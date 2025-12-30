@@ -29,70 +29,96 @@ import CLibAstronomy
 public enum CelestialBody: Int32, CaseIterable, Sendable {
     /// Mercury.
     case mercury = 0
-    
+
     /// Venus.
     case venus = 1
-    
+
     /// The Earth (for heliocentric calculations).
     case earth = 2
-    
+
     /// Mars.
     case mars = 3
-    
+
     /// Jupiter.
     case jupiter = 4
-    
+
     /// Saturn.
     case saturn = 5
-    
+
     /// Uranus.
     case uranus = 6
-    
+
     /// Neptune.
     case neptune = 7
-    
+
     /// Pluto.
     case pluto = 8
-    
+
     /// The Sun.
     case sun = 9
-    
+
     /// The Moon.
     case moon = 10
-    
+
     /// The Earth-Moon Barycenter.
     case emb = 11
-    
+
     /// The Solar System Barycenter.
     case ssb = 12
-    
+
     /// Io, moon of Jupiter.
     case io = 21
-    
+
     /// Europa, moon of Jupiter.
     case europa = 22
-    
+
     /// Ganymede, moon of Jupiter.
     case ganymede = 23
-    
+
     /// Callisto, moon of Jupiter.
     case callisto = 24
-    
+
+    // MARK: User-Defined Stars
+
+    /// User-defined star 1.
+    case star1 = 101
+
+    /// User-defined star 2.
+    case star2 = 102
+
+    /// User-defined star 3.
+    case star3 = 103
+
+    /// User-defined star 4.
+    case star4 = 104
+
+    /// User-defined star 5.
+    case star5 = 105
+
+    /// User-defined star 6.
+    case star6 = 106
+
+    /// User-defined star 7.
+    case star7 = 107
+
+    /// User-defined star 8.
+    case star8 = 108
+
     /// The underlying C body enum value.
     internal var raw: astro_body_t {
         astro_body_t(rawValue: rawValue)
     }
-    
+
     /// Creates a body from the C enum value.
     internal init?(raw: astro_body_t) {
         self.init(rawValue: raw.rawValue)
     }
-    
+
     /// The human-readable name of this body.
     public var name: String {
         String(cString: Astronomy_BodyName(raw))
     }
-    
+
     /// Creates a body from its name.
     ///
     /// - Parameter name: The name of the body (case-insensitive).
@@ -102,7 +128,7 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
         guard body.rawValue >= 0 else { return nil }
         self.init(raw: body)
     }
-    
+
     /// The orbital period around the Sun in days.
     ///
     /// Returns `nil` for bodies that don't orbit the Sun (Moon, etc.)
@@ -111,7 +137,7 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
         let period = Astronomy_PlanetOrbitalPeriod(raw)
         return period > 0 ? period : nil
     }
-    
+
     /// The gravitational parameter (mass × G) in AU³/day².
     ///
     /// Returns `nil` for bodies without a defined mass.
@@ -126,29 +152,29 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
 extension CelestialBody {
     /// The major planets (Mercury through Neptune).
     public static let planets: [CelestialBody] = [
-        .mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune
+        .mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune,
     ]
-    
+
     /// The inner planets (Mercury, Venus, Mars).
     public static let innerPlanets: [CelestialBody] = [
-        .mercury, .venus, .mars
+        .mercury, .venus, .mars,
     ]
-    
+
     /// The outer planets (Jupiter, Saturn, Uranus, Neptune).
     public static let outerPlanets: [CelestialBody] = [
-        .jupiter, .saturn, .uranus, .neptune
+        .jupiter, .saturn, .uranus, .neptune,
     ]
-    
+
     /// The Galilean moons of Jupiter.
     public static let galileanMoons: [CelestialBody] = [
-        .io, .europa, .ganymede, .callisto
+        .io, .europa, .ganymede, .callisto,
     ]
-    
+
     /// Whether this body is a major planet.
     public var isPlanet: Bool {
         Self.planets.contains(self)
     }
-    
+
     /// Whether this body is visible to the naked eye.
     public var isNakedEyeVisible: Bool {
         switch self {
@@ -173,3 +199,56 @@ extension CelestialBody: Codable {}
 // MARK: - Hashable
 
 extension CelestialBody: Hashable {}
+
+// MARK: - User-Defined Stars
+
+extension CelestialBody {
+    /// The user-defined star slots.
+    public static let userStars: [CelestialBody] = [
+        .star1, .star2, .star3, .star4, .star5, .star6, .star7, .star8,
+    ]
+
+    /// Whether this body is a user-defined star.
+    public var isUserStar: Bool {
+        Self.userStars.contains(self)
+    }
+
+    /// Defines the position and distance of a user-defined star.
+    ///
+    /// Once defined, the star can be used like any other celestial body
+    /// for position and coordinate calculations.
+    ///
+    /// - Parameters:
+    ///   - ra: Right ascension in sidereal hours (0-24).
+    ///   - dec: Declination in degrees (-90 to +90).
+    ///   - distanceLightYears: Distance from Earth in light years.
+    /// - Throws: `AstronomyError` if the star cannot be defined.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// // Define Sirius at star slot 1
+    /// try CelestialBody.star1.define(
+    ///     ra: 6.7525,
+    ///     dec: -16.7161,
+    ///     distanceLightYears: 8.6
+    /// )
+    ///
+    /// // Now use it like any other body
+    /// let position = try CelestialBody.star1.equatorial(at: .now)
+    /// ```
+    public func define(
+        ra: Double,
+        dec: Double,
+        distanceLightYears: Double
+    ) throws {
+        guard isUserStar else {
+            throw AstronomyError.invalidBody
+        }
+
+        let status = Astronomy_DefineStar(raw, ra, dec, distanceLightYears)
+        if let error = AstronomyError(status: status) {
+            throw error
+        }
+    }
+}
