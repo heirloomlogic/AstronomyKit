@@ -6,7 +6,7 @@ A beautiful, type-safe Swift interface for astronomical calculations.
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library by Don Cross, providing idiomatic Swift APIs for calculating celestial body positions, moon phases, eclipses, rise/set times, and more.
+AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library by Don Cross, providing idiomatic Swift APIs for calculating celestial body positions, moon phases, eclipses, rise/set times, etc.
 
 ## Features
 
@@ -15,7 +15,7 @@ AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astrono
 - 🌅 **Rise/Set Times** — Sunrise, sunset, moonrise, culmination
 - 🌑 **Eclipses** — Lunar and solar eclipse predictions
 - 🍂 **Seasons** — Equinoxes and solstices
-- 📍 **Coordinate Systems** — Equatorial, ecliptic, horizon, and more
+- 📍 **Coordinate Systems** — Equatorial, ecliptic, horizon, etc.
 - ⚡ **Swift 6 Ready** — Full `Sendable` conformance
 
 ## Installation
