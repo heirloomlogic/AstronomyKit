@@ -1,0 +1,4 @@
+module CLibAstronomy {
+    header "include/astronomy.h"
+    export *
+}

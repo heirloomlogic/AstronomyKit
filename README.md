@@ -1,0 +1,203 @@
+# AstronomyKit
+
+A beautiful, type-safe Swift interface for astronomical calculations.
+
+[![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library by Don Cross, providing idiomatic Swift APIs for calculating celestial body positions, moon phases, eclipses, rise/set times, and more.
+
+## Features
+
+- 🌍 **Celestial Body Positions** — Sun, Moon, planets, and Jupiter's moons
+- 🌙 **Moon Phases** — Phase angles, quarters, illumination
+- 🌅 **Rise/Set Times** — Sunrise, sunset, moonrise, culmination
+- 🌑 **Eclipses** — Lunar and solar eclipse predictions
+- 🍂 **Seasons** — Equinoxes and solstices
+- 📍 **Coordinate Systems** — Equatorial, ecliptic, horizon, and more
+- ⚡ **Swift 6 Ready** — Full `Sendable` conformance
+
+## Installation
+
+### Swift Package Manager
+
+Add to your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "2.1.19")
+]
+```
+
+Or in Xcode: **File → Add Package Dependencies** and enter the repository URL.
+
+## Quick Start
+
+```swift
+import AstronomyKit
+
+// Your location
+let observer = Observer(latitude: 40.7128, longitude: -74.0060)  // NYC
+
+// Current moon phase
+let angle = try Moon.phaseAngle(at: .now)
+print("\(Moon.emoji(for: angle)) \(Moon.phaseName(for: angle))")
+
+// Next sunrise
+if let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer) {
+    print("Sunrise: \(sunrise.date)")
+}
+
+// Where is Mars?
+let mars = try CelestialBody.mars.horizon(at: .now, from: observer)
+print("Mars: \(mars.altitude)° \(mars.compassDirection)")
+```
+
+## Usage
+
+### Time
+
+```swift
+// Current time
+let now = AstroTime.now
+
+// From components
+let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+
+// From Foundation Date
+let time = AstroTime(.now)
+
+// Time arithmetic
+let tomorrow = now.addingDays(1)
+let nextHour = now.addingHours(1)
+```
+
+### Observer Location
+
+```swift
+let seattle = Observer(latitude: 47.6062, longitude: -122.3321)
+let denver = Observer(latitude: 39.7392, longitude: -104.9903, height: 1609)
+
+// Built-in
+let greenwich = Observer.greenwich
+```
+
+### Celestial Bodies
+
+```swift
+// Available bodies
+let planets = CelestialBody.planets  // Mercury through Neptune
+let galileanMoons = CelestialBody.galileanMoons  // Io, Europa, Ganymede, Callisto
+
+// Body properties
+print(CelestialBody.mars.name)           // "Mars"
+print(CelestialBody.mars.orbitalPeriod)  // ~686 days
+```
+
+### Position Calculations
+
+```swift
+// Horizon coordinates (altitude/azimuth)
+let horizon = try CelestialBody.jupiter.horizon(at: .now, from: observer)
+print("Altitude: \(horizon.altitude)°")
+print("Azimuth: \(horizon.azimuth)° (\(horizon.compassDirection))")
+
+// Equatorial coordinates (RA/Dec)
+let eq = try CelestialBody.saturn.equatorial(at: .now)
+print("RA: \(eq.rightAscensionFormatted)")   // "02h 15m 30.2s"
+print("Dec: \(eq.declinationFormatted)")     // "+12° 34' 56.7""
+
+// Distance from Sun
+let au = try CelestialBody.mars.distanceFromSun(at: .now)
+```
+
+### Moon Phases
+
+```swift
+// Current phase
+let angle = try Moon.phaseAngle(at: .now)
+print(Moon.phaseName(for: angle))     // "Waxing Gibbous"
+print(Moon.emoji(for: angle))         // "🌔"
+print(Moon.illumination(for: angle))  // 0.0 to 1.0
+
+// Find specific phases
+let nextFull = try Moon.searchPhase(.full, after: .now)
+let nextNew = try Moon.searchPhase(.new, after: .now)
+
+// All quarters in January 2025
+let quarters = try Moon.quarters(
+    from: AstroTime(year: 2025, month: 1, day: 1),
+    to: AstroTime(year: 2025, month: 2, day: 1)
+)
+```
+
+### Rise/Set Times
+
+```swift
+let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer)
+let sunset = try CelestialBody.sun.setTime(after: .now, from: observer)
+let moonrise = try CelestialBody.moon.riseTime(after: .now, from: observer)
+
+// Upper culmination (transit)
+let transit = try CelestialBody.sun.culmination(after: .now, from: observer)
+print("Max altitude: \(transit.horizon.altitude)°")
+```
+
+### Seasons
+
+```swift
+let seasons = try Seasons.forYear(2025)
+print("🌸 Spring: \(seasons.marchEquinox)")
+print("☀️ Summer: \(seasons.juneSolstice)")
+print("🍂 Autumn: \(seasons.septemberEquinox)")
+print("❄️ Winter: \(seasons.decemberSolstice)")
+```
+
+### Eclipses
+
+```swift
+// Next lunar eclipse
+let lunar = try Eclipse.searchLunar(after: .now)
+print("\(lunar.kind) lunar eclipse at \(lunar.peak)")
+
+// Next solar eclipse
+let solar = try Eclipse.searchGlobalSolar(after: .now)
+if solar.kind == .total, let lat = solar.latitude, let lon = solar.longitude {
+    print("Total solar eclipse visible at \(lat)°, \(lon)°")
+}
+
+// All eclipses in 2025
+let eclipses = try Eclipse.lunarEclipses(
+    from: AstroTime(year: 2025, month: 1, day: 1),
+    to: AstroTime(year: 2026, month: 1, day: 1)
+)
+```
+
+## API Reference
+
+| Type | Description |
+|------|-------------|
+| `AstroTime` | Time representation with UT/TT and `Date` conversion |
+| `Observer` | Geographic location (latitude, longitude, height) |
+| `CelestialBody` | Enum of Sun, Moon, planets, and moons |
+| `Equatorial` | Right ascension and declination coordinates |
+| `Horizon` | Altitude and azimuth for local sky position |
+| `MoonPhase` | Lunar phase enum (new, first quarter, full, third quarter) |
+| `Seasons` | Equinox and solstice times for a year |
+| `LunarEclipse` | Lunar eclipse event with timing and duration |
+| `GlobalSolarEclipse` | Solar eclipse with peak location |
+
+## Requirements
+
+- Swift 6.0+
+- macOS 13+ / iOS 16+ / tvOS 16+ / watchOS 9+
+
+## Credits
+
+- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross — the underlying C library
+- Licensed under the MIT License
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
