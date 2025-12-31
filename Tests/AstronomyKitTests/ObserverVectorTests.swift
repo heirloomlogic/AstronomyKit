@@ -16,7 +16,7 @@ struct ObserverVectorTests {
 
     @Test("Observer vector returns position")
     func observerVector() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let vector = try greenwich.vector(at: time)
 
         // Observer on Earth should have position magnitude ~Earth radius in AU
@@ -27,7 +27,7 @@ struct ObserverVectorTests {
 
     @Test("Observer state returns position and velocity")
     func observerState() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let state = try greenwich.state(at: time)
 
         #expect(state.position.magnitude > 0)
@@ -36,7 +36,7 @@ struct ObserverVectorTests {
 
     @Test("J2000 vs of-date coordinates differ")
     func j2000VsOfDate() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
 
         let j2000 = try greenwich.vector(at: time, equator: .j2000)
         let ofDate = try greenwich.vector(at: time, equator: .ofDate)
@@ -50,7 +50,7 @@ struct ObserverVectorTests {
 
     @Test("Observer at equator vs pole")
     func equatorVsPole() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
 
         let equator = Observer(latitude: 0, longitude: 0)
         let pole = Observer(latitude: 90, longitude: 0)

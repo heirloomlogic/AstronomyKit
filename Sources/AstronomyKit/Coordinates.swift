@@ -13,16 +13,16 @@ import CLibAstronomy
 public struct Vector3D: Sendable, Equatable, Hashable {
     /// The x-coordinate in AU.
     public let x: Double
-    
+
     /// The y-coordinate in AU.
     public let y: Double
-    
+
     /// The z-coordinate in AU.
     public let z: Double
-    
+
     /// The time at which this vector is valid.
     public let time: AstroTime
-    
+
     /// Creates a vector with the specified components.
     public init(x: Double, y: Double, z: Double, time: AstroTime) {
         self.x = x
@@ -30,7 +30,7 @@ public struct Vector3D: Sendable, Equatable, Hashable {
         self.z = z
         self.time = time
     }
-    
+
     /// Creates a vector from the C structure.
     internal init(_ raw: astro_vector_t) throws {
         if let error = AstronomyError(status: raw.status) {
@@ -41,17 +41,16 @@ public struct Vector3D: Sendable, Equatable, Hashable {
         self.z = raw.z
         self.time = AstroTime(raw: raw.t)
     }
-    
+
     /// The magnitude (length) of the vector in AU.
     public var magnitude: Double {
         (x * x + y * y + z * z).squareRoot()
     }
-    
+
     /// Returns a unit vector in the same direction.
     public var normalized: Vector3D {
-        let m = magnitude
-        guard m > 0 else { return self }
-        return Vector3D(x: x/m, y: y/m, z: z/m, time: time)
+        guard magnitude > 0 else { return self }
+        return Vector3D(x: x / magnitude, y: y / magnitude, z: z / magnitude, time: time)
     }
 }
 
@@ -67,20 +66,20 @@ extension Vector3D: CustomStringConvertible {
 public struct Spherical: Sendable, Equatable, Hashable {
     /// The latitude angle in degrees (-90 to +90).
     public let latitude: Double
-    
+
     /// The longitude angle in degrees (0 to 360).
     public let longitude: Double
-    
+
     /// The distance in AU.
     public let distance: Double
-    
+
     /// Creates spherical coordinates.
     public init(latitude: Double, longitude: Double, distance: Double) {
         self.latitude = latitude
         self.longitude = longitude
         self.distance = distance
     }
-    
+
     /// Creates coordinates from the C structure.
     internal init(_ raw: astro_spherical_t) throws {
         if let error = AstronomyError(status: raw.status) {
@@ -107,16 +106,16 @@ extension Spherical: CustomStringConvertible {
 public struct Equatorial: Sendable, Equatable, Hashable {
     /// Right ascension in sidereal hours (0 to 24).
     public let rightAscension: Double
-    
+
     /// Declination in degrees (-90 to +90).
     public let declination: Double
-    
+
     /// Distance from the observer in AU.
     public let distance: Double
-    
+
     /// The time at which these coordinates are valid.
     public let time: AstroTime
-    
+
     /// Creates equatorial coordinates.
     public init(rightAscension: Double, declination: Double, distance: Double, time: AstroTime) {
         self.rightAscension = rightAscension
@@ -124,7 +123,7 @@ public struct Equatorial: Sendable, Equatable, Hashable {
         self.distance = distance
         self.time = time
     }
-    
+
     /// Creates coordinates from the C structure.
     internal init(_ raw: astro_equatorial_t, time: AstroTime) throws {
         if let error = AstronomyError(status: raw.status) {
@@ -135,22 +134,22 @@ public struct Equatorial: Sendable, Equatable, Hashable {
         self.distance = raw.dist
         self.time = time
     }
-    
+
     /// Right ascension formatted as hours:minutes:seconds.
     public var rightAscensionFormatted: String {
-        let totalSeconds = rightAscension * 3600
-        let hours = Int(totalSeconds / 3600)
-        let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3600)) / 60)
+        let totalSeconds = rightAscension * 3_600
+        let hours = Int(totalSeconds / 3_600)
+        let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3_600)) / 60)
         let seconds = totalSeconds.truncatingRemainder(dividingBy: 60)
         return String(format: "%02dh %02dm %.1fs", hours, minutes, seconds)
     }
-    
+
     /// Declination formatted as degrees:arcminutes:arcseconds.
     public var declinationFormatted: String {
         let sign = declination >= 0 ? "+" : "-"
-        let totalArcseconds = abs(declination) * 3600
-        let degrees = Int(totalArcseconds / 3600)
-        let arcminutes = Int((totalArcseconds.truncatingRemainder(dividingBy: 3600)) / 60)
+        let totalArcseconds = abs(declination) * 3_600
+        let degrees = Int(totalArcseconds / 3_600)
+        let arcminutes = Int((totalArcseconds.truncatingRemainder(dividingBy: 3_600)) / 60)
         let arcseconds = totalArcseconds.truncatingRemainder(dividingBy: 60)
         return String(format: "%@%02d° %02d' %.1f\"", sign, degrees, arcminutes, arcseconds)
     }
@@ -168,20 +167,20 @@ extension Equatorial: CustomStringConvertible {
 public struct Ecliptic: Sendable, Equatable, Hashable {
     /// Ecliptic latitude in degrees (-90 to +90).
     public let latitude: Double
-    
+
     /// Ecliptic longitude in degrees (0 to 360).
     public let longitude: Double
-    
+
     /// Distance in AU.
     public let distance: Double
-    
+
     /// Creates ecliptic coordinates.
     public init(latitude: Double, longitude: Double, distance: Double) {
         self.latitude = latitude
         self.longitude = longitude
         self.distance = distance
     }
-    
+
     /// Creates coordinates from the C structure.
     internal init(_ raw: astro_ecliptic_t) throws {
         if let error = AstronomyError(status: raw.status) {
@@ -210,19 +209,19 @@ public struct Horizon: Sendable, Equatable, Hashable {
     /// Positive values indicate the object is above the horizon.
     /// Negative values indicate it is below the horizon.
     public let altitude: Double
-    
+
     /// Azimuth angle in degrees (0 to 360).
     ///
     /// Measured clockwise from north: 0° = North, 90° = East,
     /// 180° = South, 270° = West.
     public let azimuth: Double
-    
+
     /// Right ascension in sidereal hours.
     public let rightAscension: Double
-    
+
     /// Declination in degrees.
     public let declination: Double
-    
+
     /// Creates horizon coordinates.
     public init(altitude: Double, azimuth: Double, rightAscension: Double = 0, declination: Double = 0) {
         self.altitude = altitude
@@ -230,7 +229,7 @@ public struct Horizon: Sendable, Equatable, Hashable {
         self.rightAscension = rightAscension
         self.declination = declination
     }
-    
+
     /// Creates coordinates from the C structure.
     internal init(_ raw: astro_horizon_t) {
         self.altitude = raw.altitude
@@ -238,16 +237,32 @@ public struct Horizon: Sendable, Equatable, Hashable {
         self.rightAscension = raw.ra
         self.declination = raw.dec
     }
-    
+
     /// Whether the object is currently above the horizon.
     public var isAboveHorizon: Bool {
         altitude > 0
     }
-    
+
     /// The cardinal/intercardinal direction name for the azimuth.
     public var compassDirection: String {
-        let directions = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
-                          "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+        let directions = [
+            "N",
+            "NNE",
+            "NE",
+            "ENE",
+            "E",
+            "ESE",
+            "SE",
+            "SSE",
+            "S",
+            "SSW",
+            "SW",
+            "WSW",
+            "W",
+            "WNW",
+            "NW",
+            "NNW",
+        ]
         let index = Int((azimuth + 11.25).truncatingRemainder(dividingBy: 360) / 22.5)
         return directions[index]
     }
@@ -256,7 +271,7 @@ public struct Horizon: Sendable, Equatable, Hashable {
 extension Horizon: CustomStringConvertible {
     public var description: String {
         let status = isAboveHorizon ? "↑" : "↓"
-        return String(format: "%@ Alt: %.1f°, Az: %.1f° (%@)", 
+        return String(format: "%@ Alt: %.1f°, Az: %.1f° (%@)",
                       status, altitude, azimuth, compassDirection)
     }
 }
@@ -267,13 +282,13 @@ extension Horizon: CustomStringConvertible {
 public enum Refraction: Sendable {
     /// No atmospheric refraction correction (airless).
     case none
-    
+
     /// Standard atmospheric refraction correction.
     case normal
-    
+
     /// JPL Horizons compatibility mode.
     case jplHorizons
-    
+
     internal var raw: astro_refraction_t {
         switch self {
         case .none: return REFRACTION_NONE

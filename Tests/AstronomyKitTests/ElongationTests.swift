@@ -63,7 +63,7 @@ struct ElongationTests {
 
         @Test("Get elongation for Venus")
         func venusElongation() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.venus.elongation(at: time)
 
             #expect(elong.time == time)
@@ -73,7 +73,7 @@ struct ElongationTests {
 
         @Test("Get elongation for Mercury")
         func mercuryElongation() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.mercury.elongation(at: time)
 
             #expect(elong.angle >= 0)
@@ -82,7 +82,7 @@ struct ElongationTests {
 
         @Test("Elongation has valid visibility")
         func hasValidVisibility() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.venus.elongation(at: time)
 
             #expect(elong.visibility == .morning || elong.visibility == .evening)
@@ -90,7 +90,7 @@ struct ElongationTests {
 
         @Test("Elongation has ecliptic separation")
         func hasEclipticSeparation() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.venus.elongation(at: time)
 
             // Ecliptic separation can be positive or negative
@@ -99,7 +99,7 @@ struct ElongationTests {
 
         @Test("Outer planets have larger elongation range", arguments: CelestialBody.outerPlanets)
         func outerPlanetElongation(planet: CelestialBody) throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try planet.elongation(at: time)
 
             // Outer planets can reach opposition (180°)
@@ -115,7 +115,7 @@ struct ElongationTests {
 
         @Test("Search max elongation for Mercury")
         func mercuryMaxElong() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let maxElong = try CelestialBody.mercury.searchMaxElongation(after: startTime)
 
             #expect(maxElong.time > startTime)
@@ -127,7 +127,7 @@ struct ElongationTests {
 
         @Test("Search max elongation for Venus")
         func venusMaxElong() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let maxElong = try CelestialBody.venus.searchMaxElongation(after: startTime)
 
             #expect(maxElong.time > startTime)
@@ -139,7 +139,7 @@ struct ElongationTests {
 
         @Test("Max elongation has visibility")
         func maxElongHasVisibility() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let maxElong = try CelestialBody.mercury.searchMaxElongation(after: startTime)
 
             #expect(maxElong.visibility == .morning || maxElong.visibility == .evening)
@@ -147,7 +147,7 @@ struct ElongationTests {
 
         @Test("Sequential max elongations alternate visibility")
         func alternatingVisibility() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
 
             // Find two consecutive max elongations for Mercury
             let first = try CelestialBody.mercury.searchMaxElongation(after: startTime)
@@ -166,7 +166,7 @@ struct ElongationTests {
 
         @Test("Elongation has all properties")
         func hasAllProperties() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.venus.elongation(at: time)
 
             _ = elong.time
@@ -177,7 +177,7 @@ struct ElongationTests {
 
         @Test("Equatable")
         func equatable() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let e1 = try CelestialBody.venus.elongation(at: time)
             let e2 = try CelestialBody.venus.elongation(at: time)
 
@@ -186,7 +186,7 @@ struct ElongationTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.venus.elongation(at: time)
 
             let desc = elong.description
@@ -203,7 +203,7 @@ struct ElongationTests {
 
         @Test("Inner planet max elongation < 90°")
         func innerPlanetMaxElongation() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
 
             let mercuryMax = try CelestialBody.mercury.searchMaxElongation(after: startTime)
             let venusMax = try CelestialBody.venus.searchMaxElongation(after: startTime)
@@ -215,7 +215,7 @@ struct ElongationTests {
 
         @Test("Mercury has smaller max elongation than Venus")
         func mercurySmallerThanVenus() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
 
             let mercuryMax = try CelestialBody.mercury.searchMaxElongation(after: startTime)
             let venusMax = try CelestialBody.venus.searchMaxElongation(after: startTime)
@@ -226,7 +226,7 @@ struct ElongationTests {
         @Test("Outer planet at opposition has ~180° elongation")
         func outerPlanetOpposition() throws {
             // Search for Mars at a time when it might be near opposition
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let elong = try CelestialBody.mars.elongation(at: time)
 
             // Mars can reach elongations up to 180° at opposition

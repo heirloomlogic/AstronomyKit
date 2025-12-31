@@ -29,11 +29,11 @@ struct ObserverTests {
 
         @Test("Create with all parameters")
         func createWithAllParams() {
-            let observer = Observer(latitude: 27.9881, longitude: 86.9250, height: 8848.86)
+            let observer = Observer(latitude: 27.9881, longitude: 86.9250, height: 8_848.86)
 
             #expect(observer.latitude == 27.9881)
             #expect(observer.longitude == 86.9250)
-            #expect(observer.height == 8848.86)
+            #expect(observer.height == 8_848.86)
         }
 
         @Test("Equator location")
@@ -115,7 +115,7 @@ struct ObserverTests {
         @Test("Gravity lower at high altitude")
         func gravityAltitudeEffect() {
             let seaLevel = Observer(latitude: 40, longitude: -74, height: 0)
-            let mountain = Observer(latitude: 40, longitude: -74, height: 8000)
+            let mountain = Observer(latitude: 40, longitude: -74, height: 8_000)
 
             #expect(seaLevel.gravity > mountain.gravity)
         }

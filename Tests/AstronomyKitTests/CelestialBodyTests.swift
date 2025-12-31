@@ -205,7 +205,7 @@ struct CelestialBodyTests {
 
             // Jupiter ~12 years
             if let jupiterPeriod = CelestialBody.jupiter.orbitalPeriod {
-                #expect(jupiterPeriod > 4300 && jupiterPeriod < 4400)
+                #expect(jupiterPeriod > 4_300 && jupiterPeriod < 4_400)
             }
         }
 
@@ -227,8 +227,7 @@ struct CelestialBodyTests {
 
             // Jupiter should have a much larger mass product than Earth
             if let jupiterMass = CelestialBody.jupiter.massProduct,
-                let earthMass = CelestialBody.earth.massProduct
-            {
+                let earthMass = CelestialBody.earth.massProduct {
                 #expect(jupiterMass > earthMass * 300)
             }
         }
@@ -240,7 +239,7 @@ struct CelestialBodyTests {
 
                 // Sun's mass should be much larger than any planet
                 if let jupiterMass = CelestialBody.jupiter.massProduct {
-                    #expect(sunMass > jupiterMass * 1000)
+                    #expect(sunMass > jupiterMass * 1_000)
                 }
             }
         }

@@ -46,7 +46,7 @@ struct EclipseTests {
 
         @Test("Search finds next lunar eclipse")
         func searchFindsEclipse() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchLunar(after: startTime)
 
             #expect(eclipse.peak > startTime)
@@ -55,7 +55,7 @@ struct EclipseTests {
 
         @Test("Lunar eclipse has valid kind")
         func validKind() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchLunar(after: startTime)
 
             // Should be partial, total, or penumbral (mapped to partial)
@@ -64,7 +64,7 @@ struct EclipseTests {
 
         @Test("Lunar eclipse has magnitude")
         func hasMagnitude() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchLunar(after: startTime)
 
             // Magnitude should be between 0 and ~2 (can exceed 1 for deep total)
@@ -74,7 +74,7 @@ struct EclipseTests {
 
         @Test("Next lunar eclipse after previous")
         func nextLunarEclipse() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let first = try Eclipse.searchLunar(after: startTime)
             let second = try Eclipse.nextLunar(after: first)
 
@@ -83,8 +83,8 @@ struct EclipseTests {
 
         @Test("Lunar eclipses in date range")
         func lunarEclipsesInRange() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
-            let endTime = AstroTime(year: 2026, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
+            let endTime = AstroTime(year: 2_026, month: 1, day: 1)
 
             let eclipses = try Eclipse.lunarEclipses(from: startTime, to: endTime)
 
@@ -107,7 +107,7 @@ struct EclipseTests {
 
         @Test("Search finds next global solar eclipse")
         func searchFindsEclipse() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchGlobalSolar(after: startTime)
 
             #expect(eclipse.peak > startTime)
@@ -116,7 +116,7 @@ struct EclipseTests {
 
         @Test("Global solar eclipse has valid kind")
         func validKind() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchGlobalSolar(after: startTime)
 
             #expect(eclipse.kind == .partial || eclipse.kind == .annular || eclipse.kind == .total)
@@ -126,7 +126,7 @@ struct EclipseTests {
         func hasCoordinatesForTotalAnnular() throws {
             // Search for several eclipses until we find a total or annular
             var eclipse = try Eclipse.searchGlobalSolar(
-                after: AstroTime(year: 2020, month: 1, day: 1))
+                after: AstroTime(year: 2_020, month: 1, day: 1))
             var attempts = 0
 
             while eclipse.kind == .partial && attempts < 10 {
@@ -142,7 +142,7 @@ struct EclipseTests {
 
         @Test("Next global solar eclipse after previous")
         func nextGlobalSolarEclipse() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let first = try Eclipse.searchGlobalSolar(after: startTime)
             let second = try Eclipse.nextGlobalSolar(after: first)
 
@@ -151,8 +151,8 @@ struct EclipseTests {
 
         @Test("Global solar eclipses in date range")
         func globalSolarEclipsesInRange() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
-            let endTime = AstroTime(year: 2028, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
+            let endTime = AstroTime(year: 2_028, month: 1, day: 1)
 
             let eclipses = try Eclipse.globalSolarEclipses(from: startTime, to: endTime)
 
@@ -174,7 +174,7 @@ struct EclipseTests {
 
         @Test("LunarEclipse has all properties")
         func hasAllProperties() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchLunar(after: startTime)
 
             _ = eclipse.kind
@@ -186,7 +186,7 @@ struct EclipseTests {
 
         @Test("Equatable")
         func equatable() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let e1 = try Eclipse.searchLunar(after: startTime)
             let e2 = try Eclipse.searchLunar(after: startTime)
 
@@ -195,7 +195,7 @@ struct EclipseTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchLunar(after: startTime)
 
             let desc = eclipse.description
@@ -211,7 +211,7 @@ struct EclipseTests {
 
         @Test("GlobalSolarEclipse has all properties")
         func hasAllProperties() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchGlobalSolar(after: startTime)
 
             _ = eclipse.kind
@@ -223,7 +223,7 @@ struct EclipseTests {
 
         @Test("Equatable")
         func equatable() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let e1 = try Eclipse.searchGlobalSolar(after: startTime)
             let e2 = try Eclipse.searchGlobalSolar(after: startTime)
 
@@ -234,7 +234,7 @@ struct EclipseTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let eclipse = try Eclipse.searchGlobalSolar(after: startTime)
 
             let desc = eclipse.description
@@ -251,7 +251,7 @@ struct EclipseTests {
         @Test("Find 2017 total solar eclipse")
         func eclipse2017() throws {
             // Great American Eclipse was August 21, 2017
-            let startTime = AstroTime(year: 2017, month: 8, day: 1)
+            let startTime = AstroTime(year: 2_017, month: 8, day: 1)
             let eclipse = try Eclipse.searchGlobalSolar(after: startTime)
 
             let calendar = Calendar(identifier: .gregorian)
@@ -266,7 +266,7 @@ struct EclipseTests {
         @Test("Find 2024 total solar eclipse")
         func eclipse2024() throws {
             // Total solar eclipse April 8, 2024
-            let startTime = AstroTime(year: 2024, month: 4, day: 1)
+            let startTime = AstroTime(year: 2_024, month: 4, day: 1)
             let eclipse = try Eclipse.searchGlobalSolar(after: startTime)
 
             let calendar = Calendar(identifier: .gregorian)

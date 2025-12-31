@@ -100,8 +100,8 @@ struct MoonTests {
 
         @Test("Phase angle changes over time")
         func angleChanges() throws {
-            let time1 = AstroTime(year: 2025, month: 1, day: 1)
-            let time2 = AstroTime(year: 2025, month: 1, day: 8)
+            let time1 = AstroTime(year: 2_025, month: 1, day: 1)
+            let time2 = AstroTime(year: 2_025, month: 1, day: 8)
 
             let angle1 = try Moon.phaseAngle(at: time1)
             let angle2 = try Moon.phaseAngle(at: time2)
@@ -246,7 +246,7 @@ struct MoonTests {
 
         @Test("Search finds next quarter")
         func searchFindsQuarter() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let quarter = try Moon.searchQuarter(after: startTime)
 
             #expect(quarter.time > startTime)
@@ -254,7 +254,7 @@ struct MoonTests {
 
         @Test("Quarter has valid phase")
         func quarterHasValidPhase() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let quarter = try Moon.searchQuarter(after: startTime)
 
             #expect(MoonPhase.allCases.contains(quarter.phase))
@@ -262,7 +262,7 @@ struct MoonTests {
 
         @Test("Next quarter follows previous")
         func nextQuarterFollows() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let quarter1 = try Moon.searchQuarter(after: startTime)
             let quarter2 = try Moon.nextQuarter(after: quarter1)
 
@@ -271,7 +271,7 @@ struct MoonTests {
 
         @Test("Quarters cycle through phases")
         func quartersCycle() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             var quarter = try Moon.searchQuarter(after: startTime)
 
             var phases: [MoonPhase] = []
@@ -288,8 +288,8 @@ struct MoonTests {
 
         @Test("Quarters in range")
         func quartersInRange() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
-            let endTime = AstroTime(year: 2025, month: 2, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
+            let endTime = AstroTime(year: 2_025, month: 2, day: 1)
 
             let quarters = try Moon.quarters(from: startTime, to: endTime)
 
@@ -312,7 +312,7 @@ struct MoonTests {
 
         @Test("Search specific phase", arguments: MoonPhase.allCases)
         func searchSpecificPhase(phase: MoonPhase) throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let foundTime = try Moon.searchPhase(phase, after: startTime)
 
             #expect(foundTime > startTime)
@@ -335,7 +335,7 @@ struct MoonTests {
 
         @Test("MoonQuarter has phase and time")
         func quarterProperties() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let quarter = try Moon.searchQuarter(after: startTime)
 
             #expect(MoonPhase.allCases.contains(quarter.phase))
@@ -344,7 +344,7 @@ struct MoonTests {
 
         @Test("MoonQuarter Equatable")
         func equatable() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let q1 = try Moon.searchQuarter(after: startTime)
             let q2 = try Moon.searchQuarter(after: startTime)
 
@@ -353,7 +353,7 @@ struct MoonTests {
 
         @Test("MoonQuarter CustomStringConvertible")
         func description() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let quarter = try Moon.searchQuarter(after: startTime)
 
             let desc = quarter.description

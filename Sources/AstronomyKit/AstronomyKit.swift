@@ -2,10 +2,8 @@
 //  AstronomyKit.swift
 //  AstronomyKit
 //
-//  A beautiful Swift interface for astronomical calculations.
-//
-//  This package wraps the AstronomyEngine C library by Don Cross,
-//  providing type-safe, idiomatic Swift APIs for calculating:
+//  AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) library by
+//  Don Cross, exposing the underlying C functionality through idiomatic Swift APIs for calculating:
 //
 //  - Celestial body positions (Sun, Moon, planets)
 //  - Moon phases and quarters

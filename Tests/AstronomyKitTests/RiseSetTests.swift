@@ -16,7 +16,7 @@ struct RiseSetTests {
     // Common test fixtures
     static let nyc = Observer(latitude: 40.7128, longitude: -74.0060)
     static let london = Observer(latitude: 51.5074, longitude: -0.1278)
-    static let testDate = AstroTime(year: 2025, month: 6, day: 21)
+    static let testDate = AstroTime(year: 2_025, month: 6, day: 21)
 
     // MARK: - RiseSetDirection Tests
 
@@ -44,7 +44,7 @@ struct RiseSetTests {
 
             #expect(sunrise != nil)
 
-            if let sunrise = sunrise {
+            if let sunrise {
                 #expect(sunrise > RiseSetTests.testDate)
 
                 // Sunrise should be within 24 hours
@@ -82,6 +82,8 @@ struct RiseSetTests {
                 limitDays: 0.5
             )
 
+            #expect(shortLimit != nil)
+
             // Longer limit should find it
             let longLimit = try CelestialBody.sun.riseTime(
                 after: RiseSetTests.testDate,
@@ -107,7 +109,7 @@ struct RiseSetTests {
 
             #expect(sunset != nil)
 
-            if let sunset = sunset {
+            if let sunset {
                 #expect(sunset > RiseSetTests.testDate)
             }
         }
@@ -124,16 +126,16 @@ struct RiseSetTests {
 
         @Test("Sunrise before sunset on same day")
         func sunriseBeforeSunset() throws {
-            let date = AstroTime(year: 2025, month: 6, day: 21, hour: 0)
+            let date = AstroTime(year: 2_025, month: 6, day: 21, hour: 0)
 
             let sunrise = try CelestialBody.sun.riseTime(after: date, from: RiseSetTests.nyc)
 
             // Search for sunset starting from sunrise
-            if let sunrise = sunrise {
+            if let sunrise {
                 let sunset = try CelestialBody.sun.setTime(after: sunrise, from: RiseSetTests.nyc)
 
                 #expect(sunset != nil)
-                if let sunset = sunset {
+                if let sunset {
                     #expect(sunset > sunrise)
                 }
             }
@@ -260,8 +262,8 @@ struct RiseSetTests {
 
         @Test("Culmination altitude varies with season")
         func culminationAltitudeVaries() throws {
-            let summer = AstroTime(year: 2025, month: 6, day: 21)
-            let winter = AstroTime(year: 2025, month: 12, day: 21)
+            let summer = AstroTime(year: 2_025, month: 6, day: 21)
+            let winter = AstroTime(year: 2_025, month: 12, day: 21)
 
             let summerCulm = try CelestialBody.sun.culmination(
                 after: summer, from: RiseSetTests.nyc)
@@ -407,7 +409,7 @@ struct RiseSetTests {
         func midnightSun() throws {
             // At high arctic latitudes in summer, sun may not set
             let arctic = Observer(latitude: 78.0, longitude: 16.0)  // Svalbard
-            let summerDate = AstroTime(year: 2025, month: 6, day: 21)
+            let summerDate = AstroTime(year: 2_025, month: 6, day: 21)
 
             let sunset = try CelestialBody.sun.setTime(
                 after: summerDate,

@@ -53,6 +53,18 @@ struct AstronomyErrorTests {
                 AstronomyError.badTime.description.contains("time")
                     || AstronomyError.badTime.description.contains("Date"))
             #expect(AstronomyError.earthNotAllowed.description.contains("Earth"))
+            #expect(AstronomyError.badVector.description.contains("ector"))
+            #expect(AstronomyError.searchFailure.description.contains("earch"))
+            #expect(AstronomyError.noMoonQuarter.description.contains("uarter"))
+            #expect(AstronomyError.wrongMoonQuarter.description.contains("uarter"))
+            #expect(AstronomyError.internalError.description.contains("nternal"))
+            #expect(AstronomyError.invalidParameter.description.contains("arameter"))
+            #expect(
+                AstronomyError.failApsis.description.contains("apsis")
+                    || AstronomyError.failApsis.description.contains("psis"))
+            #expect(AstronomyError.bufferTooSmall.description.contains("uffer"))
+            #expect(AstronomyError.outOfMemory.description.contains("emory"))
+            #expect(AstronomyError.inconsistentTimes.description.contains("imes"))
         }
 
         @Test("Unknown error includes code")
@@ -136,8 +148,8 @@ struct AstronomyErrorTests {
             let error: AstronomyError = .invalidBody
 
             // If this compiles, the type is Sendable
-            let _ = await Task {
-                return error
+            _ = await Task {
+                error
             }.value
         }
     }
@@ -152,7 +164,7 @@ struct AstronomyErrorTests {
             let error: Error = AstronomyError.invalidBody
 
             // Should be able to use as Error
-            #expect(error.localizedDescription.count > 0)
+            #expect(!error.localizedDescription.isEmpty)
         }
 
         @Test("Can be thrown and caught")
@@ -171,17 +183,12 @@ struct AstronomyErrorTests {
             }
         }
 
-        @Test("Can match specific error cases")
+        @Test("Conforms to Equatable")
         func matchSpecificCases() {
-            let error: AstronomyError = .badTime
+            let badTime = AstronomyError.badTime
+            let badVector = AstronomyError.badVector
 
-            switch error {
-            case .badTime:
-                // Success
-                break
-            default:
-                Issue.record("Should have matched .badTime")
-            }
+            #expect(badTime != badVector)
         }
     }
 
@@ -192,7 +199,7 @@ struct AstronomyErrorTests {
 
         @Test("Earth geocentric position behavior")
         func earthGeoPosition() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             // Test that the API handles Earth appropriately
             // It may throw or return a valid result depending on implementation
@@ -207,7 +214,7 @@ struct AstronomyErrorTests {
 
         @Test("Sun elongation behavior")
         func sunElongation() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             // Test that the API handles Sun appropriately
             // It may throw or return a result depending on implementation

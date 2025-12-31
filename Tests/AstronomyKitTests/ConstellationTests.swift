@@ -41,7 +41,7 @@ struct ConstellationTests {
 
     @Test("CelestialBody constellation lookup")
     func bodyConstellation() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let constellation = try CelestialBody.mars.constellation(at: time)
 
         // Mars should be in some constellation

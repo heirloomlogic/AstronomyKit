@@ -5,8 +5,8 @@
 //  Time representation for astronomical calculations.
 //
 
-import Foundation
 import CLibAstronomy
+import Foundation
 
 /// Represents a moment in time for astronomical calculations.
 ///
@@ -35,29 +35,29 @@ import CLibAstronomy
 public struct AstroTime: Sendable {
     /// The underlying C time structure.
     internal var raw: astro_time_t
-    
+
     /// Universal Time days since noon on January 1, 2000.
     ///
     /// This value is appropriate for calculations involving Earth's rotation,
     /// such as rise/set times and sidereal time.
     public var ut: Double { raw.ut }
-    
+
     /// Terrestrial Time days since noon on January 1, 2000.
     ///
     /// This value is used for calculations not involving Earth's rotation,
     /// such as planetary orbits.
     public var tt: Double { raw.tt }
-    
+
     /// The current time.
     public static var now: AstroTime {
         AstroTime(raw: Astronomy_CurrentTime())
     }
-    
+
     /// Creates a time from the underlying C structure.
     internal init(raw: astro_time_t) {
         self.raw = raw
     }
-    
+
     /// Creates a time from a Foundation `Date`.
     ///
     /// - Parameter date: The date to convert.
@@ -67,9 +67,9 @@ public struct AstroTime: Sendable {
             in: TimeZone(identifier: "UTC")!,
             from: date
         )
-        
+
         self.raw = Astronomy_MakeTime(
-            Int32(components.year ?? 2000),
+            Int32(components.year ?? 2_000),
             Int32(components.month ?? 1),
             Int32(components.day ?? 1),
             Int32(components.hour ?? 0),
@@ -77,7 +77,7 @@ public struct AstroTime: Sendable {
             Double(components.second ?? 0) + Double(components.nanosecond ?? 0) / 1_000_000_000
         )
     }
-    
+
     /// Creates a time from calendar components.
     ///
     /// - Parameters:
@@ -104,14 +104,14 @@ public struct AstroTime: Sendable {
             second
         )
     }
-    
+
     /// Creates a time from Universal Time days since J2000.
     ///
     /// - Parameter ut: Days since noon on January 1, 2000 (UTC).
     public init(ut: Double) {
         self.raw = Astronomy_TimeFromDays(ut)
     }
-    
+
     /// Converts this time to a Foundation `Date`.
     public var date: Date {
         let utc = Astronomy_UtcFromTime(raw)
@@ -124,11 +124,11 @@ public struct AstroTime: Sendable {
         components.second = Int(utc.second)
         components.nanosecond = Int((utc.second - Double(Int(utc.second))) * 1_000_000_000)
         components.timeZone = TimeZone(identifier: "UTC")
-        
+
         let calendar = Calendar(identifier: .gregorian)
         return calendar.date(from: components) ?? Date()
     }
-    
+
     /// Returns a new time by adding the specified number of days.
     ///
     /// - Parameter days: The number of days to add. Can be negative.
@@ -136,7 +136,7 @@ public struct AstroTime: Sendable {
     public func addingDays(_ days: Double) -> AstroTime {
         AstroTime(raw: Astronomy_AddDays(raw, days))
     }
-    
+
     /// Returns a new time by adding the specified number of hours.
     ///
     /// - Parameter hours: The number of hours to add. Can be negative.
@@ -144,7 +144,7 @@ public struct AstroTime: Sendable {
     public func addingHours(_ hours: Double) -> AstroTime {
         addingDays(hours / 24.0)
     }
-    
+
     /// The sidereal time at the prime meridian (Greenwich).
     ///
     /// Sidereal time is the hour angle of the vernal equinox,
@@ -191,7 +191,7 @@ extension AstroTime: Codable {
         let ut = try container.decode(Double.self)
         self.init(ut: ut)
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(ut)

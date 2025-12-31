@@ -5,8 +5,8 @@
 //  Moon phase calculations.
 //
 
-import Foundation
 import CLibAstronomy
+import Foundation
 
 // MARK: - Moon Phase
 
@@ -14,16 +14,16 @@ import CLibAstronomy
 public enum MoonPhase: Int, CaseIterable, Sendable, Codable {
     /// New Moon (0° phase angle).
     case new = 0
-    
+
     /// First Quarter (90° phase angle).
     case firstQuarter = 1
-    
+
     /// Full Moon (180° phase angle).
     case full = 2
-    
+
     /// Third/Last Quarter (270° phase angle).
     case thirdQuarter = 3
-    
+
     /// The display name of this phase.
     public var name: String {
         switch self {
@@ -33,7 +33,7 @@ public enum MoonPhase: Int, CaseIterable, Sendable, Codable {
         case .thirdQuarter: return "Third Quarter"
         }
     }
-    
+
     /// The emoji representation of this phase.
     public var emoji: String {
         switch self {
@@ -43,7 +43,7 @@ public enum MoonPhase: Int, CaseIterable, Sendable, Codable {
         case .thirdQuarter: return "🌗"
         }
     }
-    
+
     /// The ecliptic longitude of this phase in degrees.
     public var longitude: Double {
         Double(rawValue) * 90.0
@@ -60,10 +60,10 @@ extension MoonPhase: CustomStringConvertible {
 public struct MoonQuarter: Sendable, Equatable {
     /// The phase of the Moon.
     public let phase: MoonPhase
-    
+
     /// The time when this phase occurs.
     public let time: AstroTime
-    
+
     /// Creates a moon quarter from the C structure.
     internal init(_ raw: astro_moon_quarter_t) throws {
         if let error = AstronomyError(status: raw.status) {
@@ -103,7 +103,7 @@ public enum Moon {
         }
         return result.angle
     }
-    
+
     /// Determines the approximate phase name for the given angle.
     ///
     /// - Parameter angle: The phase angle in degrees (0-360).
@@ -131,7 +131,7 @@ public enum Moon {
             return "Unknown"
         }
     }
-    
+
     /// The emoji for the given phase angle.
     ///
     /// - Parameter angle: The phase angle in degrees (0-360).
@@ -159,7 +159,7 @@ public enum Moon {
             return "🌙"
         }
     }
-    
+
     /// The illuminated fraction of the Moon (0.0 to 1.0).
     ///
     /// - Parameter angle: The phase angle in degrees.
@@ -167,7 +167,7 @@ public enum Moon {
     public static func illumination(for angle: Double) -> Double {
         (1 - cos(angle * .pi / 180)) / 2
     }
-    
+
     /// Searches for the next occurrence of a specific moon phase.
     ///
     /// - Parameters:
@@ -187,7 +187,7 @@ public enum Moon {
         }
         return AstroTime(raw: result.time)
     }
-    
+
     /// Searches for the next moon quarter (new, first, full, or third).
     ///
     /// - Parameter startTime: The time to start searching from.
@@ -197,7 +197,7 @@ public enum Moon {
         let result = Astronomy_SearchMoonQuarter(startTime.raw)
         return try MoonQuarter(result)
     }
-    
+
     /// Finds the next moon quarter after a given quarter.
     ///
     /// - Parameter quarter: The previous quarter.
@@ -212,7 +212,7 @@ public enum Moon {
         let result = Astronomy_NextMoonQuarter(raw)
         return try MoonQuarter(result)
     }
-    
+
     /// Returns all moon quarters within a date range.
     ///
     /// - Parameters:
@@ -223,15 +223,15 @@ public enum Moon {
     public static func quarters(from startTime: AstroTime, to endTime: AstroTime) throws -> [MoonQuarter] {
         var quarters: [MoonQuarter] = []
         var current = try searchQuarter(after: startTime)
-        
+
         while current.time < endTime {
             quarters.append(current)
             current = try nextQuarter(after: current)
         }
-        
+
         return quarters
     }
-    
+
     /// Calculates the Moon's geocentric position.
     ///
     /// - Parameter time: The time at which to calculate the position.
@@ -241,7 +241,7 @@ public enum Moon {
         let result = Astronomy_GeoMoon(time.raw)
         return try Vector3D(result)
     }
-    
+
     /// Calculates the Moon's ecliptic coordinates.
     ///
     /// - Parameter time: The time at which to calculate.

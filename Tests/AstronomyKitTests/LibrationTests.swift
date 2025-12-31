@@ -14,7 +14,7 @@ struct LibrationTests {
 
     @Test("Libration returns valid data")
     func librationReturnsData() {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let libration = Moon.libration(at: time)
 
         // Sub-Earth point latitude/longitude should be reasonable
@@ -24,7 +24,7 @@ struct LibrationTests {
 
     @Test("Moon latitude and longitude are valid")
     func moonCoordinates() {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let libration = Moon.libration(at: time)
 
         #expect(libration.moonLatitude >= -90 && libration.moonLatitude <= 90)
@@ -33,17 +33,17 @@ struct LibrationTests {
 
     @Test("Moon distance is in expected range")
     func moonDistance() {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let libration = Moon.libration(at: time)
 
         // Moon distance ~356,000-406,000 km
-        #expect(libration.distanceKM > 350000)
-        #expect(libration.distanceKM < 410000)
+        #expect(libration.distanceKM > 350_000)
+        #expect(libration.distanceKM < 410_000)
     }
 
     @Test("Apparent diameter is reasonable")
     func apparentDiameter() {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let libration = Moon.libration(at: time)
 
         // Moon apparent diameter ~0.49° to 0.56°
@@ -53,8 +53,8 @@ struct LibrationTests {
 
     @Test("Libration changes over time")
     func librationChanges() {
-        let time1 = AstroTime(year: 2025, month: 1, day: 1)
-        let time2 = AstroTime(year: 2025, month: 1, day: 15)
+        let time1 = AstroTime(year: 2_025, month: 1, day: 1)
+        let time2 = AstroTime(year: 2_025, month: 1, day: 15)
 
         let lib1 = Moon.libration(at: time1)
         let lib2 = Moon.libration(at: time2)
@@ -65,7 +65,7 @@ struct LibrationTests {
 
     @Test("Libration is Equatable")
     func equatable() {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let lib1 = Moon.libration(at: time)
         let lib2 = Moon.libration(at: time)
 
@@ -74,7 +74,7 @@ struct LibrationTests {
 
     @Test("CustomStringConvertible")
     func description() {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let libration = Moon.libration(at: time)
 
         #expect(libration.description.contains("Libration"))

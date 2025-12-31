@@ -1,21 +1,23 @@
 # AstronomyKit
 
-A beautiful, type-safe Swift interface for astronomical calculations.
+Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library. Calculates positions of the Sun, Moon, and planets, and predicts phases, eclipses, transits, and rise/set times. Includes vector and angular coordinate transformations for equatorial, ecliptic, horizontal, and galactic systems.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Documentation](https://img.shields.io/badge/Documentation-DocC-blue.svg)](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/)
 
-AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library by Don Cross, providing idiomatic Swift APIs for calculating celestial body positions, moon phases, eclipses, rise/set times, etc.
+AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library and exposes the underlying C functionality through idiomatic Swift APIs.
 
 ## Features
 
 - 🌍 **Celestial Body Positions** — Sun, Moon, planets, and Jupiter's moons
-- 🌙 **Moon Phases** — Phase angles, quarters, illumination
+- 🌙 **Moon Phases** — Phase angles, quarters, illumination, libration
 - 🌅 **Rise/Set Times** — Sunrise, sunset, moonrise, culmination
 - 🌑 **Eclipses** — Lunar and solar eclipse predictions
 - 🍂 **Seasons** — Equinoxes and solstices
-- 📍 **Coordinate Systems** — Equatorial, ecliptic, horizon, etc.
+- 📍 **Coordinate Systems** — Equatorial, ecliptic, horizon, galactic
+- 🪐 **Orbital Events** — Apsides, elongation, transits
 - ⚡ **Swift 6 Ready** — Full `Sendable` conformance
 
 ## Installation
@@ -66,7 +68,7 @@ let now = AstroTime.now
 let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
 
 // From Foundation Date
-let time = AstroTime(.now)
+let time = AstroTime(Date())
 
 // Time arithmetic
 let tomorrow = now.addingDays(1)
@@ -182,11 +184,33 @@ let eclipses = try Eclipse.lunarEclipses(
 | `Observer` | Geographic location (latitude, longitude, height) |
 | `CelestialBody` | Enum of Sun, Moon, planets, and moons |
 | `Equatorial` | Right ascension and declination coordinates |
+| `Ecliptic` | Ecliptic longitude and latitude coordinates |
 | `Horizon` | Altitude and azimuth for local sky position |
 | `MoonPhase` | Lunar phase enum (new, first quarter, full, third quarter) |
+| `Libration` | Lunar libration angles and distance |
+| `LunarNode` | Ascending/descending node events |
 | `Seasons` | Equinox and solstice times for a year |
 | `LunarEclipse` | Lunar eclipse event with timing and duration |
 | `GlobalSolarEclipse` | Solar eclipse with peak location |
+| `LocalSolarEclipse` | Solar eclipse visibility from observer |
+| `Elongation` | Angular separation from the Sun |
+| `Illumination` | Visual magnitude and phase fraction |
+| `Apsis` | Perihelion/aphelion or perigee/apogee events |
+| `Transit` | Mercury/Venus solar transit |
+| `Constellation` | Constellation identification |
+| `RotationMatrix` | Coordinate system transformations |
+| `GravitySimulation` | N-body gravity simulation |
+| `LagrangePoint` | L1-L5 point calculations |
+
+## Documentation
+
+Comprehensive DocC documentation is available. Build it locally:
+
+```bash
+swift package generate-documentation --target AstronomyKit
+```
+
+Or in Xcode: **Product → Build Documentation**
 
 ## Requirements
 

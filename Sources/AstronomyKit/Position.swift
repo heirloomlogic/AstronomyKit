@@ -26,7 +26,7 @@ extension CelestialBody {
         let result = Astronomy_GeoVector(raw, time.raw, aberration.raw)
         return try Vector3D(result)
     }
-    
+
     /// Calculates the heliocentric position of this body.
     ///
     /// Returns the position relative to the Sun's center at the specified time.
@@ -38,7 +38,7 @@ extension CelestialBody {
         let result = Astronomy_HelioVector(raw, time.raw)
         return try Vector3D(result)
     }
-    
+
     /// Calculates the distance from the Sun to this body.
     ///
     /// - Parameter time: The time at which to calculate the distance.
@@ -51,7 +51,7 @@ extension CelestialBody {
         }
         return result.value
     }
-    
+
     /// Calculates the equatorial coordinates of this body.
     ///
     /// - Parameters:
@@ -71,7 +71,7 @@ extension CelestialBody {
         let result = Astronomy_Equator(raw, &t, observer.raw, equatorDate.raw, aberration.raw)
         return try Equatorial(result, time: time)
     }
-    
+
     /// Calculates the horizontal coordinates for an observer.
     ///
     /// Returns where the body appears in the local sky (altitude and azimuth).
@@ -92,7 +92,7 @@ extension CelestialBody {
         let result = Astronomy_Horizon(&t, observer.raw, eq.rightAscension, eq.declination, refraction.raw)
         return Horizon(result)
     }
-    
+
     /// Calculates the ecliptic longitude of this body.
     ///
     /// - Parameter time: The time at which to calculate the longitude.
@@ -105,7 +105,7 @@ extension CelestialBody {
         }
         return result.angle
     }
-    
+
     /// Calculates the angular separation from the Sun.
     ///
     /// - Parameter time: The time at which to calculate the angle.
@@ -126,10 +126,10 @@ extension CelestialBody {
 public enum Aberration: Sendable {
     /// No correction for aberration.
     case none
-    
+
     /// Correct for light time and aberration.
     case corrected
-    
+
     internal var raw: astro_aberration_t {
         switch self {
         case .none: return NO_ABERRATION
@@ -144,10 +144,10 @@ public enum Aberration: Sendable {
 public enum EquatorDate: Sendable {
     /// Use J2000 epoch coordinates.
     case j2000
-    
+
     /// Use coordinates of the current date.
     case ofDate
-    
+
     internal var raw: astro_equator_date_t {
         switch self {
         case .j2000: return EQUATOR_J2000

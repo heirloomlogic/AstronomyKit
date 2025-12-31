@@ -20,7 +20,7 @@ struct SeasonsTests {
 
         @Test("Calculate seasons for a year")
         func calculateForYear() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             // All four events should exist
             #expect(seasons.marchEquinox.ut != 0)
@@ -31,7 +31,7 @@ struct SeasonsTests {
 
         @Test("Seasons occur in correct order")
         func correctOrder() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             #expect(seasons.marchEquinox < seasons.juneSolstice)
             #expect(seasons.juneSolstice < seasons.septemberEquinox)
@@ -40,7 +40,7 @@ struct SeasonsTests {
 
         @Test("March equinox is in March")
         func marchEquinoxMonth() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let month = calendar.component(.month, from: seasons.marchEquinox.date)
@@ -50,7 +50,7 @@ struct SeasonsTests {
 
         @Test("June solstice is in June")
         func juneSolsticeMonth() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let month = calendar.component(.month, from: seasons.juneSolstice.date)
@@ -60,7 +60,7 @@ struct SeasonsTests {
 
         @Test("September equinox is in September")
         func septemberEquinoxMonth() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let month = calendar.component(.month, from: seasons.septemberEquinox.date)
@@ -70,7 +70,7 @@ struct SeasonsTests {
 
         @Test("December solstice is in December")
         func decemberSolsticeMonth() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let month = calendar.component(.month, from: seasons.decemberSolstice.date)
@@ -86,7 +86,7 @@ struct SeasonsTests {
 
         @Test("March equinox around expected day")
         func marchEquinoxDay() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let day = calendar.component(.day, from: seasons.marchEquinox.date)
@@ -97,7 +97,7 @@ struct SeasonsTests {
 
         @Test("June solstice around expected day")
         func juneSolsticeDay() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let day = calendar.component(.day, from: seasons.juneSolstice.date)
@@ -108,7 +108,7 @@ struct SeasonsTests {
 
         @Test("September equinox around expected day")
         func septemberEquinoxDay() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let day = calendar.component(.day, from: seasons.septemberEquinox.date)
@@ -119,7 +119,7 @@ struct SeasonsTests {
 
         @Test("December solstice around expected day")
         func decemberSolsticeDay() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let calendar = Calendar(identifier: .gregorian)
             let day = calendar.component(.day, from: seasons.decemberSolstice.date)
@@ -136,7 +136,7 @@ struct SeasonsTests {
 
         @Test("allEvents returns 4 events")
         func fourEvents() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let events = seasons.allEvents
 
             #expect(events.count == 4)
@@ -144,7 +144,7 @@ struct SeasonsTests {
 
         @Test("allEvents in chronological order")
         func chronologicalOrder() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let events = seasons.allEvents
 
             for i in 0..<(events.count - 1) {
@@ -154,7 +154,7 @@ struct SeasonsTests {
 
         @Test("allEvents has correct names")
         func correctNames() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let events = seasons.allEvents
 
             #expect(events[0].name == "March Equinox")
@@ -171,8 +171,8 @@ struct SeasonsTests {
 
         @Test("Different years have different dates")
         func differentYears() throws {
-            let seasons2024 = try Seasons.forYear(2024)
-            let seasons2025 = try Seasons.forYear(2025)
+            let seasons2024 = try Seasons.forYear(2_024)
+            let seasons2025 = try Seasons.forYear(2_025)
 
             #expect(seasons2024.marchEquinox != seasons2025.marchEquinox)
             #expect(seasons2024.juneSolstice != seasons2025.juneSolstice)
@@ -180,8 +180,8 @@ struct SeasonsTests {
 
         @Test("Year-to-year intervals are approximately 365 days")
         func yearlyInterval() throws {
-            let seasons2024 = try Seasons.forYear(2024)
-            let seasons2025 = try Seasons.forYear(2025)
+            let seasons2024 = try Seasons.forYear(2_024)
+            let seasons2025 = try Seasons.forYear(2_025)
 
             let diff = seasons2025.marchEquinox.ut - seasons2024.marchEquinox.ut
 
@@ -189,7 +189,7 @@ struct SeasonsTests {
             #expect(diff > 364 && diff < 367)
         }
 
-        @Test("Historical year", arguments: [1900, 1950, 2000])
+        @Test("Historical year", arguments: [1_900, 1_950, 2_000])
         func historicalYears(year: Int) throws {
             let seasons = try Seasons.forYear(year)
 
@@ -201,12 +201,12 @@ struct SeasonsTests {
 
         @Test("Future year")
         func futureYear() throws {
-            let seasons = try Seasons.forYear(2100)
+            let seasons = try Seasons.forYear(2_100)
 
             let calendar = Calendar(identifier: .gregorian)
             let marchYear = calendar.component(.year, from: seasons.marchEquinox.date)
 
-            #expect(marchYear == 2100)
+            #expect(marchYear == 2_100)
         }
     }
 
@@ -217,23 +217,23 @@ struct SeasonsTests {
 
         @Test("Equatable - equal seasons")
         func equatable() throws {
-            let s1 = try Seasons.forYear(2025)
-            let s2 = try Seasons.forYear(2025)
+            let s1 = try Seasons.forYear(2_025)
+            let s2 = try Seasons.forYear(2_025)
 
             #expect(s1 == s2)
         }
 
         @Test("Equatable - different seasons")
         func equatableDifferent() throws {
-            let s1 = try Seasons.forYear(2024)
-            let s2 = try Seasons.forYear(2025)
+            let s1 = try Seasons.forYear(2_024)
+            let s2 = try Seasons.forYear(2_025)
 
             #expect(s1 != s2)
         }
 
         @Test("CustomStringConvertible contains all events")
         func description() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let desc = seasons.description
 
             #expect(desc.contains("March Equinox"))
@@ -244,7 +244,7 @@ struct SeasonsTests {
 
         @Test("CustomStringConvertible contains emoji")
         func descriptionEmoji() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let desc = seasons.description
 
             #expect(desc.contains("🌸"))
@@ -261,7 +261,7 @@ struct SeasonsTests {
 
         @Test("Encode and decode round-trip")
         func roundTrip() throws {
-            let original = try Seasons.forYear(2025)
+            let original = try Seasons.forYear(2_025)
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(original)
@@ -274,7 +274,7 @@ struct SeasonsTests {
 
         @Test("Encodes with expected keys")
         func encodesWithKeys() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(seasons)

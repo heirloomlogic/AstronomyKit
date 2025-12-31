@@ -14,7 +14,7 @@ struct RotationAxisTests {
 
     @Test("Earth rotation axis returns valid data")
     func earthRotationAxis() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let axis = try CelestialBody.earth.rotationAxis(at: time)
 
         // Earth's north pole RA ~0h (near Polaris direction)
@@ -25,7 +25,7 @@ struct RotationAxisTests {
 
     @Test("Mars rotation axis")
     func marsRotationAxis() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let axis = try CelestialBody.mars.rotationAxis(at: time)
 
         #expect(axis.rightAscension >= 0 && axis.rightAscension <= 24)
@@ -36,7 +36,7 @@ struct RotationAxisTests {
 
     @Test("Jupiter rotation axis")
     func jupiterRotationAxis() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let axis = try CelestialBody.jupiter.rotationAxis(at: time)
 
         #expect(axis.rightAscension >= 0 && axis.rightAscension <= 24)
@@ -45,8 +45,8 @@ struct RotationAxisTests {
 
     @Test("Spin changes rapidly for fast rotators")
     func spinChanges() throws {
-        let time1 = AstroTime(year: 2025, month: 1, day: 1, hour: 0)
-        let time2 = AstroTime(year: 2025, month: 1, day: 1, hour: 6)
+        let time1 = AstroTime(year: 2_025, month: 1, day: 1, hour: 0)
+        let time2 = AstroTime(year: 2_025, month: 1, day: 1, hour: 6)
 
         let axis1 = try CelestialBody.jupiter.rotationAxis(at: time1)
         let axis2 = try CelestialBody.jupiter.rotationAxis(at: time2)
@@ -57,7 +57,7 @@ struct RotationAxisTests {
 
     @Test("North vector is a unit vector")
     func northIsUnitVector() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let axis = try CelestialBody.mars.rotationAxis(at: time)
 
         // Unit vector should have magnitude ~1
@@ -66,7 +66,7 @@ struct RotationAxisTests {
 
     @Test("RotationAxis is Equatable")
     func equatable() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let axis1 = try CelestialBody.mars.rotationAxis(at: time)
         let axis2 = try CelestialBody.mars.rotationAxis(at: time)
 
@@ -75,7 +75,7 @@ struct RotationAxisTests {
 
     @Test("CustomStringConvertible")
     func description() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let axis = try CelestialBody.mars.rotationAxis(at: time)
 
         #expect(axis.description.contains("Pole"))

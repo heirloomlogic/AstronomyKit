@@ -50,7 +50,7 @@ struct LagrangePointTests {
 
         @Test("Calculate Sun-Earth L1")
         func sunEarthL1() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let l1 = try LagrangePoint.calculate(
                 point: .l1,
@@ -67,7 +67,7 @@ struct LagrangePointTests {
 
         @Test("Calculate Sun-Earth L2 (JWST location)")
         func sunEarthL2() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let l2 = try LagrangePoint.calculate(
                 point: .l2,
@@ -84,7 +84,7 @@ struct LagrangePointTests {
 
         @Test("StateVector has position and velocity")
         func stateVectorHasComponents() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let l1 = try LagrangePoint.calculate(
                 point: .l1,
@@ -105,7 +105,7 @@ struct LagrangePointTests {
 
         @Test("Calculate Earth-Moon L1")
         func earthMoonL1() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let l1 = try LagrangePoint.calculate(
                 point: .l1,
@@ -123,7 +123,7 @@ struct LagrangePointTests {
             "L4 and L5 are at 60-degree positions",
             arguments: [LagrangePointID.l4, LagrangePointID.l5])
         func triangularPoints(point: LagrangePointID) throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let lPoint = try LagrangePoint.calculate(
                 point: point,
@@ -145,7 +145,7 @@ struct LagrangePointTests {
 
         @Test("StateVector is Equatable")
         func equatable() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let sv1 = try LagrangePoint.calculate(
                 point: .l1,
@@ -165,7 +165,7 @@ struct LagrangePointTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let sv = try LagrangePoint.calculate(
                 point: .l1,

@@ -77,6 +77,6 @@ struct UserStarTests {
         // The C library returns empty strings for user stars until defined
         // Just verify name property is accessible
         let name = CelestialBody.star1.name
-        #expect(name != nil)  // Just check it doesn't crash
+        #expect(name.isEmpty)  // Just check it doesn't crash
     }
 }

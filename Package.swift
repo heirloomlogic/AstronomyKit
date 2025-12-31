@@ -14,7 +14,11 @@ let package = Package(
         .library(
             name: "AstronomyKit",
             targets: ["AstronomyKit"]
-        )
+        ),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.4.5"),
+        .package(url: "https://github.com/simplydanny/swiftlintplugins", from: "0.62.0"),
     ],
     targets: [
         .target(
@@ -29,12 +33,16 @@ let package = Package(
         .target(
             name: "AstronomyKit",
             dependencies: ["CLibAstronomy"],
-            path: "Sources/AstronomyKit"
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]
         ),
         .testTarget(
             name: "AstronomyKitTests",
             dependencies: ["AstronomyKit"],
-            path: "Tests/AstronomyKitTests"
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]
         ),
     ]
 )

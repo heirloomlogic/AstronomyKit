@@ -266,8 +266,7 @@ public enum Eclipse {
     /// - Returns: An array of lunar eclipses.
     /// - Throws: `AstronomyError` if the search fails.
     public static func lunarEclipses(from startTime: AstroTime, to endTime: AstroTime) throws
-        -> [LunarEclipse]
-    {
+        -> [LunarEclipse] {
         var eclipses: [LunarEclipse] = []
         var current = try searchLunar(after: startTime)
 
@@ -295,8 +294,7 @@ public enum Eclipse {
     /// - Returns: The next global solar eclipse.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextGlobalSolar(after eclipse: GlobalSolarEclipse) throws
-        -> GlobalSolarEclipse
-    {
+        -> GlobalSolarEclipse {
         let result = Astronomy_NextGlobalSolarEclipse(eclipse.peak.raw)
         return try GlobalSolarEclipse(result)
     }
@@ -309,8 +307,7 @@ public enum Eclipse {
     /// - Returns: An array of global solar eclipses.
     /// - Throws: `AstronomyError` if the search fails.
     public static func globalSolarEclipses(from startTime: AstroTime, to endTime: AstroTime) throws
-        -> [GlobalSolarEclipse]
-    {
+        -> [GlobalSolarEclipse] {
         var eclipses: [GlobalSolarEclipse] = []
         var current = try searchGlobalSolar(after: startTime)
 

@@ -11,52 +11,52 @@ import CLibAstronomy
 public enum AstronomyError: Error, Equatable, Hashable, Sendable {
     /// A placeholder indicating data is not yet initialized.
     case notInitialized
-    
+
     /// The celestial body was not valid for this operation.
     case invalidBody
-    
+
     /// A numeric solver failed to converge.
     case noConvergence
-    
+
     /// The provided date/time is outside the allowed range.
     case badTime
-    
+
     /// Vector magnitude is too small to normalize.
     case badVector
-    
+
     /// Search could not find an ascending root crossing in the time interval.
     case searchFailure
-    
+
     /// Earth cannot be treated as a celestial body from Earth.
     case earthNotAllowed
-    
+
     /// No lunar quarter occurs in the specified time range.
     case noMoonQuarter
-    
+
     /// Internal error: wrong moon quarter found.
     case wrongMoonQuarter
-    
+
     /// Internal error indicating a bug.
     case internalError
-    
+
     /// A parameter value was invalid.
     case invalidParameter
-    
+
     /// Special-case logic for Neptune/Pluto apsis failed.
     case failApsis
-    
+
     /// A provided buffer is too small.
     case bufferTooSmall
-    
+
     /// Memory allocation failed.
     case outOfMemory
-    
+
     /// Initial state vectors did not have matching times.
     case inconsistentTimes
-    
+
     /// An unknown error occurred.
     case unknown(Int32)
-    
+
     /// Creates an error from a C status code.
     internal init?(status: astro_status_t) {
         switch status {

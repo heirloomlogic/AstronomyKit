@@ -20,7 +20,7 @@ struct PositionTests {
 
         @Test("Get geocentric position for Mars")
         func marsGeoPosition() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try CelestialBody.mars.geoPosition(at: time)
 
             #expect(position.magnitude > 0)
@@ -28,7 +28,7 @@ struct PositionTests {
 
         @Test("Moon is closer than planets")
         func moonCloser() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let moonPos = try CelestialBody.moon.geoPosition(at: time)
             let marsPos = try CelestialBody.mars.geoPosition(at: time)
@@ -38,7 +38,7 @@ struct PositionTests {
 
         @Test("Geocentric position has time")
         func positionHasTime() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try CelestialBody.jupiter.geoPosition(at: time)
 
             #expect(position.time == time)
@@ -46,7 +46,7 @@ struct PositionTests {
 
         @Test("Geocentric position with aberration options")
         func aberrationOptions() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let corrected = try CelestialBody.mars.geoPosition(at: time, aberration: .corrected)
             let uncorrected = try CelestialBody.mars.geoPosition(at: time, aberration: .none)
@@ -59,7 +59,7 @@ struct PositionTests {
 
         @Test("All planets can get geocentric position", arguments: CelestialBody.planets)
         func allPlanetsGeoPosition(planet: CelestialBody) throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try planet.geoPosition(at: time)
 
             #expect(position.magnitude > 0)
@@ -73,7 +73,7 @@ struct PositionTests {
 
         @Test("Earth is about 1 AU from Sun")
         func earthDistance() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try CelestialBody.earth.helioPosition(at: time)
 
             #expect(position.magnitude > 0.98)
@@ -83,7 +83,7 @@ struct PositionTests {
         @Test(
             "All planets have heliocentric positions", arguments: CelestialBody.planets + [.earth])
         func allPlanetsHelioPosition(planet: CelestialBody) throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try planet.helioPosition(at: time)
 
             #expect(position.magnitude > 0)
@@ -91,7 +91,7 @@ struct PositionTests {
 
         @Test("Outer planets are farther than inner planets")
         func outerFartherThanInner() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let marsPos = try CelestialBody.mars.helioPosition(at: time)
             let jupiterPos = try CelestialBody.jupiter.helioPosition(at: time)
@@ -101,7 +101,7 @@ struct PositionTests {
 
         @Test("Mercury is closest to Sun")
         func mercuryClosest() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let mercuryPos = try CelestialBody.mercury.helioPosition(at: time)
 
@@ -118,7 +118,7 @@ struct PositionTests {
 
         @Test("Earth distance is about 1 AU")
         func earthDistance() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let distance = try CelestialBody.earth.distanceFromSun(at: time)
 
             #expect(distance > 0.98)
@@ -127,7 +127,7 @@ struct PositionTests {
 
         @Test("Planet distances are in expected ranges")
         func planetDistanceRanges() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let mercury = try CelestialBody.mercury.distanceFromSun(at: time)
             #expect(mercury > 0.3 && mercury < 0.5)
@@ -147,7 +147,7 @@ struct PositionTests {
 
         @Test("Equatorial coordinates have valid RA")
         func validRA() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             #expect(eq.rightAscension >= 0)
@@ -156,7 +156,7 @@ struct PositionTests {
 
         @Test("Equatorial coordinates have valid Dec")
         func validDec() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             #expect(eq.declination >= -90)
@@ -165,7 +165,7 @@ struct PositionTests {
 
         @Test("Equatorial with J2000 vs of-date")
         func equatorDateOptions() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let j2000 = try CelestialBody.mars.equatorial(at: time, equatorDate: .j2000)
             let ofDate = try CelestialBody.mars.equatorial(at: time, equatorDate: .ofDate)
@@ -178,7 +178,7 @@ struct PositionTests {
 
         @Test("Equatorial from observer location")
         func fromObserver() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let eq = try CelestialBody.moon.equatorial(at: time, from: observer)
@@ -195,7 +195,7 @@ struct PositionTests {
 
         @Test("Sun above horizon at noon in summer")
         func sunAtNoon() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 17)  // 12 noon EST = 17 UTC
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 17)  // 12 noon EST = 17 UTC
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)  // NYC
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -206,7 +206,7 @@ struct PositionTests {
 
         @Test("Sun below horizon at midnight")
         func sunAtMidnight() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 4)  // Midnight EST = 4 UTC
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 4)  // Midnight EST = 4 UTC
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)  // NYC
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -223,7 +223,7 @@ struct PositionTests {
 
         @Test("Ecliptic longitude in valid range")
         func validRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let longitude = try CelestialBody.mars.eclipticLongitude(at: time)
 
             #expect(longitude >= 0)
@@ -232,7 +232,7 @@ struct PositionTests {
 
         @Test("All planets have ecliptic longitude", arguments: CelestialBody.planets)
         func allPlanetsLongitude(planet: CelestialBody) throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let longitude = try planet.eclipticLongitude(at: time)
 
             #expect(longitude >= 0)
@@ -247,7 +247,7 @@ struct PositionTests {
 
         @Test("Angle from Sun in valid range")
         func validRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let angle = try CelestialBody.mars.angleFromSun(at: time)
 
             #expect(angle >= 0)
@@ -259,9 +259,9 @@ struct PositionTests {
             // At new moon, angle should be near 0
             // At full moon, angle should be near 180
             let newMoon = try Moon.searchPhase(
-                .new, after: AstroTime(year: 2025, month: 1, day: 1))
+                .new, after: AstroTime(year: 2_025, month: 1, day: 1))
             let fullMoon = try Moon.searchPhase(
-                .full, after: AstroTime(year: 2025, month: 1, day: 1))
+                .full, after: AstroTime(year: 2_025, month: 1, day: 1))
 
             let newMoonAngle = try CelestialBody.moon.angleFromSun(at: newMoon)
             let fullMoonAngle = try CelestialBody.moon.angleFromSun(at: fullMoon)
@@ -278,7 +278,7 @@ struct PositionTests {
 
         @Test("Get Sun position")
         func getSunPosition() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try Sun.position(at: time)
 
             #expect(position.longitude >= 0)
@@ -287,7 +287,7 @@ struct PositionTests {
 
         @Test("Sun latitude is near zero")
         func sunLatitudeNearZero() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try Sun.position(at: time)
 
             // Sun's ecliptic latitude should be essentially zero
@@ -296,7 +296,7 @@ struct PositionTests {
 
         @Test("Sun at summer solstice is near 90°")
         func summerSolstice() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let position = try Sun.position(at: seasons.juneSolstice)
 
             // At June solstice, Sun is at ~90° longitude (Cancer)
@@ -306,7 +306,7 @@ struct PositionTests {
 
         @Test("Sun at winter solstice is near 270°")
         func winterSolstice() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let position = try Sun.position(at: seasons.decemberSolstice)
 
             // At December solstice, Sun is at ~270° longitude (Capricorn)
@@ -316,7 +316,7 @@ struct PositionTests {
 
         @Test("Sun at March equinox is near 0°")
         func marchEquinox() throws {
-            let seasons = try Seasons.forYear(2025)
+            let seasons = try Seasons.forYear(2_025)
             let position = try Sun.position(at: seasons.marchEquinox)
 
             // At March equinox, Sun is at ~0° longitude (Aries)

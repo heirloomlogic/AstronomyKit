@@ -107,6 +107,53 @@ struct CoordinatesTests {
         }
     }
 
+    // MARK: - Spherical Tests
+
+    @Suite("Spherical")
+    struct SphericalTests {
+
+        @Test("Create spherical with components")
+        func createSpherical() {
+            let spherical = Spherical(latitude: 45.0, longitude: 120.0, distance: 1.5)
+
+            #expect(spherical.latitude == 45.0)
+            #expect(spherical.longitude == 120.0)
+            #expect(spherical.distance == 1.5)
+        }
+
+        @Test("Spherical Equatable")
+        func sphericalEquatable() {
+            let s1 = Spherical(latitude: 30.0, longitude: 60.0, distance: 2.0)
+            let s2 = Spherical(latitude: 30.0, longitude: 60.0, distance: 2.0)
+            let s3 = Spherical(latitude: 45.0, longitude: 60.0, distance: 2.0)
+
+            #expect(s1 == s2)
+            #expect(s1 != s3)
+        }
+
+        @Test("Spherical Hashable in Set")
+        func sphericalHashable() {
+            let s1 = Spherical(latitude: 30.0, longitude: 60.0, distance: 2.0)
+            let s2 = Spherical(latitude: 45.0, longitude: 90.0, distance: 3.0)
+            let s3 = Spherical(latitude: 30.0, longitude: 60.0, distance: 2.0)  // Duplicate
+
+            let set: Set<Spherical> = [s1, s2, s3]
+
+            #expect(set.count == 2)
+        }
+
+        @Test("Spherical CustomStringConvertible")
+        func sphericalDescription() {
+            let spherical = Spherical(latitude: 45.5, longitude: 120.25, distance: 1.5)
+            let desc = spherical.description
+
+            #expect(desc.contains("lat"))
+            #expect(desc.contains("lon"))
+            #expect(desc.contains("dist"))
+            #expect(desc.contains("AU"))
+        }
+    }
+
     // MARK: - Horizon Tests
 
     @Suite("Horizon")
@@ -115,7 +162,7 @@ struct CoordinatesTests {
         @Test("Above horizon detection")
         func aboveHorizon() throws {
             // Get Sun position at noon in summer - should be well above horizon
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -128,7 +175,7 @@ struct CoordinatesTests {
         func belowHorizon() throws {
             // Get Sun position at midnight local time - should be below horizon
             // NYC is UTC-5 or UTC-4 (DST), so hour 5 UTC is midnight EST
-            let time = AstroTime(year: 2025, month: 1, day: 21, hour: 5)
+            let time = AstroTime(year: 2_025, month: 1, day: 21, hour: 5)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -139,7 +186,7 @@ struct CoordinatesTests {
 
         @Test("Azimuth in valid range")
         func azimuthRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -150,7 +197,7 @@ struct CoordinatesTests {
 
         @Test("Altitude in valid range")
         func altitudeRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -187,7 +234,7 @@ struct CoordinatesTests {
 
         @Test("CustomStringConvertible includes key info")
         func descriptionContent() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizon = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -199,7 +246,7 @@ struct CoordinatesTests {
 
         @Test("Equatable")
         func equatable() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let h1 = try CelestialBody.sun.horizon(at: time, from: observer)
@@ -216,7 +263,7 @@ struct CoordinatesTests {
 
         @Test("Right ascension in valid range")
         func raRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             #expect(eq.rightAscension >= 0)
@@ -225,7 +272,7 @@ struct CoordinatesTests {
 
         @Test("Declination in valid range")
         func decRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             #expect(eq.declination >= -90)
@@ -234,7 +281,7 @@ struct CoordinatesTests {
 
         @Test("Distance is positive")
         func distancePositive() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             #expect(eq.distance > 0)
@@ -242,7 +289,7 @@ struct CoordinatesTests {
 
         @Test("Formatted right ascension")
         func formattedRA() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             let formatted = eq.rightAscensionFormatted
@@ -254,7 +301,7 @@ struct CoordinatesTests {
 
         @Test("Formatted declination")
         func formattedDec() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             let formatted = eq.declinationFormatted
@@ -266,7 +313,7 @@ struct CoordinatesTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let eq = try CelestialBody.mars.equatorial(at: time)
 
             let desc = eq.description
@@ -283,7 +330,7 @@ struct CoordinatesTests {
 
         @Test("Longitude in valid range")
         func longitudeRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let ecliptic = try Sun.position(at: time)
 
             #expect(ecliptic.longitude >= 0)
@@ -292,7 +339,7 @@ struct CoordinatesTests {
 
         @Test("Latitude in valid range")
         func latitudeRange() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let ecliptic = try Sun.position(at: time)
 
             #expect(ecliptic.latitude >= -90)
@@ -301,7 +348,7 @@ struct CoordinatesTests {
 
         @Test("Sun latitude is near zero")
         func sunLatitudeNearZero() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let ecliptic = try Sun.position(at: time)
 
             // Sun's ecliptic latitude should be essentially zero
@@ -310,7 +357,7 @@ struct CoordinatesTests {
 
         @Test("Distance is positive")
         func distancePositive() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let ecliptic = try Sun.position(at: time)
 
             #expect(ecliptic.distance > 0)
@@ -318,7 +365,7 @@ struct CoordinatesTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let ecliptic = try Sun.position(at: time)
 
             let desc = ecliptic.description
@@ -342,7 +389,7 @@ struct CoordinatesTests {
 
         @Test("Different refraction produces different results")
         func refractionAffectsHorizon() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 6)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 6)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizonNoRefraction = try CelestialBody.sun.horizon(

@@ -92,7 +92,7 @@ struct RotationTests {
 
         @Test("EQJ to EQD and back")
         func eqjToEqdAndBack() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let toEqd = try RotationMatrix.equatorialJ2000ToEquatorialOfDate(at: time)
             let toEqj = try RotationMatrix.equatorialOfDateToEquatorialJ2000(at: time)
@@ -104,13 +104,51 @@ struct RotationTests {
 
         @Test("EQJ to Horizon and back")
         func eqjToHorAndBack() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let toHor = try RotationMatrix.equatorialJ2000ToHorizon(at: time, from: observer)
             let toEqj = try RotationMatrix.horizonToEquatorialJ2000(at: time, from: observer)
 
             let combined = try toHor.combined(with: toEqj)
+
+            #expect(abs(combined[0, 0] - 1) < 0.001)
+        }
+
+        @Test("ECL to Horizon and back")
+        func eclToHorAndBack() throws {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+            let observer = Observer(latitude: 40.7128, longitude: -74.0060)
+
+            let toHor = try RotationMatrix.eclipticToHorizon(at: time, from: observer)
+            let toEcl = try RotationMatrix.horizonToEcliptic(at: time, from: observer)
+
+            let combined = try toHor.combined(with: toEcl)
+
+            #expect(abs(combined[0, 0] - 1) < 0.001)
+        }
+
+        @Test("EQD to Horizon and back")
+        func eqdToHorAndBack() throws {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+            let observer = Observer(latitude: 40.7128, longitude: -74.0060)
+
+            let toHor = try RotationMatrix.equatorialOfDateToHorizon(at: time, from: observer)
+            let toEqd = try RotationMatrix.horizonToEquatorialOfDate(at: time, from: observer)
+
+            let combined = try toHor.combined(with: toEqd)
+
+            #expect(abs(combined[0, 0] - 1) < 0.001)
+        }
+
+        @Test("EQD to ECL and back")
+        func eqdToEclAndBack() throws {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+
+            let toEcl = try RotationMatrix.equatorialOfDateToEcliptic(at: time)
+            let toEqd = try RotationMatrix.eclipticToEquatorialOfDate(at: time)
+
+            let combined = try toEcl.combined(with: toEqd)
 
             #expect(abs(combined[0, 0] - 1) < 0.001)
         }
@@ -123,7 +161,7 @@ struct RotationTests {
 
         @Test("Rotate vector with identity")
         func rotateWithIdentity() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let vec = Vector3D(x: 1, y: 2, z: 3, time: time)
 
             let rotated = try vec.rotated(by: .identity)
@@ -135,7 +173,7 @@ struct RotationTests {
 
         @Test("Rotate preserves magnitude")
         func rotatePreservesMagnitude() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
             let vec = Vector3D(x: 1, y: 2, z: 3, time: time)
 
             let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()

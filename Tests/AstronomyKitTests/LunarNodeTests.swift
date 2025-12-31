@@ -14,7 +14,7 @@ struct LunarNodeTests {
 
     @Test("Search lunar node finds ascending or descending")
     func searchLunarNode() throws {
-        let startTime = AstroTime(year: 2025, month: 1, day: 1)
+        let startTime = AstroTime(year: 2_025, month: 1, day: 1)
         let node = try Moon.searchNode(after: startTime)
 
         #expect(node.time > startTime)
@@ -23,7 +23,7 @@ struct LunarNodeTests {
 
     @Test("Next node alternates")
     func nextNodeAlternates() throws {
-        let startTime = AstroTime(year: 2025, month: 1, day: 1)
+        let startTime = AstroTime(year: 2_025, month: 1, day: 1)
         let first = try Moon.searchNode(after: startTime)
         let second = try Moon.nextNode(after: first)
 
@@ -45,8 +45,8 @@ struct LunarNodeTests {
 
     @Test("Node crossings in range")
     func nodeCrossingsInRange() throws {
-        let start = AstroTime(year: 2025, month: 1, day: 1)
-        let end = AstroTime(year: 2025, month: 3, day: 1)
+        let start = AstroTime(year: 2_025, month: 1, day: 1)
+        let end = AstroTime(year: 2_025, month: 3, day: 1)
 
         let nodes = try Moon.nodeCrossings(from: start, to: end)
 

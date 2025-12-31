@@ -84,7 +84,7 @@ public final class GravitySimulation: @unchecked Sendable {
     }
 
     deinit {
-        if let handle = handle {
+        if let handle {
             Astronomy_GravSimFree(handle)
         }
     }
@@ -97,7 +97,7 @@ public final class GravitySimulation: @unchecked Sendable {
     /// - Parameter newTime: The target time for the simulation.
     /// - Throws: `AstronomyError` if the update fails.
     public func update(to newTime: AstroTime) throws {
-        guard let handle = handle else {
+        guard let handle else {
             throw AstronomyError.notInitialized
         }
 
@@ -117,7 +117,7 @@ public final class GravitySimulation: @unchecked Sendable {
     /// - Returns: The current position and velocity.
     /// - Throws: `AstronomyError` if the state cannot be retrieved.
     public func state(of body: CelestialBody) throws -> StateVector {
-        guard let handle = handle else {
+        guard let handle else {
             throw AstronomyError.notInitialized
         }
 
@@ -129,7 +129,7 @@ public final class GravitySimulation: @unchecked Sendable {
     ///
     /// - Returns: The time of the simulation.
     public func currentTime() -> AstroTime {
-        guard let handle = handle else {
+        guard let handle else {
             return time
         }
 
@@ -139,7 +139,7 @@ public final class GravitySimulation: @unchecked Sendable {
 
     /// The number of bodies being simulated.
     public var bodyCount: Int {
-        guard let handle = handle else { return 0 }
+        guard let handle else { return 0 }
         return Int(Astronomy_GravSimNumBodies(handle))
     }
 
@@ -148,7 +148,7 @@ public final class GravitySimulation: @unchecked Sendable {
     /// After calling this, time updates will move backward instead of forward
     /// (or vice versa).
     public func swap() {
-        guard let handle = handle else { return }
+        guard let handle else { return }
         Astronomy_GravSimSwap(handle)
     }
 }

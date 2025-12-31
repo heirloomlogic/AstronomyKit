@@ -127,8 +127,7 @@ extension RotationMatrix {
     ///
     /// - Parameter time: The time for the of-date frame.
     public static func equatorialJ2000ToEquatorialOfDate(at time: AstroTime) throws
-        -> RotationMatrix
-    {
+        -> RotationMatrix {
         var t = time.raw
         let result = Astronomy_Rotation_EQJ_EQD(&t)
         return try RotationMatrix(result)
@@ -138,8 +137,7 @@ extension RotationMatrix {
     ///
     /// - Parameter time: The time for the of-date frame.
     public static func equatorialOfDateToEquatorialJ2000(at time: AstroTime) throws
-        -> RotationMatrix
-    {
+        -> RotationMatrix {
         var t = time.raw
         let result = Astronomy_Rotation_EQD_EQJ(&t)
         return try RotationMatrix(result)

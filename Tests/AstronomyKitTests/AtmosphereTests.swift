@@ -17,7 +17,7 @@ struct AtmosphereTests {
         let atm = try Atmosphere.at(elevation: 0)
 
         // Sea level pressure ~1013.25 mbar
-        #expect(atm.pressure > 1010 && atm.pressure < 1020)
+        #expect(atm.pressure > 1_010 && atm.pressure < 1_020)
 
         // Sea level temp ~15°C in ISA
         #expect(atm.temperature > 14 && atm.temperature < 16)
@@ -29,7 +29,7 @@ struct AtmosphereTests {
     @Test("Higher elevation has lower pressure")
     func higherElevationLowerPressure() throws {
         let seaLevel = try Atmosphere.at(elevation: 0)
-        let mountain = try Atmosphere.at(elevation: 3000)
+        let mountain = try Atmosphere.at(elevation: 3_000)
 
         #expect(mountain.pressure < seaLevel.pressure)
         #expect(mountain.density < seaLevel.density)
@@ -37,7 +37,7 @@ struct AtmosphereTests {
 
     @Test("Mount Everest summit")
     func mountEverest() throws {
-        let atm = try Atmosphere.at(elevation: 8848.86)
+        let atm = try Atmosphere.at(elevation: 8_848.86)
 
         // Pressure should be about 1/3 of sea level
         #expect(atm.pressure > 300 && atm.pressure < 350)
@@ -51,7 +51,7 @@ struct AtmosphereTests {
         let observer = Observer(
             latitude: 27.9881,
             longitude: 86.9250,
-            height: 5000  // 5km elevation
+            height: 5_000  // 5km elevation
         )
 
         let atm = try observer.atmosphere
@@ -61,8 +61,8 @@ struct AtmosphereTests {
 
     @Test("Atmosphere is Equatable")
     func equatable() throws {
-        let atm1 = try Atmosphere.at(elevation: 1000)
-        let atm2 = try Atmosphere.at(elevation: 1000)
+        let atm1 = try Atmosphere.at(elevation: 1_000)
+        let atm2 = try Atmosphere.at(elevation: 1_000)
 
         #expect(atm1 == atm2)
     }

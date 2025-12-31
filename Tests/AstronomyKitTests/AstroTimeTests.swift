@@ -20,26 +20,26 @@ struct AstroTimeTests {
 
         @Test("Create from year/month/day components")
         func createFromComponents() {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             let date = time.date
             let calendar = Calendar(identifier: .gregorian)
             let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: date)
 
-            #expect(components.year == 2025)
+            #expect(components.year == 2_025)
             #expect(components.month == 6)
             #expect(components.day == 21)
         }
 
         @Test("Create from full components including time")
         func createFromFullComponents() {
-            let time = AstroTime(year: 2025, month: 12, day: 25, hour: 14, minute: 30, second: 45.5)
+            let time = AstroTime(year: 2_025, month: 12, day: 25, hour: 14, minute: 30, second: 45.5)
 
             let date = time.date
             let calendar = Calendar(identifier: .gregorian)
             let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: date)
 
-            #expect(components.year == 2025)
+            #expect(components.year == 2_025)
             #expect(components.month == 12)
             #expect(components.day == 25)
             #expect(components.hour == 14)
@@ -68,7 +68,7 @@ struct AstroTimeTests {
             let calendar = Calendar(identifier: .gregorian)
             let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: date)
 
-            #expect(components.year == 2000)
+            #expect(components.year == 2_000)
             #expect(components.month == 1)
             #expect(components.day == 1)
             #expect(components.hour == 12)
@@ -76,7 +76,7 @@ struct AstroTimeTests {
 
         @Test("J2000 epoch verification")
         func j2000Epoch() {
-            let time = AstroTime(year: 2000, month: 1, day: 1, hour: 12)
+            let time = AstroTime(year: 2_000, month: 1, day: 1, hour: 12)
 
             #expect(abs(time.ut) < 0.0001, "J2000 epoch should have ut ≈ 0")
         }
@@ -102,7 +102,7 @@ struct AstroTimeTests {
 
         @Test("Add positive days")
         func addPositiveDays() {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let later = time.addingDays(10)
 
             #expect(later.ut - time.ut == 10, "Difference should be exactly 10 days")
@@ -111,7 +111,7 @@ struct AstroTimeTests {
 
         @Test("Add negative days")
         func addNegativeDays() {
-            let time = AstroTime(year: 2025, month: 1, day: 15)
+            let time = AstroTime(year: 2_025, month: 1, day: 15)
             let earlier = time.addingDays(-5)
 
             #expect(time.ut - earlier.ut == 5, "Difference should be exactly 5 days")
@@ -120,7 +120,7 @@ struct AstroTimeTests {
 
         @Test("Add fractional days")
         func addFractionalDays() {
-            let time = AstroTime(year: 2025, month: 1, day: 1, hour: 0)
+            let time = AstroTime(year: 2_025, month: 1, day: 1, hour: 0)
             let later = time.addingDays(0.5)  // Add 12 hours
 
             let date = later.date
@@ -133,7 +133,7 @@ struct AstroTimeTests {
 
         @Test("Add positive hours")
         func addPositiveHours() {
-            let time = AstroTime(year: 2025, month: 1, day: 1, hour: 0)
+            let time = AstroTime(year: 2_025, month: 1, day: 1, hour: 0)
             let later = time.addingHours(6)
 
             let expectedDayDiff = 6.0 / 24.0
@@ -142,7 +142,7 @@ struct AstroTimeTests {
 
         @Test("Add negative hours")
         func addNegativeHours() {
-            let time = AstroTime(year: 2025, month: 1, day: 1, hour: 12)
+            let time = AstroTime(year: 2_025, month: 1, day: 1, hour: 12)
             let earlier = time.addingHours(-3)
 
             let date = earlier.date
@@ -155,7 +155,7 @@ struct AstroTimeTests {
 
         @Test("Chain multiple operations")
         func chainOperations() {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let result = time.addingDays(1).addingHours(12).addingDays(-0.5)
 
             // 1 day + 12 hours - 12 hours = 1 day
@@ -170,19 +170,19 @@ struct AstroTimeTests {
 
         @Test("UT and TT properties exist")
         func utAndTT() {
-            let time = AstroTime(year: 2025, month: 6, day: 21)
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             // TT should be slightly ahead of UT (by ~69 seconds in modern era)
             #expect(time.tt > time.ut)
 
             // The difference should be reasonable (less than 2 minutes)
-            let diffSeconds = (time.tt - time.ut) * 24 * 3600
+            let diffSeconds = (time.tt - time.ut) * 24 * 3_600
             #expect(diffSeconds > 0 && diffSeconds < 120)
         }
 
         @Test("Sidereal time is in valid range")
         func siderealTimeRange() {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let sidereal = time.siderealTime
 
             #expect(sidereal >= 0)
@@ -191,12 +191,12 @@ struct AstroTimeTests {
 
         @Test("Date property round-trips correctly")
         func dateRoundTrip() {
-            let original = AstroTime(year: 2025, month: 7, day: 4, hour: 18, minute: 30, second: 0)
+            let original = AstroTime(year: 2_025, month: 7, day: 4, hour: 18, minute: 30, second: 0)
             let date = original.date
             let recreated = AstroTime(date)
 
             // Should be within 1 second
-            #expect(abs(original.ut - recreated.ut) < 1.0 / 86400.0)
+            #expect(abs(original.ut - recreated.ut) < 1.0 / 86_400.0)
         }
     }
 
@@ -207,24 +207,24 @@ struct AstroTimeTests {
 
         @Test("Equatable - equal times")
         func equatableEqual() {
-            let time1 = AstroTime(year: 2025, month: 1, day: 1)
-            let time2 = AstroTime(year: 2025, month: 1, day: 1)
+            let time1 = AstroTime(year: 2_025, month: 1, day: 1)
+            let time2 = AstroTime(year: 2_025, month: 1, day: 1)
 
             #expect(time1 == time2)
         }
 
         @Test("Equatable - unequal times")
         func equatableUnequal() {
-            let time1 = AstroTime(year: 2025, month: 1, day: 1)
-            let time2 = AstroTime(year: 2025, month: 1, day: 2)
+            let time1 = AstroTime(year: 2_025, month: 1, day: 1)
+            let time2 = AstroTime(year: 2_025, month: 1, day: 2)
 
             #expect(time1 != time2)
         }
 
         @Test("Comparable - less than")
         func comparableLessThan() {
-            let earlier = AstroTime(year: 2020, month: 1, day: 1)
-            let later = AstroTime(year: 2025, month: 1, day: 1)
+            let earlier = AstroTime(year: 2_020, month: 1, day: 1)
+            let later = AstroTime(year: 2_025, month: 1, day: 1)
 
             #expect(earlier < later)
             #expect(later > earlier)
@@ -234,17 +234,17 @@ struct AstroTimeTests {
 
         @Test("Hashable - equal times have equal hashes")
         func hashableEqual() {
-            let time1 = AstroTime(year: 2025, month: 6, day: 21)
-            let time2 = AstroTime(year: 2025, month: 6, day: 21)
+            let time1 = AstroTime(year: 2_025, month: 6, day: 21)
+            let time2 = AstroTime(year: 2_025, month: 6, day: 21)
 
             #expect(time1.hashValue == time2.hashValue)
         }
 
         @Test("Hashable - can be used in Set")
         func hashableInSet() {
-            let time1 = AstroTime(year: 2025, month: 1, day: 1)
-            let time2 = AstroTime(year: 2025, month: 1, day: 2)
-            let time3 = AstroTime(year: 2025, month: 1, day: 1)  // Duplicate
+            let time1 = AstroTime(year: 2_025, month: 1, day: 1)
+            let time2 = AstroTime(year: 2_025, month: 1, day: 2)
+            let time3 = AstroTime(year: 2_025, month: 1, day: 1)  // Duplicate
 
             let set: Set<AstroTime> = [time1, time2, time3]
 
@@ -253,7 +253,7 @@ struct AstroTimeTests {
 
         @Test("CustomStringConvertible - ISO8601 format")
         func description() {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12, minute: 0, second: 0)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12, minute: 0, second: 0)
             let description = time.description
 
             #expect(description.contains("2025"))
@@ -269,7 +269,7 @@ struct AstroTimeTests {
 
         @Test("Encode and decode round-trip")
         func encodeDecodeRoundTrip() throws {
-            let original = AstroTime(year: 2025, month: 6, day: 21, hour: 14, minute: 30)
+            let original = AstroTime(year: 2_025, month: 6, day: 21, hour: 14, minute: 30)
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(original)
@@ -283,7 +283,7 @@ struct AstroTimeTests {
         @Test("Decodes as single value (UT)")
         func decodesAsSingleValue() throws {
             // AstroTime encodes as a single Double (the UT value)
-            let original = AstroTime(year: 2025, month: 1, day: 1, hour: 12)
+            let original = AstroTime(year: 2_025, month: 1, day: 1, hour: 12)
 
             let encoder = JSONEncoder()
             let data = try encoder.encode(original)
@@ -314,13 +314,13 @@ struct AstroTimeTests {
 
         @Test("Leap year date")
         func leapYearDate() {
-            let time = AstroTime(year: 2024, month: 2, day: 29)  // Leap year
+            let time = AstroTime(year: 2_024, month: 2, day: 29)  // Leap year
 
             let date = time.date
             let calendar = Calendar(identifier: .gregorian)
             let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: date)
 
-            #expect(components.year == 2024)
+            #expect(components.year == 2_024)
             #expect(components.month == 2)
             #expect(components.day == 29)
         }
@@ -328,18 +328,18 @@ struct AstroTimeTests {
         @Test("Year boundaries")
         func yearBoundaries() {
             let endOfYear = AstroTime(
-                year: 2024, month: 12, day: 31, hour: 23, minute: 59, second: 59)
-            let startOfYear = AstroTime(year: 2025, month: 1, day: 1, hour: 0, minute: 0, second: 0)
+                year: 2_024, month: 12, day: 31, hour: 23, minute: 59, second: 59)
+            let startOfYear = AstroTime(year: 2_025, month: 1, day: 1, hour: 0, minute: 0, second: 0)
 
             #expect(startOfYear > endOfYear)
 
             let diff = startOfYear.ut - endOfYear.ut
-            #expect(diff > 0 && diff < 1.0 / 1440.0)  // Less than 1 minute apart
+            #expect(diff > 0 && diff < 1.0 / 1_440.0)  // Less than 1 minute apart
         }
 
         @Test("Far future date")
         func farFutureDate() {
-            let time = AstroTime(year: 3000, month: 1, day: 1)
+            let time = AstroTime(year: 3_000, month: 1, day: 1)
 
             let date = time.date
             var calendar = Calendar(identifier: .gregorian)
@@ -347,12 +347,12 @@ struct AstroTimeTests {
             let year = calendar.component(.year, from: date)
 
             // Allow some variance due to calendar/Foundation limitations
-            #expect(year >= 2999 && year <= 3001)
+            #expect(year >= 2_999 && year <= 3_001)
         }
 
         @Test("Historical date")
         func historicalDate() {
-            let time = AstroTime(year: 1900, month: 1, day: 1)
+            let time = AstroTime(year: 1_900, month: 1, day: 1)
 
             let date = time.date
             var calendar = Calendar(identifier: .gregorian)
@@ -360,14 +360,14 @@ struct AstroTimeTests {
             let year = calendar.component(.year, from: date)
 
             // Allow some variance due to calendar/Foundation limitations
-            #expect(year >= 1899 && year <= 1901)
+            #expect(year >= 1_899 && year <= 1_901)
         }
 
         @Test("Midnight boundary")
         func midnightBoundary() {
             let justBeforeMidnight = AstroTime(
-                year: 2025, month: 1, day: 1, hour: 23, minute: 59, second: 59)
-            let midnight = AstroTime(year: 2025, month: 1, day: 2, hour: 0, minute: 0, second: 0)
+                year: 2_025, month: 1, day: 1, hour: 23, minute: 59, second: 59)
+            let midnight = AstroTime(year: 2_025, month: 1, day: 2, hour: 0, minute: 0, second: 0)
 
             #expect(midnight > justBeforeMidnight)
         }

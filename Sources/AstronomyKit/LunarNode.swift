@@ -121,8 +121,7 @@ extension Moon {
     /// - Returns: An array of node crossings.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nodeCrossings(from startTime: AstroTime, to endTime: AstroTime) throws
-        -> [LunarNode]
-    {
+        -> [LunarNode] {
         var nodes: [LunarNode] = []
         var current = try searchNode(after: startTime)
 

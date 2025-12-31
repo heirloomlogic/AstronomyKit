@@ -69,7 +69,7 @@ struct ApsisTests {
 
         @Test("Search finds next lunar apsis")
         func searchFindsApsis() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try Moon.searchApsis(after: startTime)
 
             #expect(apsis.time > startTime)
@@ -77,7 +77,7 @@ struct ApsisTests {
 
         @Test("Lunar apsis has valid kind")
         func hasValidKind() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try Moon.searchApsis(after: startTime)
 
             #expect(apsis.kind == .pericenter || apsis.kind == .apocenter)
@@ -85,7 +85,7 @@ struct ApsisTests {
 
         @Test("Lunar apsis has distances")
         func hasDistances() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try Moon.searchApsis(after: startTime)
 
             #expect(apsis.distanceAU > 0)
@@ -94,17 +94,17 @@ struct ApsisTests {
 
         @Test("Moon distance is in expected range")
         func moonDistanceRange() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try Moon.searchApsis(after: startTime)
 
             // Moon distance ranges from ~356,000 km (perigee) to ~406,000 km (apogee)
-            #expect(apsis.distanceKM > 350000)
-            #expect(apsis.distanceKM < 410000)
+            #expect(apsis.distanceKM > 350_000)
+            #expect(apsis.distanceKM < 410_000)
         }
 
         @Test("Next lunar apsis alternates")
         func nextApsisAlternates() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let first = try Moon.searchApsis(after: startTime)
             let second = try Moon.nextApsis(after: first)
 
@@ -114,8 +114,8 @@ struct ApsisTests {
 
         @Test("Lunar apsides in date range")
         func apsidesInRange() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
-            let endTime = AstroTime(year: 2025, month: 3, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
+            let endTime = AstroTime(year: 2_025, month: 3, day: 1)
 
             let apsides = try Moon.apsides(from: startTime, to: endTime)
 
@@ -132,7 +132,7 @@ struct ApsisTests {
 
         @Test("Perigee is closer than apogee")
         func perigeeCloserThanApogee() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             var current = try Moon.searchApsis(after: startTime)
 
             var perigee: Apsis?
@@ -150,8 +150,8 @@ struct ApsisTests {
                 current = try Moon.nextApsis(after: current)
             }
 
-            if let p = perigee, let a = apogee {
-                #expect(p.distanceKM < a.distanceKM)
+            if let perigee, let apogee {
+                #expect(perigee.distanceKM < apogee.distanceKM)
             }
         }
     }
@@ -163,7 +163,7 @@ struct ApsisTests {
 
         @Test("Search finds next planetary apsis for Earth")
         func earthApsis() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try CelestialBody.earth.searchApsis(after: startTime)
 
             #expect(apsis.time > startTime)
@@ -172,7 +172,7 @@ struct ApsisTests {
         @Test("Earth perihelion is in early January")
         func earthPerihelionDate() throws {
             // Earth's perihelion is typically around January 3
-            let startTime = AstroTime(year: 2024, month: 12, day: 1)
+            let startTime = AstroTime(year: 2_024, month: 12, day: 1)
             let apsis = try CelestialBody.earth.searchApsis(after: startTime)
 
             if apsis.kind == .pericenter {
@@ -187,7 +187,7 @@ struct ApsisTests {
 
         @Test("Earth distance is about 1 AU")
         func earthDistanceAbout1AU() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try CelestialBody.earth.searchApsis(after: startTime)
 
             #expect(apsis.distanceAU > 0.98)
@@ -196,7 +196,7 @@ struct ApsisTests {
 
         @Test("Next planetary apsis alternates")
         func nextApsisAlternates() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let first = try CelestialBody.earth.searchApsis(after: startTime)
             let second = try CelestialBody.earth.nextApsis(after: first)
 
@@ -206,7 +206,7 @@ struct ApsisTests {
 
         @Test("Mars apsis search")
         func marsApsis() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try CelestialBody.mars.searchApsis(after: startTime)
 
             #expect(apsis.time > startTime)
@@ -218,7 +218,7 @@ struct ApsisTests {
 
         @Test("Jupiter apsis search")
         func jupiterApsis() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try CelestialBody.jupiter.searchApsis(after: startTime)
 
             #expect(apsis.time > startTime)
@@ -230,8 +230,8 @@ struct ApsisTests {
 
         @Test("Planet apsides in date range")
         func apsidesInRange() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
-            let endTime = AstroTime(year: 2027, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
+            let endTime = AstroTime(year: 2_027, month: 1, day: 1)
 
             let apsides = try CelestialBody.earth.apsides(from: startTime, to: endTime)
 
@@ -254,7 +254,7 @@ struct ApsisTests {
 
         @Test("Apsis has all properties")
         func hasAllProperties() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try Moon.searchApsis(after: startTime)
 
             _ = apsis.kind
@@ -265,7 +265,7 @@ struct ApsisTests {
 
         @Test("Distance AU and KM are consistent")
         func distancesConsistent() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try CelestialBody.earth.searchApsis(after: startTime)
 
             // 1 AU ≈ 149,597,870.7 km
@@ -278,7 +278,7 @@ struct ApsisTests {
 
         @Test("Equatable")
         func equatable() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let a1 = try Moon.searchApsis(after: startTime)
             let a2 = try Moon.searchApsis(after: startTime)
 
@@ -287,7 +287,7 @@ struct ApsisTests {
 
         @Test("CustomStringConvertible")
         func description() throws {
-            let startTime = AstroTime(year: 2025, month: 1, day: 1)
+            let startTime = AstroTime(year: 2_025, month: 1, day: 1)
             let apsis = try Moon.searchApsis(after: startTime)
 
             let desc = apsis.description

@@ -14,7 +14,7 @@ struct JupiterMoonsTests {
 
     @Test("Get all four Galilean moons")
     func getAllMoons() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let moons = try Jupiter.moons(at: time)
 
         // All four moons should have positions
@@ -26,7 +26,7 @@ struct JupiterMoonsTests {
 
     @Test("Moons are at different distances")
     func moonsAtDifferentDistances() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let moons = try Jupiter.moons(at: time)
 
         // Io < Europa < Ganymede < Callisto (orbital order)
@@ -50,7 +50,7 @@ struct JupiterMoonsTests {
 
     @Test("Moons have velocities")
     func moonsHaveVelocities() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let moons = try Jupiter.moons(at: time)
 
         #expect(moons.io.velocity.magnitude > 0)
@@ -61,7 +61,7 @@ struct JupiterMoonsTests {
 
     @Test("Io moves fastest")
     func ioMovesFastest() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let moons = try Jupiter.moons(at: time)
 
         // Io has the shortest orbital period, so should have highest velocity
@@ -70,8 +70,8 @@ struct JupiterMoonsTests {
 
     @Test("Moon positions change over time")
     func positionsChange() throws {
-        let time1 = AstroTime(year: 2025, month: 1, day: 1, hour: 0)
-        let time2 = AstroTime(year: 2025, month: 1, day: 1, hour: 12)
+        let time1 = AstroTime(year: 2_025, month: 1, day: 1, hour: 0)
+        let time2 = AstroTime(year: 2_025, month: 1, day: 1, hour: 12)
 
         let moons1 = try Jupiter.moons(at: time1)
         let moons2 = try Jupiter.moons(at: time2)
@@ -82,7 +82,7 @@ struct JupiterMoonsTests {
 
     @Test("JupiterMoons is Equatable")
     func equatable() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let moons1 = try Jupiter.moons(at: time)
         let moons2 = try Jupiter.moons(at: time)
 
@@ -91,7 +91,7 @@ struct JupiterMoonsTests {
 
     @Test("CustomStringConvertible")
     func description() throws {
-        let time = AstroTime(year: 2025, month: 6, day: 21)
+        let time = AstroTime(year: 2_025, month: 6, day: 21)
         let moons = try Jupiter.moons(at: time)
 
         let desc = moons.description

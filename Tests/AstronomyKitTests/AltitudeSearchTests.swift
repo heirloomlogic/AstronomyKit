@@ -16,7 +16,7 @@ struct AltitudeSearchTests {
 
     @Test("Find astronomical twilight (Sun at -18°)")
     func astronomicalTwilight() throws {
-        let startTime = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+        let startTime = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
 
         let twilight = try CelestialBody.sun.searchAltitude(
             -18,
@@ -33,7 +33,7 @@ struct AltitudeSearchTests {
 
     @Test("Find civil twilight (Sun at -6°)")
     func civilTwilight() throws {
-        let startTime = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+        let startTime = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
 
         let twilight = try CelestialBody.sun.searchAltitude(
             -6,
@@ -47,7 +47,7 @@ struct AltitudeSearchTests {
 
     @Test("Find when Sun reaches 30° altitude")
     func sunAt30Degrees() throws {
-        let startTime = AstroTime(year: 2025, month: 6, day: 21, hour: 6)
+        let startTime = AstroTime(year: 2_025, month: 6, day: 21, hour: 6)
 
         let time = try CelestialBody.sun.searchAltitude(
             30,
@@ -61,7 +61,7 @@ struct AltitudeSearchTests {
 
     @Test("Rising vs setting gives different times")
     func risingVsSetting() throws {
-        let startTime = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+        let startTime = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
 
         let rising = try CelestialBody.sun.searchAltitude(
             10,
@@ -82,7 +82,7 @@ struct AltitudeSearchTests {
 
     @Test("Works for planets")
     func planetsWork() throws {
-        let startTime = AstroTime(year: 2025, month: 6, day: 21, hour: 0)
+        let startTime = AstroTime(year: 2_025, month: 6, day: 21, hour: 0)
 
         let marsRising = try CelestialBody.mars.searchAltitude(
             10,
@@ -97,7 +97,7 @@ struct AltitudeSearchTests {
 
     @Test("Returns nil when not found in limit")
     func returnsNilWhenNotFound() throws {
-        let startTime = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+        let startTime = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
 
         // Search for Sun at 90° (impossible from NYC)
         let result = try CelestialBody.sun.searchAltitude(

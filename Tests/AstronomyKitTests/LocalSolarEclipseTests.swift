@@ -14,7 +14,7 @@ struct LocalSolarEclipseTests {
 
     @Test("Search local solar eclipse from NYC")
     func searchLocalSolarEclipse() throws {
-        let startTime = AstroTime(year: 2025, month: 1, day: 1)
+        let startTime = AstroTime(year: 2_025, month: 1, day: 1)
         let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
         let eclipse = try Eclipse.searchLocalSolar(after: startTime, from: observer)
@@ -26,7 +26,7 @@ struct LocalSolarEclipseTests {
 
     @Test("Eclipse event has altitude")
     func eclipseEventAltitude() throws {
-        let startTime = AstroTime(year: 2025, month: 1, day: 1)
+        let startTime = AstroTime(year: 2_025, month: 1, day: 1)
         let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
         let eclipse = try Eclipse.searchLocalSolar(after: startTime, from: observer)
@@ -37,7 +37,7 @@ struct LocalSolarEclipseTests {
 
     @Test("Next local solar eclipse iterates")
     func nextLocalSolarEclipse() throws {
-        let startTime = AstroTime(year: 2025, month: 1, day: 1)
+        let startTime = AstroTime(year: 2_025, month: 1, day: 1)
         let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
         let first = try Eclipse.searchLocalSolar(after: startTime, from: observer)
@@ -49,7 +49,7 @@ struct LocalSolarEclipseTests {
     @Test("Total eclipse has total begin/end")
     func totalEclipsePhases() throws {
         // Search for a total eclipse with a longer range if needed
-        let startTime = AstroTime(year: 2024, month: 1, day: 1)
+        let startTime = AstroTime(year: 2_024, month: 1, day: 1)
         // Use a location in the path of the 2024 total eclipse
         let observer = Observer(latitude: 44.35, longitude: -99.46)  // South Dakota
 
