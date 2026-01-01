@@ -220,7 +220,10 @@ public enum Moon {
     ///   - endTime: The end of the range.
     /// - Returns: An array of moon quarter events.
     /// - Throws: `AstronomyError` if the search fails.
-    public static func quarters(from startTime: AstroTime, to endTime: AstroTime) throws -> [MoonQuarter] {
+    public static func quarters(
+        from startTime: AstroTime,
+        to endTime: AstroTime
+    ) throws -> [MoonQuarter] {
         var quarters: [MoonQuarter] = []
         var current = try searchQuarter(after: startTime)
 
@@ -250,5 +253,26 @@ public enum Moon {
     public static func eclipticPosition(at time: AstroTime) throws -> Spherical {
         let result = Astronomy_EclipticGeoMoon(time.raw)
         return try Spherical(result)
+    }
+
+    /// Calculates the Moon's geocentric state (position and velocity).
+    ///
+    /// The state vector contains both position and velocity, which is useful
+    /// for calculating the Moon's speed and direction of motion.
+    ///
+    /// - Parameter time: The time at which to calculate the state.
+    /// - Returns: The geocentric state vector with position in AU and velocity in AU/day.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let state = try Moon.geoState(at: .now)
+    /// print("Moon position: \(state.position)")
+    /// print("Moon velocity: \(state.velocity)")
+    /// ```
+    public static func geoState(at time: AstroTime) throws -> StateVector {
+        let result = Astronomy_GeoMoonState(time.raw)
+        return try StateVector(result)
     }
 }
