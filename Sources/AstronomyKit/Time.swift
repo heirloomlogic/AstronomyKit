@@ -153,6 +153,21 @@ public struct AstroTime: Sendable {
         var copy = raw
         return Astronomy_SiderealTime(&copy)
     }
+
+    /// The local sidereal time at a given geographic longitude.
+    ///
+    /// - Parameter longitude: The geographic longitude in degrees (-180 to +180).
+    ///   Positive values are east of the prime meridian.
+    /// - Returns: The local sidereal time in hours (0 to 24).
+    public func siderealTime(longitude: Double) -> Double {
+        // Local sidereal time = Greenwich sidereal time + longitude/15
+        // (since 15° = 1 hour of sidereal time)
+        var lst = siderealTime + longitude / 15.0
+        // Normalize to 0-24 range
+        while lst < 0 { lst += 24.0 }
+        while lst >= 24 { lst -= 24.0 }
+        return lst
+    }
 }
 
 // MARK: - Protocol Conformances

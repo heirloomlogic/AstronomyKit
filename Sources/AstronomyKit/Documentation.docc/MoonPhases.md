@@ -90,6 +90,28 @@ print("Latitude: \(position.latitude)°")
 print("Distance: \(position.distance) AU")
 ```
 
+### Moon State (Position and Velocity)
+
+Get the Moon's complete state vector including velocity:
+
+```swift
+let state = try Moon.geoState(at: .now)
+
+// Position in AU
+print("Distance: \(state.position.magnitude) AU")
+
+// Velocity in AU/day
+let speed = sqrt(
+    state.velocity.x * state.velocity.x +
+    state.velocity.y * state.velocity.y +
+    state.velocity.z * state.velocity.z
+)
+print("Speed: \(speed) AU/day")
+```
+
+> Tip: Use `geoState(at:)` for velocity calculations instead of differencing 
+> ecliptic longitude positions, which gives inaccurate results.
+
 ### Using CelestialBody
 
 The Moon is also available as a ``CelestialBody``:

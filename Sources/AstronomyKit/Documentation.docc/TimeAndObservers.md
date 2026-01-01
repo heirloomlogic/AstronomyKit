@@ -77,6 +77,14 @@ let sidereal = AstroTime.now.siderealTime
 print("Greenwich Sidereal Time: \(sidereal) hours")
 ```
 
+Calculate local sidereal time for any longitude:
+
+```swift
+let observer = Observer(latitude: 40.7, longitude: -74.0)  // NYC
+let lst = AstroTime.now.siderealTime(longitude: observer.longitude)
+print("Local Sidereal Time: \(lst) hours")
+```
+
 ## Working with Observers
 
 ### Creating Observers
