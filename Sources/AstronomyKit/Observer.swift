@@ -47,6 +47,12 @@ public struct Observer: Sendable, Equatable, Hashable {
         self.height = height
     }
 
+    /// A geocentric observer.
+    ///
+    /// Uses Center geodetic: 0.0, 0.0, -6378.137 km, which places the observer at Earth's center,
+    /// not on the surface.
+    static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
+
     /// The underlying C observer structure.
     internal var raw: astro_observer_t {
         Astronomy_MakeObserver(latitude, longitude, height)

@@ -28,7 +28,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "2.1.19")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "0.1.0")
 ]
 ```
 
