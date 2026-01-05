@@ -96,7 +96,8 @@ public final class GravitySimulation: @unchecked Sendable {
     ///
     /// - Parameter newTime: The target time for the simulation.
     /// - Throws: `AstronomyError` if the update fails.
-    public func update(to newTime: AstroTime) throws {
+    @discardableResult
+    public func update(to newTime: AstroTime) throws -> StateVector {
         guard let handle else {
             throw AstronomyError.notInitialized
         }
@@ -109,6 +110,7 @@ public final class GravitySimulation: @unchecked Sendable {
         }
 
         self.time = newTime
+        return try StateVector(state)
     }
 
     /// Gets the current state of a body relative to the origin.
