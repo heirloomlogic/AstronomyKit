@@ -4,7 +4,7 @@ Calculate the positions of celestial bodies in various coordinate systems.
 
 ## Overview
 
-AstronomyKit can calculate positions for the Sun, Moon, planets, Jupiter's moons, and user-defined stars. Positions can be expressed in multiple coordinate systems.
+AstronomyKit can calculate positions for the Sun, Moon, planets, Jupiter's moons, and fixed stars. Positions can be expressed in multiple coordinate systems.
 
 ## Celestial Bodies
 
@@ -145,24 +145,28 @@ let orion = try Constellation.find(ra: 5.9195, dec: 7.4071)
 print(orion.name)  // "Orion"
 ```
 
-## User-Defined Stars
+## Fixed Stars
 
-Define custom stars for position calculations:
+Define and track fixed stars by their J2000 catalog coordinates using ``FixedStar``:
 
 ```swift
-// Define Sirius at star slot 1
-try CelestialBody.star1.define(
-    ra: 6.7525,           // Right ascension in hours
-    dec: -16.7161,        // Declination in degrees
-    distanceLightYears: 8.6
+// Define Algol (Beta Persei)
+let algol = FixedStar(
+    name: "Algol",
+    ra: 3.136148,      // J2000 RA in hours
+    dec: 40.9556,      // J2000 Dec in degrees
+    distance: 92.95    // Light-years
 )
 
-// Now use it like any other body
-let position = try CelestialBody.star1.equatorial(at: .now)
-let constellation = try CelestialBody.star1.constellation(at: .now)
+// Get ecliptic longitude
+let longitude = try algol.eclipticLongitude(at: .now)
+
+// Get position in local sky
+let observer = Observer(latitude: 40.7, longitude: -74.0)
+let horizon = try algol.horizon(at: .now, from: observer)
 ```
 
-Eight star slots are available: `.star1` through `.star8`.
+J2000 coordinates can be found from star catalogs like SIMBAD, Hipparcos, or the Yale Bright Star Catalog.
 
 ## Aberration Correction
 

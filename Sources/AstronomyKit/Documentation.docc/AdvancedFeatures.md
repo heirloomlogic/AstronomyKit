@@ -167,35 +167,51 @@ let everest = try Atmosphere.at(elevation: 8848.86)
 print("Pressure: \(Int(everest.pressure)) mbar")  // ~314 mbar (vs 1013 at sea level)
 ```
 
-## User-Defined Stars
+## Fixed Stars
 
-Define custom stars for position calculations.
+Define and track fixed stars by their J2000 catalog coordinates.
 
 ### Defining a Star
 
 ```swift
-// Define Sirius at star slot 1
-try CelestialBody.star1.define(
-    ra: 6.7525,           // Right ascension in hours
-    dec: -16.7161,        // Declination in degrees
-    distanceLightYears: 8.6
+// Algol (Beta Persei) - the "Demon Star"
+let algol = FixedStar(
+    name: "Algol",
+    ra: 3.136148,      // J2000 RA in hours
+    dec: 40.9556,      // J2000 Dec in degrees
+    distance: 92.95    // Light-years
 )
 
-// Now use like any other body
-let position = try CelestialBody.star1.equatorial(at: .now)
-let constellation = try CelestialBody.star1.constellation(at: .now)
-let horizon = try CelestialBody.star1.horizon(at: .now, from: observer)
+// Sirius - the brightest star
+let sirius = FixedStar(
+    name: "Sirius",
+    ra: 6.7525,
+    dec: -16.7161,
+    distance: 8.6
+)
 ```
 
-### Available Slots
-
-Eight star slots are available: `.star1` through `.star8`.
+### Getting Positions
 
 ```swift
-for star in CelestialBody.userStars {
-    print(star.name)
-}
+// Ecliptic longitude (for astrological calculations)
+let longitude = try algol.eclipticLongitude(at: .now)
+
+// Position in local sky
+let observer = Observer(latitude: 40.7, longitude: -74.0)
+let horizon = try algol.horizon(at: .now, from: observer)
+
+// Constellation
+let constellation = try sirius.constellation(at: .now)
 ```
+
+### Finding Catalog Data
+
+J2000 coordinates can be found from:
+- [SIMBAD Astronomical Database](https://simbad.cds.unistra.fr/simbad/)
+- Hipparcos Catalog
+- Yale Bright Star Catalog
+
 
 ## Observer Gravity
 
