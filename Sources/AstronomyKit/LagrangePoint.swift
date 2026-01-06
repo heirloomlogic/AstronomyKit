@@ -58,7 +58,23 @@ public struct StateVector: Sendable, Equatable {
     /// The time at which this state is valid.
     public let time: AstroTime
 
+    /// Creates a state vector with explicit position and velocity.
+    ///
+    /// Use this initializer to define custom small body states for gravity simulation.
+    /// Position and velocity should be in the heliocentric J2000 equatorial (ICRF) frame.
+    ///
+    /// - Parameters:
+    ///   - position: Position vector in AU.
+    ///   - velocity: Velocity vector in AU/day.
+    ///   - time: The epoch at which this state is valid.
+    public init(position: Vector3D, velocity: Vector3D, time: AstroTime) {
+        self.position = position
+        self.velocity = velocity
+        self.time = time
+    }
+
     /// Creates a state vector from the C structure.
+
     internal init(_ raw: astro_state_vector_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
