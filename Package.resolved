@@ -1,5 +1,5 @@
 {
-  "originHash" : "fd984297642375fb57ce412dd20b6ce0eac5f25a2b476f9354238d6e23da18ca",
+  "originHash" : "f10b39b7f178eb537b8d2d77b2e1b5e25ddea9f011584d997d19d05b0e9af32c",
   "pins" : [
     {
       "identity" : "swift-docc-plugin",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/simplydanny/swiftlintplugins",
       "state" : {
-        "revision" : "ecafb5b056cb7995324f0d310a61f30661d00cad",
-        "version" : "0.62.2"
+        "revision" : "707f7face5524fe918f82dd39c5c80cb3e591a44",
+        "version" : "0.63.0"
       }
     }
   ],

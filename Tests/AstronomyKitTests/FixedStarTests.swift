@@ -61,7 +61,7 @@ struct FixedStarTests {
 
         @Test("RA matches catalog value")
         func raMatchesCatalog() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let eq = try FixedStarTests.algol.equatorial(at: time)
 
             // Catalog RA: 3.136148 hours (03h 08m 10.13s)
@@ -74,7 +74,7 @@ struct FixedStarTests {
 
         @Test("Dec matches catalog value")
         func decMatchesCatalog() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let eq = try FixedStarTests.algol.equatorial(at: time)
 
             // Catalog Dec: +40.9556° (+40° 57′ 20.3″)
@@ -87,7 +87,7 @@ struct FixedStarTests {
 
         @Test("Distance is positive")
         func distancePositive() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let eq = try FixedStarTests.algol.equatorial(at: time)
 
             #expect(eq.distance > 0, "Distance should be positive")
@@ -101,7 +101,7 @@ struct FixedStarTests {
 
         @Test("Ecliptic longitude is in valid range")
         func eclipticLongitudeValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let longitude = try FixedStarTests.algol.eclipticLongitude(at: time)
 
             #expect(
@@ -112,7 +112,7 @@ struct FixedStarTests {
 
         @Test("Ecliptic longitude is approximately 26° Taurus")
         func eclipticLongitudeExpectedValue() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let longitude = try FixedStarTests.algol.eclipticLongitude(at: time)
 
             // Algol is traditionally at ~26° Taurus = ~56° ecliptic longitude
@@ -125,7 +125,7 @@ struct FixedStarTests {
 
         @Test("Ecliptic latitude is in valid range")
         func eclipticLatitudeValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let latitude = try FixedStarTests.algol.eclipticLatitude(at: time)
 
             #expect(
@@ -136,7 +136,7 @@ struct FixedStarTests {
 
         @Test("Full ecliptic coordinates are consistent")
         func eclipticConsistent() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
 
             let longitude = try FixedStarTests.algol.eclipticLongitude(at: time)
             let latitude = try FixedStarTests.algol.eclipticLatitude(at: time)
@@ -160,7 +160,7 @@ struct FixedStarTests {
 
         @Test("Horizon coordinates are valid")
         func horizonValid() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 35.5, longitude: -82.5)  // Asheville, NC
             let horizon = try FixedStarTests.algol.horizon(at: time, from: observer)
 
@@ -177,7 +177,7 @@ struct FixedStarTests {
         @Test("High latitude observer sees Algol")
         func highLatitudeObserver() throws {
             // Algol at Dec +41° is circumpolar for observers above ~49°N
-            let time = AstroTime(year: 2025, month: 1, day: 1, hour: 0)
+            let time = AstroTime(year: 2_025, month: 1, day: 1, hour: 0)
             let observer = Observer(latitude: 55.0, longitude: 0.0)  // Northern UK
             let horizon = try FixedStarTests.algol.horizon(at: time, from: observer)
 
@@ -196,7 +196,7 @@ struct FixedStarTests {
 
         @Test("Position is stable across multiple calls")
         func stablePosition() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
 
             let lng1 = try FixedStarTests.algol.eclipticLongitude(at: time)
             let lng2 = try FixedStarTests.algol.eclipticLongitude(at: time)
@@ -211,8 +211,8 @@ struct FixedStarTests {
         func yearlyStability() throws {
             // Fixed stars should have minimal position change over a year
             // (only aberration and light-time effects)
-            let time1 = AstroTime(year: 2025, month: 1, day: 1)
-            let time2 = AstroTime(year: 2025, month: 7, day: 1)
+            let time1 = AstroTime(year: 2_025, month: 1, day: 1)
+            let time2 = AstroTime(year: 2_025, month: 7, day: 1)
 
             let lng1 = try FixedStarTests.algol.eclipticLongitude(at: time1)
             let lng2 = try FixedStarTests.algol.eclipticLongitude(at: time2)
@@ -236,7 +236,7 @@ struct FixedStarTests {
             let algol = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
             let sirius = FixedStar(name: "Sirius", ra: 6.7525, dec: -16.7161, distance: 8.6)
 
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let algolLon = try algol.eclipticLongitude(at: time)
             let siriusLon = try sirius.eclipticLongitude(at: time)
 
@@ -252,7 +252,7 @@ struct FixedStarTests {
             let algol = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
             let sirius = FixedStar(name: "Sirius", ra: 6.7525, dec: -16.7161, distance: 8.6)
 
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
 
             // Interleave calls to ensure slot switching works
             let algolLon1 = try algol.eclipticLongitude(at: time)
@@ -276,7 +276,7 @@ struct FixedStarTests {
                 )
             }
 
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
 
             // All stars should calculate without error
             for star in stars {
@@ -293,7 +293,7 @@ struct FixedStarTests {
 
         @Test("Algol is in Perseus")
         func algolConstellation() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let constellation = try FixedStarTests.algol.constellation(at: time)
 
             #expect(constellation.symbol == "Per", "Algol should be in Perseus")

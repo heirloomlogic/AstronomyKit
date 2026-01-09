@@ -51,7 +51,7 @@ public enum Chiron {
     /// Data source: JPL HORIZONS, heliocentric ICRF/J2000, AU and AU/day.
     private static let referenceEpochs: [(time: AstroTime, state: StateVector)] = {
         // 2000-01-01 00:00:00 TDB (JD 2451544.5)
-        let epoch2000 = AstroTime(year: 2000, month: 1, day: 1)
+        let epoch2000 = AstroTime(year: 2_000, month: 1, day: 1)
         let state2000 = StateVector(
             position: Vector3D(
                 x: -3.532082802845036,
@@ -69,7 +69,7 @@ public enum Chiron {
         )
 
         // 2010-01-01 00:00:00 TDB (JD 2455197.5)
-        let epoch2010 = AstroTime(year: 2010, month: 1, day: 1)
+        let epoch2010 = AstroTime(year: 2_010, month: 1, day: 1)
         let state2010 = StateVector(
             position: Vector3D(
                 x: 13.19148992863117,
@@ -87,7 +87,7 @@ public enum Chiron {
         )
 
         // 2020-01-01 00:00:00 TDB (JD 2458849.5)
-        let epoch2020 = AstroTime(year: 2020, month: 1, day: 1)
+        let epoch2020 = AstroTime(year: 2_020, month: 1, day: 1)
         let state2020 = StateVector(
             position: Vector3D(
                 x: 18.74979015626275,
@@ -105,7 +105,7 @@ public enum Chiron {
         )
 
         // 2030-01-01 00:00:00 TDB (JD 2462502.5)
-        let epoch2030 = AstroTime(year: 2030, month: 1, day: 1)
+        let epoch2030 = AstroTime(year: 2_030, month: 1, day: 1)
         let state2030 = StateVector(
             position: Vector3D(
                 x: 13.13185175469694,
@@ -123,7 +123,7 @@ public enum Chiron {
         )
 
         // 2040-01-01 00:00:00 TDB (JD 2466154.5)
-        let epoch2040 = AstroTime(year: 2040, month: 1, day: 1)
+        let epoch2040 = AstroTime(year: 2_040, month: 1, day: 1)
         let state2040 = StateVector(
             position: Vector3D(
                 x: -1.878330124332237,
@@ -193,7 +193,7 @@ public enum Chiron {
         let helioEarth = try CelestialBody.earth.helioPosition(at: time)
 
         // Get Earth's velocity via finite difference
-        let dt = 1.0 / 86400.0  // 1 second in days
+        let dt = 1.0 / 86_400.0  // 1 second in days
         let earthBefore = try CelestialBody.earth.helioPosition(at: time.addingDays(-dt))
         let earthAfter = try CelestialBody.earth.helioPosition(at: time.addingDays(dt))
         let earthVelocity = Vector3D(
