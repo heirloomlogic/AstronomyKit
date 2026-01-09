@@ -19,7 +19,7 @@ struct ChironTests {
 
         @Test("Heliocentric position returns valid vector")
         func helioPositionValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let position = try Chiron.helioPosition(at: time)
 
             // Chiron should be 8-18 AU from the Sun (it varies as a centaur)
@@ -32,7 +32,7 @@ struct ChironTests {
 
         @Test("Geocentric position returns valid vector")
         func geoPositionValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let position = try Chiron.geoPosition(at: time)
 
             // Geocentric distance should be roughly heliocentric ± 1 AU
@@ -45,7 +45,7 @@ struct ChironTests {
 
         @Test("Equatorial coordinates are valid")
         func equatorialValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let eq = try Chiron.equatorial(at: time)
 
             #expect(
@@ -58,7 +58,7 @@ struct ChironTests {
 
         @Test("Ecliptic longitude is in valid range")
         func eclipticLongitudeValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let longitude = try Chiron.eclipticLongitude(at: time)
 
             #expect(longitude >= 0 && longitude < 360, "Ecliptic longitude should be in [0, 360)°")
@@ -66,7 +66,7 @@ struct ChironTests {
 
         @Test("Ecliptic latitude is in valid range")
         func eclipticLatitudeValid() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let latitude = try Chiron.eclipticLatitude(at: time)
 
             // Chiron's orbit has ~7° inclination, so latitude should be modest
@@ -84,7 +84,7 @@ struct ChironTests {
 
         @Test("Position at 2000 epoch matches reference")
         func epoch2000() throws {
-            let time = AstroTime(year: 2000, month: 1, day: 1)
+            let time = AstroTime(year: 2_000, month: 1, day: 1)
             let position = try Chiron.helioPosition(at: time)
 
             // Reference from JPL Horizons:
@@ -98,7 +98,7 @@ struct ChironTests {
 
         @Test("Position at 2020 epoch matches reference")
         func epoch2020() throws {
-            let time = AstroTime(year: 2020, month: 1, day: 1)
+            let time = AstroTime(year: 2_020, month: 1, day: 1)
             let position = try Chiron.helioPosition(at: time)
 
             // Reference from JPL Horizons:
@@ -121,7 +121,7 @@ struct ChironTests {
             var lastLongitude: Double?
 
             // Check positions at start of each year from 2020-2030
-            for year in 2020...2030 {
+            for year in 2_020...2_030 {
                 let time = AstroTime(year: year, month: 1, day: 1)
                 let longitude = try Chiron.eclipticLongitude(at: time)
 
@@ -152,7 +152,7 @@ struct ChironTests {
 
         @Test("Horizon coordinates for observer are valid")
         func horizonValid() throws {
-            let time = AstroTime(year: 2025, month: 6, day: 21, hour: 12)
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
             let observer = Observer(latitude: 35.5, longitude: -82.5)  // Asheville, NC
             let horizon = try Chiron.horizon(at: time, from: observer)
 
@@ -168,7 +168,7 @@ struct ChironTests {
 
         @Test("Geocentric state has valid velocity")
         func geoStateVelocity() throws {
-            let time = AstroTime(year: 2025, month: 1, day: 1)
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
             let state = try Chiron.geoState(at: time)
 
             // Velocity magnitude should be reasonable for a centaur

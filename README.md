@@ -1,6 +1,6 @@
 # AstronomyKit
 
-Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library. Calculates positions of the Sun, Moon, and planets, and predicts phases, eclipses, transits, and rise/set times. Includes vector and angular coordinate transformations for equatorial, ecliptic, horizontal, and galactic systems.
+Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library. Calculates positions of the Sun, Moon, planets, Chiron, and fixed stars, and predicts phases, eclipses, transits, and rise/set times. Includes vector and angular coordinate transformations for equatorial, ecliptic, horizontal, and galactic systems.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
@@ -13,6 +13,8 @@ AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astrono
 
 - 🌍 **Celestial Body Positions** — Sun, Moon, planets, and Jupiter's moons
 - 🌙 **Moon Phases** — Phase angles, quarters, illumination, libration
+- ⭐ **Fixed Stars** — User-defined stars from J2000 catalog coordinates
+- ☄️ **Chiron** — Gravity-simulated position for 2060 Chiron
 - 🌅 **Rise/Set Times** — Sunrise, sunset, moonrise, culmination
 - 🌑 **Eclipses** — Lunar and solar eclipse predictions
 - 🍂 **Seasons** — Equinoxes and solstices
@@ -28,7 +30,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "0.1.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "0.2.0")
 ]
 ```
 
@@ -134,6 +136,42 @@ let quarters = try Moon.quarters(
 )
 ```
 
+### Fixed Stars
+
+```swift
+// Define a star from J2000 catalog coordinates
+let algol = FixedStar(
+    name: "Algol",
+    ra: 3.136148,      // Right ascension in hours
+    dec: 40.9556,      // Declination in degrees
+    distance: 92.95    // Distance in light-years
+)
+
+// Ecliptic longitude
+let longitude = try algol.eclipticLongitude(at: .now)
+print("Algol is at \(longitude)°")
+
+// Horizon coordinates
+let horizon = try algol.horizon(at: .now, from: observer)
+print("Algol: \(horizon.altitude)° altitude")
+```
+
+### Chiron
+
+```swift
+// Chiron's ecliptic longitude (commonly used in astrology)
+let longitude = try Chiron.eclipticLongitude(at: .now)
+print("Chiron is at \(longitude)°")
+
+// Full ecliptic coordinates
+let ecliptic = try Chiron.ecliptic(at: .now)
+print("Longitude: \(ecliptic.longitude)°, Latitude: \(ecliptic.latitude)°")
+
+// Horizon position for an observer
+let horizon = try Chiron.horizon(at: .now, from: observer)
+print("Chiron altitude: \(horizon.altitude)°")
+```
+
 ### Rise/Set Times
 
 ```swift
@@ -180,27 +218,29 @@ let eclipses = try Eclipse.lunarEclipses(
 
 | Type | Description |
 |------|-------------|
-| `AstroTime` | Time representation with UT/TT and `Date` conversion |
-| `Observer` | Geographic location (latitude, longitude, height) |
-| `CelestialBody` | Enum of Sun, Moon, planets, and moons |
-| `Equatorial` | Right ascension and declination coordinates |
-| `Ecliptic` | Ecliptic longitude and latitude coordinates |
-| `Horizon` | Altitude and azimuth for local sky position |
-| `MoonPhase` | Lunar phase enum (new, first quarter, full, third quarter) |
-| `Libration` | Lunar libration angles and distance |
-| `LunarNode` | Ascending/descending node events |
-| `Seasons` | Equinox and solstice times for a year |
-| `LunarEclipse` | Lunar eclipse event with timing and duration |
-| `GlobalSolarEclipse` | Solar eclipse with peak location |
-| `LocalSolarEclipse` | Solar eclipse visibility from observer |
-| `Elongation` | Angular separation from the Sun |
-| `Illumination` | Visual magnitude and phase fraction |
 | `Apsis` | Perihelion/aphelion or perigee/apogee events |
-| `Transit` | Mercury/Venus solar transit |
+| `AstroTime` | Time representation with UT/TT and `Date` conversion |
+| `CelestialBody` | Enum of Sun, Moon, planets, and moons |
+| `Chiron` | Gravity-simulated position for 2060 Chiron |
 | `Constellation` | Constellation identification |
-| `RotationMatrix` | Coordinate system transformations |
+| `Ecliptic` | Ecliptic longitude and latitude coordinates |
+| `Elongation` | Angular separation from the Sun |
+| `Equatorial` | Right ascension and declination coordinates |
+| `FixedStar` | User-defined star from J2000 coordinates |
+| `GlobalSolarEclipse` | Solar eclipse with peak location |
 | `GravitySimulation` | N-body gravity simulation |
+| `Horizon` | Altitude and azimuth for local sky position |
+| `Illumination` | Visual magnitude and phase fraction |
 | `LagrangePoint` | L1-L5 point calculations |
+| `Libration` | Lunar libration angles and distance |
+| `LocalSolarEclipse` | Solar eclipse visibility from observer |
+| `LunarEclipse` | Lunar eclipse event with timing and duration |
+| `LunarNode` | Ascending/descending node events |
+| `MoonPhase` | Lunar phase enum (new, first quarter, full, third quarter) |
+| `Observer` | Geographic location (latitude, longitude, height) |
+| `RotationMatrix` | Coordinate system transformations |
+| `Seasons` | Equinox and solstice times for a year |
+| `Transit` | Mercury/Venus solar transit |
 
 ## Documentation
 
