@@ -14,13 +14,18 @@ import Testing
 
 @Suite("Audit Validation Tests")
 struct AuditValidationTests {
-
     // MARK: - Reference Data from Audit
     // Timestamp: 2026-01-01T20:04:19.891Z (UTC)
     // Location: lat=35.5951, lon=-82.5515 (Asheville, NC area)
 
     static let auditTime = AstroTime(
-        year: 2_026, month: 1, day: 1, hour: 20, minute: 4, second: 19.891)
+        year: 2_026,
+        month: 1,
+        day: 1,
+        hour: 20,
+        minute: 4,
+        second: 19.891
+    )
     static let observer = Observer(latitude: 35.5951, longitude: -82.5515)
 
     // Reference positions from Astro.com for 2026-01-01 20:19 UTC (close to audit time)
@@ -48,7 +53,6 @@ struct AuditValidationTests {
 
     @Suite("Planetary Position Accuracy")
     struct PlanetaryPositionTests {
-
         @Test("Moon ecliptic longitude within tolerance")
         func moonPosition() throws {
             let time = AuditValidationTests.auditTime
@@ -88,7 +92,8 @@ struct AuditValidationTests {
             // Should be in Sagittarius (240-270°)
             #expect(
                 longitude >= 240 && longitude < 300,
-                "Mercury should be in Sagittarius/Capricorn range, got \(longitude)°")
+                "Mercury should be in Sagittarius/Capricorn range, got \(longitude)°"
+            )
         }
 
         @Test("All planets have valid ecliptic longitudes")
@@ -102,7 +107,8 @@ struct AuditValidationTests {
                 let longitude = try planet.eclipticLongitude(at: time)
                 #expect(
                     longitude >= 0 && longitude < 360,
-                    "\(planet.name) longitude \(longitude)° should be in [0, 360)")
+                    "\(planet.name) longitude \(longitude)° should be in [0, 360)"
+                )
             }
         }
 
@@ -116,7 +122,8 @@ struct AuditValidationTests {
             // Sun should be in Capricorn (270-300°) on Jan 1
             #expect(
                 sunPos.longitude >= 270 && sunPos.longitude < 300,
-                "Sun should be in Capricorn on Jan 1, got \(sunPos.longitude)°")
+                "Sun should be in Capricorn on Jan 1, got \(sunPos.longitude)°"
+            )
         }
     }
 
@@ -124,7 +131,6 @@ struct AuditValidationTests {
 
     @Suite("Velocity Calculations")
     struct VelocityTests {
-
         @Test("Moon velocity from state vector is in realistic range (11-15°/day)")
         func moonVelocityFromStateVector() throws {
             let time = AuditValidationTests.auditTime
@@ -153,7 +159,8 @@ struct AuditValidationTests {
             // Audit log showed 1.05°/day which is WRONG (likely a units issue in the app)
             #expect(
                 angularVelocityDeg > 10 && angularVelocityDeg < 16,
-                "Moon velocity should be 11-15°/day, got \(angularVelocityDeg)°/day")
+                "Moon velocity should be 11-15°/day, got \(angularVelocityDeg)°/day"
+            )
         }
 
         @Test("Moon velocity using ecliptic longitude difference shows same bug as audit")
@@ -219,7 +226,8 @@ struct AuditValidationTests {
             // Jupiter moves about 0.08°/day when direct, near-zero when stationing
             #expect(
                 abs(velocity) < 0.2,
-                "Jupiter velocity should be small (~0.08°/day), got \(abs(velocity))°/day")
+                "Jupiter velocity should be small (~0.08°/day), got \(abs(velocity))°/day"
+            )
         }
 
         @Test("Outer planet velocities are reasonable")
@@ -251,7 +259,8 @@ struct AuditValidationTests {
 
                 #expect(
                     velocity <= maxVel * 2,  // Allow some margin
-                    "\(planet.name) velocity \(velocity)°/day exceeds expected max \(maxVel)°/day")
+                    "\(planet.name) velocity \(velocity)°/day exceeds expected max \(maxVel)°/day"
+                )
             }
         }
     }
@@ -260,7 +269,6 @@ struct AuditValidationTests {
 
     @Suite("Angle Calculations")
     struct AngleTests {
-
         @Test("Local sidereal time calculation")
         func localSiderealTime() {
             let time = AuditValidationTests.auditTime
@@ -300,7 +308,6 @@ struct AuditValidationTests {
 
     @Suite("Time and Ephemeris")
     struct TimeTests {
-
         @Test("UTC to TT conversion is reasonable")
         func utcToTT() {
             let time = AuditValidationTests.auditTime
@@ -313,7 +320,8 @@ struct AuditValidationTests {
             // Delta-T should be between 60-80 seconds for 2026
             #expect(
                 deltaT > 60 && deltaT < 80,
-                "Delta-T should be ~69 seconds in 2026, got \(deltaT)s")
+                "Delta-T should be ~69 seconds in 2026, got \(deltaT)s"
+            )
         }
 
         @Test("AstroTime from date components")
@@ -326,7 +334,9 @@ struct AuditValidationTests {
             utcCalendar.timeZone = TimeZone(identifier: "UTC")!
 
             let components = utcCalendar.dateComponents(
-                [.year, .month, .day, .hour], from: dateComponents)
+                [.year, .month, .day, .hour],
+                from: dateComponents
+            )
 
             #expect(components.year == 2_026, "Year should be 2026")
             #expect(components.month == 1, "Month should be January")
@@ -354,7 +364,8 @@ struct AuditValidationTests {
             // Expected change: ~0.13° - definitely not 22°
             #expect(
                 delta < 1.0,
-                "Moon should move < 1° in 15 minutes, got \(delta)°")
+                "Moon should move < 1° in 15 minutes, got \(delta)°"
+            )
         }
     }
 
@@ -362,7 +373,6 @@ struct AuditValidationTests {
 
     @Suite("Moon State Vector")
     struct MoonStateTests {
-
         @Test("Moon.geoState returns valid position and velocity")
         func moonGeoState() throws {
             let time = AuditValidationTests.auditTime
@@ -371,7 +381,8 @@ struct AuditValidationTests {
             // Position should be around 0.00257 AU (Moon's mean distance)
             #expect(
                 state.position.magnitude > 0.002 && state.position.magnitude < 0.003,
-                "Moon distance should be ~0.00257 AU, got \(state.position.magnitude) AU")
+                "Moon distance should be ~0.00257 AU, got \(state.position.magnitude) AU"
+            )
 
             // Velocity should be non-zero
             let velocityMag = sqrt(
@@ -422,7 +433,8 @@ struct AuditValidationTests {
             // State vector velocity should be in correct range
             #expect(
                 angularVelFromState > 10 && angularVelFromState < 16,
-                "State vector velocity should be 11-15°/day")
+                "State vector velocity should be 11-15°/day"
+            )
         }
     }
 }

@@ -55,6 +55,7 @@ public struct Vector3D: Sendable, Equatable, Hashable {
 }
 
 extension Vector3D: CustomStringConvertible {
+    /// A textual representation of the vector in AU.
     public var description: String {
         String(format: "(%.6f, %.6f, %.6f) AU", x, y, z)
     }
@@ -92,6 +93,7 @@ public struct Spherical: Sendable, Equatable, Hashable {
 }
 
 extension Spherical: CustomStringConvertible {
+    /// A textual representation showing latitude, longitude, and distance.
     public var description: String {
         String(format: "lat: %.2f°, lon: %.2f°, dist: %.4f AU", latitude, longitude, distance)
     }
@@ -156,6 +158,7 @@ public struct Equatorial: Sendable, Equatable, Hashable {
 }
 
 extension Equatorial: CustomStringConvertible {
+    /// A textual representation showing formatted right ascension and declination.
     public var description: String {
         "RA: \(rightAscensionFormatted), Dec: \(declinationFormatted)"
     }
@@ -193,6 +196,7 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
 }
 
 extension Ecliptic: CustomStringConvertible {
+    /// A textual representation showing ecliptic longitude and latitude.
     public var description: String {
         String(format: "λ: %.2f°, β: %.2f°", longitude, latitude)
     }
@@ -223,7 +227,12 @@ public struct Horizon: Sendable, Equatable, Hashable {
     public let declination: Double
 
     /// Creates horizon coordinates.
-    public init(altitude: Double, azimuth: Double, rightAscension: Double = 0, declination: Double = 0) {
+    public init(
+        altitude: Double,
+        azimuth: Double,
+        rightAscension: Double = 0,
+        declination: Double = 0
+    ) {
         self.altitude = altitude
         self.azimuth = azimuth
         self.rightAscension = rightAscension
@@ -269,10 +278,16 @@ public struct Horizon: Sendable, Equatable, Hashable {
 }
 
 extension Horizon: CustomStringConvertible {
+    /// A textual representation showing altitude, azimuth, and compass direction.
     public var description: String {
         let status = isAboveHorizon ? "↑" : "↓"
-        return String(format: "%@ Alt: %.1f°, Az: %.1f° (%@)",
-                      status, altitude, azimuth, compassDirection)
+        return String(
+            format: "%@ Alt: %.1f°, Az: %.1f° (%@)",
+            status,
+            altitude,
+            azimuth,
+            compassDirection
+        )
     }
 }
 

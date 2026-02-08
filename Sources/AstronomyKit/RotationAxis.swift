@@ -49,10 +49,14 @@ public struct RotationAxis: Sendable, Equatable {
 }
 
 extension RotationAxis: CustomStringConvertible {
+    /// A textual representation showing right ascension, declination, and spin angle of the pole.
     public var description: String {
         String(
             format: "Pole: RA %.2fh, Dec %.1f°, Spin: %.1f°",
-            rightAscension, declination, spin)
+            rightAscension,
+            declination,
+            spin
+        )
     }
 }
 

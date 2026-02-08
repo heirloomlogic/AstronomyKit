@@ -44,6 +44,7 @@ public enum NodeKind: Sendable, Equatable, Hashable, Codable {
 }
 
 extension NodeKind: CustomStringConvertible {
+    /// A textual representation of the node type.
     public var description: String { name }
 }
 
@@ -80,6 +81,7 @@ public struct LunarNode: Sendable, Equatable {
 }
 
 extension LunarNode: CustomStringConvertible {
+    /// A textual representation showing the node symbol, type, and time.
     public var description: String {
         "\(kind.symbol) \(kind.name) at \(time)"
     }
@@ -120,8 +122,10 @@ extension Moon {
     ///   - endTime: The end of the range.
     /// - Returns: An array of node crossings.
     /// - Throws: `AstronomyError` if the search fails.
-    public static func nodeCrossings(from startTime: AstroTime, to endTime: AstroTime) throws
-        -> [LunarNode] {
+    public static func nodeCrossings(
+        from startTime: AstroTime,
+        to endTime: AstroTime
+    ) throws -> [LunarNode] {
         var nodes: [LunarNode] = []
         var current = try searchNode(after: startTime)
 

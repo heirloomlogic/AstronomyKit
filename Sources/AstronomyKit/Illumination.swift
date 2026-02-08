@@ -71,10 +71,14 @@ public struct Illumination: Sendable, Equatable {
 }
 
 extension Illumination: CustomStringConvertible {
+    /// A textual representation showing magnitude, phase percentage, and ring tilt.
     public var description: String {
         String(
             format: "Mag %.1f, Phase %.0f%%, Ring tilt %.1f°",
-            magnitude, phaseFraction * 100, ringTilt)
+            magnitude,
+            phaseFraction * 100,
+            ringTilt
+        )
     }
 }
 

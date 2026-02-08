@@ -36,6 +36,7 @@ public enum Visibility: Sendable, Equatable, Hashable, Codable {
 }
 
 extension Visibility: CustomStringConvertible {
+    /// A textual representation indicating morning or evening visibility.
     public var description: String { name }
 }
 
@@ -82,6 +83,7 @@ public struct Elongation: Sendable, Equatable {
 }
 
 extension Elongation: CustomStringConvertible {
+    /// A textual representation showing visibility and angular separation from the Sun.
     public var description: String {
         String(format: "%@ star, %.1f° from Sun", visibility.name, angle)
     }

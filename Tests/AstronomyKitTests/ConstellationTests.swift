@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Constellation Tests")
 struct ConstellationTests {
-
     @Test("Find Orion from Betelgeuse coordinates")
     func findOrion() throws {
         // Betelgeuse RA ~5.92h, Dec ~7.41°

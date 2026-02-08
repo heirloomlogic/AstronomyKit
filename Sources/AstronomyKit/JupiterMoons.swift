@@ -44,6 +44,7 @@ public struct JupiterMoons: Sendable, Equatable {
 }
 
 extension JupiterMoons: CustomStringConvertible {
+    /// A textual representation showing the position of each Galilean moon.
     public var description: String {
         """
         Io: \(io.position)

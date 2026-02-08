@@ -12,12 +12,10 @@ import Testing
 
 @Suite("CelestialBody Tests")
 struct CelestialBodyTests {
-
     // MARK: - Basic Properties
 
     @Suite("Basic Properties")
     struct BasicProperties {
-
         @Test("Most bodies have names", arguments: CelestialBody.allCases)
         func mostBodiesHaveNames(body: CelestialBody) {
             let name = body.name
@@ -48,7 +46,8 @@ struct CelestialBodyTests {
                 (CelestialBody.uranus, "Uranus"),
                 (CelestialBody.neptune, "Neptune"),
                 (CelestialBody.pluto, "Pluto"),
-            ])
+            ]
+        )
         func planetNames(body: CelestialBody, expectedName: String) {
             #expect(body.name == expectedName)
         }
@@ -68,7 +67,6 @@ struct CelestialBodyTests {
 
     @Suite("Name Initialization")
     struct NameInitialization {
-
         @Test("Initialize from valid name")
         func initFromValidName() {
             let mars = CelestialBody(name: "Mars")
@@ -104,7 +102,6 @@ struct CelestialBodyTests {
 
     @Suite("Categories")
     struct Categories {
-
         @Test("Planets array contains correct bodies")
         func planetsArray() {
             let planets = CelestialBody.planets
@@ -190,7 +187,6 @@ struct CelestialBodyTests {
 
     @Suite("Orbital Properties")
     struct OrbitalProperties {
-
         @Test("Orbital periods for planets")
         func orbitalPeriods() {
             // Earth's orbital period should be ~365 days
@@ -227,7 +223,8 @@ struct CelestialBodyTests {
 
             // Jupiter should have a much larger mass product than Earth
             if let jupiterMass = CelestialBody.jupiter.massProduct,
-                let earthMass = CelestialBody.earth.massProduct {
+                let earthMass = CelestialBody.earth.massProduct
+            {
                 #expect(jupiterMass > earthMass * 300)
             }
         }
@@ -249,7 +246,6 @@ struct CelestialBodyTests {
 
     @Suite("CaseIterable")
     struct CaseIterableTests {
-
         @Test("allCases is not empty")
         func allCasesNotEmpty() {
             #expect(!CelestialBody.allCases.isEmpty)
@@ -280,7 +276,6 @@ struct CelestialBodyTests {
 
     @Suite("Protocol Conformances")
     struct ProtocolConformances {
-
         @Test("CustomStringConvertible returns name")
         func description() {
             #expect(CelestialBody.mars.description == "Mars")
@@ -311,7 +306,6 @@ struct CelestialBodyTests {
 
     @Suite("Codable")
     struct CodableTests {
-
         @Test(
             "Encode and decode round-trip",
             arguments: [
@@ -319,7 +313,8 @@ struct CelestialBodyTests {
                 CelestialBody.moon,
                 CelestialBody.mars,
                 CelestialBody.jupiter,
-            ])
+            ]
+        )
         func encodeDecodeRoundTrip(body: CelestialBody) throws {
             let encoder = JSONEncoder()
             let data = try encoder.encode(body)
@@ -346,7 +341,6 @@ struct CelestialBodyTests {
 
     @Suite("Raw Values")
     struct RawValueTests {
-
         @Test("Raw values are consistent integers")
         func rawValuesConsistent() {
             #expect(CelestialBody.mercury.rawValue == 0)

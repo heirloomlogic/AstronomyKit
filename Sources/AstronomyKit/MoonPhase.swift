@@ -51,6 +51,7 @@ public enum MoonPhase: Int, CaseIterable, Sendable, Codable {
 }
 
 extension MoonPhase: CustomStringConvertible {
+    /// A textual representation showing the emoji and name of the phase.
     public var description: String { "\(emoji) \(name)" }
 }
 
@@ -78,6 +79,7 @@ public struct MoonQuarter: Sendable, Equatable {
 }
 
 extension MoonQuarter: CustomStringConvertible {
+    /// A textual representation showing the phase emoji, name, and time.
     public var description: String {
         "\(phase.emoji) \(phase.name) at \(time)"
     }

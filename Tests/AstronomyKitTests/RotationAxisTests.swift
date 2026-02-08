@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Rotation Axis Tests")
 struct RotationAxisTests {
-
     @Test("Earth rotation axis returns valid data")
     func earthRotationAxis() throws {
         let time = AstroTime(year: 2_025, month: 6, day: 21)

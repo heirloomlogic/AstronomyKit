@@ -126,8 +126,9 @@ extension RotationMatrix {
     /// Creates a rotation from J2000 equatorial to equatorial-of-date coordinates.
     ///
     /// - Parameter time: The time for the of-date frame.
-    public static func equatorialJ2000ToEquatorialOfDate(at time: AstroTime) throws
-        -> RotationMatrix {
+    public static func equatorialJ2000ToEquatorialOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
         var t = time.raw
         let result = Astronomy_Rotation_EQJ_EQD(&t)
         return try RotationMatrix(result)
@@ -136,8 +137,9 @@ extension RotationMatrix {
     /// Creates a rotation from equatorial-of-date to J2000 equatorial coordinates.
     ///
     /// - Parameter time: The time for the of-date frame.
-    public static func equatorialOfDateToEquatorialJ2000(at time: AstroTime) throws
-        -> RotationMatrix {
+    public static func equatorialOfDateToEquatorialJ2000(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
         var t = time.raw
         let result = Astronomy_Rotation_EQD_EQJ(&t)
         return try RotationMatrix(result)
@@ -263,6 +265,7 @@ extension Vector3D {
 }
 
 extension RotationMatrix: CustomStringConvertible {
+    /// A textual representation of the 3×3 rotation matrix.
     public var description: String {
         """
         [\(matrix[0]), \(matrix[1]), \(matrix[2])]

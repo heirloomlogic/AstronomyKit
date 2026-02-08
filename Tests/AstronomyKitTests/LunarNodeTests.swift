@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Lunar Node")
 struct LunarNodeTests {
-
     @Test("Search lunar node finds ascending or descending")
     func searchLunarNode() throws {
         let startTime = AstroTime(year: 2_025, month: 1, day: 1)

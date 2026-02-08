@@ -11,12 +11,10 @@ import Testing
 
 @Suite("Rotation Matrix Tests")
 struct RotationTests {
-
     // MARK: - Identity and Basic Operations
 
     @Suite("Basic Operations")
     struct BasicOperationsTests {
-
         @Test("Identity matrix")
         func identityMatrix() {
             let identity = RotationMatrix.identity
@@ -69,7 +67,6 @@ struct RotationTests {
 
     @Suite("Coordinate Conversions")
     struct CoordinateConversionsTests {
-
         @Test("EQJ to ECL and back")
         func eqjToEclAndBack() throws {
             let toEcl = try RotationMatrix.equatorialJ2000ToEcliptic()
@@ -158,7 +155,6 @@ struct RotationTests {
 
     @Suite("Vector Rotation")
     struct VectorRotationTests {
-
         @Test("Rotate vector with identity")
         func rotateWithIdentity() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -187,7 +183,6 @@ struct RotationTests {
 
     @Suite("Protocol Conformances")
     struct ProtocolConformancesTests {
-
         @Test("Equatable")
         func equatable() throws {
             let r1 = try RotationMatrix.equatorialJ2000ToEcliptic()

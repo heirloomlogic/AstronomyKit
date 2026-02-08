@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Seasons Tests")
 struct SeasonsTests {
-
     // MARK: - Basic Calculation Tests
 
     @Suite("Basic Calculations")
     struct BasicCalculations {
-
         @Test("Calculate seasons for a year")
         func calculateForYear() throws {
             let seasons = try Seasons.forYear(2_025)
@@ -83,7 +81,6 @@ struct SeasonsTests {
 
     @Suite("Date Accuracy")
     struct DateAccuracy {
-
         @Test("March equinox around expected day")
         func marchEquinoxDay() throws {
             let seasons = try Seasons.forYear(2_025)
@@ -133,7 +130,6 @@ struct SeasonsTests {
 
     @Suite("All Events")
     struct AllEventsTests {
-
         @Test("allEvents returns 4 events")
         func fourEvents() throws {
             let seasons = try Seasons.forYear(2_025)
@@ -168,7 +164,6 @@ struct SeasonsTests {
 
     @Suite("Multi-Year")
     struct MultiYearTests {
-
         @Test("Different years have different dates")
         func differentYears() throws {
             let seasons2024 = try Seasons.forYear(2_024)
@@ -214,7 +209,6 @@ struct SeasonsTests {
 
     @Suite("Protocol Conformances")
     struct ProtocolConformances {
-
         @Test("Equatable - equal seasons")
         func equatable() throws {
             let s1 = try Seasons.forYear(2_025)
@@ -258,7 +252,6 @@ struct SeasonsTests {
 
     @Suite("Codable")
     struct CodableTests {
-
         @Test("Encode and decode round-trip")
         func roundTrip() throws {
             let original = try Seasons.forYear(2_025)

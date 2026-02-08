@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.4.5"),
-        .package(url: "https://github.com/simplydanny/swiftlintplugins", from: "0.63.0"),
+        .package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin.git", from: "1.0.0"),
     ],
     targets: [
         .target(
@@ -34,14 +34,14 @@ let package = Package(
             name: "AstronomyKit",
             dependencies: ["CLibAstronomy"],
             plugins: [
-                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
             ]
         ),
         .testTarget(
             name: "AstronomyKitTests",
             dependencies: ["AstronomyKit"],
             plugins: [
-                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
             ]
         ),
     ]

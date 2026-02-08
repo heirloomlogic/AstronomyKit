@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Elongation Tests")
 struct ElongationTests {
-
     // MARK: - Visibility Tests
 
     @Suite("Visibility")
     struct VisibilityTests {
-
         @Test("Visibility names")
         func visibilityNames() {
             #expect(Visibility.morning.name == "Morning")
@@ -60,7 +58,6 @@ struct ElongationTests {
 
     @Suite("Elongation At Time")
     struct ElongationAtTimeTests {
-
         @Test("Get elongation for Venus")
         func venusElongation() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -112,7 +109,6 @@ struct ElongationTests {
 
     @Suite("Max Elongation Search")
     struct MaxElongationSearchTests {
-
         @Test("Search max elongation for Mercury")
         func mercuryMaxElong() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -152,7 +148,8 @@ struct ElongationTests {
             // Find two consecutive max elongations for Mercury
             let first = try CelestialBody.mercury.searchMaxElongation(after: startTime)
             let second = try CelestialBody.mercury.searchMaxElongation(
-                after: first.time.addingDays(1))
+                after: first.time.addingDays(1)
+            )
 
             // Should be different visibility (morning vs evening)
             #expect(first.visibility != second.visibility)
@@ -163,7 +160,6 @@ struct ElongationTests {
 
     @Suite("Elongation Struct")
     struct ElongationStructTests {
-
         @Test("Elongation has all properties")
         func hasAllProperties() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -200,7 +196,6 @@ struct ElongationTests {
 
     @Suite("Physical Meaning")
     struct PhysicalMeaningTests {
-
         @Test("Inner planet max elongation < 90°")
         func innerPlanetMaxElongation() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)

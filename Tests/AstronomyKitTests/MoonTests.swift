@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Moon Tests")
 struct MoonTests {
-
     // MARK: - MoonPhase Enum Tests
 
     @Suite("MoonPhase Enum")
     struct MoonPhaseEnumTests {
-
         @Test("All phases have names")
         func allPhasesHaveNames() {
             for phase in MoonPhase.allCases {
@@ -88,7 +86,6 @@ struct MoonTests {
 
     @Suite("Phase Angle")
     struct PhaseAngleTests {
-
         @Test("Phase angle is in valid range")
         func angleInRange() throws {
             let time = AstroTime.now
@@ -114,7 +111,6 @@ struct MoonTests {
 
     @Suite("Phase Names")
     struct PhaseNameTests {
-
         @Test("Phase name for New Moon")
         func newMoonName() {
             let name = Moon.phaseName(for: 0)
@@ -174,7 +170,6 @@ struct MoonTests {
 
     @Suite("Phase Emoji")
     struct PhaseEmojiTests {
-
         @Test("Emoji for New Moon")
         func newMoonEmoji() {
             let emoji = Moon.emoji(for: 0)
@@ -204,7 +199,6 @@ struct MoonTests {
 
     @Suite("Illumination Calculation")
     struct IlluminationTests {
-
         @Test("New Moon has ~0% illumination")
         func newMoonIllumination() {
             let illumination = Moon.illumination(for: 0)
@@ -231,7 +225,8 @@ struct MoonTests {
 
         @Test(
             "Illumination is between 0 and 1",
-            arguments: [0.0, 45.0, 90.0, 135.0, 180.0, 225.0, 270.0, 315.0])
+            arguments: [0.0, 45.0, 90.0, 135.0, 180.0, 225.0, 270.0, 315.0]
+        )
         func illuminationRange(angle: Double) {
             let illumination = Moon.illumination(for: angle)
             #expect(illumination >= 0)
@@ -243,7 +238,6 @@ struct MoonTests {
 
     @Suite("Quarter Search")
     struct QuarterSearchTests {
-
         @Test("Search finds next quarter")
         func searchFindsQuarter() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -283,7 +277,8 @@ struct MoonTests {
             // Should have all 4 phases
             #expect(
                 phases.contains(.new) || phases.contains(.firstQuarter)
-                    || phases.contains(.full) || phases.contains(.thirdQuarter))
+                    || phases.contains(.full) || phases.contains(.thirdQuarter)
+            )
         }
 
         @Test("Quarters in range")
@@ -309,7 +304,6 @@ struct MoonTests {
 
     @Suite("Phase Search")
     struct PhaseSearchTests {
-
         @Test("Search specific phase", arguments: MoonPhase.allCases)
         func searchSpecificPhase(phase: MoonPhase) throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -332,7 +326,6 @@ struct MoonTests {
 
     @Suite("MoonQuarter")
     struct MoonQuarterTests {
-
         @Test("MoonQuarter has phase and time")
         func quarterProperties() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -366,7 +359,6 @@ struct MoonTests {
 
     @Suite("Ecliptic Position")
     struct EclipticPositionTests {
-
         @Test("Ecliptic position has valid latitude")
         func validLatitude() throws {
             let time = AstroTime.now

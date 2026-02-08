@@ -12,12 +12,10 @@ import Testing
 
 @Suite("AstronomyError Tests")
 struct AstronomyErrorTests {
-
     // MARK: - Error Cases Tests
 
     @Suite("Error Cases")
     struct ErrorCasesTests {
-
         @Test("All error case descriptions exist")
         func allCasesHaveDescriptions() {
             let errors: [AstronomyError] = [
@@ -51,7 +49,8 @@ struct AstronomyErrorTests {
             #expect(AstronomyError.noConvergence.description.contains("converge"))
             #expect(
                 AstronomyError.badTime.description.contains("time")
-                    || AstronomyError.badTime.description.contains("Date"))
+                    || AstronomyError.badTime.description.contains("Date")
+            )
             #expect(AstronomyError.earthNotAllowed.description.contains("Earth"))
             #expect(AstronomyError.badVector.description.contains("ector"))
             #expect(AstronomyError.searchFailure.description.contains("earch"))
@@ -61,7 +60,8 @@ struct AstronomyErrorTests {
             #expect(AstronomyError.invalidParameter.description.contains("arameter"))
             #expect(
                 AstronomyError.failApsis.description.contains("apsis")
-                    || AstronomyError.failApsis.description.contains("psis"))
+                    || AstronomyError.failApsis.description.contains("psis")
+            )
             #expect(AstronomyError.bufferTooSmall.description.contains("uffer"))
             #expect(AstronomyError.outOfMemory.description.contains("emory"))
             #expect(AstronomyError.inconsistentTimes.description.contains("imes"))
@@ -78,7 +78,6 @@ struct AstronomyErrorTests {
 
     @Suite("Equatable")
     struct EquatableTests {
-
         @Test("Same errors are equal")
         func sameAreEqual() {
             #expect(AstronomyError.invalidBody == AstronomyError.invalidBody)
@@ -106,7 +105,6 @@ struct AstronomyErrorTests {
 
     @Suite("Hashable")
     struct HashableTests {
-
         @Test("Can be used in Set")
         func usedInSet() {
             let errors: Set<AstronomyError> = [
@@ -142,7 +140,6 @@ struct AstronomyErrorTests {
 
     @Suite("Sendable")
     struct SendableTests {
-
         @Test("Error is Sendable")
         func isSendable() async {
             let error: AstronomyError = .invalidBody
@@ -158,7 +155,6 @@ struct AstronomyErrorTests {
 
     @Suite("Error Protocol")
     struct ErrorProtocolTests {
-
         @Test("Conforms to Error protocol")
         func conformsToError() {
             let error: Error = AstronomyError.invalidBody
@@ -196,7 +192,6 @@ struct AstronomyErrorTests {
 
     @Suite("Real Errors")
     struct RealErrorTests {
-
         @Test("Earth geocentric position behavior")
         func earthGeoPosition() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)

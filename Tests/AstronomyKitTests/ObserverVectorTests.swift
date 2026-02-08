@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Observer Vector Tests")
 struct ObserverVectorTests {
-
     let greenwich = Observer.greenwich
 
     @Test("Observer vector returns position")

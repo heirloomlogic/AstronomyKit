@@ -1,5 +1,5 @@
 {
-  "originHash" : "f10b39b7f178eb537b8d2d77b2e1b5e25ddea9f011584d997d19d05b0e9af32c",
+  "originHash" : "b179b0f795800eda1f34a8e7e187689fe6586a41643bff49d68ff1d9c0815374",
   "pins" : [
     {
       "identity" : "swift-docc-plugin",
@@ -20,12 +20,12 @@
       }
     },
     {
-      "identity" : "swiftlintplugins",
+      "identity" : "swiftformatplugin",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/simplydanny/swiftlintplugins",
+      "location" : "https://github.com/HeirloomLogic/SwiftFormatPlugin.git",
       "state" : {
-        "revision" : "707f7face5524fe918f82dd39c5c80cb3e591a44",
-        "version" : "0.63.0"
+        "revision" : "89ca77ce994e6ee0a8dba579bfbfeb4ac4f04741",
+        "version" : "1.0.0"
       }
     }
   ],

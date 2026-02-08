@@ -44,7 +44,6 @@ import Foundation
 /// print("Chiron position: \(position)")
 /// ```
 public enum Chiron {
-
     // MARK: - Reference Epoch Data
 
     /// Reference epochs with pre-computed state vectors from JPL Horizons.
@@ -354,7 +353,12 @@ public enum Chiron {
         let eq = try equatorial(at: time)
         var t = time.raw
         let result = Astronomy_Horizon(
-            &t, observer.raw, eq.rightAscension, eq.declination, refraction.raw)
+            &t,
+            observer.raw,
+            eq.rightAscension,
+            eq.declination,
+            refraction.raw
+        )
         return Horizon(result)
     }
 
@@ -363,9 +367,13 @@ public enum Chiron {
     /// Selects the closest reference epoch and simulates to the target time.
     private static func simulatedState(at time: AstroTime) throws -> StateVector {
         // Find the closest reference epoch
-        let (epochTime, closestState) = referenceEpochs.min { lhs, rhs in
-            abs(lhs.time.ut - time.ut) < abs(rhs.time.ut - time.ut)
-        }!
+        guard
+            let (epochTime, closestState) = referenceEpochs.min(by: { lhs, rhs in
+                abs(lhs.time.ut - time.ut) < abs(rhs.time.ut - time.ut)
+            })
+        else {
+            throw AstronomyError.internalError
+        }
 
         // If we're very close to the epoch (within 1 day), return the epoch state directly
         if abs(closestState.time.ut - time.ut) < 1.0 {

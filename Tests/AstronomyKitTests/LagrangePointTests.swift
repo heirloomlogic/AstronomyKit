@@ -11,12 +11,10 @@ import Testing
 
 @Suite("Lagrange Point Tests")
 struct LagrangePointTests {
-
     // MARK: - LagrangePointID Tests
 
     @Suite("LagrangePointID")
     struct LagrangePointIDTests {
-
         @Test("All Lagrange points have names")
         func allHaveNames() {
             for point in LagrangePointID.allCases {
@@ -47,7 +45,6 @@ struct LagrangePointTests {
 
     @Suite("Sun-Earth System")
     struct SunEarthTests {
-
         @Test("Calculate Sun-Earth L1")
         func sunEarthL1() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -102,7 +99,6 @@ struct LagrangePointTests {
 
     @Suite("Earth-Moon System")
     struct EarthMoonTests {
-
         @Test("Calculate Earth-Moon L1")
         func earthMoonL1() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -121,7 +117,8 @@ struct LagrangePointTests {
 
         @Test(
             "L4 and L5 are at 60-degree positions",
-            arguments: [LagrangePointID.l4, LagrangePointID.l5])
+            arguments: [LagrangePointID.l4, LagrangePointID.l5]
+        )
         func triangularPoints(point: LagrangePointID) throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
 
@@ -142,7 +139,6 @@ struct LagrangePointTests {
 
     @Suite("StateVector")
     struct StateVectorTests {
-
         @Test("StateVector is Equatable")
         func equatable() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)

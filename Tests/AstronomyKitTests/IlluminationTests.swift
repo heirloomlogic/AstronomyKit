@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Illumination")
 struct IlluminationTests {
-
     @Test("Venus illumination returns valid data")
     func venusIllumination() throws {
         let time = AstroTime(year: 2_025, month: 6, day: 21)

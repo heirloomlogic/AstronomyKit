@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Atmosphere Tests")
 struct AtmosphereTests {
-
     @Test("Sea level atmosphere")
     func seaLevelAtmosphere() throws {
         let atm = try Atmosphere.at(elevation: 0)

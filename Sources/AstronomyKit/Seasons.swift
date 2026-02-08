@@ -54,6 +54,7 @@ public struct Seasons: Sendable, Equatable {
 }
 
 extension Seasons: CustomStringConvertible {
+    /// A textual representation listing all four equinox and solstice times.
     public var description: String {
         """
         🌸 March Equinox:     \(marchEquinox)

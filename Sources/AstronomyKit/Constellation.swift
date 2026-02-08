@@ -48,6 +48,7 @@ public struct Constellation: Sendable, Equatable, Hashable {
 }
 
 extension Constellation: CustomStringConvertible {
+    /// A textual representation showing the IAU symbol and full name.
     public var description: String {
         "\(symbol) (\(name))"
     }

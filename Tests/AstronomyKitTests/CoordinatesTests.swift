@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Coordinates Tests")
 struct CoordinatesTests {
-
     // MARK: - Vector3D Tests
 
     @Suite("Vector3D")
     struct Vector3DTests {
-
         @Test("Create vector with components")
         func createVector() {
             let time = AstroTime.now
@@ -111,7 +109,6 @@ struct CoordinatesTests {
 
     @Suite("Spherical")
     struct SphericalTests {
-
         @Test("Create spherical with components")
         func createSpherical() {
             let spherical = Spherical(latitude: 45.0, longitude: 120.0, distance: 1.5)
@@ -158,7 +155,6 @@ struct CoordinatesTests {
 
     @Suite("Horizon")
     struct HorizonTests {
-
         @Test("Above horizon detection")
         func aboveHorizon() throws {
             // Get Sun position at noon in summer - should be well above horizon
@@ -217,7 +213,8 @@ struct CoordinatesTests {
                 (225.0, "SW"),
                 (270.0, "W"),
                 (315.0, "NW"),
-            ])
+            ]
+        )
         func compassDirections(azimuth: Double, expected: String) throws {
             // Create a horizon with specific azimuth
             let time = AstroTime.now
@@ -260,7 +257,6 @@ struct CoordinatesTests {
 
     @Suite("Equatorial")
     struct EquatorialTests {
-
         @Test("Right ascension in valid range")
         func raRange() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -327,7 +323,6 @@ struct CoordinatesTests {
 
     @Suite("Ecliptic")
     struct EclipticTests {
-
         @Test("Longitude in valid range")
         func longitudeRange() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -379,7 +374,6 @@ struct CoordinatesTests {
 
     @Suite("Refraction")
     struct RefractionTests {
-
         @Test("Refraction enum cases exist")
         func refractionCases() {
             _ = Refraction.none
@@ -393,10 +387,14 @@ struct CoordinatesTests {
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
 
             let horizonNoRefraction = try CelestialBody.sun.horizon(
-                at: time, from: observer, refraction: .none
+                at: time,
+                from: observer,
+                refraction: .none
             )
             let horizonNormal = try CelestialBody.sun.horizon(
-                at: time, from: observer, refraction: .normal
+                at: time,
+                from: observer,
+                refraction: .normal
             )
 
             // Refraction correction should increase apparent altitude

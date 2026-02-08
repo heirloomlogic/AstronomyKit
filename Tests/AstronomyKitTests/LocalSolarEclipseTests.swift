@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Local Solar Eclipse")
 struct LocalSolarEclipseTests {
-
     @Test("Search local solar eclipse from NYC")
     func searchLocalSolarEclipse() throws {
         let startTime = AstroTime(year: 2_025, month: 1, day: 1)
