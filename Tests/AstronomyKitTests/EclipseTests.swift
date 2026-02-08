@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Eclipse Tests")
 struct EclipseTests {
-
     // MARK: - EclipseKind Tests
 
     @Suite("EclipseKind")
     struct EclipseKindTests {
-
         @Test("Eclipse kind names")
         func kindNames() {
             #expect(EclipseKind.none.name == "None")
@@ -43,7 +41,6 @@ struct EclipseTests {
 
     @Suite("Lunar Eclipse Search")
     struct LunarEclipseSearchTests {
-
         @Test("Search finds next lunar eclipse")
         func searchFindsEclipse() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -104,7 +101,6 @@ struct EclipseTests {
 
     @Suite("Global Solar Eclipse Search")
     struct GlobalSolarEclipseSearchTests {
-
         @Test("Search finds next global solar eclipse")
         func searchFindsEclipse() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -126,7 +122,8 @@ struct EclipseTests {
         func hasCoordinatesForTotalAnnular() throws {
             // Search for several eclipses until we find a total or annular
             var eclipse = try Eclipse.searchGlobalSolar(
-                after: AstroTime(year: 2_020, month: 1, day: 1))
+                after: AstroTime(year: 2_020, month: 1, day: 1)
+            )
             var attempts = 0
 
             while eclipse.kind == .partial && attempts < 10 {
@@ -171,7 +168,6 @@ struct EclipseTests {
 
     @Suite("LunarEclipse Struct")
     struct LunarEclipseStructTests {
-
         @Test("LunarEclipse has all properties")
         func hasAllProperties() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -208,7 +204,6 @@ struct EclipseTests {
 
     @Suite("GlobalSolarEclipse Struct")
     struct GlobalSolarEclipseStructTests {
-
         @Test("GlobalSolarEclipse has all properties")
         func hasAllProperties() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -247,7 +242,6 @@ struct EclipseTests {
 
     @Suite("Historical Eclipses")
     struct HistoricalEclipseTests {
-
         @Test("Find 2017 total solar eclipse")
         func eclipse2017() throws {
             // Great American Eclipse was August 21, 2017

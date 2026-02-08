@@ -12,7 +12,6 @@ import Testing
 
 @Suite("RiseSet Tests")
 struct RiseSetTests {
-
     // Common test fixtures
     static let nyc = Observer(latitude: 40.7128, longitude: -74.0060)
     static let london = Observer(latitude: 51.5074, longitude: -0.1278)
@@ -22,7 +21,6 @@ struct RiseSetTests {
 
     @Suite("RiseSetDirection")
     struct RiseSetDirectionTests {
-
         @Test("Direction enum cases")
         func directionCases() {
             #expect(RiseSetDirection.rise.rawValue == 1)
@@ -34,7 +32,6 @@ struct RiseSetTests {
 
     @Suite("Rise Time")
     struct RiseTimeTests {
-
         @Test("Sun rises in the morning")
         func sunRises() throws {
             let sunrise = try CelestialBody.sun.riseTime(
@@ -99,7 +96,6 @@ struct RiseSetTests {
 
     @Suite("Set Time")
     struct SetTimeTests {
-
         @Test("Sun sets in the evening")
         func sunSets() throws {
             let sunset = try CelestialBody.sun.setTime(
@@ -146,7 +142,6 @@ struct RiseSetTests {
 
     @Suite("Search Rise Set")
     struct SearchRiseSetTests {
-
         @Test("Generic search for rise")
         func searchRise() throws {
             let rise = try CelestialBody.sun.searchRiseSet(
@@ -196,7 +191,6 @@ struct RiseSetTests {
 
     @Suite("Hour Angle")
     struct HourAngleTests {
-
         @Test("Search for 0 hour angle (culmination)")
         func searchZeroHourAngle() throws {
             let event = try CelestialBody.sun.searchHourAngle(
@@ -236,7 +230,6 @@ struct RiseSetTests {
 
     @Suite("Culmination")
     struct CulminationTests {
-
         @Test("Sun culmination (transit)")
         func sunCulmination() throws {
             let event = try CelestialBody.sun.culmination(
@@ -266,9 +259,13 @@ struct RiseSetTests {
             let winter = AstroTime(year: 2_025, month: 12, day: 21)
 
             let summerCulm = try CelestialBody.sun.culmination(
-                after: summer, from: RiseSetTests.nyc)
+                after: summer,
+                from: RiseSetTests.nyc
+            )
             let winterCulm = try CelestialBody.sun.culmination(
-                after: winter, from: RiseSetTests.nyc)
+                after: winter,
+                from: RiseSetTests.nyc
+            )
 
             // Summer sun is higher
             #expect(summerCulm.horizon.altitude > winterCulm.horizon.altitude)
@@ -279,7 +276,6 @@ struct RiseSetTests {
 
     @Suite("HourAngleEvent")
     struct HourAngleEventTests {
-
         @Test("HourAngleEvent has time and horizon")
         func eventProperties() throws {
             let event = try CelestialBody.sun.searchHourAngle(
@@ -299,9 +295,15 @@ struct RiseSetTests {
         @Test("Equatable")
         func equatable() throws {
             let e1 = try CelestialBody.sun.searchHourAngle(
-                0, after: RiseSetTests.testDate, from: RiseSetTests.nyc)
+                0,
+                after: RiseSetTests.testDate,
+                from: RiseSetTests.nyc
+            )
             let e2 = try CelestialBody.sun.searchHourAngle(
-                0, after: RiseSetTests.testDate, from: RiseSetTests.nyc)
+                0,
+                after: RiseSetTests.testDate,
+                from: RiseSetTests.nyc
+            )
 
             #expect(e1 == e2)
         }
@@ -311,7 +313,6 @@ struct RiseSetTests {
 
     @Suite("DailyEvents")
     struct DailyEventsTests {
-
         @Test("Create daily events for Sun")
         func createSunDailyEvents() throws {
             let events = try DailyEvents(
@@ -387,15 +388,18 @@ struct RiseSetTests {
 
     @Suite("Location Variations")
     struct LocationVariationTests {
-
         @Test("Different locations have different rise times")
         func locationAffectsRiseTime() throws {
             let tokyo = Observer(latitude: 35.6762, longitude: 139.6503)
 
             let nycRise = try CelestialBody.sun.riseTime(
-                after: RiseSetTests.testDate, from: RiseSetTests.nyc)
+                after: RiseSetTests.testDate,
+                from: RiseSetTests.nyc
+            )
             let tokyoRise = try CelestialBody.sun.riseTime(
-                after: RiseSetTests.testDate, from: tokyo)
+                after: RiseSetTests.testDate,
+                from: tokyo
+            )
 
             #expect(nycRise != nil)
             #expect(tokyoRise != nil)

@@ -64,7 +64,7 @@ public struct AstroTime: Sendable {
     public init(_ date: Date) {
         let calendar = Calendar(identifier: .gregorian)
         let components = calendar.dateComponents(
-            in: TimeZone(identifier: "UTC")!,
+            in: TimeZone(identifier: "UTC") ?? .gmt,
             from: date
         )
 
@@ -173,24 +173,28 @@ public struct AstroTime: Sendable {
 // MARK: - Protocol Conformances
 
 extension AstroTime: Equatable {
+    /// Returns whether two `AstroTime` values represent the same instant.
     public static func == (lhs: AstroTime, rhs: AstroTime) -> Bool {
         lhs.ut == rhs.ut
     }
 }
 
 extension AstroTime: Comparable {
+    /// Returns whether the left-hand time occurs before the right-hand time.
     public static func < (lhs: AstroTime, rhs: AstroTime) -> Bool {
         lhs.ut < rhs.ut
     }
 }
 
 extension AstroTime: Hashable {
+    /// Hashes the essential components of this time value.
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ut)
     }
 }
 
 extension AstroTime: CustomStringConvertible {
+    /// An ISO 8601 formatted string representation of this time.
     public var description: String {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -201,12 +205,14 @@ extension AstroTime: CustomStringConvertible {
 // MARK: - Codable
 
 extension AstroTime: Codable {
+    /// Creates a time by decoding a Universal Time value.
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let ut = try container.decode(Double.self)
         self.init(ut: ut)
     }
 
+    /// Encodes this time as its Universal Time value.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(ut)

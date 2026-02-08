@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Observer Tests")
 struct ObserverTests {
-
     // MARK: - Construction Tests
 
     @Suite("Construction")
     struct Construction {
-
         @Test("Create with latitude and longitude")
         func createWithLatLon() {
             let observer = Observer(latitude: 40.7128, longitude: -74.0060)
@@ -72,7 +70,6 @@ struct ObserverTests {
 
     @Suite("Common Locations")
     struct CommonLocations {
-
         @Test("Prime meridian")
         func primeMeridian() {
             let observer = Observer.primeMeridian
@@ -96,7 +93,6 @@ struct ObserverTests {
 
     @Suite("Gravity")
     struct GravityTests {
-
         @Test("Gravity is positive")
         func gravityPositive() {
             let observer = Observer(latitude: 40, longitude: -74)
@@ -133,7 +129,6 @@ struct ObserverTests {
 
     @Suite("Protocol Conformances")
     struct ProtocolConformances {
-
         @Test("Equatable - equal observers")
         func equatableEqual() {
             let obs1 = Observer(latitude: 40.7128, longitude: -74.0060, height: 10)
@@ -216,7 +211,6 @@ struct ObserverTests {
 
     @Suite("Codable")
     struct CodableTests {
-
         @Test("Encode and decode round-trip")
         func encodeDecodeRoundTrip() throws {
             let original = Observer(latitude: 40.7128, longitude: -74.0060, height: 10)
@@ -263,7 +257,6 @@ struct ObserverTests {
 
     @Suite("Edge Cases")
     struct EdgeCases {
-
         @Test("Very high altitude")
         func veryHighAltitude() {
             let observer = Observer(latitude: 0, longitude: 0, height: 35_786_000)  // Geostationary orbit

@@ -169,6 +169,7 @@ extension CelestialBody {
 // MARK: - CustomStringConvertible
 
 extension CelestialBody: CustomStringConvertible {
+    /// The human-readable name of this celestial body.
     public var description: String { name }
 }
 

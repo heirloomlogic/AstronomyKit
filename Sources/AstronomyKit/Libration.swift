@@ -61,10 +61,15 @@ public struct Libration: Sendable, Equatable {
 }
 
 extension Libration: CustomStringConvertible {
+    /// A textual representation showing libration angles, distance, and apparent diameter.
     public var description: String {
         String(
             format: "Libration: (%.2f°, %.2f°), Distance: %.0f km, Diameter: %.3f°",
-            subEarthLatitude, subEarthLongitude, distanceKM, apparentDiameter)
+            subEarthLatitude,
+            subEarthLongitude,
+            distanceKM,
+            apparentDiameter
+        )
     }
 }
 

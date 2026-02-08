@@ -91,6 +91,7 @@ extension Observer: Codable {
 // MARK: - CustomStringConvertible
 
 extension Observer: CustomStringConvertible {
+    /// A textual representation showing latitude, longitude, and elevation.
     public var description: String {
         let latDir = latitude >= 0 ? "N" : "S"
         let lonDir = longitude >= 0 ? "E" : "W"

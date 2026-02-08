@@ -52,10 +52,14 @@ public struct Atmosphere: Sendable, Equatable {
 }
 
 extension Atmosphere: CustomStringConvertible {
+    /// A textual representation including pressure, temperature, and density.
     public var description: String {
         String(
             format: "%.1f mbar, %.1f°C, density %.3f",
-            pressure, temperature, density)
+            pressure,
+            temperature,
+            density
+        )
     }
 }
 

@@ -12,7 +12,6 @@ import Testing
 
 @Suite("Fixed Star Tests")
 struct FixedStarTests {
-
     // MARK: - Test Subject
 
     /// Algol (Beta Persei) - used as test subject for all fixed star tests.
@@ -28,7 +27,6 @@ struct FixedStarTests {
 
     @Suite("Initialization")
     struct InitializationTests {
-
         @Test("Create fixed star with valid coordinates")
         func createStar() {
             let star = FixedStarTests.algol
@@ -58,7 +56,6 @@ struct FixedStarTests {
 
     @Suite("Equatorial Coordinates")
     struct EquatorialTests {
-
         @Test("RA matches catalog value")
         func raMatchesCatalog() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
@@ -98,7 +95,6 @@ struct FixedStarTests {
 
     @Suite("Ecliptic Coordinates")
     struct EclipticTests {
-
         @Test("Ecliptic longitude is in valid range")
         func eclipticLongitudeValid() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
@@ -157,7 +153,6 @@ struct FixedStarTests {
 
     @Suite("Horizon Coordinates")
     struct HorizonTests {
-
         @Test("Horizon coordinates are valid")
         func horizonValid() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
@@ -193,7 +188,6 @@ struct FixedStarTests {
 
     @Suite("Position Stability")
     struct StabilityTests {
-
         @Test("Position is stable across multiple calls")
         func stablePosition() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
@@ -230,7 +224,6 @@ struct FixedStarTests {
 
     @Suite("Multiple Stars")
     struct MultipleStarsTests {
-
         @Test("Multiple stars work correctly")
         func multipleStars() throws {
             let algol = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
@@ -290,7 +283,6 @@ struct FixedStarTests {
 
     @Suite("Constellation")
     struct ConstellationTests {
-
         @Test("Algol is in Perseus")
         func algolConstellation() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)

@@ -39,6 +39,7 @@ public enum LagrangePointID: Int32, Sendable, CaseIterable {
 }
 
 extension LagrangePointID: CustomStringConvertible {
+    /// The name of this Lagrange point (e.g., "L1").
     public var description: String { name }
 }
 
@@ -96,6 +97,7 @@ public struct StateVector: Sendable, Equatable {
 }
 
 extension StateVector: CustomStringConvertible {
+    /// A textual representation showing the position and velocity vectors.
     public var description: String {
         "Position: \(position), Velocity: (\(velocity.x), \(velocity.y), \(velocity.z)) AU/day"
     }

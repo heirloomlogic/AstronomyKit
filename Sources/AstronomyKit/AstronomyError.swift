@@ -99,6 +99,7 @@ public enum AstronomyError: Error, Equatable, Hashable, Sendable {
 }
 
 extension AstronomyError: CustomStringConvertible {
+    /// A human-readable description of the astronomy error.
     public var description: String {
         switch self {
         case .notInitialized:

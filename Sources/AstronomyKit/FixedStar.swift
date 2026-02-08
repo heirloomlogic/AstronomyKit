@@ -39,7 +39,6 @@ import Foundation
 /// - Hipparcos Catalog
 /// - Yale Bright Star Catalog
 public struct FixedStar: Sendable, Hashable {
-
     // MARK: - Properties
 
     /// The star's display name.
@@ -143,7 +142,10 @@ public struct FixedStar: Sendable, Hashable {
         // Get geocentric position
         let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
         guard geo.status == ASTRO_SUCCESS else {
-            throw AstronomyError(status: geo.status)!
+            if let error = AstronomyError(status: geo.status) {
+                throw error
+            }
+            throw AstronomyError.internalError
         }
 
         // Rotate from equatorial J2000 to ecliptic
@@ -172,7 +174,10 @@ public struct FixedStar: Sendable, Hashable {
 
         let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
         guard geo.status == ASTRO_SUCCESS else {
-            throw AstronomyError(status: geo.status)!
+            if let error = AstronomyError(status: geo.status) {
+                throw error
+            }
+            throw AstronomyError.internalError
         }
 
         let rotation = Astronomy_Rotation_EQJ_ECL()
@@ -195,7 +200,10 @@ public struct FixedStar: Sendable, Hashable {
 
         let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
         guard geo.status == ASTRO_SUCCESS else {
-            throw AstronomyError(status: geo.status)!
+            if let error = AstronomyError(status: geo.status) {
+                throw error
+            }
+            throw AstronomyError.internalError
         }
 
         let rotation = Astronomy_Rotation_EQJ_ECL()
@@ -251,5 +259,6 @@ public struct FixedStar: Sendable, Hashable {
 // MARK: - CustomStringConvertible
 
 extension FixedStar: CustomStringConvertible {
+    /// The display name of the star.
     public var description: String { name }
 }

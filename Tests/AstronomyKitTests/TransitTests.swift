@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Transit")
 struct TransitTests {
-
     @Test("Search Mercury transit")
     func searchMercuryTransit() throws {
         let startTime = AstroTime(year: 2_020, month: 1, day: 1)

@@ -12,12 +12,10 @@ import Testing
 
 @Suite("AstroTime Tests")
 struct AstroTimeTests {
-
     // MARK: - Construction Tests
 
     @Suite("Construction")
     struct Construction {
-
         @Test("Create from year/month/day components")
         func createFromComponents() {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -54,7 +52,8 @@ struct AstroTimeTests {
 
             let roundTrippedDate = time.date
             let difference = abs(
-                originalDate.timeIntervalSince1970 - roundTrippedDate.timeIntervalSince1970)
+                originalDate.timeIntervalSince1970 - roundTrippedDate.timeIntervalSince1970
+            )
 
             #expect(difference < 1.0, "Round-tripped date should be within 1 second")
         }
@@ -99,7 +98,6 @@ struct AstroTimeTests {
 
     @Suite("Time Arithmetic")
     struct TimeArithmetic {
-
         @Test("Add positive days")
         func addPositiveDays() {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
@@ -167,7 +165,6 @@ struct AstroTimeTests {
 
     @Suite("Properties")
     struct Properties {
-
         @Test("UT and TT properties exist")
         func utAndTT() {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -204,7 +201,6 @@ struct AstroTimeTests {
 
     @Suite("Protocol Conformances")
     struct ProtocolConformances {
-
         @Test("Equatable - equal times")
         func equatableEqual() {
             let time1 = AstroTime(year: 2_025, month: 1, day: 1)
@@ -266,7 +262,6 @@ struct AstroTimeTests {
 
     @Suite("Codable")
     struct CodableTests {
-
         @Test("Encode and decode round-trip")
         func encodeDecodeRoundTrip() throws {
             let original = AstroTime(year: 2_025, month: 6, day: 21, hour: 14, minute: 30)
@@ -311,7 +306,6 @@ struct AstroTimeTests {
 
     @Suite("Edge Cases")
     struct EdgeCases {
-
         @Test("Leap year date")
         func leapYearDate() {
             let time = AstroTime(year: 2_024, month: 2, day: 29)  // Leap year
@@ -328,7 +322,13 @@ struct AstroTimeTests {
         @Test("Year boundaries")
         func yearBoundaries() {
             let endOfYear = AstroTime(
-                year: 2_024, month: 12, day: 31, hour: 23, minute: 59, second: 59)
+                year: 2_024,
+                month: 12,
+                day: 31,
+                hour: 23,
+                minute: 59,
+                second: 59
+            )
             let startOfYear = AstroTime(year: 2_025, month: 1, day: 1, hour: 0, minute: 0, second: 0)
 
             #expect(startOfYear > endOfYear)
@@ -366,7 +366,13 @@ struct AstroTimeTests {
         @Test("Midnight boundary")
         func midnightBoundary() {
             let justBeforeMidnight = AstroTime(
-                year: 2_025, month: 1, day: 1, hour: 23, minute: 59, second: 59)
+                year: 2_025,
+                month: 1,
+                day: 1,
+                hour: 23,
+                minute: 59,
+                second: 59
+            )
             let midnight = AstroTime(year: 2_025, month: 1, day: 2, hour: 0, minute: 0, second: 0)
 
             #expect(midnight > justBeforeMidnight)

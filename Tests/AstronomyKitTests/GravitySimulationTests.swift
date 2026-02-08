@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Gravity Simulation Tests")
 struct GravitySimulationTests {
-
     // Helper to create a valid state vector for testing
     private static func makeInitialState(time: AstroTime) throws -> StateVector {
         // Use LagrangePoint to get a valid state vector
@@ -27,7 +26,6 @@ struct GravitySimulationTests {
 
     @Suite("Initialization")
     struct InitializationTests {
-
         @Test("Create simulation with valid state vector")
         func createWithValidState() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -62,7 +60,6 @@ struct GravitySimulationTests {
 
     @Suite("Update")
     struct UpdateTests {
-
         @Test("Update advances simulation time")
         func updateAdvancesTime() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -102,7 +99,6 @@ struct GravitySimulationTests {
 
     @Suite("State Retrieval")
     struct StateRetrievalTests {
-
         @Test("Get body state returns valid vector")
         func getBodyState() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -138,7 +134,6 @@ struct GravitySimulationTests {
 
     @Suite("Swap")
     struct SwapTests {
-
         @Test("Swap changes simulation direction")
         func swapDirection() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -162,7 +157,6 @@ struct GravitySimulationTests {
 
     @Suite("Protocol Conformances")
     struct ProtocolConformancesTests {
-
         @Test("CustomStringConvertible")
         func description() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)

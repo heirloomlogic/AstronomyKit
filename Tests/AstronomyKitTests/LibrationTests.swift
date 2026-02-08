@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Libration Tests")
 struct LibrationTests {
-
     @Test("Libration returns valid data")
     func librationReturnsData() {
         let time = AstroTime(year: 2_025, month: 6, day: 21)

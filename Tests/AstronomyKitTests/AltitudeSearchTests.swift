@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Altitude Search Tests")
 struct AltitudeSearchTests {
-
     let nyc = Observer(latitude: 40.7128, longitude: -74.0060)
 
     @Test("Find astronomical twilight (Sun at -18°)")

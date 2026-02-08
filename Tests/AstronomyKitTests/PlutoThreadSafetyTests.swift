@@ -6,7 +6,6 @@ import Testing
 /// This test runs multiple Pluto calculations in parallel to detect race conditions.
 @Suite("Pluto Thread Safety")
 struct PlutoThreadSafetyTests {
-
     /// Helper to convert equatorial coordinates to ecliptic longitude
     private func equatorialToEclipticLongitude(ra: Double, dec: Double) -> Double {
         let obliquity = 23.4393 * .pi / 180.0
@@ -56,7 +55,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 304.391) < Self.arcminuteTolerance,
@@ -73,7 +74,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 306.011) < Self.arcminuteTolerance,
@@ -90,7 +93,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 310.776) < Self.arcminuteTolerance,
@@ -107,7 +112,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 318.316) < Self.arcminuteTolerance,
@@ -124,7 +131,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 338.828) < Self.arcminuteTolerance,
@@ -141,7 +150,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 7.915) < Self.arcminuteTolerance,
@@ -158,7 +169,9 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension, dec: plutoEq.declination)
+            ra: plutoEq.rightAscension,
+            dec: plutoEq.declination
+        )
 
         #expect(
             abs(plutoLon - 57.317) < Self.arcminuteTolerance,

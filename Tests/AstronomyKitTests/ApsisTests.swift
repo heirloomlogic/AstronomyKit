@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Apsis Tests")
 struct ApsisTests {
-
     // MARK: - ApsisKind Tests
 
     @Suite("ApsisKind")
     struct ApsisKindTests {
-
         @Test("Lunar names")
         func lunarNames() {
             #expect(ApsisKind.pericenter.lunarName == "Perigee")
@@ -66,7 +64,6 @@ struct ApsisTests {
 
     @Suite("Moon Apsis")
     struct MoonApsisTests {
-
         @Test("Search finds next lunar apsis")
         func searchFindsApsis() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -160,7 +157,6 @@ struct ApsisTests {
 
     @Suite("Planet Apsis")
     struct PlanetApsisTests {
-
         @Test("Search finds next planetary apsis for Earth")
         func earthApsis() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
@@ -251,7 +247,6 @@ struct ApsisTests {
 
     @Suite("Apsis Struct")
     struct ApsisStructTests {
-
         @Test("Apsis has all properties")
         func hasAllProperties() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)

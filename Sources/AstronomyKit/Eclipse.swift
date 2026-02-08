@@ -82,6 +82,7 @@ public struct LunarEclipse: Sendable, Equatable {
 }
 
 extension LunarEclipse: CustomStringConvertible {
+    /// A textual representation showing the eclipse type and peak time.
     public var description: String {
         "\(kind.name) Lunar Eclipse at \(peak)"
     }
@@ -131,6 +132,7 @@ public struct GlobalSolarEclipse: Sendable, Equatable {
 }
 
 extension GlobalSolarEclipse: CustomStringConvertible {
+    /// A textual representation showing the eclipse type, peak time, and center coordinates.
     public var description: String {
         if let lat = latitude, let lon = longitude {
             return "\(kind.name) Solar Eclipse at \(peak), center: (\(lat)°, \(lon)°)"
@@ -227,10 +229,14 @@ public struct LocalSolarEclipse: Sendable, Equatable {
 }
 
 extension LocalSolarEclipse: CustomStringConvertible {
+    /// A textual representation showing the eclipse type, obscuration, and peak time.
     public var description: String {
         String(
             format: "%@ Solar Eclipse, %.0f%% obscuration at %@",
-            kind.name, obscuration * 100, peak.time.description)
+            kind.name,
+            obscuration * 100,
+            peak.time.description
+        )
     }
 }
 
@@ -265,8 +271,10 @@ public enum Eclipse {
     ///   - endTime: The end of the range.
     /// - Returns: An array of lunar eclipses.
     /// - Throws: `AstronomyError` if the search fails.
-    public static func lunarEclipses(from startTime: AstroTime, to endTime: AstroTime) throws
-        -> [LunarEclipse] {
+    public static func lunarEclipses(
+        from startTime: AstroTime,
+        to endTime: AstroTime
+    ) throws -> [LunarEclipse] {
         var eclipses: [LunarEclipse] = []
         var current = try searchLunar(after: startTime)
 
@@ -293,8 +301,9 @@ public enum Eclipse {
     /// - Parameter eclipse: The previous solar eclipse.
     /// - Returns: The next global solar eclipse.
     /// - Throws: `AstronomyError` if the search fails.
-    public static func nextGlobalSolar(after eclipse: GlobalSolarEclipse) throws
-        -> GlobalSolarEclipse {
+    public static func nextGlobalSolar(
+        after eclipse: GlobalSolarEclipse
+    ) throws -> GlobalSolarEclipse {
         let result = Astronomy_NextGlobalSolarEclipse(eclipse.peak.raw)
         return try GlobalSolarEclipse(result)
     }
@@ -306,8 +315,10 @@ public enum Eclipse {
     ///   - endTime: The end of the range.
     /// - Returns: An array of global solar eclipses.
     /// - Throws: `AstronomyError` if the search fails.
-    public static func globalSolarEclipses(from startTime: AstroTime, to endTime: AstroTime) throws
-        -> [GlobalSolarEclipse] {
+    public static func globalSolarEclipses(
+        from startTime: AstroTime,
+        to endTime: AstroTime
+    ) throws -> [GlobalSolarEclipse] {
         var eclipses: [GlobalSolarEclipse] = []
         var current = try searchGlobalSolar(after: startTime)
 

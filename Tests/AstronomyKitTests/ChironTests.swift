@@ -11,12 +11,10 @@ import Testing
 
 @Suite("Chiron Tests")
 struct ChironTests {
-
     // MARK: - Basic Position Tests
 
     @Suite("Position Calculations")
     struct PositionTests {
-
         @Test("Heliocentric position returns valid vector")
         func helioPositionValid() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
@@ -81,7 +79,6 @@ struct ChironTests {
 
     @Suite("Reference Epoch Accuracy")
     struct EpochTests {
-
         @Test("Position at 2000 epoch matches reference")
         func epoch2000() throws {
             let time = AstroTime(year: 2_000, month: 1, day: 1)
@@ -115,7 +112,6 @@ struct ChironTests {
 
     @Suite("Multi-Year Calculations")
     struct MultiYearTests {
-
         @Test("Positions over 10 years are consistent")
         func tenYearRange() throws {
             var lastLongitude: Double?
@@ -149,7 +145,6 @@ struct ChironTests {
 
     @Suite("Horizon Coordinates")
     struct HorizonTests {
-
         @Test("Horizon coordinates for observer are valid")
         func horizonValid() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
@@ -165,7 +160,6 @@ struct ChironTests {
 
     @Suite("State Vector")
     struct StateVectorTests {
-
         @Test("Geocentric state has valid velocity")
         func geoStateVelocity() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)

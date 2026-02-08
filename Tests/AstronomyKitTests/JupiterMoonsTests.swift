@@ -11,7 +11,6 @@ import Testing
 
 @Suite("Jupiter Moons Tests")
 struct JupiterMoonsTests {
-
     @Test("Get all four Galilean moons")
     func getAllMoons() throws {
         let time = AstroTime(year: 2_025, month: 6, day: 21)

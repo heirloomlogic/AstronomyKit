@@ -12,12 +12,10 @@ import Testing
 
 @Suite("Position Tests")
 struct PositionTests {
-
     // MARK: - Geocentric Position Tests
 
     @Suite("Geocentric Position")
     struct GeocentricPositionTests {
-
         @Test("Get geocentric position for Mars")
         func marsGeoPosition() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -54,7 +52,8 @@ struct PositionTests {
             // Positions should be slightly different
             #expect(
                 corrected.magnitude != uncorrected.magnitude || corrected.x != uncorrected.x
-                    || corrected.y != uncorrected.y || corrected.z != uncorrected.z)
+                    || corrected.y != uncorrected.y || corrected.z != uncorrected.z
+            )
         }
 
         @Test("All planets can get geocentric position", arguments: CelestialBody.planets)
@@ -70,7 +69,6 @@ struct PositionTests {
 
     @Suite("Heliocentric Position")
     struct HeliocentricPositionTests {
-
         @Test("Earth is about 1 AU from Sun")
         func earthDistance() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -81,7 +79,9 @@ struct PositionTests {
         }
 
         @Test(
-            "All planets have heliocentric positions", arguments: CelestialBody.planets + [.earth])
+            "All planets have heliocentric positions",
+            arguments: CelestialBody.planets + [.earth]
+        )
         func allPlanetsHelioPosition(planet: CelestialBody) throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
             let position = try planet.helioPosition(at: time)
@@ -115,7 +115,6 @@ struct PositionTests {
 
     @Suite("Distance From Sun")
     struct DistanceFromSunTests {
-
         @Test("Earth distance is about 1 AU")
         func earthDistance() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -144,7 +143,6 @@ struct PositionTests {
 
     @Suite("Equatorial Coordinates")
     struct EquatorialCoordinatesTests {
-
         @Test("Equatorial coordinates have valid RA")
         func validRA() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -192,7 +190,6 @@ struct PositionTests {
 
     @Suite("Horizon Coordinates")
     struct HorizonCoordinatesTests {
-
         @Test("Sun above horizon at noon in summer")
         func sunAtNoon() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 17)  // 12 noon EST = 17 UTC
@@ -220,7 +217,6 @@ struct PositionTests {
 
     @Suite("Ecliptic Longitude")
     struct EclipticLongitudeTests {
-
         @Test("Ecliptic longitude in valid range")
         func validRange() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -244,7 +240,6 @@ struct PositionTests {
 
     @Suite("Angle From Sun")
     struct AngleFromSunTests {
-
         @Test("Angle from Sun in valid range")
         func validRange() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -259,9 +254,13 @@ struct PositionTests {
             // At new moon, angle should be near 0
             // At full moon, angle should be near 180
             let newMoon = try Moon.searchPhase(
-                .new, after: AstroTime(year: 2_025, month: 1, day: 1))
+                .new,
+                after: AstroTime(year: 2_025, month: 1, day: 1)
+            )
             let fullMoon = try Moon.searchPhase(
-                .full, after: AstroTime(year: 2_025, month: 1, day: 1))
+                .full,
+                after: AstroTime(year: 2_025, month: 1, day: 1)
+            )
 
             let newMoonAngle = try CelestialBody.moon.angleFromSun(at: newMoon)
             let fullMoonAngle = try CelestialBody.moon.angleFromSun(at: fullMoon)
@@ -275,7 +274,6 @@ struct PositionTests {
 
     @Suite("Sun Position")
     struct SunPositionTests {
-
         @Test("Get Sun position")
         func getSunPosition() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
@@ -328,7 +326,6 @@ struct PositionTests {
 
     @Suite("Aberration")
     struct AberrationTests {
-
         @Test("Aberration enum cases")
         func aberrationCases() {
             _ = Aberration.none
@@ -340,7 +337,6 @@ struct PositionTests {
 
     @Suite("EquatorDate")
     struct EquatorDateTests {
-
         @Test("EquatorDate enum cases")
         func equatorDateCases() {
             _ = EquatorDate.j2000

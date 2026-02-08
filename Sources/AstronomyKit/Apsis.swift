@@ -44,6 +44,7 @@ public enum ApsisKind: Sendable, Equatable, Hashable, Codable {
 }
 
 extension ApsisKind: CustomStringConvertible {
+    /// A textual representation of the apsis kind, using the solar terminology.
     public var description: String { solarName }
 }
 
@@ -88,6 +89,7 @@ public struct Apsis: Sendable, Equatable {
 }
 
 extension Apsis: CustomStringConvertible {
+    /// A textual representation showing the apsis type, time, and distance in kilometers.
     public var description: String {
         String(format: "%@ at %@: %.0f km", kind.solarName, time.description, distanceKM)
     }

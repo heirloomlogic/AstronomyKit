@@ -64,10 +64,14 @@ public struct Transit: Sendable, Equatable {
 }
 
 extension Transit: CustomStringConvertible {
+    /// A textual representation showing the body, peak time, and angular separation.
     public var description: String {
         String(
             format: "%@ Transit on %@, separation: %.1f arcmin",
-            body.name, peak.description, separation)
+            body.name,
+            peak.description,
+            separation
+        )
     }
 }
 
