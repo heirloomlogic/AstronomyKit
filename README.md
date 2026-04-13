@@ -1,13 +1,11 @@
 # AstronomyKit
 
-Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library. Calculates positions of the Sun, Moon, planets, Chiron, and fixed stars, and predicts phases, eclipses, transits, and rise/set times. Includes vector and angular coordinate transformations for equatorial, ecliptic, horizontal, and galactic systems.
+A Swift library for calculating positions of the Sun, Moon, planets, Chiron, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Handles coordinate transformations across equatorial, ecliptic, horizontal, and galactic systems. Wraps Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library in Swift so you don’t touch the C API directly. Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/Documentation-DocC-blue.svg)](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/)
-
-AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library and exposes the underlying C functionality through idiomatic Swift APIs.
 
 ## Features
 
@@ -244,7 +242,7 @@ let eclipses = try Eclipse.lunarEclipses(
 
 ## Documentation
 
-Comprehensive DocC documentation is available. Build it locally:
+DocC documentation is available. Build it locally:
 
 ```bash
 swift package generate-documentation --target AstronomyKit
@@ -257,10 +255,18 @@ Or in Xcode: **Product → Build Documentation**
 - Swift 6.0+
 - macOS 13+ / iOS 16+ / tvOS 16+ / watchOS 9+
 
+## Built With AstronomyKit
+
+- **[Fallow](https://heirloomlogic.com/fallow)** — Lunar fasting companion. Calculates Ekadashi and moon cycle timing.
+- **[Edict](https://heirloomlogic.com/edict)** — Electional astrology planner. Scans planetary positions to find timing windows for decisions.
+
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 ## Credits
 
-- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross — the underlying C library
-- Licensed under the MIT License
+- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross — the underlying C library (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
 
 ## License
 

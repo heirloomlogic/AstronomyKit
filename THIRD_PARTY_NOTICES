@@ -1,6 +1,16 @@
+Third-Party Software Notices
+============================
+
+AstronomyKit wraps the Astronomy Engine C library. The original source code
+and full project are available at https://github.com/cosinekitty/astronomy.
+
+-------------------------------------------------------------------------------
+
+Astronomy Engine
+
 MIT License
 
-Copyright (c) 2025 Heirloom Logic LLC
+Copyright (c) 2019-2025 Don Cross <cosinekitty@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
