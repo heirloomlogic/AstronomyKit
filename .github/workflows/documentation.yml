@@ -15,10 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Swift 6.3
-        uses: SwiftyLab/setup-swift@latest
-        with:
-          swift-version: "6.3"
+      - name: Select Xcode 26.3
+        run: sudo xcode-select -switch /Applications/Xcode_26.3.app
 
       - name: Clean docs directory
         run: rm -rf ./docs
