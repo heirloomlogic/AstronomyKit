@@ -16,9 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Select Xcode 26.3
-        run: sudo xcode-select -switch /Applications/Xcode_26.3.app
-
       - name: Clean docs directory
         run: rm -rf ./docs
 

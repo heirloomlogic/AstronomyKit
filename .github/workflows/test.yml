@@ -15,12 +15,5 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Xcode 26.3 (Swift 6.3) is pinned to match the development toolchain.
-      # AstronomyKit only requires Swift 6.0+ at runtime, but the swift-format
-      # build tool plugin's lint rules must match the version developers use
-      # locally. See README §Toolchain Alignment.
-      - name: Select Xcode 26.3
-        run: sudo xcode-select -switch /Applications/Xcode_26.3.app
-
       - name: Test
         run: swift test
