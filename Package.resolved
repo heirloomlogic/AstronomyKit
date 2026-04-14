@@ -1,5 +1,5 @@
 {
-  "originHash" : "b179b0f795800eda1f34a8e7e187689fe6586a41643bff49d68ff1d9c0815374",
+  "originHash" : "dcbe3bc4b5ad81502c299b193dd9ed854ca59af220c42ea6b5bd8462a124626b",
   "pins" : [
     {
       "identity" : "swift-docc-plugin",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HeirloomLogic/SwiftFormatPlugin.git",
       "state" : {
-        "revision" : "5b13b7f0f9f427ab75f883021f28d38a2379117a",
-        "version" : "1.1.0"
+        "revision" : "fc72c8b0eed263597f2f9621137469fc67fe4c3c",
+        "version" : "1.2.0"
       }
     }
   ],

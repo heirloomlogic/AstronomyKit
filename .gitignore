@@ -1,6 +1,7 @@
+.agents/
 .build/
+.context/
 .DS_Store
 .swiftpm
+Package.resolved
 xcuserdata/
-.agents/
-.context/

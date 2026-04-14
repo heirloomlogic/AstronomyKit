@@ -89,6 +89,7 @@ extension RotationMatrix {
     ///
     /// - Parameter other: The rotation to apply after this one.
     /// - Returns: The combined rotation matrix.
+    /// - Throws: `AstronomyError` if the combination fails.
     public func combined(with other: RotationMatrix) throws -> RotationMatrix {
         let result = Astronomy_CombineRotation(self.raw, other.raw)
         return try RotationMatrix(result)
@@ -100,6 +101,7 @@ extension RotationMatrix {
     ///   - axis: The axis to rotate around (0=x, 1=y, 2=z).
     ///   - angle: The rotation angle in degrees.
     /// - Returns: The rotation matrix.
+    /// - Throws: `AstronomyError` if the rotation cannot be created.
     public static func pivot(axis: Int, angle: Double) throws -> RotationMatrix {
         let result = Astronomy_Pivot(RotationMatrix.identity.raw, Int32(axis), angle)
         return try RotationMatrix(result)
@@ -126,6 +128,8 @@ extension RotationMatrix {
     /// Creates a rotation from J2000 equatorial to equatorial-of-date coordinates.
     ///
     /// - Parameter time: The time for the of-date frame.
+    /// - Returns: The rotation matrix.
+    /// - Throws: `AstronomyError` if the rotation cannot be created.
     public static func equatorialJ2000ToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
@@ -137,6 +141,8 @@ extension RotationMatrix {
     /// Creates a rotation from equatorial-of-date to J2000 equatorial coordinates.
     ///
     /// - Parameter time: The time for the of-date frame.
+    /// - Returns: The rotation matrix.
+    /// - Throws: `AstronomyError` if the rotation cannot be created.
     public static func equatorialOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
@@ -150,6 +156,8 @@ extension RotationMatrix {
     /// - Parameters:
     ///   - time: The observation time.
     ///   - observer: The geographic observer location.
+    /// - Returns: The rotation matrix.
+    /// - Throws: `AstronomyError` if the rotation cannot be created.
     public static func equatorialJ2000ToHorizon(
         at time: AstroTime,
         from observer: Observer
@@ -164,6 +172,8 @@ extension RotationMatrix {
     /// - Parameters:
     ///   - time: The observation time.
     ///   - observer: The geographic observer location.
+    /// - Returns: The rotation matrix.
+    /// - Throws: `AstronomyError` if the rotation cannot be created.
     public static func horizonToEquatorialJ2000(
         at time: AstroTime,
         from observer: Observer
@@ -251,6 +261,7 @@ extension Vector3D {
     ///
     /// - Parameter rotation: The rotation matrix to apply.
     /// - Returns: The rotated vector.
+    /// - Throws: `AstronomyError` if the rotation fails.
     public func rotated(by rotation: RotationMatrix) throws -> Vector3D {
         let raw = astro_vector_t(
             status: ASTRO_SUCCESS,

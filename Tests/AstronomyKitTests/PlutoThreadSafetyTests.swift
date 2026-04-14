@@ -3,10 +3,11 @@ import Foundation
 import Testing
 
 /// Test to verify that Pluto calculations are thread-safe after mutex fix.
+///
 /// This test runs multiple Pluto calculations in parallel to detect race conditions.
 @Suite("Pluto Thread Safety")
 struct PlutoThreadSafetyTests {
-    /// Helper to convert equatorial coordinates to ecliptic longitude
+    /// Helper to convert equatorial coordinates to ecliptic longitude.
     private func equatorialToEclipticLongitude(ra: Double, dec: Double) -> Double {
         let obliquity = 23.4393 * .pi / 180.0
         let raRad = ra * 15.0 * .pi / 180.0
@@ -18,7 +19,7 @@ struct PlutoThreadSafetyTests {
         return lon
     }
 
-    /// ±1 arcminute tolerance (1/60° ≈ 0.0167°)
+    /// ±1 arcminute tolerance (1/60° ≈ 0.0167°).
     static let arcminuteTolerance: Double = 1.0 / 60.0
 
     // Reference values for Pluto at different dates (from Swiss Ephemeris)
