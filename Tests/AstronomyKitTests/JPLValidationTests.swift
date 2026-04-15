@@ -106,7 +106,7 @@ struct JPLReferencePoint {
 
 // MARK: - Angular Separation Calculation
 
-/// Calculate angular separation between two equatorial positions.
+/// Calculates angular separation between two equatorial positions.
 ///
 /// Uses the spherical law of cosines formula.
 func angularSeparation(
