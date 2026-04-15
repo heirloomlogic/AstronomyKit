@@ -102,7 +102,6 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     /// Creates a body from its name.
     ///
     /// - Parameter name: The name of the body (case-insensitive).
-    /// - Returns: The matching body, or `nil` if not found.
     public init?(name: String) {
         let body = Astronomy_BodyCode(name)
         guard body.rawValue >= 0 else { return nil }

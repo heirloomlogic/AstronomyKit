@@ -1,6 +1,8 @@
 # AstronomyKit
 
-A Swift library for calculating positions of the Sun, Moon, planets, Chiron, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Handles coordinate transformations across equatorial, ecliptic, horizontal, and galactic systems. Wraps Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library in Swift so you don’t touch the C API directly. Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
+A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Handles coordinate transformations across equatorial, ecliptic, horizontal, and galactic systems. Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
+
+AstronomyKit is a Swift wrapper around Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
@@ -9,16 +11,16 @@ A Swift library for calculating positions of the Sun, Moon, planets, Chiron, and
 
 ## Features
 
-- 🌍 **Celestial Body Positions** — Sun, Moon, planets, and Jupiter's moons
-- 🌙 **Moon Phases** — Phase angles, quarters, illumination, libration
-- ⭐ **Fixed Stars** — User-defined stars from J2000 catalog coordinates
-- ☄️ **Chiron** — Gravity-simulated position for 2060 Chiron
-- 🌅 **Rise/Set Times** — Sunrise, sunset, moonrise, culmination
-- 🌑 **Eclipses** — Lunar and solar eclipse predictions
-- 🍂 **Seasons** — Equinoxes and solstices
-- 📍 **Coordinate Systems** — Equatorial, ecliptic, horizon, galactic
-- 🪐 **Orbital Events** — Apsides, elongation, transits
-- ⚡ **Swift 6 Ready** — Full `Sendable` conformance
+- Positions for the Sun, Moon, planets, and Jupiter's moons
+- Moon phase angles, quarters, illumination, and libration
+- User-defined fixed stars from J2000 catalog coordinates
+- Gravity-simulated position for 2060 Chiron
+- Rise, set, and culmination times
+- Lunar and solar eclipse predictions
+- Equinoxes and solstices
+- Coordinate transforms across equatorial, ecliptic, horizon, and galactic systems
+- Apsides, elongation, and transits
+- Full `Sendable` conformance for Swift 6
 
 ## Installation
 
@@ -186,10 +188,10 @@ print("Max altitude: \(transit.horizon.altitude)°")
 
 ```swift
 let seasons = try Seasons.forYear(2025)
-print("🌸 Spring: \(seasons.marchEquinox)")
-print("☀️ Summer: \(seasons.juneSolstice)")
-print("🍂 Autumn: \(seasons.septemberEquinox)")
-print("❄️ Winter: \(seasons.decemberSolstice)")
+print("Spring: \(seasons.marchEquinox)")
+print("Summer: \(seasons.juneSolstice)")
+print("Autumn: \(seasons.septemberEquinox)")
+print("Winter: \(seasons.decemberSolstice)")
 ```
 
 ### Eclipses
@@ -252,8 +254,9 @@ Or in Xcode: **Product → Build Documentation**
 
 ## Requirements
 
-- Swift 6.0+
-- macOS 13+ / iOS 16+ / tvOS 16+ / watchOS 9+
+**Runtime:** Swift 6.0+, macOS 13+ / iOS 16+ / tvOS 16+ / watchOS 9+.
+
+**Development:** Xcode 26.3 (Swift 6.3). The swift-format build tool plugin is pinned to a toolchain; see [Toolchain Alignment](#toolchain-alignment).
 
 ## Built With AstronomyKit
 

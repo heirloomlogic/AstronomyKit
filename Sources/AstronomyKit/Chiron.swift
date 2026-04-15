@@ -47,6 +47,7 @@ public enum Chiron {
     // MARK: - Reference Epoch Data
 
     /// Reference epochs with pre-computed state vectors from JPL Horizons.
+    ///
     /// Data source: JPL HORIZONS, heliocentric ICRF/J2000, AU and AU/day.
     private static let referenceEpochs: [(time: AstroTime, state: StateVector)] = {
         // 2000-01-01 00:00:00 TDB (JD 2451544.5)

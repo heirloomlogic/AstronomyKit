@@ -14,12 +14,15 @@ Open a [bug report](https://github.com/heirloomlogic/AstronomyKit/issues/new?tem
 
 1. Fork the repository and create a branch from `main`.
 2. Make your changes.
-3. Run `swift test` and confirm all tests pass.
-4. Open a pull request describing what you changed and why.
+3. Run `swift build` and resolve any swift-format lint warnings.
+4. Run `swift test` and confirm all tests pass.
+5. Open a pull request describing what you changed and why.
 
 ### Code Style
 
-The project uses [swift-format](https://github.com/swiftlang/swift-format) via a build plugin. Linting runs automatically during builds. Resolve all lint warnings before submitting a PR.
+The project uses [swift-format](https://github.com/swiftlang/swift-format) via a build plugin. Linting runs automatically during builds, so `swift build` is enough to see all warnings. Resolve all lint warnings before submitting a PR.
+
+Your local toolchain must match CI's Swift major.minor version; see [Toolchain Alignment](../README.md#toolchain-alignment) in the README.
 
 ### Tests
 
@@ -31,4 +34,4 @@ This project follows the [Contributor Covenant Code of Conduct](.github/CODE_OF_
 
 ## Questions
 
-If you have questions that aren't covered here, open an issue or email sessions@samadhibot.com.
+If you have questions that aren't covered here, open an issue or email astronomykit@heirloomlogic.com.

@@ -5,12 +5,17 @@
 //  AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) library by
 //  Don Cross, exposing the underlying C functionality through idiomatic Swift APIs for calculating:
 //
-//  - Celestial body positions (Sun, Moon, planets)
-//  - Moon phases and quarters
-//  - Seasonal events (equinoxes and solstices)
+//  - Positions for the Sun, Moon, planets, and Jupiter's moons
+//  - Moon phase angles, quarters, illumination, and libration
+//  - User-defined fixed stars from J2000 catalog coordinates
+//  - Gravity-simulated position for 2060 Chiron
 //  - Rise, set, and culmination times
-//  - Lunar and solar eclipses
-//  - Coordinate transformations
+//  - Lunar and solar eclipse predictions
+//  - Equinoxes and solstices
+//  - Coordinate transforms across equatorial, ecliptic, horizon, and galactic systems
+//  - Apsides, elongation, and transits
+//  - Lagrange points and lunar nodes
+//  - Full `Sendable` conformance for Swift 6
 //
 //  ## Quick Start
 //

@@ -18,7 +18,7 @@ import Testing
 
 // MARK: - JPL Reference Data Structure
 
-/// A reference data point from JPL Horizons ephemeris
+/// A reference data point from JPL Horizons ephemeris.
 struct JPLReferencePoint {
     let year: Int
     let month: Int
@@ -31,7 +31,7 @@ struct JPLReferencePoint {
     let decMinutes: Int
     let decSeconds: Double
 
-    /// Convenience init for positive declinations
+    /// Convenience init for positive declinations.
     init(
         year: Int,
         month: Int,
@@ -55,7 +55,7 @@ struct JPLReferencePoint {
         self.decSeconds = decSeconds
     }
 
-    /// Explicit init with negative flag for -00° cases
+    /// Explicit init with negative flag for -00° cases.
     init(
         year: Int,
         month: Int,
@@ -80,18 +80,18 @@ struct JPLReferencePoint {
         self.decSeconds = decSeconds
     }
 
-    /// Right Ascension in decimal hours
+    /// Right Ascension in decimal hours.
     var rightAscension: Double {
         Double(raHours) + Double(raMinutes) / 60.0 + raSeconds / 3_600.0
     }
 
-    /// Declination in decimal degrees
+    /// Declination in decimal degrees.
     var declination: Double {
         let value = Double(decDegrees) + Double(decMinutes) / 60.0 + decSeconds / 3_600.0
         return decNegative ? -value : value
     }
 
-    /// Creates an AstroTime for this date at 00:00 UT
+    /// Creates an AstroTime for this date at 00:00 UT.
     var time: AstroTime {
         AstroTime(
             year: year,
@@ -106,8 +106,9 @@ struct JPLReferencePoint {
 
 // MARK: - Angular Separation Calculation
 
-/// Calculate angular separation between two equatorial positions
-/// Uses the spherical law of cosines formula
+/// Calculate angular separation between two equatorial positions.
+///
+/// Uses the spherical law of cosines formula.
 func angularSeparation(
     ra1: Double,
     dec1: Double,  // RA in hours, Dec in degrees
@@ -127,10 +128,10 @@ func angularSeparation(
 
 // MARK: - Tolerances
 
-/// Standard tolerance in arcminutes (1 arcminute = Astronomy Engine stated accuracy)
+/// Standard tolerance in arcminutes (1 arcminute = Astronomy Engine stated accuracy).
 let toleranceArcminutes = 1.0
 
-/// Outer planet tolerance - slightly higher for Neptune/Uranus
+/// Outer planet tolerance - slightly higher for Neptune/Uranus.
 let outerPlanetToleranceArcminutes = 1.5
 
 // MARK: - Sun Validation
@@ -926,9 +927,10 @@ struct SaturnValidationTests {
 
 // MARK: - Asheville Topocentric Validation
 
-/// Asheville, NC observer location (from JPL Horizons files)
-/// Center geodetic: 277.4428, 35.595, 0 (E-lon(deg), Lat(deg), Alt(km))
-/// Longitude 277.4428°E = -82.5572°W
+/// Asheville, NC observer location (from JPL Horizons files).
+///
+/// Center geodetic: 277.4428, 35.595, 0 (E-lon(deg), Lat(deg), Alt(km)).
+/// Longitude 277.4428°E = -82.5572°W.
 let ashevilleObserver = Observer(latitude: 35.595, longitude: -82.5572)
 
 @Suite("Asheville Topocentric Validation vs JPL Horizons")

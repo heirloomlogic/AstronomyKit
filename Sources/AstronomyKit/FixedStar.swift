@@ -56,6 +56,7 @@ public struct FixedStar: Sendable, Hashable {
     // MARK: - Internal State
 
     /// Lock protecting the shared calculation slot.
+    ///
     /// All position calculations use a single C library slot, protected by this mutex.
     private static let calculationLock = NSLock()
 
@@ -81,6 +82,7 @@ public struct FixedStar: Sendable, Hashable {
     // MARK: - Private Helpers
 
     /// Configures the calculation slot with this star's coordinates.
+    ///
     /// Must be called while holding `calculationLock`.
     private func configureSlot() throws {
         let status = Astronomy_DefineStar(

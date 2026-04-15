@@ -250,6 +250,7 @@ public struct DailyEvents: Sendable {
     ///   - body: The celestial body.
     ///   - date: The date (events starting from midnight UTC).
     ///   - observer: The geographic observer location.
+    /// - Throws: `AstronomyError` if event calculation fails.
     public init(body: CelestialBody, date: AstroTime, from observer: Observer) throws {
         self.body = body
         self.observer = observer

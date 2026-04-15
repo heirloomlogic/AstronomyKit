@@ -15,6 +15,7 @@ struct FixedStarTests {
     // MARK: - Test Subject
 
     /// Algol (Beta Persei) - used as test subject for all fixed star tests.
+    ///
     /// J2000 coordinates from SIMBAD/Hipparcos.
     static let algol = FixedStar(
         name: "Algol",
