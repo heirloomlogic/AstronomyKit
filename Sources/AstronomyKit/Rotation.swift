@@ -101,7 +101,7 @@ extension RotationMatrix {
     ///   - axis: The axis to rotate around (0=x, 1=y, 2=z).
     ///   - angle: The rotation angle in degrees.
     /// - Returns: The rotation matrix.
-    /// - Throws: `AstronomyError` if the rotation cannot be created.
+    /// - Throws: `AstronomyError` if the pivot fails.
     public static func pivot(axis: Int, angle: Double) throws -> RotationMatrix {
         let result = Astronomy_Pivot(RotationMatrix.identity.raw, Int32(axis), angle)
         return try RotationMatrix(result)
@@ -129,7 +129,7 @@ extension RotationMatrix {
     ///
     /// - Parameter time: The time for the of-date frame.
     /// - Returns: The rotation matrix.
-    /// - Throws: `AstronomyError` if the rotation cannot be created.
+    /// - Throws: `AstronomyError` if the rotation cannot be computed.
     public static func equatorialJ2000ToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
@@ -142,7 +142,7 @@ extension RotationMatrix {
     ///
     /// - Parameter time: The time for the of-date frame.
     /// - Returns: The rotation matrix.
-    /// - Throws: `AstronomyError` if the rotation cannot be created.
+    /// - Throws: `AstronomyError` if the rotation cannot be computed.
     public static func equatorialOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
@@ -157,7 +157,7 @@ extension RotationMatrix {
     ///   - time: The observation time.
     ///   - observer: The geographic observer location.
     /// - Returns: The rotation matrix.
-    /// - Throws: `AstronomyError` if the rotation cannot be created.
+    /// - Throws: `AstronomyError` if the rotation cannot be computed.
     public static func equatorialJ2000ToHorizon(
         at time: AstroTime,
         from observer: Observer
@@ -173,7 +173,7 @@ extension RotationMatrix {
     ///   - time: The observation time.
     ///   - observer: The geographic observer location.
     /// - Returns: The rotation matrix.
-    /// - Throws: `AstronomyError` if the rotation cannot be created.
+    /// - Throws: `AstronomyError` if the rotation cannot be computed.
     public static func horizonToEquatorialJ2000(
         at time: AstroTime,
         from observer: Observer

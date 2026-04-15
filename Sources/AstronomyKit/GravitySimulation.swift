@@ -95,7 +95,7 @@ public final class GravitySimulation: @unchecked Sendable {
     /// gravitational effects on all tracked bodies.
     ///
     /// - Parameter newTime: The target time for the simulation.
-    /// - Returns: The updated state vector of the primary body.
+    /// - Returns: The updated state vector for the tracked body.
     /// - Throws: `AstronomyError` if the update fails.
     @discardableResult
     public func update(to newTime: AstroTime) throws -> StateVector {
