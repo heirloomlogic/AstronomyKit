@@ -7,6 +7,7 @@
 
 import CLibAstronomy
 import Foundation
+import Synchronization
 
 /// A fixed star defined by its J2000 equatorial coordinates.
 ///
@@ -55,10 +56,7 @@ public struct FixedStar: Sendable, Hashable {
 
     // MARK: - Internal State
 
-    /// Lock protecting the shared calculation slot.
-    ///
-    /// All position calculations use a single C library slot, protected by this mutex.
-    private static let calculationLock = NSLock()
+    private static let calculationLock = Mutex(())
 
     /// The C library body used for calculations.
     private static let calculationSlot = BODY_STAR1
@@ -121,11 +119,10 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer = .primeMeridian,
         equatorDate: EquatorDate = .j2000
     ) throws -> Equatorial {
-        Self.calculationLock.lock()
-        defer { Self.calculationLock.unlock() }
-
-        try configureSlot()
-        return try Self.slotBody.equatorial(at: time, from: observer, equatorDate: equatorDate)
+        try Self.calculationLock.withLock { _ in
+            try configureSlot()
+            return try Self.slotBody.equatorial(at: time, from: observer, equatorDate: equatorDate)
+        }
     }
 
     /// Calculates the star's ecliptic longitude at a given time.
@@ -136,31 +133,27 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic longitude in degrees (0-360).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func eclipticLongitude(at time: AstroTime) throws -> Double {
-        Self.calculationLock.lock()
-        defer { Self.calculationLock.unlock() }
+        try Self.calculationLock.withLock { _ in
+            try configureSlot()
 
-        try configureSlot()
-
-        // Get geocentric position
-        let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
-        guard geo.status == ASTRO_SUCCESS else {
-            if let error = AstronomyError(status: geo.status) {
-                throw error
+            let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
+            guard geo.status == ASTRO_SUCCESS else {
+                if let error = AstronomyError(status: geo.status) {
+                    throw error
+                }
+                throw AstronomyError.internalError
             }
-            throw AstronomyError.internalError
+
+            let rotation = Astronomy_Rotation_EQJ_ECL()
+            let rotated = Astronomy_RotateVector(rotation, geo)
+
+            var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
+            if longitude < 0 {
+                longitude += 360.0
+            }
+
+            return longitude
         }
-
-        // Rotate from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-        let rotated = Astronomy_RotateVector(rotation, geo)
-
-        // Calculate longitude from rotated vector
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        return longitude
     }
 
     /// Calculates the star's ecliptic latitude at a given time.
@@ -169,24 +162,23 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic latitude in degrees (-90 to +90).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func eclipticLatitude(at time: AstroTime) throws -> Double {
-        Self.calculationLock.lock()
-        defer { Self.calculationLock.unlock() }
+        try Self.calculationLock.withLock { _ in
+            try configureSlot()
 
-        try configureSlot()
-
-        let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
-        guard geo.status == ASTRO_SUCCESS else {
-            if let error = AstronomyError(status: geo.status) {
-                throw error
+            let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
+            guard geo.status == ASTRO_SUCCESS else {
+                if let error = AstronomyError(status: geo.status) {
+                    throw error
+                }
+                throw AstronomyError.internalError
             }
-            throw AstronomyError.internalError
+
+            let rotation = Astronomy_Rotation_EQJ_ECL()
+            let rotated = Astronomy_RotateVector(rotation, geo)
+            let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
+
+            return asin(rotated.z / dist) * 180.0 / .pi
         }
-
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-        let rotated = Astronomy_RotateVector(rotation, geo)
-        let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        return asin(rotated.z / dist) * 180.0 / .pi
     }
 
     /// Calculates the star's full ecliptic coordinates at a given time.
@@ -195,31 +187,30 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        Self.calculationLock.lock()
-        defer { Self.calculationLock.unlock() }
+        try Self.calculationLock.withLock { _ in
+            try configureSlot()
 
-        try configureSlot()
-
-        let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
-        guard geo.status == ASTRO_SUCCESS else {
-            if let error = AstronomyError(status: geo.status) {
-                throw error
+            let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
+            guard geo.status == ASTRO_SUCCESS else {
+                if let error = AstronomyError(status: geo.status) {
+                    throw error
+                }
+                throw AstronomyError.internalError
             }
-            throw AstronomyError.internalError
+
+            let rotation = Astronomy_Rotation_EQJ_ECL()
+            let rotated = Astronomy_RotateVector(rotation, geo)
+            let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
+
+            var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
+            if longitude < 0 {
+                longitude += 360.0
+            }
+
+            let latitude = asin(rotated.z / dist) * 180.0 / .pi
+
+            return Ecliptic(latitude: latitude, longitude: longitude, distance: dist)
         }
-
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-        let rotated = Astronomy_RotateVector(rotation, geo)
-        let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        let latitude = asin(rotated.z / dist) * 180.0 / .pi
-
-        return Ecliptic(latitude: latitude, longitude: longitude, distance: dist)
     }
 
     /// Calculates the star's horizontal coordinates for an observer.
@@ -237,11 +228,10 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer,
         refraction: Refraction = .normal
     ) throws -> Horizon {
-        Self.calculationLock.lock()
-        defer { Self.calculationLock.unlock() }
-
-        try configureSlot()
-        return try Self.slotBody.horizon(at: time, from: observer, refraction: refraction)
+        try Self.calculationLock.withLock { _ in
+            try configureSlot()
+            return try Self.slotBody.horizon(at: time, from: observer, refraction: refraction)
+        }
     }
 
     /// Determines which constellation contains the star.
@@ -250,11 +240,10 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The constellation containing the star.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func constellation(at time: AstroTime) throws -> Constellation {
-        Self.calculationLock.lock()
-        defer { Self.calculationLock.unlock() }
-
-        try configureSlot()
-        return try Self.slotBody.constellation(at: time)
+        try Self.calculationLock.withLock { _ in
+            try configureSlot()
+            return try Self.slotBody.constellation(at: time)
+        }
     }
 }
 

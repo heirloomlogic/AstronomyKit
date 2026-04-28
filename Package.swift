@@ -5,10 +5,10 @@ import PackageDescription
 let package = Package(
     name: "AstronomyKit",
     platforms: [
-        .macOS(.v13),
-        .iOS(.v16),
-        .tvOS(.v16),
-        .watchOS(.v9),
+        .macOS(.v15),
+        .iOS(.v18),
+        .tvOS(.v18),
+        .watchOS(.v11),
     ],
     products: [
         .library(
@@ -16,12 +16,16 @@ let package = Package(
             targets: ["AstronomyKit"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.4.5"),
-        .package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", from: "1.3.0"),
-    ],
-    targets: [
-        .target(
+    dependencies: {
+        var deps: [Package.Dependency] = []
+        #if os(macOS)
+        deps.append(.package(url: "https://github.com/apple/swift-docc-plugin", from: "1.4.5"))
+        deps.append(.package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", from: "1.3.0"))
+        #endif
+        return deps
+    }(),
+    targets: {
+        let cLib: Target = .target(
             name: "CLibAstronomy",
             path: "Sources/CLibAstronomy",
             sources: ["astronomy.c"],
@@ -29,20 +33,21 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("include")
             ]
-        ),
-        .target(
+        )
+        var plugins: [Target.PluginUsage] = []
+        #if os(macOS)
+        plugins.append(.plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin"))
+        #endif
+        let lib: Target = .target(
             name: "AstronomyKit",
             dependencies: ["CLibAstronomy"],
-            plugins: [
-                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
-            ]
-        ),
-        .testTarget(
+            plugins: plugins
+        )
+        let tests: Target = .testTarget(
             name: "AstronomyKitTests",
             dependencies: ["AstronomyKit"],
-            plugins: [
-                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
-            ]
-        ),
-    ]
+            plugins: plugins
+        )
+        return [cLib, lib, tests]
+    }()
 )
