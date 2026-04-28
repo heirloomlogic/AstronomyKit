@@ -1,11 +1,9 @@
 <p align="center">
-  <img src="Sources/AstronomyKit/Documentation.docc/Resources/AstronomyKit-logo@2x.png" alt="AstronomyKit" width="128">
+  <img src="Sources/AstronomyKit/Documentation.docc/Resources/AstronomyKit-logo@2x.png" alt="AstronomyKit" width="256">
 </p>
 
-<h1 align="center">AstronomyKit</h1>
-
 <p align="center">
-A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars.<br>
+AstronomyKit is a Swift library for calculating positions of the Sun, Moon, planets, and fixed stars.<br>
 Predicts moon phases, eclipses, transits, and rise/set times.<br>
 Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
 </p>
