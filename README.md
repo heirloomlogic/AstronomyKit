@@ -1,13 +1,25 @@
-# AstronomyKit
+<p align="center">
+  <img src="Sources/AstronomyKit/Documentation.docc/Resources/AstronomyKit-logo@2x.png" alt="AstronomyKit" width="256">
+</p>
 
-A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Handles coordinate transformations across equatorial, ecliptic, horizontal, and galactic systems. Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
+<p align="center">
+AstronomyKit is a Swift library for calculating positions of the Sun, Moon, planets, and fixed stars.<br>
+Predicts moon phases, eclipses, transits, and rise/set times.<br>
+Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
+</p>
 
-AstronomyKit is a Swift wrapper around Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
+<p align="center">
+Built on Don Cross’ <a href="https://github.com/cosinekitty/astronomy">Astronomy Engine</a> C library.
+</p>
+
+<p align="center">
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS-blue.svg)](https://developer.apple.com)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux%20|%20Windows-blue.svg)](https://swift.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/Documentation-DocC-blue.svg)](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/)
+
+</p>
 
 ## Features
 
@@ -254,7 +266,7 @@ Or in Xcode: **Product → Build Documentation**
 
 ## Requirements
 
-**Runtime:** Swift 6.0+, macOS 13+ / iOS 16+ / tvOS 16+ / watchOS 9+.
+**Runtime:** Swift 6.0+, macOS 15+ / iOS 18+ / tvOS 18+ / watchOS 11+ / Linux / Windows.
 
 **Development:** Xcode 26.3 (Swift 6.3). The swift-format build tool plugin is pinned to a toolchain; see [Toolchain Alignment](#toolchain-alignment).
 
