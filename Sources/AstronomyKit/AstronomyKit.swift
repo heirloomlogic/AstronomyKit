@@ -61,19 +61,19 @@ public enum AstronomyConfig {
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the Espenak-Meeus model.
     ///
-    /// - Parameter ut: Universal Time days since J2000 noon.
+    /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
-    public static func deltaTEspenakMeeus(ut: Double) -> Double {
-        Astronomy_DeltaT_EspenakMeeus(ut)
+    public static func deltaTEspenakMeeus(universalTime: Double) -> Double {
+        Astronomy_DeltaT_EspenakMeeus(universalTime)
     }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the JPL Horizons model.
     ///
-    /// - Parameter ut: Universal Time days since J2000 noon.
+    /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
-    public static func deltaTJplHorizons(ut: Double) -> Double {
-        Astronomy_DeltaT_JplHorizons(ut)
+    public static func deltaTJplHorizons(universalTime: Double) -> Double {
+        Astronomy_DeltaT_JplHorizons(universalTime)
     }
 
     /// Sets the Delta T model used for all subsequent calculations.

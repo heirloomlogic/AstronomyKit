@@ -82,7 +82,7 @@ switch to JPL Horizons for compatibility:
 AstronomyConfig.setDeltaTModel(.jplHorizons)
 
 // Query Delta T for a specific time
-let deltaT = AstronomyConfig.deltaT_EspenakMeeus(ut: 0)  // Seconds at J2000
+let deltaT = AstronomyConfig.deltaTEspenakMeeus(universalTime: 0)  // Seconds at J2000
 
 // Reset to defaults
 AstronomyConfig.reset()
