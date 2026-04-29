@@ -11,7 +11,7 @@ Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitt
 
 ![AstronomyKit logo — a bronze armillary sphere](AstronomyKit-logo)
 
-AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library and exposes the underlying C functionality through idiomatic Swift APIs.
+AstronomyKit wraps Don Cross's [Astronomy Engine](https://github.com/cosinekitty/astronomy) and exposes the underlying C functionality through idiomatic Swift APIs.
 
 ### Features
 

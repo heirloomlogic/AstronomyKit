@@ -95,11 +95,18 @@ public enum AstroSearch {
         return try Vector3D(result)
     }
 
+    /// Corrects a position for the finite speed of light, accepting a throwing closure.
+    ///
+    /// - Parameters:
+    ///   - time: The observation time (when light arrives).
+    ///   - positionFunction: A throwing closure that returns the object's position at a given time.
+    /// - Returns: The light-corrected position vector.
+    /// - Throws: Rethrows any error from `positionFunction`, or `AstronomyError` if iteration fails.
     public static func correctLightTravel(
         at time: AstroTime,
         _ positionFunction: @escaping @Sendable (AstroTime) throws -> Vector3D
     ) throws -> Vector3D {
-        let capture = _ErrorCapture()
+        let capture = ThrowingPositionCapture()
         let result = try correctLightTravel(at: time) { (t: AstroTime) -> Vector3D in
             do {
                 return try positionFunction(t)
@@ -113,6 +120,6 @@ public enum AstroSearch {
     }
 }
 
-private final class _ErrorCapture: @unchecked Sendable {
+private final class ThrowingPositionCapture: @unchecked Sendable {
     var error: (any Error)?
 }

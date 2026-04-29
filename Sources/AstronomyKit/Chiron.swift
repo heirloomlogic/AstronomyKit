@@ -230,12 +230,9 @@ public enum Chiron {
     public static func equatorial(at time: AstroTime) throws -> Equatorial {
         let geo = try geocentricPosition(at: time)
         let distance = geo.magnitude
-
-        // Convert Cartesian to spherical (RA/Dec)
-        let ra = atan2(geo.y, geo.x) * 12.0 / .pi  // Convert radians to hours
+        let ra = atan2(geo.y, geo.x) * 12.0 / .pi
         let raPositive = ra < 0 ? ra + 24.0 : ra
-
-        let dec = asin(geo.z / distance) * 180.0 / .pi  // Convert radians to degrees
+        let dec = asin(geo.z / distance) * 180.0 / .pi
 
         return Equatorial(
             rightAscension: raPositive,
@@ -253,30 +250,7 @@ public enum Chiron {
     /// - Returns: The ecliptic longitude in degrees (0-360).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func eclipticLongitude(at time: AstroTime) throws -> Double {
-        let geo = try geocentricPosition(at: time)
-
-        // Get the rotation matrix from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-
-        // Create a C vector for rotation
-        let cVector = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: geo.x,
-            y: geo.y,
-            z: geo.z,
-            t: time.raw
-        )
-
-        // Rotate to ecliptic coordinates
-        let rotated = Astronomy_RotateVector(rotation, cVector)
-
-        // Calculate ecliptic longitude from rotated vector
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        return longitude
+        try ecliptic(at: time).longitude
     }
 
     /// Calculates Chiron's ecliptic latitude at a given time.
@@ -285,25 +259,7 @@ public enum Chiron {
     /// - Returns: The ecliptic latitude in degrees (-90 to +90).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func eclipticLatitude(at time: AstroTime) throws -> Double {
-        let geo = try geocentricPosition(at: time)
-
-        // Get the rotation matrix from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-
-        // Create a C vector for rotation
-        let cVector = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: geo.x,
-            y: geo.y,
-            z: geo.z,
-            t: time.raw
-        )
-
-        // Rotate to ecliptic coordinates
-        let rotated = Astronomy_RotateVector(rotation, cVector)
-        let distance = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        return asin(rotated.z / distance) * 180.0 / .pi
+        try ecliptic(at: time).latitude
     }
 
     /// Calculates Chiron's full ecliptic coordinates at a given time.
@@ -312,32 +268,7 @@ public enum Chiron {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        let geo = try geocentricPosition(at: time)
-
-        // Get the rotation matrix from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-
-        // Create a C vector for rotation
-        let cVector = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: geo.x,
-            y: geo.y,
-            z: geo.z,
-            t: time.raw
-        )
-
-        // Rotate to ecliptic coordinates
-        let rotated = Astronomy_RotateVector(rotation, cVector)
-        let distance = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        let latitude = asin(rotated.z / distance) * 180.0 / .pi
-
-        return Ecliptic(latitude: latitude, longitude: longitude, distance: distance)
+        try geocentricPosition(at: time).toEcliptic()
     }
 
     /// Calculates Chiron's horizontal coordinates for an observer.
