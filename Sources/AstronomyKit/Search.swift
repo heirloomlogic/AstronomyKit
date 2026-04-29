@@ -8,13 +8,19 @@
 import CLibAstronomy
 
 private func searchTrampoline(context: UnsafeMutableRawPointer?, time: astro_time_t) -> astro_func_result_t {
-    let box = context!.assumingMemoryBound(to: ((AstroTime) -> Double).self).pointee
+    guard let context else {
+        return astro_func_result_t(status: ASTRO_INTERNAL_ERROR, value: 0)
+    }
+    let box = context.assumingMemoryBound(to: ((AstroTime) -> Double).self).pointee
     let value = box(AstroTime(raw: time))
     return astro_func_result_t(status: ASTRO_SUCCESS, value: value)
 }
 
 private func positionTrampoline(context: UnsafeMutableRawPointer?, time: astro_time_t) -> astro_vector_t {
-    let box = context!.assumingMemoryBound(to: ((AstroTime) -> Vector3D).self).pointee
+    guard let context else {
+        return astro_vector_t(status: ASTRO_INTERNAL_ERROR, x: 0, y: 0, z: 0, t: time)
+    }
+    let box = context.assumingMemoryBound(to: ((AstroTime) -> Vector3D).self).pointee
     let vec = box(AstroTime(raw: time))
     return astro_vector_t(status: ASTRO_SUCCESS, x: vec.x, y: vec.y, z: vec.z, t: time)
 }
