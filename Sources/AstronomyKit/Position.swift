@@ -67,8 +67,8 @@ extension CelestialBody {
         equatorDate: EquatorDate = .j2000,
         aberration: Aberration = .corrected
     ) throws -> Equatorial {
-        var t = time.raw
-        let result = Astronomy_Equator(raw, &t, observer.raw, equatorDate.raw, aberration.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Equator(raw, &rawTime, observer.raw, equatorDate.raw, aberration.raw)
         return try Equatorial(result, time: time)
     }
 
@@ -88,8 +88,8 @@ extension CelestialBody {
         refraction: Refraction = .normal
     ) throws -> Horizon {
         let eq = try equatorial(at: time, from: observer, equatorDate: .ofDate)
-        var t = time.raw
-        let result = Astronomy_Horizon(&t, observer.raw, eq.rightAscension, eq.declination, refraction.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Horizon(&rawTime, observer.raw, eq.rightAscension, eq.declination, refraction.raw)
         return Horizon(result)
     }
 

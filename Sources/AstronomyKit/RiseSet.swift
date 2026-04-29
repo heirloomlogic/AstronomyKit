@@ -216,8 +216,8 @@ extension CelestialBody {
     /// - Returns: The hour angle in sidereal hours (0–24).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func hourAngle(at time: AstroTime, from observer: Observer) throws -> Double {
-        var t = time.raw
-        let result = Astronomy_HourAngle(raw, &t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_HourAngle(raw, &rawTime, observer.raw)
         if let error = AstronomyError(status: result.status) {
             throw error
         }

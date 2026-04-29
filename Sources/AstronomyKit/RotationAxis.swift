@@ -79,8 +79,8 @@ extension CelestialBody {
     /// print("Jupiter's north pole: RA \(axis.rightAscension)h, Dec \(axis.declination)°")
     /// ```
     public func rotationAxis(at time: AstroTime) throws -> RotationAxis {
-        var t = time.raw
-        let result = Astronomy_RotationAxis(raw, &t)
+        var rawTime = time.raw
+        let result = Astronomy_RotationAxis(raw, &rawTime)
         return try RotationAxis(result)
     }
 }

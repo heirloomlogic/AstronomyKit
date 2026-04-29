@@ -135,8 +135,8 @@ extension Observer {
     /// - Returns: The position vector in AU.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func vector(at time: AstroTime, equator: EquatorFrame = .j2000) throws -> Vector3D {
-        var t = time.raw
-        let result = Astronomy_ObserverVector(&t, raw, equator.raw)
+        var rawTime = time.raw
+        let result = Astronomy_ObserverVector(&rawTime, raw, equator.raw)
         return try Vector3D(result)
     }
 
@@ -151,8 +151,8 @@ extension Observer {
     /// - Returns: The state vector with position in AU and velocity in AU/day.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func state(at time: AstroTime, equator: EquatorFrame = .j2000) throws -> StateVector {
-        var t = time.raw
-        let result = Astronomy_ObserverState(&t, raw, equator.raw)
+        var rawTime = time.raw
+        let result = Astronomy_ObserverState(&rawTime, raw, equator.raw)
         return try StateVector(result)
     }
 

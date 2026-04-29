@@ -175,7 +175,7 @@ public enum Chiron {
         let helioEarth = try CelestialBody.earth.helioPosition(at: time)
 
         return try AstroSearch.correctLightTravel(at: time) { t in
-            let helioChiron = try! helioPosition(at: t)
+            let helioChiron = try helioPosition(at: t)
             return Vector3D(
                 x: helioChiron.x - helioEarth.x,
                 y: helioChiron.y - helioEarth.y,
@@ -354,9 +354,9 @@ public enum Chiron {
         refraction: Refraction = .normal
     ) throws -> Horizon {
         let eq = try equatorial(at: time)
-        var t = time.raw
+        var rawTime = time.raw
         let result = Astronomy_Horizon(
-            &t,
+            &rawTime,
             observer.raw,
             eq.rightAscension,
             eq.declination,
