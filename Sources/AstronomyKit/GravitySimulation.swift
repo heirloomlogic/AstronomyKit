@@ -29,7 +29,7 @@ import Synchronization
 /// try sim.update(to: .now.addingDays(30))
 ///
 /// // Get the updated state
-/// let state = try sim.state(of: .ssb)
+/// let state = try sim.state(of: .solarSystemBarycenter)
 /// ```
 ///
 /// - Note: This uses a class (reference semantics) because the underlying

@@ -61,10 +61,10 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     case moon = 10
 
     /// The Earth-Moon Barycenter.
-    case emb = 11
+    case earthMoonBarycenter = 11
 
     /// The Solar System Barycenter.
-    case ssb = 12
+    case solarSystemBarycenter = 12
 
     /// Io, moon of Jupiter.
     case io = 21
