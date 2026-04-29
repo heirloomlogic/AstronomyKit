@@ -372,14 +372,14 @@ public enum Chiron {
         // Find the closest reference epoch
         guard
             let (epochTime, closestState) = referenceEpochs.min(by: { lhs, rhs in
-                abs(lhs.time.ut - time.ut) < abs(rhs.time.ut - time.ut)
+                abs(lhs.time.universalTime - time.universalTime) < abs(rhs.time.universalTime - time.universalTime)
             })
         else {
             throw AstronomyError.internalError
         }
 
         // If we're very close to the epoch (within 1 day), return the epoch state directly
-        if abs(closestState.time.ut - time.ut) < 1.0 {
+        if abs(closestState.time.universalTime - time.universalTime) < 1.0 {
             return closestState
         }
 

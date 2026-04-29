@@ -62,8 +62,8 @@ AstroTime stores two time values internally:
 
 ```swift
 let time = AstroTime.now
-print("UT: \(time.ut)")  // Days since J2000 noon (UTC)
-print("TT: \(time.tt)")  // Days since J2000 noon (TT)
+print("UT: \(time.universalTime)")  // Days since J2000 noon (UTC)
+print("TT: \(time.terrestrialTime)")  // Days since J2000 noon (TT)
 
 // Create from Terrestrial Time directly
 let fromTT = AstroTime(tt: 9132.5)

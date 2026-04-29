@@ -21,10 +21,10 @@ struct SeasonsTests {
             let seasons = try Seasons.forYear(2_025)
 
             // All four events should exist
-            #expect(seasons.marchEquinox.ut != 0)
-            #expect(seasons.juneSolstice.ut != 0)
-            #expect(seasons.septemberEquinox.ut != 0)
-            #expect(seasons.decemberSolstice.ut != 0)
+            #expect(seasons.marchEquinox.universalTime != 0)
+            #expect(seasons.juneSolstice.universalTime != 0)
+            #expect(seasons.septemberEquinox.universalTime != 0)
+            #expect(seasons.decemberSolstice.universalTime != 0)
         }
 
         @Test("Seasons occur in correct order")
@@ -178,7 +178,7 @@ struct SeasonsTests {
             let seasons2024 = try Seasons.forYear(2_024)
             let seasons2025 = try Seasons.forYear(2_025)
 
-            let diff = seasons2025.marchEquinox.ut - seasons2024.marchEquinox.ut
+            let diff = seasons2025.marchEquinox.universalTime - seasons2024.marchEquinox.universalTime
 
             // Should be about 365-366 days
             #expect(diff > 364 && diff < 367)

@@ -45,7 +45,7 @@ struct RiseSetTests {
                 #expect(sunrise > RiseSetTests.testDate)
 
                 // Sunrise should be within 24 hours
-                let diff = sunrise.ut - RiseSetTests.testDate.ut
+                let diff = sunrise.universalTime - RiseSetTests.testDate.universalTime
                 #expect(diff < 1.0)
             }
         }

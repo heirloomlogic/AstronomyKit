@@ -16,7 +16,7 @@ struct SearchTests {
         let equinox = try Sun.searchLongitude(0, after: start)
         let seasons = try Seasons.forYear(2025)
 
-        let diffSeconds = abs(equinox.ut - seasons.marchEquinox.ut) * 86400
+        let diffSeconds = abs(equinox.universalTime - seasons.marchEquinox.universalTime) * 86400
         #expect(diffSeconds < 60, "Sun.searchLongitude and Seasons should agree within 60s, got \(diffSeconds)s")
     }
 
@@ -26,7 +26,7 @@ struct SearchTests {
         let solstice = try Sun.searchLongitude(90, after: start)
         let seasons = try Seasons.forYear(2025)
 
-        let diffSeconds = abs(solstice.ut - seasons.juneSolstice.ut) * 86400
+        let diffSeconds = abs(solstice.universalTime - seasons.juneSolstice.universalTime) * 86400
         #expect(diffSeconds < 60, "Expected June solstice match within 60s, got \(diffSeconds)s")
     }
 
@@ -36,11 +36,11 @@ struct SearchTests {
         let end = start.addingDays(30)
 
         let result = try AstroSearch.find(from: start, to: end) { time in
-            time.ut - start.ut - 15.0
+            time.universalTime - start.universalTime - 15.0
         }
 
         let expected = start.addingDays(15)
-        let diffSeconds = abs(result.ut - expected.ut) * 86400
+        let diffSeconds = abs(result.universalTime - expected.universalTime) * 86400
         #expect(diffSeconds < 1, "Expected root at day 15, got diff of \(diffSeconds)s")
     }
 
@@ -58,7 +58,7 @@ struct SearchTests {
             return diff
         }
 
-        let diffSeconds = abs(result.ut - fullMoon.ut) * 86400
+        let diffSeconds = abs(result.universalTime - fullMoon.universalTime) * 86400
         #expect(diffSeconds < 120, "Generic search and Moon.searchPhase should agree within 120s, got \(diffSeconds)s")
     }
 
@@ -70,7 +70,7 @@ struct SearchTests {
         #expect(throws: AstronomyError.self) {
             // Monotonically increasing function with no root crossing in the window
             try AstroSearch.find(from: start, to: end) { time in
-                time.ut - start.ut + 100.0
+                time.universalTime - start.universalTime + 100.0
             }
         }
     }

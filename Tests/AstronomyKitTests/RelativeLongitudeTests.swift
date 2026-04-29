@@ -102,7 +102,7 @@ struct RelativeLongitudeTests {
             let start = AstroTime(year: 2025, month: 1, day: 1)
             let first = try CelestialBody.jupiter.searchOpposition(after: start)
             let second = try CelestialBody.jupiter.searchOpposition(after: first.addingDays(30))
-            let daysBetween = second.ut - first.ut
+            let daysBetween = second.universalTime - first.universalTime
             // Jupiter's synodic period is ~398.88 days
             #expect(
                 daysBetween > 380 && daysBetween < 420,

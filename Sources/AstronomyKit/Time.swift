@@ -40,13 +40,13 @@ public struct AstroTime: Sendable {
     ///
     /// This value is appropriate for calculations involving Earth's rotation,
     /// such as rise/set times and sidereal time.
-    public var ut: Double { raw.ut }
+    public var universalTime: Double { raw.ut }
 
     /// Terrestrial Time days since noon on January 1, 2000.
     ///
     /// This value is used for calculations not involving Earth's rotation,
     /// such as planetary orbits.
-    public var tt: Double { raw.tt }
+    public var terrestrialTime: Double { raw.tt }
 
     /// The current time.
     public static var now: AstroTime {
@@ -186,21 +186,21 @@ public struct AstroTime: Sendable {
 extension AstroTime: Equatable {
     /// Returns whether two `AstroTime` values represent the same instant.
     public static func == (lhs: AstroTime, rhs: AstroTime) -> Bool {
-        lhs.ut == rhs.ut
+        lhs.universalTime == rhs.universalTime
     }
 }
 
 extension AstroTime: Comparable {
     /// Returns whether the left-hand time occurs before the right-hand time.
     public static func < (lhs: AstroTime, rhs: AstroTime) -> Bool {
-        lhs.ut < rhs.ut
+        lhs.universalTime < rhs.universalTime
     }
 }
 
 extension AstroTime: Hashable {
     /// Hashes the essential components of this time value.
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(ut)
+        hasher.combine(universalTime)
     }
 }
 
@@ -226,6 +226,6 @@ extension AstroTime: Codable {
     /// Encodes this time as its Universal Time value.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(ut)
+        try container.encode(universalTime)
     }
 }
