@@ -155,4 +155,27 @@ extension Observer {
         let result = Astronomy_ObserverState(&t, raw, equator.raw)
         return try StateVector(result)
     }
+
+    /// Computes an observer's geographic location from an equatorial position vector.
+    ///
+    /// This is the inverse of ``vector(at:equator:)``. Given a geocentric
+    /// equatorial position vector, it returns the latitude, longitude, and
+    /// height of the corresponding observer on Earth's surface.
+    ///
+    /// - Parameters:
+    ///   - vector: A geocentric equatorial position vector.
+    ///   - equatorDate: The equinox reference frame of the vector.
+    /// - Returns: The observer location.
+    public static func from(
+        vector: Vector3D,
+        equatorDate: EquatorDate = .j2000
+    ) -> Observer {
+        var raw = astro_vector_t(
+            status: ASTRO_SUCCESS,
+            x: vector.x, y: vector.y, z: vector.z,
+            t: vector.time.raw
+        )
+        let obs = Astronomy_VectorObserver(&raw, equatorDate.raw)
+        return Observer(latitude: obs.latitude, longitude: obs.longitude, height: obs.height)
+    }
 }

@@ -147,4 +147,47 @@ public enum LagrangePoint {
         )
         return try StateVector(result)
     }
+
+    /// Calculates a Lagrange point from pre-computed body states and masses.
+    ///
+    /// This is faster than ``calculate(point:at:majorBody:minorBody:)`` when
+    /// you already have the state vectors and mass products of both bodies,
+    /// avoiding redundant position lookups.
+    ///
+    /// - Parameters:
+    ///   - point: Which Lagrange point to calculate (L1-L5).
+    ///   - majorState: The state vector of the larger body.
+    ///   - majorMass: The mass product (GM) of the larger body in AU³/day².
+    ///   - minorState: The state vector of the smaller body.
+    ///   - minorMass: The mass product (GM) of the smaller body in AU³/day².
+    /// - Returns: The state vector of the Lagrange point.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public static func calculateFast(
+        point: LagrangePointID,
+        majorState: StateVector,
+        majorMass: Double,
+        minorState: StateVector,
+        minorMass: Double
+    ) throws -> StateVector {
+        let majorRaw = astro_state_vector_t(
+            status: ASTRO_SUCCESS,
+            x: majorState.position.x, y: majorState.position.y, z: majorState.position.z,
+            vx: majorState.velocity.x, vy: majorState.velocity.y, vz: majorState.velocity.z,
+            t: majorState.time.raw
+        )
+        let minorRaw = astro_state_vector_t(
+            status: ASTRO_SUCCESS,
+            x: minorState.position.x, y: minorState.position.y, z: minorState.position.z,
+            vx: minorState.velocity.x, vy: minorState.velocity.y, vz: minorState.velocity.z,
+            t: minorState.time.raw
+        )
+        let result = Astronomy_LagrangePointFast(
+            point.rawValue,
+            majorRaw,
+            majorMass,
+            minorRaw,
+            minorMass
+        )
+        return try StateVector(result)
+    }
 }

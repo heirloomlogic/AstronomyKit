@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Vector conversions: `toSpherical()`, `toEquatorial()`, `toEcliptic()`, `angle(to:)`, and factory methods on `Vector3D` and `Spherical`.
 - Ecliptic-of-date (ECT) rotation matrices.
 - State vector rotation via `StateVector.rotated(by:)`.
+- Fast Lagrange point calculation: `LagrangePoint.calculateFast(point:majorState:majorMass:minorState:minorMass:)`.
+- Reverse observer lookup: `Observer.from(vector:equatorDate:)`.
+- Direct hour angle getter: `CelestialBody.hourAngle(at:from:)`.
+- Light-travel correction: `AstroSearch.correctLightTravel(at:_:)` and `CelestialBody.backdatedPosition(at:seenFrom:aberration:)`.
 - `CHANGELOG.md` and `SECURITY.md`.
 - README section on toolchain alignment between development and CI.
 

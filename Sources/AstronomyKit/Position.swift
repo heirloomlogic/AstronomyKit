@@ -150,6 +150,32 @@ extension CelestialBody {
         let result = Astronomy_GeoEmbState(time.raw)
         return try StateVector(result)
     }
+
+    /// Returns the position this body actually occupied when it emitted the light
+    /// arriving at the observer body at the given time.
+    ///
+    /// This accounts for the finite speed of light: the returned position is
+    /// where the target was in the past, not where it is "now."
+    ///
+    /// - Parameters:
+    ///   - time: The time when light arrives at the observer.
+    ///   - observerBody: The body receiving the light (e.g., `.earth`).
+    ///   - aberration: Whether to correct for stellar aberration.
+    /// - Returns: The backdated position vector.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public func backdatedPosition(
+        at time: AstroTime,
+        seenFrom observerBody: CelestialBody,
+        aberration: Aberration = .corrected
+    ) throws -> Vector3D {
+        let result = Astronomy_BackdatePosition(
+            time.raw,
+            observerBody.raw,
+            raw,
+            aberration.raw
+        )
+        return try Vector3D(result)
+    }
 }
 
 // MARK: - Aberration

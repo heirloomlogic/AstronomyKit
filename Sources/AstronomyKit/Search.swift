@@ -13,6 +13,12 @@ private func searchTrampoline(context: UnsafeMutableRawPointer?, time: astro_tim
     return astro_func_result_t(status: ASTRO_SUCCESS, value: value)
 }
 
+private func positionTrampoline(context: UnsafeMutableRawPointer?, time: astro_time_t) -> astro_vector_t {
+    let box = context!.assumingMemoryBound(to: ((AstroTime) -> Vector3D).self).pointee
+    let vec = box(AstroTime(raw: time))
+    return astro_vector_t(status: ASTRO_SUCCESS, x: vec.x, y: vec.y, z: vec.z, t: time)
+}
+
 /// Generic root-finding search for custom astronomical events.
 ///
 /// Finds the *ascending root* of a function within a time range: the moment
@@ -59,5 +65,27 @@ public enum AstroSearch {
             throw error
         }
         return AstroTime(raw: result.time)
+    }
+
+    /// Corrects a position for the finite speed of light.
+    ///
+    /// Given a function that returns an object's position at any time,
+    /// this iteratively solves for the position the object had when light
+    /// left it, such that it arrives at the observer at the specified time.
+    ///
+    /// - Parameters:
+    ///   - time: The observation time (when light arrives).
+    ///   - positionFunction: A closure that returns the object's position at a given time.
+    /// - Returns: The light-corrected position vector.
+    /// - Throws: `AstronomyError` if the iteration fails to converge.
+    public static func correctLightTravel(
+        at time: AstroTime,
+        _ positionFunction: @escaping @Sendable (AstroTime) -> Vector3D
+    ) throws -> Vector3D {
+        var closure = positionFunction
+        let result = withUnsafeMutablePointer(to: &closure) { ptr in
+            Astronomy_CorrectLightTravel(ptr, positionTrampoline, time.raw)
+        }
+        return try Vector3D(result)
     }
 }

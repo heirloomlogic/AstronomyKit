@@ -205,6 +205,25 @@ extension CelestialBody {
         return try HourAngleEvent(result)
     }
 
+    /// Returns the hour angle of this body at the given time and location.
+    ///
+    /// The hour angle measures how far past the meridian a body is, in sidereal
+    /// hours (0–24). A value of 0 means the body is on the meridian (culmination).
+    ///
+    /// - Parameters:
+    ///   - time: The time at which to calculate the hour angle.
+    ///   - observer: The geographic observer location.
+    /// - Returns: The hour angle in sidereal hours (0–24).
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public func hourAngle(at time: AstroTime, from observer: Observer) throws -> Double {
+        var t = time.raw
+        let result = Astronomy_HourAngle(raw, &t, observer.raw)
+        if let error = AstronomyError(status: result.status) {
+            throw error
+        }
+        return result.value
+    }
+
     /// Finds the next upper culmination (transit/meridian crossing).
     ///
     /// Upper culmination is when the body crosses the meridian at its highest point.
