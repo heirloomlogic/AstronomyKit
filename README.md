@@ -156,8 +156,8 @@ let quarters = try Moon.quarters(
 // Define a star from J2000 catalog coordinates
 let algol = FixedStar(
     name: "Algol",
-    ra: 3.136148,      // Right ascension in hours
-    dec: 40.9556,      // Declination in degrees
+    rightAscension: 3.136148,  // Right ascension in hours
+    declination: 40.9556,      // Declination in degrees
     distance: 92.95    // Distance in light-years
 )
 

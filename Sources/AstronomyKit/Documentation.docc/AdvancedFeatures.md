@@ -179,16 +179,16 @@ Define and track fixed stars by their J2000 catalog coordinates.
 // Algol (Beta Persei) - the "Demon Star"
 let algol = FixedStar(
     name: "Algol",
-    ra: 3.136148,      // J2000 RA in hours
-    dec: 40.9556,      // J2000 Dec in degrees
-    distance: 92.95    // Light-years
+    rightAscension: 3.136148,  // J2000 RA in hours
+    declination: 40.9556,      // J2000 Dec in degrees
+    distance: 92.95            // Light-years
 )
 
 // Sirius - the brightest star
 let sirius = FixedStar(
     name: "Sirius",
-    ra: 6.7525,
-    dec: -16.7161,
+    rightAscension: 6.7525,
+    declination: -16.7161,
     distance: 8.6
 )
 ```

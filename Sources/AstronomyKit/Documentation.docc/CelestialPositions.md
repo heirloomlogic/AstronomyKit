@@ -141,7 +141,7 @@ print("\(constellation.symbol) - \(constellation.name)")
 // Output: "Tau - Taurus"
 
 // Or from raw coordinates
-let orion = try Constellation.find(ra: 5.9195, dec: 7.4071)
+let orion = try Constellation.find(rightAscension: 5.9195, declination: 7.4071)
 print(orion.name)  // "Orion"
 ```
 
@@ -153,8 +153,8 @@ Define and track fixed stars by their J2000 catalog coordinates using ``FixedSta
 // Define Algol (Beta Persei)
 let algol = FixedStar(
     name: "Algol",
-    ra: 3.136148,      // J2000 RA in hours
-    dec: 40.9556,      // J2000 Dec in degrees
+    rightAscension: 3.136148,  // J2000 RA in hours
+    declination: 40.9556,      // J2000 Dec in degrees
     distance: 92.95    // Light-years
 )
 
