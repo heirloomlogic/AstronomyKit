@@ -69,4 +69,29 @@ struct ObserverVectorTests {
         #expect(Observer.EquatorFrame.j2000 == .j2000)
         #expect(Observer.EquatorFrame.ofDate == .ofDate)
     }
+
+    // MARK: - Reverse Observer from Vector
+
+    @Test("Vector-to-observer roundtrip preserves location")
+    func vectorObserverRoundtrip() throws {
+        let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
+        let original = Observer(latitude: 40.7128, longitude: -74.0060, height: 10)
+        let vec = try original.vector(at: testTime, equator: .ofDate)
+        let restored = Observer.from(vector: vec, equatorDate: .ofDate)
+
+        #expect(abs(restored.latitude - original.latitude) < 0.01)
+        #expect(abs(restored.longitude - original.longitude) < 0.01)
+        #expect(abs(restored.height - original.height) < 100)
+    }
+
+    @Test("Vector-to-observer works with J2000 frame")
+    func vectorObserverJ2000() throws {
+        let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
+        let original = Observer(latitude: 51.4769, longitude: -0.0005, height: 48)
+        let vec = try original.vector(at: testTime, equator: .j2000)
+        let restored = Observer.from(vector: vec, equatorDate: .j2000)
+
+        #expect(abs(restored.latitude - original.latitude) < 0.01)
+        #expect(abs(restored.longitude - original.longitude) < 0.5)
+    }
 }

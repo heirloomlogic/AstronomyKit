@@ -426,4 +426,31 @@ struct RiseSetTests {
             _ = sunset  // Just verify it doesn't throw
         }
     }
+
+    // MARK: - Hour Angle Tests
+
+    @Suite("Hour Angle")
+    struct HourAngle {
+        let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
+        let observer = Observer(latitude: 40.7128, longitude: -74.0060)
+
+        @Test("Hour angle returns value in 0-24 range")
+        func hourAngleRange() throws {
+            let ha = try CelestialBody.sun.hourAngle(at: testTime, from: observer)
+            #expect(ha >= 0 && ha < 24)
+        }
+
+        @Test("Hour angle near 0 at culmination")
+        func hourAngleAtCulmination() throws {
+            let culm = try CelestialBody.sun.culmination(after: testTime, from: observer)
+            let ha = try CelestialBody.sun.hourAngle(at: culm.time, from: observer)
+            #expect(ha < 0.01 || ha > 23.99, "Hour angle at culmination should be ~0, got \(ha)")
+        }
+
+        @Test("Hour angle works for planets", arguments: CelestialBody.planets)
+        func hourAngleForPlanets(planet: CelestialBody) throws {
+            let ha = try planet.hourAngle(at: testTime, from: observer)
+            #expect(ha >= 0 && ha < 24)
+        }
+    }
 }
