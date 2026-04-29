@@ -14,7 +14,7 @@ struct ConstellationTests {
     @Test("Find Orion from Betelgeuse coordinates")
     func findOrion() throws {
         // Betelgeuse RA ~5.92h, Dec ~7.41°
-        let constellation = try Constellation.find(ra: 5.92, dec: 7.41)
+        let constellation = try Constellation.find(rightAscension: 5.92, declination: 7.41)
 
         #expect(constellation.symbol == "Ori")
         #expect(constellation.name == "Orion")
@@ -23,7 +23,7 @@ struct ConstellationTests {
     @Test("Find Ursa Minor from Polaris coordinates")
     func findUrsaMinor() throws {
         // Polaris RA ~2.53h, Dec ~89.26°
-        let constellation = try Constellation.find(ra: 2.53, dec: 89.26)
+        let constellation = try Constellation.find(rightAscension: 2.53, declination: 89.26)
 
         #expect(constellation.symbol == "UMi")
         #expect(constellation.name == "Ursa Minor")
@@ -31,11 +31,11 @@ struct ConstellationTests {
 
     @Test("Constellation has B1875 coordinates")
     func hasB1875Coordinates() throws {
-        let constellation = try Constellation.find(ra: 5.92, dec: 7.41)
+        let constellation = try Constellation.find(rightAscension: 5.92, declination: 7.41)
 
         // B1875 coordinates should be defined
-        #expect(constellation.ra1875 >= 0 && constellation.ra1875 <= 24)
-        #expect(constellation.dec1875 >= -90 && constellation.dec1875 <= 90)
+        #expect(constellation.rightAscension1875 >= 0 && constellation.rightAscension1875 <= 24)
+        #expect(constellation.declination1875 >= -90 && constellation.declination1875 <= 90)
     }
 
     @Test("CelestialBody constellation lookup")
@@ -50,16 +50,16 @@ struct ConstellationTests {
 
     @Test("Constellation is Equatable")
     func equatable() throws {
-        let c1 = try Constellation.find(ra: 5.92, dec: 7.41)
-        let c2 = try Constellation.find(ra: 5.92, dec: 7.41)
+        let c1 = try Constellation.find(rightAscension: 5.92, declination: 7.41)
+        let c2 = try Constellation.find(rightAscension: 5.92, declination: 7.41)
 
         #expect(c1 == c2)
     }
 
     @Test("Constellation is Hashable")
     func hashable() throws {
-        let c1 = try Constellation.find(ra: 5.92, dec: 7.41)
-        let c2 = try Constellation.find(ra: 2.53, dec: 89.26)
+        let c1 = try Constellation.find(rightAscension: 5.92, declination: 7.41)
+        let c2 = try Constellation.find(rightAscension: 2.53, declination: 89.26)
 
         let set: Set<Constellation> = [c1, c2]
         #expect(set.count == 2)
@@ -67,7 +67,7 @@ struct ConstellationTests {
 
     @Test("CustomStringConvertible")
     func description() throws {
-        let constellation = try Constellation.find(ra: 5.92, dec: 7.41)
+        let constellation = try Constellation.find(rightAscension: 5.92, declination: 7.41)
 
         #expect(constellation.description.contains("Ori"))
         #expect(constellation.description.contains("Orion"))
