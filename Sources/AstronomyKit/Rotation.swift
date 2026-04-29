@@ -252,6 +252,44 @@ extension RotationMatrix {
         let result = Astronomy_Rotation_ECL_EQD(&t)
         return try RotationMatrix(result)
     }
+
+    // MARK: Ecliptic of Date (ECT) conversions
+
+    /// Creates a rotation from J2000 equatorial to ecliptic-of-date coordinates.
+    public static func equatorialJ2000ToEclipticOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var t = time.raw
+        let result = Astronomy_Rotation_EQJ_ECT(&t)
+        return try RotationMatrix(result)
+    }
+
+    /// Creates a rotation from ecliptic-of-date to J2000 equatorial coordinates.
+    public static func eclipticOfDateToEquatorialJ2000(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var t = time.raw
+        let result = Astronomy_Rotation_ECT_EQJ(&t)
+        return try RotationMatrix(result)
+    }
+
+    /// Creates a rotation from equatorial-of-date to ecliptic-of-date coordinates.
+    public static func equatorialOfDateToEclipticOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var t = time.raw
+        let result = Astronomy_Rotation_EQD_ECT(&t)
+        return try RotationMatrix(result)
+    }
+
+    /// Creates a rotation from ecliptic-of-date to equatorial-of-date coordinates.
+    public static func eclipticOfDateToEquatorialOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var t = time.raw
+        let result = Astronomy_Rotation_ECT_EQD(&t)
+        return try RotationMatrix(result)
+    }
 }
 
 // MARK: - Vector Rotation
@@ -272,6 +310,26 @@ extension Vector3D {
         )
         let result = Astronomy_RotateVector(rotation.raw, raw)
         return try Vector3D(result)
+    }
+}
+
+// MARK: - State Vector Rotation
+
+extension StateVector {
+    /// Applies a rotation matrix to both the position and velocity vectors.
+    ///
+    /// - Parameter rotation: The rotation matrix to apply.
+    /// - Returns: The rotated state vector.
+    /// - Throws: `AstronomyError` if the rotation fails.
+    public func rotated(by rotation: RotationMatrix) throws -> StateVector {
+        let raw = astro_state_vector_t(
+            status: ASTRO_SUCCESS,
+            x: position.x, y: position.y, z: position.z,
+            vx: velocity.x, vy: velocity.y, vz: velocity.z,
+            t: time.raw
+        )
+        let result = Astronomy_RotateState(rotation.raw, raw)
+        return try StateVector(result)
     }
 }
 

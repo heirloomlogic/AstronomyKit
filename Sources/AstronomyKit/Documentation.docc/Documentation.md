@@ -73,7 +73,9 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - <doc:RiseSetTimes>
 - <doc:Eclipses>
 - <doc:SeasonsAndEvents>
+- ``AstroSearch``
 - ``Seasons``
+- ``Sun``
 - ``LunarEclipse``
 - ``GlobalSolarEclipse``
 - ``LocalSolarEclipse``
@@ -81,6 +83,8 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 ### Advanced
 
 - <doc:AdvancedFeatures>
+- ``Chiron``
+- ``FixedStar``
 - ``GravitySimulation``
 - ``LagrangePoint``
 - ``Transit``

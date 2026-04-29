@@ -118,6 +118,38 @@ extension CelestialBody {
         }
         return result.angle
     }
+
+    /// Calculates the barycentric state vector (position and velocity relative
+    /// to the Solar System Barycenter).
+    ///
+    /// - Parameter time: The time at which to calculate the state.
+    /// - Returns: The barycentric state vector.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public func barycentricState(at time: AstroTime) throws -> StateVector {
+        let result = Astronomy_BaryState(raw, time.raw)
+        return try StateVector(result)
+    }
+
+    /// Calculates the heliocentric state vector (position and velocity relative
+    /// to the Sun's center).
+    ///
+    /// - Parameter time: The time at which to calculate the state.
+    /// - Returns: The heliocentric state vector.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public func heliocentricState(at time: AstroTime) throws -> StateVector {
+        let result = Astronomy_HelioState(raw, time.raw)
+        return try StateVector(result)
+    }
+
+    /// Calculates the geocentric state vector of the Earth-Moon Barycenter.
+    ///
+    /// - Parameter time: The time at which to calculate the state.
+    /// - Returns: The geocentric EMB state vector.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public static func earthMoonBaryState(at time: AstroTime) throws -> StateVector {
+        let result = Astronomy_GeoEmbState(time.raw)
+        return try StateVector(result)
+    }
 }
 
 // MARK: - Aberration
@@ -168,5 +200,28 @@ public enum Sun {
     public static func position(at time: AstroTime) throws -> Ecliptic {
         let result = Astronomy_SunPosition(time.raw)
         return try Ecliptic(result)
+    }
+
+    /// Searches for the next time the Sun reaches the specified ecliptic longitude.
+    ///
+    /// This is useful for finding specific seasonal moments. For example,
+    /// 0° corresponds to the March equinox and 90° to the June solstice.
+    ///
+    /// - Parameters:
+    ///   - targetLongitude: The target ecliptic longitude in degrees (0–360).
+    ///   - startTime: The time to start searching from.
+    ///   - limitDays: Maximum number of days to search. Defaults to 366.
+    /// - Returns: The time when the Sun reaches the target longitude.
+    /// - Throws: `AstronomyError` if the search fails.
+    public static func searchLongitude(
+        _ targetLongitude: Double,
+        after startTime: AstroTime,
+        limitDays: Double = 366
+    ) throws -> AstroTime {
+        let result = Astronomy_SearchSunLongitude(targetLongitude, startTime.raw, limitDays)
+        if let error = AstronomyError(status: result.status) {
+            throw error
+        }
+        return AstroTime(raw: result.time)
     }
 }

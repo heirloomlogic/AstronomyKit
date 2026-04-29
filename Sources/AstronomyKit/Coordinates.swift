@@ -6,6 +6,7 @@
 //
 
 import CLibAstronomy
+import Foundation
 
 // MARK: - Vector3D
 
@@ -58,6 +59,77 @@ extension Vector3D: CustomStringConvertible {
     /// A textual representation of the vector in AU.
     public var description: String {
         String(format: "(%.6f, %.6f, %.6f) AU", x, y, z)
+    }
+}
+
+// MARK: - Vector Conversions
+
+extension Vector3D {
+    /// Converts this Cartesian vector to spherical coordinates.
+    public func toSpherical() -> Spherical {
+        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
+        let result = Astronomy_SphereFromVector(raw)
+        return Spherical(latitude: result.lat, longitude: result.lon, distance: result.dist)
+    }
+
+    /// Converts this equatorial J2000 vector to equatorial coordinates.
+    public func toEquatorial() -> Equatorial {
+        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
+        let result = Astronomy_EquatorFromVector(raw)
+        return Equatorial(
+            rightAscension: result.ra,
+            declination: result.dec,
+            distance: result.dist,
+            time: time
+        )
+    }
+
+    /// Converts this equatorial J2000 vector to ecliptic coordinates.
+    public func toEcliptic() throws -> Ecliptic {
+        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
+        let result = Astronomy_Ecliptic(raw)
+        return try Ecliptic(result)
+    }
+
+    /// Creates a Cartesian vector from spherical coordinates.
+    public static func from(sphere: Spherical, at time: AstroTime) -> Vector3D {
+        let raw = astro_spherical_t(status: ASTRO_SUCCESS, lat: sphere.latitude, lon: sphere.longitude, dist: sphere.distance)
+        let result = Astronomy_VectorFromSphere(raw, time.raw)
+        return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
+    }
+
+    /// Creates a Cartesian vector from horizontal coordinates.
+    public static func from(
+        horizon: Spherical,
+        at time: AstroTime,
+        refraction: Refraction = .normal
+    ) -> Vector3D {
+        let raw = astro_spherical_t(status: ASTRO_SUCCESS, lat: horizon.latitude, lon: horizon.longitude, dist: horizon.distance)
+        let result = Astronomy_VectorFromHorizon(raw, time.raw, refraction.raw)
+        return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
+    }
+
+    /// Calculates the angle in degrees between this vector and another.
+    public func angle(to other: Vector3D) throws -> Double {
+        let rawA = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
+        let rawB = astro_vector_t(status: ASTRO_SUCCESS, x: other.x, y: other.y, z: other.z, t: other.time.raw)
+        let result = Astronomy_AngleBetween(rawA, rawB)
+        if let error = AstronomyError(status: result.status) {
+            throw error
+        }
+        return result.angle
+    }
+}
+
+extension Spherical {
+    /// Creates spherical coordinates from a Cartesian vector in the horizontal frame.
+    public static func fromHorizonVector(
+        _ vector: Vector3D,
+        refraction: Refraction = .normal
+    ) -> Spherical {
+        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: vector.x, y: vector.y, z: vector.z, t: vector.time.raw)
+        let result = Astronomy_HorizonFromVector(raw, refraction.raw)
+        return Spherical(latitude: result.lat, longitude: result.lon, distance: result.dist)
     }
 }
 
@@ -191,7 +263,7 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         }
         self.latitude = raw.elat
         self.longitude = raw.elon
-        self.distance = raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z
+        self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
     }
 }
 

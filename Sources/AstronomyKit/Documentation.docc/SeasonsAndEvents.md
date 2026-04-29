@@ -168,3 +168,28 @@ if angle > 170 {
     print("Jupiter is near opposition!")
 }
 ```
+
+## Conjunctions and Oppositions
+
+Search for when a planet reaches a specific angular relationship with the Sun:
+
+```swift
+// Find the next Mars opposition (closest to Earth)
+let opposition = try CelestialBody.mars.searchOpposition(after: .now)
+print("Mars opposition: \(opposition.date)")
+
+// Find the next Jupiter superior conjunction (behind the Sun)
+let conjunction = try CelestialBody.jupiter.searchSuperiorConjunction(after: .now)
+print("Jupiter conjunction: \(conjunction.date)")
+
+// Measure the relative ecliptic longitude between two bodies
+let angle = try CelestialBody.venus.pairLongitude(with: .mars, at: .now)
+print("Venus-Mars separation: \(angle)°")
+
+// Search for an arbitrary relative longitude from the Sun
+let result = try CelestialBody.saturn.searchRelativeLongitude(90, after: .now)
+```
+
+The relative longitude convention measures the heliocentric angle between the planet
+and Earth. At 0° the planet and Earth are on the same side of the Sun (opposition for
+outer planets). At 180° the planet is on the far side of the Sun (superior conjunction).

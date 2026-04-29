@@ -169,6 +169,8 @@ print("Pressure: \(Int(everest.pressure)) mbar")  // ~314 mbar (vs 1013 at sea l
 
 ## Fixed Stars
 
+> Note: `FixedStar` is an AstronomyKit addition. It wraps Astronomy Engine's `Astronomy_DefineStar()` with a thread-safe, Swift-idiomatic value type and mutex-protected calculation slots.
+
 Define and track fixed stars by their J2000 catalog coordinates.
 
 ### Defining a Star
@@ -212,6 +214,28 @@ J2000 coordinates can be found from:
 - Hipparcos Catalog
 - Yale Bright Star Catalog
 
+
+## Chiron
+
+> Note: `Chiron` is an AstronomyKit addition. Astronomy Engine has no built-in support for 2060 Chiron.
+
+AstronomyKit provides gravity-simulated positions for the centaur 2060 Chiron using pre-computed JPL Horizons state vectors at reference epochs (2000, 2010, 2020, 2030, 2040). The nearest epoch is selected and propagated via n-body gravity simulation.
+
+### Getting Chiron's Position
+
+```swift
+// Ecliptic longitude
+let longitude = try Chiron.eclipticLongitude(at: .now)
+
+// Full ecliptic coordinates
+let ecliptic = try Chiron.ecliptic(at: .now)
+
+// Horizon position for an observer
+let observer = Observer(latitude: 40.7, longitude: -74.0)
+let horizon = try Chiron.horizon(at: .now, from: observer)
+```
+
+Accuracy is highest near the reference epochs and degrades as distance increases. Within ±5 years of an epoch, error is expected to be less than 1 arcminute.
 
 ## Observer Gravity
 

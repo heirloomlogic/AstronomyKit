@@ -7,10 +7,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [Unreleased]
 
 ### Added
+- Conjunction and opposition search: `searchOpposition(after:)`, `searchSuperiorConjunction(after:)`, `searchRelativeLongitude(_:after:)`, and `pairLongitude(with:at:)` on `CelestialBody`.
+- Sun ecliptic longitude search: `Sun.searchLongitude(_:after:limitDays:)`.
+- Generic root-finding search: `AstroSearch.find(from:to:toleranceSeconds:_:)`.
+- State vector methods: `barycentricState(at:)`, `heliocentricState(at:)`, and `earthMoonBaryState(at:)`.
+- Vector conversions: `toSpherical()`, `toEquatorial()`, `toEcliptic()`, `angle(to:)`, and factory methods on `Vector3D` and `Spherical`.
+- Ecliptic-of-date (ECT) rotation matrices.
+- State vector rotation via `StateVector.rotated(by:)`.
 - `CHANGELOG.md` and `SECURITY.md`.
 - README section on toolchain alignment between development and CI.
 
+### Fixed
+- `Ecliptic` distance now correctly computes the vector magnitude (was storing the squared magnitude).
+
 ### Changed
+- Corrected accuracy claim from "sub-arcminute" to "±1 arcminute" to match Astronomy Engine's stated accuracy.
+- Corrected model attribution from "derived from NASA JPL ephemeris data" to "based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons."
+- Documentation now identifies Chiron and FixedStar as AstronomyKit additions beyond Astronomy Engine.
 - Documentation workflow now publishes on version tags instead of every push to `main`.
 - Test workflow now also runs on pushes to `main`, not only on pull requests.
 - `Package.resolved` is no longer tracked in the repository.
@@ -56,7 +69,7 @@ Initial public release.
 - Lunar and solar `Eclipse` prediction (including `GlobalSolarEclipse` and `LocalSolarEclipse`).
 - `Apsis`, `Elongation`, `Transit`, `LunarNode`, `LagrangePoint`, `Constellation`, and `Illumination`.
 - `GravitySimulation` N-body simulator.
-- Tests validating positions against JPL Horizons ephemeris data to sub-arcminute accuracy.
+- Tests validating positions against JPL Horizons ephemeris data to ±1 arcminute accuracy.
 - DocC documentation and GitHub Actions workflows for tests and documentation publishing.
 - Full `Sendable` conformance for Swift 6.
 
