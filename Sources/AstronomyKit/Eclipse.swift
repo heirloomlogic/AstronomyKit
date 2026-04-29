@@ -14,7 +14,10 @@ public enum EclipseKind: Sendable, Equatable, Hashable {
     /// No eclipse.
     case none
 
-    /// A penumbral lunar eclipse or partial solar eclipse.
+    /// A penumbral lunar eclipse (Moon passes through Earth's penumbral shadow only).
+    case penumbral
+
+    /// A partial eclipse.
     case partial
 
     /// An annular solar eclipse.
@@ -27,6 +30,7 @@ public enum EclipseKind: Sendable, Equatable, Hashable {
     internal init(_ raw: astro_eclipse_kind_t) {
         switch raw {
         case ECLIPSE_NONE: self = .none
+        case ECLIPSE_PENUMBRAL: self = .penumbral
         case ECLIPSE_PARTIAL: self = .partial
         case ECLIPSE_ANNULAR: self = .annular
         case ECLIPSE_TOTAL: self = .total
@@ -38,6 +42,7 @@ public enum EclipseKind: Sendable, Equatable, Hashable {
     public var name: String {
         switch self {
         case .none: return "None"
+        case .penumbral: return "Penumbral"
         case .partial: return "Partial"
         case .annular: return "Annular"
         case .total: return "Total"

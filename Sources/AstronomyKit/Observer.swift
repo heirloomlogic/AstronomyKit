@@ -47,11 +47,11 @@ public struct Observer: Sendable, Equatable, Hashable {
         self.height = height
     }
 
-    /// A geocentric observer.
+    /// A geocentric observer at Earth's center.
     ///
-    /// Uses Center geodetic: 0.0, 0.0, -6378.137 km, which places the observer at Earth's center,
-    /// not on the surface.
-    static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
+    /// Uses height of -6,378,137 m to place the observer at Earth's center
+    /// rather than on the surface.
+    public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
 
     /// The underlying C observer structure.
     internal var raw: astro_observer_t {
@@ -135,8 +135,8 @@ extension Observer {
     /// - Returns: The position vector in AU.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func vector(at time: AstroTime, equator: EquatorFrame = .j2000) throws -> Vector3D {
-        var t = time.raw
-        let result = Astronomy_ObserverVector(&t, raw, equator.raw)
+        var rawTime = time.raw
+        let result = Astronomy_ObserverVector(&rawTime, raw, equator.raw)
         return try Vector3D(result)
     }
 
@@ -151,8 +151,33 @@ extension Observer {
     /// - Returns: The state vector with position in AU and velocity in AU/day.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func state(at time: AstroTime, equator: EquatorFrame = .j2000) throws -> StateVector {
-        var t = time.raw
-        let result = Astronomy_ObserverState(&t, raw, equator.raw)
+        var rawTime = time.raw
+        let result = Astronomy_ObserverState(&rawTime, raw, equator.raw)
         return try StateVector(result)
+    }
+
+    /// Computes an observer's geographic location from an equatorial position vector.
+    ///
+    /// This is the inverse of ``vector(at:equator:)``. Given a geocentric
+    /// equatorial position vector, it returns the latitude, longitude, and
+    /// height of the corresponding observer on Earth's surface.
+    ///
+    /// - Parameters:
+    ///   - vector: A geocentric equatorial position vector.
+    ///   - equatorDate: The equinox reference frame of the vector.
+    /// - Returns: The observer location.
+    public static func from(
+        vector: Vector3D,
+        equatorDate: EquatorDate = .j2000
+    ) -> Observer {
+        var raw = astro_vector_t(
+            status: ASTRO_SUCCESS,
+            x: vector.x,
+            y: vector.y,
+            z: vector.z,
+            t: vector.time.raw
+        )
+        let obs = Astronomy_VectorObserver(&raw, equatorDate.raw)
+        return Observer(latitude: obs.latitude, longitude: obs.longitude, height: obs.height)
     }
 }

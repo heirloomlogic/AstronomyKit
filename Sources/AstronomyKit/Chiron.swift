@@ -40,7 +40,7 @@ import Foundation
 /// print("Chiron is at \(longitude)°")
 ///
 /// // Get Chiron's geocentric position
-/// let position = try Chiron.geoPosition(at: .now)
+/// let position = try Chiron.geocentricPosition(at: .now)
 /// print("Chiron position: \(position)")
 /// ```
 public enum Chiron {
@@ -158,29 +158,31 @@ public enum Chiron {
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The heliocentric position vector in AU (J2000 equatorial frame).
     /// - Throws: `AstronomyError` if the calculation fails.
-    public static func helioPosition(at time: AstroTime) throws -> Vector3D {
+    public static func heliocentricPosition(at time: AstroTime) throws -> Vector3D {
         let state = try simulatedState(at: time)
         return state.position
     }
 
     /// Calculates Chiron's geocentric position at a given time.
     ///
-    /// Returns the position vector as seen from Earth's center.
+    /// Returns the position vector as seen from Earth's center,
+    /// corrected for light travel time.
     ///
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The geocentric position vector in AU (J2000 equatorial frame).
     /// - Throws: `AstronomyError` if the calculation fails.
-    public static func geoPosition(at time: AstroTime) throws -> Vector3D {
-        let helioChiron = try helioPosition(at: time)
-        let helioEarth = try CelestialBody.earth.helioPosition(at: time)
+    public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
+        let helioEarth = try CelestialBody.earth.heliocentricPosition(at: time)
 
-        // Geocentric = Chiron heliocentric - Earth heliocentric
-        return Vector3D(
-            x: helioChiron.x - helioEarth.x,
-            y: helioChiron.y - helioEarth.y,
-            z: helioChiron.z - helioEarth.z,
-            time: time
-        )
+        return try AstroSearch.correctLightTravel(at: time) { t in
+            let helioChiron = try heliocentricPosition(at: t)
+            return Vector3D(
+                x: helioChiron.x - helioEarth.x,
+                y: helioChiron.y - helioEarth.y,
+                z: helioChiron.z - helioEarth.z,
+                time: t
+            )
+        }
     }
 
     /// Calculates Chiron's geocentric state (position and velocity) at a given time.
@@ -190,16 +192,16 @@ public enum Chiron {
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func geoState(at time: AstroTime) throws -> StateVector {
         let helioState = try simulatedState(at: time)
-        let helioEarth = try CelestialBody.earth.helioPosition(at: time)
+        let helioEarth = try CelestialBody.earth.heliocentricPosition(at: time)
 
         // Get Earth's velocity via finite difference
-        let dt = 1.0 / 86_400.0  // 1 second in days
-        let earthBefore = try CelestialBody.earth.helioPosition(at: time.addingDays(-dt))
-        let earthAfter = try CelestialBody.earth.helioPosition(at: time.addingDays(dt))
+        let timeStep = 1.0 / 86_400.0  // 1 second in days
+        let earthBefore = try CelestialBody.earth.heliocentricPosition(at: time.addingDays(-timeStep))
+        let earthAfter = try CelestialBody.earth.heliocentricPosition(at: time.addingDays(timeStep))
         let earthVelocity = Vector3D(
-            x: (earthAfter.x - earthBefore.x) / (2 * dt),
-            y: (earthAfter.y - earthBefore.y) / (2 * dt),
-            z: (earthAfter.z - earthBefore.z) / (2 * dt),
+            x: (earthAfter.x - earthBefore.x) / (2 * timeStep),
+            y: (earthAfter.y - earthBefore.y) / (2 * timeStep),
+            z: (earthAfter.z - earthBefore.z) / (2 * timeStep),
             time: time
         )
 
@@ -226,14 +228,11 @@ public enum Chiron {
     /// - Returns: The equatorial coordinates (RA/Dec) in J2000.
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func equatorial(at time: AstroTime) throws -> Equatorial {
-        let geo = try geoPosition(at: time)
+        let geo = try geocentricPosition(at: time)
         let distance = geo.magnitude
-
-        // Convert Cartesian to spherical (RA/Dec)
-        let ra = atan2(geo.y, geo.x) * 12.0 / .pi  // Convert radians to hours
+        let ra = atan2(geo.y, geo.x) * 12.0 / .pi
         let raPositive = ra < 0 ? ra + 24.0 : ra
-
-        let dec = asin(geo.z / distance) * 180.0 / .pi  // Convert radians to degrees
+        let dec = asin(geo.z / distance) * 180.0 / .pi
 
         return Equatorial(
             rightAscension: raPositive,
@@ -251,30 +250,7 @@ public enum Chiron {
     /// - Returns: The ecliptic longitude in degrees (0-360).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func eclipticLongitude(at time: AstroTime) throws -> Double {
-        let geo = try geoPosition(at: time)
-
-        // Get the rotation matrix from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-
-        // Create a C vector for rotation
-        let cVector = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: geo.x,
-            y: geo.y,
-            z: geo.z,
-            t: time.raw
-        )
-
-        // Rotate to ecliptic coordinates
-        let rotated = Astronomy_RotateVector(rotation, cVector)
-
-        // Calculate ecliptic longitude from rotated vector
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        return longitude
+        try ecliptic(at: time).longitude
     }
 
     /// Calculates Chiron's ecliptic latitude at a given time.
@@ -283,25 +259,7 @@ public enum Chiron {
     /// - Returns: The ecliptic latitude in degrees (-90 to +90).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func eclipticLatitude(at time: AstroTime) throws -> Double {
-        let geo = try geoPosition(at: time)
-
-        // Get the rotation matrix from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-
-        // Create a C vector for rotation
-        let cVector = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: geo.x,
-            y: geo.y,
-            z: geo.z,
-            t: time.raw
-        )
-
-        // Rotate to ecliptic coordinates
-        let rotated = Astronomy_RotateVector(rotation, cVector)
-        let distance = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        return asin(rotated.z / distance) * 180.0 / .pi
+        try ecliptic(at: time).latitude
     }
 
     /// Calculates Chiron's full ecliptic coordinates at a given time.
@@ -310,32 +268,7 @@ public enum Chiron {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        let geo = try geoPosition(at: time)
-
-        // Get the rotation matrix from equatorial J2000 to ecliptic
-        let rotation = Astronomy_Rotation_EQJ_ECL()
-
-        // Create a C vector for rotation
-        let cVector = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: geo.x,
-            y: geo.y,
-            z: geo.z,
-            t: time.raw
-        )
-
-        // Rotate to ecliptic coordinates
-        let rotated = Astronomy_RotateVector(rotation, cVector)
-        let distance = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        let latitude = asin(rotated.z / distance) * 180.0 / .pi
-
-        return Ecliptic(latitude: latitude, longitude: longitude, distance: distance)
+        try geocentricPosition(at: time).toEcliptic()
     }
 
     /// Calculates Chiron's horizontal coordinates for an observer.
@@ -352,9 +285,9 @@ public enum Chiron {
         refraction: Refraction = .normal
     ) throws -> Horizon {
         let eq = try equatorial(at: time)
-        var t = time.raw
+        var rawTime = time.raw
         let result = Astronomy_Horizon(
-            &t,
+            &rawTime,
             observer.raw,
             eq.rightAscension,
             eq.declination,
@@ -370,14 +303,14 @@ public enum Chiron {
         // Find the closest reference epoch
         guard
             let (epochTime, closestState) = referenceEpochs.min(by: { lhs, rhs in
-                abs(lhs.time.ut - time.ut) < abs(rhs.time.ut - time.ut)
+                abs(lhs.time.universalTime - time.universalTime) < abs(rhs.time.universalTime - time.universalTime)
             })
         else {
             throw AstronomyError.internalError
         }
 
         // If we're very close to the epoch (within 1 day), return the epoch state directly
-        if abs(closestState.time.ut - time.ut) < 1.0 {
+        if abs(closestState.time.universalTime - time.universalTime) < 1.0 {
             return closestState
         }
 

@@ -98,7 +98,7 @@ let eqjToHor = try RotationMatrix.equatorialJ2000ToHorizon(at: time, from: obser
 Transform a vector using a rotation matrix:
 
 ```swift
-let position = try CelestialBody.mars.geoPosition(at: .now)
+let position = try CelestialBody.mars.geocentricPosition(at: .now)
 let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()
 let eclipticPosition = position.rotated(by: rotation)
 ```
@@ -127,7 +127,7 @@ let rotated = try RotationMatrix.pivot(axis: 2, angle: 45.0)  // 45° around Z
 A 3D Cartesian position vector:
 
 ```swift
-let pos = try CelestialBody.jupiter.geoPosition(at: .now)
+let pos = try CelestialBody.jupiter.geocentricPosition(at: .now)
 print("X: \(pos.x) AU")
 print("Y: \(pos.y) AU")
 print("Z: \(pos.z) AU")
@@ -175,16 +175,30 @@ let geometric = try body.horizon(at: .now, from: observer, refraction: .none)
 let jpl = try body.horizon(at: .now, from: observer, refraction: .jplHorizons)
 ```
 
+### Computing Refraction Directly
+
+Calculate refraction angles independently of a coordinate conversion:
+
+```swift
+// How much does refraction raise an object at 5° geometric altitude?
+let offset = Refraction.normal.refractionAngle(at: 5.0)
+print("Refraction at 5°: +\(offset)°")
+
+// Given an apparent altitude of 5°, what was the geometric altitude?
+let inverse = Refraction.normal.inverseRefractionAngle(at: 5.0)
+let geometric = 5.0 - inverse
+```
+
 ### Aberration
 
 Light-time and stellar aberration affect apparent positions:
 
 ```swift
 // With aberration correction (default) - what you actually see
-let apparent = try body.geoPosition(at: .now, aberration: .corrected)
+let apparent = try body.geocentricPosition(at: .now, aberration: .corrected)
 
 // Without correction - geometric position
-let geometric = try body.geoPosition(at: .now, aberration: .none)
+let geometric = try body.geocentricPosition(at: .now, aberration: .none)
 ```
 
 ## Available Rotations
@@ -203,4 +217,9 @@ let geometric = try body.geoPosition(at: .now, aberration: .none)
 | HOR | ECL | `horizonToEcliptic(at:from:)` |
 | EQD | ECL | `equatorialOfDateToEcliptic(at:)` |
 | ECL | EQD | `eclipticToEquatorialOfDate(at:)` |
+| EQD | HOR | `equatorialOfDateToHorizon(at:from:)` |
 | HOR | EQD | `horizonToEquatorialOfDate(at:from:)` |
+| EQJ | ECT | `equatorialJ2000ToEclipticOfDate(at:)` |
+| ECT | EQJ | `eclipticOfDateToEquatorialJ2000(at:)` |
+| EQD | ECT | `equatorialOfDateToEclipticOfDate(at:)` |
+| ECT | EQD | `eclipticOfDateToEquatorialOfDate(at:)` |

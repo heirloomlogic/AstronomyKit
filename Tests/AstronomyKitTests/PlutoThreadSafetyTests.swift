@@ -8,12 +8,12 @@ import Testing
 @Suite("Pluto Thread Safety")
 struct PlutoThreadSafetyTests {
     /// Helper to convert equatorial coordinates to ecliptic longitude.
-    private func equatorialToEclipticLongitude(ra: Double, dec: Double) -> Double {
+    private func equatorialToEclipticLongitude(rightAscension: Double, declination: Double) -> Double {
         let obliquity = 23.4393 * .pi / 180.0
-        let raRad = ra * 15.0 * .pi / 180.0
-        let decRad = dec * .pi / 180.0
-        let sinLon = sin(raRad) * cos(obliquity) + tan(decRad) * sin(obliquity)
-        let cosLon = cos(raRad)
+        let rightAscensionRad = rightAscension * 15.0 * .pi / 180.0
+        let declinationRad = declination * .pi / 180.0
+        let sinLon = sin(rightAscensionRad) * cos(obliquity) + tan(declinationRad) * sin(obliquity)
+        let cosLon = cos(rightAscensionRad)
         var lon = atan2(sinLon, cosLon) * 180.0 / .pi
         if lon < 0 { lon += 360.0 }
         return lon
@@ -56,8 +56,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(
@@ -75,8 +75,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(
@@ -94,8 +94,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(
@@ -113,8 +113,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(
@@ -132,8 +132,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(
@@ -151,8 +151,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(
@@ -170,8 +170,8 @@ struct PlutoThreadSafetyTests {
 
         let plutoEq = try CelestialBody.pluto.equatorial(at: time, equatorDate: .ofDate)
         let plutoLon = equatorialToEclipticLongitude(
-            ra: plutoEq.rightAscension,
-            dec: plutoEq.declination
+            rightAscension: plutoEq.rightAscension,
+            declination: plutoEq.declination
         )
 
         #expect(

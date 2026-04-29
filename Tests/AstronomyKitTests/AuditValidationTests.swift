@@ -313,7 +313,7 @@ struct AuditValidationTests {
             let time = AuditValidationTests.auditTime
 
             // TT is ahead of UT by about 69 seconds (Delta-T) in 2026
-            let deltaT = (time.tt - time.ut) * 86_400  // Convert from days to seconds
+            let deltaT = (time.terrestrialTime - time.universalTime) * 86_400  // Convert from days to seconds
 
             print("[AUDIT TEST] Delta-T: \(deltaT) seconds")
 

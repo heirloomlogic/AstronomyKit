@@ -77,7 +77,7 @@ struct AstroTimeTests {
         func j2000Epoch() {
             let time = AstroTime(year: 2_000, month: 1, day: 1, hour: 12)
 
-            #expect(abs(time.ut) < 0.0001, "J2000 epoch should have ut ≈ 0")
+            #expect(abs(time.universalTime) < 0.0001, "J2000 epoch should have ut ≈ 0")
         }
 
         @Test("Static now property")
@@ -103,7 +103,7 @@ struct AstroTimeTests {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
             let later = time.addingDays(10)
 
-            #expect(later.ut - time.ut == 10, "Difference should be exactly 10 days")
+            #expect(later.universalTime - time.universalTime == 10, "Difference should be exactly 10 days")
             #expect(later > time)
         }
 
@@ -112,7 +112,7 @@ struct AstroTimeTests {
             let time = AstroTime(year: 2_025, month: 1, day: 15)
             let earlier = time.addingDays(-5)
 
-            #expect(time.ut - earlier.ut == 5, "Difference should be exactly 5 days")
+            #expect(time.universalTime - earlier.universalTime == 5, "Difference should be exactly 5 days")
             #expect(earlier < time)
         }
 
@@ -135,7 +135,7 @@ struct AstroTimeTests {
             let later = time.addingHours(6)
 
             let expectedDayDiff = 6.0 / 24.0
-            #expect(abs(later.ut - time.ut - expectedDayDiff) < 0.0001)
+            #expect(abs(later.universalTime - time.universalTime - expectedDayDiff) < 0.0001)
         }
 
         @Test("Add negative hours")
@@ -157,7 +157,7 @@ struct AstroTimeTests {
             let result = time.addingDays(1).addingHours(12).addingDays(-0.5)
 
             // 1 day + 12 hours - 12 hours = 1 day
-            #expect(abs(result.ut - time.ut - 1.0) < 0.0001)
+            #expect(abs(result.universalTime - time.universalTime - 1.0) < 0.0001)
         }
     }
 
@@ -170,10 +170,10 @@ struct AstroTimeTests {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
 
             // TT should be slightly ahead of UT (by ~69 seconds in modern era)
-            #expect(time.tt > time.ut)
+            #expect(time.terrestrialTime > time.universalTime)
 
             // The difference should be reasonable (less than 2 minutes)
-            let diffSeconds = (time.tt - time.ut) * 24 * 3_600
+            let diffSeconds = (time.terrestrialTime - time.universalTime) * 24 * 3_600
             #expect(diffSeconds > 0 && diffSeconds < 120)
         }
 
@@ -193,7 +193,7 @@ struct AstroTimeTests {
             let recreated = AstroTime(date)
 
             // Should be within 1 second
-            #expect(abs(original.ut - recreated.ut) < 1.0 / 86_400.0)
+            #expect(abs(original.universalTime - recreated.universalTime) < 1.0 / 86_400.0)
         }
     }
 
@@ -298,7 +298,7 @@ struct AstroTimeTests {
             let decoder = JSONDecoder()
             let time = try decoder.decode(AstroTime.self, from: data)
 
-            #expect(abs(time.ut) < 0.0001)
+            #expect(abs(time.universalTime) < 0.0001)
         }
     }
 
@@ -333,7 +333,7 @@ struct AstroTimeTests {
 
             #expect(startOfYear > endOfYear)
 
-            let diff = startOfYear.ut - endOfYear.ut
+            let diff = startOfYear.universalTime - endOfYear.universalTime
             #expect(diff > 0 && diff < 1.0 / 1_440.0)  // Less than 1 minute apart
         }
 

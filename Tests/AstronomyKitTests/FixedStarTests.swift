@@ -19,8 +19,8 @@ struct FixedStarTests {
     /// J2000 coordinates from SIMBAD/Hipparcos.
     static let algol = FixedStar(
         name: "Algol",
-        ra: 3.136148,  // 03h 08m 10.13s
-        dec: 40.9556,  // +40° 57′ 20.3″
+        rightAscension: 3.136148,  // 03h 08m 10.13s
+        declination: 40.9556,  // +40° 57′ 20.3″
         distance: 92.95  // light-years
     )
 
@@ -39,8 +39,8 @@ struct FixedStarTests {
 
         @Test("Fixed star is Hashable")
         func hashable() {
-            let algol1 = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
-            let algol2 = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
+            let algol1 = FixedStar(name: "Algol", rightAscension: 3.136148, declination: 40.9556, distance: 92.95)
+            let algol2 = FixedStar(name: "Algol", rightAscension: 3.136148, declination: 40.9556, distance: 92.95)
 
             #expect(algol1 == algol2)
             #expect(algol1.hashValue == algol2.hashValue)
@@ -227,8 +227,8 @@ struct FixedStarTests {
     struct MultipleStarsTests {
         @Test("Multiple stars work correctly")
         func multipleStars() throws {
-            let algol = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
-            let sirius = FixedStar(name: "Sirius", ra: 6.7525, dec: -16.7161, distance: 8.6)
+            let algol = FixedStar(name: "Algol", rightAscension: 3.136148, declination: 40.9556, distance: 92.95)
+            let sirius = FixedStar(name: "Sirius", rightAscension: 6.7525, declination: -16.7161, distance: 8.6)
 
             let time = AstroTime(year: 2_025, month: 1, day: 1)
             let algolLon = try algol.eclipticLongitude(at: time)
@@ -243,8 +243,8 @@ struct FixedStarTests {
 
         @Test("Stars can be interleaved")
         func interleavedStars() throws {
-            let algol = FixedStar(name: "Algol", ra: 3.136148, dec: 40.9556, distance: 92.95)
-            let sirius = FixedStar(name: "Sirius", ra: 6.7525, dec: -16.7161, distance: 8.6)
+            let algol = FixedStar(name: "Algol", rightAscension: 3.136148, declination: 40.9556, distance: 92.95)
+            let sirius = FixedStar(name: "Sirius", rightAscension: 6.7525, declination: -16.7161, distance: 8.6)
 
             let time = AstroTime(year: 2_025, month: 1, day: 1)
 
@@ -264,8 +264,8 @@ struct FixedStarTests {
             let stars = (0..<20).map { i in
                 FixedStar(
                     name: "Star\(i)",
-                    ra: Double(i) + 1.0,
-                    dec: Double(i) * 4.0 - 40.0,
+                    rightAscension: Double(i) + 1.0,
+                    declination: Double(i) * 4.0 - 40.0,
                     distance: 100.0
                 )
             }

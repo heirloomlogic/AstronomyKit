@@ -111,11 +111,11 @@ Cartesian coordinates in 3D space:
 
 ```swift
 // Geocentric (from Earth's center)
-let geo = try CelestialBody.jupiter.geoPosition(at: .now)
+let geo = try CelestialBody.jupiter.geocentricPosition(at: .now)
 print("Distance from Earth: \(geo.magnitude) AU")
 
 // Heliocentric (from Sun's center)
-let helio = try CelestialBody.mars.helioPosition(at: .now)
+let helio = try CelestialBody.mars.heliocentricPosition(at: .now)
 print("Distance from Sun: \(helio.magnitude) AU")
 ```
 
@@ -141,7 +141,7 @@ print("\(constellation.symbol) - \(constellation.name)")
 // Output: "Tau - Taurus"
 
 // Or from raw coordinates
-let orion = try Constellation.find(ra: 5.9195, dec: 7.4071)
+let orion = try Constellation.find(rightAscension: 5.9195, declination: 7.4071)
 print(orion.name)  // "Orion"
 ```
 
@@ -153,8 +153,8 @@ Define and track fixed stars by their J2000 catalog coordinates using ``FixedSta
 // Define Algol (Beta Persei)
 let algol = FixedStar(
     name: "Algol",
-    ra: 3.136148,      // J2000 RA in hours
-    dec: 40.9556,      // J2000 Dec in degrees
+    rightAscension: 3.136148,  // J2000 RA in hours
+    declination: 40.9556,      // J2000 Dec in degrees
     distance: 92.95    // Light-years
 )
 
@@ -174,10 +174,10 @@ Control light-time and aberration corrections:
 
 ```swift
 // With correction (default) - apparent position
-let apparent = try body.geoPosition(at: .now, aberration: .corrected)
+let apparent = try body.geocentricPosition(at: .now, aberration: .corrected)
 
 // Without correction - geometric position
-let geometric = try body.geoPosition(at: .now, aberration: .none)
+let geometric = try body.geocentricPosition(at: .now, aberration: .none)
 ```
 
 ## Refraction Correction

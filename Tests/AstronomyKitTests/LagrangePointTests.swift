@@ -174,4 +174,55 @@ struct LagrangePointTests {
             #expect(sv.description.contains("Velocity"))
         }
     }
+
+    // MARK: - Fast Calculation Tests
+
+    @Suite("Fast Calculation")
+    struct FastCalculation {
+        let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
+
+        @Test("Fast calculation matches standard calculation")
+        func fastMatchesStandard() throws {
+            let standard = try LagrangePoint.calculate(
+                point: .l2,
+                at: testTime,
+                majorBody: .sun,
+                minorBody: .earth
+            )
+
+            let sunState = try CelestialBody.sun.barycentricState(at: testTime)
+            let earthState = try CelestialBody.earth.barycentricState(at: testTime)
+            let sunMass = try #require(CelestialBody.sun.massProduct)
+            let earthMass = try #require(CelestialBody.earth.massProduct)
+
+            let fast = try LagrangePoint.calculateFast(
+                point: .l2,
+                majorState: sunState,
+                majorMass: sunMass,
+                minorState: earthState,
+                minorMass: earthMass
+            )
+
+            #expect(abs(fast.position.x - standard.position.x) < 1e-6)
+            #expect(abs(fast.position.y - standard.position.y) < 1e-6)
+            #expect(abs(fast.position.z - standard.position.z) < 1e-6)
+        }
+
+        @Test("Fast calculation works for all Lagrange points", arguments: LagrangePointID.allCases)
+        func fastWorksForAllPoints(point: LagrangePointID) throws {
+            let sunState = try CelestialBody.sun.barycentricState(at: testTime)
+            let earthState = try CelestialBody.earth.barycentricState(at: testTime)
+            let sunMass = try #require(CelestialBody.sun.massProduct)
+            let earthMass = try #require(CelestialBody.earth.massProduct)
+
+            let result = try LagrangePoint.calculateFast(
+                point: point,
+                majorState: sunState,
+                majorMass: sunMass,
+                minorState: earthState,
+                minorMass: earthMass
+            )
+            #expect(result.position.magnitude > 0)
+        }
+    }
 }

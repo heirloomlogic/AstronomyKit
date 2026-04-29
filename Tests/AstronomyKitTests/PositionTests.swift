@@ -19,7 +19,7 @@ struct PositionTests {
         @Test("Get geocentric position for Mars")
         func marsGeoPosition() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
-            let position = try CelestialBody.mars.geoPosition(at: time)
+            let position = try CelestialBody.mars.geocentricPosition(at: time)
 
             #expect(position.magnitude > 0)
         }
@@ -28,8 +28,8 @@ struct PositionTests {
         func moonCloser() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
 
-            let moonPos = try CelestialBody.moon.geoPosition(at: time)
-            let marsPos = try CelestialBody.mars.geoPosition(at: time)
+            let moonPos = try CelestialBody.moon.geocentricPosition(at: time)
+            let marsPos = try CelestialBody.mars.geocentricPosition(at: time)
 
             #expect(moonPos.magnitude < marsPos.magnitude)
         }
@@ -37,7 +37,7 @@ struct PositionTests {
         @Test("Geocentric position has time")
         func positionHasTime() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
-            let position = try CelestialBody.jupiter.geoPosition(at: time)
+            let position = try CelestialBody.jupiter.geocentricPosition(at: time)
 
             #expect(position.time == time)
         }
@@ -46,8 +46,8 @@ struct PositionTests {
         func aberrationOptions() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
 
-            let corrected = try CelestialBody.mars.geoPosition(at: time, aberration: .corrected)
-            let uncorrected = try CelestialBody.mars.geoPosition(at: time, aberration: .none)
+            let corrected = try CelestialBody.mars.geocentricPosition(at: time, aberration: .corrected)
+            let uncorrected = try CelestialBody.mars.geocentricPosition(at: time, aberration: .none)
 
             // Positions should be slightly different
             #expect(
@@ -59,7 +59,7 @@ struct PositionTests {
         @Test("All planets can get geocentric position", arguments: CelestialBody.planets)
         func allPlanetsGeoPosition(planet: CelestialBody) throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
-            let position = try planet.geoPosition(at: time)
+            let position = try planet.geocentricPosition(at: time)
 
             #expect(position.magnitude > 0)
         }
@@ -72,7 +72,7 @@ struct PositionTests {
         @Test("Earth is about 1 AU from Sun")
         func earthDistance() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
-            let position = try CelestialBody.earth.helioPosition(at: time)
+            let position = try CelestialBody.earth.heliocentricPosition(at: time)
 
             #expect(position.magnitude > 0.98)
             #expect(position.magnitude < 1.02)
@@ -84,7 +84,7 @@ struct PositionTests {
         )
         func allPlanetsHelioPosition(planet: CelestialBody) throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
-            let position = try planet.helioPosition(at: time)
+            let position = try planet.heliocentricPosition(at: time)
 
             #expect(position.magnitude > 0)
         }
@@ -93,8 +93,8 @@ struct PositionTests {
         func outerFartherThanInner() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
 
-            let marsPos = try CelestialBody.mars.helioPosition(at: time)
-            let jupiterPos = try CelestialBody.jupiter.helioPosition(at: time)
+            let marsPos = try CelestialBody.mars.heliocentricPosition(at: time)
+            let jupiterPos = try CelestialBody.jupiter.heliocentricPosition(at: time)
 
             #expect(jupiterPos.magnitude > marsPos.magnitude)
         }
@@ -103,7 +103,7 @@ struct PositionTests {
         func mercuryClosest() throws {
             let time = AstroTime(year: 2_025, month: 6, day: 21)
 
-            let mercuryPos = try CelestialBody.mercury.helioPosition(at: time)
+            let mercuryPos = try CelestialBody.mercury.heliocentricPosition(at: time)
 
             // Mercury orbit ~0.39 AU
             #expect(mercuryPos.magnitude > 0.3)

@@ -242,7 +242,7 @@ public enum Moon {
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The geocentric position vector.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public static func geoPosition(at time: AstroTime) throws -> Vector3D {
+    public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
         let result = Astronomy_GeoMoon(time.raw)
         return try Vector3D(result)
     }

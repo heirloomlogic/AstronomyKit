@@ -5,7 +5,7 @@
 <p align="center">
 AstronomyKit is a Swift library for calculating positions of the Sun, Moon, planets, and fixed stars.<br>
 Predicts moon phases, eclipses, transits, and rise/set times.<br>
-Sub-arcminute accuracy, derived from NASA JPL ephemeris data. Runs entirely on-device.
+Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
 </p>
 
 <p align="center">
@@ -31,7 +31,9 @@ Built on Don Cross’ <a href="https://github.com/cosinekitty/astronomy">Astrono
 - Lunar and solar eclipse predictions
 - Equinoxes and solstices
 - Coordinate transforms across equatorial, ecliptic, horizon, and galactic systems
+- Planetary conjunctions, oppositions, and relative longitude search
 - Apsides, elongation, and transits
+- Generic root-finding search for custom astronomical events
 - Full `Sendable` conformance for Swift 6
 
 ## Installation
@@ -154,8 +156,8 @@ let quarters = try Moon.quarters(
 // Define a star from J2000 catalog coordinates
 let algol = FixedStar(
     name: "Algol",
-    ra: 3.136148,      // Right ascension in hours
-    dec: 40.9556,      // Declination in degrees
+    rightAscension: 3.136148,  // Right ascension in hours
+    declination: 40.9556,      // Declination in degrees
     distance: 92.95    // Distance in light-years
 )
 
@@ -226,6 +228,22 @@ let eclipses = try Eclipse.lunarEclipses(
 )
 ```
 
+### Conjunctions and Oppositions
+
+```swift
+// When is Mars next at opposition? (closest to Earth, brightest)
+let opposition = try CelestialBody.mars.searchOpposition(after: .now)
+print("Mars opposition: \(opposition.date)")
+
+// When is Jupiter next in superior conjunction? (behind the Sun)
+let conjunction = try CelestialBody.jupiter.searchSuperiorConjunction(after: .now)
+print("Jupiter conjunction: \(conjunction.date)")
+
+// Relative ecliptic longitude between two bodies
+let angle = try CelestialBody.venus.pairLongitude(with: .mars, at: .now)
+print("Venus-Mars separation: \(angle)°")
+```
+
 ## API Reference
 
 | Type | Description |
@@ -251,8 +269,22 @@ let eclipses = try Eclipse.lunarEclipses(
 | `MoonPhase` | Lunar phase enum (new, first quarter, full, third quarter) |
 | `Observer` | Geographic location (latitude, longitude, height) |
 | `RotationMatrix` | Coordinate system transformations |
+| `AstroSearch` | Generic root-finding search for custom events |
 | `Seasons` | Equinox and solstice times for a year |
+| `StateVector` | Position and velocity state vector |
+| `Sun` | Sun position and ecliptic longitude search |
 | `Transit` | Mercury/Venus solar transit |
+
+## Beyond Astronomy Engine
+
+AstronomyKit includes features not present in the upstream C library:
+
+| Feature | Description |
+|---------|-------------|
+| `Chiron` | Gravity-simulated positions for 2060 Chiron using pre-computed JPL Horizons state vectors at reference epochs (2000–2040). Astronomy Engine has no built-in Chiron support. |
+| `FixedStar` | Thread-safe value type for user-defined stars from J2000 catalog coordinates. Wraps Astronomy Engine's `Astronomy_DefineStar()` with mutex-protected calculation slots and a Swift-idiomatic API. |
+
+All other AstronomyKit types wrap Astronomy Engine C functions directly.
 
 ## Documentation
 

@@ -63,7 +63,7 @@ let newMoon = try Moon.searchPhase(.new, after: .now)
 ### Get the Next Quarter
 
 ```swift
-let quarter = try Moon.nextQuarter(after: .now)
+let quarter = try Moon.searchQuarter(after: .now)
 print("\(quarter.phase.emoji) \(quarter.phase.name) at \(quarter.time)")
 ```
 

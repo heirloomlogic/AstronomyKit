@@ -199,7 +199,7 @@ struct AstronomyErrorTests {
             // Test that the API handles Earth appropriately
             // It may throw or return a valid result depending on implementation
             do {
-                let pos = try CelestialBody.earth.geoPosition(at: time)
+                let pos = try CelestialBody.earth.geocentricPosition(at: time)
                 // If it doesn't throw, verify we got a valid position
                 #expect(pos.magnitude >= 0)
             } catch {

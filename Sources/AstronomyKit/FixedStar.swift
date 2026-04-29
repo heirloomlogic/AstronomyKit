@@ -24,8 +24,8 @@ import Synchronization
 /// ```swift
 /// let algol = FixedStar(
 ///     name: "Algol",
-///     ra: 3.136148,      // J2000 RA in hours
-///     dec: 40.9556,      // J2000 Dec in degrees
+///     rightAscension: 3.136148,  // J2000 RA in hours
+///     declination: 40.9556,      // J2000 Dec in degrees
 ///     distance: 92.95    // Light-years
 /// )
 ///
@@ -67,13 +67,13 @@ public struct FixedStar: Sendable, Hashable {
     ///
     /// - Parameters:
     ///   - name: A display name for the star.
-    ///   - ra: Right ascension in sidereal hours (0-24).
-    ///   - dec: Declination in degrees (-90 to +90).
+    ///   - rightAscension: Right ascension in sidereal hours (0-24).
+    ///   - declination: Declination in degrees (-90 to +90).
     ///   - distance: Distance from Earth in light-years (minimum 1.0).
-    public init(name: String, ra: Double, dec: Double, distance: Double) {
+    public init(name: String, rightAscension: Double, declination: Double, distance: Double) {
         self.name = name
-        self.rightAscension = ra
-        self.declination = dec
+        self.rightAscension = rightAscension
+        self.declination = declination
         self.distance = distance
     }
 

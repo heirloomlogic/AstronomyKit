@@ -11,7 +11,7 @@ Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitt
 
 ![AstronomyKit logo — a bronze armillary sphere](AstronomyKit-logo)
 
-AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library and exposes the underlying C functionality through idiomatic Swift APIs.
+AstronomyKit wraps Don Cross's [Astronomy Engine](https://github.com/cosinekitty/astronomy) and exposes the underlying C functionality through idiomatic Swift APIs.
 
 ### Features
 
@@ -58,6 +58,9 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - <doc:CoordinateSystems>
 - ``CelestialBody``
 - ``Observer``
+- ``Constellation``
+- ``Aberration``
+- ``EquatorDate``
 
 ### Moon
 
@@ -67,36 +70,64 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - ``MoonQuarter``
 - ``Libration``
 - ``LunarNode``
+- ``NodeKind``
 
 ### Events
 
 - <doc:RiseSetTimes>
 - <doc:Eclipses>
 - <doc:SeasonsAndEvents>
+- ``AstroSearch``
 - ``Seasons``
+- ``Sun``
+- ``Eclipse``
 - ``LunarEclipse``
 - ``GlobalSolarEclipse``
 - ``LocalSolarEclipse``
+- ``EclipseEvent``
+- ``EclipseKind``
+- ``Apsis``
+- ``ApsisKind``
+- ``Elongation``
+- ``Visibility``
+- ``Illumination``
+- ``Transit``
+- ``DailyEvents``
+- ``HourAngleEvent``
+- ``RiseSetDirection``
 
 ### Advanced
 
 - <doc:AdvancedFeatures>
+- ``Chiron``
+- ``FixedStar``
 - ``GravitySimulation``
 - ``LagrangePoint``
-- ``Transit``
+- ``LagrangePointID``
+- ``Jupiter``
+- ``JupiterMoons``
+- ``RotationAxis``
+- ``Atmosphere``
 
 ### Coordinates
 
 - ``Equatorial``
 - ``Ecliptic``
 - ``Horizon``
+- ``Spherical``
 - ``Vector3D``
 - ``StateVector``
 - ``RotationMatrix``
+- ``Refraction``
 
 ### Time
 
 - ``AstroTime``
+
+### Configuration
+
+- ``AstronomyConfig``
+- ``DeltaTModel``
 
 ### Errors
 

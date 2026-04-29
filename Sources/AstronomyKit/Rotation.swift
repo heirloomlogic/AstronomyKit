@@ -133,8 +133,8 @@ extension RotationMatrix {
     public static func equatorialJ2000ToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_EQJ_EQD(&t)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQJ_EQD(&rawTime)
         return try RotationMatrix(result)
     }
 
@@ -146,8 +146,8 @@ extension RotationMatrix {
     public static func equatorialOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_EQD_EQJ(&t)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQD_EQJ(&rawTime)
         return try RotationMatrix(result)
     }
 
@@ -162,8 +162,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_EQJ_HOR(&t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQJ_HOR(&rawTime, observer.raw)
         return try RotationMatrix(result)
     }
 
@@ -178,8 +178,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_HOR_EQJ(&t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_HOR_EQJ(&rawTime, observer.raw)
         return try RotationMatrix(result)
     }
 
@@ -202,8 +202,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_ECL_HOR(&t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_ECL_HOR(&rawTime, observer.raw)
         return try RotationMatrix(result)
     }
 
@@ -212,8 +212,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_HOR_ECL(&t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_HOR_ECL(&rawTime, observer.raw)
         return try RotationMatrix(result)
     }
 
@@ -224,8 +224,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_EQD_HOR(&t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQD_HOR(&rawTime, observer.raw)
         return try RotationMatrix(result)
     }
 
@@ -234,22 +234,60 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_HOR_EQD(&t, observer.raw)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_HOR_EQD(&rawTime, observer.raw)
         return try RotationMatrix(result)
     }
 
     /// Creates a rotation from equatorial-of-date to ecliptic coordinates.
     public static func equatorialOfDateToEcliptic(at time: AstroTime) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_EQD_ECL(&t)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQD_ECL(&rawTime)
         return try RotationMatrix(result)
     }
 
     /// Creates a rotation from ecliptic to equatorial-of-date coordinates.
     public static func eclipticToEquatorialOfDate(at time: AstroTime) throws -> RotationMatrix {
-        var t = time.raw
-        let result = Astronomy_Rotation_ECL_EQD(&t)
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_ECL_EQD(&rawTime)
+        return try RotationMatrix(result)
+    }
+
+    // MARK: Ecliptic of Date (ECT) conversions
+
+    /// Creates a rotation from J2000 equatorial to ecliptic-of-date coordinates.
+    public static func equatorialJ2000ToEclipticOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQJ_ECT(&rawTime)
+        return try RotationMatrix(result)
+    }
+
+    /// Creates a rotation from ecliptic-of-date to J2000 equatorial coordinates.
+    public static func eclipticOfDateToEquatorialJ2000(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_ECT_EQJ(&rawTime)
+        return try RotationMatrix(result)
+    }
+
+    /// Creates a rotation from equatorial-of-date to ecliptic-of-date coordinates.
+    public static func equatorialOfDateToEclipticOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_EQD_ECT(&rawTime)
+        return try RotationMatrix(result)
+    }
+
+    /// Creates a rotation from ecliptic-of-date to equatorial-of-date coordinates.
+    public static func eclipticOfDateToEquatorialOfDate(
+        at time: AstroTime
+    ) throws -> RotationMatrix {
+        var rawTime = time.raw
+        let result = Astronomy_Rotation_ECT_EQD(&rawTime)
         return try RotationMatrix(result)
     }
 }
@@ -272,6 +310,30 @@ extension Vector3D {
         )
         let result = Astronomy_RotateVector(rotation.raw, raw)
         return try Vector3D(result)
+    }
+}
+
+// MARK: - State Vector Rotation
+
+extension StateVector {
+    /// Applies a rotation matrix to both the position and velocity vectors.
+    ///
+    /// - Parameter rotation: The rotation matrix to apply.
+    /// - Returns: The rotated state vector.
+    /// - Throws: `AstronomyError` if the rotation fails.
+    public func rotated(by rotation: RotationMatrix) throws -> StateVector {
+        let raw = astro_state_vector_t(
+            status: ASTRO_SUCCESS,
+            x: position.x,
+            y: position.y,
+            z: position.z,
+            vx: velocity.x,
+            vy: velocity.y,
+            vz: velocity.z,
+            t: time.raw
+        )
+        let result = Astronomy_RotateState(rotation.raw, raw)
+        return try StateVector(result)
     }
 }
 

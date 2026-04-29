@@ -18,7 +18,7 @@ import CLibAstronomy
 /// ## Example
 ///
 /// ```swift
-/// let libration = try Moon.libration(at: .now)
+/// let libration = Moon.libration(at: .now)
 /// print("Sub-Earth point: (\(libration.subEarthLatitude)°, \(libration.subEarthLongitude)°)")
 /// print("Moon distance: \(Int(libration.distanceKM)) km")
 /// ```
@@ -87,7 +87,7 @@ extension Moon {
     /// ## Example
     ///
     /// ```swift
-    /// let lib = try Moon.libration(at: .now)
+    /// let lib = Moon.libration(at: .now)
     /// if lib.subEarthLongitude > 0 {
     ///     print("More of the Moon's east limb is visible")
     /// } else {
