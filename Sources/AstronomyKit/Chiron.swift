@@ -165,22 +165,24 @@ public enum Chiron {
 
     /// Calculates Chiron's geocentric position at a given time.
     ///
-    /// Returns the position vector as seen from Earth's center.
+    /// Returns the position vector as seen from Earth's center,
+    /// corrected for light travel time.
     ///
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The geocentric position vector in AU (J2000 equatorial frame).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func geoPosition(at time: AstroTime) throws -> Vector3D {
-        let helioChiron = try helioPosition(at: time)
         let helioEarth = try CelestialBody.earth.helioPosition(at: time)
 
-        // Geocentric = Chiron heliocentric - Earth heliocentric
-        return Vector3D(
-            x: helioChiron.x - helioEarth.x,
-            y: helioChiron.y - helioEarth.y,
-            z: helioChiron.z - helioEarth.z,
-            time: time
-        )
+        return try AstroSearch.correctLightTravel(at: time) { t in
+            let helioChiron = try! helioPosition(at: t)
+            return Vector3D(
+                x: helioChiron.x - helioEarth.x,
+                y: helioChiron.y - helioEarth.y,
+                z: helioChiron.z - helioEarth.z,
+                time: t
+            )
+        }
     }
 
     /// Calculates Chiron's geocentric state (position and velocity) at a given time.
@@ -193,13 +195,13 @@ public enum Chiron {
         let helioEarth = try CelestialBody.earth.helioPosition(at: time)
 
         // Get Earth's velocity via finite difference
-        let dt = 1.0 / 86_400.0  // 1 second in days
-        let earthBefore = try CelestialBody.earth.helioPosition(at: time.addingDays(-dt))
-        let earthAfter = try CelestialBody.earth.helioPosition(at: time.addingDays(dt))
+        let timeStep = 1.0 / 86_400.0  // 1 second in days
+        let earthBefore = try CelestialBody.earth.helioPosition(at: time.addingDays(-timeStep))
+        let earthAfter = try CelestialBody.earth.helioPosition(at: time.addingDays(timeStep))
         let earthVelocity = Vector3D(
-            x: (earthAfter.x - earthBefore.x) / (2 * dt),
-            y: (earthAfter.y - earthBefore.y) / (2 * dt),
-            z: (earthAfter.z - earthBefore.z) / (2 * dt),
+            x: (earthAfter.x - earthBefore.x) / (2 * timeStep),
+            y: (earthAfter.y - earthBefore.y) / (2 * timeStep),
+            z: (earthAfter.z - earthBefore.z) / (2 * timeStep),
             time: time
         )
 

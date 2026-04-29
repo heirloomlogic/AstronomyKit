@@ -121,8 +121,8 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     ///
     /// Returns `nil` for bodies without a defined mass.
     public var massProduct: Double? {
-        let mp = Astronomy_MassProduct(raw)
-        return mp > 0 ? mp : nil
+        let massProduct = Astronomy_MassProduct(raw)
+        return massProduct > 0 ? massProduct : nil
     }
 }
 

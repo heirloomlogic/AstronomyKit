@@ -50,8 +50,9 @@ public struct Vector3D: Sendable, Equatable, Hashable {
 
     /// Returns a unit vector in the same direction.
     public var normalized: Vector3D {
-        guard magnitude > 0 else { return self }
-        return Vector3D(x: x / magnitude, y: y / magnitude, z: z / magnitude, time: time)
+        let length = magnitude
+        guard length > 0 else { return self }
+        return Vector3D(x: x / length, y: y / length, z: z / length, time: time)
     }
 }
 
@@ -93,7 +94,12 @@ extension Vector3D {
 
     /// Creates a Cartesian vector from spherical coordinates.
     public static func from(sphere: Spherical, at time: AstroTime) -> Vector3D {
-        let raw = astro_spherical_t(status: ASTRO_SUCCESS, lat: sphere.latitude, lon: sphere.longitude, dist: sphere.distance)
+        let raw = astro_spherical_t(
+            status: ASTRO_SUCCESS,
+            lat: sphere.latitude,
+            lon: sphere.longitude,
+            dist: sphere.distance
+        )
         let result = Astronomy_VectorFromSphere(raw, time.raw)
         return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
     }
@@ -104,7 +110,12 @@ extension Vector3D {
         at time: AstroTime,
         refraction: Refraction = .normal
     ) -> Vector3D {
-        let raw = astro_spherical_t(status: ASTRO_SUCCESS, lat: horizon.latitude, lon: horizon.longitude, dist: horizon.distance)
+        let raw = astro_spherical_t(
+            status: ASTRO_SUCCESS,
+            lat: horizon.latitude,
+            lon: horizon.longitude,
+            dist: horizon.distance
+        )
         let result = Astronomy_VectorFromHorizon(raw, time.raw, refraction.raw)
         return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
     }
@@ -238,7 +249,7 @@ extension Equatorial: CustomStringConvertible {
 
 // MARK: - Ecliptic
 
-/// Ecliptic coordinates referenced to the true equinox of date.
+/// Ecliptic coordinates (latitude, longitude, distance).
 public struct Ecliptic: Sendable, Equatable, Hashable {
     /// Ecliptic latitude in degrees (-90 to +90).
     public let latitude: Double
@@ -382,5 +393,28 @@ public enum Refraction: Sendable {
         case .normal: return REFRACTION_NORMAL
         case .jplHorizons: return REFRACTION_JPLHOR
         }
+    }
+
+    /// Calculates the atmospheric refraction offset for a given altitude.
+    ///
+    /// Returns the angular adjustment in degrees to add to a geometric
+    /// (airless) altitude to obtain the apparent altitude as seen by an
+    /// observer through the atmosphere.
+    ///
+    /// - Parameter altitude: The geometric altitude in degrees above the horizon.
+    /// - Returns: The refraction offset in degrees (always >= 0).
+    public func refractionAngle(at altitude: Double) -> Double {
+        Astronomy_Refraction(raw, altitude)
+    }
+
+    /// Calculates the inverse atmospheric refraction for a given apparent altitude.
+    ///
+    /// Given an apparent (refracted) altitude, returns the angular adjustment
+    /// to subtract to recover the geometric (airless) altitude.
+    ///
+    /// - Parameter bentAltitude: The apparent altitude in degrees (after refraction).
+    /// - Returns: The inverse refraction offset in degrees.
+    public func inverseRefractionAngle(at bentAltitude: Double) -> Double {
+        Astronomy_InverseRefraction(raw, bentAltitude)
     }
 }
