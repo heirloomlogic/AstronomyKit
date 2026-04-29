@@ -184,7 +184,10 @@ struct LagrangePointTests {
         @Test("Fast calculation matches standard calculation")
         func fastMatchesStandard() throws {
             let standard = try LagrangePoint.calculate(
-                point: .l2, at: testTime, majorBody: .sun, minorBody: .earth
+                point: .l2,
+                at: testTime,
+                majorBody: .sun,
+                minorBody: .earth
             )
 
             let sunState = try CelestialBody.sun.barycentricState(at: testTime)

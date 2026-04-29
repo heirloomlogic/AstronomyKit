@@ -10,7 +10,6 @@ import Testing
 
 @Suite("State Vector Extensions")
 struct StateVectorExtensionTests {
-
     let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
 
     @Test("Barycentric state returns position and velocity")
@@ -63,7 +62,6 @@ struct StateVectorExtensionTests {
 
 @Suite("Vector Conversion Tests")
 struct VectorConversionTests {
-
     let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
 
     @Test("Vector to spherical roundtrip")
@@ -125,7 +123,6 @@ struct VectorConversionTests {
 
 @Suite("ECT Rotation Tests")
 struct ECTRotationTests {
-
     let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
 
     @Test("EQJ to ECT roundtrip preserves vector")

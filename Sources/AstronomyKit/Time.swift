@@ -112,6 +112,17 @@ public struct AstroTime: Sendable {
         self.raw = Astronomy_TimeFromDays(ut)
     }
 
+    /// Creates a time from Terrestrial Time days since J2000.
+    ///
+    /// Terrestrial Time is used for calculations not involving Earth's rotation
+    /// (planetary orbits, eclipses, etc.). This initializer is the inverse of
+    /// ``init(ut:)`` — it starts from a TT value and derives the corresponding UT.
+    ///
+    /// - Parameter tt: Terrestrial Time days since noon on January 1, 2000.
+    public init(tt: Double) {
+        self.raw = Astronomy_TerrestrialTime(tt)
+    }
+
     /// Converts this time to a Foundation `Date`.
     public var date: Date {
         let utc = Astronomy_UtcFromTime(raw)

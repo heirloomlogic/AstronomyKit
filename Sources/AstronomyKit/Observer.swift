@@ -47,11 +47,11 @@ public struct Observer: Sendable, Equatable, Hashable {
         self.height = height
     }
 
-    /// A geocentric observer.
+    /// A geocentric observer at Earth's center.
     ///
-    /// Uses Center geodetic: 0.0, 0.0, -6378.137 km, which places the observer at Earth's center,
-    /// not on the surface.
-    static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
+    /// Uses height of -6,378,137 m to place the observer at Earth's center
+    /// rather than on the surface.
+    public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
 
     /// The underlying C observer structure.
     internal var raw: astro_observer_t {
@@ -172,7 +172,9 @@ extension Observer {
     ) -> Observer {
         var raw = astro_vector_t(
             status: ASTRO_SUCCESS,
-            x: vector.x, y: vector.y, z: vector.z,
+            x: vector.x,
+            y: vector.y,
+            z: vector.z,
             t: vector.time.raw
         )
         let obs = Astronomy_VectorObserver(&raw, equatorDate.raw)

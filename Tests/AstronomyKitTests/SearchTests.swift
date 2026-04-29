@@ -10,7 +10,6 @@ import Testing
 
 @Suite("AstroSearch Tests")
 struct SearchTests {
-
     @Test("Sun.searchLongitude finds March equinox near Seasons result")
     func sunLongitudeMatchesSeasons() throws {
         let start = AstroTime(year: 2025, month: 1, day: 1)

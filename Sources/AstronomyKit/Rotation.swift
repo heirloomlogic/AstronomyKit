@@ -324,8 +324,12 @@ extension StateVector {
     public func rotated(by rotation: RotationMatrix) throws -> StateVector {
         let raw = astro_state_vector_t(
             status: ASTRO_SUCCESS,
-            x: position.x, y: position.y, z: position.z,
-            vx: velocity.x, vy: velocity.y, vz: velocity.z,
+            x: position.x,
+            y: position.y,
+            z: position.z,
+            vx: velocity.x,
+            vy: velocity.y,
+            vz: velocity.z,
             t: time.raw
         )
         let result = Astronomy_RotateState(rotation.raw, raw)

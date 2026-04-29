@@ -58,6 +58,9 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - <doc:CoordinateSystems>
 - ``CelestialBody``
 - ``Observer``
+- ``Constellation``
+- ``Aberration``
+- ``EquatorDate``
 
 ### Moon
 
@@ -67,6 +70,7 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - ``MoonQuarter``
 - ``Libration``
 - ``LunarNode``
+- ``NodeKind``
 
 ### Events
 
@@ -76,9 +80,21 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - ``AstroSearch``
 - ``Seasons``
 - ``Sun``
+- ``Eclipse``
 - ``LunarEclipse``
 - ``GlobalSolarEclipse``
 - ``LocalSolarEclipse``
+- ``EclipseEvent``
+- ``EclipseKind``
+- ``Apsis``
+- ``ApsisKind``
+- ``Elongation``
+- ``Visibility``
+- ``Illumination``
+- ``Transit``
+- ``DailyEvents``
+- ``HourAngleEvent``
+- ``RiseSetDirection``
 
 ### Advanced
 
@@ -87,20 +103,31 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 - ``FixedStar``
 - ``GravitySimulation``
 - ``LagrangePoint``
-- ``Transit``
+- ``LagrangePointID``
+- ``Jupiter``
+- ``JupiterMoons``
+- ``RotationAxis``
+- ``Atmosphere``
 
 ### Coordinates
 
 - ``Equatorial``
 - ``Ecliptic``
 - ``Horizon``
+- ``Spherical``
 - ``Vector3D``
 - ``StateVector``
 - ``RotationMatrix``
+- ``Refraction``
 
 ### Time
 
 - ``AstroTime``
+
+### Configuration
+
+- ``AstronomyConfig``
+- ``DeltaTModel``
 
 ### Errors
 

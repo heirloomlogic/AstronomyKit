@@ -10,7 +10,6 @@ import Testing
 
 @Suite("Relative Longitude Tests")
 struct RelativeLongitudeTests {
-
     // MARK: - Pair Longitude
 
     @Suite("Pair Longitude")
@@ -105,8 +104,10 @@ struct RelativeLongitudeTests {
             let second = try CelestialBody.jupiter.searchOpposition(after: first.addingDays(30))
             let daysBetween = second.ut - first.ut
             // Jupiter's synodic period is ~398.88 days
-            #expect(daysBetween > 380 && daysBetween < 420,
-                    "Expected ~399 days between Jupiter oppositions, got \(daysBetween)")
+            #expect(
+                daysBetween > 380 && daysBetween < 420,
+                "Expected ~399 days between Jupiter oppositions, got \(daysBetween)"
+            )
         }
     }
 }

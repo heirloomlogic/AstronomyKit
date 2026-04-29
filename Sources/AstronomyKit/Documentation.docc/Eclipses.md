@@ -40,9 +40,9 @@ default:
 let eclipse = try Eclipse.searchLunar(after: .now)
 
 print("Peak: \(eclipse.peak)")
-print("Partial duration: \(eclipse.sdPartial) minutes")
-print("Total duration: \(eclipse.sdTotal) minutes")  // 0 if not total
-print("Penumbral duration: \(eclipse.sdPenumbra) minutes")
+print("Partial duration: \(eclipse.partialDuration) minutes")
+print("Total duration: \(eclipse.totalDuration) minutes")  // 0 if not total
+print("Penumbral duration: \(eclipse.penumbralDuration) minutes")
 ```
 
 ### All Eclipses in a Date Range
@@ -150,7 +150,7 @@ let observer = Observer(latitude: 35.0, longitude: -120.0)
 let eclipses = try Eclipse.localSolarEclipses(
     from: .now,
     to: .now.addingDays(365 * 10),
-    from: observer
+    observer: observer
 )
 
 for eclipse in eclipses {

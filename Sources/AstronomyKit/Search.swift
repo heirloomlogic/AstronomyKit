@@ -51,21 +51,21 @@ public enum AstroSearch {
     /// non-negative values after it. The search finds the transition point.
     ///
     /// - Parameters:
-    ///   - t1: The start of the search window.
-    ///   - t2: The end of the search window.
+    ///   - startTime: The start of the search window.
+    ///   - endTime: The end of the search window.
     ///   - toleranceSeconds: Desired precision in seconds. Defaults to 1.
     ///   - function: A closure that returns a value for a given time.
     /// - Returns: The time when the function crosses from negative to non-negative.
     /// - Throws: `AstronomyError` if the search fails to converge.
     public static func find(
-        from t1: AstroTime,
-        to t2: AstroTime,
+        from startTime: AstroTime,
+        to endTime: AstroTime,
         toleranceSeconds: Double = 1.0,
         _ function: @escaping @Sendable (AstroTime) -> Double
     ) throws -> AstroTime {
         var closure = function
         let result = withUnsafeMutablePointer(to: &closure) { ptr in
-            Astronomy_Search(searchTrampoline, ptr, t1.raw, t2.raw, toleranceSeconds)
+            Astronomy_Search(searchTrampoline, ptr, startTime.raw, endTime.raw, toleranceSeconds)
         }
         if let error = AstronomyError(status: result.status) {
             throw error
@@ -94,4 +94,25 @@ public enum AstroSearch {
         }
         return try Vector3D(result)
     }
+
+    public static func correctLightTravel(
+        at time: AstroTime,
+        _ positionFunction: @escaping @Sendable (AstroTime) throws -> Vector3D
+    ) throws -> Vector3D {
+        let capture = _ErrorCapture()
+        let result = try correctLightTravel(at: time) { (t: AstroTime) -> Vector3D in
+            do {
+                return try positionFunction(t)
+            } catch {
+                capture.error = error
+                return Vector3D(x: 0, y: 0, z: 0, time: t)
+            }
+        }
+        if let error = capture.error { throw error }
+        return result
+    }
+}
+
+private final class _ErrorCapture: @unchecked Sendable {
+    var error: (any Error)?
 }

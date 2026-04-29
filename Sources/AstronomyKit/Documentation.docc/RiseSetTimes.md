@@ -153,8 +153,9 @@ if let sunrise = try CelestialBody.sun.riseTime(after: .now, from: arcticObserve
 Get all events for a single day:
 
 ```swift
-let events = try CelestialBody.sun.dailyEvents(
-    on: .now,
+let events = try DailyEvents(
+    body: .sun,
+    date: .now,
     from: observer
 )
 

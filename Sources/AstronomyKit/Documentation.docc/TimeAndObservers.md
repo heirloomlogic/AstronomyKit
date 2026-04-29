@@ -64,9 +64,29 @@ AstroTime stores two time values internally:
 let time = AstroTime.now
 print("UT: \(time.ut)")  // Days since J2000 noon (UTC)
 print("TT: \(time.tt)")  // Days since J2000 noon (TT)
+
+// Create from Terrestrial Time directly
+let fromTT = AstroTime(tt: 9132.5)
 ```
 
 The difference (ΔT) is automatically handled by AstronomyKit.
+
+### Delta T Configuration
+
+The difference between TT and UT (called ΔT) varies over time and is estimated
+using a model. AstronomyKit defaults to the Espenak-Meeus model, but you can
+switch to JPL Horizons for compatibility:
+
+```swift
+// Switch to JPL Horizons Delta T model
+AstronomyConfig.setDeltaTModel(.jplHorizons)
+
+// Query Delta T for a specific time
+let deltaT = AstronomyConfig.deltaT_EspenakMeeus(ut: 0)  // Seconds at J2000
+
+// Reset to defaults
+AstronomyConfig.reset()
+```
 
 ### Sidereal Time
 

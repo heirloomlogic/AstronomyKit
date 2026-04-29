@@ -10,7 +10,6 @@ import Testing
 
 @Suite("Light Travel Corrections")
 struct LightTravelTests {
-
     let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
 
     @Test("CorrectLightTravel produces a valid position")

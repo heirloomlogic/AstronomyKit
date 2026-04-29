@@ -38,9 +38,9 @@ public struct Illumination: Sendable, Equatable {
     /// The angle in degrees between the Sun and Earth, as seen from the body.
     ///
     /// This indicates the phase of the body:
-    /// - 0° = full phase (body between Earth and Sun)
+    /// - 0° = full phase (body on far side of Sun from Earth, fully illuminated)
     /// - 90° = half phase
-    /// - 180° = new phase (body opposite from Sun)
+    /// - 180° = new phase (body between Earth and Sun, backlit)
     public let phaseAngle: Double
 
     /// The fraction of the body's apparent disc that is illuminated.
