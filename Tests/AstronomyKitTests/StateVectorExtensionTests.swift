@@ -26,10 +26,10 @@ struct StateVectorExtensionTests {
         #expect(state.velocity.magnitude > 0)
     }
 
-    @Test("Heliocentric state position matches helioPosition")
+    @Test("Heliocentric state position matches heliocentricPosition")
     func heliocentricStateMatchesPosition() throws {
         let state = try CelestialBody.jupiter.heliocentricState(at: testTime)
-        let pos = try CelestialBody.jupiter.helioPosition(at: testTime)
+        let pos = try CelestialBody.jupiter.heliocentricPosition(at: testTime)
         #expect(abs(state.position.x - pos.x) < 1e-10)
         #expect(abs(state.position.y - pos.y) < 1e-10)
         #expect(abs(state.position.z - pos.z) < 1e-10)
@@ -66,7 +66,7 @@ struct VectorConversionTests {
 
     @Test("Vector to spherical roundtrip")
     func vectorSphericalRoundtrip() throws {
-        let original = try CelestialBody.mars.geoPosition(at: testTime)
+        let original = try CelestialBody.mars.geocentricPosition(at: testTime)
         let sphere = original.toSpherical()
         let restored = Vector3D.from(sphere: sphere, at: testTime)
 
@@ -77,7 +77,7 @@ struct VectorConversionTests {
 
     @Test("Vector to equatorial matches CelestialBody.equatorial")
     func vectorToEquatorial() throws {
-        let vec = try CelestialBody.jupiter.geoPosition(at: testTime, aberration: .corrected)
+        let vec = try CelestialBody.jupiter.geocentricPosition(at: testTime, aberration: .corrected)
         let eq = vec.toEquatorial()
         let expected = try CelestialBody.jupiter.equatorial(at: testTime)
 
@@ -87,7 +87,7 @@ struct VectorConversionTests {
 
     @Test("Vector to ecliptic produces valid coordinates")
     func vectorToEcliptic() throws {
-        let vec = try CelestialBody.mars.geoPosition(at: testTime)
+        let vec = try CelestialBody.mars.geocentricPosition(at: testTime)
         let ecl = try vec.toEcliptic()
         #expect(ecl.longitude >= 0 && ecl.longitude < 360)
         #expect(ecl.latitude >= -90 && ecl.latitude <= 90)
@@ -127,7 +127,7 @@ struct ECTRotationTests {
 
     @Test("EQJ to ECT roundtrip preserves vector")
     func eqjToEctRoundtrip() throws {
-        let vec = try CelestialBody.mars.geoPosition(at: testTime)
+        let vec = try CelestialBody.mars.geocentricPosition(at: testTime)
 
         let toECT = try RotationMatrix.equatorialJ2000ToEclipticOfDate(at: testTime)
         let toEQJ = try RotationMatrix.eclipticOfDateToEquatorialJ2000(at: testTime)
@@ -142,7 +142,7 @@ struct ECTRotationTests {
 
     @Test("EQD to ECT roundtrip preserves vector")
     func eqdToEctRoundtrip() throws {
-        let vec = try CelestialBody.jupiter.geoPosition(at: testTime)
+        let vec = try CelestialBody.jupiter.geocentricPosition(at: testTime)
 
         let toECT = try RotationMatrix.equatorialOfDateToEclipticOfDate(at: testTime)
         let toEQD = try RotationMatrix.eclipticOfDateToEquatorialOfDate(at: testTime)

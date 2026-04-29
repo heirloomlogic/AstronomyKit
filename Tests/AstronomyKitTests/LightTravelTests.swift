@@ -15,7 +15,7 @@ struct LightTravelTests {
     @Test("CorrectLightTravel produces a valid position")
     func correctLightTravel() throws {
         let result = try AstroSearch.correctLightTravel(at: testTime) { time in
-            try! CelestialBody.mars.helioPosition(at: time)
+            try CelestialBody.mars.heliocentricPosition(at: time)
         }
         #expect(result.magnitude > 1.0, "Mars should be > 1 AU from Sun")
     }
@@ -31,7 +31,7 @@ struct LightTravelTests {
 
     @Test("BackdatePosition differs from instantaneous position")
     func backdateVsInstantaneous() throws {
-        let instant = try CelestialBody.jupiter.helioPosition(at: testTime)
+        let instant = try CelestialBody.jupiter.heliocentricPosition(at: testTime)
         let backdated = try CelestialBody.jupiter.backdatedPosition(
             at: testTime,
             seenFrom: .earth,

@@ -19,7 +19,7 @@ extension CelestialBody {
     ///   - aberration: Whether to correct for aberration. Defaults to `.corrected`.
     /// - Returns: The geocentric position vector.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public func geoPosition(
+    public func geocentricPosition(
         at time: AstroTime,
         aberration: Aberration = .corrected
     ) throws -> Vector3D {
@@ -34,7 +34,7 @@ extension CelestialBody {
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The heliocentric position vector.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public func helioPosition(at time: AstroTime) throws -> Vector3D {
+    public func heliocentricPosition(at time: AstroTime) throws -> Vector3D {
         let result = Astronomy_HelioVector(raw, time.raw)
         return try Vector3D(result)
     }

@@ -16,9 +16,9 @@ struct ChironTests {
     @Suite("Position Calculations")
     struct PositionTests {
         @Test("Heliocentric position returns valid vector")
-        func helioPositionValid() throws {
+        func heliocentricPositionValid() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
-            let position = try Chiron.helioPosition(at: time)
+            let position = try Chiron.heliocentricPosition(at: time)
 
             // Chiron should be 8-18 AU from the Sun (it varies as a centaur)
             let distance = position.magnitude
@@ -29,9 +29,9 @@ struct ChironTests {
         }
 
         @Test("Geocentric position returns valid vector")
-        func geoPositionValid() throws {
+        func geocentricPositionValid() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
-            let position = try Chiron.geoPosition(at: time)
+            let position = try Chiron.geocentricPosition(at: time)
 
             // Geocentric distance should be roughly heliocentric ± 1 AU
             let distance = position.magnitude
@@ -82,7 +82,7 @@ struct ChironTests {
         @Test("Position at 2000 epoch matches reference")
         func epoch2000() throws {
             let time = AstroTime(year: 2_000, month: 1, day: 1)
-            let position = try Chiron.helioPosition(at: time)
+            let position = try Chiron.heliocentricPosition(at: time)
 
             // Reference from JPL Horizons:
             // X = -3.532082802845036
@@ -96,7 +96,7 @@ struct ChironTests {
         @Test("Position at 2020 epoch matches reference")
         func epoch2020() throws {
             let time = AstroTime(year: 2_020, month: 1, day: 1)
-            let position = try Chiron.helioPosition(at: time)
+            let position = try Chiron.heliocentricPosition(at: time)
 
             // Reference from JPL Horizons:
             // X = 18.74979015626275
