@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
-        .package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", from: "1.4.0"),
+        .package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", branch: "main"),
     ],
     targets: [
         .target(
