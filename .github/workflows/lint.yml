@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Link swift-format from Xcode toolchain
+        run: ln -s "$(xcrun --find swift-format)" /usr/local/bin/swift-format
+
       - name: Resolve swift-format config
         run: |
           if [ ! -f .swift-format ]; then
