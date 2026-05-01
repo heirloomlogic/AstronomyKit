@@ -111,7 +111,7 @@ public enum Moon {
     /// - Parameter angle: The phase angle in degrees (0-360).
     /// - Returns: A human-readable phase name.
     public static func phaseName(for angle: Double) -> String {
-        let normalized = angle.truncatingRemainder(dividingBy: 360)
+        let normalized = ((angle.truncatingRemainder(dividingBy: 360)) + 360).truncatingRemainder(dividingBy: 360)
         switch normalized {
         case 0..<22.5, 337.5..<360:
             return "New Moon"
@@ -139,7 +139,7 @@ public enum Moon {
     /// - Parameter angle: The phase angle in degrees (0-360).
     /// - Returns: An emoji representing the moon phase.
     public static func emoji(for angle: Double) -> String {
-        let normalized = angle.truncatingRemainder(dividingBy: 360)
+        let normalized = ((angle.truncatingRemainder(dividingBy: 360)) + 360).truncatingRemainder(dividingBy: 360)
         switch normalized {
         case 0..<22.5, 337.5..<360:
             return "🌑"

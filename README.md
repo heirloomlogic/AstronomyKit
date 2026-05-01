@@ -302,6 +302,17 @@ Or in Xcode: **Product → Build Documentation**
 
 **Development:** Xcode 26.3 (Swift 6.3). The swift-format build tool plugin is pinned to a toolchain; see [Toolchain Alignment](#toolchain-alignment).
 
+## Toolchain Alignment
+
+The swift-format build tool plugin is pinned to a specific toolchain version. To contribute, your local toolchain must match CI:
+
+| Context | Toolchain |
+|---------|-----------|
+| **Consumers** (SPM dependency) | Swift 6.0+ — any compatible toolchain |
+| **Contributors** (building from source) | Xcode 26.3 / Swift 6.3 — must match CI |
+
+If your toolchain doesn't match, `swift build` will surface lint errors from the format plugin. Update Xcode or install the matching Swift toolchain before submitting a PR.
+
 ## Built With AstronomyKit
 
 - **[Fallow](https://heirloomlogic.com/fallow)** — Lunar fasting companion. Calculates Ekadashi and moon cycle timing.

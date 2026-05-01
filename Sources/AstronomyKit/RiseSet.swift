@@ -275,10 +275,9 @@ public struct DailyEvents: Sendable {
         self.observer = observer
         self.date = date
 
-        // Search within a 1-day window
-        self.rise = try? body.riseTime(after: date, from: observer, limitDays: 1)
-        self.set = try? body.setTime(after: date, from: observer, limitDays: 1)
-        self.culmination = try? body.culmination(after: date, from: observer)
+        self.rise = try body.riseTime(after: date, from: observer, limitDays: 1)
+        self.set = try body.setTime(after: date, from: observer, limitDays: 1)
+        self.culmination = try body.culmination(after: date, from: observer)
     }
 
     /// Whether the body is visible at some point during this day.

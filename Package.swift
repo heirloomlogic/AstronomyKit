@@ -16,16 +16,19 @@ let package = Package(
             targets: ["AstronomyKit"]
         ),
     ],
-    dependencies: {
-        var deps: [Package.Dependency] = []
-        #if os(macOS)
-        deps.append(.package(url: "https://github.com/apple/swift-docc-plugin", from: "1.4.5"))
-        deps.append(.package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", from: "1.3.0"))
-        #endif
-        return deps
-    }(),
-    targets: {
-        let cLib: Target = .target(
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
+        .package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", from: "1.4.0"),
+    ],
+    targets: [
+        .target(
+            name: "AstronomyKit",
+            dependencies: ["CLibAstronomy"],
+            plugins: [
+                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
+            ]
+        ),
+        .target(
             name: "CLibAstronomy",
             path: "Sources/CLibAstronomy",
             sources: ["astronomy.c"],
@@ -33,21 +36,13 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("include")
             ]
-        )
-        var plugins: [Target.PluginUsage] = []
-        #if os(macOS)
-        plugins.append(.plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin"))
-        #endif
-        let lib: Target = .target(
-            name: "AstronomyKit",
-            dependencies: ["CLibAstronomy"],
-            plugins: plugins
-        )
-        let tests: Target = .testTarget(
+        ),
+        .testTarget(
             name: "AstronomyKitTests",
             dependencies: ["AstronomyKit"],
-            plugins: plugins
-        )
-        return [cLib, lib, tests]
-    }()
+            plugins: [
+                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
+            ]
+        ),
+    ]
 )

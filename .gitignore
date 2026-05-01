@@ -3,5 +3,6 @@
 .context/
 .DS_Store
 .swiftpm
+docs/
 Package.resolved
 xcuserdata/

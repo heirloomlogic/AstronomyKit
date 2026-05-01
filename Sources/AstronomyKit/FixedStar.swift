@@ -133,27 +133,7 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic longitude in degrees (0-360).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func eclipticLongitude(at time: AstroTime) throws -> Double {
-        try Self.calculationLock.withLock { _ in
-            try configureSlot()
-
-            let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
-            guard geo.status == ASTRO_SUCCESS else {
-                if let error = AstronomyError(status: geo.status) {
-                    throw error
-                }
-                throw AstronomyError.internalError
-            }
-
-            let rotation = Astronomy_Rotation_EQJ_ECL()
-            let rotated = Astronomy_RotateVector(rotation, geo)
-
-            var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-            if longitude < 0 {
-                longitude += 360.0
-            }
-
-            return longitude
-        }
+        try ecliptic(at: time).longitude
     }
 
     /// Calculates the star's ecliptic latitude at a given time.
@@ -162,23 +142,7 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic latitude in degrees (-90 to +90).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func eclipticLatitude(at time: AstroTime) throws -> Double {
-        try Self.calculationLock.withLock { _ in
-            try configureSlot()
-
-            let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
-            guard geo.status == ASTRO_SUCCESS else {
-                if let error = AstronomyError(status: geo.status) {
-                    throw error
-                }
-                throw AstronomyError.internalError
-            }
-
-            let rotation = Astronomy_Rotation_EQJ_ECL()
-            let rotated = Astronomy_RotateVector(rotation, geo)
-            let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-            return asin(rotated.z / dist) * 180.0 / .pi
-        }
+        try ecliptic(at: time).latitude
     }
 
     /// Calculates the star's full ecliptic coordinates at a given time.
