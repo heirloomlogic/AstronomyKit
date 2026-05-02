@@ -37,7 +37,7 @@ public struct RotationAxis: Sendable, Equatable {
     public let north: Vector3D
 
     /// Creates a rotation axis from the C structure.
-    internal init(_ raw: astro_axis_t) throws {
+    init(_ raw: astro_axis_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

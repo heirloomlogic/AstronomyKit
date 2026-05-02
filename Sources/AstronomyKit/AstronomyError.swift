@@ -58,7 +58,7 @@ public enum AstronomyError: Error, Equatable, Hashable, Sendable {
     case unknown(Int32)
 
     /// Creates an error from a C status code.
-    internal init?(status: astro_status_t) {
+    init?(status: astro_status_t) {
         switch status {
         case ASTRO_SUCCESS:
             return nil

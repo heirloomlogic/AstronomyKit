@@ -32,7 +32,7 @@ public struct RotationMatrix: Sendable, Equatable {
     }
 
     /// Creates a rotation matrix from the C structure.
-    internal init(_ raw: astro_rotation_t) throws {
+    init(_ raw: astro_rotation_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -51,7 +51,7 @@ public struct RotationMatrix: Sendable, Equatable {
     }
 
     /// The internal C representation.
-    internal var raw: astro_rotation_t {
+    var raw: astro_rotation_t {
         var rot = astro_rotation_t()
         rot.status = ASTRO_SUCCESS
         rot.rot.0 = (matrix[0], matrix[1], matrix[2])

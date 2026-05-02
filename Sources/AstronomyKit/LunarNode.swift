@@ -17,7 +17,7 @@ public enum NodeKind: Sendable, Equatable, Hashable, Codable {
     /// The Moon crosses from north to south of the ecliptic plane.
     case descending
 
-    internal init(_ raw: astro_node_kind_t) {
+    init(_ raw: astro_node_kind_t) {
         switch raw {
         case ASCENDING_NODE:
             self = .ascending
@@ -71,7 +71,7 @@ public struct LunarNode: Sendable, Equatable {
     public let time: AstroTime
 
     /// Creates a lunar node from the C structure.
-    internal init(_ raw: astro_node_event_t) throws {
+    init(_ raw: astro_node_event_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

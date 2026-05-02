@@ -2,24 +2,20 @@
   <img src="Sources/AstronomyKit/Documentation.docc/Resources/AstronomyKit-logo@2x.png" alt="AstronomyKit" width="256">
 </p>
 
+<h1 align="center">AstronomyKit</h1>
+
 <p align="center">
-AstronomyKit is a Swift library for calculating positions of the Sun, Moon, planets, and fixed stars.<br>
-Predicts moon phases, eclipses, transits, and rise/set times.<br>
-Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
+A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
 </p>
 
 <p align="center">
 Built on Don Cross’ <a href="https://github.com/cosinekitty/astronomy">Astronomy Engine</a> C library.
 </p>
 
-<p align="center">
-
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux%20|%20Windows-blue.svg)](https://swift.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/Documentation-DocC-blue.svg)](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/)
-
-</p>
 
 ## Features
 
@@ -301,6 +297,17 @@ Or in Xcode: **Product → Build Documentation**
 **Runtime:** Swift 6.0+, macOS 15+ / iOS 18+ / tvOS 18+ / watchOS 11+ / Linux / Windows.
 
 **Development:** Xcode 26.3 (Swift 6.3). The swift-format build tool plugin is pinned to a toolchain; see [Toolchain Alignment](#toolchain-alignment).
+
+## Toolchain Alignment
+
+The swift-format build tool plugin is pinned to a specific toolchain version. To contribute, your local toolchain must match CI:
+
+| Context | Toolchain |
+|---------|-----------|
+| **Consumers** (SPM dependency) | Swift 6.0+ — any compatible toolchain |
+| **Contributors** (building from source) | Xcode 26.3 / Swift 6.3 — must match CI |
+
+If your toolchain doesn't match, `swift build` will surface lint errors from the format plugin. Update Xcode or install the matching Swift toolchain before submitting a PR.
 
 ## Built With AstronomyKit
 

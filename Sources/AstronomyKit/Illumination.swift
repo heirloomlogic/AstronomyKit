@@ -57,7 +57,7 @@ public struct Illumination: Sendable, Equatable {
     public let ringTilt: Double
 
     /// Creates an illumination result from the C structure.
-    internal init(_ raw: astro_illum_t) throws {
+    init(_ raw: astro_illum_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

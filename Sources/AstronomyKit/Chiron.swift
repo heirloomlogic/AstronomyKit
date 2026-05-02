@@ -228,18 +228,7 @@ public enum Chiron {
     /// - Returns: The equatorial coordinates (RA/Dec) in J2000.
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func equatorial(at time: AstroTime) throws -> Equatorial {
-        let geo = try geocentricPosition(at: time)
-        let distance = geo.magnitude
-        let ra = atan2(geo.y, geo.x) * 12.0 / .pi
-        let raPositive = ra < 0 ? ra + 24.0 : ra
-        let dec = asin(geo.z / distance) * 180.0 / .pi
-
-        return Equatorial(
-            rightAscension: raPositive,
-            declination: dec,
-            distance: distance,
-            time: time
-        )
+        try geocentricPosition(at: time).toEquatorial()
     }
 
     /// Calculates Chiron's ecliptic longitude at a given time.

@@ -40,9 +40,6 @@
 
 import CLibAstronomy
 
-// Re-export everything
-@_exported import struct Foundation.Date
-
 // MARK: - Delta T Models
 
 /// The Delta T model used to convert between Universal Time and Terrestrial Time.

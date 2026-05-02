@@ -36,7 +36,7 @@ public struct Constellation: Sendable, Equatable, Hashable {
     public let declination1875: Double
 
     /// Creates a constellation from the C structure.
-    internal init(_ raw: astro_constellation_t) throws {
+    init(_ raw: astro_constellation_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

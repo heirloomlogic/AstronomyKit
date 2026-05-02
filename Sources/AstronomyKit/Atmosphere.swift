@@ -39,7 +39,7 @@ public struct Atmosphere: Sendable, Equatable {
     public let density: Double
 
     /// Creates an atmosphere from the C structure.
-    internal init(_ raw: astro_atmosphere_t) throws {
+    init(_ raw: astro_atmosphere_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

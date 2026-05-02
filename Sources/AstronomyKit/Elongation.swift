@@ -17,7 +17,7 @@ public enum Visibility: Sendable, Equatable, Hashable, Codable {
     /// The body is best visible in the evening, after sunset.
     case evening
 
-    internal init(_ raw: astro_visibility_t) {
+    init(_ raw: astro_visibility_t) {
         switch raw {
         case VISIBLE_MORNING:
             self = .morning
@@ -71,7 +71,7 @@ public struct Elongation: Sendable, Equatable {
     public let eclipticSeparation: Double
 
     /// Creates an elongation result from the C structure.
-    internal init(_ raw: astro_elongation_t) throws {
+    init(_ raw: astro_elongation_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

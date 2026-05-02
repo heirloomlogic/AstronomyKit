@@ -22,7 +22,7 @@ Open a [bug report](https://github.com/heirloomlogic/AstronomyKit/issues/new?tem
 
 The project uses [swift-format](https://github.com/swiftlang/swift-format) via a build plugin. Linting runs automatically during builds, so `swift build` is enough to see all warnings. Resolve all lint warnings before submitting a PR.
 
-Your local toolchain must match CI's Swift major.minor version; see [Toolchain Alignment](../README.md#toolchain-alignment) in the README.
+Your local toolchain must match CI's Swift major.minor version; see [Toolchain Alignment](README.md#toolchain-alignment) in the README.
 
 ### Tests
 

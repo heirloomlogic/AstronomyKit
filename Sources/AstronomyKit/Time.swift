@@ -34,7 +34,7 @@ import Foundation
 /// ```
 public struct AstroTime: Sendable {
     /// The underlying C time structure.
-    internal var raw: astro_time_t
+    var raw: astro_time_t
 
     /// Universal Time days since noon on January 1, 2000.
     ///
@@ -54,7 +54,7 @@ public struct AstroTime: Sendable {
     }
 
     /// Creates a time from the underlying C structure.
-    internal init(raw: astro_time_t) {
+    init(raw: astro_time_t) {
         self.raw = raw
     }
 

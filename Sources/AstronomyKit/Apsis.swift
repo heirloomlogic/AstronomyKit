@@ -17,7 +17,7 @@ public enum ApsisKind: Sendable, Equatable, Hashable, Codable {
     /// The body is at its farthest distance (apogee for Moon, aphelion for planets).
     case apocenter
 
-    internal init(_ raw: astro_apsis_kind_t) {
+    init(_ raw: astro_apsis_kind_t) {
         switch raw {
         case APSIS_PERICENTER:
             self = .pericenter
@@ -77,7 +77,7 @@ public struct Apsis: Sendable, Equatable {
     public let distanceKM: Double
 
     /// Creates an apsis from the C structure.
-    internal init(_ raw: astro_apsis_t) throws {
+    init(_ raw: astro_apsis_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

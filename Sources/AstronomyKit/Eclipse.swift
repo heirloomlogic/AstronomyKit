@@ -27,7 +27,7 @@ public enum EclipseKind: Sendable, Equatable, Hashable {
     case total
 
     /// Creates an eclipse kind from the C enum.
-    internal init(_ raw: astro_eclipse_kind_t) {
+    init(_ raw: astro_eclipse_kind_t) {
         switch raw {
         case ECLIPSE_NONE: self = .none
         case ECLIPSE_PENUMBRAL: self = .penumbral
@@ -73,7 +73,7 @@ public struct LunarEclipse: Sendable, Equatable {
     public let totalDuration: Double
 
     /// Creates a lunar eclipse from the C structure.
-    internal init(_ raw: astro_lunar_eclipse_t) throws {
+    init(_ raw: astro_lunar_eclipse_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -116,7 +116,7 @@ public struct GlobalSolarEclipse: Sendable, Equatable {
     public let longitude: Double?
 
     /// Creates a global solar eclipse from the C structure.
-    internal init(_ raw: astro_global_solar_eclipse_t) throws {
+    init(_ raw: astro_global_solar_eclipse_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -163,7 +163,7 @@ public struct EclipseEvent: Sendable, Equatable {
     public var isVisible: Bool { altitude > 0 }
 
     /// Creates an eclipse event from the C structure.
-    internal init(_ raw: astro_eclipse_event_t) {
+    init(_ raw: astro_eclipse_event_t) {
         self.time = AstroTime(raw: raw.time)
         self.altitude = raw.altitude
     }
@@ -207,7 +207,7 @@ public struct LocalSolarEclipse: Sendable, Equatable {
     public let partialEnd: EclipseEvent
 
     /// Creates a local solar eclipse from the C structure.
-    internal init(_ raw: astro_local_solar_eclipse_t) throws {
+    init(_ raw: astro_local_solar_eclipse_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
