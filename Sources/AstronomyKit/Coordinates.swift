@@ -33,7 +33,7 @@ public struct Vector3D: Sendable, Equatable, Hashable {
     }
 
     /// Creates a vector from the C structure.
-    internal init(_ raw: astro_vector_t) throws {
+    init(_ raw: astro_vector_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -165,7 +165,7 @@ public struct Spherical: Sendable, Equatable, Hashable {
     }
 
     /// Creates coordinates from the C structure.
-    internal init(_ raw: astro_spherical_t) throws {
+    init(_ raw: astro_spherical_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -210,7 +210,7 @@ public struct Equatorial: Sendable, Equatable, Hashable {
     }
 
     /// Creates coordinates from the C structure.
-    internal init(_ raw: astro_equatorial_t, time: AstroTime) throws {
+    init(_ raw: astro_equatorial_t, time: AstroTime) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -268,7 +268,7 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
     }
 
     /// Creates coordinates from the C structure.
-    internal init(_ raw: astro_ecliptic_t) throws {
+    init(_ raw: astro_ecliptic_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -323,7 +323,7 @@ public struct Horizon: Sendable, Equatable, Hashable {
     }
 
     /// Creates coordinates from the C structure.
-    internal init(_ raw: astro_horizon_t) {
+    init(_ raw: astro_horizon_t) {
         self.altitude = raw.altitude
         self.azimuth = raw.azimuth
         self.rightAscension = raw.ra
@@ -387,7 +387,7 @@ public enum Refraction: Sendable {
     /// JPL Horizons compatibility mode.
     case jplHorizons
 
-    internal var raw: astro_refraction_t {
+    var raw: astro_refraction_t {
         switch self {
         case .none: return REFRACTION_NONE
         case .normal: return REFRACTION_NORMAL

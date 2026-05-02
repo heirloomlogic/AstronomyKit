@@ -188,7 +188,7 @@ public enum Aberration: Sendable {
     /// Correct for light time and aberration.
     case corrected
 
-    internal var raw: astro_aberration_t {
+    var raw: astro_aberration_t {
         switch self {
         case .none: return NO_ABERRATION
         case .corrected: return ABERRATION
@@ -206,7 +206,7 @@ public enum EquatorDate: Sendable {
     /// Use coordinates of the current date.
     case ofDate
 
-    internal var raw: astro_equator_date_t {
+    var raw: astro_equator_date_t {
         switch self {
         case .j2000: return EQUATOR_J2000
         case .ofDate: return EQUATOR_OF_DATE

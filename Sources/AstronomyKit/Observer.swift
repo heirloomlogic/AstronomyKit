@@ -54,7 +54,7 @@ public struct Observer: Sendable, Equatable, Hashable {
     public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
 
     /// The underlying C observer structure.
-    internal var raw: astro_observer_t {
+    var raw: astro_observer_t {
         Astronomy_MakeObserver(latitude, longitude, height)
     }
 
@@ -116,7 +116,7 @@ extension Observer {
         /// Equatorial coordinates of the specified date.
         case ofDate
 
-        internal var raw: astro_equator_date_t {
+        var raw: astro_equator_date_t {
             switch self {
             case .j2000: return EQUATOR_J2000
             case .ofDate: return EQUATOR_OF_DATE

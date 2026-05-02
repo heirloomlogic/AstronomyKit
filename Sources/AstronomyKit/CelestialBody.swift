@@ -85,12 +85,12 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     case star1 = 101
 
     /// The underlying C body enum value.
-    internal var raw: astro_body_t {
+    var raw: astro_body_t {
         astro_body_t(rawValue: rawValue)
     }
 
     /// Creates a body from the C enum value.
-    internal init?(raw: astro_body_t) {
+    init?(raw: astro_body_t) {
         self.init(rawValue: raw.rawValue)
     }
 

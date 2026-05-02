@@ -76,7 +76,7 @@ public struct StateVector: Sendable, Equatable {
 
     /// Creates a state vector from the C structure.
 
-    internal init(_ raw: astro_state_vector_t) throws {
+    init(_ raw: astro_state_vector_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

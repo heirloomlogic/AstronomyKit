@@ -17,7 +17,7 @@ public enum RiseSetDirection: Int32, Sendable {
     /// Setting below the horizon.
     case set = -1
 
-    internal var raw: astro_direction_t {
+    var raw: astro_direction_t {
         astro_direction_t(rawValue: rawValue)
     }
 }
@@ -170,7 +170,7 @@ public struct HourAngleEvent: Sendable, Equatable {
     public let horizon: Horizon
 
     /// Creates an event from the C structure.
-    internal init(_ raw: astro_hour_angle_t) throws {
+    init(_ raw: astro_hour_angle_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

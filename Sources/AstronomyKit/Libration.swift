@@ -50,7 +50,7 @@ public struct Libration: Sendable, Equatable {
     public let apparentDiameter: Double
 
     /// Creates a libration from the C structure.
-    internal init(_ raw: astro_libration_t) {
+    init(_ raw: astro_libration_t) {
         self.subEarthLatitude = raw.elat
         self.subEarthLongitude = raw.elon
         self.moonLatitude = raw.mlat

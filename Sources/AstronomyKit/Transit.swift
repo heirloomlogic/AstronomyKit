@@ -51,7 +51,7 @@ public struct Transit: Sendable, Equatable {
     }
 
     /// Creates a transit from the C structure.
-    internal init(body: CelestialBody, _ raw: astro_transit_t) throws {
+    init(body: CelestialBody, _ raw: astro_transit_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

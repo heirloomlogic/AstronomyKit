@@ -35,7 +35,7 @@ public struct JupiterMoons: Sendable, Equatable {
     public let callisto: StateVector
 
     /// Creates Jupiter moons data from the C structure.
-    internal init(_ raw: astro_jupiter_moons_t) throws {
+    init(_ raw: astro_jupiter_moons_t) throws {
         self.io = try StateVector(raw.io)
         self.europa = try StateVector(raw.europa)
         self.ganymede = try StateVector(raw.ganymede)

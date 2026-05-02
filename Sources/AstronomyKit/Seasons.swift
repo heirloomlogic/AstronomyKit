@@ -22,7 +22,7 @@ public struct Seasons: Sendable, Equatable {
     public let decemberSolstice: AstroTime
 
     /// Creates a seasons instance from the C structure.
-    internal init(_ raw: astro_seasons_t) throws {
+    init(_ raw: astro_seasons_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }

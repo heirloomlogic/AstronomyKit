@@ -66,7 +66,7 @@ public struct MoonQuarter: Sendable, Equatable {
     public let time: AstroTime
 
     /// Creates a moon quarter from the C structure.
-    internal init(_ raw: astro_moon_quarter_t) throws {
+    init(_ raw: astro_moon_quarter_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
@@ -106,12 +106,16 @@ public enum Moon {
         return result.angle
     }
 
+    private static func normalizedAngle(_ angle: Double) -> Double {
+        ((angle.truncatingRemainder(dividingBy: 360)) + 360).truncatingRemainder(dividingBy: 360)
+    }
+
     /// Determines the approximate phase name for the given angle.
     ///
     /// - Parameter angle: The phase angle in degrees (0-360).
     /// - Returns: A human-readable phase name.
     public static func phaseName(for angle: Double) -> String {
-        let normalized = ((angle.truncatingRemainder(dividingBy: 360)) + 360).truncatingRemainder(dividingBy: 360)
+        let normalized = normalizedAngle(angle)
         switch normalized {
         case 0..<22.5, 337.5..<360:
             return "New Moon"
@@ -139,7 +143,7 @@ public enum Moon {
     /// - Parameter angle: The phase angle in degrees (0-360).
     /// - Returns: An emoji representing the moon phase.
     public static func emoji(for angle: Double) -> String {
-        let normalized = ((angle.truncatingRemainder(dividingBy: 360)) + 360).truncatingRemainder(dividingBy: 360)
+        let normalized = normalizedAngle(angle)
         switch normalized {
         case 0..<22.5, 337.5..<360:
             return "🌑"
