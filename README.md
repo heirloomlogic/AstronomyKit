@@ -2,18 +2,14 @@
   <img src="Sources/AstronomyKit/Documentation.docc/Resources/AstronomyKit-logo@2x.png" alt="AstronomyKit" width="256">
 </p>
 
-<h1 align="center">AstronomyKit</h1>
+# AstronomyKit
 
-<p align="center">
 A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
-</p>
 
-<p align="center">
-Built on Don Cross’ <a href="https://github.com/cosinekitty/astronomy">Astronomy Engine</a> C library.
-</p>
+Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux%20|%20Windows-blue.svg)](https://swift.org)
+[![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux-blue.svg)](https://swift.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/Documentation-DocC-blue.svg)](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/)
 
@@ -40,7 +36,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "0.2.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "1.0.0")
 ]
 ```
 
@@ -294,7 +290,7 @@ Or in Xcode: **Product → Build Documentation**
 
 ## Requirements
 
-**Runtime:** Swift 6.0+, macOS 15+ / iOS 18+ / tvOS 18+ / watchOS 11+ / Linux / Windows.
+**Runtime:** Swift 6.0+, macOS 15+ / iOS 18+ / tvOS 18+ / watchOS 11+ / Linux.
 
 **Development:** Xcode 26.3 (Swift 6.3). The swift-format build tool plugin is pinned to a toolchain; see [Toolchain Alignment](#toolchain-alignment).
 

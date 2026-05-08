@@ -12,7 +12,7 @@ Add AstronomyKit to your Swift package:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit.git", from: "0.2.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "1.0.0")
 ]
 ```
 
