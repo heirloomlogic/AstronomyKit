@@ -18,14 +18,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
-        .package(url: "https://github.com/HeirloomLogic/SwiftFormatPlugin", from: "1.6.0"),
+        .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
     ],
     targets: [
         .target(
             name: "AstronomyKit",
             dependencies: ["CLibAstronomy"],
             plugins: [
-                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
+                .plugin(name: "Persnoop", package: "Persnicket")
             ]
         ),
         .target(
@@ -41,7 +41,7 @@ let package = Package(
             name: "AstronomyKitTests",
             dependencies: ["AstronomyKit"],
             plugins: [
-                .plugin(name: "SwiftFormatBuildToolPlugin", package: "SwiftFormatPlugin")
+                .plugin(name: "Persnoop", package: "Persnicket")
             ]
         ),
     ]
