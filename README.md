@@ -303,7 +303,7 @@ The swift-format build tool plugin is pinned to a specific toolchain version. To
 | **Consumers** (SPM dependency) | Swift 6.0+ — any compatible toolchain |
 | **Contributors** (building from source) | Xcode 26.3 / Swift 6.3 — must match CI |
 
-If your toolchain doesn't match, `swift build` will surface lint errors from the format plugin. Update Xcode or install the matching Swift toolchain before submitting a PR.
+The format plugin is **dev-gated** and does not ship to consumers: it only resolves when a gitignored `.dev-tooling` sentinel is present. Run `touch .dev-tooling` once before building from source to enable it (see [CONTRIBUTING](CONTRIBUTING.md#code-style)). With it enabled, if your toolchain doesn't match, `swift build` will surface lint errors from the format plugin — update Xcode or install the matching Swift toolchain before submitting a PR.
 
 ## Built With AstronomyKit
 

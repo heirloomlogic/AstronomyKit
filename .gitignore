@@ -1,6 +1,7 @@
 .agents/
 .build/
 .context/
+.dev-tooling
 .DS_Store
 .swiftpm
 docs/
