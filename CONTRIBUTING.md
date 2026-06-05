@@ -13,14 +13,17 @@ Open a [bug report](https://github.com/heirloomlogic/AstronomyKit/issues/new?tem
 ## Submitting Changes
 
 1. Fork the repository and create a branch from `main`.
-2. Make your changes.
-3. Run `swift build` and resolve any swift-format lint warnings.
-4. Run `swift test` and confirm all tests pass.
-5. Open a pull request describing what you changed and why.
+2. Run `touch .dev-tooling` once, **before your first build**, to enable the swift-format build plugin (see [Code Style](#code-style)).
+3. Make your changes.
+4. Run `swift build` and resolve any swift-format lint warnings.
+5. Run `swift test` and confirm all tests pass.
+6. Open a pull request describing what you changed and why.
 
 ### Code Style
 
-The project uses [swift-format](https://github.com/swiftlang/swift-format) via a build plugin. Linting runs automatically during builds, so `swift build` is enough to see all warnings. Resolve all lint warnings before submitting a PR.
+The project uses [swift-format](https://github.com/swiftlang/swift-format) via a build plugin. The plugin is **dev-gated**: it (and the rest of the dev tooling) only resolves when a gitignored `.dev-tooling` sentinel is present, so consumers who depend on AstronomyKit never inherit it. Run `touch .dev-tooling` once before your first build to enable it; linting then runs automatically during builds, so `swift build` is enough to see all warnings. Resolve all lint warnings before submitting a PR.
+
+If you already built *before* creating the sentinel, SwiftPM has cached the manifest in consumer mode (it keys the cache on the manifest's text, which doesn't change when the sentinel does). Clear that one cache layer with `swift package purge-cache` followed by `swift package resolve` — note that `swift package reset` and Xcode's "Reset Package Caches" do **not** clear it; `purge-cache` is the specific verb.
 
 Your local toolchain must match CI's Swift major.minor version; see [Toolchain Alignment](README.md#toolchain-alignment) in the README.
 
