@@ -49,6 +49,9 @@ public struct Vector3D: Sendable, Equatable, Hashable {
     }
 
     /// Returns a unit vector in the same direction.
+    ///
+    /// Returns `self` unchanged when the magnitude is zero, since a zero
+    /// vector has no direction to normalize.
     public var normalized: Vector3D {
         let length = magnitude
         guard length > 0 else { return self }
@@ -222,20 +225,26 @@ public struct Equatorial: Sendable, Equatable, Hashable {
 
     /// Right ascension formatted as hours:minutes:seconds.
     public var rightAscensionFormatted: String {
-        let totalSeconds = rightAscension * 3_600
-        let hours = Int(totalSeconds / 3_600)
-        let minutes = Int((totalSeconds.truncatingRemainder(dividingBy: 3_600)) / 60)
-        let seconds = totalSeconds.truncatingRemainder(dividingBy: 60)
+        // Round to the displayed 0.1 s precision first so that e.g. 59.96 s
+        // rolls over into the next minute instead of printing "60.0s", and
+        // wrap at 24 h so values rounding up to exactly 24 display as 0 h.
+        let totalTenths = (rightAscension * 36_000).rounded()
+            .truncatingRemainder(dividingBy: 864_000)
+        let hours = Int(totalTenths / 36_000)
+        let minutes = Int(totalTenths.truncatingRemainder(dividingBy: 36_000) / 600)
+        let seconds = totalTenths.truncatingRemainder(dividingBy: 600) / 10
         return String(format: "%02dh %02dm %.1fs", hours, minutes, seconds)
     }
 
     /// Declination formatted as degrees:arcminutes:arcseconds.
     public var declinationFormatted: String {
         let sign = declination >= 0 ? "+" : "-"
-        let totalArcseconds = abs(declination) * 3_600
-        let degrees = Int(totalArcseconds / 3_600)
-        let arcminutes = Int((totalArcseconds.truncatingRemainder(dividingBy: 3_600)) / 60)
-        let arcseconds = totalArcseconds.truncatingRemainder(dividingBy: 60)
+        // Round to the displayed 0.1" precision first so seconds cannot
+        // print as "60.0" (see rightAscensionFormatted).
+        let totalTenths = (abs(declination) * 36_000).rounded()
+        let degrees = Int(totalTenths / 36_000)
+        let arcminutes = Int(totalTenths.truncatingRemainder(dividingBy: 36_000) / 600)
+        let arcseconds = totalTenths.truncatingRemainder(dividingBy: 600) / 10
         return String(format: "%@%02d° %02d' %.1f\"", sign, degrees, arcminutes, arcseconds)
     }
 }
@@ -355,7 +364,12 @@ public struct Horizon: Sendable, Equatable, Hashable {
             "NW",
             "NNW",
         ]
-        let index = Int((azimuth + 11.25).truncatingRemainder(dividingBy: 360) / 22.5)
+        guard azimuth.isFinite else { return directions[0] }
+        // Normalize into [0, 360) so out-of-range azimuths cannot index
+        // outside the table.
+        let normalized = (azimuth.truncatingRemainder(dividingBy: 360) + 360)
+            .truncatingRemainder(dividingBy: 360)
+        let index = Int((normalized + 11.25).truncatingRemainder(dividingBy: 360) / 22.5)
         return directions[index]
     }
 }

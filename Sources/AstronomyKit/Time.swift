@@ -58,24 +58,15 @@ public struct AstroTime: Sendable {
         self.raw = raw
     }
 
+    /// Seconds from the Unix epoch (1970-01-01 00:00 UTC) to the J2000
+    /// reference moment used by ``universalTime`` (2000-01-01 12:00 UTC).
+    private static let j2000UnixOffset = 946_728_000.0
+
     /// Creates a time from a Foundation `Date`.
     ///
     /// - Parameter date: The date to convert.
     public init(_ date: Date) {
-        let calendar = Calendar(identifier: .gregorian)
-        let components = calendar.dateComponents(
-            in: TimeZone(identifier: "UTC") ?? .gmt,
-            from: date
-        )
-
-        self.raw = Astronomy_MakeTime(
-            Int32(components.year ?? 2_000),
-            Int32(components.month ?? 1),
-            Int32(components.day ?? 1),
-            Int32(components.hour ?? 0),
-            Int32(components.minute ?? 0),
-            Double(components.second ?? 0) + Double(components.nanosecond ?? 0) / 1_000_000_000
-        )
+        self.init(ut: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400)
     }
 
     /// Creates a time from calendar components.
@@ -125,19 +116,7 @@ public struct AstroTime: Sendable {
 
     /// Converts this time to a Foundation `Date`.
     public var date: Date {
-        let utc = Astronomy_UtcFromTime(raw)
-        var components = DateComponents()
-        components.year = Int(utc.year)
-        components.month = Int(utc.month)
-        components.day = Int(utc.day)
-        components.hour = Int(utc.hour)
-        components.minute = Int(utc.minute)
-        components.second = Int(utc.second)
-        components.nanosecond = Int((utc.second - Double(Int(utc.second))) * 1_000_000_000)
-        components.timeZone = TimeZone(identifier: "UTC")
-
-        let calendar = Calendar(identifier: .gregorian)
-        return calendar.date(from: components) ?? Date()
+        Date(timeIntervalSince1970: raw.ut * 86_400 + Self.j2000UnixOffset)
     }
 
     /// Returns a new time by adding the specified number of days.
@@ -205,11 +184,17 @@ extension AstroTime: Hashable {
 }
 
 extension AstroTime: CustomStringConvertible {
-    /// An ISO 8601 formatted string representation of this time.
-    public var description: String {
+    // ISO8601DateFormatter is documented to be thread-safe, so a shared
+    // instance avoids re-allocating a formatter on every description call.
+    private nonisolated(unsafe) static let iso8601Formatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter.string(from: date)
+        return formatter
+    }()
+
+    /// An ISO 8601 formatted string representation of this time.
+    public var description: String {
+        Self.iso8601Formatter.string(from: date)
     }
 }
 

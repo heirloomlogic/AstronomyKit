@@ -109,20 +109,8 @@ extension Observer: CustomStringConvertible {
 
 extension Observer {
     /// The coordinate frame for observer vectors.
-    public enum EquatorFrame: Sendable {
-        /// J2000 equatorial coordinates.
-        case j2000
-
-        /// Equatorial coordinates of the specified date.
-        case ofDate
-
-        var raw: astro_equator_date_t {
-            switch self {
-            case .j2000: return EQUATOR_J2000
-            case .ofDate: return EQUATOR_OF_DATE
-            }
-        }
-    }
+    @available(*, deprecated, renamed: "EquatorDate")
+    public typealias EquatorFrame = EquatorDate
 
     /// Returns this observer's position as a vector.
     ///
@@ -134,7 +122,7 @@ extension Observer {
     ///   - equator: The coordinate frame (.j2000 or .ofDate).
     /// - Returns: The position vector in AU.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public func vector(at time: AstroTime, equator: EquatorFrame = .j2000) throws -> Vector3D {
+    public func vector(at time: AstroTime, equator: EquatorDate = .j2000) throws -> Vector3D {
         var rawTime = time.raw
         let result = Astronomy_ObserverVector(&rawTime, raw, equator.raw)
         return try Vector3D(result)
@@ -150,7 +138,7 @@ extension Observer {
     ///   - equator: The coordinate frame (.j2000 or .ofDate).
     /// - Returns: The state vector with position in AU and velocity in AU/day.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public func state(at time: AstroTime, equator: EquatorFrame = .j2000) throws -> StateVector {
+    public func state(at time: AstroTime, equator: EquatorDate = .j2000) throws -> StateVector {
         var rawTime = time.raw
         let result = Astronomy_ObserverState(&rawTime, raw, equator.raw)
         return try StateVector(result)

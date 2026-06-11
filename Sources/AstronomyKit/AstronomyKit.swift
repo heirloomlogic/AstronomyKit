@@ -79,6 +79,12 @@ public enum AstronomyConfig {
     /// Different models produce slightly different values, especially for
     /// dates far from the present.
     ///
+    /// - Important: This updates unsynchronized global state that every
+    ///   calculation reads. Call it once at startup, before any other
+    ///   AstronomyKit call, and never concurrently with other AstronomyKit
+    ///   calls. Changing the model while calculations are in flight on
+    ///   other threads is a data race.
+    ///
     /// - Parameter model: The Delta T model to use.
     public static func setDeltaTModel(_ model: DeltaTModel) {
         switch model {
@@ -89,11 +95,15 @@ public enum AstronomyConfig {
         }
     }
 
-    /// Resets all internal state in the Astronomy Engine.
+    /// Frees all dynamic memory allocated by the Astronomy Engine.
     ///
-    /// This clears cached calculations, resets the Delta T function to
-    /// the default (Espenak-Meeus), and undefines any custom star definitions.
-    /// Call this if you need a clean slate.
+    /// The engine allocates memory in only one place: a cache of orbit
+    /// segments that speeds up Pluto calculations. This purges that cache,
+    /// which slows down the next nearby Pluto calculation but releases the
+    /// memory (useful before running leak checkers). It does not affect the
+    /// Delta T model or any ``FixedStar`` definitions.
+    ///
+    /// This is safe to call concurrently with other calculations.
     public static func reset() {
         Astronomy_Reset()
     }

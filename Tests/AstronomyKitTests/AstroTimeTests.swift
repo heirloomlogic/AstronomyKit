@@ -195,6 +195,39 @@ struct AstroTimeTests {
             // Should be within 1 second
             #expect(abs(original.universalTime - recreated.universalTime) < 1.0 / 86_400.0)
         }
+
+        @Test("Date round-trip preserves fractional seconds")
+        func dateRoundTripFractionalSeconds() {
+            let original = AstroTime(
+                year: 2_025, month: 7, day: 4, hour: 18, minute: 30, second: 12.345
+            )
+            let recreated = AstroTime(original.date)
+
+            // Conversion is pure arithmetic, so it should hold to well under
+            // a millisecond.
+            #expect(
+                abs(original.universalTime - recreated.universalTime) < 0.001 / 86_400.0
+            )
+        }
+
+        @Test("Date round-trip works before 1970")
+        func dateRoundTripPre1970() {
+            let original = AstroTime(year: 1_950, month: 3, day: 15, hour: 6)
+            let date = original.date
+            let recreated = AstroTime(date)
+
+            #expect(date.timeIntervalSince1970 < 0)
+            #expect(abs(original.universalTime - recreated.universalTime) < 0.001 / 86_400.0)
+        }
+
+        @Test("Date conversion matches the J2000 epoch")
+        func dateMatchesJ2000() {
+            // ut == 0 is 2000-01-01 12:00 UTC, which is 946,728,000 seconds
+            // after the Unix epoch.
+            let j2000 = AstroTime(ut: 0)
+
+            #expect(j2000.date.timeIntervalSince1970 == 946_728_000)
+        }
     }
 
     // MARK: - Protocol Conformance Tests

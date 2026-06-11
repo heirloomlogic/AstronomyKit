@@ -7,6 +7,7 @@
 
 import CLibAstronomy
 import Foundation
+import Synchronization
 
 // MARK: - Chiron
 
@@ -49,6 +50,10 @@ public enum Chiron {
     /// Reference epochs with pre-computed state vectors from JPL Horizons.
     ///
     /// Data source: JPL HORIZONS, heliocentric ICRF/J2000, AU and AU/day.
+    ///
+    /// The Horizons states are tabulated at 00:00 TDB while the epochs below
+    /// are constructed as 00:00 UTC, an offset of ~64-69 seconds. At Chiron's
+    /// orbital speed this is below a milliarcsecond and is ignored.
     private static let referenceEpochs: [(time: AstroTime, state: StateVector)] = {
         // 2000-01-01 00:00:00 TDB (JD 2451544.5)
         let epoch2000 = AstroTime(year: 2_000, month: 1, day: 1)
@@ -187,35 +192,27 @@ public enum Chiron {
 
     /// Calculates Chiron's geocentric state (position and velocity) at a given time.
     ///
+    /// The state is geometric (instantaneous): unlike ``geocentricPosition(at:)``,
+    /// it is not corrected for light travel time.
+    ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The geocentric state vector.
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func geoState(at time: AstroTime) throws -> StateVector {
         let helioState = try simulatedState(at: time)
-        let helioEarth = try CelestialBody.earth.heliocentricPosition(at: time)
-
-        // Get Earth's velocity via finite difference
-        let timeStep = 1.0 / 86_400.0  // 1 second in days
-        let earthBefore = try CelestialBody.earth.heliocentricPosition(at: time.addingDays(-timeStep))
-        let earthAfter = try CelestialBody.earth.heliocentricPosition(at: time.addingDays(timeStep))
-        let earthVelocity = Vector3D(
-            x: (earthAfter.x - earthBefore.x) / (2 * timeStep),
-            y: (earthAfter.y - earthBefore.y) / (2 * timeStep),
-            z: (earthAfter.z - earthBefore.z) / (2 * timeStep),
-            time: time
-        )
+        let earthState = try CelestialBody.earth.heliocentricState(at: time)
 
         return StateVector(
             position: Vector3D(
-                x: helioState.position.x - helioEarth.x,
-                y: helioState.position.y - helioEarth.y,
-                z: helioState.position.z - helioEarth.z,
+                x: helioState.position.x - earthState.position.x,
+                y: helioState.position.y - earthState.position.y,
+                z: helioState.position.z - earthState.position.z,
                 time: time
             ),
             velocity: Vector3D(
-                x: helioState.velocity.x - earthVelocity.x,
-                y: helioState.velocity.y - earthVelocity.y,
-                z: helioState.velocity.z - earthVelocity.z,
+                x: helioState.velocity.x - earthState.velocity.x,
+                y: helioState.velocity.y - earthState.velocity.y,
+                z: helioState.velocity.z - earthState.velocity.z,
                 time: time
             ),
             time: time
@@ -287,30 +284,67 @@ public enum Chiron {
 
     // MARK: - Private Helpers
 
+    /// A reusable gravity simulation anchored at a reference epoch.
+    ///
+    /// `pathDays` tracks the total time span the simulation has integrated
+    /// across all updates. Numerical integration error grows with the path
+    /// traveled, so the cache re-anchors at the epoch once the accumulated
+    /// path would exceed twice the span of a fresh integration. This keeps
+    /// the worst-case error of a reused simulation comparable to creating a
+    /// fresh one per query (the previous behavior), while making sequential
+    /// queries and light-travel iteration dramatically cheaper.
+    private struct CachedSimulation {
+        let epochIndex: Int
+        let simulation: GravitySimulation
+        var lastUniversalTime: Double
+        var pathDays: Double
+    }
+
+    private static let simulationCache = Mutex<CachedSimulation?>(nil)
+
     /// Selects the closest reference epoch and simulates to the target time.
     private static func simulatedState(at time: AstroTime) throws -> StateVector {
         // Find the closest reference epoch
         guard
-            let (epochTime, closestState) = referenceEpochs.min(by: { lhs, rhs in
-                abs(lhs.time.universalTime - time.universalTime) < abs(rhs.time.universalTime - time.universalTime)
+            let (epochIndex, epoch) = referenceEpochs.enumerated().min(by: { lhs, rhs in
+                abs(lhs.element.time.universalTime - time.universalTime)
+                    < abs(rhs.element.time.universalTime - time.universalTime)
             })
         else {
             throw AstronomyError.internalError
         }
 
-        // If we're very close to the epoch (within 1 day), return the epoch state directly
-        if abs(closestState.time.universalTime - time.universalTime) < 1.0 {
-            return closestState
+        let targetUT = time.universalTime
+        let freshPath = abs(targetUT - epoch.time.universalTime)
+
+        return try simulationCache.withLock { cached in
+            // Reuse the cached simulation when it is anchored at the same
+            // epoch and stepping it stays within the error budget.
+            if var entry = cached, entry.epochIndex == epochIndex {
+                let step = abs(targetUT - entry.lastUniversalTime)
+                if entry.pathDays + step <= max(2 * freshPath, 365) {
+                    let state = try entry.simulation.update(to: time)
+                    entry.lastUniversalTime = targetUT
+                    entry.pathDays += step
+                    cached = entry
+                    return state
+                }
+            }
+
+            // Start fresh from the reference epoch.
+            let simulation = try GravitySimulation(
+                origin: .sun,
+                time: epoch.time,
+                initialState: epoch.state
+            )
+            let state = try simulation.update(to: time)
+            cached = CachedSimulation(
+                epochIndex: epochIndex,
+                simulation: simulation,
+                lastUniversalTime: targetUT,
+                pathDays: freshPath
+            )
+            return state
         }
-
-        // Create and run the gravity simulation
-        let sim = try GravitySimulation(
-            origin: .sun,
-            time: epochTime,
-            initialState: closestState
-        )
-
-        // Update returns the simulated small body state
-        return try sim.update(to: time)
     }
 }

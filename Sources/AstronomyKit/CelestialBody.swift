@@ -81,8 +81,22 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     // MARK: - Internal (Fixed Star Support)
 
     /// Internal star slot used by FixedStar.
-    /// Use the `FixedStar` type instead of accessing this directly.
+    ///
+    /// - Warning: Do not use this case directly. It refers to mutable global
+    ///   state in the underlying C library that ``FixedStar`` configures and
+    ///   guards with a lock. Calculations on `star1` outside of `FixedStar`
+    ///   bypass that lock and read whatever star (if any) was defined last.
     case star1 = 101
+
+    /// All celestial bodies usable in general calculations.
+    ///
+    /// Excludes the internal ``star1`` slot, which is only meaningful while
+    /// ``FixedStar`` is configuring it.
+    public static let allCases: [CelestialBody] = [
+        .mercury, .venus, .earth, .mars, .jupiter, .saturn, .uranus, .neptune,
+        .pluto, .sun, .moon, .earthMoonBarycenter, .solarSystemBarycenter,
+        .io, .europa, .ganymede, .callisto,
+    ]
 
     /// The underlying C body enum value.
     var raw: astro_body_t {
@@ -96,16 +110,39 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
 
     /// The human-readable name of this body.
     public var name: String {
-        String(cString: Astronomy_BodyName(raw))
+        switch self {
+        case .mercury: return "Mercury"
+        case .venus: return "Venus"
+        case .earth: return "Earth"
+        case .mars: return "Mars"
+        case .jupiter: return "Jupiter"
+        case .saturn: return "Saturn"
+        case .uranus: return "Uranus"
+        case .neptune: return "Neptune"
+        case .pluto: return "Pluto"
+        case .sun: return "Sun"
+        case .moon: return "Moon"
+        case .earthMoonBarycenter: return "EMB"
+        case .solarSystemBarycenter: return "SSB"
+        case .io: return "Io"
+        case .europa: return "Europa"
+        case .ganymede: return "Ganymede"
+        case .callisto: return "Callisto"
+        case .star1: return "Star1"
+        }
     }
 
     /// Creates a body from its name.
     ///
-    /// - Parameter name: The name of the body (case-insensitive).
+    /// - Parameter name: The name of the body (case-insensitive),
+    ///   e.g. "Mars", "moon", "EMB".
     public init?(name: String) {
-        let body = Astronomy_BodyCode(name)
-        guard body.rawValue >= 0 else { return nil }
-        self.init(raw: body)
+        guard
+            let match = Self.allCases.first(where: {
+                $0.name.caseInsensitiveCompare(name) == .orderedSame
+            })
+        else { return nil }
+        self = match
     }
 
     /// The orbital period around the Sun in days.

@@ -1,4 +1,19 @@
 /*
+    VENDORING NOTE (AstronomyKit)
+
+    Vendored from: https://github.com/cosinekitty/astronomy (source/c/astronomy.c)
+    Upstream commit: 826e26ff3a6dc03ee46658b1138fef582d96c5d9 (2025-01-27)
+
+    Local patches not in upstream:
+      - pthread mutex (pluto_cache_mutex) protecting the Pluto orbit cache:
+        CalcPluto holds the lock across segment lookup and use, and
+        Astronomy_Reset takes it before freeing the cache.
+
+    When updating from upstream, re-apply the patches above (or verify
+    upstream has adopted equivalent thread-safety fixes), then refresh the
+    commit hash in this note.
+*/
+/*
     Astronomy Engine for C/C++.
     https://github.com/cosinekitty/astronomy
 
@@ -4571,6 +4586,9 @@ static int ClampIndex(double frac, int nsteps)
 }
 
 
+/* The caller must hold pluto_cache_mutex, and must keep holding it while
+   reading the returned cache segment, so that Astronomy_Reset cannot free
+   the segment out from under the reader. */
 static astro_status_t GetSegment(int *seg_index, body_segment_t *cache[], double tt)
 {
     int i;
@@ -4591,17 +4609,12 @@ static astro_status_t GetSegment(int *seg_index, body_segment_t *cache[], double
 
     *seg_index = ClampIndex((tt - PlutoStateTable[0].tt) / PLUTO_TIME_STEP, PLUTO_NUM_STATES-1);
 
-    pthread_mutex_lock(&pluto_cache_mutex);
-
     if (cache[*seg_index] == NULL)
     {
         /* Allocate memory for the segment (about 11K each). */
         seg = cache[*seg_index] = (body_segment_t *) calloc(1, sizeof(body_segment_t));
         if (seg == NULL)
-        {
-            pthread_mutex_unlock(&pluto_cache_mutex);
             return ASTRO_OUT_OF_MEMORY;
-        }
 
         /* Calculate the segment. */
         /* Pick the pair of bracketing body states to fill the segment. */
@@ -4631,7 +4644,6 @@ static astro_status_t GetSegment(int *seg_index, body_segment_t *cache[], double
         }
     }
 
-    pthread_mutex_unlock(&pluto_cache_mutex);
     return ASTRO_SUCCESS;
 }
 
@@ -4665,12 +4677,21 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
     memset(bstate, 0, sizeof(body_state_t));
     bstate->tt = time.tt;
 
+    /* Hold the cache mutex across both the segment lookup and the
+       interpolation that reads it, so Astronomy_Reset cannot free the
+       segment while it is in use. */
+    pthread_mutex_lock(&pluto_cache_mutex);
     status = GetSegment(&seg_index, pluto_cache, time.tt);
     if (status != ASTRO_SUCCESS)
+    {
+        pthread_mutex_unlock(&pluto_cache_mutex);
         return status;
+    }
 
     if (seg_index < 0)
     {
+        /* The crawl below never touches the cache. */
+        pthread_mutex_unlock(&pluto_cache_mutex);
         /* The target time is outside the year range 0000..4000. */
         /* Calculate it by crawling backward from 0000 or forward from 4000. */
         /* FIXFIXFIX - This is super slow. Could optimize this with extra caching if needed. */
@@ -4704,6 +4725,9 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
         ramp = (time.tt - s1->tt)/PLUTO_DT;
         bstate->r = VecRamp(ra, rb, ramp);
         bstate->v = VecRamp(va, vb, ramp);
+
+        /* The segment is no longer needed. */
+        pthread_mutex_unlock(&pluto_cache_mutex);
 
         if (helio)
             MajorBodyBary(&bary, time.tt);
@@ -12773,11 +12797,13 @@ astro_node_event_t Astronomy_NextMoonNode(astro_node_event_t prevNode)
 void Astronomy_Reset(void)
 {
     int i;
+    pthread_mutex_lock(&pluto_cache_mutex);
     for (i=0; i < PLUTO_NUM_STATES-1; ++i)
     {
         free(pluto_cache[i]);
         pluto_cache[i] = NULL;
     }
+    pthread_mutex_unlock(&pluto_cache_mutex);
 }
 
 

@@ -216,17 +216,31 @@ struct CoordinatesTests {
             ]
         )
         func compassDirections(azimuth: Double, expected: String) throws {
-            // Create a horizon with specific azimuth
-            let time = AstroTime.now
-            let observer = Observer(latitude: 0, longitude: 0)
+            let horizon = Horizon(altitude: 0, azimuth: azimuth)
 
-            // Find a body at approximately the desired azimuth
-            // This is a simpler approach - just verify the compass calculation logic
-            let horizon = try CelestialBody.moon.horizon(at: time, from: observer)
+            #expect(horizon.compassDirection == expected)
+        }
 
-            // The actual azimuth test is done in description output
-            let direction = horizon.compassDirection
-            #expect(!direction.isEmpty)
+        @Test(
+            "Compass direction for out-of-range azimuth does not crash",
+            arguments: [
+                (-50.0, "NW"),  // -50 normalizes to 310
+                (-0.001, "N"),
+                (360.0, "N"),
+                (765.0, "NE"),  // 765 normalizes to 45
+                (348.75, "N"),  // boundary between NNW and N
+            ]
+        )
+        func compassDirectionOutOfRange(azimuth: Double, expected: String) {
+            let horizon = Horizon(altitude: 0, azimuth: azimuth)
+
+            #expect(horizon.compassDirection == expected)
+        }
+
+        @Test("Compass direction for non-finite azimuth does not crash")
+        func compassDirectionNonFinite() {
+            #expect(!Horizon(altitude: 0, azimuth: .nan).compassDirection.isEmpty)
+            #expect(!Horizon(altitude: 0, azimuth: .infinity).compassDirection.isEmpty)
         }
 
         @Test("CustomStringConvertible includes key info")
@@ -305,6 +319,42 @@ struct CoordinatesTests {
             #expect(formatted.contains("°"))
             #expect(formatted.contains("'"))
             #expect(formatted.contains("\""))
+        }
+
+        @Test("Formatted right ascension rolls over seconds cleanly")
+        func formattedRARollover() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+
+            // 12:34:59.97 rounds up to 12:35:00.0, not "12h 34m 60.0s".
+            let nearMinute = Equatorial(
+                rightAscension: 12.0 + 34.0 / 60 + 59.97 / 3_600,
+                declination: 0,
+                distance: 1,
+                time: time
+            )
+            #expect(nearMinute.rightAscensionFormatted == "12h 35m 0.0s")
+
+            // Values rounding up to 24h wrap to 0h.
+            let nearDay = Equatorial(
+                rightAscension: 23.999_999,
+                declination: 0,
+                distance: 1,
+                time: time
+            )
+            #expect(nearDay.rightAscensionFormatted == "00h 00m 0.0s")
+        }
+
+        @Test("Formatted declination rolls over arcseconds cleanly")
+        func formattedDecRollover() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+
+            let nearArcminute = Equatorial(
+                rightAscension: 0,
+                declination: -(45.0 + 59.0 / 60 + 59.97 / 3_600),
+                distance: 1,
+                time: time
+            )
+            #expect(nearArcminute.declinationFormatted == "-46° 00' 0.0\"")
         }
 
         @Test("CustomStringConvertible")
