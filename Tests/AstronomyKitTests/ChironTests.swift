@@ -156,6 +156,60 @@ struct ChironTests {
         }
     }
 
+    // MARK: - Epoch Continuity
+
+    @Suite("Epoch Continuity")
+    struct EpochContinuityTests {
+        private func distance(_ a: Vector3D, _ b: Vector3D) -> Double {
+            let dx = a.x - b.x
+            let dy = a.y - b.y
+            let dz = a.z - b.z
+            return (dx * dx + dy * dy + dz * dz).squareRoot()
+        }
+
+        @Test("Position is not frozen near a reference epoch")
+        func notFrozenNearEpoch() throws {
+            // Regression test: a former shortcut returned the epoch state
+            // verbatim for any time within a day of a reference epoch.
+            let epoch = AstroTime(year: 2_020, month: 1, day: 1)
+            let nearby = epoch.addingHours(12)
+
+            let posAtEpoch = try Chiron.heliocentricPosition(at: epoch)
+            let posNearby = try Chiron.heliocentricPosition(at: nearby)
+
+            // Chiron moves ~3e-3 AU/day, so half a day of motion is ~1.5e-3 AU.
+            let moved = distance(posAtEpoch, posNearby)
+            #expect(moved > 1e-4, "Position should move over 12 hours (moved \(moved) AU)")
+            #expect(moved < 1e-2, "Position should not jump (moved \(moved) AU)")
+        }
+
+        @Test("Position is continuous across the one-day epoch boundary")
+        func continuousAcrossBoundary() throws {
+            let epoch = AstroTime(year: 2_020, month: 1, day: 1)
+            let before = epoch.addingDays(0.9)
+            let after = epoch.addingDays(1.1)
+
+            let posBefore = try Chiron.heliocentricPosition(at: before)
+            let posAfter = try Chiron.heliocentricPosition(at: after)
+
+            // 0.2 days of orbital motion is ~6e-4 AU; a discontinuity at the
+            // boundary would show up as a jump of a full day's motion or more.
+            let moved = distance(posBefore, posAfter)
+            #expect(moved > 1e-5, "Position should move across the boundary (moved \(moved) AU)")
+            #expect(moved < 1.5e-3, "Position should not jump at the boundary (moved \(moved) AU)")
+        }
+
+        @Test("Returned state carries the requested time")
+        func stateCarriesRequestedTime() throws {
+            let epoch = AstroTime(year: 2_020, month: 1, day: 1)
+            let nearby = epoch.addingHours(6)
+
+            let state = try Chiron.geoState(at: nearby)
+
+            #expect(abs(state.time.universalTime - nearby.universalTime) < 1e-9)
+        }
+    }
+
     // MARK: - State Vector Tests
 
     @Suite("State Vector")

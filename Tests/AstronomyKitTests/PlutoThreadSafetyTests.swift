@@ -179,4 +179,42 @@ struct PlutoThreadSafetyTests {
             "Pluto 2126: \(plutoLon)° vs ref 57.317°"
         )
     }
+
+    @Test("Concurrent Pluto calculations survive cache resets")
+    func concurrentResetIsSafe() async throws {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        let date = formatter.date(from: "2031-01-02T21:45:00Z")!
+        let time = AstroTime(date)
+        let expected = 310.776
+
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            // Hammer Pluto calculations on several tasks...
+            for _ in 0..<8 {
+                group.addTask { [self] in
+                    for _ in 0..<50 {
+                        let plutoEq = try CelestialBody.pluto.equatorial(
+                            at: time,
+                            equatorDate: .ofDate
+                        )
+                        let plutoLon = equatorialToEclipticLongitude(
+                            rightAscension: plutoEq.rightAscension,
+                            declination: plutoEq.declination
+                        )
+                        #expect(abs(plutoLon - expected) < Self.arcminuteTolerance)
+                    }
+                }
+            }
+
+            // ...while another task repeatedly purges the Pluto cache.
+            group.addTask {
+                for _ in 0..<100 {
+                    AstronomyConfig.reset()
+                    await Task.yield()
+                }
+            }
+
+            try await group.waitForAll()
+        }
+    }
 }

@@ -16,13 +16,9 @@ struct CelestialBodyTests {
 
     @Suite("Basic Properties")
     struct BasicProperties {
-        @Test("Most bodies have names", arguments: CelestialBody.allCases)
-        func mostBodiesHaveNames(body: CelestialBody) {
-            let name = body.name
-
-            // Note: Some bodies (like Galilean moons) may not have names in all library versions
-            // Just verify the property is accessible
-            _ = name
+        @Test("All bodies have non-empty names", arguments: CelestialBody.allCases)
+        func allBodiesHaveNames(body: CelestialBody) {
+            #expect(!body.name.isEmpty)
         }
 
         @Test("Sun name is correct")
@@ -54,12 +50,10 @@ struct CelestialBodyTests {
 
         @Test("Galilean moon names")
         func galileanMoonNames() {
-            // Note: Galilean moon names may be empty strings in some library versions
-            // Just verify the properties are accessible
-            _ = CelestialBody.io.name
-            _ = CelestialBody.europa.name
-            _ = CelestialBody.ganymede.name
-            _ = CelestialBody.callisto.name
+            #expect(CelestialBody.io.name == "Io")
+            #expect(CelestialBody.europa.name == "Europa")
+            #expect(CelestialBody.ganymede.name == "Ganymede")
+            #expect(CelestialBody.callisto.name == "Callisto")
         }
     }
 
@@ -78,9 +72,21 @@ struct CelestialBodyTests {
         func initFromLowercaseName() {
             let mars = CelestialBody(name: "mars")
 
-            // This depends on C library case-sensitivity
-            // Just verify it returns something reasonable
-            #expect(mars == .mars || mars == nil)
+            #expect(mars == .mars)
+        }
+
+        @Test("Initialize is case-insensitive", arguments: CelestialBody.allCases)
+        func initIsCaseInsensitive(body: CelestialBody) {
+            #expect(CelestialBody(name: body.name.uppercased()) == body)
+            #expect(CelestialBody(name: body.name.lowercased()) == body)
+        }
+
+        @Test("Galilean moons can be initialized by name")
+        func initGalileanMoons() {
+            #expect(CelestialBody(name: "Io") == .io)
+            #expect(CelestialBody(name: "Europa") == .europa)
+            #expect(CelestialBody(name: "Ganymede") == .ganymede)
+            #expect(CelestialBody(name: "Callisto") == .callisto)
         }
 
         @Test("Initialize from invalid name returns nil")
@@ -269,6 +275,11 @@ struct CelestialBodyTests {
             }
 
             #expect(count == CelestialBody.allCases.count)
+        }
+
+        @Test("allCases excludes the internal star slot")
+        func allCasesExcludesStarSlot() {
+            #expect(!CelestialBody.allCases.contains(.star1))
         }
     }
 

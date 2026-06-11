@@ -7,11 +7,14 @@
 
 import CLibAstronomy
 
+private typealias SearchFunction = @Sendable (AstroTime) -> Double
+private typealias PositionFunction = @Sendable (AstroTime) -> Vector3D
+
 private func searchTrampoline(context: UnsafeMutableRawPointer?, time: astro_time_t) -> astro_func_result_t {
     guard let context else {
         return astro_func_result_t(status: ASTRO_INTERNAL_ERROR, value: 0)
     }
-    let box = context.assumingMemoryBound(to: ((AstroTime) -> Double).self).pointee
+    let box = context.assumingMemoryBound(to: SearchFunction.self).pointee
     let value = box(AstroTime(raw: time))
     return astro_func_result_t(status: ASTRO_SUCCESS, value: value)
 }
@@ -20,7 +23,7 @@ private func positionTrampoline(context: UnsafeMutableRawPointer?, time: astro_t
     guard let context else {
         return astro_vector_t(status: ASTRO_INTERNAL_ERROR, x: 0, y: 0, z: 0, t: time)
     }
-    let box = context.assumingMemoryBound(to: ((AstroTime) -> Vector3D).self).pointee
+    let box = context.assumingMemoryBound(to: PositionFunction.self).pointee
     let vec = box(AstroTime(raw: time))
     return astro_vector_t(status: ASTRO_SUCCESS, x: vec.x, y: vec.y, z: vec.z, t: time)
 }
@@ -63,7 +66,7 @@ public enum AstroSearch {
         toleranceSeconds: Double = 1.0,
         _ function: @escaping @Sendable (AstroTime) -> Double
     ) throws -> AstroTime {
-        var closure = function
+        var closure: SearchFunction = function
         let result = withUnsafeMutablePointer(to: &closure) { ptr in
             Astronomy_Search(searchTrampoline, ptr, startTime.raw, endTime.raw, toleranceSeconds)
         }
@@ -88,7 +91,7 @@ public enum AstroSearch {
         at time: AstroTime,
         _ positionFunction: @escaping @Sendable (AstroTime) -> Vector3D
     ) throws -> Vector3D {
-        var closure = positionFunction
+        var closure: PositionFunction = positionFunction
         let result = withUnsafeMutablePointer(to: &closure) { ptr in
             Astronomy_CorrectLightTravel(ptr, positionTrampoline, time.raw)
         }
@@ -120,6 +123,12 @@ public enum AstroSearch {
     }
 }
 
+/// Captures the first error thrown by a throwing position closure so it can
+/// be rethrown after the C iteration completes.
+///
+/// `@unchecked Sendable` is safe here because `Astronomy_CorrectLightTravel`
+/// invokes the callback synchronously and serially on the calling thread:
+/// `error` is never accessed concurrently.
 private final class ThrowingPositionCapture: @unchecked Sendable {
     var error: (any Error)?
 }
