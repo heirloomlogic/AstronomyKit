@@ -205,6 +205,16 @@ struct ObserverTests {
             #expect(desc.contains("S"))
             #expect(desc.contains("E"))
         }
+
+        @Test(
+            "CustomStringConvertible - non-finite and huge heights don't crash",
+            arguments: [Double.infinity, -.infinity, .nan, 1e300]
+        )
+        func descriptionExtremeHeight(height: Double) {
+            let observer = Observer(latitude: 0, longitude: 0, height: height)
+
+            #expect(!observer.description.isEmpty)
+        }
     }
 
     // MARK: - Codable Tests

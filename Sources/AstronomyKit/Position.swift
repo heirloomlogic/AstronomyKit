@@ -56,14 +56,16 @@ extension CelestialBody {
     ///
     /// - Parameters:
     ///   - time: The time at which to calculate the position.
-    ///   - observer: The observer location. Defaults to Earth's center.
+    ///   - observer: The observer location. Defaults to Earth's center;
+    ///     pass a surface location for topocentric coordinates (parallax
+    ///     matters most for the Moon).
     ///   - equatorDate: The equinox reference. Defaults to J2000.
     ///   - aberration: Whether to correct for aberration. Defaults to `.corrected`.
     /// - Returns: The equatorial coordinates (RA/Dec).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func equatorial(
         at time: AstroTime,
-        from observer: Observer = .primeMeridian,
+        from observer: Observer = .geocentric,
         equatorDate: EquatorDate = .j2000,
         aberration: Aberration = .corrected
     ) throws -> Equatorial {
@@ -237,14 +239,18 @@ public enum Sun {
     ///   - targetLongitude: The target ecliptic longitude in degrees (0–360).
     ///   - startTime: The time to start searching from.
     ///   - limitDays: Maximum number of days to search. Defaults to 366.
-    /// - Returns: The time when the Sun reaches the target longitude.
-    /// - Throws: `AstronomyError` if the search fails.
+    /// - Returns: The time when the Sun reaches the target longitude, or
+    ///   `nil` if it does not do so within `limitDays`.
+    /// - Throws: `AstronomyError` if the calculation fails.
     public static func searchLongitude(
         _ targetLongitude: Double,
         after startTime: AstroTime,
         limitDays: Double = 366
-    ) throws -> AstroTime {
+    ) throws -> AstroTime? {
         let result = Astronomy_SearchSunLongitude(targetLongitude, startTime.raw, limitDays)
+        if result.status == ASTRO_SEARCH_FAILURE {
+            return nil
+        }
         if let error = AstronomyError(status: result.status) {
             throw error
         }

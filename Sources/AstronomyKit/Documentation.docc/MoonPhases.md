@@ -52,12 +52,10 @@ print("Moon is \(Int(illumination * 100))% illuminated")
 ### Search for a Specific Phase
 
 ```swift
-// Next full moon
-let fullMoon = try Moon.searchPhase(.full, after: .now)
-print("Next full moon: \(fullMoon)")
-
-// Next new moon
-let newMoon = try Moon.searchPhase(.new, after: .now)
+// Next full moon (nil if none occurs within the search window)
+if let fullMoon = try Moon.searchPhase(.full, after: .now) {
+    print("Next full moon: \(fullMoon)")
+}
 ```
 
 ### Get the Next Quarter

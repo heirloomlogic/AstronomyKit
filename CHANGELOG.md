@@ -4,6 +4,25 @@ All notable changes to AstronomyKit will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Version tags include an `+upstream-X.Y.Z` suffix identifying the bundled Astronomy Engine C library version.
 
+## [2.0.0+upstream-2.1.19]
+
+### Changed
+- **Breaking:** window-bounded searches now return `nil` instead of throwing when the event does not occur within the search window: `AstroSearch.find(from:to:toleranceSeconds:_:)`, `Sun.searchLongitude(_:after:limitDays:)`, and `Moon.searchPhase(_:after:limitDays:)` all return `AstroTime?`, matching the existing rise/set search convention. `AstronomyError.searchFailure` now indicates an internal solver failure.
+- **Breaking:** `equatorial(at:from:equatorDate:aberration:)` on `CelestialBody` and `FixedStar` now defaults to a geocentric observer, matching its documentation. The old default was a surface point at 0°N 0°E, which silently added topocentric parallax (up to ~1° for the Moon). Pass an explicit observer for topocentric coordinates.
+- **Breaking:** removed the deprecated `Observer.EquatorFrame` typealias; use `EquatorDate`.
+- `AstroSearch.find` and `AstroSearch.correctLightTravel` now each take a throwing closure (non-throwing closures still work unchanged), and abort the underlying C iteration immediately when the closure throws instead of continuing on placeholder values.
+
+### Fixed
+- Swapping the Delta T model while calculations run on other threads was a data race. The vendored C library now stores the Delta T function pointer as a C11 atomic (a local patch, like the existing Pluto cache mutex), and `AstronomyConfig.setDeltaTModel(_:)` is safe to call from any thread.
+- The vendored C library's internal performance counters (`_CalcMoonCount`, `_AltitudeDiffCallCount`, `_FindAscentMaxRecursionDepth`) were incremented racily from concurrent Moon and rise/set calculations; they are now C11 atomics. The full test suite runs clean under ThreadSanitizer.
+- `AstroTime(year:month:day:hour:minute:second:)` crashed when a component exceeded `Int32` range; components are now clamped.
+- `Observer.description` crashed for non-finite or astronomically large heights.
+
+### Added
+- `AstronomyError` conforms to `LocalizedError`, so `localizedDescription` produces the descriptive message instead of a generic one.
+- ThreadSanitizer and release-configuration test jobs in CI, plus a Delta T thread-safety stress test.
+- `.spi.yml` manifest so the Swift Package Index builds and hosts the DocC documentation.
+
 ## [1.1.0+upstream-2.1.19]
 
 ### Added
@@ -106,7 +125,8 @@ Initial public release.
 - DocC documentation and GitHub Actions workflows for tests and documentation publishing.
 - Full `Sendable` conformance for Swift 6.
 
-[1.1.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/1.0.0+upstream-2.1.19...HEAD
+[2.0.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/1.1.0+upstream-2.1.19...HEAD
+[1.1.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/1.0.0+upstream-2.1.19...1.1.0+upstream-2.1.19
 [1.0.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/0.2.2+upstream-2.1.19...1.0.0+upstream-2.1.19
 [0.2.2+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/0.2.1+upstream-2.1.19...0.2.2+upstream-2.1.19
 [0.2.1+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/0.2.0+upstream-2.1.19...0.2.1+upstream-2.1.19

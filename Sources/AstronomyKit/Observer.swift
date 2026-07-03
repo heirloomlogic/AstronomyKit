@@ -99,7 +99,7 @@ extension Observer: CustomStringConvertible {
         let lon = String(format: "%.4f°%@", abs(longitude), lonDir)
 
         if height != 0 {
-            return "\(lat), \(lon), \(Int(height))m"
+            return "\(lat), \(lon), \(String(format: "%.0fm", height))"
         }
         return "\(lat), \(lon)"
     }
@@ -108,10 +108,6 @@ extension Observer: CustomStringConvertible {
 // MARK: - Observer Vectors
 
 extension Observer {
-    /// The coordinate frame for observer vectors.
-    @available(*, deprecated, renamed: "EquatorDate")
-    public typealias EquatorFrame = EquatorDate
-
     /// Returns this observer's position as a vector.
     ///
     /// The position is relative to Earth's center in the specified

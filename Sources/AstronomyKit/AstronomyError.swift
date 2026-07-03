@@ -6,6 +6,7 @@
 //
 
 import CLibAstronomy
+import Foundation
 
 /// Errors that can occur during astronomy calculations.
 public enum AstronomyError: Error, Equatable, Hashable, Sendable {
@@ -24,7 +25,11 @@ public enum AstronomyError: Error, Equatable, Hashable, Sendable {
     /// Vector magnitude is too small to normalize.
     case badVector
 
-    /// Search could not find an ascending root crossing in the time interval.
+    /// An internal solver failed to bracket its search interval.
+    ///
+    /// Searches bounded by a caller-supplied window (`AstroSearch.find`,
+    /// `Sun.searchLongitude`, `Moon.searchPhase`, rise/set searches) report
+    /// "no event in the window" by returning `nil` instead of throwing this.
     case searchFailure
 
     /// Earth cannot be treated as a celestial body from Earth.
@@ -135,5 +140,15 @@ extension AstronomyError: CustomStringConvertible {
         case .unknown(let code):
             return "Unknown error (code: \(code))"
         }
+    }
+}
+
+extension AstronomyError: LocalizedError {
+    /// A localized message describing what error occurred.
+    ///
+    /// Mirrors ``description`` so that `localizedDescription` produces a
+    /// meaningful message instead of a generic one.
+    public var errorDescription: String? {
+        description
     }
 }

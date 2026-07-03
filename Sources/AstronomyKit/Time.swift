@@ -78,6 +78,11 @@ public struct AstroTime: Sendable {
     ///   - hour: The hour (0-23). Defaults to 0.
     ///   - minute: The minute (0-59). Defaults to 0.
     ///   - second: The second (0.0-59.999...). Defaults to 0.
+    ///
+    /// Out-of-range components are tolerated and treated as calendar
+    /// arithmetic (for example, February 31 rolls over into March).
+    /// Components are clamped to the `Int32` range; the underlying engine
+    /// produces meaningful results for years roughly within ±999,999.
     public init(
         year: Int,
         month: Int,
@@ -87,11 +92,11 @@ public struct AstroTime: Sendable {
         second: Double = 0
     ) {
         self.raw = Astronomy_MakeTime(
-            Int32(year),
-            Int32(month),
-            Int32(day),
-            Int32(hour),
-            Int32(minute),
+            Int32(clamping: year),
+            Int32(clamping: month),
+            Int32(clamping: day),
+            Int32(clamping: hour),
+            Int32(clamping: minute),
             second
         )
     }

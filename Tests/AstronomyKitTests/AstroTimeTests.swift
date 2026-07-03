@@ -383,6 +383,14 @@ struct AstroTimeTests {
             #expect(year >= 2_999 && year <= 3_001)
         }
 
+        @Test("Components beyond Int32 range don't crash")
+        func extremeComponents() {
+            let time = AstroTime(year: Int.max, month: Int.min, day: 1)
+
+            // Clamped components produce a finite (if physically meaningless) time.
+            #expect(time.universalTime.isFinite)
+        }
+
         @Test("Historical date")
         func historicalDate() {
             let time = AstroTime(year: 1_900, month: 1, day: 1)
