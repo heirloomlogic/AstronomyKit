@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The vendored C library's internal performance counters (`_CalcMoonCount`, `_AltitudeDiffCallCount`, `_FindAscentMaxRecursionDepth`) were incremented racily from concurrent Moon and rise/set calculations; they are now C11 atomics. The full test suite runs clean under ThreadSanitizer.
 - `AstroTime(year:month:day:hour:minute:second:)` crashed when a component exceeded `Int32` range; components are now clamped.
 - `Observer.description` crashed for non-finite or astronomically large heights.
+- Concurrent Chiron position queries could corrupt one another. The gravity-simulation cache was a shared mutable global, so queries interleaving on different threads stepped the same integrator — a data race (reported by ThreadSanitizer) that also made light-travel corrections fail to converge. The reusable simulation is now scoped to each computation, so Chiron calculations hold no shared state and are safe to run concurrently.
 
 ### Added
 - `AstronomyError` conforms to `LocalizedError`, so `localizedDescription` produces the descriptive message instead of a generic one.
