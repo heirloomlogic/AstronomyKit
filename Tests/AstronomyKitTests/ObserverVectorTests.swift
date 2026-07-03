@@ -64,12 +64,6 @@ struct ObserverVectorTests {
         #expect(poleVec.magnitude > 0)
     }
 
-    @Test("EquatorFrame enum cases")
-    func equatorFrameCases() {
-        #expect(Observer.EquatorFrame.j2000 == .j2000)
-        #expect(Observer.EquatorFrame.ofDate == .ofDate)
-    }
-
     // MARK: - Reverse Observer from Vector
 
     @Test("Vector-to-observer roundtrip preserves location")

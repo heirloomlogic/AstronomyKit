@@ -180,14 +180,18 @@ public enum Moon {
     ///   - phase: The phase to search for.
     ///   - startTime: The time to start searching from.
     ///   - limitDays: Maximum days to search. Defaults to 60.
-    /// - Returns: The time when the phase occurs.
-    /// - Throws: `AstronomyError` if the search fails.
+    /// - Returns: The time when the phase occurs, or `nil` if it does not
+    ///   occur within `limitDays`.
+    /// - Throws: `AstronomyError` if the calculation fails.
     public static func searchPhase(
         _ phase: MoonPhase,
         after startTime: AstroTime,
         limitDays: Double = 60
-    ) throws -> AstroTime {
+    ) throws -> AstroTime? {
         let result = Astronomy_SearchMoonPhase(phase.longitude, startTime.raw, limitDays)
+        if result.status == ASTRO_NO_MOON_QUARTER {
+            return nil
+        }
         if let error = AstronomyError(status: result.status) {
             throw error
         }

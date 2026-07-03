@@ -79,11 +79,10 @@ public enum AstronomyConfig {
     /// Different models produce slightly different values, especially for
     /// dates far from the present.
     ///
-    /// - Important: This updates unsynchronized global state that every
-    ///   calculation reads. Call it once at startup, before any other
-    ///   AstronomyKit call, and never concurrently with other AstronomyKit
-    ///   calls. Changing the model while calculations are in flight on
-    ///   other threads is a data race.
+    /// - Note: This is safe to call from any thread at any time. A
+    ///   calculation already in flight on another thread may use either the
+    ///   old or the new model for that one calculation, so for reproducible
+    ///   results set the model once at startup.
     ///
     /// - Parameter model: The Delta T model to use.
     public static func setDeltaTModel(_ model: DeltaTModel) {

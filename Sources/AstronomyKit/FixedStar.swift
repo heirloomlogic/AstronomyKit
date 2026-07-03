@@ -116,7 +116,7 @@ public struct FixedStar: Sendable, Hashable {
     /// - Throws: `AstronomyError` if the calculation fails.
     public func equatorial(
         at time: AstroTime,
-        from observer: Observer = .primeMeridian,
+        from observer: Observer = .geocentric,
         equatorDate: EquatorDate = .j2000
     ) throws -> Equatorial {
         try Self.calculationLock.withLock { _ in

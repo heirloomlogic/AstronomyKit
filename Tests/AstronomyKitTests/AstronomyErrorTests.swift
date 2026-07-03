@@ -72,6 +72,12 @@ struct AstronomyErrorTests {
             let error = AstronomyError.unknown(42)
             #expect(error.description.contains("42"))
         }
+
+        @Test("localizedDescription mirrors description")
+        func localizedDescriptionMirrorsDescription() {
+            #expect(AstronomyError.badTime.localizedDescription == AstronomyError.badTime.description)
+            #expect(AstronomyError.unknown(42).localizedDescription.contains("42"))
+        }
     }
 
     // MARK: - Equatable Tests

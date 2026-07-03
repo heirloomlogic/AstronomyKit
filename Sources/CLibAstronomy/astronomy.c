@@ -8,6 +8,13 @@
       - pthread mutex (pluto_cache_mutex) protecting the Pluto orbit cache:
         CalcPluto holds the lock across segment lookup and use, and
         Astronomy_Reset takes it before freeing the cache.
+      - C11 _Atomic on the DeltaTFunc function pointer (stdatomic.h):
+        Astronomy_SetDeltaTFunction stores with release ordering and
+        TerrestrialTime loads with acquire ordering, so the Delta T model
+        can be swapped while calculations run on other threads.
+      - C11 _Atomic on the undocumented performance counters _CalcMoonCount,
+        _AltitudeDiffCallCount, and _FindAscentMaxRecursionDepth, which are
+        otherwise incremented racily from concurrent calculations.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -42,6 +49,7 @@
 
 #include <math.h>
 #include <pthread.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -912,7 +920,7 @@ double Astronomy_DeltaT_JplHorizons(double ut)
     return Astronomy_DeltaT_EspenakMeeus(ut);
 }
 
-static astro_deltat_func DeltaTFunc = Astronomy_DeltaT_EspenakMeeus;
+static _Atomic(astro_deltat_func) DeltaTFunc = Astronomy_DeltaT_EspenakMeeus;
 
 /**
  * @brief Changes the function Astronomy Engine uses to calculate Delta T.
@@ -931,12 +939,13 @@ static astro_deltat_func DeltaTFunc = Astronomy_DeltaT_EspenakMeeus;
  */
 void Astronomy_SetDeltaTFunction(astro_deltat_func func)
 {
-    DeltaTFunc = func;
+    atomic_store_explicit(&DeltaTFunc, func, memory_order_release);
 }
 
 static double TerrestrialTime(double ut)
 {
-    return ut + DeltaTFunc(ut)/86400.0;
+    astro_deltat_func func = atomic_load_explicit(&DeltaTFunc, memory_order_acquire);
+    return ut + func(ut)/86400.0;
 }
 
 /**
@@ -2164,7 +2173,7 @@ static void Planetary(MoonContext *ctx)
         +0.33*Sine(0.3132   +6.3368*T);
 }
 
-int _CalcMoonCount;     /* Undocumented global for performance tuning. */
+_Atomic int _CalcMoonCount;     /* Undocumented global for performance tuning. */
 
 static void CalcMoon(
     double centuries_since_j2000,
@@ -8045,8 +8054,8 @@ typedef struct
 }
 ascent_t;
 
-int _AltitudeDiffCallCount;
-int _FindAscentMaxRecursionDepth;
+_Atomic int _AltitudeDiffCallCount;
+_Atomic int _FindAscentMaxRecursionDepth;
 
 /** @endcond */
 

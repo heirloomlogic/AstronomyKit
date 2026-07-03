@@ -184,6 +184,22 @@ struct PositionTests {
             #expect(eq.rightAscension >= 0)
             #expect(eq.distance > 0)
         }
+
+        @Test("Default observer is geocentric")
+        func defaultObserverIsGeocentric() throws {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+
+            let defaulted = try CelestialBody.moon.equatorial(at: time)
+            let geocentric = try CelestialBody.moon.equatorial(at: time, from: .geocentric)
+            let surface = try CelestialBody.moon.equatorial(at: time, from: .primeMeridian)
+
+            #expect(defaulted.rightAscension == geocentric.rightAscension)
+            #expect(defaulted.declination == geocentric.declination)
+
+            // Lunar parallax from a surface observer is large enough to
+            // distinguish the two, guarding against a default regression.
+            #expect(abs(defaulted.declination - surface.declination) > 0.01)
+        }
     }
 
     // MARK: - Horizon Coordinates Tests
@@ -253,13 +269,17 @@ struct PositionTests {
         func moonAngleVaries() throws {
             // At new moon, angle should be near 0
             // At full moon, angle should be near 180
-            let newMoon = try Moon.searchPhase(
-                .new,
-                after: AstroTime(year: 2_025, month: 1, day: 1)
+            let newMoon = try #require(
+                try Moon.searchPhase(
+                    .new,
+                    after: AstroTime(year: 2_025, month: 1, day: 1)
+                )
             )
-            let fullMoon = try Moon.searchPhase(
-                .full,
-                after: AstroTime(year: 2_025, month: 1, day: 1)
+            let fullMoon = try #require(
+                try Moon.searchPhase(
+                    .full,
+                    after: AstroTime(year: 2_025, month: 1, day: 1)
+                )
             )
 
             let newMoonAngle = try CelestialBody.moon.angleFromSun(at: newMoon)

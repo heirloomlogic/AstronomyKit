@@ -131,9 +131,10 @@ print(Moon.phaseName(for: angle))     // "Waxing Gibbous"
 print(Moon.emoji(for: angle))         // "🌔"
 print(Moon.illumination(for: angle))  // 0.0 to 1.0
 
-// Find specific phases
-let nextFull = try Moon.searchPhase(.full, after: .now)
-let nextNew = try Moon.searchPhase(.new, after: .now)
+// Find specific phases (nil if not found within the search window)
+if let nextFull = try Moon.searchPhase(.full, after: .now) {
+    print("Next full moon: \(nextFull)")
+}
 
 // All quarters in January 2025
 let quarters = try Moon.quarters(

@@ -307,7 +307,7 @@ struct MoonTests {
         @Test("Search specific phase", arguments: MoonPhase.allCases)
         func searchSpecificPhase(phase: MoonPhase) throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)
-            let foundTime = try Moon.searchPhase(phase, after: startTime)
+            let foundTime = try #require(try Moon.searchPhase(phase, after: startTime))
 
             #expect(foundTime > startTime)
 
