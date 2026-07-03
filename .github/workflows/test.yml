@@ -47,6 +47,11 @@ jobs:
           swift-version: "6.2"
 
       - name: Test (Thread Sanitizer)
+        # Synchronization.Mutex is not modeled by ThreadSanitizer on Linux, so
+        # Mutex-guarded state is falsely reported as racing under contention.
+        # The suppressions file documents these known false positives.
+        env:
+          TSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/tsan-suppressions.txt
         run: swift test --sanitize=thread
 
   test-release-macos:
