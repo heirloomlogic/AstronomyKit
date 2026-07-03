@@ -82,7 +82,7 @@ for quarter in quarters {
 ### Ecliptic Coordinates
 
 ```swift
-let position = try Moon.eclipticPosition(at: .now)
+let position = try Moon.ecliptic(at: .now)
 print("Longitude: \(position.longitude)°")
 print("Latitude: \(position.latitude)°")
 print("Distance: \(position.distance) AU")

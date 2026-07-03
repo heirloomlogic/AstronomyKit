@@ -47,6 +47,11 @@ jobs:
           swift-version: "6.2"
 
       - name: Test (Thread Sanitizer)
+        # Synchronization.Mutex is not modeled by ThreadSanitizer on Linux, so
+        # Mutex-guarded state is falsely reported as racing under contention.
+        # The suppressions file documents these known false positives.
+        env:
+          TSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/tsan-suppressions.txt
         run: swift test --sanitize=thread
 
   test-release-macos:
@@ -71,3 +76,24 @@ jobs:
 
       - name: Test (release)
         run: swift test -c release
+
+  # The macOS jobs above exercise the shared source, but the iOS/tvOS/watchOS
+  # SDKs compile differently (availability, unavailable APIs). Build the library
+  # for each declared Apple platform so a platform-specific break is caught here
+  # rather than in a consumer's app. Build-only: running would require booting a
+  # simulator, and the behavior is already covered by the macOS test jobs.
+  build-apple-platforms:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [iOS, tvOS, watchOS]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build (${{ matrix.platform }})
+        run: |
+          xcodebuild build \
+            -scheme AstronomyKit \
+            -destination "generic/platform=${{ matrix.platform }}"

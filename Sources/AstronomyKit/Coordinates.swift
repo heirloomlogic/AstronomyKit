@@ -285,6 +285,20 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.longitude = raw.elon
         self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
     }
+
+    /// Creates coordinates from a spherical C structure.
+    ///
+    /// Some engine functions (such as `Astronomy_EclipticGeoMoon`) report
+    /// ecliptic coordinates as a spherical triple rather than an
+    /// `astro_ecliptic_t`; the latitude, longitude, and distance map directly.
+    init(_ raw: astro_spherical_t) throws {
+        if let error = AstronomyError(status: raw.status) {
+            throw error
+        }
+        self.latitude = raw.lat
+        self.longitude = raw.lon
+        self.distance = raw.dist
+    }
 }
 
 extension Ecliptic: CustomStringConvertible {

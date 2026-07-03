@@ -7,7 +7,6 @@
 
 import CLibAstronomy
 import Foundation
-import Synchronization
 
 // MARK: - Chiron
 
@@ -179,8 +178,12 @@ public enum Chiron {
     public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
         let helioEarth = try CelestialBody.earth.heliocentricPosition(at: time)
 
+        // Reuse one simulation across the light-travel iterations. The instance
+        // is local to this call, so it is never shared between threads.
+        let chiron = ReusableSimulation()
+
         return try AstroSearch.correctLightTravel(at: time) { t in
-            let helioChiron = try heliocentricPosition(at: t)
+            let helioChiron = try chiron.state(at: t).position
             return Vector3D(
                 x: helioChiron.x - helioEarth.x,
                 y: helioChiron.y - helioEarth.y,
@@ -284,49 +287,53 @@ public enum Chiron {
 
     // MARK: - Private Helpers
 
-    /// A reusable gravity simulation anchored at a reference epoch.
+    /// A Chiron gravity simulation scoped to a single computation.
     ///
-    /// `pathDays` tracks the total time span the simulation has integrated
-    /// across all updates. Numerical integration error grows with the path
-    /// traveled, so the cache re-anchors at the epoch once the accumulated
-    /// path would exceed twice the span of a fresh integration. This keeps
-    /// the worst-case error of a reused simulation comparable to creating a
-    /// fresh one per query (the previous behavior), while making sequential
-    /// queries and light-travel iteration dramatically cheaper.
-    private struct CachedSimulation {
-        let epochIndex: Int
-        let simulation: GravitySimulation
-        var lastUniversalTime: Double
-        var pathDays: Double
-    }
+    /// One instance is created per top-level query and reused across the
+    /// iterations of a light-travel correction, then discarded. Because an
+    /// instance is never shared between threads, no locking is required and
+    /// concurrent Chiron queries cannot corrupt one another's integration.
+    ///
+    /// Reuse is bounded by an error budget: numerical integration error grows
+    /// with the path traveled, so the simulation re-anchors at the reference
+    /// epoch once the accumulated path would exceed twice the span of a fresh
+    /// integration. This keeps a reused simulation's worst-case error
+    /// comparable to a fresh one while making light-travel iteration cheap.
+    ///
+    /// `@unchecked Sendable` lets an instance be captured by the `@Sendable`
+    /// light-travel closure. The C solver invokes that closure synchronously
+    /// and serially on the calling thread, so the instance is never touched
+    /// concurrently.
+    private final class ReusableSimulation: @unchecked Sendable {
+        private var epochIndex: Int?
+        private var simulation: GravitySimulation?
+        private var lastUniversalTime = 0.0
+        private var pathDays = 0.0
 
-    private static let simulationCache = Mutex<CachedSimulation?>(nil)
+        /// Simulates Chiron's heliocentric state at the target time, reusing
+        /// the anchored simulation when the error budget allows.
+        func state(at time: AstroTime) throws -> StateVector {
+            // Find the closest reference epoch.
+            guard
+                let (index, epoch) = referenceEpochs.enumerated().min(by: { lhs, rhs in
+                    abs(lhs.element.time.universalTime - time.universalTime)
+                        < abs(rhs.element.time.universalTime - time.universalTime)
+                })
+            else {
+                throw AstronomyError.internalError
+            }
 
-    /// Selects the closest reference epoch and simulates to the target time.
-    private static func simulatedState(at time: AstroTime) throws -> StateVector {
-        // Find the closest reference epoch
-        guard
-            let (epochIndex, epoch) = referenceEpochs.enumerated().min(by: { lhs, rhs in
-                abs(lhs.element.time.universalTime - time.universalTime)
-                    < abs(rhs.element.time.universalTime - time.universalTime)
-            })
-        else {
-            throw AstronomyError.internalError
-        }
+            let targetUT = time.universalTime
+            let freshPath = abs(targetUT - epoch.time.universalTime)
 
-        let targetUT = time.universalTime
-        let freshPath = abs(targetUT - epoch.time.universalTime)
-
-        return try simulationCache.withLock { cached in
-            // Reuse the cached simulation when it is anchored at the same
-            // epoch and stepping it stays within the error budget.
-            if var entry = cached, entry.epochIndex == epochIndex {
-                let step = abs(targetUT - entry.lastUniversalTime)
-                if entry.pathDays + step <= max(2 * freshPath, 365) {
-                    let state = try entry.simulation.update(to: time)
-                    entry.lastUniversalTime = targetUT
-                    entry.pathDays += step
-                    cached = entry
+            // Reuse the anchored simulation when it sits at the same epoch and
+            // stepping it stays within the error budget.
+            if let simulation, let epochIndex, epochIndex == index {
+                let step = abs(targetUT - lastUniversalTime)
+                if pathDays + step <= max(2 * freshPath, 365) {
+                    let state = try simulation.update(to: time)
+                    lastUniversalTime = targetUT
+                    pathDays += step
                     return state
                 }
             }
@@ -338,13 +345,19 @@ public enum Chiron {
                 initialState: epoch.state
             )
             let state = try simulation.update(to: time)
-            cached = CachedSimulation(
-                epochIndex: epochIndex,
-                simulation: simulation,
-                lastUniversalTime: targetUT,
-                pathDays: freshPath
-            )
+            self.simulation = simulation
+            epochIndex = index
+            lastUniversalTime = targetUT
+            pathDays = freshPath
             return state
         }
+    }
+
+    /// Selects the closest reference epoch and simulates to the target time.
+    ///
+    /// Each call runs an independent simulation, so it holds no shared mutable
+    /// state and is safe to call concurrently.
+    private static func simulatedState(at time: AstroTime) throws -> StateVector {
+        try ReusableSimulation().state(at: time)
     }
 }

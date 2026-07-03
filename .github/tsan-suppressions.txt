@@ -1,0 +1,14 @@
+# ThreadSanitizer suppressions for AstronomyKit's Linux CI job.
+#
+# Swift's `Synchronization.Mutex` is not instrumented by ThreadSanitizer on
+# Linux: TSan does not observe the lock's happens-before edges, so memory that
+# is correctly serialized by a Mutex is still reported as a data race whenever
+# two threads contend for it. The entries below are such false positives — the
+# guarded state is only ever touched while holding the corresponding Swift-side
+# Mutex. (macOS TSan models the same Mutex correctly and reports no races.)
+#
+# FixedStar shares the Astronomy Engine's single user-definable star slot
+# (BODY_STAR1). `FixedStar.calculationLock` serializes each Astronomy_DefineStar
+# write together with the calculation that reads the slot, so concurrent
+# FixedStar calculations are safe. See Sources/AstronomyKit/FixedStar.swift.
+race:Astronomy_DefineStar

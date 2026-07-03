@@ -75,7 +75,7 @@ private func positionTrampoline(context: UnsafeMutableRawPointer?, time: astro_t
 /// let start = AstroTime(year: 2025, month: 1, day: 1)
 /// let end = start.addingDays(30)
 /// let crossing = try AstroSearch.find(from: start, to: end) { time in
-///     let lon = try Moon.eclipticPosition(at: time).lon
+///     let lon = try Moon.ecliptic(at: time).longitude
 ///     var diff = lon - 90.0
 ///     while diff < -180 { diff += 360 }
 ///     while diff > 180 { diff -= 360 }

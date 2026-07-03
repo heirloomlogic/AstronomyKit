@@ -31,6 +31,10 @@ Your local toolchain must match CI's Swift major.minor version; see [Toolchain A
 
 New functionality should include tests. Bug fixes should include a test that would have caught the issue.
 
+### Updating the vendored C library
+
+AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with a few local thread-safety patches. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
+
 ## Code of Conduct
 
 This project follows the [Contributor Covenant Code of Conduct](.github/CODE_OF_CONDUCT.md). By participating, you agree to uphold it.
