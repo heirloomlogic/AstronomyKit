@@ -149,13 +149,15 @@ print("Velocity: \(state.velocity)")  // AU/day
 
 ## Spherical Coordinates
 
-Used for Moon's ecliptic position:
+The `Spherical` type (latitude, longitude, distance) is produced by converting
+a position vector:
 
 ```swift
-let moonPos = try Moon.eclipticPosition(at: .now)
-print("Longitude: \(moonPos.longitude)°")
-print("Latitude: \(moonPos.latitude)°")
-print("Distance: \(moonPos.distance) AU")
+let vector = try CelestialBody.mars.geocentricPosition(at: .now)
+let spherical = vector.toSpherical()
+print("Longitude: \(spherical.longitude)°")
+print("Latitude: \(spherical.latitude)°")
+print("Distance: \(spherical.distance) AU")
 ```
 
 ## Atmospheric Effects

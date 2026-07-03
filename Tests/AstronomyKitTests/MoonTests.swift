@@ -362,7 +362,7 @@ struct MoonTests {
         @Test("Ecliptic position has valid latitude")
         func validLatitude() throws {
             let time = AstroTime.now
-            let position = try Moon.eclipticPosition(at: time)
+            let position = try Moon.ecliptic(at: time)
 
             #expect(position.latitude >= -90)
             #expect(position.latitude <= 90)
@@ -371,7 +371,7 @@ struct MoonTests {
         @Test("Ecliptic position has valid longitude")
         func validLongitude() throws {
             let time = AstroTime.now
-            let position = try Moon.eclipticPosition(at: time)
+            let position = try Moon.ecliptic(at: time)
 
             #expect(position.longitude >= 0)
             #expect(position.longitude < 360)
@@ -380,7 +380,7 @@ struct MoonTests {
         @Test("Ecliptic position has positive distance")
         func positiveDistance() throws {
             let time = AstroTime.now
-            let position = try Moon.eclipticPosition(at: time)
+            let position = try Moon.ecliptic(at: time)
 
             #expect(position.distance > 0)
         }
@@ -389,7 +389,7 @@ struct MoonTests {
         func moonLatitudeLimited() throws {
             // Moon's orbit is inclined ~5° to ecliptic
             let time = AstroTime.now
-            let position = try Moon.eclipticPosition(at: time)
+            let position = try Moon.ecliptic(at: time)
 
             #expect(abs(position.latitude) < 6)
         }

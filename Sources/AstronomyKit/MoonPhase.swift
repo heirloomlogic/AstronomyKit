@@ -257,12 +257,15 @@ public enum Moon {
 
     /// Calculates the Moon's ecliptic coordinates.
     ///
+    /// The coordinates are geocentric and referred to the true ecliptic and
+    /// equinox of date.
+    ///
     /// - Parameter time: The time at which to calculate.
     /// - Returns: The ecliptic coordinates.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public static func eclipticPosition(at time: AstroTime) throws -> Spherical {
+    public static func ecliptic(at time: AstroTime) throws -> Ecliptic {
         let result = Astronomy_EclipticGeoMoon(time.raw)
-        return try Spherical(result)
+        return try Ecliptic(result)
     }
 
     /// Calculates the Moon's geocentric state (position and velocity).

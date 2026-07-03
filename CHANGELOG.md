@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Breaking:** window-bounded searches now return `nil` instead of throwing when the event does not occur within the search window: `AstroSearch.find(from:to:toleranceSeconds:_:)`, `Sun.searchLongitude(_:after:limitDays:)`, and `Moon.searchPhase(_:after:limitDays:)` all return `AstroTime?`, matching the existing rise/set search convention. `AstronomyError.searchFailure` now indicates an internal solver failure.
 - **Breaking:** `equatorial(at:from:equatorDate:aberration:)` on `CelestialBody` and `FixedStar` now defaults to a geocentric observer, matching its documentation. The old default was a surface point at 0°N 0°E, which silently added topocentric parallax (up to ~1° for the Moon). Pass an explicit observer for topocentric coordinates.
 - **Breaking:** removed the deprecated `Observer.EquatorFrame` typealias; use `EquatorDate`.
+- **Breaking:** `Moon.eclipticPosition(at:)` is renamed to `Moon.ecliptic(at:)` and now returns `Ecliptic` instead of `Spherical`, matching `Sun.position(at:)`, `Chiron.ecliptic(at:)`, and `FixedStar.ecliptic(at:)`. The latitude, longitude, and distance values are unchanged.
 - `AstroSearch.find` and `AstroSearch.correctLightTravel` now each take a throwing closure (non-throwing closures still work unchanged), and abort the underlying C iteration immediately when the closure throws instead of continuing on placeholder values.
 
 ### Fixed
@@ -21,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 - `AstronomyError` conforms to `LocalizedError`, so `localizedDescription` produces the descriptive message instead of a generic one.
 - ThreadSanitizer and release-configuration test jobs in CI, plus a Delta T thread-safety stress test.
+- CI now builds the library for each declared Apple platform (iOS, tvOS, watchOS) in addition to the macOS and Linux test jobs.
+- `MAINTAINING.md` documenting how to update the vendored Astronomy Engine C library while preserving the local thread-safety patches.
 - `.spi.yml` manifest so the Swift Package Index builds and hosts the DocC documentation.
 
 ## [1.1.0+upstream-2.1.19]
