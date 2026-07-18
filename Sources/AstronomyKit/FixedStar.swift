@@ -39,6 +39,15 @@ import Synchronization
 /// - [SIMBAD Astronomical Database](https://simbad.cds.unistra.fr/simbad/)
 /// - Hipparcos Catalog
 /// - Yale Bright Star Catalog
+///
+/// ## Concurrency
+///
+/// The C library exposes eight user-defined star slots (`BODY_STAR1`…`BODY_STAR8`),
+/// each an independent record. Calculations map a star to a slot by a stable hash of
+/// its coordinates, so up to eight distinct stars can be computed fully in parallel.
+/// A slot is only redefined when the star currently loaded in it differs, so repeated
+/// calls for the same star skip the redefinition entirely. Stars whose hashes collide
+/// on the same slot serialize on that slot's mutex (correct, just slower).
 public struct FixedStar: Sendable, Hashable {
     // MARK: - Properties
 
@@ -56,10 +65,20 @@ public struct FixedStar: Sendable, Hashable {
 
     // MARK: - Internal State
 
-    private static let calculationLock = Mutex(())
+    /// The coordinates currently loaded into a C star slot.
+    private struct StarDefinition: Equatable {
+        let rightAscension, declination, distance: Double
+    }
 
-    /// The C library body used for calculations.
-    private static let calculationSlot = BODY_STAR1
+    /// Boxes a per-slot mutex so it can live in an `Array` (`Mutex` is non-copyable and
+    /// cannot be stored in an array directly).
+    private final class Slot: Sendable {
+        /// The definition currently loaded in this C star slot, or `nil` if unused.
+        let mutex = Mutex<StarDefinition?>(nil)
+    }
+
+    /// One mutex per C star slot; the payload is the definition currently loaded in that slot.
+    private static let slots: [Slot] = (0..<8).map { _ in Slot() }
 
     // MARK: - Initialization
 
@@ -79,18 +98,40 @@ public struct FixedStar: Sendable, Hashable {
 
     // MARK: - Private Helpers
 
-    /// Configures the calculation slot with this star's coordinates.
+    /// Runs `body` with a C star slot configured for this star's coordinates.
     ///
-    /// Must be called while holding `calculationLock`.
-    private func configureSlot() throws {
-        let status = Astronomy_DefineStar(
-            Self.calculationSlot,
-            rightAscension,
-            declination,
-            distance
+    /// A slot index is chosen from a stable hash of the coordinates, so distinct stars
+    /// use distinct slots and can run concurrently. The slot is redefined only when it
+    /// currently holds a different star, so repeated calls for the same star skip the
+    /// `Astronomy_DefineStar` call.
+    private func withSlot<T>(_ body: (astro_body_t) throws -> T) throws -> T {
+        let definition = StarDefinition(
+            rightAscension: rightAscension,
+            declination: declination,
+            distance: distance
         )
-        if let error = AstronomyError(status: status) {
-            throw error
+        var hasher = Hasher()
+        hasher.combine(rightAscension)
+        hasher.combine(declination)
+        hasher.combine(distance)
+        // Map into 0..<8 without risking `abs(Int.min)`, which traps.
+        let index = ((hasher.finalize() % 8) + 8) % 8
+        let cBody = astro_body_t(rawValue: BODY_STAR1.rawValue + Int32(index))
+
+        return try Self.slots[index].mutex.withLock { cached in
+            if cached != definition {
+                let status = Astronomy_DefineStar(
+                    cBody,
+                    rightAscension,
+                    declination,
+                    distance
+                )
+                if let error = AstronomyError(status: status) {
+                    throw error
+                }
+                cached = definition
+            }
+            return try body(cBody)
         }
     }
 
@@ -114,11 +155,10 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer = .geocentric,
         equatorDate: EquatorDate = .j2000
     ) throws -> Equatorial {
-        try Self.calculationLock.withLock { _ in
-            try configureSlot()
+        try withSlot { cBody in
             var rawTime = time.raw
             let result = Astronomy_Equator(
-                Self.calculationSlot,
+                cBody,
                 &rawTime,
                 try observer.validatedRaw(),
                 equatorDate.raw,
@@ -154,10 +194,8 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        try Self.calculationLock.withLock { _ in
-            try configureSlot()
-
-            let geo = Astronomy_GeoVector(Self.calculationSlot, time.raw, ABERRATION)
+        try withSlot { cBody in
+            let geo = Astronomy_GeoVector(cBody, time.raw, ABERRATION)
             guard geo.status == ASTRO_SUCCESS else {
                 if let error = AstronomyError(status: geo.status) {
                     throw error
@@ -195,11 +233,10 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer,
         refraction: Refraction = .normal
     ) throws -> Horizon {
-        try Self.calculationLock.withLock { _ in
-            try configureSlot()
+        try withSlot { cBody in
             var rawTime = time.raw
             let eqResult = Astronomy_Equator(
-                Self.calculationSlot,
+                cBody,
                 &rawTime,
                 try observer.validatedRaw(),
                 EQUATOR_OF_DATE,
@@ -223,11 +260,10 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The constellation containing the star.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func constellation(at time: AstroTime) throws -> Constellation {
-        try Self.calculationLock.withLock { _ in
-            try configureSlot()
+        try withSlot { cBody in
             var rawTime = time.raw
             let result = Astronomy_Equator(
-                Self.calculationSlot,
+                cBody,
                 &rawTime,
                 try Observer.geocentric.validatedRaw(),
                 EQUATOR_J2000,

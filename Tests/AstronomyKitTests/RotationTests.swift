@@ -36,14 +36,25 @@ struct RotationTests {
         func identityMatrix() {
             let identity = RotationMatrix.identity
 
-            // Diagonal elements should be 1
-            #expect(identity[0, 0] == 1)
-            #expect(identity[1, 1] == 1)
-            #expect(identity[2, 2] == 1)
+            // Every element of the identity matrix, read via the subscript, matches.
+            for row in 0..<3 {
+                for col in 0..<3 {
+                    #expect(identity[row, col] == (row == col ? 1 : 0))
+                }
+            }
+        }
 
-            // Off-diagonal elements should be 0
-            #expect(identity[0, 1] == 0)
-            #expect(identity[0, 2] == 0)
+        @Test("Subscript reads every element of a non-trivial matrix")
+        func subscriptReadsAllElements() throws {
+            // A 90° pivot about the z axis has a known, non-symmetric layout, so it
+            // exercises each subscript branch distinctly.
+            let rotation = try RotationMatrix.pivot(axis: 2, angle: 90)
+
+            #expect(abs(rotation[0, 0] - 0) < 0.001)
+            #expect(abs(rotation[0, 1] - 1) < 0.001)
+            #expect(abs(rotation[1, 0] - -1) < 0.001)
+            #expect(abs(rotation[1, 1] - 0) < 0.001)
+            #expect(abs(rotation[2, 2] - 1) < 0.001)
         }
 
         @Test("Inverse of rotation")
@@ -206,6 +217,13 @@ struct RotationTests {
             let r2 = try RotationMatrix.equatorialJ2000ToEcliptic()
 
             #expect(r1 == r2)
+        }
+
+        @Test("Distinct matrices are not equal")
+        func inequality() throws {
+            let ecliptic = try RotationMatrix.equatorialJ2000ToEcliptic()
+
+            #expect(ecliptic != .identity)
         }
 
         @Test("CustomStringConvertible")

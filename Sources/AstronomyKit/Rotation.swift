@@ -22,13 +22,27 @@ import CLibAstronomy
 /// let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()
 /// let ecliptic = position.rotated(by: rotation)
 /// ```
-public struct RotationMatrix: Sendable, Equatable {
-    /// The 3x3 rotation matrix stored as a flat array in row-major order.
-    private let matrix: [Double]
+public struct RotationMatrix: Sendable {
+    /// The 3x3 rotation matrix, stored inline as the C structure to avoid a heap
+    /// allocation per matrix.
+    private let storage: astro_rotation_t
 
     /// Access matrix element at row, column.
+    ///
+    /// Traps on an out-of-range index, matching the previous array-backed behavior.
     public subscript(row: Int, col: Int) -> Double {
-        matrix[row * 3 + col]
+        switch (row, col) {
+        case (0, 0): return storage.rot.0.0
+        case (0, 1): return storage.rot.0.1
+        case (0, 2): return storage.rot.0.2
+        case (1, 0): return storage.rot.1.0
+        case (1, 1): return storage.rot.1.1
+        case (1, 2): return storage.rot.1.2
+        case (2, 0): return storage.rot.2.0
+        case (2, 1): return storage.rot.2.1
+        case (2, 2): return storage.rot.2.2
+        default: preconditionFailure("RotationMatrix index (\(row), \(col)) out of range")
+        }
     }
 
     /// Creates a rotation matrix from the C structure.
@@ -36,29 +50,19 @@ public struct RotationMatrix: Sendable, Equatable {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
-        // Flatten the 3x3 C array
-        self.matrix = [
-            raw.rot.0.0, raw.rot.0.1, raw.rot.0.2,
-            raw.rot.1.0, raw.rot.1.1, raw.rot.1.2,
-            raw.rot.2.0, raw.rot.2.1, raw.rot.2.2,
-        ]
+        var normalized = raw
+        normalized.status = ASTRO_SUCCESS
+        self.storage = normalized
     }
 
-    /// Creates a rotation matrix from a flat array (row-major).
-    private init(matrix: [Double]) {
-        precondition(matrix.count == 9)
-        self.matrix = matrix
+    /// Creates a rotation matrix from a C structure known to be valid, skipping the
+    /// status check. For internally constructed matrices only (e.g. ``identity``).
+    private init(unchecked raw: astro_rotation_t) {
+        self.storage = raw
     }
 
     /// The internal C representation.
-    var raw: astro_rotation_t {
-        var rot = astro_rotation_t()
-        rot.status = ASTRO_SUCCESS
-        rot.rot.0 = (matrix[0], matrix[1], matrix[2])
-        rot.rot.1 = (matrix[3], matrix[4], matrix[5])
-        rot.rot.2 = (matrix[6], matrix[7], matrix[8])
-        return rot
-    }
+    var raw: astro_rotation_t { storage }
 }
 
 // MARK: - Matrix Operations
@@ -66,11 +70,12 @@ public struct RotationMatrix: Sendable, Equatable {
 extension RotationMatrix {
     /// The identity rotation matrix (no rotation).
     public static var identity: RotationMatrix {
-        RotationMatrix(matrix: [
-            1, 0, 0,
-            0, 1, 0,
-            0, 0, 1,
-        ])
+        var rot = astro_rotation_t()
+        rot.status = ASTRO_SUCCESS
+        rot.rot.0 = (1, 0, 0)
+        rot.rot.1 = (0, 1, 0)
+        rot.rot.2 = (0, 0, 1)
+        return RotationMatrix(unchecked: rot)
     }
 
     /// Returns the inverse (transpose) of this rotation.
@@ -340,13 +345,28 @@ extension StateVector {
     }
 }
 
+// MARK: - Equatable
+
+extension RotationMatrix: Equatable {
+    /// Two rotation matrices are equal when all nine elements match.
+    ///
+    /// Written by hand because the inline C-tuple storage has no synthesized conformance.
+    public static func == (lhs: RotationMatrix, rhs: RotationMatrix) -> Bool {
+        lhs[0, 0] == rhs[0, 0] && lhs[0, 1] == rhs[0, 1] && lhs[0, 2] == rhs[0, 2]
+            && lhs[1, 0] == rhs[1, 0] && lhs[1, 1] == rhs[1, 1] && lhs[1, 2] == rhs[1, 2]
+            && lhs[2, 0] == rhs[2, 0] && lhs[2, 1] == rhs[2, 1] && lhs[2, 2] == rhs[2, 2]
+    }
+}
+
+// MARK: - CustomStringConvertible
+
 extension RotationMatrix: CustomStringConvertible {
     /// A textual representation of the 3×3 rotation matrix.
     public var description: String {
         """
-        [\(matrix[0]), \(matrix[1]), \(matrix[2])]
-        [\(matrix[3]), \(matrix[4]), \(matrix[5])]
-        [\(matrix[6]), \(matrix[7]), \(matrix[8])]
+        [\(self[0, 0]), \(self[0, 1]), \(self[0, 2])]
+        [\(self[1, 0]), \(self[1, 1]), \(self[1, 2])]
+        [\(self[2, 0]), \(self[2, 1]), \(self[2, 2])]
         """
     }
 }
