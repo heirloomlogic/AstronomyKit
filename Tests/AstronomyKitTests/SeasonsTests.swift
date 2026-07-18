@@ -12,6 +12,25 @@ import Testing
 
 @Suite("Seasons Tests")
 struct SeasonsTests {
+    // MARK: - Input Validation Tests
+
+    @Suite("Input Validation")
+    struct InputValidation {
+        @Test("Year above Int32 range throws invalidParameter")
+        func yearAboveInt32Throws() {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try Seasons.forYear(Int(Int32.max) + 1)
+            }
+        }
+
+        @Test("Int.min year throws invalidParameter")
+        func intMinYearThrows() {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try Seasons.forYear(Int.min)
+            }
+        }
+    }
+
     // MARK: - Basic Calculation Tests
 
     @Suite("Basic Calculations")

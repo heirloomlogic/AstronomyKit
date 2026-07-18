@@ -94,11 +94,6 @@ public struct FixedStar: Sendable, Hashable {
         }
     }
 
-    /// The Swift body wrapper for the calculation slot.
-    private static var slotBody: CelestialBody {
-        .star1
-    }
-
     // MARK: - Position Calculations
 
     /// Calculates the star's equatorial coordinates at a given time.
@@ -121,7 +116,15 @@ public struct FixedStar: Sendable, Hashable {
     ) throws -> Equatorial {
         try Self.calculationLock.withLock { _ in
             try configureSlot()
-            return try Self.slotBody.equatorial(at: time, from: observer, equatorDate: equatorDate)
+            var rawTime = time.raw
+            let result = Astronomy_Equator(
+                Self.calculationSlot,
+                &rawTime,
+                try observer.validatedRaw(),
+                equatorDate.raw,
+                ABERRATION
+            )
+            return try Equatorial(result, time: time)
         }
     }
 
@@ -194,7 +197,23 @@ public struct FixedStar: Sendable, Hashable {
     ) throws -> Horizon {
         try Self.calculationLock.withLock { _ in
             try configureSlot()
-            return try Self.slotBody.horizon(at: time, from: observer, refraction: refraction)
+            var rawTime = time.raw
+            let eqResult = Astronomy_Equator(
+                Self.calculationSlot,
+                &rawTime,
+                try observer.validatedRaw(),
+                EQUATOR_OF_DATE,
+                ABERRATION
+            )
+            let eq = try Equatorial(eqResult, time: time)
+            let result = Astronomy_Horizon(
+                &rawTime,
+                try observer.validatedRaw(),
+                eq.rightAscension,
+                eq.declination,
+                refraction.raw
+            )
+            return Horizon(result)
         }
     }
 
@@ -206,7 +225,19 @@ public struct FixedStar: Sendable, Hashable {
     public func constellation(at time: AstroTime) throws -> Constellation {
         try Self.calculationLock.withLock { _ in
             try configureSlot()
-            return try Self.slotBody.constellation(at: time)
+            var rawTime = time.raw
+            let result = Astronomy_Equator(
+                Self.calculationSlot,
+                &rawTime,
+                try Observer.geocentric.validatedRaw(),
+                EQUATOR_J2000,
+                ABERRATION
+            )
+            let eq = try Equatorial(result, time: time)
+            return try Constellation.find(
+                rightAscension: eq.rightAscension,
+                declination: eq.declination
+            )
         }
     }
 }

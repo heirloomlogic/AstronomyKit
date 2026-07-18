@@ -11,6 +11,23 @@ import Testing
 
 @Suite("Rotation Matrix Tests")
 struct RotationTests {
+    // MARK: - Pivot Validation
+
+    @Suite("Pivot Validation")
+    struct PivotValidation {
+        @Test("Out-of-range axes throw invalidParameter", arguments: [-1, 3, Int.max])
+        func invalidAxisThrows(axis: Int) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try RotationMatrix.pivot(axis: axis, angle: 30)
+            }
+        }
+
+        @Test("Valid axes are accepted", arguments: [0, 1, 2])
+        func validAxisSucceeds(axis: Int) throws {
+            _ = try RotationMatrix.pivot(axis: axis, angle: 30)
+        }
+    }
+
     // MARK: - Identity and Basic Operations
 
     @Suite("Basic Operations")

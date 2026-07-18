@@ -78,26 +78,6 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     /// Callisto, moon of Jupiter.
     case callisto = 24
 
-    // MARK: - Internal (Fixed Star Support)
-
-    /// Internal star slot used by FixedStar.
-    ///
-    /// - Warning: Do not use this case directly. It refers to mutable global
-    ///   state in the underlying C library that ``FixedStar`` configures and
-    ///   guards with a lock. Calculations on `star1` outside of `FixedStar`
-    ///   bypass that lock and read whatever star (if any) was defined last.
-    case star1 = 101
-
-    /// All celestial bodies usable in general calculations.
-    ///
-    /// Excludes the internal ``star1`` slot, which is only meaningful while
-    /// ``FixedStar`` is configuring it.
-    public static let allCases: [CelestialBody] = [
-        .mercury, .venus, .earth, .mars, .jupiter, .saturn, .uranus, .neptune,
-        .pluto, .sun, .moon, .earthMoonBarycenter, .solarSystemBarycenter,
-        .io, .europa, .ganymede, .callisto,
-    ]
-
     /// The underlying C body enum value.
     var raw: astro_body_t {
         astro_body_t(rawValue: rawValue)
@@ -128,7 +108,6 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
         case .europa: return "Europa"
         case .ganymede: return "Ganymede"
         case .callisto: return "Callisto"
-        case .star1: return "Star1"
         }
     }
 

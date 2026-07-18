@@ -1,0 +1,42 @@
+name: Sanitizers
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  asan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.2"
+
+      - name: Test (Address Sanitizer)
+        run: swift test --sanitize=address
+
+  ubsan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.2"
+
+      - name: Test (Undefined Behavior Sanitizer)
+        # UBSan reports and continues by default; halt_on_error makes the first
+        # finding fail the job instead of being lost in the log.
+        env:
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: swift test --sanitize=undefined

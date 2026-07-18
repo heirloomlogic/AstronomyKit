@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Breaking:** removed the deprecated `Observer.EquatorFrame` typealias; use `EquatorDate`.
 - **Breaking:** `Moon.eclipticPosition(at:)` is renamed to `Moon.ecliptic(at:)` and now returns `Ecliptic` instead of `Spherical`, matching `Sun.position(at:)`, `Chiron.ecliptic(at:)`, and `FixedStar.ecliptic(at:)`. The latitude, longitude, and distance values are unchanged.
 - `AstroSearch.find` and `AstroSearch.correctLightTravel` now each take a throwing closure (non-throwing closures still work unchanged), and abort the underlying C iteration immediately when the closure throws instead of continuing on placeholder values.
+- **Breaking:** Pluto positions for times more than ~100 years outside the tabulated range (roughly years 0000–4000) now throw `AstronomyError.badTime` instead of triggering an unbounded, ever-slower step-integration (a compute denial-of-service). This is a local patch to the vendored C library, guarded by `PLUTO_MAX_CRAWL_DAYS`.
+- **Breaking:** `Chiron` calculations are now limited to years 1900–2150; times outside this range throw `AstronomyError.badTime`. Integration error grows with distance from the reference epochs, so far-off times were both slow and inaccurate.
+- **Breaking:** removed the internal `CelestialBody.star1` slot. It exposed mutable global state in the vendored C library that only `FixedStar` was meant to configure; `FixedStar` now drives that slot directly under its own lock. `CelestialBody.allCases` again reflects every declared case (17), and `CelestialBody(rawValue: 101)` is `nil`.
 
 ### Fixed
 - Swapping the Delta T model while calculations run on other threads was a data race. The vendored C library now stores the Delta T function pointer as a C11 atomic (a local patch, like the existing Pluto cache mutex), and `AstronomyConfig.setDeltaTModel(_:)` is safe to call from any thread.
@@ -19,6 +22,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `AstroTime(year:month:day:hour:minute:second:)` crashed when a component exceeded `Int32` range; components are now clamped.
 - `Observer.description` crashed for non-finite or astronomically large heights.
 - Concurrent Chiron position queries could corrupt one another. The gravity-simulation cache was a shared mutable global, so queries interleaving on different threads stepped the same integrator — a data race (reported by ThreadSanitizer) that also made light-travel corrections fail to converge. The reusable simulation is now scoped to each computation, so Chiron calculations hold no shared state and are safe to run concurrently.
+- `Astronomy_Constellation` lazily initialized its J2000→B1875 rotation matrix in function-local `static`s, so concurrent first calls raced. The vendored C library now guards that initialization with `pthread_once` (a local patch), and constellation lookups are safe to run concurrently from a cold start.
+- `Seasons.forYear(_:)` and `RotationMatrix.pivot(axis:angle:)` trapped (crashed) on integer arguments outside the ranges the C layer accepts. They now throw `AstronomyError.invalidParameter` instead.
+- Observers with non-finite coordinates, or a latitude outside -90...90, now throw `AstronomyError.invalidParameter` when used in a calculation rather than producing undefined results.
 
 ### Added
 - `AstronomyError` conforms to `LocalizedError`, so `localizedDescription` produces the descriptive message instead of a generic one.
@@ -26,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - CI now builds the library for each declared Apple platform (iOS, tvOS, watchOS) in addition to the macOS and Linux test jobs.
 - `MAINTAINING.md` documenting how to update the vendored Astronomy Engine C library while preserving the local thread-safety patches.
 - `.spi.yml` manifest so the Swift Package Index builds and hosts the DocC documentation.
+- Weekly (and on-demand) AddressSanitizer and UndefinedBehaviorSanitizer CI workflow, complementing the per-PR ThreadSanitizer job.
 
 ## [1.1.0+upstream-2.1.19]
 

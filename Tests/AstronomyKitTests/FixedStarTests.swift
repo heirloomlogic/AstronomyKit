@@ -24,6 +24,25 @@ struct FixedStarTests {
         distance: 92.95  // light-years
     )
 
+    // MARK: - Input Validation Tests
+
+    @Suite("Input Validation")
+    struct InputValidation {
+        @Test("Star with NaN right ascension throws invalidParameter")
+        func nanRightAscensionThrows() {
+            let star = FixedStar(
+                name: "Bad",
+                rightAscension: .nan,
+                declination: 0,
+                distance: 100
+            )
+            let time = AstroTime(year: 2_025, month: 1, day: 1)
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try star.equatorial(at: time)
+            }
+        }
+    }
+
     // MARK: - Initialization Tests
 
     @Suite("Initialization")

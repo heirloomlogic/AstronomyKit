@@ -15,6 +15,12 @@
       - C11 _Atomic on the undocumented performance counters _CalcMoonCount,
         _AltitudeDiffCallCount, and _FindAscentMaxRecursionDepth, which are
         otherwise incremented racily from concurrent calculations.
+      - pthread_once (constel_init_once) guarding the lazy initialization of
+        the J2000->B1875 rotation matrix in Astronomy_Constellation, whose
+        function-local statics otherwise race on concurrent first calls.
+      - Compute denial-of-service guard (PLUTO_MAX_CRAWL_DAYS) in CalcPluto:
+        times more than ~100 years outside the PlutoStateTable range return
+        ASTRO_BAD_TIME instead of triggering an unbounded step-integration.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -84,6 +90,11 @@ extern "C" {
 #define PLUTO_DT          146
 
 #define PLUTO_NSTEPS      201
+
+/* AstronomyKit local patch: bound the uncached CalcPlutoOneWay crawl to ~100
+   years beyond the PlutoStateTable range so a far-off time cannot trigger an
+   unbounded step-integration (a compute denial-of-service). */
+#define PLUTO_MAX_CRAWL_DAYS 36525.0
 
 
 
@@ -4701,6 +4712,11 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
     {
         /* The crawl below never touches the cache. */
         pthread_mutex_unlock(&pluto_cache_mutex);
+        /* AstronomyKit local patch: reject times far outside the table so the
+           crawl below cannot run for an unbounded number of steps. */
+        if (time.tt < PlutoStateTable[0].tt - PLUTO_MAX_CRAWL_DAYS ||
+            time.tt > PlutoStateTable[PLUTO_NUM_STATES-1].tt + PLUTO_MAX_CRAWL_DAYS)
+            return ASTRO_BAD_TIME;
         /* The target time is outside the year range 0000..4000. */
         /* Calculate it by crawling backward from 0000 or forward from 4000. */
         /* FIXFIXFIX - This is super slow. Could optimize this with extra caching if needed. */
@@ -11248,6 +11264,35 @@ static const constel_boundary_t ConstelBounds[] = {
 #define NUM_CONSTEL_BOUNDARIES  357
 
 
+/* AstronomyKit local patch: guard the constellation rotation matrix's lazy
+   initialization with pthread_once so concurrent first calls cannot race on
+   constel_rot / constel_epoch2000. */
+static pthread_once_t constel_init_once = PTHREAD_ONCE_INIT;
+static astro_time_t constel_epoch2000;
+static astro_rotation_t constel_rot = { ASTRO_NOT_INITIALIZED };
+
+static void ConstelInit(void)
+{
+    /*
+        Need to calculate the B1875 epoch. Based on this:
+        https://en.wikipedia.org/wiki/Epoch_(astronomy)#Besselian_years
+        B = 1900 + (JD - 2415020.31352) / 365.242198781
+        I'm interested in using TT instead of JD, giving:
+        B = 1900 + ((TT+2451545) - 2415020.31352) / 365.242198781
+        B = 1900 + (TT + 36524.68648) / 365.242198781
+        TT = 365.242198781*(B - 1900) - 36524.68648 = -45655.741449525
+        But Astronomy_TimeFromDays() wants UT, not TT.
+        Near that date, I get a historical correction of ut-tt = 3.2 seconds.
+        That gives UT = -45655.74141261017 for the B1875 epoch,
+        or 1874-12-31T18:12:21.950Z.
+    */
+    astro_time_t time = Astronomy_TimeFromDays(-45655.74141261017);
+    constel_rot = Astronomy_Rotation_EQJ_EQD(&time);
+    if (constel_rot.status != ASTRO_SUCCESS)
+        return;
+
+    constel_epoch2000 = Astronomy_TimeFromDays(0.0);
+}
 
 /**
  * @brief
@@ -11269,8 +11314,6 @@ static const constel_boundary_t ConstelBounds[] = {
  */
 astro_constellation_t Astronomy_Constellation(double ra, double dec)
 {
-    static astro_time_t epoch2000;
-    static astro_rotation_t rot = { ASTRO_NOT_INITIALIZED };
     astro_constellation_t constel;
     astro_spherical_t s2000;
     astro_equatorial_t b1875;
@@ -11287,39 +11330,20 @@ astro_constellation_t Astronomy_Constellation(double ra, double dec)
         ra += 24.0;
 
     /* Lazy-initialize the rotation matrix for converting J2000 to B1875. */
-    if (rot.status != ASTRO_SUCCESS)
-    {
-        /*
-            Need to calculate the B1875 epoch. Based on this:
-            https://en.wikipedia.org/wiki/Epoch_(astronomy)#Besselian_years
-            B = 1900 + (JD - 2415020.31352) / 365.242198781
-            I'm interested in using TT instead of JD, giving:
-            B = 1900 + ((TT+2451545) - 2415020.31352) / 365.242198781
-            B = 1900 + (TT + 36524.68648) / 365.242198781
-            TT = 365.242198781*(B - 1900) - 36524.68648 = -45655.741449525
-            But Astronomy_TimeFromDays() wants UT, not TT.
-            Near that date, I get a historical correction of ut-tt = 3.2 seconds.
-            That gives UT = -45655.74141261017 for the B1875 epoch,
-            or 1874-12-31T18:12:21.950Z.
-        */
-        astro_time_t time = Astronomy_TimeFromDays(-45655.74141261017);
-        rot = Astronomy_Rotation_EQJ_EQD(&time);
-        if (rot.status != ASTRO_SUCCESS)
-            return ConstelErr(rot.status);
-
-        epoch2000 = Astronomy_TimeFromDays(0.0);
-    }
+    pthread_once(&constel_init_once, ConstelInit);
+    if (constel_rot.status != ASTRO_SUCCESS)
+        return ConstelErr(constel_rot.status);
 
     /* Convert coordinates from J2000 to year 1875. */
     s2000.status = ASTRO_SUCCESS;
     s2000.lon = ra * 15.0;
     s2000.lat = dec;
     s2000.dist = 1.0;
-    vec2000 = Astronomy_VectorFromSphere(s2000, epoch2000);
+    vec2000 = Astronomy_VectorFromSphere(s2000, constel_epoch2000);
     if (vec2000.status != ASTRO_SUCCESS)
         return ConstelErr(vec2000.status);
 
-    vec1875 = Astronomy_RotateVector(rot, vec2000);
+    vec1875 = Astronomy_RotateVector(constel_rot, vec2000);
     if (vec1875.status != ASTRO_SUCCESS)
         return ConstelErr(vec1875.status);
 
