@@ -91,7 +91,9 @@ extension CelestialBody {
     ) throws -> Horizon {
         let eq = try equatorial(at: time, from: observer, equatorDate: .ofDate)
         var rawTime = time.raw
-        let result = Astronomy_Horizon(&rawTime, try observer.validatedRaw(), eq.rightAscension, eq.declination, refraction.raw)
+        let result = Astronomy_Horizon(
+            &rawTime, try observer.validatedRaw(), eq.rightAscension, eq.declination, refraction.raw
+        )
         return Horizon(result)
     }
 
