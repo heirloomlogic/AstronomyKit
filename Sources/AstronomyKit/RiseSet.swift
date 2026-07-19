@@ -44,7 +44,7 @@ extension CelestialBody {
     ) throws -> AstroTime? {
         let result = Astronomy_SearchRiseSetEx(
             raw,
-            observer.raw,
+            try observer.validatedRaw(),
             direction.raw,
             startTime.raw,
             limitDays,
@@ -139,7 +139,7 @@ extension CelestialBody {
     ) throws -> AstroTime? {
         let result = Astronomy_SearchAltitude(
             raw,
-            observer.raw,
+            try observer.validatedRaw(),
             direction.raw,
             startTime.raw,
             limitDays,
@@ -197,7 +197,7 @@ extension CelestialBody {
     ) throws -> HourAngleEvent {
         let result = Astronomy_SearchHourAngleEx(
             raw,
-            observer.raw,
+            try observer.validatedRaw(),
             hourAngle,
             startTime.raw,
             direction
@@ -217,7 +217,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError` if the calculation fails.
     public func hourAngle(at time: AstroTime, from observer: Observer) throws -> Double {
         var rawTime = time.raw
-        let result = Astronomy_HourAngle(raw, &rawTime, observer.raw)
+        let result = Astronomy_HourAngle(raw, &rawTime, try observer.validatedRaw())
         if let error = AstronomyError(status: result.status) {
             throw error
         }

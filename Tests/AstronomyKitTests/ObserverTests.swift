@@ -12,6 +12,43 @@ import Testing
 
 @Suite("Observer Tests")
 struct ObserverTests {
+    // MARK: - Coordinate Validation Tests
+
+    @Suite("Coordinate Validation")
+    struct CoordinateValidation {
+        static let time = AstroTime(year: 2_025, month: 1, day: 1)
+
+        @Test("NaN latitude throws invalidParameter at calculation time")
+        func nanLatitudeThrows() {
+            let observer = Observer(latitude: .nan, longitude: 0)
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try observer.vector(at: Self.time)
+            }
+        }
+
+        @Test("Latitude beyond 90 throws invalidParameter at calculation time")
+        func outOfRangeLatitudeThrows() {
+            let observer = Observer(latitude: 91, longitude: 0)
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try observer.vector(at: Self.time)
+            }
+        }
+
+        @Test("Infinite height throws invalidParameter at calculation time")
+        func infiniteHeightThrows() {
+            let observer = Observer(latitude: 40, longitude: -74, height: .infinity)
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try CelestialBody.moon.equatorial(at: Self.time, from: observer)
+            }
+        }
+
+        @Test("Valid observer computes normally")
+        func validObserverSucceeds() throws {
+            let observer = Observer(latitude: 40.7128, longitude: -74.0060)
+            _ = try observer.vector(at: Self.time)
+        }
+    }
+
     // MARK: - Construction Tests
 
     @Suite("Construction")

@@ -11,6 +11,25 @@ import Testing
 
 @Suite("Chiron Tests")
 struct ChironTests {
+    // MARK: - Supported Range Tests
+
+    @Suite("Supported Range")
+    struct SupportedRange {
+        @Test("Years outside 1900-2150 throw badTime", arguments: [1_800, 2_200])
+        func outOfRangeThrows(year: Int) {
+            let time = AstroTime(year: year, month: 1, day: 1)
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Chiron.heliocentricPosition(at: time)
+            }
+        }
+
+        @Test("Interior years succeed", arguments: [1_950, 2_100])
+        func interiorYearsSucceed(year: Int) throws {
+            let time = AstroTime(year: year, month: 1, day: 1)
+            _ = try Chiron.heliocentricPosition(at: time)
+        }
+    }
+
     // MARK: - Basic Position Tests
 
     @Suite("Position Calculations")

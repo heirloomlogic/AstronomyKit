@@ -356,7 +356,7 @@ public enum Eclipse {
         after startTime: AstroTime,
         from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let result = Astronomy_SearchLocalSolarEclipse(startTime.raw, observer.raw)
+        let result = Astronomy_SearchLocalSolarEclipse(startTime.raw, try observer.validatedRaw())
         return try LocalSolarEclipse(result)
     }
 
@@ -371,7 +371,7 @@ public enum Eclipse {
         after eclipse: LocalSolarEclipse,
         from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let result = Astronomy_NextLocalSolarEclipse(eclipse.peak.time.raw, observer.raw)
+        let result = Astronomy_NextLocalSolarEclipse(eclipse.peak.time.raw, try observer.validatedRaw())
         return try LocalSolarEclipse(result)
     }
 

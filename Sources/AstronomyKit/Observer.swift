@@ -41,6 +41,11 @@ public struct Observer: Sendable, Equatable, Hashable {
     ///   - latitude: Geographic latitude in degrees (-90 to +90).
     ///   - longitude: Geographic longitude in degrees (-180 to +180).
     ///   - height: Height above sea level in meters. Defaults to 0.
+    ///
+    /// Coordinates are not validated here. An observer whose latitude,
+    /// longitude, or height is non-finite, or whose latitude falls outside
+    /// -90...90, throws ``AstronomyError/invalidParameter`` when used in a
+    /// calculation. (Longitude wraps, so any finite longitude is accepted.)
     public init(latitude: Double, longitude: Double, height: Double = 0) {
         self.latitude = latitude
         self.longitude = longitude
@@ -55,7 +60,22 @@ public struct Observer: Sendable, Equatable, Hashable {
 
     /// The underlying C observer structure.
     var raw: astro_observer_t {
-        Astronomy_MakeObserver(latitude, longitude, height)
+        astro_observer_t(latitude: latitude, longitude: longitude, height: height)
+    }
+
+    /// The underlying C observer structure, validating the coordinates first.
+    ///
+    /// - Throws: ``AstronomyError/invalidParameter`` if latitude, longitude, or
+    ///   height is not finite, or if latitude is outside -90...90. Longitude
+    ///   wraps in the underlying engine, so any finite longitude is accepted.
+    func validatedRaw() throws -> astro_observer_t {
+        guard
+            latitude.isFinite, longitude.isFinite, height.isFinite,
+            (-90.0...90.0).contains(latitude)
+        else {
+            throw AstronomyError.invalidParameter
+        }
+        return raw
     }
 
     /// The local gravitational acceleration in m/s².
@@ -120,7 +140,7 @@ extension Observer {
     /// - Throws: `AstronomyError` if the calculation fails.
     public func vector(at time: AstroTime, equator: EquatorDate = .j2000) throws -> Vector3D {
         var rawTime = time.raw
-        let result = Astronomy_ObserverVector(&rawTime, raw, equator.raw)
+        let result = Astronomy_ObserverVector(&rawTime, try validatedRaw(), equator.raw)
         return try Vector3D(result)
     }
 
@@ -136,7 +156,7 @@ extension Observer {
     /// - Throws: `AstronomyError` if the calculation fails.
     public func state(at time: AstroTime, equator: EquatorDate = .j2000) throws -> StateVector {
         var rawTime = time.raw
-        let result = Astronomy_ObserverState(&rawTime, raw, equator.raw)
+        let result = Astronomy_ObserverState(&rawTime, try validatedRaw(), equator.raw)
         return try StateVector(result)
     }
 

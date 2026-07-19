@@ -38,7 +38,10 @@ public struct Seasons: Sendable, Equatable {
     /// - Returns: The four seasonal events for that year.
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func forYear(_ year: Int) throws -> Seasons {
-        let result = Astronomy_Seasons(Int32(year))
+        guard let cYear = Int32(exactly: year) else {
+            throw AstronomyError.invalidParameter
+        }
+        let result = Astronomy_Seasons(cYear)
         return try Seasons(result)
     }
 

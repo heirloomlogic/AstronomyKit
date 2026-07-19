@@ -57,6 +57,18 @@ re-applied, or verified as adopted upstream.**
    `_AltitudeDiffCallCount`, and `_FindAscentMaxRecursionDepth` are C11
    `_Atomic`, since concurrent Moon and rise/set calculations increment them.
 
+4. **Constellation lazy-init `pthread_once`.** `Astronomy_Constellation` lazily
+   builds a J2000→B1875 rotation matrix on first use. The state was
+   function-local `static`s, so concurrent first calls raced. Initialization is
+   now hoisted to file scope (`constel_init_once`, `constel_epoch2000`,
+   `constel_rot`) behind a `pthread_once`.
+
+5. **Pluto compute denial-of-service guard.** `CalcPluto`'s uncached
+   `CalcPlutoOneWay` crawl for times outside the `PlutoStateTable` range costs
+   time proportional to the distance from the table, so a far-off time could
+   hang. It now returns `ASTRO_BAD_TIME` for times more than
+   `PLUTO_MAX_CRAWL_DAYS` (~100 years) beyond the table.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the

@@ -277,9 +277,14 @@ struct CelestialBodyTests {
             #expect(count == CelestialBody.allCases.count)
         }
 
-        @Test("allCases excludes the internal star slot")
-        func allCasesExcludesStarSlot() {
-            #expect(!CelestialBody.allCases.contains(.star1))
+        @Test("allCases contains every declared body")
+        func allCasesCount() {
+            #expect(CelestialBody.allCases.count == 17)
+        }
+
+        @Test("The former internal star slot is not a valid case")
+        func starSlotRemoved() {
+            #expect(CelestialBody(rawValue: 101) == nil)
         }
     }
 

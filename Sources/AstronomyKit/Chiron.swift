@@ -32,6 +32,10 @@ import Foundation
 /// numerical integration error. For typical usage within ±5 years of an epoch,
 /// error is expected to be less than 1 arcminute.
 ///
+/// Calculations are supported for years 1900 through 2150. Integration error
+/// grows with distance from the reference epochs, so times outside this range
+/// throw ``AstronomyError/badTime``.
+///
 /// ## Example
 ///
 /// ```swift
@@ -44,6 +48,14 @@ import Foundation
 /// print("Chiron position: \(position)")
 /// ```
 public enum Chiron {
+    // MARK: - Supported Range
+
+    /// The earliest time Chiron calculations support.
+    private static let earliestSupportedTime = AstroTime(year: 1_900, month: 1, day: 1)
+
+    /// The latest time Chiron calculations support.
+    private static let latestSupportedTime = AstroTime(year: 2_150, month: 1, day: 1)
+
     // MARK: - Reference Epoch Data
 
     /// Reference epochs with pre-computed state vectors from JPL Horizons.
@@ -277,7 +289,7 @@ public enum Chiron {
         var rawTime = time.raw
         let result = Astronomy_Horizon(
             &rawTime,
-            observer.raw,
+            try observer.validatedRaw(),
             eq.rightAscension,
             eq.declination,
             refraction.raw
@@ -313,6 +325,10 @@ public enum Chiron {
         /// Simulates Chiron's heliocentric state at the target time, reusing
         /// the anchored simulation when the error budget allows.
         func state(at time: AstroTime) throws -> StateVector {
+            guard time >= earliestSupportedTime, time <= latestSupportedTime else {
+                throw AstronomyError.badTime
+            }
+
             // Find the closest reference epoch.
             guard
                 let (index, epoch) = referenceEpochs.enumerated().min(by: { lhs, rhs in

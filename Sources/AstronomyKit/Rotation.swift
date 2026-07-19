@@ -103,6 +103,9 @@ extension RotationMatrix {
     /// - Returns: The rotation matrix.
     /// - Throws: `AstronomyError` if the pivot fails.
     public static func pivot(axis: Int, angle: Double) throws -> RotationMatrix {
+        guard (0...2).contains(axis) else {
+            throw AstronomyError.invalidParameter
+        }
         let result = Astronomy_Pivot(RotationMatrix.identity.raw, Int32(axis), angle)
         return try RotationMatrix(result)
     }
@@ -163,7 +166,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         var rawTime = time.raw
-        let result = Astronomy_Rotation_EQJ_HOR(&rawTime, observer.raw)
+        let result = Astronomy_Rotation_EQJ_HOR(&rawTime, try observer.validatedRaw())
         return try RotationMatrix(result)
     }
 
@@ -179,7 +182,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         var rawTime = time.raw
-        let result = Astronomy_Rotation_HOR_EQJ(&rawTime, observer.raw)
+        let result = Astronomy_Rotation_HOR_EQJ(&rawTime, try observer.validatedRaw())
         return try RotationMatrix(result)
     }
 
@@ -203,7 +206,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         var rawTime = time.raw
-        let result = Astronomy_Rotation_ECL_HOR(&rawTime, observer.raw)
+        let result = Astronomy_Rotation_ECL_HOR(&rawTime, try observer.validatedRaw())
         return try RotationMatrix(result)
     }
 
@@ -213,7 +216,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         var rawTime = time.raw
-        let result = Astronomy_Rotation_HOR_ECL(&rawTime, observer.raw)
+        let result = Astronomy_Rotation_HOR_ECL(&rawTime, try observer.validatedRaw())
         return try RotationMatrix(result)
     }
 
@@ -225,7 +228,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         var rawTime = time.raw
-        let result = Astronomy_Rotation_EQD_HOR(&rawTime, observer.raw)
+        let result = Astronomy_Rotation_EQD_HOR(&rawTime, try observer.validatedRaw())
         return try RotationMatrix(result)
     }
 
@@ -235,7 +238,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         var rawTime = time.raw
-        let result = Astronomy_Rotation_HOR_EQD(&rawTime, observer.raw)
+        let result = Astronomy_Rotation_HOR_EQD(&rawTime, try observer.validatedRaw())
         return try RotationMatrix(result)
     }
 
