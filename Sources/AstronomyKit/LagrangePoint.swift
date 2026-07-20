@@ -80,18 +80,19 @@ public struct StateVector: Sendable, Equatable {
         if let error = AstronomyError(status: raw.status) {
             throw error
         }
-        self.time = AstroTime(raw: raw.t)
+        let t = AstroTime(raw: raw.t)
+        self.time = t
         self.position = Vector3D(
             x: raw.x,
             y: raw.y,
             z: raw.z,
-            time: AstroTime(raw: raw.t)
+            time: t
         )
         self.velocity = Vector3D(
             x: raw.vx,
             y: raw.vy,
             z: raw.vz,
-            time: AstroTime(raw: raw.t)
+            time: t
         )
     }
 }

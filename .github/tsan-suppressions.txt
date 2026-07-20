@@ -7,8 +7,10 @@
 # guarded state is only ever touched while holding the corresponding Swift-side
 # Mutex. (macOS TSan models the same Mutex correctly and reports no races.)
 #
-# FixedStar shares the Astronomy Engine's single user-definable star slot
-# (BODY_STAR1). `FixedStar.calculationLock` serializes each Astronomy_DefineStar
-# write together with the calculation that reads the slot, so concurrent
-# FixedStar calculations are safe. See Sources/AstronomyKit/FixedStar.swift.
+# FixedStar maps each star to one of the Astronomy Engine's eight user-definable
+# star slots (BODY_STAR1...BODY_STAR8). `FixedStar.withSlot` holds that slot's
+# Mutex around both the Astronomy_DefineStar write and the calculation that
+# reads the slot, and the per-slot cached StarDefinition payload is only read
+# or written inside the same withLock. See Sources/AstronomyKit/FixedStar.swift.
 race:Astronomy_DefineStar
+race:*FixedStar*withSlot*
