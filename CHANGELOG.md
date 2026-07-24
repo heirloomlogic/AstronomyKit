@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ## [2.0.0+upstream-2.1.19]
 
 ### Changed
+- **Breaking:** ephemeris math is now deterministic across environments (issue #28). The transcendental functions the vendored C library relied on (`sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `atan2`, `exp`, `log10`, `pow`, `cbrt`, `hypot`) are now supplied by a vendored, `ak_`-prefixed subset of musl 1.2.5 with FP contraction pinned off, instead of the host libm. Positions are therefore bit-identical across macOS versions, Linux, and Swift toolchains, rather than differing in their last bits with each host libm. The one-time cost is a last-ULP shift in position values relative to every previous environment: downstream consumers with position-baselined tests (for example the AstrologyKit calibration corpus) must re-baseline once, after which the values are permanent across all operating systems. (`sqrt`, `fmod`, `floor`, `ceil`, and `fabs` remain the host's — they are IEEE-exact everywhere.)
 - **Breaking:** window-bounded searches now return `nil` instead of throwing when the event does not occur within the search window: `AstroSearch.find(from:to:toleranceSeconds:_:)`, `Sun.searchLongitude(_:after:limitDays:)`, and `Moon.searchPhase(_:after:limitDays:)` all return `AstroTime?`, matching the existing rise/set search convention. `AstronomyError.searchFailure` now indicates an internal solver failure.
 - **Breaking:** `equatorial(at:from:equatorDate:aberration:)` on `CelestialBody` and `FixedStar` now defaults to a geocentric observer, matching its documentation. The old default was a surface point at 0°N 0°E, which silently added topocentric parallax (up to ~1° for the Moon). Pass an explicit observer for topocentric coordinates.
 - **Breaking:** removed the deprecated `Observer.EquatorFrame` typealias; use `EquatorDate`.
@@ -30,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Observers with non-finite coordinates, or a latitude outside -90...90, now throw `AstronomyError.invalidParameter` when used in a calculation rather than producing undefined results.
 
 ### Added
+- Bit-exact `ReproducibilityTests` (run in debug and release, on macOS and Linux CI) that assert transcendental and ephemeris outputs against frozen golden constants, plus a CI `nm` guard that fails the build if the vendored C objects reference any host-libm transcendental instead of the `ak_`-prefixed musl implementations.
 - `AstronomyError` conforms to `LocalizedError`, so `localizedDescription` produces the descriptive message instead of a generic one.
 - ThreadSanitizer and release-configuration test jobs in CI, plus a Delta T thread-safety stress test.
 - CI now builds the library for each declared Apple platform (iOS, tvOS, watchOS) in addition to the macOS and Linux test jobs.

@@ -207,12 +207,12 @@ public struct FixedStar: Sendable, Hashable {
             let rotated = Astronomy_RotateVector(rotation, geo)
             let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
 
-            var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
+            var longitude = ak_atan2(rotated.y, rotated.x) * 180.0 / .pi
             if longitude < 0 {
                 longitude += 360.0
             }
 
-            let latitude = asin(rotated.z / dist) * 180.0 / .pi
+            let latitude = ak_asin(rotated.z / dist) * 180.0 / .pi
 
             return Ecliptic(latitude: latitude, longitude: longitude, distance: dist)
         }

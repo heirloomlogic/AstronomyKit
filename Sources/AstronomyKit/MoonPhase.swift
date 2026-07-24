@@ -171,7 +171,7 @@ public enum Moon {
     /// - Parameter angle: The phase angle in degrees.
     /// - Returns: The illumination fraction.
     public static func illumination(for angle: Double) -> Double {
-        (1 - cos(angle * .pi / 180)) / 2
+        (1 - ak_cos(angle * .pi / 180)) / 2
     }
 
     /// Searches for the next occurrence of a specific moon phase.
