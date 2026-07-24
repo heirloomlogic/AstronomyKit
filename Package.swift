@@ -47,7 +47,7 @@ let package = Package(
         .target(
             name: "CLibAstronomy",
             path: "Sources/CLibAstronomy",
-            sources: ["astronomy.c"],
+            sources: ["astronomy.c", "detmath"],
             publicHeadersPath: "include",
             cSettings: [
                 .headerSearchPath("include")

@@ -21,6 +21,12 @@
       - Compute denial-of-service guard (PLUTO_MAX_CRAWL_DAYS) in CalcPluto:
         times more than ~100 years outside the PlutoStateTable range return
         ASTRO_BAD_TIME instead of triggering an unbounded step-integration.
+      - Deterministic transcendentals (ak_detmath.h, included right after
+        astronomy.h): sin, cos, tan, asin, acos, atan, atan2, exp, log10,
+        pow, cbrt, and hypot are redirected to ak_-prefixed implementations
+        vendored from musl 1.2.5 in detmath/, and FP contraction is pinned
+        off for this translation unit, so ephemeris results are bit-identical
+        across host libms and architectures (issue #28).
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -73,6 +79,12 @@
 #endif
 
 #include "astronomy.h"
+
+/* AstronomyKit local patch: redirect libm transcendentals to the vendored
+   musl 1.2.5 implementations in detmath/ and pin FP contraction off for the
+   rest of this translation unit, so results are bit-identical across host
+   libms (issue #28). */
+#include "ak_detmath.h"
 
 #ifdef __FAST_MATH__
 #error Astronomy Engine does not support "fast math" optimization because it causes incorrect behavior. See: https://github.com/cosinekitty/astronomy/issues/245
