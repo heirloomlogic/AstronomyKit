@@ -1,27 +1,7 @@
 // swift-tools-version: 6.0
 
-import PackageDescription
 import Foundation
-
-// Dev-only tooling (the Persnoop swift-format linter and swift-docc-plugin) must not leak
-// into downstream consumers' dependency graphs. SwiftPM has no first-class dev-dependencies,
-// so gate it on a gitignored `.dev-tooling` sentinel, present only in this package's own
-// working clone (and created as a step in CI). `#filePath` anchors the lookup to this
-// manifest's directory, independent of the current working directory.
-let packageDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-let devSentinel = packageDir.appendingPathComponent(".dev-tooling").path
-let isDevBuild = FileManager.default.fileExists(atPath: devSentinel)
-
-let devDependencies: [Package.Dependency] = isDevBuild
-    ? [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
-        .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
-    ]
-    : []
-
-let devPlugins: [Target.PluginUsage] = isDevBuild
-    ? [.plugin(name: "Persnoop", package: "Persnicket")]
-    : []
+import PackageDescription
 
 let package = Package(
     name: "AstronomyKit",
@@ -35,14 +15,12 @@ let package = Package(
         .library(
             name: "AstronomyKit",
             targets: ["AstronomyKit"]
-        ),
+        )
     ],
-    dependencies: devDependencies,
     targets: [
         .target(
             name: "AstronomyKit",
-            dependencies: ["CLibAstronomy"],
-            plugins: devPlugins
+            dependencies: ["CLibAstronomy"]
         ),
         .target(
             name: "CLibAstronomy",
@@ -55,8 +33,39 @@ let package = Package(
         ),
         .testTarget(
             name: "AstronomyKitTests",
-            dependencies: ["AstronomyKit"],
-            plugins: devPlugins
+            dependencies: ["AstronomyKit"]
         ),
     ]
 )
+
+// MARK: - Dev-only tooling
+//
+// Dev-only tooling (the Persnoop swift-format linter and swift-docc-plugin) must not leak
+// into downstream consumers' dependency graphs. A build-tool plugin attached to a shipping
+// target follows that target into every consumer — as a forced "trust and enable" prompt in
+// Xcode, not merely a wasted checkout. SwiftPM has no first-class dev dependencies, so gate
+// them on a gitignored `.dev-tooling` sentinel, present only in this package's own working
+// clone (and created as a step in CI, before the first resolve).
+//
+// `#filePath` anchors the lookup to this manifest's directory, independent of the current
+// working directory. Attaching the plugin here, after the package is constructed, keeps the
+// target list above free of gating noise.
+//
+// Toggling the sentinel on an already-evaluated package requires `swift package purge-cache`:
+// SwiftPM caches the evaluated manifest keyed on its source text alone, so a gate that reads
+// an external file is invisible to that cache key.
+
+let packageDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+let devSentinel = packageDir.appendingPathComponent(".dev-tooling").path
+
+if FileManager.default.fileExists(atPath: devSentinel) {
+    package.dependencies += [
+        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
+        .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
+    ]
+    // CLibAstronomy is vendored C with no Swift sources, so the swift-format linter has
+    // nothing to say about it.
+    for target in package.targets where target.name != "CLibAstronomy" {
+        target.plugins = (target.plugins ?? []) + [.plugin(name: "Persnoop", package: "Persnicket")]
+    }
+}
