@@ -11,32 +11,61 @@ permissions:
 jobs:
   asan:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Install Swift
-        uses: swift-actions/setup-swift@v2
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
 
       - name: Test (Address Sanitizer)
+        # LeakSanitizer runs inside ASan and failed this job on every scheduled
+        # run: 368 bytes in 6 allocations, all inside libXCTest.so, after all
+        # 579 tests passed. The suppressions file documents that harness leak.
+        #
+        # LSAN_OPTIONS, not ASAN_OPTIONS. A `leak:` entry is a LeakSanitizer
+        # suppression; ASan's own parser accepts only interceptor_name,
+        # interceptor_via_fun, interceptor_via_lib and odr_violation, and
+        # rejects the file outright with "failed to parse suppressions".
+        env:
+          LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan-suppressions.txt
         run: swift test --sanitize=address
 
+  # macOS, not Linux. `swift test --sanitize=undefined` fails on Linux with
+  # "unsupported option '-sanitize=undefined' for target
+  # 'x86_64-unknown-linux-gnu'" — this job had never once passed. The Darwin
+  # toolchain ships the UBSan runtime, so the check runs there instead. No
+  # setup-swift step: macOS runners carry the toolchain in Xcode.
   ubsan:
-    runs-on: ubuntu-latest
+    runs-on: macos-26
+    timeout-minutes: 30
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Swift
-        uses: swift-actions/setup-swift@v2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          swift-version: "6.2"
+          persist-credentials: false
 
       - name: Test (Undefined Behavior Sanitizer)
         # UBSan reports and continues by default; halt_on_error makes the first
         # finding fail the job instead of being lost in the log.
         env:
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: swift test --sanitize=undefined
+        # The linker flags are not optional. SwiftPM instruments the C target
+        # under --sanitize=undefined but never links the UBSan runtime, so the
+        # test bundle dies at link time on undefined symbols such as
+        # ___ubsan_handle_type_mismatch_v1, referenced from CLibAstronomy.o.
+        # Link the runtime explicitly. `clang -print-runtime-dir` resolves the
+        # path without hard-coding an Xcode or clang version.
+        # Verified locally on 2026-08-19: 579 tests, 0 UBSan runtime errors.
+        run: |
+          set -euo pipefail
+          RT=$(xcrun clang -print-runtime-dir)
+          swift test --sanitize=undefined \
+            -Xlinker -L"$RT" \
+            -Xlinker -lclang_rt.ubsan_osx_dynamic \
+            -Xlinker -rpath -Xlinker "$RT"

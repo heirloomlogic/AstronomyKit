@@ -1,20 +1,34 @@
 name: Lint
 
+# PRs only — see the note in test.yml. The `push: branches: [main]` trigger
+# re-linted a commit the PR had already linted green.
 on:
   pull_request:
-  push:
-    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
+# Stays on macOS deliberately. swift-format runs on Linux too (drop `xcrun`,
+# add a setup step), but this repo is public so a Linux runner saves nothing,
+# and moving would pull swift-actions/setup-swift — still on the end-of-life
+# node20 runtime — into a workflow that currently uses no such action.
 jobs:
   swift-format-lint:
     runs-on: macos-26
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup swift-format lint
+        # `.dev-tooling` must exist before the first resolve: Package.swift gates
+        # the Persnicket dependency on that sentinel, so without it Persnoop is
+        # not in the graph and bin/ci-lint-setup is never checked out.
         run: |
           touch .dev-tooling
           swift package resolve
