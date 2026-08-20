@@ -50,4 +50,17 @@ jobs:
         # finding fail the job instead of being lost in the log.
         env:
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: swift test --sanitize=undefined
+        # The linker flags are not optional. SwiftPM instruments the C target
+        # under --sanitize=undefined but never links the UBSan runtime, so the
+        # test bundle dies at link time on undefined symbols such as
+        # ___ubsan_handle_type_mismatch_v1, referenced from CLibAstronomy.o.
+        # Link the runtime explicitly. `clang -print-runtime-dir` resolves the
+        # path without hard-coding an Xcode or clang version.
+        # Verified locally on 2026-08-19: 579 tests, 0 UBSan runtime errors.
+        run: |
+          set -euo pipefail
+          RT=$(xcrun clang -print-runtime-dir)
+          swift test --sanitize=undefined \
+            -Xlinker -L"$RT" \
+            -Xlinker -lclang_rt.ubsan_osx_dynamic \
+            -Xlinker -rpath -Xlinker "$RT"
