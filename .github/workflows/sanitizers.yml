@@ -27,8 +27,13 @@ jobs:
         # LeakSanitizer runs inside ASan and failed this job on every scheduled
         # run: 368 bytes in 6 allocations, all inside libXCTest.so, after all
         # 579 tests passed. The suppressions file documents that harness leak.
+        #
+        # LSAN_OPTIONS, not ASAN_OPTIONS. A `leak:` entry is a LeakSanitizer
+        # suppression; ASan's own parser accepts only interceptor_name,
+        # interceptor_via_fun, interceptor_via_lib and odr_violation, and
+        # rejects the file outright with "failed to parse suppressions".
         env:
-          ASAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan-suppressions.txt
+          LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan-suppressions.txt
         run: swift test --sanitize=address
 
   # macOS, not Linux. `swift test --sanitize=undefined` fails on Linux with
