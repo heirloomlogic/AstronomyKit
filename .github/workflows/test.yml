@@ -1,34 +1,47 @@
 name: Tests
 
+# PRs only. A `push: branches: [main]` trigger here re-ran every job against a
+# commit the PR had already tested green — a flat 2x for no new signal. The
+# trade: `main` has no branch protection, so nothing re-tests a merge commit;
+# a semantic conflict between two branches that each passed alone now surfaces
+# on the next PR rather than immediately. Restore the push trigger if one slips
+# through.
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - "**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
   test-macos:
-    runs-on: macos-latest
+    runs-on: macos-26
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Test
         run: swift test
 
   test-linux:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Install Swift
-        uses: swift-actions/setup-swift@v2
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
 
@@ -99,12 +112,15 @@ jobs:
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Install Swift
-        uses: swift-actions/setup-swift@v2
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
 
@@ -117,22 +133,28 @@ jobs:
         run: swift test --sanitize=thread
 
   test-release-macos:
-    runs-on: macos-latest
+    runs-on: macos-26
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Test (release)
         run: swift test -c release
 
   test-release-linux:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Install Swift
-        uses: swift-actions/setup-swift@v2
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
 
@@ -145,14 +167,17 @@ jobs:
   # rather than in a consumer's app. Build-only: running would require booting a
   # simulator, and the behavior is already covered by the macOS test jobs.
   build-apple-platforms:
-    runs-on: macos-latest
+    runs-on: macos-26
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         platform: [iOS, tvOS, watchOS]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Build (${{ matrix.platform }})
         run: |
