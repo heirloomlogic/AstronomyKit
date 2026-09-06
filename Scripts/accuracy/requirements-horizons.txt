@@ -1,0 +1,3 @@
+numpy==2.4.6
+pyerfa==2.0.1.5
+pyswisseph==2.10.3.2

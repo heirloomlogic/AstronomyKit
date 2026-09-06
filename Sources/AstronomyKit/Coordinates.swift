@@ -88,7 +88,8 @@ extension Vector3D {
         )
     }
 
-    /// Converts this equatorial J2000 vector to ecliptic coordinates.
+    /// Converts this equatorial J2000 vector to the true ecliptic and equinox
+    /// of date, using the vector's associated time.
     public func toEcliptic() throws -> Ecliptic {
         let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
         let result = Astronomy_Ecliptic(raw)

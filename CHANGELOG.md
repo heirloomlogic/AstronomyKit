@@ -4,6 +4,20 @@ All notable changes to AstronomyKit will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Version tags include an `+upstream-X.Y.Z` suffix identifying the bundled Astronomy Engine C library version.
 
+## [3.0.0-candidate.1] — Unreleased
+
+### Changed
+- **Numerical compatibility break:** restore every retained VSOP87B term for Mercury through Neptune, including Earth, and all 77 IAU2000B nutation terms. Positions and analytic state derivatives use the same complete planetary tables. Public calculation signatures remain unchanged.
+- **Time semantics:** `AstroTime(Date)`, calendar construction and `.now` interpret civil UTC using the bundled USNO 1961–2017 table, including pre-1972 linear offsets. Future dates hold the last announced leap-second offset. Earlier civil dates retain the historical UT1 proxy. Native calculations continue to use modeled UT1 and TT with the existing delta-T model.
+- `.date` converts TT back to civil UTC for every time, including native search results. Foundation cannot represent leap seconds: positive gaps map to the following transition; historical overlaps choose the later civil occurrence. Numeric Codable and `init(ut:)` continue to represent UT1; `addingDays` and `addingHours` retain UT1 arithmetic. Existing serialized times can display different civil dates after upgrading.
+- Consumers must invalidate version-dependent positions and review numerical snapshots. `AstronomyConfig.ephemerisVersion` identifies the model and civil-time table. Updated bit goldens are compatibility records, not independent accuracy references.
+
+### Fixed
+- Bound the native TT inverse so nonfinite/nonconvergent input returns an invalid time instead of looping forever.
+
+### Qualification
+- This is an unreleased candidate. See `PRODUCTION-INTEGRATION.md` for the frozen event gate, measured cost and completed/pending checks. No universal 60-second UTC accuracy claim is made for 1900–2100 or for unknown future leap seconds and Earth orientation.
+
 ## [2.0.0+upstream-2.1.19]
 
 ### Changed

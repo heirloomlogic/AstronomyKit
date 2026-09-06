@@ -1,5 +1,6 @@
 .agents/
 .build/
+.build-release/
 .context/
 .dev-tooling
 .DS_Store
@@ -9,3 +10,4 @@ Package.resolved
 xcuserdata/
 .swift-format
 .github/swift-format-matcher.json
+__pycache__/

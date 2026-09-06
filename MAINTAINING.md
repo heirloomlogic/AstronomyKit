@@ -219,9 +219,13 @@ guards the local patches:
 touch .dev-tooling          # enable dev tooling for local builds
 swift package resolve
 swift build
-swift test                  # all suites, incl. JPLValidationTests / AuditValidationTests
-swift test --sanitize=thread  # exercises the Pluto / Delta T / counter patches
+swift test --no-parallel                  # all suites, incl. JPLValidationTests / AuditValidationTests
+swift test --no-parallel --sanitize=thread  # exercises the Pluto / Delta T / counter patches
 ```
+
+Keep whole-suite runs nonparallel: the Delta T thread-safety test intentionally
+swaps the process-global model. Swift Testing's `.serialized` trait orders tests
+inside that suite only and does not isolate unrelated suites from those swaps.
 
 The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert against
 JPL Horizons and audit reference positions to roughly ±1 arcminute; a regression
@@ -240,3 +244,20 @@ Linux build if the `astronomy.c` object references any host-libm transcendental
 
 CI runs all of these jobs plus release-configuration and per-platform builds on
 every pull request.
+
+## Complete model and civil time tables
+
+The major-version accuracy repair restores the full upstream VSOP87B and
+IAU2000B data; do not reintroduce the upstream truncation when resyncing C.
+`Scripts/model-data/manifest.json` pins source revisions and hashes.
+`python3 Scripts/generate-models.py --check` verifies the committed shipping
+headers under `Sources/CLibAstronomy/generated`. The same VSOP arrays supply
+positions and derivatives. Keep the 77-term function and its fixed offsets.
+
+`python3 Scripts/generate-time-table.py --check` verifies `UTCOffsetTable.swift`
+against the archived USNO/IERS sources in `Scripts/accuracy/time-data`.
+Updating time standards requires a new snapshot, hash manifest, model identifier,
+transition tests and numerical compatibility review. Consumers never generate
+or fetch these tables. The historical/future civil conventions are documented
+on `AstroTime`; C raw times remain modeled UT1/TT. Preserve the bounded native
+TT inverse when resyncing upstream.

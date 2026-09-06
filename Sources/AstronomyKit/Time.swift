@@ -11,7 +11,10 @@ import Foundation
 /// Represents a moment in time for astronomical calculations.
 ///
 /// `AstroTime` is the fundamental time type in AstronomyKit. It stores both
-/// Universal Time (UT1/UTC) and Terrestrial Time (TT) for accurate calculations.
+/// modeled Universal Time (UT1) and Terrestrial Time (TT). Civil UTC dates use a
+/// bundled USNO offset table from 1961 onward; earlier dates use UT1 as a
+/// historical civil-time proxy. Future dates hold the last announced leap-second
+/// offset. This convention does not predict future leap seconds or measured UT1.
 ///
 /// ## Creating Times
 ///
@@ -50,7 +53,7 @@ public struct AstroTime: Sendable {
 
     /// The current time.
     public static var now: AstroTime {
-        AstroTime(raw: Astronomy_CurrentTime())
+        AstroTime(Date())
     }
 
     /// Creates a time from the underlying C structure.
@@ -59,14 +62,14 @@ public struct AstroTime: Sendable {
     }
 
     /// Seconds from the Unix epoch (1970-01-01 00:00 UTC) to the J2000
-    /// reference moment used by ``universalTime`` (2000-01-01 12:00 UTC).
+    /// civil calendar reference moment (2000-01-01 12:00 UTC).
     private static let j2000UnixOffset = 946_728_000.0
 
     /// Creates a time from a Foundation `Date`.
     ///
     /// - Parameter date: The date to convert.
     public init(_ date: Date) {
-        self.init(ut: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400)
+        self.init(civilDays: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400)
     }
 
     /// Creates a time from calendar components.
@@ -91,7 +94,7 @@ public struct AstroTime: Sendable {
         minute: Int = 0,
         second: Double = 0
     ) {
-        self.raw = Astronomy_MakeTime(
+        let calendar = Astronomy_MakeTime(
             Int32(clamping: year),
             Int32(clamping: month),
             Int32(clamping: day),
@@ -99,11 +102,21 @@ public struct AstroTime: Sendable {
             Int32(clamping: minute),
             second
         )
+        self.init(civilDays: calendar.ut)
     }
 
-    /// Creates a time from Universal Time days since J2000.
+    private init(civilDays: Double) {
+        if let tt = CivilTime.terrestrialTime(utcDays: civilDays) {
+            self.init(tt: tt)
+        } else {
+            self.init(ut: civilDays)
+        }
+    }
+
+    /// Creates a time from modeled UT1 days since J2000.
     ///
-    /// - Parameter ut: Days since noon on January 1, 2000 (UTC).
+    /// - Parameter ut: UT1 days since the UT1 calendar coordinate 2000-01-01 noon.
+    ///   Use ``init(_:)`` for a civil UTC date.
     public init(ut: Double) {
         self.raw = Astronomy_TimeFromDays(ut)
     }
@@ -114,17 +127,33 @@ public struct AstroTime: Sendable {
     /// (planetary orbits, eclipses, etc.). This initializer is the inverse of
     /// ``init(ut:)`` — it starts from a TT value and derives the corresponding UT.
     ///
+    /// If TT falls in a positive discontinuity gap in the selected Delta T model,
+    /// UT clamps to the first representable coordinate after the jump while TT
+    /// remains unchanged. At a negative jump with two solutions, fixed-point
+    /// iteration returns the first solution reached from its initial `ut = tt`
+    /// estimate. Because `Codable` stores UT, encoding a gap-clamped value and
+    /// decoding it derives TT again from the selected model.
+    ///
+    /// Nonfinite or nonconvergent input produces an invalid time with NaN fields.
     /// - Parameter tt: Terrestrial Time days since noon on January 1, 2000.
     public init(tt: Double) {
         self.raw = Astronomy_TerrestrialTime(tt)
     }
 
-    /// Converts this time to a Foundation `Date`.
+    /// Converts TT to a civil UTC `Date` using the bundled offset table.
+    ///
+    /// Positive leap seconds map to the following midnight because Foundation
+    /// cannot represent them. At overlapping historical UTC steps, the later
+    /// civil occurrence wins. Such instants cannot round-trip through `Date`.
     public var date: Date {
-        Date(timeIntervalSince1970: raw.ut * 86_400 + Self.j2000UnixOffset)
+        let civilDays = CivilTime.utcDays(terrestrialTime: raw.tt, universalTime: raw.ut)
+        return Date(timeIntervalSince1970: civilDays * 86_400 + Self.j2000UnixOffset)
     }
 
-    /// Returns a new time by adding the specified number of days.
+    /// Returns a new time by adding the specified number of UT1 days.
+    ///
+    /// This preserves native search arithmetic. It is not civil calendar
+    /// arithmetic or a count of uniform TT days across leap-second transitions.
     ///
     /// - Parameter days: The number of days to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given days.
@@ -132,7 +161,7 @@ public struct AstroTime: Sendable {
         AstroTime(raw: Astronomy_AddDays(raw, days))
     }
 
-    /// Returns a new time by adding the specified number of hours.
+    /// Returns a new time by adding the specified number of UT1 hours.
     ///
     /// - Parameter hours: The number of hours to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given hours.

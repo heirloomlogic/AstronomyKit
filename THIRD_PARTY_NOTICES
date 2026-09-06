@@ -8,6 +8,15 @@ and full project are available at https://github.com/cosinekitty/astronomy.
 
 Astronomy Engine
 
+The isolated event-accuracy investigation also retains complete VSOP87B data
+and the 77 IAU2000B nutation coefficient rows from Astronomy Engine revision
+826e26ff3a6dc03ee46658b1138fef582d96c5d9 under Scripts/model-data. Generated
+diagnostic headers are under Scripts/accuracy/generated. Exact source URLs and
+SHA-256 hashes are recorded in Scripts/model-data/manifest.json. VSOP87 is the
+planetary theory of Pierre Bretagnon and Gerard Francou (Bureau des Longitudes);
+the upstream explanatory document is retained as Scripts/model-data/vsop87.txt.
+These diagnostic data and candidate models are not part of the shipping target.
+
 MIT License
 
 Copyright (c) 2019-2025 Don Cross <cosinekitty@gmail.com>

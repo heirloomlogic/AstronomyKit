@@ -1,0 +1,3647 @@
+{
+  "schemaVersion": 1,
+  "command": "validate-manifest",
+  "status": "phase-passed",
+  "releasePassed": false,
+  "measurements": {
+    "astronomy": {
+      "status": "pending"
+    },
+    "doctrine": {
+      "status": "pending"
+    },
+    "selection": {
+      "status": "pending"
+    },
+    "explanation": {
+      "status": "pending"
+    }
+  },
+  "manifest": {
+    "familyCount": 156,
+    "caseCount": 648,
+    "developmentRecords": 540,
+    "evaluationRecords": 108,
+    "archiveSHA256": "643297443ad2be199ac8690e8a960bea94f14f017d763727961dfc453fab786b"
+  },
+  "exposedEvaluationCases": [],
+  "untouchedEstimateAvailable": true,
+  "pendingIssues": [
+    369,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378
+  ],
+  "protocolResults": {
+    "schemaResults": [
+      {
+        "caseID": "A01",
+        "errors": [],
+        "familyID": "A01",
+        "status": "passed"
+      },
+      {
+        "caseID": "A02",
+        "errors": [],
+        "familyID": "A02",
+        "status": "passed"
+      },
+      {
+        "caseID": "A03",
+        "errors": [],
+        "familyID": "A03",
+        "status": "passed"
+      },
+      {
+        "caseID": "A04",
+        "errors": [],
+        "familyID": "A04",
+        "status": "passed"
+      },
+      {
+        "caseID": "A05",
+        "errors": [],
+        "familyID": "A05",
+        "status": "passed"
+      },
+      {
+        "caseID": "A06",
+        "errors": [],
+        "familyID": "A06",
+        "status": "passed"
+      },
+      {
+        "caseID": "A07",
+        "errors": [],
+        "familyID": "A07",
+        "status": "passed"
+      },
+      {
+        "caseID": "A08",
+        "errors": [],
+        "familyID": "A08",
+        "status": "passed"
+      },
+      {
+        "caseID": "A09",
+        "errors": [],
+        "familyID": "A09",
+        "status": "passed"
+      },
+      {
+        "caseID": "A10",
+        "errors": [],
+        "familyID": "A10",
+        "status": "passed"
+      },
+      {
+        "caseID": "A11",
+        "errors": [],
+        "familyID": "A11",
+        "status": "passed"
+      },
+      {
+        "caseID": "A12",
+        "errors": [],
+        "familyID": "A12",
+        "status": "passed"
+      },
+      {
+        "caseID": "A13",
+        "errors": [],
+        "familyID": "A13",
+        "status": "passed"
+      },
+      {
+        "caseID": "A14",
+        "errors": [],
+        "familyID": "A14",
+        "status": "passed"
+      },
+      {
+        "caseID": "A15",
+        "errors": [],
+        "familyID": "A15",
+        "status": "passed"
+      },
+      {
+        "caseID": "A16",
+        "errors": [],
+        "familyID": "A16",
+        "status": "passed"
+      },
+      {
+        "caseID": "A17",
+        "errors": [],
+        "familyID": "A17",
+        "status": "passed"
+      },
+      {
+        "caseID": "A18",
+        "errors": [],
+        "familyID": "A18",
+        "status": "passed"
+      },
+      {
+        "caseID": "A19",
+        "errors": [],
+        "familyID": "A19",
+        "status": "passed"
+      },
+      {
+        "caseID": "A20",
+        "errors": [],
+        "familyID": "A20",
+        "status": "passed"
+      },
+      {
+        "caseID": "A21",
+        "errors": [],
+        "familyID": "A21",
+        "status": "passed"
+      },
+      {
+        "caseID": "A22",
+        "errors": [],
+        "familyID": "A22",
+        "status": "passed"
+      },
+      {
+        "caseID": "A23",
+        "errors": [],
+        "familyID": "A23",
+        "status": "passed"
+      },
+      {
+        "caseID": "A24",
+        "errors": [],
+        "familyID": "A24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F01-01",
+        "errors": [],
+        "familyID": "F01",
+        "status": "passed"
+      },
+      {
+        "caseID": "F02-01",
+        "errors": [],
+        "familyID": "F02",
+        "status": "passed"
+      },
+      {
+        "caseID": "F03-01",
+        "errors": [],
+        "familyID": "F03",
+        "status": "passed"
+      },
+      {
+        "caseID": "F04-01",
+        "errors": [],
+        "familyID": "F04",
+        "status": "passed"
+      },
+      {
+        "caseID": "F05-01",
+        "errors": [],
+        "familyID": "F05",
+        "status": "passed"
+      },
+      {
+        "caseID": "F06-01",
+        "errors": [],
+        "familyID": "F06",
+        "status": "passed"
+      },
+      {
+        "caseID": "F07-01",
+        "errors": [],
+        "familyID": "F07",
+        "status": "passed"
+      },
+      {
+        "caseID": "F08-01",
+        "errors": [],
+        "familyID": "F08",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-01",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-02",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-03",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-04",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-05",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-06",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-07",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-08",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-09",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-10",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-11",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-12",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-13",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-14",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-15",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-16",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-17",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-18",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-19",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F10-01",
+        "errors": [],
+        "familyID": "F10",
+        "status": "passed"
+      },
+      {
+        "caseID": "F10-02",
+        "errors": [],
+        "familyID": "F10",
+        "status": "passed"
+      },
+      {
+        "caseID": "F10-03",
+        "errors": [],
+        "familyID": "F10",
+        "status": "passed"
+      },
+      {
+        "caseID": "F11-01",
+        "errors": [],
+        "familyID": "F11",
+        "status": "passed"
+      },
+      {
+        "caseID": "F11-02",
+        "errors": [],
+        "familyID": "F11",
+        "status": "passed"
+      },
+      {
+        "caseID": "F12-01",
+        "errors": [],
+        "familyID": "F12",
+        "status": "passed"
+      },
+      {
+        "caseID": "F12-02",
+        "errors": [],
+        "familyID": "F12",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-01",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F14-01",
+        "errors": [],
+        "familyID": "F14",
+        "status": "passed"
+      },
+      {
+        "caseID": "F14-02",
+        "errors": [],
+        "familyID": "F14",
+        "status": "passed"
+      },
+      {
+        "caseID": "F14-03",
+        "errors": [],
+        "familyID": "F14",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-01",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-01",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-01",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-02",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-03",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-04",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-05",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-01",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-02",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-03",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F19-01",
+        "errors": [],
+        "familyID": "F19",
+        "status": "passed"
+      },
+      {
+        "caseID": "F19-02",
+        "errors": [],
+        "familyID": "F19",
+        "status": "passed"
+      },
+      {
+        "caseID": "F20-01",
+        "errors": [],
+        "familyID": "F20",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-01",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-02",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-01",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-02",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-01",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-02",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-03",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-04",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-05",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-01",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-02",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-03",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-01",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-02",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-03",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-04",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F26-01",
+        "errors": [],
+        "familyID": "F26",
+        "status": "passed"
+      },
+      {
+        "caseID": "F26-02",
+        "errors": [],
+        "familyID": "F26",
+        "status": "passed"
+      },
+      {
+        "caseID": "F27-01",
+        "errors": [],
+        "familyID": "F27",
+        "status": "passed"
+      },
+      {
+        "caseID": "F28-01",
+        "errors": [],
+        "familyID": "F28",
+        "status": "passed"
+      },
+      {
+        "caseID": "F28-02",
+        "errors": [],
+        "familyID": "F28",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-01",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-02",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-03",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-01",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-02",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-03",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-04",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F31-01",
+        "errors": [],
+        "familyID": "F31",
+        "status": "passed"
+      },
+      {
+        "caseID": "F32-01",
+        "errors": [],
+        "familyID": "F32",
+        "status": "passed"
+      },
+      {
+        "caseID": "F32-02",
+        "errors": [],
+        "familyID": "F32",
+        "status": "passed"
+      },
+      {
+        "caseID": "F32-03",
+        "errors": [],
+        "familyID": "F32",
+        "status": "passed"
+      },
+      {
+        "caseID": "F32-04",
+        "errors": [],
+        "familyID": "F32",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-commercialLaunch-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-commercialLaunch-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-businessAnnouncement-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-businessAnnouncement-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-authorityPetition-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-authorityPetition-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-businessClosure-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-businessClosure-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-assetPurchase-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-assetPurchase-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-assetSale-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-assetSale-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-lendMoney-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-lendMoney-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-borrowMoney-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-borrowMoney-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-speculativeInvestment-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-speculativeInvestment-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-contractAgreement-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-contractAgreement-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-contractTermination-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-contractTermination-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-courtFiling-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-courtFiling-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-courtship-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-courtship-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-wedding-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-wedding-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-reconciliation-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-reconciliation-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-propertyPurchase-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-propertyPurchase-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-propertySale-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-propertySale-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-moveHome-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-moveHome-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-buildingWork-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-buildingWork-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-contest-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-contest-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-settlement-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-settlement-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-creativeStart-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-creativeStart-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-creativeRelease-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-creativeRelease-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-creativeRevision-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-creativeRevision-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-localJourney-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-localJourney-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-distantJourney-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-distantJourney-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-returnJourney-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-returnJourney-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-treatment-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-treatment-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-surgery-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-surgery-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-rehabilitation-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-rehabilitation-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-foundationalStudy-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-foundationalStudy-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-advancedStudy-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-advancedStudy-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-examination-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-examination-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-artsStudy-positive",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-artsStudy-negative",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-01",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-02",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-01",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-02",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F36-01",
+        "errors": [],
+        "familyID": "F36",
+        "status": "passed"
+      },
+      {
+        "caseID": "F36-02",
+        "errors": [],
+        "familyID": "F36",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-01",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-02",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-01",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-01",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-02",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-03",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-04",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-05",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-06",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-01",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-02",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-01",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-02",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-03",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F42-01",
+        "errors": [],
+        "familyID": "F42",
+        "status": "passed"
+      },
+      {
+        "caseID": "F43-01",
+        "errors": [],
+        "familyID": "F43",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-01",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-01",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F46-01",
+        "errors": [],
+        "familyID": "F46",
+        "status": "passed"
+      },
+      {
+        "caseID": "F46-02",
+        "errors": [],
+        "familyID": "F46",
+        "status": "passed"
+      },
+      {
+        "caseID": "F46-03",
+        "errors": [],
+        "familyID": "F46",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-01",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-02",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-03",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-01",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F49-01",
+        "errors": [],
+        "familyID": "F49",
+        "status": "passed"
+      },
+      {
+        "caseID": "F50-01",
+        "errors": [],
+        "familyID": "F50",
+        "status": "passed"
+      },
+      {
+        "caseID": "F51-01",
+        "errors": [],
+        "familyID": "F51",
+        "status": "passed"
+      },
+      {
+        "caseID": "F52-01",
+        "errors": [],
+        "familyID": "F52",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-AB-residual-justBelow",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-AB-residual-exact",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-AB-residual-justAbove",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-AC-residual-justBelow",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-AC-residual-exact",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-AC-residual-justAbove",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-V-contact-before-ingress-justBelow",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-V-contact-before-ingress-exact",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-V-contact-before-ingress-justAbove",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-V-target-justBelow",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-V-target-exact",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-V-target-justAbove",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-V-bracket-touch-justBelow",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-V-bracket-touch-exact",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-V-bracket-touch-justAbove",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-previous-seven-day-justBelow",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-previous-seven-day-exact",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-previous-seven-day-justAbove",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-next-seven-day-justBelow",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-next-seven-day-exact",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-next-seven-day-justAbove",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-V-collector-speed-justBelow",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-V-collector-speed-exact",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-V-collector-speed-justAbove",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-V-strict-intervention-justBelow",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-V-strict-intervention-exact",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-V-strict-intervention-justAbove",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-previous-seven-day-justBelow",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-previous-seven-day-exact",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-previous-seven-day-justAbove",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-next-seven-day-justBelow",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-next-seven-day-exact",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-next-seven-day-justAbove",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-V-hostile-orb-justBelow",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-V-hostile-orb-exact",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-V-hostile-orb-justAbove",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-V-moon-contact-ingress-justBelow",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-V-moon-contact-ingress-exact",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-V-moon-contact-ingress-justAbove",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-protected-threshold-justBelow",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-protected-threshold-exact",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-protected-threshold-justAbove",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-no-strong-protected-role",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-V-opponent-capacity-justBelow",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-V-opponent-capacity-exact",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-V-opponent-capacity-justAbove",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-V-matching-modalities-justBelow",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-V-matching-modalities-exact",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-V-matching-modalities-justAbove",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-V-fortune-wrap-justBelow",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-V-fortune-wrap-exact",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-V-fortune-wrap-justAbove",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-V-catalog-star-orb-justBelow",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-V-catalog-star-orb-exact",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-V-catalog-star-orb-justAbove",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-V-eligible-return-orb-justBelow",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-V-eligible-return-orb-exact",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-V-eligible-return-orb-justAbove",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-explicitRangeSeconds-justBelow",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-explicitRangeSeconds-exact",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-explicitRangeSeconds-justAbove",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-exactUncertaintySecondsEachSide-justBelow",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-exactUncertaintySecondsEachSide-exact",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-exactUncertaintySecondsEachSide-justAbove",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F42-V-first-unequal-component-justBelow",
+        "errors": [],
+        "familyID": "F42",
+        "status": "passed"
+      },
+      {
+        "caseID": "F42-V-first-unequal-component-exact",
+        "errors": [],
+        "familyID": "F42",
+        "status": "passed"
+      },
+      {
+        "caseID": "F42-V-first-unequal-component-justAbove",
+        "errors": [],
+        "familyID": "F42",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-lower-permitted-start-justBelow",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-lower-permitted-start-exact",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-lower-permitted-start-justAbove",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-upper-permitted-start-justBelow",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-upper-permitted-start-exact",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-upper-permitted-start-justAbove",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-V-simultaneous-first-cause-justBelow",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-V-simultaneous-first-cause-exact",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-V-simultaneous-first-cause-justAbove",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-gap-start-justBelow",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-gap-start-exact",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-gap-start-justAbove",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-gap-end-justBelow",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-gap-end-exact",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-gap-end-justAbove",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-V-availability-gap-justBelow",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-V-availability-gap-exact",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-V-availability-gap-justAbove",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F52-V-correction-ceiling-justBelow",
+        "errors": [],
+        "familyID": "F52",
+        "status": "passed"
+      },
+      {
+        "caseID": "F52-V-correction-ceiling-exact",
+        "errors": [],
+        "familyID": "F52",
+        "status": "passed"
+      },
+      {
+        "caseID": "F52-V-correction-ceiling-justAbove",
+        "errors": [],
+        "familyID": "F52",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-V-signed-speed-justBelow",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-V-signed-speed-exact",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-V-signed-speed-justAbove",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-V-missing-signed-speed",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-V-uncertain-cazimi-separation",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-V-uncertain-beams-separation",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F01-V-missing-declaredDoctrine-registrySHA256",
+        "errors": [],
+        "familyID": "F01",
+        "status": "passed"
+      },
+      {
+        "caseID": "F02-V-missing-source-locator",
+        "errors": [],
+        "familyID": "F02",
+        "status": "passed"
+      },
+      {
+        "caseID": "F03-V-missing-nodes-0-id",
+        "errors": [],
+        "familyID": "F03",
+        "status": "passed"
+      },
+      {
+        "caseID": "F04-V-missing-originalExpectedRecordSHA256",
+        "errors": [],
+        "familyID": "F04",
+        "status": "passed"
+      },
+      {
+        "caseID": "F05-V-missing-requests-0-undertaking",
+        "errors": [],
+        "familyID": "F05",
+        "status": "passed"
+      },
+      {
+        "caseID": "F06-V-missing-legacyIDs-0",
+        "errors": [],
+        "familyID": "F06",
+        "status": "passed"
+      },
+      {
+        "caseID": "F07-V-missing-undertakings",
+        "errors": [],
+        "familyID": "F07",
+        "status": "passed"
+      },
+      {
+        "caseID": "F08-V-missing-undertaking",
+        "errors": [],
+        "familyID": "F08",
+        "status": "passed"
+      },
+      {
+        "caseID": "F10-V-missing-anglesDegrees",
+        "errors": [],
+        "familyID": "F10",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-missing-bodies-B-coefficients",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F14-V-missing-targetDegrees",
+        "errors": [],
+        "familyID": "F14",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-V-missing-bodies-B-coefficients",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-V-missing-coefficients",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-V-missing-eventBracketsSeconds-1",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F19-V-missing-receiver-combust",
+        "errors": [],
+        "familyID": "F19",
+        "status": "passed"
+      },
+      {
+        "caseID": "F20-V-missing-guest-combust",
+        "errors": [],
+        "familyID": "F20",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-missing-events-1-timeDays",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-V-missing-collectorEffectiveReception-B",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-V-missing-intervention-day",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-missing-previous-day",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-V-missing-nearestRight-degrees",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F28-V-missing-eligibleReception",
+        "errors": [],
+        "familyID": "F28",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-V-missing-contact-orbDegrees",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-V-missing-nextIngressDays",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F31-V-missing-sameGeometry-instant",
+        "errors": [],
+        "familyID": "F31",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-V-missing-capacity-L7",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-V-missing-moonAndDistinctTopicModalities-0",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-V-missing-natalSect",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-V-missing-natalPoint",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F42-V-missing-candidateKeys-A-primaryMinimum",
+        "errors": [],
+        "familyID": "F42",
+        "status": "passed"
+      },
+      {
+        "caseID": "F43-V-missing-substantiveKeys-0",
+        "errors": [],
+        "familyID": "F43",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-missing-validIntervalsSeconds-0-1",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-V-missing-eventsSeconds-0-at",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F46-V-missing-timingToleranceSeconds",
+        "errors": [],
+        "familyID": "F46",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-missing-timeZoneIdentifier",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-V-missing-availableIntervalsSeconds",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F49-V-missing-evidence-0-ruleID",
+        "errors": [],
+        "familyID": "F49",
+        "status": "passed"
+      },
+      {
+        "caseID": "F50-V-missing-evidence-firstBoundarySeconds",
+        "errors": [],
+        "familyID": "F50",
+        "status": "passed"
+      },
+      {
+        "caseID": "F52-V-missing-acceptanceReviews",
+        "errors": [],
+        "familyID": "F52",
+        "status": "passed"
+      },
+      {
+        "caseID": "F26-V-missing-optional-outer-contact",
+        "errors": [],
+        "familyID": "F26",
+        "status": "passed"
+      },
+      {
+        "caseID": "F27-V-missing-protected-solar-condition",
+        "errors": [],
+        "familyID": "F27",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-missing-protected-capacity",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F36-V-missing-informational-illness-capacity",
+        "errors": [],
+        "familyID": "F36",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-V-missing-star-longitude",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F51-V-missing-new-assessment-doctrine",
+        "errors": [],
+        "familyID": "F51",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-V-uncertain-solar-separation",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F10-V-uncertain-nearest-angle-distance",
+        "errors": [],
+        "familyID": "F10",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-uncertain-AB-perfection-time-days",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F14-V-uncertain-tangent-target-degrees",
+        "errors": [],
+        "familyID": "F14",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-V-uncertain-contact-minus-ingress-seconds",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-V-uncertain-middle-root-time-seconds",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-V-uncertain-next-station-seconds",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-V-uncertain-second-bracket-start-seconds",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-uncertain-next-translation-contact-days",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-V-uncertain-collector-absolute-speed",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-V-uncertain-intervention-minus-promise-seconds",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-uncertain-previous-ray-lookback-days",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-V-uncertain-right-neighbor-distance",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-V-uncertain-hostile-contact-orb",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-V-uncertain-moon-contact-minus-ingress-seconds",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-V-uncertain-unnormalized-fortune-longitude",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-V-uncertain-star-conjunction-orb",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-V-uncertain-natal-contact-orb",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-V-uncertain-eligible-return-orb",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-uncertain-usable-window-start-seconds",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-V-uncertain-moon-minus-ASC-boundary-seconds",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F46-V-uncertain-usable-window-end-seconds",
+        "errors": [],
+        "familyID": "F46",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-V-uncertain-unresolved-subinterval-end-seconds",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F19-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F19",
+        "status": "passed"
+      },
+      {
+        "caseID": "F20-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F20",
+        "status": "passed"
+      },
+      {
+        "caseID": "F27-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F27",
+        "status": "passed"
+      },
+      {
+        "caseID": "F28-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F28",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-V-uncertain-categorical-condition",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F01-V-traversal-orders",
+        "errors": [],
+        "familyID": "F01",
+        "status": "passed"
+      },
+      {
+        "caseID": "F02-V-traversal-orders",
+        "errors": [],
+        "familyID": "F02",
+        "status": "passed"
+      },
+      {
+        "caseID": "F03-V-traversal-orders",
+        "errors": [],
+        "familyID": "F03",
+        "status": "passed"
+      },
+      {
+        "caseID": "F04-V-traversal-orders",
+        "errors": [],
+        "familyID": "F04",
+        "status": "passed"
+      },
+      {
+        "caseID": "F05-V-traversal-orders",
+        "errors": [],
+        "familyID": "F05",
+        "status": "passed"
+      },
+      {
+        "caseID": "F06-V-traversal-orders",
+        "errors": [],
+        "familyID": "F06",
+        "status": "passed"
+      },
+      {
+        "caseID": "F07-V-traversal-orders",
+        "errors": [],
+        "familyID": "F07",
+        "status": "passed"
+      },
+      {
+        "caseID": "F08-V-traversal-orders",
+        "errors": [],
+        "familyID": "F08",
+        "status": "passed"
+      },
+      {
+        "caseID": "F09-V-traversal-orders",
+        "errors": [],
+        "familyID": "F09",
+        "status": "passed"
+      },
+      {
+        "caseID": "F10-V-traversal-orders",
+        "errors": [],
+        "familyID": "F10",
+        "status": "passed"
+      },
+      {
+        "caseID": "F11-V-traversal-orders",
+        "errors": [],
+        "familyID": "F11",
+        "status": "passed"
+      },
+      {
+        "caseID": "F12-V-traversal-orders",
+        "errors": [],
+        "familyID": "F12",
+        "status": "passed"
+      },
+      {
+        "caseID": "F13-V-traversal-orders",
+        "errors": [],
+        "familyID": "F13",
+        "status": "passed"
+      },
+      {
+        "caseID": "F14-V-traversal-orders",
+        "errors": [],
+        "familyID": "F14",
+        "status": "passed"
+      },
+      {
+        "caseID": "F15-V-traversal-orders",
+        "errors": [],
+        "familyID": "F15",
+        "status": "passed"
+      },
+      {
+        "caseID": "F16-V-traversal-orders",
+        "errors": [],
+        "familyID": "F16",
+        "status": "passed"
+      },
+      {
+        "caseID": "F17-V-traversal-orders",
+        "errors": [],
+        "familyID": "F17",
+        "status": "passed"
+      },
+      {
+        "caseID": "F18-V-traversal-orders",
+        "errors": [],
+        "familyID": "F18",
+        "status": "passed"
+      },
+      {
+        "caseID": "F19-V-traversal-orders",
+        "errors": [],
+        "familyID": "F19",
+        "status": "passed"
+      },
+      {
+        "caseID": "F20-V-traversal-orders",
+        "errors": [],
+        "familyID": "F20",
+        "status": "passed"
+      },
+      {
+        "caseID": "F21-V-traversal-orders",
+        "errors": [],
+        "familyID": "F21",
+        "status": "passed"
+      },
+      {
+        "caseID": "F22-V-traversal-orders",
+        "errors": [],
+        "familyID": "F22",
+        "status": "passed"
+      },
+      {
+        "caseID": "F23-V-traversal-orders",
+        "errors": [],
+        "familyID": "F23",
+        "status": "passed"
+      },
+      {
+        "caseID": "F24-V-traversal-orders",
+        "errors": [],
+        "familyID": "F24",
+        "status": "passed"
+      },
+      {
+        "caseID": "F25-V-traversal-orders",
+        "errors": [],
+        "familyID": "F25",
+        "status": "passed"
+      },
+      {
+        "caseID": "F26-V-traversal-orders",
+        "errors": [],
+        "familyID": "F26",
+        "status": "passed"
+      },
+      {
+        "caseID": "F27-V-traversal-orders",
+        "errors": [],
+        "familyID": "F27",
+        "status": "passed"
+      },
+      {
+        "caseID": "F28-V-traversal-orders",
+        "errors": [],
+        "familyID": "F28",
+        "status": "passed"
+      },
+      {
+        "caseID": "F29-V-traversal-orders",
+        "errors": [],
+        "familyID": "F29",
+        "status": "passed"
+      },
+      {
+        "caseID": "F30-V-traversal-orders",
+        "errors": [],
+        "familyID": "F30",
+        "status": "passed"
+      },
+      {
+        "caseID": "F31-V-traversal-orders",
+        "errors": [],
+        "familyID": "F31",
+        "status": "passed"
+      },
+      {
+        "caseID": "F32-V-traversal-orders",
+        "errors": [],
+        "familyID": "F32",
+        "status": "passed"
+      },
+      {
+        "caseID": "F33-V-traversal-orders",
+        "errors": [],
+        "familyID": "F33",
+        "status": "passed"
+      },
+      {
+        "caseID": "F34-V-traversal-orders",
+        "errors": [],
+        "familyID": "F34",
+        "status": "passed"
+      },
+      {
+        "caseID": "F35-V-traversal-orders",
+        "errors": [],
+        "familyID": "F35",
+        "status": "passed"
+      },
+      {
+        "caseID": "F36-V-traversal-orders",
+        "errors": [],
+        "familyID": "F36",
+        "status": "passed"
+      },
+      {
+        "caseID": "F37-V-traversal-orders",
+        "errors": [],
+        "familyID": "F37",
+        "status": "passed"
+      },
+      {
+        "caseID": "F38-V-traversal-orders",
+        "errors": [],
+        "familyID": "F38",
+        "status": "passed"
+      },
+      {
+        "caseID": "F39-V-traversal-orders",
+        "errors": [],
+        "familyID": "F39",
+        "status": "passed"
+      },
+      {
+        "caseID": "F40-V-traversal-orders",
+        "errors": [],
+        "familyID": "F40",
+        "status": "passed"
+      },
+      {
+        "caseID": "F41-V-traversal-orders",
+        "errors": [],
+        "familyID": "F41",
+        "status": "passed"
+      },
+      {
+        "caseID": "F42-V-traversal-orders",
+        "errors": [],
+        "familyID": "F42",
+        "status": "passed"
+      },
+      {
+        "caseID": "F43-V-traversal-orders",
+        "errors": [],
+        "familyID": "F43",
+        "status": "passed"
+      },
+      {
+        "caseID": "F44-V-traversal-orders",
+        "errors": [],
+        "familyID": "F44",
+        "status": "passed"
+      },
+      {
+        "caseID": "F45-V-traversal-orders",
+        "errors": [],
+        "familyID": "F45",
+        "status": "passed"
+      },
+      {
+        "caseID": "F46-V-traversal-orders",
+        "errors": [],
+        "familyID": "F46",
+        "status": "passed"
+      },
+      {
+        "caseID": "F47-V-traversal-orders",
+        "errors": [],
+        "familyID": "F47",
+        "status": "passed"
+      },
+      {
+        "caseID": "F48-V-traversal-orders",
+        "errors": [],
+        "familyID": "F48",
+        "status": "passed"
+      },
+      {
+        "caseID": "F49-V-traversal-orders",
+        "errors": [],
+        "familyID": "F49",
+        "status": "passed"
+      },
+      {
+        "caseID": "F50-V-traversal-orders",
+        "errors": [],
+        "familyID": "F50",
+        "status": "passed"
+      },
+      {
+        "caseID": "F51-V-traversal-orders",
+        "errors": [],
+        "familyID": "F51",
+        "status": "passed"
+      },
+      {
+        "caseID": "F52-V-traversal-orders",
+        "errors": [],
+        "familyID": "F52",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-commercialLaunch-c01",
+        "errors": [],
+        "familyID": "DEV-E-commercialLaunch",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-commercialLaunch-c02",
+        "errors": [],
+        "familyID": "DEV-E-commercialLaunch",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-commercialLaunch-c03",
+        "errors": [],
+        "familyID": "DEV-E-commercialLaunch",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-businessAnnouncement-c01",
+        "errors": [],
+        "familyID": "DEV-E-businessAnnouncement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-businessAnnouncement-c02",
+        "errors": [],
+        "familyID": "DEV-E-businessAnnouncement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-businessAnnouncement-c03",
+        "errors": [],
+        "familyID": "DEV-E-businessAnnouncement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-authorityPetition-c01",
+        "errors": [],
+        "familyID": "DEV-E-authorityPetition",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-authorityPetition-c02",
+        "errors": [],
+        "familyID": "DEV-E-authorityPetition",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-authorityPetition-c03",
+        "errors": [],
+        "familyID": "DEV-E-authorityPetition",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-businessClosure-c01",
+        "errors": [],
+        "familyID": "DEV-E-businessClosure",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-businessClosure-c02",
+        "errors": [],
+        "familyID": "DEV-E-businessClosure",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-businessClosure-c03",
+        "errors": [],
+        "familyID": "DEV-E-businessClosure",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-assetPurchase-c01",
+        "errors": [],
+        "familyID": "DEV-E-assetPurchase",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-assetPurchase-c02",
+        "errors": [],
+        "familyID": "DEV-E-assetPurchase",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-assetPurchase-c03",
+        "errors": [],
+        "familyID": "DEV-E-assetPurchase",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-assetSale-c01",
+        "errors": [],
+        "familyID": "DEV-E-assetSale",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-assetSale-c02",
+        "errors": [],
+        "familyID": "DEV-E-assetSale",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-assetSale-c03",
+        "errors": [],
+        "familyID": "DEV-E-assetSale",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-lendMoney-c01",
+        "errors": [],
+        "familyID": "DEV-E-lendMoney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-lendMoney-c02",
+        "errors": [],
+        "familyID": "DEV-E-lendMoney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-lendMoney-c03",
+        "errors": [],
+        "familyID": "DEV-E-lendMoney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-borrowMoney-c01",
+        "errors": [],
+        "familyID": "DEV-E-borrowMoney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-borrowMoney-c02",
+        "errors": [],
+        "familyID": "DEV-E-borrowMoney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-borrowMoney-c03",
+        "errors": [],
+        "familyID": "DEV-E-borrowMoney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-speculativeInvestment-c01",
+        "errors": [],
+        "familyID": "DEV-E-speculativeInvestment",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-speculativeInvestment-c02",
+        "errors": [],
+        "familyID": "DEV-E-speculativeInvestment",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-speculativeInvestment-c03",
+        "errors": [],
+        "familyID": "DEV-E-speculativeInvestment",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contractAgreement-c01",
+        "errors": [],
+        "familyID": "DEV-E-contractAgreement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contractAgreement-c02",
+        "errors": [],
+        "familyID": "DEV-E-contractAgreement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contractAgreement-c03",
+        "errors": [],
+        "familyID": "DEV-E-contractAgreement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contractTermination-c01",
+        "errors": [],
+        "familyID": "DEV-E-contractTermination",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contractTermination-c02",
+        "errors": [],
+        "familyID": "DEV-E-contractTermination",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contractTermination-c03",
+        "errors": [],
+        "familyID": "DEV-E-contractTermination",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-courtFiling-c01",
+        "errors": [],
+        "familyID": "DEV-E-courtFiling",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-courtFiling-c02",
+        "errors": [],
+        "familyID": "DEV-E-courtFiling",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-courtFiling-c03",
+        "errors": [],
+        "familyID": "DEV-E-courtFiling",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-courtship-c01",
+        "errors": [],
+        "familyID": "DEV-E-courtship",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-courtship-c02",
+        "errors": [],
+        "familyID": "DEV-E-courtship",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-courtship-c03",
+        "errors": [],
+        "familyID": "DEV-E-courtship",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-wedding-c01",
+        "errors": [],
+        "familyID": "DEV-E-wedding",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-wedding-c02",
+        "errors": [],
+        "familyID": "DEV-E-wedding",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-wedding-c03",
+        "errors": [],
+        "familyID": "DEV-E-wedding",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-reconciliation-c01",
+        "errors": [],
+        "familyID": "DEV-E-reconciliation",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-reconciliation-c02",
+        "errors": [],
+        "familyID": "DEV-E-reconciliation",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-reconciliation-c03",
+        "errors": [],
+        "familyID": "DEV-E-reconciliation",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-propertyPurchase-c01",
+        "errors": [],
+        "familyID": "DEV-E-propertyPurchase",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-propertyPurchase-c02",
+        "errors": [],
+        "familyID": "DEV-E-propertyPurchase",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-propertyPurchase-c03",
+        "errors": [],
+        "familyID": "DEV-E-propertyPurchase",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-propertySale-c01",
+        "errors": [],
+        "familyID": "DEV-E-propertySale",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-propertySale-c02",
+        "errors": [],
+        "familyID": "DEV-E-propertySale",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-propertySale-c03",
+        "errors": [],
+        "familyID": "DEV-E-propertySale",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-moveHome-c01",
+        "errors": [],
+        "familyID": "DEV-E-moveHome",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-moveHome-c02",
+        "errors": [],
+        "familyID": "DEV-E-moveHome",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-moveHome-c03",
+        "errors": [],
+        "familyID": "DEV-E-moveHome",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-buildingWork-c01",
+        "errors": [],
+        "familyID": "DEV-E-buildingWork",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-buildingWork-c02",
+        "errors": [],
+        "familyID": "DEV-E-buildingWork",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-buildingWork-c03",
+        "errors": [],
+        "familyID": "DEV-E-buildingWork",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contest-c01",
+        "errors": [],
+        "familyID": "DEV-E-contest",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contest-c02",
+        "errors": [],
+        "familyID": "DEV-E-contest",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-contest-c03",
+        "errors": [],
+        "familyID": "DEV-E-contest",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-settlement-c01",
+        "errors": [],
+        "familyID": "DEV-E-settlement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-settlement-c02",
+        "errors": [],
+        "familyID": "DEV-E-settlement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-settlement-c03",
+        "errors": [],
+        "familyID": "DEV-E-settlement",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeStart-c01",
+        "errors": [],
+        "familyID": "DEV-E-creativeStart",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeStart-c02",
+        "errors": [],
+        "familyID": "DEV-E-creativeStart",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeStart-c03",
+        "errors": [],
+        "familyID": "DEV-E-creativeStart",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeRelease-c01",
+        "errors": [],
+        "familyID": "DEV-E-creativeRelease",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeRelease-c02",
+        "errors": [],
+        "familyID": "DEV-E-creativeRelease",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeRelease-c03",
+        "errors": [],
+        "familyID": "DEV-E-creativeRelease",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeRevision-c01",
+        "errors": [],
+        "familyID": "DEV-E-creativeRevision",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeRevision-c02",
+        "errors": [],
+        "familyID": "DEV-E-creativeRevision",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-creativeRevision-c03",
+        "errors": [],
+        "familyID": "DEV-E-creativeRevision",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-localJourney-c01",
+        "errors": [],
+        "familyID": "DEV-E-localJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-localJourney-c02",
+        "errors": [],
+        "familyID": "DEV-E-localJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-localJourney-c03",
+        "errors": [],
+        "familyID": "DEV-E-localJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-distantJourney-c01",
+        "errors": [],
+        "familyID": "DEV-E-distantJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-distantJourney-c02",
+        "errors": [],
+        "familyID": "DEV-E-distantJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-distantJourney-c03",
+        "errors": [],
+        "familyID": "DEV-E-distantJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-returnJourney-c01",
+        "errors": [],
+        "familyID": "DEV-E-returnJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-returnJourney-c02",
+        "errors": [],
+        "familyID": "DEV-E-returnJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-returnJourney-c03",
+        "errors": [],
+        "familyID": "DEV-E-returnJourney",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-treatment-c01",
+        "errors": [],
+        "familyID": "DEV-E-treatment",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-treatment-c02",
+        "errors": [],
+        "familyID": "DEV-E-treatment",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-treatment-c03",
+        "errors": [],
+        "familyID": "DEV-E-treatment",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-surgery-c01",
+        "errors": [],
+        "familyID": "DEV-E-surgery",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-surgery-c02",
+        "errors": [],
+        "familyID": "DEV-E-surgery",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-surgery-c03",
+        "errors": [],
+        "familyID": "DEV-E-surgery",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-rehabilitation-c01",
+        "errors": [],
+        "familyID": "DEV-E-rehabilitation",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-rehabilitation-c02",
+        "errors": [],
+        "familyID": "DEV-E-rehabilitation",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-rehabilitation-c03",
+        "errors": [],
+        "familyID": "DEV-E-rehabilitation",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-foundationalStudy-c01",
+        "errors": [],
+        "familyID": "DEV-E-foundationalStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-foundationalStudy-c02",
+        "errors": [],
+        "familyID": "DEV-E-foundationalStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-foundationalStudy-c03",
+        "errors": [],
+        "familyID": "DEV-E-foundationalStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-advancedStudy-c01",
+        "errors": [],
+        "familyID": "DEV-E-advancedStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-advancedStudy-c02",
+        "errors": [],
+        "familyID": "DEV-E-advancedStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-advancedStudy-c03",
+        "errors": [],
+        "familyID": "DEV-E-advancedStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-examination-c01",
+        "errors": [],
+        "familyID": "DEV-E-examination",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-examination-c02",
+        "errors": [],
+        "familyID": "DEV-E-examination",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-examination-c03",
+        "errors": [],
+        "familyID": "DEV-E-examination",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-artsStudy-c01",
+        "errors": [],
+        "familyID": "DEV-E-artsStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-artsStudy-c02",
+        "errors": [],
+        "familyID": "DEV-E-artsStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-E-artsStudy-c03",
+        "errors": [],
+        "familyID": "DEV-E-artsStudy",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-S-01-reference",
+        "errors": [],
+        "familyID": "DEV-S-01",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-S-02-reference",
+        "errors": [],
+        "familyID": "DEV-S-02",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-S-03-reference",
+        "errors": [],
+        "familyID": "DEV-S-03",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-S-04-reference",
+        "errors": [],
+        "familyID": "DEV-S-04",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-S-05-reference",
+        "errors": [],
+        "familyID": "DEV-S-05",
+        "status": "passed"
+      },
+      {
+        "caseID": "DEV-S-06-reference",
+        "errors": [],
+        "familyID": "DEV-S-06",
+        "status": "passed"
+      }
+    ],
+    "currentContractResults": [
+      {
+        "caseID": "F01-01",
+        "errors": [],
+        "familyID": "F01",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D06"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F02-01",
+        "errors": [],
+        "familyID": "F02",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F03-01",
+        "errors": [],
+        "familyID": "F03",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F04-01",
+        "errors": [],
+        "familyID": "F04",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "development"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          },
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F52-01",
+        "errors": [],
+        "familyID": "F52",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "namedBlocker"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          },
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F52-V-correction-ceiling-justBelow",
+        "errors": [],
+        "familyID": "F52",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "oneCorrectionRemaining"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F52-V-correction-ceiling-exact",
+        "errors": [],
+        "familyID": "F52",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "namedReleaseBlocker"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F52-V-correction-ceiling-justAbove",
+        "errors": [],
+        "familyID": "F52",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "rejectReviewCeiling"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F01-V-missing-declaredDoctrine-registrySHA256",
+        "errors": [],
+        "familyID": "F01",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F02-V-missing-source-locator",
+        "errors": [],
+        "familyID": "F02",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F03-V-missing-nodes-0-id",
+        "errors": [],
+        "familyID": "F03",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F04-V-missing-originalExpectedRecordSHA256",
+        "errors": [],
+        "familyID": "F04",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F52-V-missing-acceptanceReviews",
+        "errors": [],
+        "familyID": "F52",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "invalidReviewHistory"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 1
+      },
+      {
+        "caseID": "F01-V-traversal-orders",
+        "errors": [],
+        "familyID": "F01",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D06"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 3
+      },
+      {
+        "caseID": "F02-V-traversal-orders",
+        "errors": [],
+        "familyID": "F02",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 3
+      },
+      {
+        "caseID": "F03-V-traversal-orders",
+        "errors": [],
+        "familyID": "F03",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 3
+      },
+      {
+        "caseID": "F04-V-traversal-orders",
+        "errors": [],
+        "familyID": "F04",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "development"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          },
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 3
+      },
+      {
+        "caseID": "F52-V-traversal-orders",
+        "errors": [],
+        "familyID": "F52",
+        "observedFindings": [
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "text",
+              "value": "namedBlocker"
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          },
+          {
+            "consequence": "advisory",
+            "expectedValue": {
+              "kind": "boolean",
+              "value": false
+            },
+            "roleIDs": [],
+            "ruleID": "D30"
+          }
+        ],
+        "status": "passed",
+        "traversalCount": 3
+      }
+    ]
+  }
+}

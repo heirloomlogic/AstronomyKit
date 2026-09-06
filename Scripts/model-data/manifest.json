@@ -1,0 +1,45 @@
+{
+  "upstreamRevision": "826e26ff3a6dc03ee46658b1138fef582d96c5d9",
+  "files": {
+    "VSOP87B.mer": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.mer",
+      "sha256": "cc3c03bb5ca5257983e5f311c22b5cea43da504a27f0bb8a09281c6da0f7c10f"
+    },
+    "VSOP87B.ven": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.ven",
+      "sha256": "fcff361adbdb3a9947c7e0cbe45e9ac45585987983fc891c92462e15a532e8e4"
+    },
+    "VSOP87B.ear": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.ear",
+      "sha256": "30a05a74b8bf65aeffffea7d329934b648dfbe186a06f6cce12b0d9403f896bb"
+    },
+    "VSOP87B.mar": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.mar",
+      "sha256": "1e39273409b7fac1262d2e4682856b5c8f18ea745540c77c90b0a16dba8d14cf"
+    },
+    "VSOP87B.jup": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.jup",
+      "sha256": "408b5938ab39e661940b4253579f4a7a65f206926d98bec20e46aebb06cdd159"
+    },
+    "VSOP87B.sat": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.sat",
+      "sha256": "c790102e7d698c4a2de125e3eb8e87b19c7d6ee1cc2082440ef9689633da5d6a"
+    },
+    "VSOP87B.ura": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.ura",
+      "sha256": "a71943b2a514c03ab6e6e4071a6cccc13fd42c9879910f71630df04b8fbe1066"
+    },
+    "VSOP87B.nep": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/VSOP87B.nep",
+      "sha256": "9eedbfb9d0972e9593909b2990a241bb7c684fced7ce6e4659f990528443c892"
+    },
+    "iau2000b.txt": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/model_data/iau2000b.txt",
+      "sha256": "97efae0d01d254ff6c0a470b0e39aa5258c22932f343e8934841bd97dbf03493"
+    },
+    "vsop87.txt": {
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/generate/vsop/vsop87.txt",
+      "sha256": "8e2067276413f2feffde70a4292d8b3dc70b8c0355ff5d00a7ccdf4c3af5f121"
+    }
+  }
+}

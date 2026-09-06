@@ -47,7 +47,8 @@ public enum DeltaTModel: Sendable {
     /// The Espenak-Meeus model (default).
     case espenakMeeus
 
-    /// The JPL Horizons model, for compatibility with JPL tools.
+    /// Legacy approximation of the Horizons delta-T model. This is not the
+    /// civil UTC leap-second conversion used by `AstroTime(Date)`.
     case jplHorizons
 }
 
@@ -55,6 +56,10 @@ public enum DeltaTModel: Sendable {
 
 /// Module-level configuration and utility functions.
 public enum AstronomyConfig {
+    /// Numerical model identifier for provenance and version-dependent caches.
+    /// Changes to this value require reviewing cached positions and event times.
+    public static let ephemerisVersion = "3.0.0-candidate.1+vsop87b.iau2000b.utc-c72"
+
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the Espenak-Meeus model.
     ///
