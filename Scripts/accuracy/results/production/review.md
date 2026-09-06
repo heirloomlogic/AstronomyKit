@@ -1,72 +1,65 @@
 # Production integration review
 
-Round 1 / ceiling 6. Two fresh Critics cover all four remits.
-Target: root working tree vs origin/main, including untracked shipping sources,
-generators/tests/docs; earlier archived diagnostic data are context. Paired
-AstrologyKit worktree .context/AstrologyKit-migration vs its HEAD 85f2d4.
+Review converged in **three rounds**, with no outstanding blocking or advisory
+findings. Critics were read-only by instruction; tool-enforced confinement was
+not available. Root coordinated review and resumed packaging after convergence.
 
-Task prod-core: correctness + spec/house rules for C full tables, time contract,
-Swift API, generator provenance and numerical compatibility. Requested
-Astra/high due subtle numerical/time inversion architecture. Escalations 0/1.
-Task prod-integration: state/lifecycle + error paths for entire change, plus
-correctness/spec of downstream observation integration and production gate.
-Requested Astra/high due cross-repo reference/provenance state. Escalations 0/1.
+## Scope and outcomes
 
-Confinement instruction-only: Critics read-only, no file or tracker mutations.
-Runtime model confirmation unavailable; usage unavailable. Capability retries 0.
-Initial DIFF-SIZE to be supplied by Critics, excluding generated coefficient/data
-volume separately. Existing pending long-running builds/range diagnostics are
-outside source review; their .context logs may be read. No golden instrumentation
-remains. No release or PR has been published.
+Round 1 used two fresh Critics covering correctness, specification, lifecycle
+and error paths across AstronomyKit and the paired AstrologyKit observations.
+The broad handwritten scope was 2,729 changed lines; generated coefficient and
+input-table volume was recorded separately. Review found:
 
-Round 1 complete: prod-core blocking (1), prod-integration clean.
-Merged blocker time-discontinuity: Date Unix 506140670.85679626 and
--282782416.0919621 map into 1986/1961 positive delta-T polynomial jumps;
-128-step exact inverse oscillates then returns NaN for valid civil time.
-Core scope handwritten DIFF-SIZE 662; broad integration handwritten 2729.
-For convergence compare next fix's handwritten lines against 2729.
-Generated/core input volume separately 72275 changed lines; no generated edits
-are expected in the fix. No advisory findings. No escalation/capability retry.
+- Valid 1961/1986 civil dates could fall inside a positive discontinuity in the
+  delta-T approximation and make the exact TT inverse oscillate until invalid.
+  `Sources/CLibAstronomy/astronomy.c:1033` now snapshots the selected model,
+  preserves requested TT, and bounds inversion with a documented gap policy.
+- A test incorrectly assumed every enormous finite input must be invalid,
+  although the legacy JPL model can return a coherent finite result.
+- Tests changing the global delta-T model overlapped unrelated suites.
+  `.github/workflows/test.yml:38` and the other qualification invocations use
+  `--no-parallel`; concurrent task groups inside the thread-safety tests remain.
 
-Fix task prod-fix-1 reserved: requested gpt-5.6-sol/high, escalation0/1;
-model confirmation and actual usage unavailable. Must preserve snapshots.
+The first fix was 195 lines (+171/-24). Exact gap regressions failed first with
+eight assertions; the subsequent serial debug suite passed all 590 tests.
 
-Additional round1 validation evidence: pre-fix TSan completed with no data-race
-warnings but three assertions. prod-integration rechecked its lifecycle remit:
-confirmed the finite-extreme inverse test incorrectly demands NaN under legacy
-JPL (which can converge), and global DeltaT swaps contaminate unrelated parallel
-suites. Added to same Fixer: model-independent extreme-input assertion and
---no-parallel CI/qualification; concurrent task groups within safety tests stay.
-Eclipse equality failure is harness interference, not a proven eclipse regression.
-Round count remains1. No escalation, no rejected findings yet.
+Round 2 reviewed only that fix. It found the new unconditional later-UT overlap
+claim was false at the 1900 negative jump. The second fix documents the actual
+TT-seeded first-convergence rule in C/Swift and adds
+`Tests/AstronomyKitTests/CivilTimeTests.swift:183`. It verifies both valid forward
+roots and the selected earlier root. The false later-root expectation failed
+first. This fix was 49 lines (+37/-12) and changed no executable solver code.
+The civil UTC table's later-occurrence convention remains separate.
 
-Fix1 complete: confirmed time discontinuity and harness/test contract findings;
-rejected0, reverted0. Snapshot before/after .context/accuracy/prod-fix-1.
-DIFF-SIZE195 (+171/-24), six paths, smaller than2729. Failing-first8 assertions;
-CivilTime11/11, debug590/176 including unchanged bit goldens.
-Round2 reserved prod-review-2: fresh Astra/high, all four remits limited to Fix1
-snapshot range. Highest previous tier floor Astra, escalation0/1, retries0.
-Confinement instruction-only; confirmed model and usage unavailable.
+Round 3 was a fresh review of only those 49 lines and returned clean across all
+four remits. Both fix sizes decreased. There were no rejected findings, reverts,
+escalations, capability retries, unresolved findings or advisory findings.
 
-Round2 complete BLOCKING1 category spec-gap: negative DeltaT at1900 makes
-TT-seeded inverse select earlier branch, contrary to unconditional later-UT
-documentation. ExactTT -36510.21703178009 givesUT -36510.21700051158; later
-solution -36510.216999488424 also zero residual. No other findings/advisories.
-Fix1 size195 verified; new category, no recurrence/non-convergence guard.
-Fix2 reserved same Sol/high worker; escalation0/1, retries0, no reverts.
-Scope clarify bounded deterministic TT-seeded inverse selection and test negative
-DeltaT overlap; positive UTC table's later-civil choice is a separate contract.
-Require snapshot and fix size<195. Round3 fresh Astra/high reserved afterfix.
+## Dispatch receipt
 
-Fix2 snapshotted: .context/accuracy/prod-fix-2/before -> after. Size49
-(+37/-12), four paths, smaller than195. Solver behavior unchanged;
-TT-seeded first fixedpoint solution documented, exact1900 both-roots
-regression failed first for false laterbranch expectation. Focusedtest pending.
-Round3 prod-review-3 reserved fresh Astra/high, allfourremits ONLYFix2;
-escalation0/1, retries0, instruction-only, actualmodel/usageunavailable.
+All four Critic contexts requested `gpt-6-astra` with high reasoning because of
+the numerical inverse and cross-repository state/provenance concerns. The Fixer
+requested `gpt-5.6-sol` with high reasoning. Runtime model confirmation and
+actual usage were not exposed by the harness; no cost inference is made.
+The ceiling was six rounds; review converged at round three.
 
-Round3 CLEAN, allfourremits, size49 verified, zero blockers/advisories.
-Converged in3rounds. No escalations, retries, rejected findings or reverts.
-Requested Critics Astra/high, Fixer Sol/high; confirmed model and usage unavailable.
-Final Fix2 focused12/12 pass. TSan590/176 pass before comments/test-onlyFix2,
-zero race warnings. Final release running againstFix2. Review source phase complete.
+## Final validation
+
+- Final debug and release: 591 tests in 176 suites each, including bit goldens.
+- ThreadSanitizer: 590 tests in 176 suites, no race warnings. This precedes the
+  final comments and one regression test; executable model code is unchanged.
+- Paired immutable-checkout tests: 137 tests in 12 suites.
+- Full specification validator: 13 checks; Python validators: 85 tests;
+  native diagnostic tests: 10, with no skips.
+- Final iOS, tvOS and watchOS generic builds passed, alongside macOS.
+- Immutable production gate: 36/36, maximum timing error 59.477844 seconds.
+- Final native common-TT audit: 2,462 stations and 24,120 positions; no station
+  exceeded 60 seconds (maximum 40.799618 seconds).
+- Final native JPL audit: 12 stations, maximum disagreement 8.008008 seconds.
+
+Source/object hashes and archive closure were verified. Subsequent changes
+were the exact revision pin, packaging, evidence/documentation, and one line
+wrap. No frozen reference, tolerance, or calibration letter was changed.
+Linux execution and the wider release qualification remain pending as listed
+in the production integration report. No release or tracker update was made.

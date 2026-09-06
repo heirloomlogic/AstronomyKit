@@ -1,0 +1,286 @@
+From 92e7a773d1107a08efb3404d906b0323aef2f985 Mon Sep 17 00:00:00 2001
+From: Chris Sessions <chris@livefront.com>
+Date: Sun, 6 Sep 2026 08:42:43 -0400
+Subject: [PATCH] Migrate observations to reviewed AstronomyKit accuracy
+ candidate
+
+---
+ Package.swift                                 |  4 +-
+ .../ElectionFactBuilder+Observation.swift     | 16 ++----
+ .../AstrologyKit/ElectionFactBuilder.swift    |  3 +-
+ .../AstrologyKit/GeocentricCalculations.swift | 44 +++++----------
+ .../DatedEclipticObservationTests.swift       | 47 ++++++++++++++++
+ docs/astronomy-accuracy-migration.md          | 54 +++++++++++++++++++
+ 6 files changed, 123 insertions(+), 45 deletions(-)
+ create mode 100644 Tests/AstrologyKitTests/DatedEclipticObservationTests.swift
+ create mode 100644 docs/astronomy-accuracy-migration.md
+
+diff --git a/Package.swift b/Package.swift
+index 0cbdd1f4..79ae25d4 100644
+--- a/Package.swift
++++ b/Package.swift
+@@ -3,7 +3,7 @@
+ import PackageDescription
+ import Foundation
+ 
+-// AstronomyKit is pinned to an EXACT version, not a floating range. The ephemeris
++// AstronomyKit is pinned to an EXACT revision, not a floating range. The ephemeris
+ // this dependency provides determines every planetary position we score, and the
+ // corpus letters in Tests/AstrologyKitTests/Corpus/Anchors.swift were graded blind
+ // against the charts it produces. A silent minor/patch bump drifts those charts by
+@@ -13,7 +13,7 @@ import Foundation
+ // edit a letter to absorb the drift.
+ let astronomyKit = Package.Dependency.package(
+     url: "https://github.com/heirloomlogic/AstronomyKit",
+-    exact: "2.2.0+upstream-2.1.19"
++    revision: "c68b96cb87b20a49697af133921b8ad55b7e6ad0"
+ )
+ 
+ let package = Package(
+diff --git a/Sources/AstrologyKit/ElectionFactBuilder+Observation.swift b/Sources/AstrologyKit/ElectionFactBuilder+Observation.swift
+index c3754e3d..26f5c038 100644
+--- a/Sources/AstrologyKit/ElectionFactBuilder+Observation.swift
++++ b/Sources/AstrologyKit/ElectionFactBuilder+Observation.swift
+@@ -52,7 +52,7 @@ extension ElectionFactBuilder {
+         }
+     }
+ 
+-    /// Preserves the dedicated Sun/Moon ephemeris paths and the established planetary rotation.
++    /// Preserves the dedicated Sun/Moon ephemeris paths and the true-ecliptic-of-date planetary rotation.
+     static func eclipticLongitude(of body: CelestialBody, at time: AstroTime) throws -> Double {
+         switch body {
+         case .sun: try Sun.position(at: time).longitude
+@@ -92,8 +92,8 @@ extension ElectionFactBuilder {
+         )
+     }
+ 
+-    /// Reuses each body's equatorial ephemeris result for latitude, declination and solar altitude.
+-    /// The Moon's independent ecliptic entry point remains the source of its latitude.
++    /// Dated ecliptic latitude shares the longitude path; equatorial coordinates
++    /// independently supply declination and solar altitude.
+     static func observeEquatorial(
+         at time: AstroTime,
+         observer: Observer
+@@ -103,19 +103,11 @@ extension ElectionFactBuilder {
+         var sunAltitude: Double?
+         for planet in Planet.allCases {
+             guard let body = GeocentricCalculations.celestialBody(for: planet) else { continue }
+-            if body == .moon {
+-                latitudes[planet] = try? Moon.ecliptic(at: time).latitude
+-            }
++            latitudes[planet] = try? GeocentricCalculations.eclipticLatitude(for: body, at: time)
+             guard let equatorial = try? body.equatorial(at: time, from: .geocentric, equatorDate: .ofDate) else {
+                 continue
+             }
+             declinations[planet] = equatorial.declination
+-            if body != .moon {
+-                latitudes[planet] = GeocentricCalculations.eclipticLatitude(
+-                    ofRightAscension: equatorial.rightAscension * 15,
+-                    declination: equatorial.declination
+-                )
+-            }
+             if body == .sun {
+                 let hourAngle =
+                     (time.siderealTime(longitude: observer.longitude) * 15 - equatorial.rightAscension * 15) * .pi / 180
+diff --git a/Sources/AstrologyKit/ElectionFactBuilder.swift b/Sources/AstrologyKit/ElectionFactBuilder.swift
+index 3a35638a..ffb8e01f 100644
+--- a/Sources/AstrologyKit/ElectionFactBuilder.swift
++++ b/Sources/AstrologyKit/ElectionFactBuilder.swift
+@@ -54,7 +54,8 @@ public struct ElectionFactBuilder: Sendable {
+             ascendant: abs(observer.latitude) < 90 ? angles.ascendant : nil,
+             midheaven: angles.midheaven,
+             quadrant: abs(observer.latitude) < 90 ? quadrant : nil,
+-            sunAltitude: equatorial.sunAltitude, ephemerisID: "AstronomyKit", ephemerisVersion: "2.2.0+upstream-2.1.19",
++            sunAltitude: equatorial.sunAltitude, ephemerisID: "AstronomyKit",
++            ephemerisVersion: AstronomyConfig.ephemerisVersion,
+             unavailableReason: .ephemerisUnavailable)
+     }
+ }
+diff --git a/Sources/AstrologyKit/GeocentricCalculations.swift b/Sources/AstrologyKit/GeocentricCalculations.swift
+index 32b595dc..560e0c49 100644
+--- a/Sources/AstrologyKit/GeocentricCalculations.swift
++++ b/Sources/AstrologyKit/GeocentricCalculations.swift
+@@ -25,37 +25,27 @@ public enum GeocentricCalculations {
+ 
+     /// Calculate geocentric ecliptic longitude using Tropical (of Date) coordinates.
+     ///
+-    /// This uses geocentric equatorial coordinates "of date" which accounts for
+-    /// precession since J2000. Western astrology requires Tropical coordinates
+-    /// (referenced to the vernal equinox of the current date), not J2000 Sidereal.
+-    ///
+-    /// Fetching the position is all this does; ``eclipticLongitude(ofRightAscension:declination:)``
+-    /// is the rotation.
+-    ///
+-    /// - Parameters:
+-    ///   - body: The celestial body to calculate position for.
+-    ///   - time: The time at which to calculate the position.
+-    /// - Returns: Ecliptic longitude in degrees (0-360).
+-    /// - Throws: `AstronomyError` if the calculation fails.
++    /// Longitude and latitude come from one apparent vector rotated to the true
++    /// ecliptic and equinox of date. Sun and Moon retain their dedicated ephemerides.
+     public static func eclipticLongitude(
+         for body: CelestialBody,
+         at time: AstroTime
+     ) throws -> Double {
+-        // Geocentric equatorial coordinates OF DATE (Tropical), which account for
+-        // precession since J2000 (~0.35° by 2026).
+-        let equatorial = try body.equatorial(at: time, equatorDate: .ofDate)
++        try eclipticPosition(for: body, at: time).longitude
++    }
+ 
+-        return eclipticLongitude(
+-            ofRightAscension: equatorial.rightAscension * 15.0,  // hours → degrees
+-            declination: equatorial.declination
+-        )
++    static func eclipticPosition(for body: CelestialBody, at time: AstroTime) throws -> Ecliptic {
++        switch body {
++        case .sun: try Sun.position(at: time)
++        case .moon: try Moon.ecliptic(at: time)
++        default: try body.geocentricPosition(at: time).toEcliptic()
++        }
+     }
+ 
+     /// Rotate an equatorial coordinate pair onto the ecliptic and return its longitude.
+     ///
+-    /// Both arguments are in degrees. The obliquity is held constant: it varies by
+-    /// ~0.013° per century, inside the ±1 arcminute this package targets, and a
+-    /// time-varying ε would move every longitude the calibration corpus is baselined on.
++    /// Both arguments are in degrees. This fixed-obliquity geometry helper does
++    /// not perform the dated ephemeris rotation used by production observations.
+     ///
+     /// ## Why the multiplied-out form
+     ///
+@@ -109,18 +99,12 @@ public enum GeocentricCalculations {
+ 
+     /// Geocentric ecliptic latitude, distinct from equatorial declination (D14).
+     ///
+-    /// The Moon uses its dedicated ecliptic ephemeris. Other bodies use the same
+-    /// equator-of-date frame and fixed obliquity as the established longitude rotation.
++    /// Uses the same dated vector and dedicated Sun/Moon paths as longitude.
+     public static func eclipticLatitude(
+         for body: CelestialBody,
+         at time: AstroTime
+     ) throws -> Double {
+-        if body == .moon { return try Moon.ecliptic(at: time).latitude }
+-        let equatorial = try body.equatorial(at: time, equatorDate: .ofDate)
+-        return eclipticLatitude(
+-            ofRightAscension: equatorial.rightAscension * 15,
+-            declination: equatorial.declination
+-        )
++        try eclipticPosition(for: body, at: time).latitude
+     }
+ 
+     /// Inverse obliquity rotation of an equatorial unit vector; inputs and output are degrees.
+diff --git a/Tests/AstrologyKitTests/DatedEclipticObservationTests.swift b/Tests/AstrologyKitTests/DatedEclipticObservationTests.swift
+new file mode 100644
+index 00000000..7d95ebec
+--- /dev/null
++++ b/Tests/AstrologyKitTests/DatedEclipticObservationTests.swift
+@@ -0,0 +1,47 @@
++import AstronomyKit
++import Foundation
++import Testing
++
++@testable import AstrologyKit
++
++@Suite("Dated apparent ecliptic observations")
++struct DatedEclipticObservationTests {
++    @Test("Planetary longitude and latitude share the dated vector")
++    func datedVector() throws {
++        for year in [1_900, 2_041, 2_100] {
++            let time = AstroTime(year: year, month: 2, day: 1)
++            for body in [CelestialBody.mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune, .pluto] {
++                let equatorialRotation = try RotationMatrix.equatorialJ2000ToEquatorialOfDate(at: time)
++                let vector = try body.geocentricPosition(at: time).rotated(by: equatorialRotation)
++                let rotation = try RotationMatrix.equatorialOfDateToEclipticOfDate(at: time)
++                let expected = try vector.rotated(by: rotation).toSpherical()
++                let longitude = try GeocentricCalculations.eclipticLongitude(for: body, at: time)
++                let latitude = try GeocentricCalculations.eclipticLatitude(for: body, at: time)
++                #expect(abs(longitude - expected.longitude) < 1e-10)
++                #expect(abs(latitude - expected.latitude) < 1e-10)
++            }
++        }
++    }
++
++    @Test("Fact latitudes use the shared dated observation")
++    func factLatitudes() throws {
++        let time = AstroTime(year: 2_041, month: 2, day: 1)
++        let observed = ElectionFactBuilder.observeEquatorial(at: time, observer: .geocentric)
++        for planet in Planet.allCases {
++            guard let body = GeocentricCalculations.celestialBody(for: planet) else { continue }
++            let expected = try GeocentricCalculations.eclipticLatitude(for: body, at: time)
++            #expect(observed.latitudes[planet] == expected)
++        }
++    }
++
++    @Test("Dedicated Sun and Moon observations preserve their conventions")
++    func luminaries() throws {
++        let time = AstroTime(year: 2_041, month: 2, day: 1)
++        let sun = try Sun.position(at: time)
++        let moon = try Moon.ecliptic(at: time)
++        #expect(try GeocentricCalculations.eclipticLongitude(for: .sun, at: time) == sun.longitude)
++        #expect(try GeocentricCalculations.eclipticLatitude(for: .sun, at: time) == sun.latitude)
++        #expect(try GeocentricCalculations.eclipticLongitude(for: .moon, at: time) == moon.longitude)
++        #expect(try GeocentricCalculations.eclipticLatitude(for: .moon, at: time) == moon.latitude)
++    }
++}
+diff --git a/docs/astronomy-accuracy-migration.md b/docs/astronomy-accuracy-migration.md
+new file mode 100644
+index 00000000..80cdcbae
+--- /dev/null
++++ b/docs/astronomy-accuracy-migration.md
+@@ -0,0 +1,54 @@
++# AstronomyKit accuracy migration
++
++This migration pins AstronomyKit source revision `c68b96cb87b20a49697af133921b8ad55b7e6ad0`
++(`3.0.0-candidate.1+vsop87b.iau2000b.utc-c72`). It replaces the fixed-obliquity
++planetary observation conversion with the apparent true ecliptic of date.
++Longitude and latitude now come from the same dated vector throughout shared
++chart and fact observations. The dedicated Sun/Moon paths and signed central
++difference speed width are preserved.
++
++The paired production comparison passes all 36 original events, including
++all 12 stations: maximum absolute timing difference 59.477844 seconds.
++Every bracket is at most one second and every angular/station residual meets
++its separate frozen convergence gate. References and tolerances are unchanged.
++`B369-ASTRONOMY-60S` is cleared for this reviewed candidate's local production
++comparison. This does not close #369 or certify complete event-search coverage.
++
++The AstronomyKit `PRODUCTION-INTEGRATION.md` and
++`Scripts/accuracy/results/production/` contain the event table, source/object
++hashes, model/time-table provenance, independent JPL evidence, broader common-TT
++station/position checks, review record and test logs. Review converged in three
++rounds with no outstanding findings. The broader station check covers 2,462
++ordinary Mercury–Saturn roots over 1900–2100, all within 60 seconds.
++
++## Numerical migration
++
++`Date` now has explicit civil UTC semantics; the engine computes planetary
++motion in TT and Earth rotation in modeled UT1. Future civil dates hold the last
++announced leap-second offset. This is not a universal prediction of future UTC
++or Earth orientation. `AstroTime(ut:)` and serialized numeric times remain UT1.
++
++Fact provenance reads the dependency's model identifier. Internal ephemeris
++caches are immutable values scoped to a scan, so no persistent internal cache
++needs rewriting. Consumers must invalidate stored version-dependent results
++and review their changed chart/fact snapshots. Frozen independent event records
++and corpus letters have not been changed to absorb this migration; legacy blind
++calibration and full release evaluation remain separate qualification work.
++
++## Handoff
++
++The dependency is pinned to the exact reviewed, unreleased commit above, using
++the public repository URL. Local verification resolves an immutable checkout
++through a gitignored bare Git mirror because the commit has not been published.
++That mirror is not a consumer dependency. Publish the paired commits before
++asking a clean external checkout to resolve this candidate; no tag or release
++has been published by this migration.
++
++The 137 affected calculation/fact/reference/cache tests, specification validator
++and reference-protocol/manifest checks are recorded alongside the acceptance
++report. Pending-suite reporting remains intact. #369 still owns its certified
++search core, 74-case adapter, legacy integration and complete ElectionEventTests.
++Final macOS debug/release and iOS/tvOS/watchOS builds passed. Linux execution,
++further preselected event/JPL coverage, controlled scan runtime
++and memory qualification remain release work. The initial full-model native
++benchmark is substantially slower; no coefficients were removed to reduce it.
