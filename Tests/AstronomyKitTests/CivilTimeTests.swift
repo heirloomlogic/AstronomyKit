@@ -172,7 +172,8 @@ struct CivilTimeTests {
         #expect(negative.afterTT < negative.beforeTT)
         let overlapTT = negative.afterTT + (negative.beforeTT - negative.afterTT) / 2
         let later = AstroTime(tt: overlapTT)
-        let modeledTT = later.universalTime
+        let modeledTT =
+            later.universalTime
             + AstronomyConfig.deltaTEspenakMeeus(universalTime: later.universalTime) / 86_400
         #expect(later.terrestrialTime == overlapTT)
         #expect(later.universalTime > negative.beforeUT)
@@ -194,7 +195,8 @@ struct CivilTimeTests {
         #expect(overlap.universalTime == earlierUT)
         #expect(overlap.terrestrialTime == requestedTT)
         for validUT in [earlierUT, laterUT] {
-            let modeledTT = validUT
+            let modeledTT =
+                validUT
                 + AstronomyConfig.deltaTEspenakMeeus(universalTime: validUT) / 86_400
             #expect(modeledTT == requestedTT)
         }
