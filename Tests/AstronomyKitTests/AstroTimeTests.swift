@@ -62,7 +62,7 @@ struct AstroTimeTests {
         func createFromUTDays() {
             let time = AstroTime(ut: 0)
 
-            // ut=0 corresponds to J2000 epoch: 2000-01-01 12:00:00 UTC
+            // ut=0 is UT1 noon; its civil UTC date differs by the modeled DUT1.
             let date = time.date
             let calendar = Calendar(identifier: .gregorian)
             let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: date)
@@ -70,7 +70,8 @@ struct AstroTimeTests {
             #expect(components.year == 2_000)
             #expect(components.month == 1)
             #expect(components.day == 1)
-            #expect(components.hour == 12)
+            #expect(time.universalTime == 0)
+            #expect(abs(date.timeIntervalSince1970 - 946_728_000) < 1)
         }
 
         @Test("J2000 epoch verification")
@@ -148,7 +149,8 @@ struct AstroTimeTests {
             calendar.timeZone = TimeZone(identifier: "UTC")!
             let hour = calendar.component(.hour, from: date)
 
-            #expect(hour == 9)
+            #expect(hour == 8 || hour == 9)
+            #expect(abs(earlier.date.timeIntervalSince(time.date) + 10_800) < 0.01)
         }
 
         @Test("Chain multiple operations")
@@ -222,11 +224,10 @@ struct AstroTimeTests {
 
         @Test("Date conversion matches the J2000 epoch")
         func dateMatchesJ2000() {
-            // ut == 0 is 2000-01-01 12:00 UTC, which is 946,728,000 seconds
-            // after the Unix epoch.
-            let j2000 = AstroTime(ut: 0)
-
-            #expect(j2000.date.timeIntervalSince1970 == 946_728_000)
+            let date = Date(timeIntervalSince1970: 946_728_000)
+            let j2000 = AstroTime(date)
+            #expect(j2000.date == date)
+            #expect(abs(j2000.terrestrialTime * 86_400 - 64.184) < 0.000001)
         }
     }
 

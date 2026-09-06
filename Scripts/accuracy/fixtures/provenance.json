@@ -1,0 +1,31 @@
+{
+  "repository": "heirloomlogic/AstrologyKit",
+  "revision": "85f2d440f231902581dd40726e19072c6fe832a9",
+  "sourceDirectory": "docs/evaluation/development/facts",
+  "files": {
+    "A01.json": "f08ab79d4765dc2fff120197cf61090e9bed8749a2a402f70d773416d5938277",
+    "A02.json": "dbc0aae6d1d7a8dc3bc6c8d7ca7b06dc9b6720c7ca37664beb3a91ecd2b11bed",
+    "A03.json": "03f24ff7f6b74dae26e9221fb6f6ddff1a3338e929cd5d8f601419fef435dae6",
+    "A04.json": "8c303e5946805a77942d35aeb98026ae174379a44f61c639e1c75d888ff41217",
+    "A05.json": "f447da18ca19f4d5105000564b1786dfc5920406fee8b52025f656bfa6fb6955",
+    "A06.json": "75605773f39ec1fb82727ea244527da9d6956e34ed28742fc7c2b69a6774157d",
+    "A07.json": "880b5370dc49fcb8848d67be0ebb55c6a3d771eaf9a4aab098157c10cb876fb2",
+    "A08.json": "ee29e7bebd22f85c6fbf9d502e1301759b890e0a9c8c6c866a79ea8fa8f8d1c4",
+    "A09.json": "f9b1aab115793559c58f2e0c30d3d5c3c3f4c635657a2ab0c39a25576bcc0ebc",
+    "A10.json": "aedda681373c0009bce548064c9d2cf6a793e4b7de44e470fa01dbf8103f4ddc",
+    "A11.json": "cdb73aeceb709a2dfb3d144187d1cebc0d13ab7994d4bd52642678e5ffa0a65d",
+    "A12.json": "d1d2eff81c8b060c94975c700ff5abcdb74d84c747b6ab12c2d01349485ba68d",
+    "A13.json": "4c93a799facecd4ca6a5c3c668d678cfbd5c527b87cd9d7889eec98849ba365a",
+    "A14.json": "7600c9e16eadf175887dd98d5bfb8e1474100be40c46af4e5c7918a65c9ee8f3",
+    "A15.json": "28c36f5dbbf76b4c32ab0fcd0639fc5f44aeb43aee8f20ff85c191942edeb24f",
+    "A16.json": "23a88a3bb7747c0692f7ba60e5d22e94a1e3191529a6eed7699b0f7596462b3b",
+    "A17.json": "1c47d235bfa0f5768b91407724334b0ca0d9c414758e5e7943a05a93439bb220",
+    "A18.json": "5bacd37aecf3b99aa5c4acc3d2566f3eabba9dc94f9e8399e488e7b83767e95a",
+    "A19.json": "ffacaee124910eaacc75da76b00ce05fcc4bc005948f1d7d3cc373084056efd9",
+    "A20.json": "2c46a46624ffa031d3937b7e36f5b8dae347db0bcc8ee79b164411f4ba90deea",
+    "A21.json": "f882262744f617031d6daf60c38b5b1d4fc3d10d819fa3b6e725a6b59bd2f0a8",
+    "A22.json": "6b16ca7c0cddd947bfdb3a53da8e5578ae7ac4df5adba6b40746dd755cafbefe",
+    "A23.json": "b0283693351224824300023dc58f79325606a2fface3bc559e94742d9019c1ce",
+    "A24.json": "67504048d317dc3be25e513edc481a4c0d8703117d8e89b0753390ecbf27715f"
+  }
+}

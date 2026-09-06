@@ -1,0 +1,89 @@
+{
+  "astronomyCandidateRevision": "c68b96cb87b20a49697af133921b8ad55b7e6ad0",
+  "astrologyMigrationRevision": "92e7a773d1107a08efb3404d906b0323aef2f985",
+  "blocker": "B369-ASTRONOMY-60S",
+  "localProductionStatus": "cleared for this candidate",
+  "remoteTrackerChanged": false,
+  "releasePublished": false,
+  "frozenEvents": {
+    "count": 36,
+    "baselineFailures": 13,
+    "productionFailures": 0,
+    "maxAbsoluteTimingErrorSeconds": 59.47784423828125,
+    "maxBracketSeconds": 0.0006103515625,
+    "maxAngularResidualDegrees": 8.013616792368339e-07,
+    "maxStationResidualDegreesPerDay": 1.0302869668521453e-08
+  },
+  "broadCommonTT": {
+    "stations": 2462,
+    "failuresOver60Seconds": 0,
+    "maxStationErrorSeconds": 40.799617767333984,
+    "monthlyPositions": 24120,
+    "maxReferenceWidthSpreadSeconds": 3.988037077942863
+  },
+  "jpl": {
+    "stations": 12,
+    "maxStationErrorSeconds": 8.008007961181711
+  },
+  "validation": {
+    "macOSDebug": {
+      "tests": 591,
+      "suites": 176,
+      "passed": true
+    },
+    "macOSRelease": {
+      "tests": 591,
+      "suites": 176,
+      "passed": true
+    },
+    "threadSanitizer": {
+      "tests": 590,
+      "suites": 176,
+      "passed": true,
+      "raceWarnings": 0,
+      "sourceEpoch": "Before final comments and one regression test; runtime code unchanged"
+    },
+    "pairedPinnedCheckout": {
+      "tests": 137,
+      "suites": 12,
+      "passed": true
+    },
+    "specValidator": {
+      "checks": 13,
+      "passed": true,
+      "releasePassed": false
+    },
+    "pairedPython": {
+      "tests": 85,
+      "passed": true
+    },
+    "diagnosticPython": {
+      "tests": 10,
+      "skipped": 0,
+      "passed": true
+    },
+    "appleGenericBuilds": [
+      "iOS",
+      "tvOS",
+      "watchOS"
+    ],
+    "review": {
+      "rounds": 3,
+      "blockers": 0,
+      "advisory": 0,
+      "requestedCritics": "gpt-6-astra/high",
+      "requestedFixer": "gpt-5.6-sol/high",
+      "confirmedModels": "unavailable",
+      "actualUsage": "unavailable",
+      "escalations": 0,
+      "reverts": 0
+    }
+  },
+  "remainingReleaseQualification": [
+    "Linux debug/release reproducibility and sanitizer execution",
+    "Additional preselected aspects, ingresses, solar thresholds, lunar phases and new JPL samples",
+    "Controlled production scan and station-probe throughput, peak memory and final binary size",
+    "Legacy calibration and pending election-service acceptance; issue369 remains open"
+  ],
+  "timeLimitation": "Civil UTC before1961 uses UT1 proxy; future UTC holds last announced leap offset. Common-TT population and frozen gate are not universal UTC accuracy or complete search coverage."
+}

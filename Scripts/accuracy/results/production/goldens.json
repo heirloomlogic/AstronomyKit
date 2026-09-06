@@ -1,0 +1,872 @@
+[
+  {
+    "beforeBits": "3eb11f64b7bcc6de",
+    "afterBits": "3f2e37154de905d2",
+    "before": 1.0205883133714958e-06,
+    "after": 0.00023052344382005916
+  },
+  {
+    "beforeBits": "3f0910a8f8112330",
+    "afterBits": "bf21c98f4f719b44",
+    "before": 4.7807842755326325e-05,
+    "after": -0.00013570665734904442
+  },
+  {
+    "beforeBits": "3f1bb7b4e43012e0",
+    "afterBits": "3f259c511951f286",
+    "before": 0.0001057342679332096,
+    "after": 0.00016487588860404997
+  },
+  {
+    "beforeBits": "3f642f33e11a920b",
+    "afterBits": "3f642f33ff34649c",
+    "before": 0.0024639142291837993,
+    "after": 0.002463914448196448
+  },
+  {
+    "beforeBits": "3f6447ba6ad3ca7e",
+    "afterBits": "3f6447ba2615afec",
+    "before": 0.0024756089175011478,
+    "after": 0.0024756084173329553
+  },
+  {
+    "beforeBits": "3f65f45f813767ce",
+    "afterBits": "3f65f45f8d09b34e",
+    "before": 0.0026800027205639903,
+    "after": 0.0026800028065764652
+  },
+  {
+    "beforeBits": "3f65f78191f70af7",
+    "afterBits": "3f65f7832f9f49ab",
+    "before": 0.0026814966838356563,
+    "after": 0.0026814996935879596
+  },
+  {
+    "beforeBits": "3f66201305f373d0",
+    "afterBits": "3f6620128e5d6597",
+    "before": 0.0027008410976194566,
+    "after": 0.002700840227515665
+  },
+  {
+    "beforeBits": "3f662013061677bf",
+    "afterBits": "3f6620128e807239",
+    "before": 0.002700841098614653,
+    "after": 0.0027008402285118274
+  },
+  {
+    "beforeBits": "3fa1cccbbf97a4b2",
+    "afterBits": "3fa1c6e64d1b3121",
+    "before": 0.03476559366010558,
+    "after": 0.0347206086276819
+  },
+  {
+    "beforeBits": "3fc2bec333018866",
+    "afterBits": "3fc2bec333018866",
+    "before": 0.1464466094067262,
+    "after": 0.1464466094067262
+  },
+  {
+    "beforeBits": "3fce5ea25d8700bf",
+    "afterBits": "3fce18487fb68432",
+    "before": 0.23726300780072582,
+    "after": 0.23511606441482652
+  },
+  {
+    "beforeBits": "3fcebdba820d96aa",
+    "afterBits": "3fcebd636d4e176f",
+    "before": 0.2401650557541662,
+    "after": 0.24015467488441852
+  },
+  {
+    "beforeBits": "3fd2800bffb25d77",
+    "afterBits": "3fd25d6f708b3bf8",
+    "before": 0.2890653607405151,
+    "after": 0.2869528388081899
+  },
+  {
+    "beforeBits": "3fddcd2c2d05f5e7",
+    "afterBits": "3fddd26c43f6cf94",
+    "before": 0.4656477393799307,
+    "after": 0.4659681953155481
+  },
+  {
+    "beforeBits": "3fe02c783518508d",
+    "afterBits": "3fe009eb91d0faa4",
+    "before": 0.5054284131060897,
+    "after": 0.5012109611487472
+  },
+  {
+    "beforeBits": "3fe38f6c7515793d",
+    "afterBits": "3fe38ba57dc5b81a",
+    "before": 0.6112577711863093,
+    "after": 0.6107966858378433
+  },
+  {
+    "beforeBits": "3fe419effc2f407d",
+    "afterBits": "3fe419d8c2c283c5",
+    "before": 0.628166191623691,
+    "after": 0.6281551174071117
+  },
+  {
+    "beforeBits": "3fe5e247be9df4f3",
+    "afterBits": "3fe5e242f1d3ccfb",
+    "before": 0.683872101115098,
+    "after": 0.6838698123159753
+  },
+  {
+    "beforeBits": "3fe671a2922c1add",
+    "afterBits": "3fe671b17d8a2cd5",
+    "before": 0.7013714651992263,
+    "after": 0.701378579325502
+  },
+  {
+    "beforeBits": "3fe782610a615b27",
+    "afterBits": "3fe7829233b11d74",
+    "before": 0.7346654131641558,
+    "after": 0.7346888551336819
+  },
+  {
+    "beforeBits": "3fe8975c6091923f",
+    "afterBits": "3fe89b5c5e5f3d70",
+    "before": 0.7684766660791594,
+    "after": 0.7689649432376608
+  },
+  {
+    "beforeBits": "3fe975215d80db8b",
+    "afterBits": "3fe9730b052bd768",
+    "before": 0.7955481363522819,
+    "after": 0.7952933407784544
+  },
+  {
+    "beforeBits": "3fe9aa2b857a968d",
+    "afterBits": "3fe9a9f754e22e86",
+    "before": 0.8020227057465533,
+    "after": 0.8019978196984574
+  },
+  {
+    "beforeBits": "3feabbe8ea1827f5",
+    "afterBits": "3feabbef6fa9dc8a",
+    "before": 0.8354382106929267,
+    "after": 0.835441320507827
+  },
+  {
+    "beforeBits": "3feba68cb8eecadf",
+    "afterBits": "3feba6a097fdd6e7",
+    "before": 0.8640807735412998,
+    "after": 0.8640902489266552
+  },
+  {
+    "beforeBits": "3fef7757a2932d91",
+    "afterBits": "3fef777497730894",
+    "before": 0.9833181548396387,
+    "after": 0.983331962394248
+  },
+  {
+    "beforeBits": "3fef7b72dec0c2a7",
+    "afterBits": "3fef7b71913d4c64",
+    "before": 0.9838194227832745,
+    "after": 0.9838188015659282
+  },
+  {
+    "beforeBits": "3fefe04041fda1f3",
+    "afterBits": "3fefe036bb4a178b",
+    "before": 0.9961243904954799,
+    "after": 0.9961198480602759
+  },
+  {
+    "beforeBits": "3ff02d06a8c5cde3",
+    "afterBits": "3ff0309f4b1abd5d",
+    "before": 1.0109926788980992,
+    "after": 1.0118706640021948
+  },
+  {
+    "beforeBits": "3ff040ce426a6836",
+    "afterBits": "3ff040cc00333460",
+    "before": 1.015821704326766,
+    "after": 1.0158195503056717
+  },
+  {
+    "beforeBits": "3ff040ce426a946c",
+    "afterBits": "3ff040cc00336096",
+    "before": 1.0158217043292792,
+    "after": 1.0158195503081848
+  },
+  {
+    "beforeBits": "3ff1528f5ff79feb",
+    "afterBits": "3ff152966f7742e3",
+    "before": 1.0826562641832378,
+    "after": 1.082662997640164
+  },
+  {
+    "beforeBits": "3ff2267e2ae9f816",
+    "afterBits": "3ff22686861d72a8",
+    "before": 1.134397666580758,
+    "after": 1.1344056357258214
+  },
+  {
+    "beforeBits": "3ff50147543a2c05",
+    "afterBits": "3ff505d517e93cc5",
+    "before": 1.3128121652723632,
+    "after": 1.313923924830122
+  },
+  {
+    "beforeBits": "3ff60e9eaa5b6211",
+    "afterBits": "3ff6106ffc615cad",
+    "before": 1.3785692839211416,
+    "after": 1.37901304803908
+  },
+  {
+    "beforeBits": "3ff69c1578f76f14",
+    "afterBits": "3ff69c1dad6138e3",
+    "before": 1.4131064152961175,
+    "after": 1.4131142399451668
+  },
+  {
+    "beforeBits": "3ffd8c8c0ea5ada6",
+    "afterBits": "3ffd8ca70464a0d6",
+    "before": 1.8468132564692978,
+    "after": 1.846838967476335
+  },
+  {
+    "beforeBits": "40003ba872c85491",
+    "afterBits": "40003ba04de2953c",
+    "before": 2.0291298835168807,
+    "after": 2.0291143498203876
+  },
+  {
+    "beforeBits": "40003ba872c863d8",
+    "afterBits": "40003ba04de2a484",
+    "before": 2.0291298835186176,
+    "after": 2.029114349822125
+  },
+  {
+    "beforeBits": "4000a38e155ac312",
+    "afterBits": "4000a44cf254f87f",
+    "before": 2.0798608463595736,
+    "after": 2.0802248890095707
+  },
+  {
+    "beforeBits": "4001615b61116916",
+    "afterBits": "400161028f4fafc4",
+    "before": 2.172537573188616,
+    "after": 2.172368163699476
+  },
+  {
+    "beforeBits": "400353f49eb4e65f",
+    "afterBits": "4003504ed6dee974",
+    "before": 2.41599391927302,
+    "after": 2.414212874105198
+  },
+  {
+    "beforeBits": "400767d1daf64aae",
+    "afterBits": "400767824859b8be",
+    "before": 2.9256932360088603,
+    "after": 2.9255414631253123
+  },
+  {
+    "beforeBits": "40087828bb1837cd",
+    "afterBits": "400878311bb99d5a",
+    "before": 3.05867143790872,
+    "after": 3.0586874166507814
+  },
+  {
+    "beforeBits": "400a88d0b389ebd9",
+    "afterBits": "400a8967f90b4bbc",
+    "before": 3.3168043161835894,
+    "after": 3.3170928436825005
+  },
+  {
+    "beforeBits": "400ddfbd62fc7b33",
+    "afterBits": "400dde3fd9e02ea5",
+    "before": 3.7342479451466715,
+    "after": 3.7335202237644176
+  },
+  {
+    "beforeBits": "401164a1d53ade7e",
+    "afterBits": "401161abb760a14a",
+    "before": 4.348273593633733,
+    "after": 4.345381608269529
+  },
+  {
+    "beforeBits": "4011fbe3fcda64cc",
+    "afterBits": "4011fc1fbddec7e9",
+    "before": 4.495986891584106,
+    "after": 4.496214834902255
+  },
+  {
+    "beforeBits": "401273c854a33ab3",
+    "afterBits": "401273af215f00ed",
+    "before": 4.613068888151861,
+    "after": 4.612972756789742
+  },
+  {
+    "beforeBits": "40138a2f3c5693de",
+    "afterBits": "40138a1da21252ca",
+    "before": 4.884945814880636,
+    "after": 4.8848786662753785
+  },
+  {
+    "beforeBits": "40144e6e9c80f8ab",
+    "afterBits": "40144e712596ec73",
+    "before": 5.076593823787486,
+    "after": 5.076603495918891
+  },
+  {
+    "beforeBits": "4014eceb5c98901b",
+    "afterBits": "4014eceb4be9f652",
+    "before": 5.231366583644582,
+    "after": 5.231366335062903
+  },
+  {
+    "beforeBits": "40192ff8e3fa69b3",
+    "afterBits": "40192fdd02f76f19",
+    "before": 6.2968478795614145,
+    "after": 6.296741529800578
+  },
+  {
+    "beforeBits": "40192ff8e3fa74bb",
+    "afterBits": "40192fdd02f77a21",
+    "before": 6.296847879563923,
+    "after": 6.296741529803087
+  },
+  {
+    "beforeBits": "402065cfd2e92e86",
+    "afterBits": "402065d156d78f5a",
+    "before": 8.198851195301597,
+    "after": 8.19886275655124
+  },
+  {
+    "beforeBits": "4020e8a40071f1bf",
+    "afterBits": "4020e89f552f16b4",
+    "before": 8.45437623396799,
+    "after": 8.454340612409716
+  },
+  {
+    "beforeBits": "4020f87962e29f42",
+    "afterBits": "4020f87f7a111824",
+    "before": 8.48530110374816,
+    "after": 8.485347570978838
+  },
+  {
+    "beforeBits": "40214a107aa4aa07",
+    "afterBits": "40214a2c867a47af",
+    "before": 8.644656975365264,
+    "after": 8.644870951105842
+  },
+  {
+    "beforeBits": "40223d36e1f3b520",
+    "afterBits": "40223d367806f729",
+    "before": 9.119559346198514,
+    "after": 9.119556189394261
+  },
+  {
+    "beforeBits": "4025641953f117b5",
+    "afterBits": "402563fb9111e429",
+    "before": 10.695505736522913,
+    "after": 10.695278676446906
+  },
+  {
+    "beforeBits": "4025b57fdb5b9d2b",
+    "afterBits": "4025b5804abb32fa",
+    "before": 10.854491095479338,
+    "after": 10.854494414664703
+  },
+  {
+    "beforeBits": "402d7b26da6ed84a",
+    "afterBits": "402d7c7fbd4a63e1",
+    "before": 14.74053080180251,
+    "after": 14.743162074404554
+  },
+  {
+    "beforeBits": "402f6a0a985a594e",
+    "afterBits": "402f6a0293e23bd7",
+    "before": 15.707112084416305,
+    "after": 15.707050916067528
+  },
+  {
+    "beforeBits": "402f721c47ba30c6",
+    "afterBits": "402f721744775a07",
+    "before": 15.722872010687194,
+    "after": 15.722833766526504
+  },
+  {
+    "beforeBits": "4031acb69ae9003d",
+    "afterBits": "4031acb61b576d3a",
+    "before": 17.674661332974427,
+    "after": 17.67465372929039
+  },
+  {
+    "beforeBits": "4032282813168d46",
+    "afterBits": "40322813491a1b4d",
+    "before": 18.156861489301512,
+    "after": 18.156544274209683
+  },
+  {
+    "beforeBits": "40323063ee2dce7d",
+    "afterBits": "40323074f62c4aa5",
+    "before": 18.189024816687823,
+    "after": 18.189284692586302
+  },
+  {
+    "beforeBits": "403244d1d88725fc",
+    "afterBits": "403244d1959cc71d",
+    "before": 18.268826992984017,
+    "after": 18.268823004508807
+  },
+  {
+    "beforeBits": "40338298077caf5e",
+    "afterBits": "403382a2fb08fd07",
+    "before": 19.51013228220051,
+    "after": 19.510299386686736
+  },
+  {
+    "beforeBits": "4033fb81150bc169",
+    "afterBits": "4033fb7264fc81e7",
+    "before": 19.982438388223645,
+    "after": 19.98221427120907
+  },
+  {
+    "beforeBits": "4033ffa65efe67dc",
+    "afterBits": "4033ffb407f2aae3",
+    "before": 19.998632371054427,
+    "after": 19.9988408057642
+  },
+  {
+    "beforeBits": "4034b894640f3c06",
+    "afterBits": "4034b8951b2010be",
+    "before": 20.721014264792778,
+    "after": 20.72102517636153
+  },
+  {
+    "beforeBits": "4036cfb227995175",
+    "afterBits": "4036cfccced741b1",
+    "before": 22.811312174731444,
+    "after": 22.811718871643908
+  },
+  {
+    "beforeBits": "40393bf7806af66f",
+    "afterBits": "40393bb1446fe662",
+    "before": 25.234245325197147,
+    "after": 25.23317363483364
+  },
+  {
+    "beforeBits": "403cfd6363875b3c",
+    "afterBits": "403cfd56729ee71e",
+    "before": 28.989797802492134,
+    "after": 28.98960033778632
+  },
+  {
+    "beforeBits": "403d4684c8a6a007",
+    "afterBits": "403d4685050d75e2",
+    "before": 29.275463619880636,
+    "after": 29.27546722010255
+  },
+  {
+    "beforeBits": "403d69418a4c6e56",
+    "afterBits": "403d6913d381de23",
+    "before": 29.41115631452552,
+    "after": 29.41045877380942
+  },
+  {
+    "beforeBits": "403e239be7bafb9d",
+    "afterBits": "403e2392fbe00a90",
+    "before": 30.13909767451297,
+    "after": 30.138961546132634
+  },
+  {
+    "beforeBits": "403ee4e500e4efad",
+    "afterBits": "403ee4e4bfb003b2",
+    "before": 30.894119315998683,
+    "after": 30.894115429374956
+  },
+  {
+    "beforeBits": "403f050cb0ec1942",
+    "afterBits": "403f05130a07080b",
+    "before": 31.019724900857234,
+    "after": 31.019821764675765
+  },
+  {
+    "beforeBits": "403f11e03b56ddce",
+    "afterBits": "403f11e0fcfdfdea",
+    "before": 31.069827755649207,
+    "after": 31.06983929825757
+  },
+  {
+    "beforeBits": "404146a0549f9ffb",
+    "afterBits": "404146a0753ad328",
+    "before": 34.55176790041147,
+    "after": 34.55177178737932
+  },
+  {
+    "beforeBits": "404434025f934094",
+    "afterBits": "404433f3338200ec",
+    "before": 40.40632242860843,
+    "after": 40.405859411695786
+  },
+  {
+    "beforeBits": "4044fe5608c94d51",
+    "afterBits": "4044fe55caf2ec61",
+    "before": 41.98700055913162,
+    "after": 41.98699318753712
+  },
+  {
+    "beforeBits": "4046914f6d221716",
+    "afterBits": "404691563aa5cdab",
+    "before": 45.13523639835891,
+    "after": 45.135444003065764
+  },
+  {
+    "beforeBits": "4049ebad3ce736b3",
+    "afterBits": "4049ebaff82cf0bd",
+    "before": 51.84122430124025,
+    "after": 51.84130766100268
+  },
+  {
+    "beforeBits": "404c0ef8754dbf82",
+    "afterBits": "404c0f1fbc4f35fd",
+    "before": 56.11695734306615,
+    "after": 56.118155993153756
+  },
+  {
+    "beforeBits": "40502e8cc473861e",
+    "afterBits": "40502e8b17419316",
+    "before": 64.72734175950652,
+    "after": 64.72723943141713
+  },
+  {
+    "beforeBits": "405367fd1bbf2008",
+    "afterBits": "405367fff62659fb",
+    "before": 77.62482350983203,
+    "after": 77.62499765153181
+  },
+  {
+    "beforeBits": "405a05b4e27beb90",
+    "afterBits": "405a05b4e327e577",
+    "before": 104.08916532613353,
+    "after": 104.08916548629882
+  },
+  {
+    "beforeBits": "405a94515567bbb4",
+    "afterBits": "405a94436ef93167",
+    "before": 106.31746420984456,
+    "after": 106.3166158135915
+  },
+  {
+    "beforeBits": "405e49456e8637c6",
+    "afterBits": "405e4948df049697",
+    "before": 121.14486277682508,
+    "after": 121.14507270286627
+  },
+  {
+    "beforeBits": "405f4c2340dcd12a",
+    "afterBits": "405f4c2d1425e33c",
+    "before": 125.18965169490971,
+    "after": 125.19025138568844
+  },
+  {
+    "beforeBits": "406275cee74c433c",
+    "afterBits": "406275ce91d323b6",
+    "before": 147.68150677580877,
+    "after": 147.6814660190409
+  },
+  {
+    "beforeBits": "40630888e467d1ec",
+    "afterBits": "40630889777386db",
+    "before": 152.2667104747519,
+    "after": 152.26678059161972
+  },
+  {
+    "beforeBits": "40637bbc442399e6",
+    "afterBits": "40637bb7ca02232f",
+    "before": 155.8667317099891,
+    "after": 155.86618519227474
+  },
+  {
+    "beforeBits": "4064b3c8da51a53c",
+    "afterBits": "4064b3cbdb8b584f",
+    "before": 165.61826816507698,
+    "after": 165.61863496032535
+  },
+  {
+    "beforeBits": "4065a484fef2f92f",
+    "afterBits": "4065a4931c947233",
+    "before": 173.14123485046136,
+    "after": 173.14295796388032
+  },
+  {
+    "beforeBits": "4065f01e4d5d9253",
+    "afterBits": "4065f016207256cd",
+    "before": 175.50369900012683,
+    "after": 175.50270101863717
+  },
+  {
+    "beforeBits": "40691ecdb365de2d",
+    "afterBits": "40691ecdb20a686b",
+    "before": 200.96260995765752,
+    "after": 200.96260931046285
+  },
+  {
+    "beforeBits": "406b29636c0ae3a1",
+    "afterBits": "406b29640deb8e71",
+    "before": 217.29338647963326,
+    "after": 217.29346366889106
+  },
+  {
+    "beforeBits": "406bdaddd13fbd53",
+    "afterBits": "406bdad82db0b9fa",
+    "before": 222.83957731675272,
+    "after": 222.83888897435082
+  },
+  {
+    "beforeBits": "406d6c6b274db29d",
+    "afterBits": "406d6c77268c30e0",
+    "before": 235.38808026480993,
+    "after": 235.38954474812545
+  },
+  {
+    "beforeBits": "406dee459c532e36",
+    "afterBits": "406dee3e9b8c53ac",
+    "before": 239.44599739309496,
+    "after": 239.44514253051364
+  },
+  {
+    "beforeBits": "406e1ebf54ef9e58",
+    "afterBits": "406e1ec3df688186",
+    "before": 240.96085593033308,
+    "after": 240.96141024028128
+  },
+  {
+    "beforeBits": "406f6dfcf3cade92",
+    "afterBits": "406f6dfd54e83564",
+    "before": 251.43712796805318,
+    "after": 251.43717427590593
+  },
+  {
+    "beforeBits": "406f70044a31b064",
+    "afterBits": "406f700908706a6d",
+    "before": 251.50052365975273,
+    "after": 251.50110265690037
+  },
+  {
+    "beforeBits": "40706aac9989ecd6",
+    "afterBits": "40706abc2635daa2",
+    "before": 262.6671386134816,
+    "after": 262.67093487774594
+  },
+  {
+    "beforeBits": "4070d8c7d92e09b2",
+    "afterBits": "4070d8c59ec4ed43",
+    "before": 269.5487911032061,
+    "after": 269.5482471172765
+  },
+  {
+    "beforeBits": "4070f1c870f92086",
+    "afterBits": "4070f1c9fbdb1cec",
+    "before": 271.111435864594,
+    "after": 271.11181245413786
+  },
+  {
+    "beforeBits": "40717dbe9d61ac65",
+    "afterBits": "40717dbf551b8fe2",
+    "before": 279.8590368094795,
+    "after": 279.8592120243685
+  },
+  {
+    "beforeBits": "4072f2d7cb6a0627",
+    "afterBits": "4072f2ce8d20ce3d",
+    "before": 303.17768422523153,
+    "after": 303.17542755903906
+  },
+  {
+    "beforeBits": "407305cb6c2d5b3f",
+    "afterBits": "407305cb6a2e93d9",
+    "before": 304.36216371266704,
+    "after": 304.36216180986736
+  },
+  {
+    "beforeBits": "40732a1b1ac7bcdd",
+    "afterBits": "40732a1dd2919c06",
+    "before": 306.6316173364883,
+    "after": 306.632280892169
+  },
+  {
+    "beforeBits": "4073ac7eed58cfdf",
+    "afterBits": "4073ac8bc9a584c9",
+    "before": 314.78098807041346,
+    "after": 314.7841278520178
+  },
+  {
+    "beforeBits": "407479378f51d13d",
+    "afterBits": "407479351eec1d73",
+    "before": 327.5760644145956,
+    "after": 327.57546894295155
+  },
+  {
+    "beforeBits": "4075172fb0052c4d",
+    "afterBits": "4075172f8d75095e",
+    "before": 337.4491424753258,
+    "after": 337.4491095134489
+  },
+  {
+    "beforeBits": "40752a6c13485726",
+    "afterBits": "40752a6bff2ca79d",
+    "before": 338.6513855768011,
+    "after": 338.65136640017755
+  },
+  {
+    "beforeBits": "40766a948226d247",
+    "afterBits": "40766a904d34faf4",
+    "before": 358.6612569347821,
+    "after": 358.6602298802893
+  },
+  {
+    "beforeBits": "40c2f243a77d8738",
+    "afterBits": "40c2f243a77e541c",
+    "before": 9700.528548899674,
+    "after": 9700.528548995084
+  },
+  {
+    "beforeBits": "40c2f2783d356cae",
+    "afterBits": "40c2f2783d3fd62f",
+    "before": 9700.939367940966,
+    "after": 9700.939369182188
+  },
+  {
+    "beforeBits": "40c2f50de513abc0",
+    "afterBits": "40c2f50de6154cc1",
+    "before": 9706.108553370344,
+    "after": 9706.108584082105
+  },
+  {
+    "beforeBits": "4120990731d3764f",
+    "afterBits": "4120990731c0263a",
+    "before": 543875.5973164531,
+    "after": 543875.597169108
+  },
+  {
+    "beforeBits": "befdaf5e35fe7ad9",
+    "afterBits": "bf207daf6873b028",
+    "before": -2.8309851927250634e-05,
+    "after": -0.00012581602297900949
+  },
+  {
+    "beforeBits": "bf8be4693a2f23bd",
+    "afterBits": "bf8b16d474471a39",
+    "before": -0.013619253242625246,
+    "after": -0.013227138327136167
+  },
+  {
+    "beforeBits": "bfc3ad3e0d7cba08",
+    "afterBits": "bfc3dc41ac1a7703",
+    "before": -0.1537244382720504,
+    "after": -0.15515919593320157
+  },
+  {
+    "beforeBits": "bfd7e67dfd98efc7",
+    "afterBits": "bfd7ccd6a238d5ac",
+    "before": -0.3734431244408793,
+    "after": -0.3718773445319481
+  },
+  {
+    "beforeBits": "bfe465d3c28b4b55",
+    "afterBits": "bfe4565414974590",
+    "before": -0.637430076569539,
+    "after": -0.6355381395498387
+  },
+  {
+    "beforeBits": "bfe51cf63ad6d21b",
+    "afterBits": "bfe511f4dc68d0a7",
+    "before": -0.6597853802873631,
+    "after": -0.6584419541236642
+  },
+  {
+    "beforeBits": "bfee459e4ff4e901",
+    "afterBits": "bfee4319dfc58eed",
+    "before": -0.9459983407644189,
+    "after": -0.9456910486737492
+  },
+  {
+    "beforeBits": "bff1305f62c49a61",
+    "afterBits": "bff12f222e44d1ff",
+    "before": -1.0743097169994587,
+    "after": -1.0740072066665787
+  },
+  {
+    "beforeBits": "bff4356ac519684d",
+    "afterBits": "bff43c699957279e",
+    "before": -1.2630412768544546,
+    "after": -1.264749144540907
+  },
+  {
+    "beforeBits": "bff62384fc9218aa",
+    "afterBits": "bff62e5191b95e13",
+    "before": -1.3836717477839025,
+    "after": -1.386308259234174
+  },
+  {
+    "beforeBits": "bffc17d14ff9f330",
+    "afterBits": "bffc1684a152574d",
+    "before": -1.755814850242313,
+    "after": -1.7554975797297232
+  },
+  {
+    "beforeBits": "c00393d3377c5046",
+    "afterBits": "c00393e8799125b8",
+    "before": -2.4471802077114573,
+    "after": -2.4472207543774083
+  },
+  {
+    "beforeBits": "c003e81a591c08e8",
+    "afterBits": "c003e94117dc2bd3",
+    "before": -2.488331504982046,
+    "after": -2.4888936866823115
+  },
+  {
+    "beforeBits": "c0102cc222e544fd",
+    "afterBits": "c0102c4bd7ec4f1b",
+    "before": -4.043709321254252,
+    "after": -4.043258069799573
+  },
+  {
+    "beforeBits": "c01112247d49fa2a",
+    "afterBits": "c011122505c8ef3c",
+    "before": -4.267717321052752,
+    "after": -4.267719355000562
+  },
+  {
+    "beforeBits": "c014b8bc7b60b5a9",
+    "afterBits": "c014b8bcba1351f7",
+    "before": -5.1804065015580045,
+    "after": -5.180407435826502
+  },
+  {
+    "beforeBits": "c014d5ada0d3f33b",
+    "afterBits": "c014d5ad5b883111",
+    "before": -5.208670151649865,
+    "after": -5.20866911906002
+  },
+  {
+    "beforeBits": "c029fa2413123482",
+    "afterBits": "c029fa23c6c6359d",
+    "before": -12.988556476566604,
+    "after": -12.98855420274304
+  },
+  {
+    "beforeBits": "c0390714a51d5a5b",
+    "afterBits": "c0390707f55d10b9",
+    "before": -25.027658767381904,
+    "after": -25.027465186329866
+  },
+  {
+    "beforeBits": "c039ce8abc521a66",
+    "afterBits": "c039ce7b4cc10222",
+    "before": -25.806804437679965,
+    "after": -25.806568905945944
+  },
+  {
+    "beforeBits": "c043cd71c05c4689",
+    "afterBits": "c043cd71c04e7976",
+    "before": -39.60503391748086,
+    "after": -39.605033911054235
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "retrieved": "2026-09-06",
+  "files": {
+    "tai-utc.dat": {
+      "url": "https://maia.usno.navy.mil/ser7/tai-utc.dat",
+      "sha256": "3524e1ae34d67e858873a89e59983bbc5bd100221da898e796c1b36036a310c3"
+    },
+    "bulletin-c.txt": {
+      "url": "https://hpiers.obspm.fr/iers/bul/bulc/bulletinc.dat",
+      "sha256": "310e172eadacacca3adf92cb9bd646fcc0d6320e35e996a106d2644ede3b52f0"
+    }
+  }
+}

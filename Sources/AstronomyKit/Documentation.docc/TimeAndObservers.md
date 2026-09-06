@@ -187,3 +187,28 @@ let data = try JSONEncoder().encode(observer)
 let time = AstroTime.now
 let timeData = try JSONEncoder().encode(time)
 ```
+
+## Civil time and numerical compatibility
+
+`AstroTime(Date)`, calendar components and `.now` use civil UTC. From 1961 onward,
+a bundled USNO table converts UTC to TT, including the rate adjustments before
+1972. Future dates retain the last announced leap-second offset. Before 1961,
+civil dates use the engine's historical UT1 proxy.
+
+`universalTime` and `init(ut:)` are modeled UT1 coordinates, not UTC timestamps.
+`terrestrialTime` and `init(tt:)` are TT. Native search results already carry
+both scales; their `.date` uses the same civil inverse as every other time.
+`addingDays` and `addingHours` add UT1 coordinate intervals. For civil calendar
+arithmetic, use Foundation and construct a new `AstroTime` from the resulting date.
+
+Foundation cannot represent leap seconds. TT instants in positive UTC gaps map
+to the next transition; negative historical steps choose the later civil
+occurrence. Those instants cannot round-trip through `Date`. Positive gaps in
+the selected Delta T model similarly map TT to the first UT1 coordinate after
+the jump. At negative overlaps, fixed-point iteration returns the first solution
+reached from its initial `ut = tt` estimate. TT remains exact in memory, but
+numeric Codable remains UT1-based, so decoding a gap-clamped value derives TT
+again from the selected model. The table's future convention and the modeled
+UT1 values do not establish future UTC or Earth-orientation accuracy. Review
+serialized times and invalidate version-dependent cached calculations when
+upgrading.
