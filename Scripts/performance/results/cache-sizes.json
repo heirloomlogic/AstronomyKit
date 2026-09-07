@@ -1,0 +1,344 @@
+{
+  "workload": {
+    "positionsPerTrial": 1600,
+    "alternatingTrials": 5,
+    "bodies": [
+      "mercury",
+      "venus",
+      "mars",
+      "jupiter",
+      "saturn",
+      "uranus",
+      "neptune",
+      "sun"
+    ]
+  },
+  "variants": {
+    "16": {
+      "library": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots16.dylib",
+      "sourceSHA256": "5fdd5a97c8f248b13fe3bd476aa5b4e462af14292f2e5b8e3f75b58c44faea55",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-slot16.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots16.dylib"
+      ],
+      "tlsBytesPerThread": 8224
+    },
+    "32": {
+      "library": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots32.dylib",
+      "sourceSHA256": "164de2541c544a6c5b82b5b78266b70947ea93b5c46f5c93d22a08af7ef36fe8",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-slot32.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots32.dylib"
+      ],
+      "tlsBytesPerThread": 16416
+    },
+    "64": {
+      "library": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots64.dylib",
+      "sourceSHA256": "4ec5718c7da8fe6ae30df67b9a25606d138ba98017024d5942a93d4e2ca84354",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-slot64.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots64.dylib"
+      ],
+      "tlsBytesPerThread": 32800
+    },
+    "128": {
+      "library": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots128.dylib",
+      "sourceSHA256": "18c96004e480bc71486882d7220d4f47d949c86f6f6cf94a40625cae403b5263",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-slot128.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/perf-baseline-cache-sizes/slots128.dylib"
+      ],
+      "tlsBytesPerThread": 65568
+    }
+  },
+  "results": {
+    "coldStream": {
+      "trialsSeconds": {
+        "16": [
+          0.497825458,
+          0.506026375,
+          0.498289709,
+          0.501294583,
+          0.511407167
+        ],
+        "32": [
+          0.508078958,
+          0.503817125,
+          0.504076459,
+          0.506616709,
+          0.509066042
+        ],
+        "64": [
+          0.504079667,
+          0.505610167,
+          0.509584875,
+          0.5236715,
+          0.508331834
+        ],
+        "128": [
+          0.512680208,
+          0.507061958,
+          0.509242583,
+          0.521486083,
+          0.5179815
+        ]
+      },
+      "medianSeconds": {
+        "16": 0.501294583,
+        "32": 0.506616709,
+        "64": 0.508331834,
+        "128": 0.512680208
+      },
+      "checksums": {
+        "16": [
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406
+        ],
+        "32": [
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406
+        ],
+        "64": [
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406
+        ],
+        "128": [
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406
+        ]
+      }
+    },
+    "hotSameEpoch": {
+      "trialsSeconds": {
+        "16": [
+          0.11484375,
+          0.114110417,
+          0.115421209,
+          0.114310042,
+          0.1129635
+        ],
+        "32": [
+          0.006301459,
+          0.006309833,
+          0.00619125,
+          0.006351667,
+          0.006230791
+        ],
+        "64": [
+          0.006414708,
+          0.006421708,
+          0.0064185,
+          0.00634975,
+          0.006357709
+        ],
+        "128": [
+          0.006568375,
+          0.006704542,
+          0.006660041,
+          0.006647584,
+          0.006437333
+        ]
+      },
+      "medianSeconds": {
+        "16": 0.114310042,
+        "32": 0.006301459,
+        "64": 0.006414708,
+        "128": 0.006647584
+      },
+      "checksums": {
+        "16": [
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204
+        ],
+        "32": [
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204
+        ],
+        "64": [
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204
+        ],
+        "128": [
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204
+        ]
+      }
+    }
+  }
+}
