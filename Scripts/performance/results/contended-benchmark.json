@@ -1,0 +1,649 @@
+{
+  "schemaVersion": 1,
+  "baselineRevision": "8e88bb462364265a66cf78c10a6e5932b17fad0b",
+  "restoredRevision": "c0322c2de061bf8c1d11b065040edd2953f767d6",
+  "candidateRevision": "c0322c2de061bf8c1d11b065040edd2953f767d6",
+  "workload": {
+    "bodies": [
+      "mercury",
+      "venus",
+      "mars",
+      "jupiter",
+      "saturn",
+      "uranus",
+      "neptune",
+      "sun"
+    ],
+    "positionsPerTrial": 1600,
+    "trials": 5,
+    "coldStreamUT": "9000 + i*0.125",
+    "hotSameEpochUT": 9000.0
+  },
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]",
+  "clang": "Apple clang version 21.0.0 (clang-2100.3.30.1)",
+  "libraries": {
+    "baseline": {
+      "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/baseline.dylib",
+      "sourceSHA256": "3dd03a9afd05871bbccf893f92100241f9fdb91db8da429949350f6f1bb5bff2",
+      "binarySHA256": "c4c48b8cd99643eca1000416d852e6f9c236c8327c0211dc5065dd65a0135149",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/baseline-8e88bb4.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/baseline.dylib"
+      ]
+    },
+    "restored": {
+      "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/restored.dylib",
+      "sourceSHA256": "8704da2d14d4dbb2006b19501124de0ef35fbf483d245270491bea3091591a0c",
+      "binarySHA256": "374f3ede239c4b53c51e766bd93b9f69cfcdafe870c122795ad2e864cce7552f",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/restored-c0322c2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/restored.dylib"
+      ]
+    },
+    "candidate": {
+      "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/candidate.dylib",
+      "sourceSHA256": "164de2541c544a6c5b82b5b78266b70947ea93b5c46f5c93d22a08af7ef36fe8",
+      "binarySHA256": "b43d4c65405077c675119be6023d20ccc54cee2f8fb004d68c45d280d539dfcf",
+      "compileCommand": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/astronomy.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/candidate.dylib"
+      ]
+    }
+  },
+  "native": {
+    "coldStream": {
+      "warmupSeconds": {
+        "baseline": 0.010849667,
+        "restored": 1.465732208,
+        "candidate": 0.785010375
+      },
+      "trialsSeconds": {
+        "baseline": [
+          0.025308292,
+          0.008991084,
+          0.019679,
+          0.008988541,
+          0.009023167
+        ],
+        "restored": [
+          0.9480865,
+          1.0254085,
+          0.750853208,
+          0.8111195,
+          0.793559375
+        ],
+        "candidate": [
+          0.765291,
+          0.707407167,
+          0.672039875,
+          0.708833708,
+          0.760516875
+        ]
+      },
+      "medianSeconds": {
+        "baseline": 0.009023167,
+        "restored": 0.8111195,
+        "candidate": 0.708833708
+      },
+      "checksums": {
+        "baseline": [
+          284520.32420020644,
+          284520.32420020644,
+          284520.32420020644,
+          284520.32420020644,
+          284520.32420020644
+        ],
+        "restored": [
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406
+        ],
+        "candidate": [
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406,
+          284520.26890225406
+        ]
+      },
+      "restoredSlowdownVsBaseline": 89.89299433336433,
+      "candidateSpeedupVsRestored": 1.1443015348248646,
+      "candidateSlowdownVsBaseline": 78.55708622039246
+    },
+    "hotSameEpoch": {
+      "warmupSeconds": {
+        "baseline": 0.009739375,
+        "restored": 1.053319542,
+        "candidate": 0.0598775
+      },
+      "trialsSeconds": {
+        "baseline": [
+          0.009114125,
+          0.009079084,
+          0.017287542,
+          0.029907583,
+          0.02795925
+        ],
+        "restored": [
+          1.901698291,
+          1.759012208,
+          1.41603775,
+          1.495099917,
+          1.704915917
+        ],
+        "candidate": [
+          0.02041425,
+          0.018024209,
+          0.006680708,
+          0.006691959,
+          0.016189416
+        ]
+      },
+      "medianSeconds": {
+        "baseline": 0.017287542,
+        "restored": 1.704915917,
+        "candidate": 0.016189416
+      },
+      "checksums": {
+        "baseline": [
+          276230.61256816285,
+          276230.61256816285,
+          276230.61256816285,
+          276230.61256816285,
+          276230.61256816285
+        ],
+        "restored": [
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204
+        ],
+        "candidate": [
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204,
+          276230.6039026204
+        ]
+      },
+      "restoredSlowdownVsBaseline": 98.62107157859688,
+      "candidateSpeedupVsRestored": 105.31052614868874,
+      "candidateSlowdownVsBaseline": 0.9364787660385728
+    }
+  },
+  "differential": {
+    "samples": 3200,
+    "mismatches": [],
+    "bitwiseEqual": true
+  },
+  "harnessSHA256": {
+    "Scripts/performance/benchmark.py": "cf5f2e22f6e16a58dd575308b7752c369837cbfc7db26201b7f877982df870c4",
+    "Scripts/performance/swift-probe.swift": "5a3f0fccdc82df4b75c1191f6a949115c940a0fffe30fad3c269bddf71985f2b"
+  },
+  "swift": {
+    "api": "CelestialBody.geocentricPosition(at:)",
+    "optimization": "swiftc -O -whole-module-optimization",
+    "compiler": "Apple Swift version 6.4 (swiftlang-6.4.0.30.4 clang-2100.3.30.1)\nTarget: arm64-apple-macosx26.0",
+    "sourceFilesSHA256": {
+      "Sources/AstronomyKit/Apsis.swift": "50e00a5530dab43612500c8bbb1715386b9c76b64ba177e0532c75119433e7a7",
+      "Sources/AstronomyKit/AstronomyError.swift": "46fe7d0683350a6ce4d04e4e270d2d1c7b5f201d7db21e6167e1be0c51c6ba9c",
+      "Sources/AstronomyKit/AstronomyKit.swift": "a9759e5decc2d4217f1e6809883efc4431d54411a14da659a18c68458d04340c",
+      "Sources/AstronomyKit/Atmosphere.swift": "8edd5396d88889b10ffb073f25d5186d55e7bf70a75aeca3cf733a6e64f0367a",
+      "Sources/AstronomyKit/CelestialBody.swift": "32f74788adf03fb608c2b5a5c70f5e9f153430e0bba928a12de81c26cdb77117",
+      "Sources/AstronomyKit/Chiron.swift": "2b5d8af311b8946638e4fb0b9dd5c1929f3931178aaf4ea4288b30dc4d6cccfe",
+      "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
+      "Sources/AstronomyKit/Constellation.swift": "c29061f321ee0e9fab25b25733f3f5b9c30775e9fa02cce38e2311abfa978950",
+      "Sources/AstronomyKit/Coordinates.swift": "c0825638c16864b37d990b6dd1a3421e5bcab91838e4dc427d2dc70556c92ae2",
+      "Sources/AstronomyKit/Eclipse.swift": "45202ecff7e18e00897ac31f5b1d3f87eb8acbfce3ecddb5a665b48255412268",
+      "Sources/AstronomyKit/Elongation.swift": "4e89c4adad4fed563282c7b5c1c86bd2d3e2044d2aa0fd513b9057bbdda62675",
+      "Sources/AstronomyKit/FixedStar.swift": "75a958546c8acecd7f954f844b4384f9b57403310e55ea378a0476eb75a280c8",
+      "Sources/AstronomyKit/GravitySimulation.swift": "36250dc238d8ce43c25719cabafe66c72d5ede6e2afad781097c33593ffc5cd8",
+      "Sources/AstronomyKit/Illumination.swift": "31f7d137968f3c65a612fa59f825b6998d56a844636772f210a696edf78af89f",
+      "Sources/AstronomyKit/JupiterMoons.swift": "fdd22d089a25f1ba85b9934d66e05f63e1b34396e6c17641d2ab566369b58379",
+      "Sources/AstronomyKit/LagrangePoint.swift": "5cee4323eb7abdc5ddaccb2c48695832c092cb138952aadd2f757a171238989b",
+      "Sources/AstronomyKit/Libration.swift": "2d389e14e48f2a0bb7859c13a26025ecd5636659474e047417029f0f858a5a91",
+      "Sources/AstronomyKit/LunarNode.swift": "15d22a00b4ec304b292767e93ec16e9bb2ad39511bd486270261f68894559c07",
+      "Sources/AstronomyKit/MoonPhase.swift": "0d480bcd00e9061afe2d58012eab703d90f058dea3d0d85d0557e72dce6ea469",
+      "Sources/AstronomyKit/Observer.swift": "c274472d73810894c2b153f534dc76e846c8e8ff154de24217212be051147e54",
+      "Sources/AstronomyKit/Position.swift": "199da185fb339feb760fab803eaf043e76aad31828fca6963da70eaba8f1481f",
+      "Sources/AstronomyKit/RelativeLongitude.swift": "bd14a238bed1842d8c191bd7f34d8c56eac9046332bde9c59dc80ed530494e96",
+      "Sources/AstronomyKit/RiseSet.swift": "713989cc7ade1ea4fe5d38f3ae9bfdc9b6a3ca3064f1992d074c3725d9003085",
+      "Sources/AstronomyKit/Rotation.swift": "6f23ff689a803ab0a9c300c01b66c7d7a6cd8a8aa7cf371aa1999384e721a4ba",
+      "Sources/AstronomyKit/RotationAxis.swift": "6cada73120cac597f7e2a3dff1ad431c4197c38fdcae4362b53e90f6ae03e145",
+      "Sources/AstronomyKit/Search.swift": "e5b10408b85b2325c87f86d8895305bdc38dc8c71265718e0c324226ae1c69e9",
+      "Sources/AstronomyKit/Seasons.swift": "848f04fb8540d464407facd304c5f5e4863185d0b10666cce1d87853735e329d",
+      "Sources/AstronomyKit/Time.swift": "bf0338842eac3369da00b2956f8b6894281982c0d07a01d334da4a9deaf4c3ec",
+      "Sources/AstronomyKit/Transit.swift": "506eec46785f547500396747963463e774e0113d8bfdc0c383744da01cfbc2e9",
+      "Sources/AstronomyKit/UTCOffsetTable.swift": "6ff9360c7fc717e4ce383fc11c4ef0324d25552997bb1d44885acb2fe5fbafb6",
+      "Scripts/performance/swift-probe.swift": "5a3f0fccdc82df4b75c1191f6a949115c940a0fffe30fad3c269bddf71985f2b"
+    },
+    "executionOrder": {
+      "coldStream": [
+        "baseline",
+        "restored",
+        "candidate",
+        "restored",
+        "candidate",
+        "baseline",
+        "candidate",
+        "baseline",
+        "restored",
+        "baseline",
+        "restored",
+        "candidate",
+        "restored",
+        "candidate",
+        "baseline"
+      ],
+      "hotSameEpoch": [
+        "baseline",
+        "restored",
+        "candidate",
+        "restored",
+        "candidate",
+        "baseline",
+        "candidate",
+        "baseline",
+        "restored",
+        "baseline",
+        "restored",
+        "candidate",
+        "restored",
+        "candidate",
+        "baseline"
+      ]
+    },
+    "records": {
+      "baseline": {
+        "compileCommand": [
+          "xcrun",
+          "swiftc",
+          "-O",
+          "-whole-module-optimization",
+          "-I",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+          "-Xcc",
+          "-fmodule-map-file=/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/module.modulemap",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Apsis.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/AstronomyError.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/AstronomyKit.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Atmosphere.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/CelestialBody.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Chiron.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/CivilTime.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Constellation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Coordinates.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Eclipse.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Elongation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/FixedStar.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/GravitySimulation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Illumination.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/JupiterMoons.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/LagrangePoint.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Libration.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/LunarNode.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/MoonPhase.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Observer.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Position.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RelativeLongitude.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RiseSet.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Rotation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RotationAxis.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Search.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Seasons.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Time.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Transit.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/UTCOffsetTable.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/swift-probe.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/baseline.dylib",
+          "-o",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/swift-baseline"
+        ],
+        "executableSHA256": "43ac4593cfed253b6ac72984a9cf2f577bb490996927f4e1f3b562d4fb1269c8",
+        "workloads": {
+          "coldStream": {
+            "trialsSeconds": [
+              0.008327125,
+              0.00552125,
+              0.005363625,
+              0.007252292,
+              0.00503725
+            ],
+            "checksums": [
+              14387.741997483221,
+              14387.741997483221,
+              14387.741997483221,
+              14387.741997483221,
+              14387.741997483221
+            ],
+            "medianSeconds": 0.00552125
+          },
+          "hotSameEpoch": {
+            "trialsSeconds": [
+              0.005133417,
+              0.008458709,
+              0.005150375,
+              0.005168333,
+              0.005796667
+            ],
+            "checksums": [
+              14867.56819431504,
+              14867.56819431504,
+              14867.56819431504,
+              14867.56819431504,
+              14867.56819431504
+            ],
+            "medianSeconds": 0.005168333
+          }
+        }
+      },
+      "restored": {
+        "compileCommand": [
+          "xcrun",
+          "swiftc",
+          "-O",
+          "-whole-module-optimization",
+          "-I",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+          "-Xcc",
+          "-fmodule-map-file=/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/module.modulemap",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Apsis.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/AstronomyError.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/AstronomyKit.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Atmosphere.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/CelestialBody.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Chiron.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/CivilTime.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Constellation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Coordinates.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Eclipse.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Elongation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/FixedStar.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/GravitySimulation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Illumination.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/JupiterMoons.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/LagrangePoint.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Libration.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/LunarNode.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/MoonPhase.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Observer.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Position.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RelativeLongitude.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RiseSet.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Rotation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RotationAxis.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Search.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Seasons.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Time.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Transit.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/UTCOffsetTable.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/swift-probe.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/restored.dylib",
+          "-o",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/swift-restored"
+        ],
+        "executableSHA256": "b3df1bfaa91e921cb98aacc873d27aa1775d19af0d01f2f7fc50d389cb668b1e",
+        "workloads": {
+          "coldStream": {
+            "trialsSeconds": [
+              1.390492208,
+              1.760499333,
+              0.782412417,
+              0.767791167,
+              0.730147167
+            ],
+            "checksums": [
+              14387.176405416758,
+              14387.176405416758,
+              14387.176405416758,
+              14387.176405416758,
+              14387.176405416758
+            ],
+            "medianSeconds": 0.782412417
+          },
+          "hotSameEpoch": {
+            "trialsSeconds": [
+              0.684395625,
+              0.789535709,
+              0.742476333,
+              0.893334958,
+              0.953147708
+            ],
+            "checksums": [
+              14867.012126752195,
+              14867.012126752195,
+              14867.012126752195,
+              14867.012126752195,
+              14867.012126752195
+            ],
+            "medianSeconds": 0.789535709
+          }
+        }
+      },
+      "candidate": {
+        "compileCommand": [
+          "xcrun",
+          "swiftc",
+          "-O",
+          "-whole-module-optimization",
+          "-I",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+          "-Xcc",
+          "-fmodule-map-file=/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/module.modulemap",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Apsis.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/AstronomyError.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/AstronomyKit.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Atmosphere.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/CelestialBody.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Chiron.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/CivilTime.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Constellation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Coordinates.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Eclipse.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Elongation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/FixedStar.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/GravitySimulation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Illumination.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/JupiterMoons.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/LagrangePoint.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Libration.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/LunarNode.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/MoonPhase.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Observer.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Position.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RelativeLongitude.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RiseSet.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Rotation.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/RotationAxis.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Search.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Seasons.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Time.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/Transit.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/AstronomyKit/UTCOffsetTable.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/swift-probe.swift",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/candidate.dylib",
+          "-o",
+          "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/performance-final/swift-candidate"
+        ],
+        "executableSHA256": "da72dfa85df477decac13d5f8e023c2115800c5b6034eaf3da1bc60b415cd7fc",
+        "workloads": {
+          "coldStream": {
+            "trialsSeconds": [
+              1.738993375,
+              1.5954245,
+              0.93736275,
+              0.826764625,
+              0.591030625
+            ],
+            "checksums": [
+              14387.176405416758,
+              14387.176405416758,
+              14387.176405416758,
+              14387.176405416758,
+              14387.176405416758
+            ],
+            "medianSeconds": 0.93736275
+          },
+          "hotSameEpoch": {
+            "trialsSeconds": [
+              0.001164333,
+              0.000541209,
+              0.00239875,
+              0.00062275,
+              0.00053325
+            ],
+            "checksums": [
+              14867.012126752195,
+              14867.012126752195,
+              14867.012126752195,
+              14867.012126752195,
+              14867.012126752195
+            ],
+            "medianSeconds": 0.00062275
+          }
+        }
+      }
+    },
+    "comparisons": {
+      "coldStream": {
+        "medianSeconds": {
+          "baseline": 0.00552125,
+          "restored": 0.782412417,
+          "candidate": 0.93736275
+        },
+        "restoredSlowdownVsBaseline": 141.70928992528866,
+        "candidateSpeedupVsRestored": 0.8346954442130328,
+        "candidateSlowdownVsBaseline": 169.773647271904
+      },
+      "hotSameEpoch": {
+        "medianSeconds": {
+          "baseline": 0.005168333,
+          "restored": 0.789535709,
+          "candidate": 0.00062275
+        },
+        "restoredSlowdownVsBaseline": 152.76409414795836,
+        "candidateSpeedupVsRestored": 1267.8212910477719,
+        "candidateSlowdownVsBaseline": 0.12049339700054158
+      }
+    }
+  }
+}

@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Consumers must invalidate version-dependent positions and review numerical snapshots. `AstronomyConfig.ephemerisVersion` identifies the model and civil-time table. Updated bit goldens are compatibility records, not independent accuracy references.
 
 ### Fixed
+- Reuse exact planetary series results in a bounded per-thread cache for repeated position, state, and distance calculations. Full model coefficients, summation order, civil time behavior, and numerical snapshots are unchanged.
 - Bound the native TT inverse so nonfinite/nonconvergent input returns an invalid time instead of looping forever.
 
 ### Qualification

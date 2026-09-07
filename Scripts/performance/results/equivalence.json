@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "monthlyPositions": 24120,
+  "monthlyReplayChecks": 24120,
+  "stateVectorDistanceChecks": 448,
+  "referenceSHA256": "374f3ede239c4b53c51e766bd93b9f69cfcdafe870c122795ad2e864cce7552f",
+  "candidateSHA256": "b43d4c65405077c675119be6023d20ccc54cee2f8fb004d68c45d280d539dfcf",
+  "frozenPopulationSHA256": "a03fe81c346aa836ed5192579ebd9e09d606860abe8ef3b341e95e7a599ac989",
+  "scriptSHA256": "0ddb7a9260c341c1888a59e078e7a3735c1c14f7bdedaa9ac983f6d2279c49c9",
+  "scope": "Bitwise equivalence to the restored model; independent accuracy gates remain separate."
+}

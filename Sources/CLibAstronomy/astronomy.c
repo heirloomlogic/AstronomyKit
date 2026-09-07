@@ -7,6 +7,8 @@
     Local patches not in upstream:
       - Full VSOP87B series and 77-term IAU2000B; coefficient tables are
         generated offline into generated/ from pinned upstream source data.
+      - Bounded thread-local caching of pure VSOP series at exact TT keys;
+        caller time metadata and mutable engine configuration are never cached.
       - Bounded TT inverse with finite-input, representational-precision, and
         discontinuity-gap checks; the Espenak-Meeus default and Delta T values
         are unchanged.
@@ -2803,10 +2805,61 @@ static const vsop_model_t vsop[] =
 #define RAD_INDEX 2
 /** @endcond */
 
-static void VsopCoords(const vsop_model_t *model, double t, double sphere[3])
+/* Only the immutable planetary models above use this cache. The key is the
+   exact scaled TT consumed by the series, including the sign of zero. Neither
+   UT nor a Delta T function belongs in the key: those have already determined
+   TT before evaluation. Keeping numeric series alone preserves caller-owned
+   time metadata, and thread-local fixed storage needs no locks or reset. */
+#define VSOP_CACHE_SLOTS 32
+#define VSOP_CACHE_COORDS 1
+#define VSOP_CACHE_DERIV 2
+#define VSOP_CACHE_RADIUS 4
+
+typedef struct
+{
+    uint64_t key;
+    unsigned valid;
+    double sphere[3];
+    double deriv[3];
+}
+vsop_cache_entry_t;
+
+static _Thread_local vsop_cache_entry_t vsop_cache[ASTRO_ARRAYSIZE(vsop)][VSOP_CACHE_SLOTS];
+static _Thread_local unsigned vsop_cache_next[ASTRO_ARRAYSIZE(vsop)];
+
+static vsop_cache_entry_t *VsopCache(const vsop_model_t *model, double t)
+{
+    uint64_t key;
+    int body = (int)(model - vsop);
+    unsigned i;
+    vsop_cache_entry_t *entry;
+
+    if (!isfinite(t))
+        return NULL;
+    memcpy(&key, &t, sizeof(key));
+    for (i=0; i < VSOP_CACHE_SLOTS; ++i)
+    {
+        entry = &vsop_cache[body][i];
+        if (entry->valid && entry->key == key)
+            return entry;
+    }
+    entry = &vsop_cache[body][vsop_cache_next[body]];
+    vsop_cache_next[body] = (vsop_cache_next[body] + 1) % VSOP_CACHE_SLOTS;
+    entry->key = key;
+    entry->valid = 0;
+    return entry;
+}
+
+static void VsopCoords(const vsop_model_t *model, double t, double sphere[3], vsop_cache_entry_t *cached)
 {
     int k, s, i;
     double incr;
+
+    if (cached && (cached->valid & VSOP_CACHE_COORDS))
+    {
+        memcpy(sphere, cached->sphere, sizeof(cached->sphere));
+        return;
+    }
 
     for (k=0; k < 3; ++k)
     {
@@ -2828,6 +2881,11 @@ static void VsopCoords(const vsop_model_t *model, double t, double sphere[3])
             sphere[k] += incr;
             tpower *= t;
         }
+    }
+    if (cached)
+    {
+        memcpy(cached->sphere, sphere, sizeof(cached->sphere));
+        cached->valid |= VSOP_CACHE_COORDS | VSOP_CACHE_RADIUS;
     }
 }
 
@@ -2872,7 +2930,7 @@ static astro_vector_t CalcVsop(const vsop_model_t *model, astro_time_t time)
     terse_vector_t pos;
 
     /* Calculate the VSOP "B" trigonometric series to obtain ecliptic spherical coordinates. */
-    VsopCoords(model, t, sphere);
+    VsopCoords(model, t, sphere, VsopCache(model, t));
 
     /* Convert ecliptic spherical coordinates to ecliptic Cartesian coordinates. */
     VsopSphereToRect(sphere[LON_INDEX], sphere[LAT_INDEX], sphere[RAD_INDEX], eclip);
@@ -2891,9 +2949,15 @@ static astro_vector_t CalcVsop(const vsop_model_t *model, astro_time_t time)
 }
 
 
-static void VsopDeriv(const vsop_model_t *model, double t, double deriv[3])
+static void VsopDeriv(const vsop_model_t *model, double t, double deriv[3], vsop_cache_entry_t *cached)
 {
     int k, s, i;
+
+    if (cached && (cached->valid & VSOP_CACHE_DERIV))
+    {
+        memcpy(deriv, cached->deriv, sizeof(cached->deriv));
+        return;
+    }
 
     for (k=0; k < 3; ++k)
     {
@@ -2919,6 +2983,11 @@ static void VsopDeriv(const vsop_model_t *model, double t, double deriv[3])
             tpower *= t;
         }
     }
+    if (cached)
+    {
+        memcpy(cached->deriv, deriv, sizeof(cached->deriv));
+        cached->valid |= VSOP_CACHE_DERIV;
+    }
 }
 
 
@@ -2932,12 +3001,14 @@ static body_state_t CalcVsopPosVel(const vsop_model_t *model, double tt)
     double dr_dt, dlat_dt, dlon_dt;
     double r, coslat, coslon, sinlat, sinlon;
 
+    vsop_cache_entry_t *cached = VsopCache(model, t);
+
     state.tt = tt;
-    VsopCoords(model, t, sphere);
+    VsopCoords(model, t, sphere, cached);
     VsopSphereToRect(sphere[LON_INDEX], sphere[LAT_INDEX], sphere[RAD_INDEX], eclip);
     state.r = VsopRotate(eclip);
 
-    VsopDeriv(model, t, deriv);
+    VsopDeriv(model, t, deriv, cached);
 
     /* Use spherical coords and spherical derivatives to calculate */
     /* the velocity vector in rectangular coordinates. */
@@ -2978,6 +3049,10 @@ static double VsopHelioDistance(const vsop_model_t *model, astro_time_t time)
     double distance = 0.0;
     double tpower = 1.0;
     const vsop_formula_t *formula = &model->formula[2];     /* [2] is the distance part of the formula */
+    vsop_cache_entry_t *cached = VsopCache(model, t);
+
+    if (cached && (cached->valid & VSOP_CACHE_RADIUS))
+        return cached->sphere[RAD_INDEX];
 
     /*
         The caller only wants to know the distance between the planet and the Sun.
@@ -2997,6 +3072,11 @@ static double VsopHelioDistance(const vsop_model_t *model, astro_time_t time)
         tpower *= t;
     }
 
+    if (cached)
+    {
+        cached->sphere[RAD_INDEX] = distance;
+        cached->valid |= VSOP_CACHE_RADIUS;
+    }
     return distance;
 }
 

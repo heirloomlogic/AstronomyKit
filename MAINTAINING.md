@@ -45,11 +45,7 @@ semver as usual.
 
 ## Local patches (must survive every update)
 
-The vendored `astronomy.c` differs from upstream only by these thread-safety and
-determinism patches. Upstream is single-threaded by design and links the host
-libm; AstronomyKit advertises `Sendable` safety and pins bit-exact results, so
-these are required. **After any upstream sync they must be re-applied, or
-verified as adopted upstream.**
+The vendored `astronomy.c` includes the runtime patches below. AstronomyKit promises thread safety and deterministic results; preserve these patches after every upstream sync, or verify that upstream adopted an equivalent implementation. The complete coefficient tables and civil time integration are documented at the end of this file.
 
 1. **Pluto orbit cache mutex.** A `pthread` mutex (`pluto_cache_mutex`) guards
    the Pluto segment cache. `CalcPluto` holds the lock across both the segment
@@ -89,6 +85,8 @@ verified as adopted upstream.**
    and architectures (issue #28). See
    [Deterministic math (detmath/)](#deterministic-math-detmath) for the full
    picture, including which functions deliberately stay on the host.
+
+7. **Exact VSOP cache.** A bounded thread-local cache retains spherical coordinates, derivatives, and radius for each of the eight immutable planetary models. Keys use the exact bits of scaled TT, including signed zero; nonfinite inputs bypass the cache. Entries contain no caller time metadata or mutable engine settings. The full series and summation order remain unchanged on a miss. Keep the cache below time conversion so Delta T changes cannot reuse a result for a different TT. Each body retains 32 entries, using 16,416 bytes per thread on the measured arm64 build. Storage lasts for the thread's lifetime and needs no heap cleanup in `Astronomy_Reset`.
 
 ## Updating from upstream
 
@@ -221,6 +219,7 @@ swift package resolve
 swift build
 swift test --no-parallel                  # all suites, incl. JPLValidationTests / AuditValidationTests
 swift test --no-parallel --sanitize=thread  # exercises the Pluto / Delta T / counter patches
+sh Scripts/performance/test-vsop-cache.sh   # counts trig calls to require actual VSOP reuse
 ```
 
 Keep whole-suite runs nonparallel: the Delta T thread-safety test intentionally
