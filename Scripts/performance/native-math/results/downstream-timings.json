@@ -1,0 +1,687 @@
+{
+  "nyc-day": {
+    "completeWindowDifferences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 65,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 125,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 15,
+          "maxAbsoluteDifference": 1.0658141036401503e-14
+        },
+        "[].peakChartState.declinations.mars": {
+          "count": 20,
+          "maxAbsoluteDifference": 1.7763568394002505e-15
+        },
+        "[].peakChartState.declinations.mercury": {
+          "count": 5,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.moon": {
+          "count": 20,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 25,
+          "maxAbsoluteDifference": 3.3306690738754696e-16
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 20,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 20,
+          "maxAbsoluteDifference": 6.661338147750939e-16
+        },
+        "[].peakChartState.declinations.sun": {
+          "count": 20,
+          "maxAbsoluteDifference": 1.0658141036401503e-14
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 30,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.venus": {
+          "count": 30,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 30,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.mars": {
+          "count": 10,
+          "maxAbsoluteDifference": 2.842170943040401e-14
+        },
+        "[].peakChartState.positions.mercury": {
+          "count": 20,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 25,
+          "maxAbsoluteDifference": 4.440892098500626e-16
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 5,
+          "maxAbsoluteDifference": 2.220446049250313e-16
+        },
+        "[].peakChartState.positions.sun": {
+          "count": 5,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 5,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.venus": {
+          "count": 20,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 20,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.mars": {
+          "count": 10,
+          "maxAbsoluteDifference": 4.092726157978177e-12
+        },
+        "[].peakChartState.speeds.mercury": {
+          "count": 30,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.moon": {
+          "count": 5,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 15,
+          "maxAbsoluteDifference": 6.394884621840902e-14
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 15,
+          "maxAbsoluteDifference": 6.394884621840902e-14
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 5,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.venus": {
+          "count": 35,
+          "maxAbsoluteDifference": 1.0231815394945443e-12
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 20,
+          "maxAbsoluteDifference": 3.774758283725532e-15
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 10,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        }
+      }
+    },
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.076737332,
+    "medians": {
+      "baseline": 8.168895542,
+      "candidate": 3.780527625
+    },
+    "speedup": 2.1607818675838932,
+    "trials": {
+      "baseline": [
+        {
+          "exitCode": 0,
+          "processSeconds": 11.31489291699836,
+          "seconds": 10.819443208,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 8.527173000009498,
+          "seconds": 8.507573542,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 7.903497582999989,
+          "seconds": 7.882832875,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 8.189182125002844,
+          "seconds": 8.168895542,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 7.951670583002851,
+          "seconds": 7.930022584,
+          "windowCount": 13
+        }
+      ],
+      "candidate": [
+        {
+          "exitCode": 0,
+          "processSeconds": 5.455627041999833,
+          "seconds": 5.063652959,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 3.8003992500016466,
+          "seconds": 3.780527625,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 3.406975499994587,
+          "seconds": 3.385724625,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 3.7805247910000617,
+          "seconds": 3.755398417,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 3.9006213749962626,
+          "seconds": 3.881928667,
+          "windowCount": 13
+        }
+      ]
+    }
+  },
+  "nyc-week": {
+    "completeWindowDifferences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 425,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 1250,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 110,
+          "maxAbsoluteDifference": 1.0658141036401503e-14
+        },
+        "[].peakChartState.declinations.mars": {
+          "count": 95,
+          "maxAbsoluteDifference": 5.329070518200751e-15
+        },
+        "[].peakChartState.declinations.mercury": {
+          "count": 130,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.moon": {
+          "count": 140,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 155,
+          "maxAbsoluteDifference": 5.551115123125783e-16
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 105,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 135,
+          "maxAbsoluteDifference": 6.661338147750939e-16
+        },
+        "[].peakChartState.declinations.sun": {
+          "count": 120,
+          "maxAbsoluteDifference": 1.0658141036401503e-14
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 120,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.venus": {
+          "count": 135,
+          "maxAbsoluteDifference": 5.329070518200751e-15
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 150,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.mars": {
+          "count": 60,
+          "maxAbsoluteDifference": 2.842170943040401e-14
+        },
+        "[].peakChartState.positions.mercury": {
+          "count": 185,
+          "maxAbsoluteDifference": 2.842170943040401e-14
+        },
+        "[].peakChartState.positions.moon": {
+          "count": 35,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 130,
+          "maxAbsoluteDifference": 8.881784197001252e-16
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 10,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 120,
+          "maxAbsoluteDifference": 8.881784197001252e-16
+        },
+        "[].peakChartState.positions.sun": {
+          "count": 40,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 55,
+          "maxAbsoluteDifference": 4.973799150320701e-14
+        },
+        "[].peakChartState.positions.venus": {
+          "count": 85,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 175,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.mars": {
+          "count": 85,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.mercury": {
+          "count": 205,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.moon": {
+          "count": 80,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 200,
+          "maxAbsoluteDifference": 1.9184653865522705e-13
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 15,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 180,
+          "maxAbsoluteDifference": 9.592326932761353e-14
+        },
+        "[].peakChartState.speeds.sun": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.venus": {
+          "count": 180,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 95,
+          "maxAbsoluteDifference": 1.5210055437364645e-14
+        },
+        "[].peakFlagInstances[].distanceToSun": {
+          "count": 35,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 110,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        }
+      }
+    },
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.333654166,
+    "medians": {
+      "baseline": 45.640229792,
+      "candidate": 19.667197083
+    },
+    "speedup": 2.320627062381485,
+    "trials": {
+      "baseline": [
+        {
+          "exitCode": 0,
+          "processSeconds": 51.66879724999308,
+          "seconds": 51.615784334,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 45.74105829099426,
+          "seconds": 45.533775458,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 47.486447125003906,
+          "seconds": 47.437260042,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 43.900416541000595,
+          "seconds": 43.712229625,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 45.68938500000513,
+          "seconds": 45.640229792,
+          "windowCount": 85
+        }
+      ],
+      "candidate": [
+        {
+          "exitCode": 0,
+          "processSeconds": 20.908833250010503,
+          "seconds": 20.720246583,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 20.225150416998076,
+          "seconds": 20.043556167,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 19.133655291996547,
+          "seconds": 18.945653958,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 18.838826374994824,
+          "seconds": 18.789140583,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 19.854572374999407,
+          "seconds": 19.667197083,
+          "windowCount": 85
+        }
+      ]
+    }
+  },
+  "reykjavik-day": {
+    "completeWindowDifferences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 65,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 130,
+          "maxAbsoluteDifference": 5.684341886080802e-14
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 15,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.mars": {
+          "count": 25,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.mercury": {
+          "count": 20,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.moon": {
+          "count": 15,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 30,
+          "maxAbsoluteDifference": 2.220446049250313e-16
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 20,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 15,
+          "maxAbsoluteDifference": 2.220446049250313e-16
+        },
+        "[].peakChartState.declinations.sun": {
+          "count": 20,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 15,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.declinations.venus": {
+          "count": 35,
+          "maxAbsoluteDifference": 5.329070518200751e-15
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 30,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.mercury": {
+          "count": 35,
+          "maxAbsoluteDifference": 2.842170943040401e-14
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 10,
+          "maxAbsoluteDifference": 8.881784197001252e-16
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 15,
+          "maxAbsoluteDifference": 2.220446049250313e-16
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 10,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.positions.venus": {
+          "count": 10,
+          "maxAbsoluteDifference": 7.105427357601002e-15
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 10,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.mars": {
+          "count": 5,
+          "maxAbsoluteDifference": 4.092726157978177e-12
+        },
+        "[].peakChartState.speeds.mercury": {
+          "count": 35,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 30,
+          "maxAbsoluteDifference": 1.2789769243681803e-13
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 30,
+          "maxAbsoluteDifference": 6.394884621840902e-14
+        },
+        "[].peakChartState.speeds.sun": {
+          "count": 10,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 15,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakChartState.speeds.venus": {
+          "count": 30,
+          "maxAbsoluteDifference": 2.0463630789890885e-12
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 30,
+          "maxAbsoluteDifference": 1.8762769116165146e-14
+        }
+      }
+    },
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.07299825,
+    "medians": {
+      "baseline": 6.794981042,
+      "candidate": 2.958956959
+    },
+    "speedup": 2.296410909706646,
+    "trials": {
+      "baseline": [
+        {
+          "exitCode": 0,
+          "processSeconds": 6.814952791988617,
+          "seconds": 6.794981042,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 6.959856916000717,
+          "seconds": 6.937799209,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 6.8042799579998245,
+          "seconds": 6.785497834,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 6.914398416993208,
+          "seconds": 6.891885708,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 6.748195584004861,
+          "seconds": 6.724751458,
+          "windowCount": 13
+        }
+      ],
+      "candidate": [
+        {
+          "exitCode": 0,
+          "processSeconds": 2.982298458009609,
+          "seconds": 2.958956959,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 2.946129624993773,
+          "seconds": 2.925974417,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 3.046771458000876,
+          "seconds": 3.024920708,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 2.9897071669984143,
+          "seconds": 2.969475458,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "processSeconds": 2.977269499999238,
+          "seconds": 2.9568672080000002,
+          "windowCount": 13
+        }
+      ]
+    }
+  },
+  "scoring": {
+    "completeWindowDifferences": null,
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.260501916,
+    "medians": {
+      "baseline": 39.731222333,
+      "candidate": 16.053018416
+    },
+    "speedup": 2.4750001092255642,
+    "trials": {
+      "baseline": [
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 41.31157137500122,
+          "scoringCapPassed": false,
+          "seconds": 39.631721082999995
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 41.72494237500359,
+          "scoringCapPassed": false,
+          "seconds": 40.326597917
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 41.33125000000291,
+          "scoringCapPassed": false,
+          "seconds": 39.972336125
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 41.052897000001394,
+          "scoringCapPassed": false,
+          "seconds": 39.512365583000005
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 41.123850457996014,
+          "scoringCapPassed": false,
+          "seconds": 39.731222333
+        }
+      ],
+      "candidate": [
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 16.840542624995578,
+          "scoringCapPassed": true,
+          "seconds": 15.769019791
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 16.67176479200134,
+          "scoringCapPassed": true,
+          "seconds": 16.053018416
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 16.914601917000255,
+          "scoringCapPassed": true,
+          "seconds": 16.323061875
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 16.913446999998996,
+          "scoringCapPassed": true,
+          "seconds": 16.298502166000002
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "processSeconds": 16.36071254099079,
+          "scoringCapPassed": true,
+          "seconds": 15.764733209
+        }
+      ]
+    }
+  }
+}

@@ -1,17 +1,9 @@
 /*
-    ak_math.h - deterministic transcendental math for AstronomyKit.
+    ak_math.h - compatibility entry points for platform-native math.
 
-    Declares the double-precision transcendental functions vendored from
-    musl libc 1.2.5 into Sources/CLibAstronomy/detmath/. They are prefixed
-    ak_ so they can never collide with or resolve to the host libm at link
-    time, and they produce bit-identical results on every supported OS and
-    architecture (issue #28).
-
-    astronomy.c is redirected onto these via ak_detmath.h; Swift code that
-    needs a transcendental whose result feeds user-visible ephemeris values
-    should call these instead of the host libm as well. IEEE-exact,
-    correctly-rounded operations (sqrt, fabs, fmod, floor, ceil) are not
-    vendored - the host versions are identical everywhere.
+    Existing C and Swift callers retain the ak_ symbols. Each forwards to the
+    host math library; cross-platform bit identity is not guaranteed.
+    astronomy.c calls native math directly so the compiler can optimize it.
 */
 #ifndef AK_MATH_H
 #define AK_MATH_H

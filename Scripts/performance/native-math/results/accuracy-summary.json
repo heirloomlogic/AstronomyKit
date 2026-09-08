@@ -1,0 +1,211 @@
+{
+  "failures": [],
+  "independentPositionLimitArcseconds": 60,
+  "independentPositionMaxArcseconds": {
+    "baseline": {
+      "jupiter": [
+        1.1190530579369806,
+        1.044669251490471
+      ],
+      "mars": [
+        1.2889601471670176,
+        1.4145044621759528
+      ],
+      "mercury": [
+        0.5263666168275449,
+        0.3977650084105222
+      ],
+      "moon": [
+        3.7642336164708468,
+        2.6886477859001445
+      ],
+      "neptune": [
+        4.715239964036755,
+        0.9114542288133354
+      ],
+      "pluto": [
+        9.870499537737487,
+        1.924164621134139
+      ],
+      "saturn": [
+        3.240833946165367,
+        1.2501062857012357
+      ],
+      "sun": [
+        0.4612841752987151,
+        0.09056212448155986
+      ],
+      "uranus": [
+        2.6127511679305826,
+        1.8534620012726877
+      ],
+      "venus": [
+        0.5806855886248741,
+        0.6897471600253668
+      ]
+    },
+    "candidate": {
+      "jupiter": [
+        1.1190530579369806,
+        1.0446692514906708
+      ],
+      "mars": [
+        1.2889601471670176,
+        1.4145044621667102
+      ],
+      "mercury": [
+        0.5263666168275449,
+        0.3977650084105222
+      ],
+      "moon": [
+        3.7642336164708468,
+        2.688647785900944
+      ],
+      "neptune": [
+        4.715239964036755,
+        0.9114542288133354
+      ],
+      "pluto": [
+        9.870499537635169,
+        1.9241646211277441
+      ],
+      "saturn": [
+        3.240833946165367,
+        1.2501062857012109
+      ],
+      "sun": [
+        0.4612841752987151,
+        0.09056212448155986
+      ],
+      "uranus": [
+        2.6127511679305826,
+        1.8534620012726877
+      ],
+      "venus": [
+        0.5806855886248741,
+        0.6897471600253668
+      ]
+    }
+  },
+  "libraries": {
+    "baseline": {
+      "binarySHA256": "94552914f13a8157239c381b2399dfbbc630d394bf9ae0dd4eb3f0550fa7532d",
+      "command": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/native-math/baseline.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_invalid.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_oflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_uflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__math_xflow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__rem_pio2_large.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/__tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/acos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/asin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/atan2.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cbrt.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/cos.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/exp_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/hypot.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/log10.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/pow_data.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/scalbn.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/sin.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/detmath/tan.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/native-math/probe.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/native-math/baseline.dylib"
+      ],
+      "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/native-math/baseline.dylib",
+      "sourceSHA256": "164de2541c544a6c5b82b5b78266b70947ea93b5c46f5c93d22a08af7ef36fe8"
+    },
+    "candidate": {
+      "binarySHA256": "cb46119f945c50bd1fe4110ec557b7ac97a43f15deec3dd1345df3e6bdfaf1fb",
+      "command": [
+        "clang",
+        "-O2",
+        "-dynamiclib",
+        "-fPIC",
+        "-pthread",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/include",
+        "-I",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/astronomy.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/ak_math.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/accuracy/sample.c",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/native-math/probe.c",
+        "-lm",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/native-math/candidate.dylib"
+      ],
+      "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/native-math/candidate.dylib",
+      "sourceSHA256": "aae580b027f604110b08a8625e7947909eafa94bb4f05a3b67cf43035a693476"
+    }
+  },
+  "maxAngularChangeDegreesByBody": {
+    "jupiter": [
+      5.684341886080802e-14,
+      8.909539772616881e-15
+    ],
+    "mars": [
+      1.1368683772161603e-13,
+      1.3322676295501878e-14
+    ],
+    "mercury": [
+      5.684341886080802e-14,
+      9.325873406851315e-15
+    ],
+    "moon": [
+      8.526512829121202e-14,
+      1.3322676295501878e-14
+    ],
+    "neptune": [
+      5.684341886080802e-14,
+      1.0436096431476471e-14
+    ],
+    "pluto": [
+      5.684341886080802e-14,
+      9.325873406851315e-15
+    ],
+    "saturn": [
+      5.684341886080802e-14,
+      9.159339953157541e-15
+    ],
+    "sun": [
+      5.684341886080802e-14,
+      9.647352903520423e-15
+    ],
+    "uranus": [
+      5.684341886080802e-14,
+      1.1102230246251565e-14
+    ],
+    "venus": [
+      5.684341886080802e-14,
+      1.6653345369377348e-14
+    ]
+  },
+  "maxStationErrorSeconds": {
+    "baseline": 40.799617767333984,
+    "candidate": 40.799617767333984
+  },
+  "maxStationShiftSeconds": 0.00514984130859375,
+  "positions": 24120,
+  "referenceSHA256": "a03fe81c346aa836ed5192579ebd9e09d606860abe8ef3b341e95e7a599ac989",
+  "stations": 2462
+}

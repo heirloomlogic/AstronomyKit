@@ -1,0 +1,100 @@
+{
+  "completeRecordDifferences": {
+    "discrete": {},
+    "ignoredRandomUUIDs": 0,
+    "numeric": {
+      ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
+        "count": 24,
+        "maxAbsoluteDifference": 1.342673347992044e-12
+      },
+      ".chronologicalGroups[].events[].motionAfter.residual": {
+        "count": 14,
+        "maxAbsoluteDifference": 4.0602442043435714e-11
+      },
+      ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
+        "count": 17,
+        "maxAbsoluteDifference": 6.713366740489616e-13
+      },
+      ".chronologicalGroups[].events[].motionBefore.residual": {
+        "count": 12,
+        "maxAbsoluteDifference": 8.120488408686812e-11
+      },
+      ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
+        "count": 36,
+        "maxAbsoluteDifference": 2.3201409047956352e-07
+      },
+      ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
+        "count": 44,
+        "maxAbsoluteDifference": 5.329070518200751e-15
+      },
+      ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+        "count": 44,
+        "maxAbsoluteDifference": 1.2053857911809018e-11
+      },
+      ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
+        "count": 15,
+        "maxAbsoluteDifference": 5.684341886080802e-14
+      },
+      ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
+        "count": 18,
+        "maxAbsoluteDifference": 8.120488408686853e-11
+      },
+      ".chronologicalGroups[].events[].residual": {
+        "count": 13,
+        "maxAbsoluteDifference": 8.120488408686853e-11
+      },
+      ".evaluations": {
+        "count": 1,
+        "maxAbsoluteDifference": 1
+      },
+      ".events[].motionAfter.derivativePerSecond": {
+        "count": 24,
+        "maxAbsoluteDifference": 1.342673347992044e-12
+      },
+      ".events[].motionAfter.residual": {
+        "count": 14,
+        "maxAbsoluteDifference": 4.0602442043435714e-11
+      },
+      ".events[].motionBefore.derivativePerSecond": {
+        "count": 17,
+        "maxAbsoluteDifference": 6.713366740489616e-13
+      },
+      ".events[].motionBefore.residual": {
+        "count": 12,
+        "maxAbsoluteDifference": 8.120488408686812e-11
+      },
+      ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
+        "count": 36,
+        "maxAbsoluteDifference": 2.3201409047956352e-07
+      },
+      ".events[].pointSamples[].latitudeDegrees": {
+        "count": 44,
+        "maxAbsoluteDifference": 5.329070518200751e-15
+      },
+      ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+        "count": 44,
+        "maxAbsoluteDifference": 1.2053857911809018e-11
+      },
+      ".events[].pointSamples[].longitudeDegrees": {
+        "count": 15,
+        "maxAbsoluteDifference": 5.684341886080802e-14
+      },
+      ".events[].pointSamples[].speedDegreesPerDay": {
+        "count": 18,
+        "maxAbsoluteDifference": 8.120488408686853e-11
+      },
+      ".events[].residual": {
+        "count": 13,
+        "maxAbsoluteDifference": 8.120488408686853e-11
+      }
+    }
+  },
+  "failures": [],
+  "groupingValidation": "Probe recomputes groups and exact point samples from every returned event in each arm.",
+  "maxHistoricalShiftSeconds": 0.0,
+  "maxIndependentErrorSeconds": {
+    "baseline": 59.47723388671875,
+    "candidate": 59.47723388671875
+  },
+  "queryPairs": 36
+}

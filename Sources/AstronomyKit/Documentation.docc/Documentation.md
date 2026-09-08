@@ -45,6 +45,19 @@ let mars = try CelestialBody.mars.horizon(at: .now, from: observer)
 print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 ```
 
+### Numerical compatibility
+
+AstronomyKit prioritizes Apple performance and uses platform-native math. Linux
+remains supported with the same astronomical accuracy tests. Results may differ
+slightly across platforms, architectures, OS releases, toolchains, and build
+configurations; cross-platform bit identity is not guaranteed. These rounding
+differences can be amplified in event-time calculations.
+
+For persisted numerical caches, include `AstronomyConfig.ephemerisVersion` and
+the platform, architecture, OS, and toolchain identity. Review stored positions
+and event times when upgrading. Numerical regression tolerances are separate
+from absolute astronomical accuracy limits.
+
 ## Topics
 
 ### Essentials

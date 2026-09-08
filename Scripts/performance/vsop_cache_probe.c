@@ -1,26 +1,24 @@
-#include "ak_math.h"
+#include <math.h>
 #include "astronomy.h"
 
 #include <stdint.h>
 #include <stdio.h>
 
-double ak_uncounted_cos(double x);
-double ak_uncounted_sin(double x);
 
 static uint64_t cos_calls;
 static uint64_t sin_calls;
 static volatile double result_sink;
 
-double ak_cos(double x)
+double ak_counted_cos(double x)
 {
     ++cos_calls;
-    return ak_uncounted_cos(x);
+    return cos(x);
 }
 
-double ak_sin(double x)
+double ak_counted_sin(double x)
 {
     ++sin_calls;
-    return ak_uncounted_sin(x);
+    return sin(x);
 }
 
 static void reset_counts(void)

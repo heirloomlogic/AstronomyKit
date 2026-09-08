@@ -4,6 +4,14 @@ All notable changes to AstronomyKit will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Version tags include an `+upstream-X.Y.Z` suffix identifying the bundled Astronomy Engine C library version.
 
+## [3.0.0-candidate.2] — Unreleased
+
+### Changed
+- Use platform-native math on Apple and Linux, preserving full astronomical models, exact-epoch caching, FP contraction policy, and calculation API signatures. Existing `ak_*` symbols forward to native math; historical musl sources remain available for reproducing experiments but are excluded from the library.
+- End the cross-platform bit-identity contract. Shared numerical regression tolerances replace exact numerical goldens; independent accuracy references and Linux CI remain required. Outputs may differ across OS, architecture, toolchain, and build configuration.
+- Advance `AstronomyConfig.ephemerisVersion`. Persisted numerical caches must account for that version and the platform, architecture, OS, and toolchain; consumers should review derived positions and event times after upgrading.
+- Accept independently validated performance improvements incrementally. The historical downstream performance target remains an overall goal; station displacement from historical finite differences is reported separately from independent accuracy and event coverage. See `Scripts/performance/native-math/POLICY.md`.
+
 ## [3.0.0-candidate.1] — Unreleased
 
 ### Changed

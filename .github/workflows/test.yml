@@ -40,6 +40,9 @@ jobs:
       - name: Test
         run: swift test --no-parallel
 
+      - name: Verify shipping native math
+        run: python3 Scripts/check-native-math.py
+
   test-linux:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -60,67 +63,8 @@ jobs:
       - name: Test
         run: swift test --no-parallel
 
-      # Deterministic-math link guard (issue #28). The vendored astronomy.c and
-      # the detmath/ objects must never resolve a transcendental to the host
-      # libm — only to the ak_-prefixed musl implementations. Inspect the built
-      # objects' undefined symbols and fail if any host transcendental (or, for
-      # detmath, fma) leaks in. sqrt/fmod/floor/ceil/fabs stay on the host and
-      # are allowed. See MAINTAINING.md (section: Deterministic math (detmath/)).
-      - name: Deterministic-math nm guard
-        run: |
-          set -euo pipefail
-
-          # Transcendentals that MUST resolve to the vendored ak_ implementations.
-          TRANSCENDENTALS='sin|cos|tan|asin|acos|atan|atan2|exp|log10|pow|cbrt|hypot'
-
-          # Undefined symbol names, one per line, with a single leading
-          # underscore stripped so the check works on both ELF (Linux, no
-          # prefix) and Mach-O (macOS, leading '_').
-          undef_bases() { nm -u "$1" | awk '{print $NF}' | sed 's/^_//'; }
-
-          fail=0
-
-          # astronomy.c object: Linux SwiftPM names it astronomy.c.o; accept the
-          # macOS astronomy.o too. Fail loudly if neither is found.
-          astro_obj=$(find .build \( -name 'astronomy.c.o' -o -name 'astronomy.o' \) | head -1)
-          if [ -z "$astro_obj" ]; then
-            echo "ERROR: could not locate the astronomy.c object under .build; nm guard cannot run." >&2
-            echo "See MAINTAINING.md (section: Deterministic math (detmath/))." >&2
-            exit 1
-          fi
-          echo "Checking $astro_obj"
-          hits=$(undef_bases "$astro_obj" | grep -Ex "$TRANSCENDENTALS" || true)
-          if [ -n "$hits" ]; then
-            echo "ERROR: astronomy.c has undefined references to host-libm transcendentals:" >&2
-            echo "$hits" | sed 's/^/  /' >&2
-            echo "They must resolve to the vendored ak_ implementations via ak_detmath.h." >&2
-            echo "See MAINTAINING.md (section: Deterministic math (detmath/))." >&2
-            fail=1
-          fi
-
-          # detmath objects: no undefined transcendentals and no undefined fma
-          # (pow.c undefs __FP_FAST_FMA precisely to avoid emitting one).
-          detmath_objs=$(find .build -path '*CLibAstronomy*' \( -name '*.c.o' -o -name '*.o' \) \
-            ! -name 'astronomy.c.o' ! -name 'astronomy.o' ! -name 'CLibAstronomy.o' | sort)
-          if [ -z "$detmath_objs" ]; then
-            echo "ERROR: could not locate any detmath objects under .build; nm guard cannot run." >&2
-            echo "See MAINTAINING.md (section: Deterministic math (detmath/))." >&2
-            exit 1
-          fi
-          for obj in $detmath_objs; do
-            hits=$(undef_bases "$obj" | grep -Ex "$TRANSCENDENTALS|fma" || true)
-            if [ -n "$hits" ]; then
-              echo "ERROR: detmath object $obj has forbidden undefined references:" >&2
-              echo "$hits" | sed 's/^/  /' >&2
-              echo "See MAINTAINING.md (section: Deterministic math (detmath/))." >&2
-              fail=1
-            fi
-          done
-
-          if [ "$fail" -ne 0 ]; then
-            exit 1
-          fi
-          echo "nm guard passed: no host-libm transcendental leakage."
+      - name: Verify shipping native math
+        run: python3 Scripts/check-native-math.py
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
@@ -156,6 +100,9 @@ jobs:
       - name: Test (release)
         run: swift test --no-parallel -c release
 
+      - name: Verify shipping native math
+        run: python3 Scripts/check-native-math.py --configuration release
+
   test-release-linux:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -172,6 +119,9 @@ jobs:
 
       - name: Test (release)
         run: swift test --no-parallel -c release
+
+      - name: Verify shipping native math
+        run: python3 Scripts/check-native-math.py --configuration release
 
   # The macOS jobs above exercise the shared source, but the iOS/tvOS/watchOS
   # SDKs compile differently (availability, unavailable APIs). Build the library
