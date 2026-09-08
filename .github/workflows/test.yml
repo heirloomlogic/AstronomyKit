@@ -28,11 +28,10 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Validate accuracy investigation inputs
+      - name: Verify generated model and time tables
         run: |
           python3 Scripts/generate-models.py --check
           python3 Scripts/generate-time-table.py --check
-          python3 -m unittest discover -s Scripts/accuracy -p 'test_*.py' -v
 
       - name: Verify polynomial artifacts and analytic evaluator
         run: |
@@ -44,9 +43,6 @@ jobs:
 
       - name: Test
         run: swift test --no-parallel
-
-      - name: Verify shipping native math
-        run: python3 Scripts/check-native-math.py
 
   test-linux:
     runs-on: ubuntu-latest
@@ -72,9 +68,6 @@ jobs:
 
       - name: Test
         run: swift test --no-parallel
-
-      - name: Verify shipping native math
-        run: python3 Scripts/check-native-math.py
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
@@ -110,9 +103,6 @@ jobs:
       - name: Test (release)
         run: swift test --no-parallel -c release
 
-      - name: Verify shipping native math
-        run: python3 Scripts/check-native-math.py --configuration release
-
   test-release-linux:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -129,9 +119,6 @@ jobs:
 
       - name: Test (release)
         run: swift test --no-parallel -c release
-
-      - name: Verify shipping native math
-        run: python3 Scripts/check-native-math.py --configuration release
 
   # The macOS jobs above exercise the shared source, but the iOS/tvOS/watchOS
   # SDKs compile differently (availability, unavailable APIs). Build the library

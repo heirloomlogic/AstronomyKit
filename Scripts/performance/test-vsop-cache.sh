@@ -18,13 +18,13 @@ compile()
 }
 
 # Interpose only in the engine translation unit, after declaring host math.
-# The probe's wrappers call real libm; there are no detmath objects in this test.
+# The probe's wrappers count calls and forward to the real libm.
 cat > "$build_dir/count.h" <<'HEADER'
 #include <math.h>
-double ak_counted_cos(double);
-double ak_counted_sin(double);
-#define cos ak_counted_cos
-#define sin ak_counted_sin
+double counted_cos(double);
+double counted_sin(double);
+#define cos counted_cos
+#define sin counted_sin
 HEADER
 compile -pthread -include "$build_dir/count.h" -c "$astronomy_source" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/vsop_cache_probe.c" -o "$build_dir/probe.o"

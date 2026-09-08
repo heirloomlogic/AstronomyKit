@@ -9,13 +9,13 @@ static uint64_t cos_calls;
 static uint64_t sin_calls;
 static volatile double result_sink;
 
-double ak_counted_cos(double x)
+double counted_cos(double x)
 {
     ++cos_calls;
     return cos(x);
 }
 
-double ak_counted_sin(double x)
+double counted_sin(double x)
 {
     ++sin_calls;
     return sin(x);

@@ -5,8 +5,8 @@
 
 static uint64_t calls;
 static volatile double sink;
-double ak_counted_cos(double x) { ++calls; return cos(x); }
-double ak_counted_sin(double x) { ++calls; return sin(x); }
+double counted_cos(double x) { ++calls; return cos(x); }
+double counted_sin(double x) { ++calls; return sin(x); }
 
 int main(void)
 {

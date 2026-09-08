@@ -58,8 +58,8 @@ public struct Observer: Sendable, Equatable, Hashable {
     /// rather than on the surface.
     public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
 
-    /// The underlying C observer structure.
-    var raw: astro_observer_t {
+    /// The underlying C observer structure. Callers go through ``validatedRaw()``.
+    private var raw: astro_observer_t {
         astro_observer_t(latitude: latitude, longitude: longitude, height: height)
     }
 

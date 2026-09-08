@@ -37,7 +37,7 @@ that fail the numerical regression checks, and dates outside this coverage, use
 the complete original series. Supported dates are unchanged.
 
 The tables add about 11 MB before platform packaging. No files are downloaded or
-loaded at runtime. See the [qualification and performance report](Scripts/performance/polynomial/README.md).
+loaded at runtime. See the [polynomial evaluation notes](Scripts/performance/polynomial/README.md).
 
 ## Installation
 

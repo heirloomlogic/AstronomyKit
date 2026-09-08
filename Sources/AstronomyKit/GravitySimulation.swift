@@ -174,6 +174,10 @@ public final class GravitySimulation: @unchecked Sendable {
 extension GravitySimulation: CustomStringConvertible {
     /// A textual representation including the origin body, time, and body count.
     public var description: String {
-        "GravitySimulation(origin: \(origin), time: \(time), bodies: \(bodyCount))"
+        // One lock acquisition so time and body count are a consistent snapshot.
+        let (time, bodies) = lock.withLock { simState in
+            (simState.time, simState.handle.map { Int(Astronomy_GravSimNumBodies($0)) } ?? 0)
+        }
+        return "GravitySimulation(origin: \(origin), time: \(time), bodies: \(bodies))"
     }
 }

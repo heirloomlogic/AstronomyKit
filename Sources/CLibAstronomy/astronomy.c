@@ -9,6 +9,10 @@
         generated offline into generated/ from pinned upstream source data.
       - Bounded thread-local caching of pure VSOP series at exact TT keys;
         caller time metadata and mutable engine configuration are never cached.
+      - Polynomial evaluation (polynomial.h, generated/polynomial-data.h) of
+        the full VSOP87B model for qualified segments from 1900 through 2100
+        TT; CalcVsop, CalcVsopPosVel and VsopHelioDistance fall back to the
+        full series outside coverage.
       - Bounded TT inverse with finite-input, representational-precision, and
         discontinuity-gap checks; the Espenak-Meeus default and Delta T values
         are unchanged.

@@ -83,11 +83,6 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
         astro_body_t(rawValue: rawValue)
     }
 
-    /// Creates a body from the C enum value.
-    init?(raw: astro_body_t) {
-        self.init(rawValue: raw.rawValue)
-    }
-
     /// The human-readable name of this body.
     public var name: String {
         switch self {
