@@ -1,0 +1,27 @@
+{
+  "evidenceSHA256": "aac0139094f8abcff288c81963149ef3face530a683833e4921dbce761130e93",
+  "invalid": {
+    "Mercury": [
+      5727,
+      5728
+    ],
+    "Venus": [
+      1431,
+      1432
+    ],
+    "Earth": [
+      5727,
+      5728
+    ],
+    "Mars": [
+      1431,
+      1432
+    ],
+    "Jupiter": [
+      1431
+    ],
+    "Saturn": [],
+    "Uranus": [],
+    "Neptune": []
+  }
+}

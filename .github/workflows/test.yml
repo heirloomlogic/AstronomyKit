@@ -34,7 +34,12 @@ jobs:
           python3 Scripts/generate-time-table.py --check
           python3 -m unittest discover -s Scripts/accuracy -p 'test_*.py' -v
 
-      - name: Verify exact VSOP cache reuse
+      - name: Verify polynomial artifacts and analytic evaluator
+        run: |
+          python3 Scripts/performance/polynomial/embed.py --check
+          python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py' -v
+
+      - name: Verify polynomial evaluation and full-model cache reuse
         run: sh Scripts/performance/test-vsop-cache.sh
 
       - name: Test
@@ -57,7 +62,12 @@ jobs:
         with:
           swift-version: "6.2"
 
-      - name: Verify exact VSOP cache reuse
+      - name: Verify polynomial artifacts and analytic evaluator
+        run: |
+          python3 Scripts/performance/polynomial/embed.py --check
+          python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py' -v
+
+      - name: Verify polynomial evaluation and full-model cache reuse
         run: sh Scripts/performance/test-vsop-cache.sh
 
       - name: Test

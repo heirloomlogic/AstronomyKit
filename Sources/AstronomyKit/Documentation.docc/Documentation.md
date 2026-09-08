@@ -45,6 +45,13 @@ let mars = try CelestialBody.mars.horizon(at: .now, from: observer)
 print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 ```
 
+### Planetary evaluation
+
+Qualified segments from 1900 through 2100 TT use compiled polynomial approximations
+of the full VSOP87B model. Position and heliocentric velocity share one representation.
+Dates outside that interval and unqualified segments use the full series, preserving
+the supported date range. The tables add roughly 11 MB before platform packaging.
+
 ### Numerical compatibility
 
 AstronomyKit prioritizes Apple performance and uses platform-native math. Linux
