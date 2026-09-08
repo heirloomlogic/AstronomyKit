@@ -25,7 +25,8 @@ let package = Package(
         .target(
             name: "CLibAstronomy",
             path: "Sources/CLibAstronomy",
-            sources: ["astronomy.c", "detmath"],
+            exclude: ["detmath", "ak_detmath.h"],
+            sources: ["astronomy.c", "ak_math.c"],
             publicHeadersPath: "include",
             cSettings: [
                 .headerSearchPath("include")

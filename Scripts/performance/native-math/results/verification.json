@@ -1,0 +1,15 @@
+{
+  "independentPositionLimitArcseconds": 60,
+  "maxAbsoluteChanges": {
+    "Astronomy_BaryState": 2.220446049250313e-16,
+    "Astronomy_HelioDistance": 0,
+    "Astronomy_HelioState": 2.220446049250313e-16,
+    "Astronomy_HelioVector": 2.220446049250313e-16
+  },
+  "passed": true,
+  "positionCount": 24120,
+  "scope": "Native regression and frozen accuracy populations; actual search coverage uses events-summary.json",
+  "scriptSHA256": "adf12527cb28d8034196de51a054a92fcd7cec3deef3641b9422248edc2508e5",
+  "stateVectorDistanceChecks": 448,
+  "stationCount": 2462
+}

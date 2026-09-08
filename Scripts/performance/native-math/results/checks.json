@@ -1,0 +1,71 @@
+{
+  "debug": {
+    "passed": true,
+    "logSHA256": "a24c9eae850b5a138a61c21ab90103be387e7998a12563127cf0b9b5a294e78b"
+  },
+  "release": {
+    "passed": true,
+    "logSHA256": "c90066b52fae834f666a2a3d8e33eb821ffa91ff1da31ce6af01157a06f5e3f8"
+  },
+  "tsan": {
+    "passed": true,
+    "logSHA256": "0676deaa68e0f66146412922069ffb33f628d863970773f87c5db33f5ad8acf0"
+  },
+  "python": {
+    "passed": true,
+    "logSHA256": "d8de3be9c5bd71f2ddad963d34c239131357305073800949bbd08a2eee98d265"
+  },
+  "lint": {
+    "passed": true,
+    "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "iOS": {
+    "passed": true,
+    "logSHA256": "904908ea4636265e6660921afc5ab9305259632cbdf68984123a50b418443c33"
+  },
+  "tvOS": {
+    "passed": true,
+    "logSHA256": "1a4411242c49cce145f74f25510ee6e51aefdb643e9f9f8f16a10e3a3d346e4c"
+  },
+  "watchOS": {
+    "passed": true,
+    "logSHA256": "ff9060da27e3a2567f747aaf522d2d435a4a598a8729ebb1f9e4cfc7290da1be"
+  },
+  "cache": {
+    "passed": true,
+    "logSHA256": "c8e544695428cc8612e816e0b2aef05d38a515fad0ee5f098d79dc4a8f80d788"
+  },
+  "guard": {
+    "passed": true,
+    "logSHA256": "cfc08db4428773d2b2ed6dd3baea5fcd821fb411081f7fd5f96735484a3a6b85"
+  },
+  "backend-guard": {
+    "passed": true,
+    "logSHA256": "b422d016fe8e98edc45cd12d137569904137c2fe6707f3a5a515a061e569003c"
+  },
+  "linux": {
+    "executedLocally": false,
+    "requiredInCI": true
+  },
+  "githubActions": {
+    "executed": false,
+    "note": "Local implementation; no PR or remote CI run created."
+  },
+  "windowSemantics": {
+    "nyc-day": {
+      "passed": true,
+      "behavioralNumericFieldsExact": true,
+      "floatingGeometryDifferencesWithinBudgets": true
+    },
+    "nyc-week": {
+      "passed": true,
+      "behavioralNumericFieldsExact": true,
+      "floatingGeometryDifferencesWithinBudgets": true
+    },
+    "reykjavik-day": {
+      "passed": true,
+      "behavioralNumericFieldsExact": true,
+      "floatingGeometryDifferencesWithinBudgets": true
+    }
+  }
+}

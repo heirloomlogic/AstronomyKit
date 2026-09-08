@@ -14,29 +14,41 @@ compile()
     "$compiler" -std=c11 -O2 \
         "-I$source_root" \
         "-I$source_root/include" \
-        "-I$source_root/detmath" \
         "$@"
 }
 
-compile -pthread -c "$astronomy_source" -o "$build_dir/astronomy.o"
-
-for source in "$source_root"/detmath/*.c; do
-    name=$(basename "$source" .c)
-    case "$name" in
-        cos)
-            compile -Dak_cos=ak_uncounted_cos \
-                -c "$source" -o "$build_dir/$name.o"
-            ;;
-        sin)
-            compile -Dak_sin=ak_uncounted_sin \
-                -c "$source" -o "$build_dir/$name.o"
-            ;;
-        *)
-            compile -c "$source" -o "$build_dir/$name.o"
-            ;;
-    esac
-done
-
+# Interpose only in the engine translation unit, after declaring host math.
+# The probe's wrappers call real libm; there are no detmath objects in this test.
+cat > "$build_dir/count.h" <<'HEADER'
+#include <math.h>
+double ak_counted_cos(double);
+double ak_counted_sin(double);
+#define cos ak_counted_cos
+#define sin ak_counted_sin
+HEADER
+compile -pthread -include "$build_dir/count.h" -c "$astronomy_source" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/vsop_cache_probe.c" -o "$build_dir/probe.o"
 "$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/vsop-cache-probe"
 "$build_dir/vsop-cache-probe"
+
+# A negative control proves the probe rejects an engine with caching disabled.
+python3 - "$astronomy_source" "$build_dir/uncached.c" <<'PYTHON'
+import sys
+from pathlib import Path
+source = Path(sys.argv[1]).read_text()
+marker = "static vsop_cache_entry_t *VsopCache(const vsop_model_t *model, double t)\n{"
+assert source.count(marker) == 1
+Path(sys.argv[2]).write_text(source.replace(marker, marker + "\n    return NULL; /* diagnostic: bypass cache */"))
+PYTHON
+compile -pthread -include "$build_dir/count.h" -c "$build_dir/uncached.c" -o "$build_dir/astronomy.o"
+"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/vsop-cache-probe"
+negative_status=0
+"$build_dir/vsop-cache-probe" > "$build_dir/negative.log" 2>&1 || negative_status=$?
+if [ "$negative_status" -ne 1 ]; then
+    echo "ERROR: expected a cache assertion failure, got exit $negative_status" >&2
+    cat "$build_dir/negative.log" >&2
+    exit 1
+fi
+grep -F "HelioVector repeated the VSOP position series" "$build_dir/negative.log" > /dev/null
+cat "$build_dir/negative.log"
+echo "Cache probe rejected the uncached negative control."

@@ -1,0 +1,53 @@
+{
+  "commands": {
+    "events": [
+      "swiftc",
+      "-O",
+      "-parse-as-library",
+      "-I",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release",
+      "-Xcc",
+      "-fmodule-map-file=/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/module.modulemap",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/chronology/event-probe.swift",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstrologyKit.o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstronomyKit.o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/hybrid.dylib",
+      "-o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/events"
+    ],
+    "scan": [
+      "swiftc",
+      "-O",
+      "-parse-as-library",
+      "-I",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release",
+      "-Xcc",
+      "-fmodule-map-file=/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/module.modulemap",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/scan.swift",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstrologyKit.o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstronomyKit.o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/hybrid.dylib",
+      "-o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/scan"
+    ],
+    "scoring": [
+      "swiftc",
+      "-O",
+      "-parse-as-library",
+      "-I",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release",
+      "-Xcc",
+      "-fmodule-map-file=/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/module.modulemap",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/scoring.swift",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstrologyKit.o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstronomyKit.o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/hybrid.dylib",
+      "-o",
+      "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/chronology/scoring"
+    ]
+  },
+  "objects": {
+    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstrologyKit.o": "53dea14d2bb254dabcdd9cf714410f100331cacc24346500c78f552645589982",
+    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstronomyKit.o": "6ca62f0d9dcde158f47f0d738086845fb44e5d6b4051ab4ea1116bde73a8fed7"
+  }
+}
