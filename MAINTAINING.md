@@ -50,6 +50,8 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
 
 10. **Bounded TT inverse.** The native TT-to-UT inverse checks for finite input, representational precision, and Delta T discontinuity gaps, so nonconvergent input returns an invalid time instead of looping forever.
 
+11. **Compensated VSOP summation.** `VsopCoords`, `VsopDeriv`, and `VsopHelioDistance` accumulate every series through the `VSOP_COMPENSATED_ADD` macro (Neumaier compensated addition), keeping the same terms in the same order. Plain accumulation lost low bits systematically because the t^1 longitude series starts with the mean-motion constant, and the loss grows linearly with |t|: up to 4.45e-12 AU for Mercury at the coverage edges, above the 1e-12 component budget the polynomial tables are qualified against. The compensated result matches an exactly summed evaluation of the same tables bit for bit. Patch 6 (FP contraction off) is what keeps the compensation from being fused away; do not reorder the terms or hoist the `+= *_c` finalization.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the corresponding `+upstream-A.B.C` engine version.

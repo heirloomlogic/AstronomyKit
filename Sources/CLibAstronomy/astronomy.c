@@ -13,6 +13,11 @@
         the full VSOP87B model for qualified segments from 1900 through 2100
         TT; CalcVsop, CalcVsopPosVel and VsopHelioDistance fall back to the
         full series outside coverage.
+      - Neumaier compensated accumulation (VSOP_COMPENSATED_ADD) of the VSOP
+        series in VsopCoords, VsopDeriv and VsopHelioDistance. Plain
+        addition lost low bits systematically (up to 4.45e-12 AU for
+        Mercury at the 1900/2100 edges); compensation matches an exactly
+        summed evaluation of the same tables bit for bit.
       - Bounded TT inverse with finite-input, representational-precision, and
         discontinuity-gap checks; the Espenak-Meeus default and Delta T values
         are unchanged.
@@ -2847,6 +2852,23 @@ static vsop_cache_entry_t *VsopCache(const vsop_model_t *model, double t)
     return entry;
 }
 
+/*
+    Neumaier compensated accumulation. The VSOP series sum hundreds of terms
+    whose magnitudes span many orders; plain accumulation leaves a roundoff
+    floor near 5e-13 AU in the resulting coordinates, which the polynomial
+    qualification budget cannot resolve. Compensation keeps every term, every
+    coefficient, and the summation order; only the rounding error is tracked
+    and folded back in. FP_CONTRACT is off in this translation unit, so the
+    compensation cannot be fused away.
+*/
+#define VSOP_COMPENSATED_ADD(sum, comp, value) \
+    do { \
+        double vsop_value_ = (value); \
+        double vsop_next_ = (sum) + vsop_value_; \
+        (comp) += (fabs(sum) >= fabs(vsop_value_)) ? (((sum) - vsop_next_) + vsop_value_) : ((vsop_value_ - vsop_next_) + (sum)); \
+        (sum) = vsop_next_; \
+    } while (0)
+
 static void VsopCoords(const vsop_model_t *model, double t, double sphere[3], vsop_cache_entry_t *cached)
 {
     int k, s, i;
@@ -2861,23 +2883,26 @@ static void VsopCoords(const vsop_model_t *model, double t, double sphere[3], vs
     for (k=0; k < 3; ++k)
     {
         double tpower = 1.0;
+        double sphere_c = 0.0;
         const vsop_formula_t *formula = &model->formula[k];
         sphere[k] = 0.0;
         for (s=0; s < formula->nseries; ++s)
         {
-            double sum = 0.0;
+            double sum = 0.0, sum_c = 0.0;
             const vsop_series_t *series = &formula->series[s];
             for (i=0; i < series->nterms; ++i)
             {
                 const vsop_term_t *term = &series->term[i];
-                sum  += term->amplitude * cos(term->phase + (t * term->frequency));
+                VSOP_COMPENSATED_ADD(sum, sum_c, term->amplitude * cos(term->phase + (t * term->frequency)));
             }
+            sum += sum_c;
             incr = tpower * sum;
             if (k == LON_INDEX)
                 incr = fmod(incr, PI2);     /* improve precision for longitudes, which can be hundreds of radians */
-            sphere[k] += incr;
+            VSOP_COMPENSATED_ADD(sphere[k], sphere_c, incr);
             tpower *= t;
         }
+        sphere[k] += sphere_c;
     }
     if (cached)
     {
@@ -2967,17 +2992,19 @@ static void VsopDeriv(const vsop_model_t *model, double t, double deriv[3], vsop
         deriv[k] = 0.0;
         for (s=0; s < formula->nseries; ++s)
         {
-            double sin_sum = 0.0;
-            double cos_sum = 0.0;
+            double sin_sum = 0.0, sin_c = 0.0;
+            double cos_sum = 0.0, cos_c = 0.0;
             const vsop_series_t *series = &formula->series[s];
             for (i=0; i < series->nterms; ++i)
             {
                 const vsop_term_t *term = &series->term[i];
                 double angle = term->phase + (t * term->frequency);
-                sin_sum += term->amplitude * term->frequency * sin(angle);
+                VSOP_COMPENSATED_ADD(sin_sum, sin_c, term->amplitude * term->frequency * sin(angle));
                 if (s > 0)
-                    cos_sum += term->amplitude * cos(angle);
+                    VSOP_COMPENSATED_ADD(cos_sum, cos_c, term->amplitude * cos(angle));
             }
+            sin_sum += sin_c;
+            cos_sum += cos_c;
             deriv[k] += (s * dpower * cos_sum) - (tpower * sin_sum);
             dpower = tpower;
             tpower *= t;
@@ -3059,7 +3086,7 @@ static double VsopHelioDistance(const vsop_model_t *model, astro_time_t time)
         return sqrt(polynomial_position[0]*polynomial_position[0] +
                     polynomial_position[1]*polynomial_position[1] +
                     polynomial_position[2]*polynomial_position[2]);
-    double distance = 0.0;
+    double distance = 0.0, distance_c = 0.0;
     double tpower = 1.0;
     const vsop_formula_t *formula = &model->formula[2];     /* [2] is the distance part of the formula */
     vsop_cache_entry_t *cached = VsopCache(model, t);
@@ -3074,16 +3101,18 @@ static double VsopHelioDistance(const vsop_model_t *model, astro_time_t time)
 
     for (s=0; s < formula->nseries; ++s)
     {
-        double sum = 0.0;
+        double sum = 0.0, sum_c = 0.0;
         const vsop_series_t *series = &formula->series[s];
         for (i=0; i < series->nterms; ++i)
         {
             const vsop_term_t *term = &series->term[i];
-            sum += term->amplitude * cos(term->phase + (t * term->frequency));
+            VSOP_COMPENSATED_ADD(sum, sum_c, term->amplitude * cos(term->phase + (t * term->frequency)));
         }
-        distance += tpower * sum;
+        sum += sum_c;
+        VSOP_COMPENSATED_ADD(distance, distance_c, tpower * sum);
         tpower *= t;
     }
+    distance += distance_c;
 
     if (cached)
     {
