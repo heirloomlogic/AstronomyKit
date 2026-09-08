@@ -19,7 +19,7 @@ import time
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 OUT = ROOT / '.build/polynomial-shipping'
-BASELINE = '53f5c5c'
+BASELINE = '8a1680535d7f4afc523dbe9e9041435dca9ddc10'
 NAMES = ['baseline', 'candidate']
 WORKLOADS = ['new', 'random', 'refinement', 'repeated']
 sys.path.insert(0, str(ROOT / 'Scripts/accuracy'))
@@ -37,7 +37,11 @@ def build():
     OUT.mkdir(parents=True, exist_ok=True)
     croot = ROOT/'Sources/CLibAstronomy'
     baseline = OUT/'baseline.c'
-    baseline.write_bytes(subprocess.check_output(['git','show',f'{BASELINE}:Sources/CLibAstronomy/astronomy.c']))
+    # The reference arm is the same revision with the polynomial path stubbed out,
+    # so every reference sample takes the full compensated series.
+    source = subprocess.check_output(['git','show',f'{BASELINE}:Sources/CLibAstronomy/astronomy.c'],text=True)
+    assert source.count('#include "polynomial.h"\n')==1, 'baseline polynomial include'
+    baseline.write_text(source.replace('#include "polynomial.h"\n','#define PolynomialPosition(b,t,p,v) 0\n'))
     records = {'baselineRevision':subprocess.check_output(['git','rev-parse',BASELINE],text=True).strip(),
                'platform':platform.platform(), 'machine':platform.machine(),
                'compiler':subprocess.check_output(['swiftc','--version'],text=True), 'libraries':{}, 'swift':{},

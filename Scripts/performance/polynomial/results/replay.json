@@ -1,0 +1,97 @@
+{
+  "binarySHA256": "4c9b7864f1b537eb07c1d73b021024ab0a46a5c4d80ee1b90b2d1497025bcdae",
+  "budget": "max(1e-12, abs(reference)*1e-12) for each requested component and radius",
+  "files": {
+    "nyc-day": {
+      "evaluated": 644568,
+      "failingRecords": 0,
+      "failures": [],
+      "invalid": {},
+      "maxBudgetRatio": {
+        "Earth": 0.054175414154755686,
+        "Jupiter": 0.0577871084317394,
+        "Mars": 0.034111602431607935,
+        "Mercury": 0.07322614736793298,
+        "Neptune": 0.03363975764614224,
+        "Saturn": 0.023869795029440866,
+        "Uranus": 0.03730349362740526,
+        "Venus": 0.05795364188543317
+      },
+      "records": 940669,
+      "saturated": false,
+      "sourceSHA256": "4f805a74974993f09f3e182dc377e61ef30bd9c68196ab8201f6ea258077812d",
+      "unique": 644568
+    },
+    "nyc-week": {
+      "evaluated": 1636249,
+      "failingRecords": 0,
+      "failures": [],
+      "invalid": {},
+      "maxBudgetRatio": {
+        "Earth": 0.054175414154755686,
+        "Jupiter": 0.0577871084317394,
+        "Mars": 0.03833044992518353,
+        "Mercury": 0.07457923167919489,
+        "Neptune": 0.04196643033083092,
+        "Saturn": 0.023869795029440866,
+        "Uranus": 0.03730349362740526,
+        "Venus": 0.0688338275267597
+      },
+      "records": 5295748,
+      "saturated": false,
+      "sourceSHA256": "263484957ec6afa8e1092a155a55650e542121fbf7877dae9fb046434961e68e",
+      "unique": 1636249
+    },
+    "reykjavik-day": {
+      "evaluated": 597438,
+      "failingRecords": 0,
+      "failures": [],
+      "invalid": {},
+      "maxBudgetRatio": {
+        "Earth": 0.054175414154755686,
+        "Jupiter": 0.0577871084317394,
+        "Mars": 0.033556490919295356,
+        "Mercury": 0.07322614736793298,
+        "Neptune": 0.03363975764614224,
+        "Saturn": 0.023869795029440866,
+        "Uranus": 0.03730349362740526,
+        "Venus": 0.05984102102729594
+      },
+      "records": 830690,
+      "saturated": false,
+      "sourceSHA256": "5327526fcdbbd3ad247816378c2b314ee7ee22be81d725cfedcf1a5c62cfed67",
+      "unique": 597438
+    },
+    "scoring": {
+      "evaluated": 95936,
+      "failingRecords": 0,
+      "failures": [],
+      "invalid": {},
+      "maxBudgetRatio": {
+        "Earth": 0.12215228828438285,
+        "Jupiter": 0.0604793992664554,
+        "Mars": 0.09703349235223868,
+        "Mercury": 0.15443202272535927,
+        "Neptune": 0.028783342234765096,
+        "Saturn": 0.030100921755149557,
+        "Uranus": 0.03730349362740526,
+        "Venus": 0.12165268792330153
+      },
+      "records": 678903,
+      "saturated": false,
+      "sourceSHA256": "f0618cd29f70e11b1c613de735947bb927022d88877aaca556c5e2a4f4fd8973",
+      "unique": 95936
+    }
+  },
+  "invalid": {
+    "Earth": [],
+    "Jupiter": [],
+    "Mars": [],
+    "Mercury": [],
+    "Neptune": [],
+    "Saturn": [],
+    "Uranus": [],
+    "Venus": []
+  },
+  "reference": "8a1680535d7f4afc523dbe9e9041435dca9ddc10"
+}

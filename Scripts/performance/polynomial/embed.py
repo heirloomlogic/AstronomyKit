@@ -35,7 +35,7 @@ def render():
         if hashlib.sha256(valid).hexdigest() != row['validitySHA256']:
             raise ValueError(f'{name}: validity hash mismatch')
         degree, width, count = row['degree'], row['width'], row['segments']
-        if degree != 12 or width not in (8, 16, 32) or count != math.ceil((STOP-START)/width):
+        if degree not in (12, 16) or width not in (8, 16, 32) or count != math.ceil((STOP-START)/width):
             raise ValueError(f'{name}: unsupported grid')
         if len(valid) != count or not set(valid) <= {0, 1} or len(data) != count*3*(degree+1)*8:
             raise ValueError(f'{name}: incorrect table size')

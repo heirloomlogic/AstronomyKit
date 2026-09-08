@@ -1,29 +1,32 @@
 {
-  "baselineRevision": "53f5c5c17043404159a4529c110f1336b346eb4e",
+  "baselineRevision": "8a1680535d7f4afc523dbe9e9041435dca9ddc10",
   "compiler": "Apple Swift version 6.4 (swiftlang-6.4.0.30.4 clang-2100.3.30.1)\nTarget: arm64-apple-macosx26.0\n",
   "harness": {
-    "PROTOCOL.md": "ac6b0c8e9df69b0d1cde566182e29701e1d34bca943e72142861a5047ca36656",
-    "README.md": "a3912eedafdf00da54ee0658a396d290583e015e53391e50b13e53c67f82bc92",
-    "downstream.py": "48d5e31d3215eaa2d8376662cd04a6c7aaa14cfd692d9050a9ed36e0833a82aa",
-    "embed.py": "d992d13e14b29284d3ff0eb4cde95763e501fb68655e17e38663b7996c15b668",
+    "PROTOCOL.md": "dc82f6e0bcb1f09e7f2334582463536a8800b526e75e22a285b59cdcba6c6cb8",
+    "README.md": "9bd94aa7d2743e485c0ff24113b373a7de2656d42398ed6b342aafd2003d9b14",
+    "downstream.py": "16fc8660917f58ef6d2f95b41415611dc10f7ff8963229b2aacefa219a7ec87e",
+    "embed.py": "fe35c45bb558c8123c4e81fe9f4ede53d83ae0321c4768efaeb3d0b262e79d31",
     "exclude-integration.py": "3418ad4fe3bb618d2606041d824b419eb2e9f13ef69c9db5d699a68e614a2c46",
-    "experiment.py": "9942799fa4976611488e5bcd5940487eaaf60be1acafa3bd80453f3c2ec40fff",
+    "experiment.py": "e9946407d55535ba9a1f8c416c2c27fcc3179a6149c3b14ba9d4fc53832c56b3",
     "fit.c": "977fcfaca783a5bd42ffa68e7e38ab3bd013ff760adb7717001890d5fe55aa33",
-    "qualify.c": "e675120d518c71f104db89507c52d2a70c60b2b62de4a06586c449d72556bfdb",
-    "qualify.py": "6df93a5b29e2e0381d96ff94448de4541b8ae7c8e38a17c2050610ab620ce246",
-    "report.py": "4033f39e86736b881e7d9ac6189966be9887834b4828f66eeb2ad40c73b2b0ba",
-    "run.py": "fc2d570a55002a0cc11e82dc2fe889a49cc0aff47e0d1a29574aed0f83ac9e48",
-    "seams.c": "61aa585a833b954d4bc1f31b24e27de3b8e09a6bf623a4bedd7f714565391bf3",
+    "qualify.c": "c2e1a1269e7ad2cb55941bf8506f280c77a0b43345e5122a9f31c5c581b39afe",
+    "qualify.py": "ac9b7fb2d8cb90dd9d9190b622639319ffa449697e59465f8c12a94b9e922ea9",
+    "replay.py": "975c529f40d8ab2d5ed6031421bccda21312e1f1fca704d39f7af755c94d37a0",
+    "report.py": "780e9fdf0a1b0639b38221e4b3a08c98250f2e65f03098ce89bb55c28b72ffb0",
+    "run.py": "73f14eb4af30870c925b83f9b331f9e766fafc5c1073fe298b03827e88b1571c",
+    "screen-windows.py": "b612783723de3057aae44d7390212e7a8ecf81c0f9cf0ff86f8f5b1d1007190e",
+    "seams.c": "288afad1d6cd419b869c9643dd8fec9080f08f6980c606c5ed9a08b8d9369855",
     "seams.py": "35ec8b131febbd12d4d8bbfa27ad7ef16e6f8c03a0166a067767d861a36b21c2",
     "test_polynomial.py": "f8106b649725eb322c6ae8724888d190221f3ea6135c3b51dca617d902f14311",
+    "test_replay.py": "43df03219b39b1858be2f17b52ba4710f09066bdb43f7314e67c867c1e3355a4",
     "traces.py": "c51c6649e05d9fd6f0db95e5a8e19b5fedd5b888427487ec5cbd2ef916905579",
-    "verify.py": "2d222dfc00cacbb3d8d22282f20a7d132dfeba71f003930700b07c924989aa11",
+    "verify.py": "8bab5d032d3a297620b5c7434dd0f6a3d0b61c324e01ec047a999c7aacbaf20d",
     "work_probe.c": "f8b4d340b97190d2790d0ece1904e32d4d420cebf09cc155a17692a1740830e1"
   },
   "libraries": {
     "baseline": {
       "binaryBytes": 1059008,
-      "binarySHA256": "f2c00f7bcb8b2a2db0bbbbd3693bafc7bc66ccc7959383766d0fac693415d014",
+      "binarySHA256": "3115f55c1b73a3a2d57dc631bfdc34ca3e6557fb1e9dc9b32ee3b1fbd05fd43e",
       "command": [
         "clang",
         "-O2",
@@ -43,11 +46,11 @@
         "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/baseline.dylib"
       ],
       "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/baseline.dylib",
-      "sourceSHA256": "aae580b027f604110b08a8625e7947909eafa94bb4f05a3b67cf43035a693476"
+      "sourceSHA256": "9e17411d1655f5732c49bb321d104dec2be9d14d5605e0e0e19c74aa51b05c75"
     },
     "candidate": {
-      "binaryBytes": 11924576,
-      "binarySHA256": "55408483b57c5071c1fdc5c4fedeea7225ffda9f8ba2cbfd948ca204075569be",
+      "binaryBytes": 12651104,
+      "binarySHA256": "771456cdc1e4e24dc381c736cebaf2faa5961f70e6a500ff1be1905ea640bad1",
       "command": [
         "clang",
         "-O2",
@@ -67,7 +70,7 @@
         "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/candidate.dylib"
       ],
       "path": "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/candidate.dylib",
-      "sourceSHA256": "dcbd3037d166486d995dcec165bc202d45f40cfd63fb0c247f94a32e6dd2f34c"
+      "sourceSHA256": "2813055b9b839e7b9a9ce7c00cae7271a5c50076471274493de163fe3b89be3c"
     }
   },
   "machine": "arm64",
@@ -75,7 +78,7 @@
   "sources": {
     "Sources/AstronomyKit/Apsis.swift": "50e00a5530dab43612500c8bbb1715386b9c76b64ba177e0532c75119433e7a7",
     "Sources/AstronomyKit/AstronomyError.swift": "46fe7d0683350a6ce4d04e4e270d2d1c7b5f201d7db21e6167e1be0c51c6ba9c",
-    "Sources/AstronomyKit/AstronomyKit.swift": "2bdb55acacc0f117a7797946f13adcc9b5c6ec9bb13c8416a468fed302b0720b",
+    "Sources/AstronomyKit/AstronomyKit.swift": "e9b4e8dfb252ea4d7d2f8f3cdcf5c5afdff314bb3ecd4a22592cf55eb02cf953",
     "Sources/AstronomyKit/Atmosphere.swift": "8edd5396d88889b10ffb073f25d5186d55e7bf70a75aeca3cf733a6e64f0367a",
     "Sources/AstronomyKit/CelestialBody.swift": "32f74788adf03fb608c2b5a5c70f5e9f153430e0bba928a12de81c26cdb77117",
     "Sources/AstronomyKit/Chiron.swift": "2b5d8af311b8946638e4fb0b9dd5c1929f3931178aaf4ea4288b30dc4d6cccfe",
@@ -117,7 +120,7 @@
     "Sources/AstronomyKit/UTCOffsetTable.swift": "6ff9360c7fc717e4ce383fc11c4ef0324d25552997bb1d44885acb2fe5fbafb6",
     "Sources/CLibAstronomy/ak_detmath.h": "38b8ce280c5b384150a4980b2117023241d5789d647963e276fee9ca953d1f1b",
     "Sources/CLibAstronomy/ak_math.c": "b82ad27cccc2b21030e9cec3c5f7ae9cb6c99da79e90c50baa1753cc3db8014d",
-    "Sources/CLibAstronomy/astronomy.c": "dcbd3037d166486d995dcec165bc202d45f40cfd63fb0c247f94a32e6dd2f34c",
+    "Sources/CLibAstronomy/astronomy.c": "2813055b9b839e7b9a9ce7c00cae7271a5c50076471274493de163fe3b89be3c",
     "Sources/CLibAstronomy/detmath/__cos.c": "20fa7827baeb1b779199ee72d1f1485dc025a21d70f298f238e216343a6c1dd8",
     "Sources/CLibAstronomy/detmath/__math_invalid.c": "497ab07b2bc9d2e296cb45de74a4602fe6300db06208587cdc8d8a5fd9342f6a",
     "Sources/CLibAstronomy/detmath/__math_oflow.c": "53d19d21f0dd4a2a528c0041835e6f49492609b66b8d960808b7426837bf4974",
@@ -147,7 +150,7 @@
     "Sources/CLibAstronomy/detmath/tan.c": "a2d86f3680bc4e749e6f24ca09f1c6016fac848aaddc9bd08f81df33a1095d63",
     "Sources/CLibAstronomy/generated/.gitattributes": "90c268096c358f13edc650160cd462a5749fe50c49ec9f72745b3b5ddc667656",
     "Sources/CLibAstronomy/generated/iau2000b_full.h": "969e564ac5173310bb7f730cf683de7a4975b3fcf20566f2a4b45755dcee41c1",
-    "Sources/CLibAstronomy/generated/polynomial-data.h": "809e5b3b683438685a84b404447cffed3741fd2d2dd2474f47884a39a3542b24",
+    "Sources/CLibAstronomy/generated/polynomial-data.h": "689747697bf1b5f1f0f41dbdbab90a1dccfca5eb9ecbb4ba4d0a2162acfd54da",
     "Sources/CLibAstronomy/generated/vsop87b_full.h": "712b8ab206ded1f769a6445928176ebfa65089c14025133c63e47519408534f8",
     "Sources/CLibAstronomy/include/ak_math.h": "33f4913def6d2792c45bbacec49fa08ccdabcd95a444e9ff5dca0f32dd38a90d",
     "Sources/CLibAstronomy/include/astronomy.h": "0c130854ee55b466dee98928ad72e3c5092bc862d37a2bba036c5568c811edbe",
@@ -156,7 +159,7 @@
   },
   "swift": {
     "baseline": {
-      "binarySHA256": "ea5498ffa93862aa1ddaf732d77013b200e71905ca6dfbc89a351f48dbd73a15",
+      "binarySHA256": "b07848c668bedc29392d39e1012a9c8a22465a0d983468c2f7d288b4e28b1ac9",
       "command": [
         "swiftc",
         "-O",
@@ -202,7 +205,7 @@
       ]
     },
     "candidate": {
-      "binarySHA256": "4dc21bd4bab5fabd5f2381bb64e75ac85f588f5137d2f92940fbac34f4a07b63",
+      "binarySHA256": "87abd21cfcba0aaf4f25cd46a2422991742f511ae807a9a33a74156b144261d3",
       "command": [
         "swiftc",
         "-O",

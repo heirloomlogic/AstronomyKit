@@ -16,11 +16,11 @@ import time
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
-REVISION = '0129d8a494957f12be101916cf7f18f8bbde7622'
+REVISION = '8a1680535d7f4afc523dbe9e9041435dca9ddc10'
 BODIES = ['Mercury', 'Venus', 'Earth', 'Mars', 'Jupiter', 'Saturn', 'Uranus', 'Neptune']
 START, STOP = -36524.5, 36889.5
 DEGREES, WIDTHS = [12, 16, 20, 24], [2, 4, 8, 16, 32]
-POSITION_LIMIT, VELOCITY_LIMIT = 1e-11, 1e-11
+POSITION_LIMIT, VELOCITY_LIMIT = 2.5e-13, 2.5e-13
 SUFFIX = '.dylib' if sys.platform == 'darwin' else '.so'
 
 

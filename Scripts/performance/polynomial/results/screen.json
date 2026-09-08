@@ -1,0 +1,1614 @@
+{
+  "configurations": [
+    {
+      "body": "Mercury",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 1.972727536880825e-13,
+      "maxVelocityAUPerDay": 1.6766752916619332e-14,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mercury",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 1.9748092050519972e-13,
+      "maxVelocityAUPerDay": 1.9435841824844147e-14,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mercury",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 1.9749479829300753e-13,
+      "maxVelocityAUPerDay": 1.7901370490125412e-14,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mercury",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 1.9730050926369813e-13,
+      "maxVelocityAUPerDay": 1.7814417475892075e-14,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mercury",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 2.6406719692839697e-13,
+      "maxVelocityAUPerDay": 1.9090631853124762e-14,
+      "pass": false,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mercury",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 2.636300466124508e-13,
+      "maxVelocityAUPerDay": 1.5716377851915375e-14,
+      "pass": false,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mercury",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 2.634288186892375e-13,
+      "maxVelocityAUPerDay": 1.8072349172726376e-14,
+      "pass": false,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mercury",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 2.637063744453938e-13,
+      "maxVelocityAUPerDay": 1.860317455637528e-14,
+      "pass": false,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mercury",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 2.3697710460623966e-13,
+      "maxVelocityAUPerDay": 1.5799720472914336e-13,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mercury",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 2.314259894831139e-13,
+      "maxVelocityAUPerDay": 1.8991752614994084e-14,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mercury",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 2.362554596402333e-13,
+      "maxVelocityAUPerDay": 2.0560809999015106e-14,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mercury",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 2.3570034812792073e-13,
+      "maxVelocityAUPerDay": 1.6540588343438856e-14,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mercury",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 2.981889457576159e-10,
+      "maxVelocityAUPerDay": 4.3036048683053885e-10,
+      "pass": false,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mercury",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 5.908190603420849e-13,
+      "maxVelocityAUPerDay": 9.131653766480952e-13,
+      "pass": false,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mercury",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 3.04117842020446e-13,
+      "maxVelocityAUPerDay": 1.6535384173010925e-14,
+      "pass": false,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mercury",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 3.0714319976254956e-13,
+      "maxVelocityAUPerDay": 2.0521778720805628e-14,
+      "pass": false,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mercury",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 5.022714682501039e-07,
+      "maxVelocityAUPerDay": 3.6781345130396104e-07,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mercury",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 7.4160611263085485e-09,
+      "maxVelocityAUPerDay": 6.495524826344301e-09,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mercury",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 7.484775299548829e-11,
+      "maxVelocityAUPerDay": 9.402615144815663e-11,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mercury",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 2.3664264992007134e-12,
+      "maxVelocityAUPerDay": 2.756149475313663e-12,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Venus",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 1.965094753586527e-13,
+      "maxVelocityAUPerDay": 4.394054564649252e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Venus",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 1.965094753586527e-13,
+      "maxVelocityAUPerDay": 4.683753385137379e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Venus",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 1.965094753586527e-13,
+      "maxVelocityAUPerDay": 5.0671272733282535e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Venus",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 1.9667600881234648e-13,
+      "maxVelocityAUPerDay": 4.760081218080359e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Venus",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 2.278177646530821e-13,
+      "maxVelocityAUPerDay": 4.740999259844614e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Venus",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 2.280675648336228e-13,
+      "maxVelocityAUPerDay": 5.205905151406398e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Venus",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 2.2795654253116027e-13,
+      "maxVelocityAUPerDay": 4.690692279041286e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Venus",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 2.2803980925800715e-13,
+      "maxVelocityAUPerDay": 4.565792188770956e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Venus",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 1.91402449445377e-13,
+      "maxVelocityAUPerDay": 4.430483757644765e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Venus",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 1.9068080447937064e-13,
+      "maxVelocityAUPerDay": 4.777428452840127e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Venus",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 1.9101387138675818e-13,
+      "maxVelocityAUPerDay": 3.980756696497778e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Venus",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 1.9212409441138334e-13,
+      "maxVelocityAUPerDay": 4.912736883966318e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Venus",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 1.7200130209005238e-13,
+      "maxVelocityAUPerDay": 4.011629353359303e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Venus",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 1.729727472365994e-13,
+      "maxVelocityAUPerDay": 5.362030264244311e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Venus",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 1.723066134218243e-13,
+      "maxVelocityAUPerDay": 4.097416850257218e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Venus",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 1.7200130209005238e-13,
+      "maxVelocityAUPerDay": 5.169475958410885e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Venus",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 2.1892210266827306e-13,
+      "maxVelocityAUPerDay": 2.6862626706369852e-14,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Venus",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 2.0967949598826863e-13,
+      "maxVelocityAUPerDay": 6.264520152621245e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Venus",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 2.1040114095427498e-13,
+      "maxVelocityAUPerDay": 5.5441762292218755e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Venus",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 2.1001256289565617e-13,
+      "maxVelocityAUPerDay": 4.591270939824366e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Earth",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 1.475486399726833e-13,
+      "maxVelocityAUPerDay": 2.6944592390609756e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Earth",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 1.4760415112391456e-13,
+      "maxVelocityAUPerDay": 2.5678244253146687e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Earth",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 1.476319066995302e-13,
+      "maxVelocityAUPerDay": 2.4936649967166602e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Earth",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 1.476319066995302e-13,
+      "maxVelocityAUPerDay": 2.3978215246689416e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Earth",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 1.760917800464057e-13,
+      "maxVelocityAUPerDay": 2.4277455046295415e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Earth",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 1.761056578342135e-13,
+      "maxVelocityAUPerDay": 2.8727020762175925e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Earth",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 1.7608831059945373e-13,
+      "maxVelocityAUPerDay": 2.762113454624071e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Earth",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 1.7608137170554983e-13,
+      "maxVelocityAUPerDay": 2.6536932373755207e-15,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Earth",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 1.8773871346411397e-13,
+      "maxVelocityAUPerDay": 2.9476421303797906e-14,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Earth",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 1.9528823003156504e-13,
+      "maxVelocityAUPerDay": 2.998469528225911e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Earth",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 1.9528823003156504e-13,
+      "maxVelocityAUPerDay": 2.555247680113837e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Earth",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 1.9537149675841192e-13,
+      "maxVelocityAUPerDay": 2.5435925067596177e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Earth",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 4.265710007445023e-11,
+      "maxVelocityAUPerDay": 6.238336930364241e-11,
+      "pass": false,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Earth",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 1.9244328353096307e-13,
+      "maxVelocityAUPerDay": 2.302248561063258e-13,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Earth",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 1.6142642778049776e-13,
+      "maxVelocityAUPerDay": 2.327998904760875e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Earth",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 1.6124601653899617e-13,
+      "maxVelocityAUPerDay": 2.1983283249316088e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Earth",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 3.229253375813812e-08,
+      "maxVelocityAUPerDay": 2.0367783723496125e-08,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Earth",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 1.6804103455947406e-09,
+      "maxVelocityAUPerDay": 1.5565485879387442e-09,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Earth",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 4.4740239291130024e-11,
+      "maxVelocityAUPerDay": 5.7240781559109166e-11,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Earth",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 6.62164767462059e-13,
+      "maxVelocityAUPerDay": 9.162965525222333e-13,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mars",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 1.6256440638073855e-13,
+      "maxVelocityAUPerDay": 1.059482362952835e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mars",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 1.6253665080512292e-13,
+      "maxVelocityAUPerDay": 1.2667818183320634e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mars",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 1.6256440638073855e-13,
+      "maxVelocityAUPerDay": 1.1722393888913274e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mars",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 1.6256440638073855e-13,
+      "maxVelocityAUPerDay": 1.1280039402539188e-15,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Mars",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 1.2678746941219288e-13,
+      "maxVelocityAUPerDay": 8.335346302068558e-16,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mars",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 1.2678746941219288e-13,
+      "maxVelocityAUPerDay": 9.67325178291567e-16,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mars",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 1.2678746941219288e-13,
+      "maxVelocityAUPerDay": 9.619041674291395e-16,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mars",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 1.2667644710973036e-13,
+      "maxVelocityAUPerDay": 9.660241356845845e-16,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Mars",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 1.1801670751765414e-13,
+      "maxVelocityAUPerDay": 9.441232518003773e-16,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mars",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 1.1812772982011666e-13,
+      "maxVelocityAUPerDay": 1.3504822260479443e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mars",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 1.1801670751765414e-13,
+      "maxVelocityAUPerDay": 1.0013691265076119e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mars",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 1.1801670751765414e-13,
+      "maxVelocityAUPerDay": 1.0390993621101074e-15,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Mars",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 1.2692624729027102e-13,
+      "maxVelocityAUPerDay": 9.688430613330468e-16,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mars",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 1.268013472000007e-13,
+      "maxVelocityAUPerDay": 1.1249681741709594e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mars",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 1.2692624729027102e-13,
+      "maxVelocityAUPerDay": 1.0668549377257364e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mars",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 1.2674583604876943e-13,
+      "maxVelocityAUPerDay": 1.0443035325380379e-15,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Mars",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 1.3222756223285614e-13,
+      "maxVelocityAUPerDay": 1.8611848173755163e-14,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mars",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 1.0735856648125264e-13,
+      "maxVelocityAUPerDay": 1.0512424264419451e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mars",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 1.0724754417879012e-13,
+      "maxVelocityAUPerDay": 1.0737938316296436e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Mars",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 1.071365218763276e-13,
+      "maxVelocityAUPerDay": 1.2533377113932431e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 7.616129948928574e-14,
+      "maxVelocityAUPerDay": 8.239936510889834e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 7.616129948928574e-14,
+      "maxVelocityAUPerDay": 8.847089727481716e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 7.593925488436071e-14,
+      "maxVelocityAUPerDay": 9.063930161978817e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 7.616129948928574e-14,
+      "maxVelocityAUPerDay": 7.513521055324546e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 7.460698725481052e-14,
+      "maxVelocityAUPerDay": 9.367506770274758e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 7.460698725481052e-14,
+      "maxVelocityAUPerDay": 8.456776945386935e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 7.460698725481052e-14,
+      "maxVelocityAUPerDay": 7.39425881635114e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 7.460698725481052e-14,
+      "maxVelocityAUPerDay": 8.847089727481716e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 6.927791673660977e-14,
+      "maxVelocityAUPerDay": 8.760353553682876e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 6.927791673660977e-14,
+      "maxVelocityAUPerDay": 8.760353553682876e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 6.927791673660977e-14,
+      "maxVelocityAUPerDay": 8.673617379884035e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 6.927791673660977e-14,
+      "maxVelocityAUPerDay": 8.109832250191573e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 5.839773109528323e-14,
+      "maxVelocityAUPerDay": 8.174884380540703e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 5.839773109528323e-14,
+      "maxVelocityAUPerDay": 7.32920668600201e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 5.839773109528323e-14,
+      "maxVelocityAUPerDay": 7.155734338404329e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 5.81756864903582e-14,
+      "maxVelocityAUPerDay": 8.803721640582296e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 8.393286066166183e-14,
+      "maxVelocityAUPerDay": 3.4893962719273475e-15,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 8.43769498715119e-14,
+      "maxVelocityAUPerDay": 9.107298248878237e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 8.43769498715119e-14,
+      "maxVelocityAUPerDay": 8.651933336434325e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Jupiter",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 8.43769498715119e-14,
+      "maxVelocityAUPerDay": 8.998878031629687e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Saturn",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 2.3418766925686896e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Saturn",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 2.8297676701871666e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Saturn",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 2.0789576657409548e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Saturn",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 2.5099280293039428e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Saturn",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 4.6407322429331543e-14,
+      "maxVelocityAUPerDay": 2.279535067650773e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Saturn",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 4.6407322429331543e-14,
+      "maxVelocityAUPerDay": 2.3283241654126208e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Saturn",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 4.6407322429331543e-14,
+      "maxVelocityAUPerDay": 2.4367443826611712e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Saturn",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 4.6407322429331543e-14,
+      "maxVelocityAUPerDay": 2.688821387764051e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Saturn",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 4.551914400963142e-14,
+      "maxVelocityAUPerDay": 2.3391661871374758e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Saturn",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 4.551914400963142e-14,
+      "maxVelocityAUPerDay": 2.6346112791397758e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Saturn",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 4.551914400963142e-14,
+      "maxVelocityAUPerDay": 2.0816681711721685e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Saturn",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 4.551914400963142e-14,
+      "maxVelocityAUPerDay": 2.0735366548785272e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Saturn",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 5.845324224651449e-14,
+      "maxVelocityAUPerDay": 1.2836953722228372e-16,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Saturn",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 5.850875339774575e-14,
+      "maxVelocityAUPerDay": 2.2551405187698492e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Saturn",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 5.856426454897701e-14,
+      "maxVelocityAUPerDay": 2.2985086056692694e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Saturn",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 5.850875339774575e-14,
+      "maxVelocityAUPerDay": 2.7755575615628914e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Saturn",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 4.32764934998886e-13,
+      "maxVelocityAUPerDay": 3.239474660743369e-13,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Saturn",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 4.8683279629813114e-14,
+      "maxVelocityAUPerDay": 2.185751579730777e-16,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Saturn",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 4.8627768478581856e-14,
+      "maxVelocityAUPerDay": 2.5153490401663703e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Saturn",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 4.8627768478581856e-14,
+      "maxVelocityAUPerDay": 2.47198095326695e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Uranus",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 4.618527782440651e-14,
+      "maxVelocityAUPerDay": 7.589415207398531e-18,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Uranus",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 4.618527782440651e-14,
+      "maxVelocityAUPerDay": 8.673617379884035e-18,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Uranus",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 4.618527782440651e-14,
+      "maxVelocityAUPerDay": 1.214306433183765e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Uranus",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 4.618527782440651e-14,
+      "maxVelocityAUPerDay": 1.1709383462843448e-17,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Uranus",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 8.890457814381136e-18,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Uranus",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 9.107298248878237e-18,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Uranus",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 1.1275702593849246e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Uranus",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 9.974659986866641e-18,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Uranus",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 4.884981308350689e-14,
+      "maxVelocityAUPerDay": 6.938893903907228e-18,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Uranus",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 4.884981308350689e-14,
+      "maxVelocityAUPerDay": 9.974659986866641e-18,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Uranus",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 4.884981308350689e-14,
+      "maxVelocityAUPerDay": 1.1275702593849246e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Uranus",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 4.884981308350689e-14,
+      "maxVelocityAUPerDay": 9.107298248878237e-18,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Uranus",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 1.431146867680866e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Uranus",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 9.540979117872439e-18,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Uranus",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 1.3877787807814457e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Uranus",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 1.1275702593849246e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Uranus",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 6.572520305780927e-14,
+      "maxVelocityAUPerDay": 2.7544373032428737e-14,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Uranus",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 5.773159728050814e-14,
+      "maxVelocityAUPerDay": 1.3227266504323154e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Uranus",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 5.773159728050814e-14,
+      "maxVelocityAUPerDay": 1.3010426069826053e-17,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Uranus",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 5.773159728050814e-14,
+      "maxVelocityAUPerDay": 9.324138683375338e-18,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Neptune",
+      "bytes": 11452584,
+      "degree": 12,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 4.87890977618477e-18,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Neptune",
+      "bytes": 14976456,
+      "degree": 16,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 6.071532165918825e-18,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Neptune",
+      "bytes": 18500328,
+      "degree": 20,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 9.974659986866641e-18,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Neptune",
+      "bytes": 22024200,
+      "degree": 24,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 6.071532165918825e-18,
+      "pass": true,
+      "segments": 36707,
+      "width": 2
+    },
+    {
+      "body": "Neptune",
+      "bytes": 5726448,
+      "degree": 12,
+      "maxPositionAU": 4.707345624410664e-14,
+      "maxVelocityAUPerDay": 4.9873299934333204e-18,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Neptune",
+      "bytes": 7488432,
+      "degree": 16,
+      "maxPositionAU": 4.707345624410664e-14,
+      "maxVelocityAUPerDay": 7.37257477290143e-18,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Neptune",
+      "bytes": 9250416,
+      "degree": 20,
+      "maxPositionAU": 4.707345624410664e-14,
+      "maxVelocityAUPerDay": 1.0842021724855044e-17,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Neptune",
+      "bytes": 11012400,
+      "degree": 24,
+      "maxPositionAU": 4.707345624410664e-14,
+      "maxVelocityAUPerDay": 6.5052130349130266e-18,
+      "pass": true,
+      "segments": 18354,
+      "width": 4
+    },
+    {
+      "body": "Neptune",
+      "bytes": 2863224,
+      "degree": 12,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 1.0408340855860843e-17,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Neptune",
+      "bytes": 3744216,
+      "degree": 16,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 6.938893903907228e-18,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Neptune",
+      "bytes": 4625208,
+      "degree": 20,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 9.974659986866641e-18,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Neptune",
+      "bytes": 5506200,
+      "degree": 24,
+      "maxPositionAU": 5.3290705182007514e-14,
+      "maxVelocityAUPerDay": 7.37257477290143e-18,
+      "pass": true,
+      "segments": 9177,
+      "width": 8
+    },
+    {
+      "body": "Neptune",
+      "bytes": 1431768,
+      "degree": 12,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 2.8067636105924554e-14,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Neptune",
+      "bytes": 1872312,
+      "degree": 16,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 8.944667923005412e-18,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Neptune",
+      "bytes": 2312856,
+      "degree": 20,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 1.1275702593849246e-17,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Neptune",
+      "bytes": 2753400,
+      "degree": 24,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 7.806255641895632e-18,
+      "pass": true,
+      "segments": 4589,
+      "width": 16
+    },
+    {
+      "body": "Neptune",
+      "bytes": 716040,
+      "degree": 12,
+      "maxPositionAU": 8.173728360816312e-11,
+      "maxVelocityAUPerDay": 5.764228558444856e-11,
+      "pass": false,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Neptune",
+      "bytes": 936360,
+      "degree": 16,
+      "maxPositionAU": 2.3092638912203256e-13,
+      "maxVelocityAUPerDay": 2.2263473616751517e-13,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Neptune",
+      "bytes": 1156680,
+      "degree": 20,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 2.9826401765076227e-16,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    },
+    {
+      "body": "Neptune",
+      "bytes": 1377000,
+      "degree": 24,
+      "maxPositionAU": 4.440892098500626e-14,
+      "maxVelocityAUPerDay": 7.37257477290143e-18,
+      "pass": true,
+      "segments": 2295,
+      "width": 32
+    }
+  ],
+  "evaluationSeconds": {
+    "12": 0.008788,
+    "16": 0.012116,
+    "20": 0.017561,
+    "24": 0.021389
+  },
+  "fitMethod": "integrated",
+  "fitSourceSHA256": "977fcfaca783a5bd42ffa68e7e38ab3bd013ff760adb7717001890d5fe55aa33",
+  "protocolSHA256": "dc82f6e0bcb1f09e7f2334582463536a8800b526e75e22a285b59cdcba6c6cb8",
+  "revision": "8a1680535d7f4afc523dbe9e9041435dca9ddc10"
+}

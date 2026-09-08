@@ -66,6 +66,9 @@ assert len(traces)==4 and not any(r['failures'] for r in traces.values())
 validity=json.loads((ROOT/'Scripts/performance/polynomial/data/shipping-validity.json').read_text())
 archived=ROOT/'Scripts/performance/polynomial/results/qualification.json'
 assert validity['qualificationSHA256']==sha(archived if archived.exists() else OUT/'qualification.json')
+if 'replaySHA256' in validity:
+    replayed=ROOT/'Scripts/performance/polynomial/results/replay.json'
+    assert validity['replaySHA256']==sha(replayed if replayed.exists() else OUT/'replay.json')
 integration=json.loads((ROOT/'Scripts/performance/polynomial/data/integration-validity.json').read_text())
 assert integration['evidenceSHA256']==sha(OUT/'integration-exclusions.json')
 assert integration['invalid']==read('integration-exclusions.json')['invalid']

@@ -1,112 +1,112 @@
 {
   "completeRecordDifferences": {
     "discrete": {
-      ".chronologicalGroups[].bracket.end": 24,
-      ".chronologicalGroups[].bracket.start": 24,
-      ".chronologicalGroups[].events[].bracket.end": 24,
-      ".chronologicalGroups[].events[].bracket.start": 24,
-      ".chronologicalGroups[].events[].id": 24,
-      ".chronologicalGroups[].events[].instant": 24,
-      ".chronologicalGroups[].id": 24,
-      ".events[].bracket.end": 24,
-      ".events[].bracket.start": 24,
-      ".events[].id": 24,
-      ".events[].instant": 24
+      ".chronologicalGroups[].bracket.end": 22,
+      ".chronologicalGroups[].bracket.start": 22,
+      ".chronologicalGroups[].events[].bracket.end": 22,
+      ".chronologicalGroups[].events[].bracket.start": 22,
+      ".chronologicalGroups[].events[].id": 20,
+      ".chronologicalGroups[].events[].instant": 20,
+      ".chronologicalGroups[].id": 20,
+      ".events[].bracket.end": 22,
+      ".events[].bracket.start": 22,
+      ".events[].id": 20,
+      ".events[].instant": 20
     },
     "ignoredRandomUUIDs": 0,
     "numeric": {
       ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
-        "count": 46,
-        "maxAbsoluteDifference": 9.153675549970965e-10
+        "count": 48,
+        "maxAbsoluteDifference": 3.665498240033103e-10
       },
       ".chronologicalGroups[].events[].motionAfter.residual": {
-        "count": 45,
-        "maxAbsoluteDifference": 1.6647001237808064e-08
+        "count": 47,
+        "maxAbsoluteDifference": 1.0008501963706555e-08
       },
       ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
-        "count": 45,
-        "maxAbsoluteDifference": 1.0633972916137222e-09
+        "count": 50,
+        "maxAbsoluteDifference": 1.9225404001635195e-10
       },
       ".chronologicalGroups[].events[].motionBefore.residual": {
-        "count": 46,
-        "maxAbsoluteDifference": 1.0800249583553523e-08
+        "count": 48,
+        "maxAbsoluteDifference": 1.2180732613030289e-08
       },
       ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
-        "count": 52,
-        "maxAbsoluteDifference": 7.966779163808002e-05
+        "count": 58,
+        "maxAbsoluteDifference": 3.874633027121585e-05
       },
       ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
-        "count": 52,
-        "maxAbsoluteDifference": 1.8660805833903282e-07
+        "count": 58,
+        "maxAbsoluteDifference": 4.1711629261698135e-08
       },
       ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-        "count": 52,
-        "maxAbsoluteDifference": 3.5755525484848505e-09
+        "count": 57,
+        "maxAbsoluteDifference": 1.4951532234519505e-09
       },
       ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
-        "count": 51,
-        "maxAbsoluteDifference": 8.962786068877904e-11
+        "count": 55,
+        "maxAbsoluteDifference": 1.0402345651527867e-11
       },
       ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
-        "count": 50,
-        "maxAbsoluteDifference": 5.327040408786843e-08
+        "count": 55,
+        "maxAbsoluteDifference": 1.4698084083164531e-08
       },
       ".chronologicalGroups[].events[].residual": {
-        "count": 45,
-        "maxAbsoluteDifference": 4.917970792510979e-09
+        "count": 47,
+        "maxAbsoluteDifference": 1.1449888656248473e-08
       },
       ".evaluations": {
-        "count": 7,
-        "maxAbsoluteDifference": 10
+        "count": 4,
+        "maxAbsoluteDifference": 3
       },
       ".events[].motionAfter.derivativePerSecond": {
-        "count": 46,
-        "maxAbsoluteDifference": 9.153675549970965e-10
+        "count": 48,
+        "maxAbsoluteDifference": 3.665498240033103e-10
       },
       ".events[].motionAfter.residual": {
-        "count": 45,
-        "maxAbsoluteDifference": 1.6647001237808064e-08
+        "count": 47,
+        "maxAbsoluteDifference": 1.0008501963706555e-08
       },
       ".events[].motionBefore.derivativePerSecond": {
-        "count": 45,
-        "maxAbsoluteDifference": 1.0633972916137222e-09
+        "count": 50,
+        "maxAbsoluteDifference": 1.9225404001635195e-10
       },
       ".events[].motionBefore.residual": {
-        "count": 46,
-        "maxAbsoluteDifference": 1.0800249583553523e-08
+        "count": 48,
+        "maxAbsoluteDifference": 1.2180732613030289e-08
       },
       ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
-        "count": 52,
-        "maxAbsoluteDifference": 7.966779163808002e-05
+        "count": 58,
+        "maxAbsoluteDifference": 3.874633027121585e-05
       },
       ".events[].pointSamples[].latitudeDegrees": {
-        "count": 52,
-        "maxAbsoluteDifference": 1.8660805833903282e-07
+        "count": 58,
+        "maxAbsoluteDifference": 4.1711629261698135e-08
       },
       ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-        "count": 52,
-        "maxAbsoluteDifference": 3.5755525484848505e-09
+        "count": 57,
+        "maxAbsoluteDifference": 1.4951532234519505e-09
       },
       ".events[].pointSamples[].longitudeDegrees": {
-        "count": 51,
-        "maxAbsoluteDifference": 8.962786068877904e-11
+        "count": 55,
+        "maxAbsoluteDifference": 1.0402345651527867e-11
       },
       ".events[].pointSamples[].speedDegreesPerDay": {
-        "count": 50,
-        "maxAbsoluteDifference": 5.327040408786843e-08
+        "count": 55,
+        "maxAbsoluteDifference": 1.4698084083164531e-08
       },
       ".events[].residual": {
-        "count": 45,
-        "maxAbsoluteDifference": 4.917970792510979e-09
+        "count": 47,
+        "maxAbsoluteDifference": 1.1449888656248473e-08
       }
     }
   },
   "failures": [],
   "groupingValidation": "Probe recomputes groups and exact point samples from every returned event in each arm.",
-  "maxHistoricalShiftSeconds": 0.072957,
+  "maxHistoricalShiftSeconds": 0.021458,
   "maxIndependentErrorSeconds": {
-    "baseline": 59.47723388671875,
-    "candidate": 59.472941875457764
+    "baseline": 59.473801136016846,
+    "candidate": 59.473801136016846
   },
   "queryPairs": 36
 }

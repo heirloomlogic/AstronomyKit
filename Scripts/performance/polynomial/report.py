@@ -48,9 +48,10 @@ for path in OUT.iterdir():
                     shutil.copyfileobj(source,compressed)
         else:
             name=path.name
-            if name=='qualification.json':
+            key={'qualification.json':'qualificationSHA256','replay.json':'replaySHA256'}.get(name)
+            if key:
                 validity=json.loads((HERE/'data/shipping-validity.json').read_text())
-                if sha(path)!=validity['qualificationSHA256']: name='qualification-current.json'
+                if sha(path)!=validity.get(key): name=name.replace('.json','-current.json')
             shutil.copy2(path,results/name)
     elif path.name=='accuracy.json.gz': shutil.copy2(path,results/path.name)
 for archive in ['initial-campaign','contended-scans']:

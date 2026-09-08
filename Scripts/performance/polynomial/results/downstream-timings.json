@@ -5,44 +5,96 @@
       "ignoredRandomUUIDs": 65,
       "numeric": {
         "[].peakChartState.aspects[].orb": {
-          "count": 1250,
-          "maxAbsoluteDifference": 2.6147972675971687e-12
+          "count": 1555,
+          "maxAbsoluteDifference": 1.8758328224066645e-12
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 30,
+          "maxAbsoluteDifference": 3.552713678800501e-15
+        },
+        "[].peakChartState.declinations.mars": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.055333763768431e-13
+        },
+        "[].peakChartState.declinations.mercury": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.9184653865522705e-13
         },
         "[].peakChartState.declinations.neptune": {
           "count": 65,
-          "maxAbsoluteDifference": 3.2929214910382143e-13
+          "maxAbsoluteDifference": 1.8707257964933888e-14
         },
         "[].peakChartState.declinations.pluto": {
-          "count": 65,
-          "maxAbsoluteDifference": 4.973799150320701e-14
+          "count": 60,
+          "maxAbsoluteDifference": 3.197442310920451e-14
         },
         "[].peakChartState.declinations.saturn": {
           "count": 65,
-          "maxAbsoluteDifference": 8.146816554699399e-13
+          "maxAbsoluteDifference": 3.108624468950438e-14
+        },
+        "[].peakChartState.declinations.sun": {
+          "count": 60,
+          "maxAbsoluteDifference": 4.973799150320701e-14
         },
         "[].peakChartState.declinations.uranus": {
-          "count": 60,
-          "maxAbsoluteDifference": 2.7355895326763857e-13
+          "count": 45,
+          "maxAbsoluteDifference": 1.4210854715202004e-14
+        },
+        "[].peakChartState.declinations.venus": {
+          "count": 65,
+          "maxAbsoluteDifference": 4.227729277772596e-13
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.694822225952521e-13
+        },
+        "[].peakChartState.positions.mars": {
+          "count": 65,
+          "maxAbsoluteDifference": 8.810729923425242e-13
+        },
+        "[].peakChartState.positions.mercury": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.9184653865522705e-12
         },
         "[].peakChartState.positions.neptune": {
           "count": 65,
-          "maxAbsoluteDifference": 8.264500195309665e-13
+          "maxAbsoluteDifference": 4.6629367034256575e-14
         },
         "[].peakChartState.positions.pluto": {
-          "count": 65,
-          "maxAbsoluteDifference": 1.7053025658242404e-13
+          "count": 30,
+          "maxAbsoluteDifference": 5.684341886080802e-14
         },
         "[].peakChartState.positions.saturn": {
           "count": 65,
-          "maxAbsoluteDifference": 2.02127203863256e-12
+          "maxAbsoluteDifference": 7.882583474838611e-14
+        },
+        "[].peakChartState.positions.sun": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.4352963262354024e-12
         },
         "[].peakChartState.positions.uranus": {
-          "count": 55,
-          "maxAbsoluteDifference": 1.2363443602225743e-12
+          "count": 40,
+          "maxAbsoluteDifference": 7.815970093361102e-14
+        },
+        "[].peakChartState.positions.venus": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.5489831639570184e-12
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 65,
+          "maxAbsoluteDifference": 5.729816621169448e-11
+        },
+        "[].peakChartState.speeds.mars": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.3096723705530167e-10
+        },
+        "[].peakChartState.speeds.mercury": {
+          "count": 65,
+          "maxAbsoluteDifference": 4.420144250616431e-10
         },
         "[].peakChartState.speeds.neptune": {
-          "count": 65,
-          "maxAbsoluteDifference": 8.217426739065559e-11
+          "count": 60,
+          "maxAbsoluteDifference": 5.9472426983120386e-12
         },
         "[].peakChartState.speeds.pluto": {
           "count": 25,
@@ -50,97 +102,113 @@
         },
         "[].peakChartState.speeds.saturn": {
           "count": 65,
-          "maxAbsoluteDifference": 1.921982573094283e-10
+          "maxAbsoluteDifference": 1.3365308859647484e-11
+        },
+        "[].peakChartState.speeds.sun": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.4378899727016687e-10
         },
         "[].peakChartState.speeds.uranus": {
+          "count": 60,
+          "maxAbsoluteDifference": 2.0463630789890885e-11
+        },
+        "[].peakChartState.speeds.venus": {
           "count": 65,
-          "maxAbsoluteDifference": 1.4938450476620346e-10
+          "maxAbsoluteDifference": 3.3662672649370506e-10
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.2784885917180873e-13
+        },
+        "[].peakFlagInstances[].distanceToSun": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.3642420526593924e-12
         },
         "[].peakFlagInstances[].separation": {
-          "count": 165,
-          "maxAbsoluteDifference": 2.6147972675971687e-12
+          "count": 155,
+          "maxAbsoluteDifference": 1.4495071809506044e-12
         }
       }
     },
     "historicalTargetPassed": false,
     "historicalTargetSeconds": 0.076737332,
     "medians": {
-      "baseline": 3.206838042,
-      "candidate": 2.348598542
+      "baseline": 4.063302708,
+      "candidate": 0.416683708
     },
-    "speedup": 1.36542622532208,
+    "speedup": 9.75152766951954,
     "trials": {
       "baseline": [
         {
           "exitCode": 0,
-          "peakRSSBytes": 69206016,
-          "processSeconds": 3.3863007499894593,
-          "seconds": 3.185270125,
+          "peakRSSBytes": 68222976,
+          "processSeconds": 4.155501166998874,
+          "seconds": 3.96559775,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 66994176,
-          "processSeconds": 3.215364999996382,
-          "seconds": 3.189996083,
+          "peakRSSBytes": 68534272,
+          "processSeconds": 4.022375208995072,
+          "seconds": 3.998843333,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 68698112,
-          "processSeconds": 3.2408346250012983,
-          "seconds": 3.2186908340000002,
+          "peakRSSBytes": 68009984,
+          "processSeconds": 4.360030333002214,
+          "seconds": 4.336913833,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 70156288,
-          "processSeconds": 3.2299554999917746,
-          "seconds": 3.206838042,
+          "peakRSSBytes": 69386240,
+          "processSeconds": 4.0855216669879155,
+          "seconds": 4.063302708,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 65683456,
-          "processSeconds": 3.65692300000228,
-          "seconds": 3.6343229580000003,
+          "peakRSSBytes": 68091904,
+          "processSeconds": 4.131223082993529,
+          "seconds": 4.108765,
           "windowCount": 13
         }
       ],
       "candidate": [
         {
           "exitCode": 0,
-          "peakRSSBytes": 69664768,
-          "processSeconds": 2.5421953330078395,
-          "seconds": 2.348598542,
+          "peakRSSBytes": 68878336,
+          "processSeconds": 0.6115187499963213,
+          "seconds": 0.408116416,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 69828608,
-          "processSeconds": 2.364133209004649,
-          "seconds": 2.339264875,
+          "peakRSSBytes": 68550656,
+          "processSeconds": 0.4419664170127362,
+          "seconds": 0.416683708,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 71385088,
-          "processSeconds": 2.437056708004093,
-          "seconds": 2.414564917,
+          "peakRSSBytes": 69681152,
+          "processSeconds": 0.4388169160083635,
+          "seconds": 0.410637166,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 70631424,
-          "processSeconds": 2.3550653750135098,
-          "seconds": 2.333835708,
+          "peakRSSBytes": 68419584,
+          "processSeconds": 0.4524625000049127,
+          "seconds": 0.426769,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 68632576,
-          "processSeconds": 2.3962762919982197,
-          "seconds": 2.370828792,
+          "peakRSSBytes": 69795840,
+          "processSeconds": 0.44834245899983216,
+          "seconds": 0.42702425,
           "windowCount": 13
         }
       ]
@@ -152,162 +220,210 @@
       "ignoredRandomUUIDs": 425,
       "numeric": {
         "[].peakChartState.aspects[].orb": {
-          "count": 9275,
-          "maxAbsoluteDifference": 3.943512183468556e-12
+          "count": 11165,
+          "maxAbsoluteDifference": 3.183231456205249e-12
         },
         "[].peakChartState.declinations.jupiter": {
-          "count": 220,
-          "maxAbsoluteDifference": 3.552713678800501e-14
+          "count": 255,
+          "maxAbsoluteDifference": 2.4868995751603507e-14
+        },
+        "[].peakChartState.declinations.mars": {
+          "count": 425,
+          "maxAbsoluteDifference": 4.3520742565306136e-13
+        },
+        "[].peakChartState.declinations.mercury": {
+          "count": 425,
+          "maxAbsoluteDifference": 4.156675004196586e-13
         },
         "[].peakChartState.declinations.neptune": {
           "count": 425,
-          "maxAbsoluteDifference": 4.82058837292243e-13
+          "maxAbsoluteDifference": 2.964295475749168e-14
         },
         "[].peakChartState.declinations.pluto": {
-          "count": 425,
-          "maxAbsoluteDifference": 4.973799150320701e-14
+          "count": 355,
+          "maxAbsoluteDifference": 3.197442310920451e-14
         },
         "[].peakChartState.declinations.saturn": {
           "count": 425,
-          "maxAbsoluteDifference": 1.1182166304024577e-12
+          "maxAbsoluteDifference": 4.3298697960381105e-14
+        },
+        "[].peakChartState.declinations.sun": {
+          "count": 405,
+          "maxAbsoluteDifference": 4.973799150320701e-14
         },
         "[].peakChartState.declinations.uranus": {
+          "count": 350,
+          "maxAbsoluteDifference": 2.4868995751603507e-14
+        },
+        "[].peakChartState.declinations.venus": {
           "count": 420,
-          "maxAbsoluteDifference": 3.836930773104541e-13
+          "maxAbsoluteDifference": 5.702105454474804e-13
         },
         "[].peakChartState.positions.jupiter": {
-          "count": 240,
-          "maxAbsoluteDifference": 1.9326762412674725e-12
+          "count": 425,
+          "maxAbsoluteDifference": 5.542233338928781e-13
+        },
+        "[].peakChartState.positions.mars": {
+          "count": 415,
+          "maxAbsoluteDifference": 1.1368683772161603e-12
+        },
+        "[].peakChartState.positions.mercury": {
+          "count": 425,
+          "maxAbsoluteDifference": 2.7284841053187847e-12
         },
         "[].peakChartState.positions.neptune": {
-          "count": 425,
-          "maxAbsoluteDifference": 1.2110312752611208e-12
+          "count": 420,
+          "maxAbsoluteDifference": 7.638334409421077e-14
         },
         "[].peakChartState.positions.pluto": {
-          "count": 425,
-          "maxAbsoluteDifference": 1.7053025658242404e-13
+          "count": 135,
+          "maxAbsoluteDifference": 5.684341886080802e-14
         },
         "[].peakChartState.positions.saturn": {
           "count": 425,
-          "maxAbsoluteDifference": 2.7853275241795927e-12
+          "maxAbsoluteDifference": 1.0325074129013956e-13
+        },
+        "[].peakChartState.positions.sun": {
+          "count": 420,
+          "maxAbsoluteDifference": 2.6574298317427747e-12
         },
         "[].peakChartState.positions.uranus": {
-          "count": 415,
-          "maxAbsoluteDifference": 1.7905676941154525e-12
+          "count": 350,
+          "maxAbsoluteDifference": 9.947598300641403e-14
+        },
+        "[].peakChartState.positions.venus": {
+          "count": 425,
+          "maxAbsoluteDifference": 2.1245227799226996e-12
         },
         "[].peakChartState.speeds.jupiter": {
-          "count": 235,
-          "maxAbsoluteDifference": 3.1309355108533055e-10
+          "count": 410,
+          "maxAbsoluteDifference": 6.139089236967266e-11
+        },
+        "[].peakChartState.speeds.mars": {
+          "count": 395,
+          "maxAbsoluteDifference": 1.7598722479306161e-10
+        },
+        "[].peakChartState.speeds.mercury": {
+          "count": 420,
+          "maxAbsoluteDifference": 4.440607881406322e-10
         },
         "[].peakChartState.speeds.neptune": {
-          "count": 425,
-          "maxAbsoluteDifference": 1.6134293900904595e-10
+          "count": 420,
+          "maxAbsoluteDifference": 9.272582701669307e-12
         },
         "[].peakChartState.speeds.pluto": {
-          "count": 115,
-          "maxAbsoluteDifference": 8.185452315956354e-12
+          "count": 205,
+          "maxAbsoluteDifference": 1.6370904631912708e-11
         },
         "[].peakChartState.speeds.saturn": {
           "count": 425,
-          "maxAbsoluteDifference": 1.921982573094283e-10
+          "maxAbsoluteDifference": 1.518785097687214e-11
+        },
+        "[].peakChartState.speeds.sun": {
+          "count": 425,
+          "maxAbsoluteDifference": 3.4583536034915596e-10
         },
         "[].peakChartState.speeds.uranus": {
-          "count": 425,
-          "maxAbsoluteDifference": 4.000639819423668e-10
+          "count": 400,
+          "maxAbsoluteDifference": 2.5579538487363607e-11
+        },
+        "[].peakChartState.speeds.venus": {
+          "count": 420,
+          "maxAbsoluteDifference": 4.133653419557959e-10
         },
         "[].peakFlagInstances[].angularStrength": {
-          "count": 155,
-          "maxAbsoluteDifference": 4.949374243778948e-13
+          "count": 655,
+          "maxAbsoluteDifference": 3.772537837676282e-13
         },
         "[].peakFlagInstances[].distanceToSun": {
-          "count": 230,
-          "maxAbsoluteDifference": 1.9326762412674725e-12
+          "count": 420,
+          "maxAbsoluteDifference": 2.6147972675971687e-12
         },
         "[].peakFlagInstances[].separation": {
-          "count": 1085,
-          "maxAbsoluteDifference": 2.8421709430404007e-12
+          "count": 1140,
+          "maxAbsoluteDifference": 2.6005864128819667e-12
         }
       }
     },
     "historicalTargetPassed": false,
     "historicalTargetSeconds": 0.333654166,
     "medians": {
-      "baseline": 20.096264791,
-      "candidate": 14.510853125
+      "baseline": 22.068531375,
+      "candidate": 2.896673417
     },
-    "speedup": 1.384912700713453,
+    "speedup": 7.618577657213332,
     "trials": {
       "baseline": [
         {
           "exitCode": 0,
-          "peakRSSBytes": 74121216,
-          "processSeconds": 20.87576504200115,
-          "seconds": 20.674102167,
+          "peakRSSBytes": 74285056,
+          "processSeconds": 21.87965920798888,
+          "seconds": 21.822091875,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 82001920,
-          "processSeconds": 19.52351133301272,
-          "seconds": 19.468153542,
+          "peakRSSBytes": 78725120,
+          "processSeconds": 22.120630584002356,
+          "seconds": 22.068531375,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 81248256,
-          "processSeconds": 19.570721083000535,
-          "seconds": 19.513234875,
+          "peakRSSBytes": 76414976,
+          "processSeconds": 22.545633707995876,
+          "seconds": 22.49397875,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 79626240,
-          "processSeconds": 20.1528741660004,
-          "seconds": 20.096264791,
+          "peakRSSBytes": 82395136,
+          "processSeconds": 22.031335291001596,
+          "seconds": 21.979168708,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 81297408,
-          "processSeconds": 21.40793487499468,
-          "seconds": 21.349312,
+          "peakRSSBytes": 73662464,
+          "processSeconds": 22.48605491599301,
+          "seconds": 22.43271325,
           "windowCount": 85
         }
       ],
       "candidate": [
         {
           "exitCode": 0,
-          "peakRSSBytes": 83345408,
-          "processSeconds": 14.701468333005323,
-          "seconds": 14.510853125,
+          "peakRSSBytes": 82575360,
+          "processSeconds": 3.2006865000003017,
+          "seconds": 3.146126584,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 82395136,
-          "processSeconds": 13.038172500004293,
-          "seconds": 12.983054792,
+          "peakRSSBytes": 81575936,
+          "processSeconds": 2.8831068329891423,
+          "seconds": 2.8311849159999998,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 81870848,
-          "processSeconds": 14.690253209002549,
-          "seconds": 14.633232542,
+          "peakRSSBytes": 83492864,
+          "processSeconds": 2.8955192499997793,
+          "seconds": 2.843820167,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 83836928,
-          "processSeconds": 13.534036915996694,
-          "seconds": 13.483071708,
+          "peakRSSBytes": 83771392,
+          "processSeconds": 3.0607835420087213,
+          "seconds": 3.008349125,
           "windowCount": 85
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 80871424,
-          "processSeconds": 14.951828249992104,
-          "seconds": 14.753947334,
+          "peakRSSBytes": 81854464,
+          "processSeconds": 2.949380000005476,
+          "seconds": 2.896673417,
           "windowCount": 85
         }
       ]
@@ -319,146 +435,210 @@
       "ignoredRandomUUIDs": 65,
       "numeric": {
         "[].peakChartState.aspects[].orb": {
-          "count": 1290,
-          "maxAbsoluteDifference": 2.4229507289419416e-12
+          "count": 1440,
+          "maxAbsoluteDifference": 1.8189894035458565e-12
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 40,
+          "maxAbsoluteDifference": 1.0658141036401503e-14
+        },
+        "[].peakChartState.declinations.mars": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.682298827494378e-13
+        },
+        "[].peakChartState.declinations.mercury": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.7763568394002505e-13
         },
         "[].peakChartState.declinations.neptune": {
           "count": 65,
-          "maxAbsoluteDifference": 4.0689673852511987e-13
+          "maxAbsoluteDifference": 1.9761969838327786e-14
         },
         "[].peakChartState.declinations.pluto": {
-          "count": 65,
-          "maxAbsoluteDifference": 4.263256414560601e-14
+          "count": 50,
+          "maxAbsoluteDifference": 1.7763568394002505e-14
         },
         "[].peakChartState.declinations.saturn": {
           "count": 65,
-          "maxAbsoluteDifference": 8.606448886894214e-13
+          "maxAbsoluteDifference": 3.108624468950438e-14
+        },
+        "[].peakChartState.declinations.sun": {
+          "count": 55,
+          "maxAbsoluteDifference": 4.973799150320701e-14
         },
         "[].peakChartState.declinations.uranus": {
+          "count": 55,
+          "maxAbsoluteDifference": 2.1316282072803006e-14
+        },
+        "[].peakChartState.declinations.venus": {
           "count": 65,
-          "maxAbsoluteDifference": 2.1671553440683056e-13
+          "maxAbsoluteDifference": 4.618527782440651e-13
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.268496584496461e-13
+        },
+        "[].peakChartState.positions.mars": {
+          "count": 60,
+          "maxAbsoluteDifference": 7.389644451905042e-13
+        },
+        "[].peakChartState.positions.mercury": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.6058265828178264e-12
         },
         "[].peakChartState.positions.neptune": {
           "count": 65,
-          "maxAbsoluteDifference": 1.021849271864994e-12
+          "maxAbsoluteDifference": 4.75175454539567e-14
         },
         "[].peakChartState.positions.pluto": {
-          "count": 65,
-          "maxAbsoluteDifference": 1.7053025658242404e-13
+          "count": 15,
+          "maxAbsoluteDifference": 5.684341886080802e-14
         },
         "[].peakChartState.positions.saturn": {
           "count": 65,
-          "maxAbsoluteDifference": 2.154720846192504e-12
+          "maxAbsoluteDifference": 7.882583474838611e-14
+        },
+        "[].peakChartState.positions.sun": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.0516032489249483e-12
         },
         "[].peakChartState.positions.uranus": {
+          "count": 50,
+          "maxAbsoluteDifference": 8.526512829121202e-14
+        },
+        "[].peakChartState.positions.venus": {
           "count": 65,
-          "maxAbsoluteDifference": 1.0089706847793423e-12
+          "maxAbsoluteDifference": 1.0444978215673473e-12
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 65,
+          "maxAbsoluteDifference": 5.729816621169448e-11
+        },
+        "[].peakChartState.speeds.mars": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.4733814168721437e-10
+        },
+        "[].peakChartState.speeds.mercury": {
+          "count": 65,
+          "maxAbsoluteDifference": 4.3382897274568677e-10
         },
         "[].peakChartState.speeds.neptune": {
-          "count": 65,
-          "maxAbsoluteDifference": 1.0270184702676488e-10
+          "count": 60,
+          "maxAbsoluteDifference": 8.249401162174763e-12
         },
         "[].peakChartState.speeds.pluto": {
-          "count": 40,
+          "count": 25,
           "maxAbsoluteDifference": 8.185452315956354e-12
         },
         "[].peakChartState.speeds.saturn": {
           "count": 65,
-          "maxAbsoluteDifference": 1.921982573094283e-10
+          "maxAbsoluteDifference": 1.0583534049146692e-11
+        },
+        "[].peakChartState.speeds.sun": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.0900082492735237e-10
         },
         "[].peakChartState.speeds.uranus": {
           "count": 65,
-          "maxAbsoluteDifference": 2.455635694786906e-10
+          "maxAbsoluteDifference": 1.944044925039634e-11
+        },
+        "[].peakChartState.speeds.venus": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.0975221559638157e-10
         },
         "[].peakFlagInstances[].angularStrength": {
-          "count": 35,
-          "maxAbsoluteDifference": 2.418065747633591e-13
+          "count": 85,
+          "maxAbsoluteDifference": 3.3872904481313526e-13
+        },
+        "[].peakFlagInstances[].distanceToSun": {
+          "count": 60,
+          "maxAbsoluteDifference": 1.0800249583553523e-12
         },
         "[].peakFlagInstances[].separation": {
-          "count": 185,
-          "maxAbsoluteDifference": 2.2737367544323206e-12
+          "count": 140,
+          "maxAbsoluteDifference": 1.0373923942097463e-12
         }
       }
     },
     "historicalTargetPassed": false,
     "historicalTargetSeconds": 0.07299825,
     "medians": {
-      "baseline": 3.244398791,
-      "candidate": 2.209463291
+      "baseline": 3.757699792,
+      "candidate": 0.470094833
     },
-    "speedup": 1.4684103620167366,
+    "speedup": 7.993493074619691,
     "trials": {
       "baseline": [
         {
           "exitCode": 0,
-          "peakRSSBytes": 66633728,
-          "processSeconds": 3.4174046669941163,
-          "seconds": 3.244398791,
+          "peakRSSBytes": 67174400,
+          "processSeconds": 3.7878200419945642,
+          "seconds": 3.757699792,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 68812800,
-          "processSeconds": 3.5835931659967173,
-          "seconds": 3.550628917,
+          "peakRSSBytes": 68501504,
+          "processSeconds": 4.4078475830028765,
+          "seconds": 4.375811084,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 66912256,
-          "processSeconds": 2.9858055829972727,
-          "seconds": 2.958521,
+          "peakRSSBytes": 66813952,
+          "processSeconds": 4.414064041004167,
+          "seconds": 4.387564666,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 66863104,
-          "processSeconds": 3.5198429160082014,
-          "seconds": 3.496741625,
+          "peakRSSBytes": 66273280,
+          "processSeconds": 3.707509250001749,
+          "seconds": 3.6824176250000002,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 69304320,
-          "processSeconds": 2.9330870830017375,
-          "seconds": 2.9102423330000002,
+          "peakRSSBytes": 68927488,
+          "processSeconds": 3.6264983330038376,
+          "seconds": 3.596519,
           "windowCount": 13
         }
       ],
       "candidate": [
         {
           "exitCode": 0,
-          "peakRSSBytes": 73121792,
-          "processSeconds": 2.5776714159874246,
-          "seconds": 2.407524708,
+          "peakRSSBytes": 69042176,
+          "processSeconds": 0.525880707995384,
+          "seconds": 0.494960042,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 68550656,
-          "processSeconds": 2.232373042003019,
-          "seconds": 2.209463291,
+          "peakRSSBytes": 70647808,
+          "processSeconds": 0.4990029579930706,
+          "seconds": 0.470094833,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 71794688,
-          "processSeconds": 2.256172624998726,
-          "seconds": 2.231550833,
+          "peakRSSBytes": 70598656,
+          "processSeconds": 0.5023357500031125,
+          "seconds": 0.473808917,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 71663616,
-          "processSeconds": 2.1901546659937594,
-          "seconds": 2.167423625,
+          "peakRSSBytes": 67960832,
+          "processSeconds": 0.4769461669930024,
+          "seconds": 0.453348083,
           "windowCount": 13
         },
         {
           "exitCode": 0,
-          "peakRSSBytes": 69287936,
-          "processSeconds": 2.218794957996579,
-          "seconds": 2.195468,
+          "peakRSSBytes": 69173248,
+          "processSeconds": 0.45414329100458417,
+          "seconds": 0.430579208,
           "windowCount": 13
         }
       ]
@@ -469,93 +649,93 @@
     "historicalTargetPassed": false,
     "historicalTargetSeconds": 0.260501916,
     "medians": {
-      "baseline": 15.398283584,
-      "candidate": 2.651833375
+      "baseline": 19.654002249999998,
+      "candidate": 1.369028875
     },
-    "speedup": 5.806655776025144,
+    "speedup": 14.356163415472153,
     "trials": {
       "baseline": [
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 47775744,
-          "processSeconds": 16.038607750000665,
+          "peakRSSBytes": 48365568,
+          "processSeconds": 20.67635966699163,
           "scoringCapPassed": true,
-          "seconds": 15.246995833
+          "seconds": 19.798828083
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 47267840,
-          "processSeconds": 16.02729116700357,
+          "peakRSSBytes": 48005120,
+          "processSeconds": 20.365093874992453,
           "scoringCapPassed": true,
-          "seconds": 15.398283584
+          "seconds": 19.654002249999998
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 47841280,
-          "processSeconds": 15.978726290995837,
+          "peakRSSBytes": 47513600,
+          "processSeconds": 20.30599229100335,
           "scoringCapPassed": true,
-          "seconds": 15.381358917
+          "seconds": 19.595636875
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 48250880,
-          "processSeconds": 16.253852041001664,
+          "peakRSSBytes": 47874048,
+          "processSeconds": 20.344741042004898,
           "scoringCapPassed": true,
-          "seconds": 15.634109
+          "seconds": 19.653630707999998
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 48152576,
-          "processSeconds": 16.11632883400307,
+          "peakRSSBytes": 48087040,
+          "processSeconds": 22.222376791993156,
           "scoringCapPassed": true,
-          "seconds": 15.498550416999999
+          "seconds": 21.518133834
         }
       ],
       "candidate": [
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 51216384,
-          "processSeconds": 2.869937374998699,
+          "peakRSSBytes": 51838976,
+          "processSeconds": 1.5629992920003133,
           "scoringCapPassed": true,
-          "seconds": 2.68121775
+          "seconds": 1.369028875
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 51036160,
-          "processSeconds": 2.6895285840000724,
+          "peakRSSBytes": 50970624,
+          "processSeconds": 1.4570864580018679,
           "scoringCapPassed": true,
-          "seconds": 2.651833375
+          "seconds": 1.348173375
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 50790400,
-          "processSeconds": 2.6803382910002256,
+          "peakRSSBytes": 51363840,
+          "processSeconds": 1.3932597920065746,
           "scoringCapPassed": true,
-          "seconds": 2.639791125
+          "seconds": 1.359306833
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 50823168,
-          "processSeconds": 2.7207369999960065,
+          "peakRSSBytes": 51691520,
+          "processSeconds": 1.4254175839887466,
           "scoringCapPassed": true,
-          "seconds": 2.684741916
+          "seconds": 1.39637375
         },
         {
           "checksum": -81888,
           "exitCode": 0,
-          "peakRSSBytes": 51331072,
-          "processSeconds": 2.683120083005633,
+          "peakRSSBytes": 51118080,
+          "processSeconds": 1.423855957997148,
           "scoringCapPassed": true,
-          "seconds": 2.644696459
+          "seconds": 1.389570791
         }
       ]
     }

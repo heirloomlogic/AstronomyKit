@@ -1,69 +1,69 @@
 {
-  "binarySHA256": "120aecbbd491ccfb2bc5b55459d27635c16397765af2b65095da61fedf8f892b",
+  "binarySHA256": "80e1bc89c2f8b803361b90abfa21a8ba7ee79cd72f355b0cf6398509e47f7f8e",
   "bodies": [
     {
       "body": "Mercury",
-      "componentBudgetRatio": 0.9961476088449217,
+      "componentBudgetRatio": 0.24608093340816595,
       "invalid": [],
       "passed": true,
       "positions": 27534,
-      "stencilBudgetRatio": 0.7623901510100951
+      "stencilBudgetRatio": 0.2177667771802172
     },
     {
       "body": "Venus",
-      "componentBudgetRatio": 0.9968414982353124,
+      "componentBudgetRatio": 0.21477264411373653,
       "invalid": [],
       "passed": true,
       "positions": 6888,
-      "stencilBudgetRatio": 0.7447376049185551
+      "stencilBudgetRatio": 0.145328193923433
     },
     {
       "body": "Earth",
-      "componentBudgetRatio": 0.9947875856397559,
+      "componentBudgetRatio": 0.21145585282766888,
       "invalid": [],
       "passed": true,
       "positions": 27534,
-      "stencilBudgetRatio": 0.9734019146279139
+      "stencilBudgetRatio": 0.16847634398686753
     },
     {
       "body": "Mars",
-      "componentBudgetRatio": 0.9875433804040767,
+      "componentBudgetRatio": 0.14971357487070236,
       "invalid": [],
       "passed": true,
       "positions": 6888,
-      "stencilBudgetRatio": 0.8450740107690536
+      "stencilBudgetRatio": 0.1377491871436265
     },
     {
       "body": "Jupiter",
-      "componentBudgetRatio": 0.9278133816792433,
+      "componentBudgetRatio": 0.09459100169806334,
       "invalid": [],
       "passed": true,
       "positions": 6888,
-      "stencilBudgetRatio": 0.624778007107807
+      "stencilBudgetRatio": 0.06275535646693697
     },
     {
       "body": "Saturn",
-      "componentBudgetRatio": 0.7812778202165305,
-      "invalid": [],
-      "passed": true,
-      "positions": 6888,
-      "stencilBudgetRatio": 0.570607170572915
-    },
-    {
-      "body": "Uranus",
-      "componentBudgetRatio": 0.9219847107999612,
-      "invalid": [],
-      "passed": true,
-      "positions": 6888,
-      "stencilBudgetRatio": 0.6997735724212363
-    },
-    {
-      "body": "Neptune",
-      "componentBudgetRatio": 0.9060530103965903,
+      "componentBudgetRatio": 0.060396132539608516,
       "invalid": [],
       "passed": true,
       "positions": 13770,
-      "stencilBudgetRatio": 0.6247443519928996
+      "stencilBudgetRatio": 0.049071857688431926
+    },
+    {
+      "body": "Uranus",
+      "componentBudgetRatio": 0.047351012000262926,
+      "invalid": [],
+      "passed": true,
+      "positions": 6888,
+      "stencilBudgetRatio": 0.03744227150548341
+    },
+    {
+      "body": "Neptune",
+      "componentBudgetRatio": 0.05773159728050814,
+      "invalid": [],
+      "passed": true,
+      "positions": 13770,
+      "stencilBudgetRatio": 0.03619327071120032
     }
   ],
   "command": [
@@ -84,9 +84,9 @@
     "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/seams.dylib"
   ],
   "sources": {
-    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/baseline.c": "aae580b027f604110b08a8625e7947909eafa94bb4f05a3b67cf43035a693476",
-    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/polynomial/seams.c": "61aa585a833b954d4bc1f31b24e27de3b8e09a6bf623a4bedd7f714565391bf3",
-    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated/polynomial-data.h": "809e5b3b683438685a84b404447cffed3741fd2d2dd2474f47884a39a3542b24",
+    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/polynomial-shipping/baseline.c": "9e17411d1655f5732c49bb321d104dec2be9d14d5605e0e0e19c74aa51b05c75",
+    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Scripts/performance/polynomial/seams.c": "288afad1d6cd419b869c9643dd8fec9080f08f6980c606c5ed9a08b8d9369855",
+    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/generated/polynomial-data.h": "689747697bf1b5f1f0f41dbdbab90a1dccfca5eb9ecbb4ba4d0a2162acfd54da",
     "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/Sources/CLibAstronomy/polynomial.h": "bbb51a7fea1738f4f6dd029842da31a678891518930735d386b797f79e638783"
   }
 }

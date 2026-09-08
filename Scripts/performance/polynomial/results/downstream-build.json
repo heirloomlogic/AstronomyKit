@@ -92,15 +92,15 @@
     ]
   },
   "executables": {
-    "events-baseline": "b31cf025af22895fce151f9b006ed939b4c7aeb2b3986f2c653a2d99e9ad8ad9",
-    "events-candidate": "dd9299d72150d473e6e67963864a55977e80f855ffbc29d59522c93cd8d3a8f7",
-    "scan-baseline": "82d1f2ac2af73bf8832ce651dc49d94d8b6618b5be1c958fa324435dd7168af1",
-    "scan-candidate": "4c554121d33fcc923e60837e16b3df49edc796e1e392ed5eb6037af2ce75850d",
-    "scoring-baseline": "2240e31c272d7c0e718040380724e635d5a1791c57a6c3da52dca4c51385960f",
-    "scoring-candidate": "6011b920e2137ae6243f4d86be588d5fa87d7caf2be59940fc5ddddeb5ed1172"
+    "events-baseline": "481c8c1fd5bfe90f942d121e9329c0c29c280da2752e5281df5dadb1c78af34d",
+    "events-candidate": "1eac98e87c980b68b1f271573564d362c4b267b0039e386d7d34030509b43412",
+    "scan-baseline": "2e8a8bb77d31b37c12e5e81cbf95df64c9e90a20582817d14d5e3256a2285e82",
+    "scan-candidate": "672857b0f1d6ef9610016e3455b3c90cffa30a970d4fcd61b1ff1f5647cda736",
+    "scoring-baseline": "82a920c6435e6972854489bbd9135d0b60bcb8ead418eec7f37598b95c923fc3",
+    "scoring-candidate": "f79ba9aeab0e1798e69ce1c1d26c541437d8a6b41026683054e270c85a2e02b3"
   },
   "objects": {
-    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/release/AstronomyKit.o": "9e248dea218494010a75f5545c0397120cf7acbf9420f4b581510ddbae1d371d",
+    "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.build/release/AstronomyKit.o": "94bbd052c77cb4d4b77339b5ea91dcd342c5d637ebbf34b1398248e1577c2ccb",
     "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstrologyKit.o": "53dea14d2bb254dabcdd9cf714410f100331cacc24346500c78f552645589982",
     "/Users/sessions/conductor/workspaces/AstronomyKit/ankara/.context/AstrologyKit-chronology/.build/out/Products/Release/AstronomyKit.o": "6ca62f0d9dcde158f47f0d738086845fb44e5d6b4051ab4ea1116bde73a8fed7"
   },

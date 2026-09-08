@@ -5,84 +5,84 @@
       "ignoredRandomUUIDs": 0,
       "numeric": {
         ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
-          "count": 1379,
-          "maxAbsoluteDifference": 1.92673568072399e-14
+          "count": 5877,
+          "maxAbsoluteDifference": 5.874196528504738e-14
         },
         ".chronologicalGroups[].events[].motionAfter.residual": {
-          "count": 1379,
-          "maxAbsoluteDifference": 1.6626700008316015e-12
+          "count": 5718,
+          "maxAbsoluteDifference": 3.1551102605120035e-12
         },
         ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
-          "count": 1380,
-          "maxAbsoluteDifference": 2.4436670135324912e-14
+          "count": 6011,
+          "maxAbsoluteDifference": 4.769847169149022e-14
         },
         ".chronologicalGroups[].events[].motionBefore.residual": {
-          "count": 1379,
-          "maxAbsoluteDifference": 1.7621459846850485e-12
+          "count": 5853,
+          "maxAbsoluteDifference": 3.552713678800501e-12
         },
         ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 1380,
-          "maxAbsoluteDifference": 3.2481953634747466e-06
+          "count": 6123,
+          "maxAbsoluteDifference": 1.009260690893703e-05
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
-          "count": 1367,
-          "maxAbsoluteDifference": 1.2656542480726785e-14
+          "count": 5908,
+          "maxAbsoluteDifference": 2.7133850721838826e-13
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 1318,
-          "maxAbsoluteDifference": 2.3909445820771702e-11
+          "count": 5960,
+          "maxAbsoluteDifference": 3.6922845683684535e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
-          "count": 1378,
-          "maxAbsoluteDifference": 1.3642420526593924e-12
+          "count": 6117,
+          "maxAbsoluteDifference": 3.453237695794087e-12
         },
         ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
-          "count": 1380,
-          "maxAbsoluteDifference": 2.0707245362849847e-09
+          "count": 5982,
+          "maxAbsoluteDifference": 4.994100466504392e-09
         },
         ".chronologicalGroups[].events[].residual": {
-          "count": 1378,
-          "maxAbsoluteDifference": 1.3642420526593924e-12
+          "count": 5935,
+          "maxAbsoluteDifference": 3.453237695794087e-12
         },
         ".events[].motionAfter.derivativePerSecond": {
-          "count": 1379,
-          "maxAbsoluteDifference": 1.92673568072399e-14
+          "count": 5877,
+          "maxAbsoluteDifference": 5.874196528504738e-14
         },
         ".events[].motionAfter.residual": {
-          "count": 1379,
-          "maxAbsoluteDifference": 1.6626700008316015e-12
+          "count": 5718,
+          "maxAbsoluteDifference": 3.1551102605120035e-12
         },
         ".events[].motionBefore.derivativePerSecond": {
-          "count": 1380,
-          "maxAbsoluteDifference": 2.4436670135324912e-14
+          "count": 6011,
+          "maxAbsoluteDifference": 4.769847169149022e-14
         },
         ".events[].motionBefore.residual": {
-          "count": 1379,
-          "maxAbsoluteDifference": 1.7621459846850485e-12
+          "count": 5853,
+          "maxAbsoluteDifference": 3.552713678800501e-12
         },
         ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 1380,
-          "maxAbsoluteDifference": 3.2481953634747466e-06
+          "count": 6123,
+          "maxAbsoluteDifference": 1.009260690893703e-05
         },
         ".events[].pointSamples[].latitudeDegrees": {
-          "count": 1367,
-          "maxAbsoluteDifference": 1.2656542480726785e-14
+          "count": 5908,
+          "maxAbsoluteDifference": 2.7133850721838826e-13
         },
         ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 1318,
-          "maxAbsoluteDifference": 2.3909445820771702e-11
+          "count": 5960,
+          "maxAbsoluteDifference": 3.6922845683684535e-10
         },
         ".events[].pointSamples[].longitudeDegrees": {
-          "count": 1378,
-          "maxAbsoluteDifference": 1.3642420526593924e-12
+          "count": 6117,
+          "maxAbsoluteDifference": 3.453237695794087e-12
         },
         ".events[].pointSamples[].speedDegreesPerDay": {
-          "count": 1380,
-          "maxAbsoluteDifference": 2.0707245362849847e-09
+          "count": 5982,
+          "maxAbsoluteDifference": 4.994100466504392e-09
         },
         ".events[].residual": {
-          "count": 1378,
-          "maxAbsoluteDifference": 1.3642420526593924e-12
+          "count": 5935,
+          "maxAbsoluteDifference": 3.453237695794087e-12
         }
       }
     },
@@ -96,107 +96,107 @@
   "nyc-week": {
     "differences": {
       "discrete": {
-        ".chronologicalGroups[].bracket.end": 9,
-        ".chronologicalGroups[].bracket.start": 12,
-        ".chronologicalGroups[].events[].bracket.end": 9,
-        ".chronologicalGroups[].events[].bracket.start": 12,
-        ".chronologicalGroups[].events[].id": 7,
-        ".chronologicalGroups[].events[].instant": 7,
-        ".chronologicalGroups[].id": 7,
-        ".events[].bracket.end": 9,
-        ".events[].bracket.start": 12,
-        ".events[].id": 7,
-        ".events[].instant": 7,
-        ".unresolved.length": 454,
-        ".unresolved[].interval.end": 9568,
-        ".unresolved[].interval.start": 9114,
-        ".unresolved[].target.station._0": 370
+        ".chronologicalGroups[].bracket.end": 2,
+        ".chronologicalGroups[].bracket.start": 2,
+        ".chronologicalGroups[].events[].bracket.end": 2,
+        ".chronologicalGroups[].events[].bracket.start": 2,
+        ".chronologicalGroups[].events[].id": 1,
+        ".chronologicalGroups[].events[].instant": 1,
+        ".chronologicalGroups[].id": 1,
+        ".events[].bracket.end": 2,
+        ".events[].bracket.start": 2,
+        ".events[].id": 1,
+        ".events[].instant": 1,
+        ".unresolved.length": 148,
+        ".unresolved[].interval.end": 8546,
+        ".unresolved[].interval.start": 8398,
+        ".unresolved[].target.station._0": 136
       },
       "ignoredRandomUUIDs": 0,
       "numeric": {
         ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
-          "count": 14191,
-          "maxAbsoluteDifference": 3.975398840411898e-13
+          "count": 40917,
+          "maxAbsoluteDifference": 3.927964995365657e-13
         },
         ".chronologicalGroups[].events[].motionAfter.residual": {
-          "count": 14200,
-          "maxAbsoluteDifference": 2.156572698468629e-10
+          "count": 40618,
+          "maxAbsoluteDifference": 1.7310930464152323e-10
         },
         ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
-          "count": 14096,
-          "maxAbsoluteDifference": 7.303167402425426e-13
+          "count": 41072,
+          "maxAbsoluteDifference": 3.7454975644439503e-13
         },
         ".chronologicalGroups[].events[].motionBefore.residual": {
-          "count": 14200,
-          "maxAbsoluteDifference": 2.189040060058666e-10
+          "count": 41085,
+          "maxAbsoluteDifference": 1.7134027532829561e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 14467,
-          "maxAbsoluteDifference": 0.00018046879292554774
+          "count": 43720,
+          "maxAbsoluteDifference": 0.0001759998064747581
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
-          "count": 14372,
-          "maxAbsoluteDifference": 1.880218203353934e-11
+          "count": 42903,
+          "maxAbsoluteDifference": 1.507871605355149e-11
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 14069,
-          "maxAbsoluteDifference": 3.423293426507712e-09
+          "count": 42382,
+          "maxAbsoluteDifference": 5.57966367553675e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
-          "count": 14461,
-          "maxAbsoluteDifference": 2.165960744093809e-10
+          "count": 43704,
+          "maxAbsoluteDifference": 1.734838939171368e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
-          "count": 14464,
-          "maxAbsoluteDifference": 5.8566168803508845e-08
+          "count": 43197,
+          "maxAbsoluteDifference": 4.994100466504392e-09
         },
         ".chronologicalGroups[].events[].residual": {
-          "count": 14204,
-          "maxAbsoluteDifference": 2.1665091942679737e-10
+          "count": 41074,
+          "maxAbsoluteDifference": 1.7301315935469574e-10
         },
         ".evaluations": {
-          "count": 454,
-          "maxAbsoluteDifference": 5
+          "count": 148,
+          "maxAbsoluteDifference": 2
         },
         ".events[].motionAfter.derivativePerSecond": {
-          "count": 14191,
-          "maxAbsoluteDifference": 3.975398840411898e-13
+          "count": 40917,
+          "maxAbsoluteDifference": 3.927964995365657e-13
         },
         ".events[].motionAfter.residual": {
-          "count": 14200,
-          "maxAbsoluteDifference": 2.156572698468629e-10
+          "count": 40618,
+          "maxAbsoluteDifference": 1.7310930464152323e-10
         },
         ".events[].motionBefore.derivativePerSecond": {
-          "count": 14096,
-          "maxAbsoluteDifference": 7.303167402425426e-13
+          "count": 41072,
+          "maxAbsoluteDifference": 3.7454975644439503e-13
         },
         ".events[].motionBefore.residual": {
-          "count": 14200,
-          "maxAbsoluteDifference": 2.189040060058666e-10
+          "count": 41085,
+          "maxAbsoluteDifference": 1.7134027532829561e-10
         },
         ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 14467,
-          "maxAbsoluteDifference": 0.00018046879292554774
+          "count": 43720,
+          "maxAbsoluteDifference": 0.0001759998064747581
         },
         ".events[].pointSamples[].latitudeDegrees": {
-          "count": 14372,
-          "maxAbsoluteDifference": 1.880218203353934e-11
+          "count": 42903,
+          "maxAbsoluteDifference": 1.507871605355149e-11
         },
         ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 14069,
-          "maxAbsoluteDifference": 3.423293426507712e-09
+          "count": 42382,
+          "maxAbsoluteDifference": 5.57966367553675e-10
         },
         ".events[].pointSamples[].longitudeDegrees": {
-          "count": 14461,
-          "maxAbsoluteDifference": 2.165960744093809e-10
+          "count": 43704,
+          "maxAbsoluteDifference": 1.734838939171368e-10
         },
         ".events[].pointSamples[].speedDegreesPerDay": {
-          "count": 14464,
-          "maxAbsoluteDifference": 5.8566168803508845e-08
+          "count": 43197,
+          "maxAbsoluteDifference": 4.994100466504392e-09
         },
         ".events[].residual": {
-          "count": 14204,
-          "maxAbsoluteDifference": 2.1665091942679737e-10
+          "count": 41074,
+          "maxAbsoluteDifference": 1.7301315935469574e-10
         }
       }
     },
@@ -213,84 +213,84 @@
       "ignoredRandomUUIDs": 0,
       "numeric": {
         ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
-          "count": 1300,
-          "maxAbsoluteDifference": 1.997225084968135e-14
+          "count": 5993,
+          "maxAbsoluteDifference": 5.874196528504738e-14
         },
         ".chronologicalGroups[].events[].motionAfter.residual": {
-          "count": 1297,
-          "maxAbsoluteDifference": 8.422151864806438e-13
+          "count": 5830,
+          "maxAbsoluteDifference": 3.1551102605120035e-12
         },
         ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
-          "count": 1301,
-          "maxAbsoluteDifference": 2.3496775271997228e-14
+          "count": 6115,
+          "maxAbsoluteDifference": 5.0988022397974175e-14
         },
         ".chronologicalGroups[].events[].motionBefore.residual": {
-          "count": 1300,
-          "maxAbsoluteDifference": 8.810729381324156e-13
+          "count": 5956,
+          "maxAbsoluteDifference": 3.3679726217129835e-12
         },
         ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 1300,
-          "maxAbsoluteDifference": 2.2317748542080313e-06
+          "count": 6175,
+          "maxAbsoluteDifference": 1.276076768062101e-05
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
-          "count": 1292,
-          "maxAbsoluteDifference": 1.2656542480726785e-14
+          "count": 5960,
+          "maxAbsoluteDifference": 2.828848266744899e-13
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 1234,
-          "maxAbsoluteDifference": 2.3909445820771702e-11
+          "count": 6008,
+          "maxAbsoluteDifference": 3.8730924023511193e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
-          "count": 1299,
-          "maxAbsoluteDifference": 8.475442569988445e-13
+          "count": 6166,
+          "maxAbsoluteDifference": 3.311129148642067e-12
         },
         ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
-          "count": 1301,
-          "maxAbsoluteDifference": 2.0707245362849847e-09
+          "count": 6022,
+          "maxAbsoluteDifference": 4.994100466504392e-09
         },
         ".chronologicalGroups[].events[].residual": {
-          "count": 1299,
-          "maxAbsoluteDifference": 8.475442569988445e-13
+          "count": 6026,
+          "maxAbsoluteDifference": 3.353761712787673e-12
         },
         ".events[].motionAfter.derivativePerSecond": {
-          "count": 1300,
-          "maxAbsoluteDifference": 1.997225084968135e-14
+          "count": 5993,
+          "maxAbsoluteDifference": 5.874196528504738e-14
         },
         ".events[].motionAfter.residual": {
-          "count": 1297,
-          "maxAbsoluteDifference": 8.422151864806438e-13
+          "count": 5830,
+          "maxAbsoluteDifference": 3.1551102605120035e-12
         },
         ".events[].motionBefore.derivativePerSecond": {
-          "count": 1301,
-          "maxAbsoluteDifference": 2.3496775271997228e-14
+          "count": 6115,
+          "maxAbsoluteDifference": 5.0988022397974175e-14
         },
         ".events[].motionBefore.residual": {
-          "count": 1300,
-          "maxAbsoluteDifference": 8.810729381324156e-13
+          "count": 5956,
+          "maxAbsoluteDifference": 3.3679726217129835e-12
         },
         ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 1300,
-          "maxAbsoluteDifference": 2.2317748542080313e-06
+          "count": 6175,
+          "maxAbsoluteDifference": 1.276076768062101e-05
         },
         ".events[].pointSamples[].latitudeDegrees": {
-          "count": 1292,
-          "maxAbsoluteDifference": 1.2656542480726785e-14
+          "count": 5960,
+          "maxAbsoluteDifference": 2.828848266744899e-13
         },
         ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 1234,
-          "maxAbsoluteDifference": 2.3909445820771702e-11
+          "count": 6008,
+          "maxAbsoluteDifference": 3.8730924023511193e-10
         },
         ".events[].pointSamples[].longitudeDegrees": {
-          "count": 1299,
-          "maxAbsoluteDifference": 8.475442569988445e-13
+          "count": 6166,
+          "maxAbsoluteDifference": 3.311129148642067e-12
         },
         ".events[].pointSamples[].speedDegreesPerDay": {
-          "count": 1301,
-          "maxAbsoluteDifference": 2.0707245362849847e-09
+          "count": 6022,
+          "maxAbsoluteDifference": 4.994100466504392e-09
         },
         ".events[].residual": {
-          "count": 1299,
-          "maxAbsoluteDifference": 8.475442569988445e-13
+          "count": 6026,
+          "maxAbsoluteDifference": 3.353761712787673e-12
         }
       }
     },
@@ -304,106 +304,95 @@
   "scoring": {
     "differences": {
       "discrete": {
-        ".chronologicalGroups[].bracket.end": 18,
-        ".chronologicalGroups[].bracket.start": 10,
-        ".chronologicalGroups[].events[].bracket.end": 18,
-        ".chronologicalGroups[].events[].bracket.start": 10,
-        ".chronologicalGroups[].events[].id": 8,
-        ".chronologicalGroups[].events[].instant": 8,
-        ".chronologicalGroups[].id": 8,
-        ".events[].bracket.end": 18,
-        ".events[].bracket.start": 10,
-        ".events[].id": 8,
-        ".events[].instant": 8,
         ".unresolved[].interval.end": 1445,
         ".unresolved[].interval.start": 1445
       },
       "ignoredRandomUUIDs": 0,
       "numeric": {
         ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
-          "count": 5395,
-          "maxAbsoluteDifference": 8.660243094580447e-11
+          "count": 5017,
+          "maxAbsoluteDifference": 5.370693391981411e-12
         },
         ".chronologicalGroups[].events[].motionAfter.residual": {
-          "count": 5314,
-          "maxAbsoluteDifference": 4.836765908424109e-09
+          "count": 4829,
+          "maxAbsoluteDifference": 3.654219783909049e-10
         },
         ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
-          "count": 5458,
-          "maxAbsoluteDifference": 9.197312433780574e-11
+          "count": 5140,
+          "maxAbsoluteDifference": 1.0070050109973417e-11
         },
         ".chronologicalGroups[].events[].motionBefore.residual": {
-          "count": 5328,
-          "maxAbsoluteDifference": 5.2072631920704476e-09
+          "count": 5161,
+          "maxAbsoluteDifference": 1.8271098919545244e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 5756,
-          "maxAbsoluteDifference": 0.00023096989170452026
+          "count": 5728,
+          "maxAbsoluteDifference": 4.2487555458006754e-05
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
-          "count": 5836,
-          "maxAbsoluteDifference": 1.4642065337966415e-11
+          "count": 5728,
+          "maxAbsoluteDifference": 5.361266985914881e-13
         },
         ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 5742,
-          "maxAbsoluteDifference": 1.1812772982011666e-09
+          "count": 5659,
+          "maxAbsoluteDifference": 9.356206365218611e-10
         },
         ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
-          "count": 5836,
-          "maxAbsoluteDifference": 1.8400214685243554e-10
+          "count": 5577,
+          "maxAbsoluteDifference": 7.354117315117037e-12
         },
         ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
-          "count": 5736,
-          "maxAbsoluteDifference": 5.3676428357629646e-08
+          "count": 5211,
+          "maxAbsoluteDifference": 8.364103021296643e-09
         },
         ".chronologicalGroups[].events[].residual": {
-          "count": 5488,
-          "maxAbsoluteDifference": 2.2331343123888865e-09
+          "count": 5305,
+          "maxAbsoluteDifference": 1.2688263138573216e-10
         },
         ".events[].motionAfter.derivativePerSecond": {
-          "count": 5395,
-          "maxAbsoluteDifference": 8.660243094580447e-11
+          "count": 5017,
+          "maxAbsoluteDifference": 5.370693391981411e-12
         },
         ".events[].motionAfter.residual": {
-          "count": 5314,
-          "maxAbsoluteDifference": 4.836765908424109e-09
+          "count": 4829,
+          "maxAbsoluteDifference": 3.654219783909049e-10
         },
         ".events[].motionBefore.derivativePerSecond": {
-          "count": 5458,
-          "maxAbsoluteDifference": 9.197312433780574e-11
+          "count": 5140,
+          "maxAbsoluteDifference": 1.0070050109973417e-11
         },
         ".events[].motionBefore.residual": {
-          "count": 5328,
-          "maxAbsoluteDifference": 5.2072631920704476e-09
+          "count": 5161,
+          "maxAbsoluteDifference": 1.8271098919545244e-10
         },
         ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
-          "count": 5756,
-          "maxAbsoluteDifference": 0.00023096989170452026
+          "count": 5728,
+          "maxAbsoluteDifference": 4.2487555458006754e-05
         },
         ".events[].pointSamples[].latitudeDegrees": {
-          "count": 5836,
-          "maxAbsoluteDifference": 1.4642065337966415e-11
+          "count": 5728,
+          "maxAbsoluteDifference": 5.361266985914881e-13
         },
         ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
-          "count": 5742,
-          "maxAbsoluteDifference": 1.1812772982011666e-09
+          "count": 5659,
+          "maxAbsoluteDifference": 9.356206365218611e-10
         },
         ".events[].pointSamples[].longitudeDegrees": {
-          "count": 5836,
-          "maxAbsoluteDifference": 1.8400214685243554e-10
+          "count": 5577,
+          "maxAbsoluteDifference": 7.354117315117037e-12
         },
         ".events[].pointSamples[].speedDegreesPerDay": {
-          "count": 5736,
-          "maxAbsoluteDifference": 5.3676428357629646e-08
+          "count": 5211,
+          "maxAbsoluteDifference": 8.364103021296643e-09
         },
         ".events[].residual": {
-          "count": 5488,
-          "maxAbsoluteDifference": 2.2331343123888865e-09
+          "count": 5305,
+          "maxAbsoluteDifference": 1.2688263138573216e-10
         }
       }
     },
     "failures": [],
-    "maxRootShiftSeconds": 1e-06,
+    "maxRootShiftSeconds": 0,
     "queries": {
       "baseline": 1403,
       "candidate": 1403

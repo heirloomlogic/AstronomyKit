@@ -1,12 +1,12 @@
 {
-  "bytes": 10738416,
+  "bytes": 11454144,
   "configurations": [
     {
       "body": "Mercury",
       "bytes": 2863224,
       "degree": 12,
-      "maxPositionAU": 4.2149096712851275e-12,
-      "maxVelocityAUPerDay": 3.3571713117797053e-13,
+      "maxPositionAU": 2.3697710460623966e-13,
+      "maxVelocityAUPerDay": 1.5799720472914336e-13,
       "pass": true,
       "segments": 9177,
       "width": 8
@@ -15,8 +15,8 @@
       "body": "Venus",
       "bytes": 716040,
       "degree": 12,
-      "maxPositionAU": 2.330705073383399e-12,
-      "maxVelocityAUPerDay": 6.512596451707653e-14,
+      "maxPositionAU": 2.1892210266827306e-13,
+      "maxVelocityAUPerDay": 2.6862626706369852e-14,
       "pass": true,
       "segments": 2295,
       "width": 32
@@ -25,8 +25,8 @@
       "body": "Earth",
       "bytes": 2863224,
       "degree": 12,
-      "maxPositionAU": 1.5178344692223789e-12,
-      "maxVelocityAUPerDay": 3.780222662674859e-14,
+      "maxPositionAU": 1.8773871346411397e-13,
+      "maxVelocityAUPerDay": 2.9476421303797906e-14,
       "pass": true,
       "segments": 9177,
       "width": 8
@@ -35,8 +35,8 @@
       "body": "Mars",
       "bytes": 716040,
       "degree": 12,
-      "maxPositionAU": 1.592836973429712e-12,
-      "maxVelocityAUPerDay": 2.639988921915304e-14,
+      "maxPositionAU": 1.3222756223285614e-13,
+      "maxVelocityAUPerDay": 1.8611848173755163e-14,
       "pass": true,
       "segments": 2295,
       "width": 32
@@ -45,28 +45,28 @@
       "body": "Jupiter",
       "bytes": 716040,
       "degree": 12,
-      "maxPositionAU": 9.57012247226885e-13,
-      "maxVelocityAUPerDay": 3.4399566528620085e-15,
+      "maxPositionAU": 8.393286066166183e-14,
+      "maxVelocityAUPerDay": 3.4893962719273475e-15,
       "pass": true,
       "segments": 2295,
       "width": 32
     },
     {
       "body": "Saturn",
-      "bytes": 716040,
+      "bytes": 1431768,
       "degree": 12,
-      "maxPositionAU": 7.956413305976184e-13,
-      "maxVelocityAUPerDay": 3.239309862013151e-13,
+      "maxPositionAU": 5.845324224651449e-14,
+      "maxVelocityAUPerDay": 1.2836953722228372e-16,
       "pass": true,
-      "segments": 2295,
-      "width": 32
+      "segments": 4589,
+      "width": 16
     },
     {
       "body": "Uranus",
       "bytes": 716040,
       "degree": 12,
-      "maxPositionAU": 1.0267342531733448e-12,
-      "maxVelocityAUPerDay": 2.7482356668162566e-14,
+      "maxPositionAU": 6.572520305780927e-14,
+      "maxVelocityAUPerDay": 2.7544373032428737e-14,
       "pass": true,
       "segments": 2295,
       "width": 32
@@ -75,12 +75,12 @@
       "body": "Neptune",
       "bytes": 1431768,
       "degree": 12,
-      "maxPositionAU": 7.513989430663059e-13,
-      "maxVelocityAUPerDay": 2.807606577781563e-14,
+      "maxPositionAU": 4.263256414560601e-14,
+      "maxVelocityAUPerDay": 2.8067636105924554e-14,
       "pass": true,
       "segments": 4589,
       "width": 16
     }
   ],
-  "screenSHA256": "da529b6e9a5818242db3a63f4f05e189e0290a27267594bb72784482cc81bf77"
+  "screenSHA256": "4d74a07274ddcb99f791debc8aa871c5dba6dfbe4c128d27f56d2940f179dda5"
 }

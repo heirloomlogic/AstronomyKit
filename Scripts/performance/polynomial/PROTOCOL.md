@@ -1,54 +1,22 @@
-# Polynomial evaluator experiment v1
+# Polynomial evaluator experiment v2
 
-Frozen before candidate evaluation. This is sampled qualification, not a formal
-interpolation error bound. Shipping sources and astronomical references remain
-unchanged until integrated acceptance.
+Frozen before candidate evaluation. This is sampled qualification, not a formal interpolation error bound. Independent astronomical references remain unchanged; shipping sources change only as recorded here.
 
-- Source: the full VSOP87B evaluator at `0129d8a494957f12be101916cf7f18f8bbde7622`.
-- Coverage: TT days [-36524.5, 36889.5), 1900-01-01 through 2101-01-01.
-  An analytic calendar test caught an initial one-day excess at the upper bound.
-  Removing it does not change the selected grids' coefficients or segment counts;
-  final padded segments continue to be checked beyond the exposed coverage.
+- Source: the full VSOP87B evaluator at `8a1680535d7f4afc523dbe9e9041435dca9ddc10`, which compensates the series summation (Neumaier accumulation, same terms in the same order) and matches an exactly summed evaluation of the same tables bit for bit.
+- Provenance change from v1: the v1 archive was fitted against `0129d8a494957f12be101916cf7f18f8bbde7622`, a revision that predates both native math and compensated summation, and was qualified against `53f5c5c`. That model could not be kept frozen: the plain summation loses low bits systematically (up to 4.45e-12 AU for Mercury at the coverage edges, growing linearly with |t|), so the 1e-12 qualification budget was measuring the reference's own arithmetic and no fit degree could pass it. The fit must target the same numerics it is qualified against, so the pin now tracks the shipping evaluator. The v1 archive is no longer reproducible from this protocol; its inputs remain in git history.
+- Qualification reference: the same revision with the polynomial path stubbed out, so every reference sample takes the full compensated series. Timing and regression comparisons use that same build as the baseline arm; the model change relative to `53f5c5c` is reported separately as a numerics change and is accepted through the independent references, not through the 1e-12 component budget.
+- Coverage: TT days [-36524.5, 36889.5), 1900-01-01 through 2101-01-01. Final padded segments continue to be checked beyond the exposed coverage.
 - Bodies: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune.
-- Grid: degrees 12/16/20/24; segment lengths 2/4/8/16/32 days.
-  The final fit retains the full segment width (padding beyond coverage is never
-  exposed by the runtime). Initial short-last-segment results are archived in
-  `screen-short-last.json`; one-day fits amplified sampling roundoff in derivatives.
-- Screening segments: first, last, and ten evenly distributed interior segments
-  of each body's grid. No independent event reference participates in fitting.
-- Fit: Cartesian heliocentric coordinates before VsopRotate, at 4*(degree+1)
-  Chebyshev roots, projecting onto degree+1 coefficients after subtracting the
-  midpoint position. Oversampling reduces differentiation of source roundoff;
-  the original degree+1-node experiment is retained as `screen-single-node.json`.
-  Full-range checks of this position-only fit found frequent velocity failures
-  from differentiated source roundoff. The final fit projects the analytic full
-  model velocity to degree-1, integrates it, and anchors position at the exact
-  midpoint full-model position. Both runtime position and velocity still come
-  from one polynomial. `--fit position` reproduces the rejected oversampled fit.
-  No validation limit was changed in these corrections.
-  Fixed-order double arithmetic with pinned deterministic trigonometry; coefficient
-  zero uses the half-weight convention. Velocity differentiates the polynomial.
-- Validation per segment: both endpoints, adjacent representable interior TT
-  times, 31 equally spaced interior points, and 16 interior points from the fixed
-  LCG seed 20260907. These differ from the interpolation nodes. Probe the full
-  evaluator at exactly the representable TT consumed by the candidate.
-- Screening component limits: 1e-11 AU position, 1e-11 AU/day velocity.
-  These are preliminary filters; passing them cannot replace the event gates.
-- Full-range validation applies the same samples to every selected segment.
-  A failing segment uses the original evaluator and is counted in the report.
-- Rank passing configurations by measured polynomial evaluation time; timings
-  within 5% tie and use smaller coefficient bytes. Total binary coefficient data
-  must not exceed 32 MiB. Report fallbacks and do not hide their timing cost.
-- Final accuracy: unchanged 36-event/60-second gate, archived 24,120 monthly
-  positions and 2,462 stations, JPL/Audit checks. Added root displacement from
-  the full evaluator must be <=0.05 seconds for existing events and stations.
-- Additional edge checks: both sides of every segment/coverage seam, central
-  difference widths 0.0007/0.01/0.02/0.04 day crossing seams, non-finite/extreme
-  times, repeated and concurrent calls. Preserve caller-owned time metadata.
-- Performance: five alternating isolated trials, plus cold subprocess startup;
-  random, chronological, refinement and repeated epochs. Downstream uses the
-  preserved 320-scoring and five-minute New York day/week and Reykjavik day
-  workloads, including preparation, plus the pre-change integrated gate.
+- Grid: degrees 12/16/20/24; segment lengths 2/4/8/16/32 days. The final fit retains the full segment width; padding beyond coverage is never exposed by the runtime.
+- Screening segments: first, last, and ten evenly distributed interior segments of each body's grid. No independent event reference participates in fitting.
+- Fit: Cartesian heliocentric coordinates before VsopRotate. The analytic full-model velocity is projected to degree-1 at 4*(degree+1) Chebyshev roots, integrated, and anchored at the exact midpoint full-model position. Both runtime position and velocity come from one polynomial. Fixed-order double arithmetic; coefficient zero uses the half-weight convention. `--fit position` reproduces the rejected v1 oversampled position fit.
+- Validation per segment: both endpoints, adjacent representable interior TT times, 31 equally spaced interior points, and 16 interior points from the fixed LCG seed 20260907. These differ from the interpolation nodes. Probe the full evaluator at exactly the representable TT consumed by the candidate.
+- Screening component limits: 2.5e-13 AU position, 2.5e-13 AU/day velocity, four times inside the production budget of max(1e-12, abs(reference)*1e-12). v1 used 1e-11. A 1e-13 limit was rejected because no configuration reaches it for the inner four planets even with compensation. These are preliminary filters; passing them cannot replace the event gates.
+- Full-range validation applies the same samples to every selected segment. A failing segment uses the original evaluator and is counted in the report.
+- Request replay: the four frozen downstream request populations under `data/requests/` (every ephemeris request the scoring, New York day, New York week and Reykjavik day workloads actually made) are evaluated at their exact TT under the production budget. Failing segments join the shipping validity mask. The v1 grid screen passed 127 scoring and 9 week-scan component misses at epochs the product visits.
+- Rank passing configurations by measured polynomial evaluation time; timings within 5% tie and use smaller coefficient bytes. Total binary coefficient data must not exceed 32 MiB. Report fallbacks and do not hide their timing cost.
+- Final accuracy: unchanged 36-event/60-second gate, archived 24,120 monthly positions and 2,462 stations, JPL/Audit checks. Added root displacement from the full evaluator must be <=0.05 seconds for existing events and stations, reported as a diagnostic under the approved incremental acceptance policy.
+- Additional edge checks: both sides of every segment/coverage seam, central difference widths 0.0007/0.01/0.02/0.04 day crossing seams, non-finite/extreme times, repeated and concurrent calls. Preserve caller-owned time metadata.
+- Performance: five alternating isolated trials, plus cold subprocess startup; random, chronological, refinement and repeated epochs. Downstream uses the preserved 320-scoring and five-minute New York day/week and Reykjavik day workloads, including preparation, plus the pre-change integrated gate.
 
-No new numerical goldens or production model identifier until independent
-accuracy and paired performance justify adoption.
+No new numerical goldens beyond the compensated model identifier until independent accuracy and paired performance justify adoption.

@@ -1,5 +1,7 @@
 /* Exercise the shipped dispatch, including the full-model fallback. */
 #include "baseline.c"
+/* The reference arm stubs the dispatch out; restore the shipping definition here. */
+#undef PolynomialPosition
 #include "polynomial.h"
 
 static body_state_t candidate_state(int body, double tt)
