@@ -28,6 +28,17 @@ Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronom
 - Generic root-finding search for custom astronomical events
 - Full `Sendable` conformance for Swift 6
 
+## Planetary calculation performance
+
+For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates immutable
+polynomial approximations of the complete VSOP87B model. Position and heliocentric
+velocity use the same polynomial; distance comes from its position vector. Segments
+that fail the numerical regression checks, and dates outside this coverage, use
+the complete original series. Supported dates are unchanged.
+
+The tables add about 11 MB before platform packaging. No files are downloaded or
+loaded at runtime. See the [qualification and performance report](Scripts/performance/polynomial/README.md).
+
 ## Installation
 
 ### Swift Package Manager

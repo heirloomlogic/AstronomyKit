@@ -1,0 +1,221 @@
+{
+  "nyc-day": {
+    "differences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 13,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 250,
+          "maxAbsoluteDifference": 2.6147972675971687e-12
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 13,
+          "maxAbsoluteDifference": 3.2929214910382143e-13
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 13,
+          "maxAbsoluteDifference": 4.973799150320701e-14
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 13,
+          "maxAbsoluteDifference": 8.146816554699399e-13
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 12,
+          "maxAbsoluteDifference": 2.7355895326763857e-13
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 13,
+          "maxAbsoluteDifference": 8.264500195309665e-13
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.7053025658242404e-13
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 13,
+          "maxAbsoluteDifference": 2.02127203863256e-12
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 11,
+          "maxAbsoluteDifference": 1.2363443602225743e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 13,
+          "maxAbsoluteDifference": 8.217426739065559e-11
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 5,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.921982573094283e-10
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.4938450476620346e-10
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 33,
+          "maxAbsoluteDifference": 2.6147972675971687e-12
+        }
+      }
+    },
+    "failures": []
+  },
+  "nyc-week": {
+    "differences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 85,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 1855,
+          "maxAbsoluteDifference": 3.943512183468556e-12
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 44,
+          "maxAbsoluteDifference": 3.552713678800501e-14
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 85,
+          "maxAbsoluteDifference": 4.82058837292243e-13
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 85,
+          "maxAbsoluteDifference": 4.973799150320701e-14
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 85,
+          "maxAbsoluteDifference": 1.1182166304024577e-12
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 84,
+          "maxAbsoluteDifference": 3.836930773104541e-13
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 48,
+          "maxAbsoluteDifference": 1.9326762412674725e-12
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 85,
+          "maxAbsoluteDifference": 1.2110312752611208e-12
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 85,
+          "maxAbsoluteDifference": 1.7053025658242404e-13
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 85,
+          "maxAbsoluteDifference": 2.7853275241795927e-12
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 83,
+          "maxAbsoluteDifference": 1.7905676941154525e-12
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 47,
+          "maxAbsoluteDifference": 3.1309355108533055e-10
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 85,
+          "maxAbsoluteDifference": 1.6134293900904595e-10
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 23,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 85,
+          "maxAbsoluteDifference": 1.921982573094283e-10
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 85,
+          "maxAbsoluteDifference": 4.000639819423668e-10
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 31,
+          "maxAbsoluteDifference": 4.949374243778948e-13
+        },
+        "[].peakFlagInstances[].distanceToSun": {
+          "count": 46,
+          "maxAbsoluteDifference": 1.9326762412674725e-12
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 217,
+          "maxAbsoluteDifference": 2.8421709430404007e-12
+        }
+      }
+    },
+    "failures": []
+  },
+  "reykjavik-day": {
+    "differences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 13,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 258,
+          "maxAbsoluteDifference": 2.4229507289419416e-12
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 13,
+          "maxAbsoluteDifference": 4.0689673852511987e-13
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 13,
+          "maxAbsoluteDifference": 4.263256414560601e-14
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 13,
+          "maxAbsoluteDifference": 8.606448886894214e-13
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 13,
+          "maxAbsoluteDifference": 2.1671553440683056e-13
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.021849271864994e-12
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.7053025658242404e-13
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 13,
+          "maxAbsoluteDifference": 2.154720846192504e-12
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.0089706847793423e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.0270184702676488e-10
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 8,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 13,
+          "maxAbsoluteDifference": 1.921982573094283e-10
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 13,
+          "maxAbsoluteDifference": 2.455635694786906e-10
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 7,
+          "maxAbsoluteDifference": 2.418065747633591e-13
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 37,
+          "maxAbsoluteDifference": 2.2737367544323206e-12
+        }
+      }
+    },
+    "failures": []
+  }
+}

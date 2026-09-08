@@ -1,0 +1,563 @@
+{
+  "nyc-day": {
+    "completeWindowDifferences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 65,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 1250,
+          "maxAbsoluteDifference": 2.6147972675971687e-12
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 65,
+          "maxAbsoluteDifference": 3.2929214910382143e-13
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 65,
+          "maxAbsoluteDifference": 4.973799150320701e-14
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 65,
+          "maxAbsoluteDifference": 8.146816554699399e-13
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 60,
+          "maxAbsoluteDifference": 2.7355895326763857e-13
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 65,
+          "maxAbsoluteDifference": 8.264500195309665e-13
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.7053025658242404e-13
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.02127203863256e-12
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 55,
+          "maxAbsoluteDifference": 1.2363443602225743e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 65,
+          "maxAbsoluteDifference": 8.217426739065559e-11
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 25,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.921982573094283e-10
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.4938450476620346e-10
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 165,
+          "maxAbsoluteDifference": 2.6147972675971687e-12
+        }
+      }
+    },
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.076737332,
+    "medians": {
+      "baseline": 3.206838042,
+      "candidate": 2.348598542
+    },
+    "speedup": 1.36542622532208,
+    "trials": {
+      "baseline": [
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 69206016,
+          "processSeconds": 3.3863007499894593,
+          "seconds": 3.185270125,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 66994176,
+          "processSeconds": 3.215364999996382,
+          "seconds": 3.189996083,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 68698112,
+          "processSeconds": 3.2408346250012983,
+          "seconds": 3.2186908340000002,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 70156288,
+          "processSeconds": 3.2299554999917746,
+          "seconds": 3.206838042,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 65683456,
+          "processSeconds": 3.65692300000228,
+          "seconds": 3.6343229580000003,
+          "windowCount": 13
+        }
+      ],
+      "candidate": [
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 69664768,
+          "processSeconds": 2.5421953330078395,
+          "seconds": 2.348598542,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 69828608,
+          "processSeconds": 2.364133209004649,
+          "seconds": 2.339264875,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 71385088,
+          "processSeconds": 2.437056708004093,
+          "seconds": 2.414564917,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 70631424,
+          "processSeconds": 2.3550653750135098,
+          "seconds": 2.333835708,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 68632576,
+          "processSeconds": 2.3962762919982197,
+          "seconds": 2.370828792,
+          "windowCount": 13
+        }
+      ]
+    }
+  },
+  "nyc-week": {
+    "completeWindowDifferences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 425,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 9275,
+          "maxAbsoluteDifference": 3.943512183468556e-12
+        },
+        "[].peakChartState.declinations.jupiter": {
+          "count": 220,
+          "maxAbsoluteDifference": 3.552713678800501e-14
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 425,
+          "maxAbsoluteDifference": 4.82058837292243e-13
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 425,
+          "maxAbsoluteDifference": 4.973799150320701e-14
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 425,
+          "maxAbsoluteDifference": 1.1182166304024577e-12
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 420,
+          "maxAbsoluteDifference": 3.836930773104541e-13
+        },
+        "[].peakChartState.positions.jupiter": {
+          "count": 240,
+          "maxAbsoluteDifference": 1.9326762412674725e-12
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 425,
+          "maxAbsoluteDifference": 1.2110312752611208e-12
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 425,
+          "maxAbsoluteDifference": 1.7053025658242404e-13
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 425,
+          "maxAbsoluteDifference": 2.7853275241795927e-12
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 415,
+          "maxAbsoluteDifference": 1.7905676941154525e-12
+        },
+        "[].peakChartState.speeds.jupiter": {
+          "count": 235,
+          "maxAbsoluteDifference": 3.1309355108533055e-10
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 425,
+          "maxAbsoluteDifference": 1.6134293900904595e-10
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 115,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 425,
+          "maxAbsoluteDifference": 1.921982573094283e-10
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 425,
+          "maxAbsoluteDifference": 4.000639819423668e-10
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 155,
+          "maxAbsoluteDifference": 4.949374243778948e-13
+        },
+        "[].peakFlagInstances[].distanceToSun": {
+          "count": 230,
+          "maxAbsoluteDifference": 1.9326762412674725e-12
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 1085,
+          "maxAbsoluteDifference": 2.8421709430404007e-12
+        }
+      }
+    },
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.333654166,
+    "medians": {
+      "baseline": 20.096264791,
+      "candidate": 14.510853125
+    },
+    "speedup": 1.384912700713453,
+    "trials": {
+      "baseline": [
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 74121216,
+          "processSeconds": 20.87576504200115,
+          "seconds": 20.674102167,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 82001920,
+          "processSeconds": 19.52351133301272,
+          "seconds": 19.468153542,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 81248256,
+          "processSeconds": 19.570721083000535,
+          "seconds": 19.513234875,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 79626240,
+          "processSeconds": 20.1528741660004,
+          "seconds": 20.096264791,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 81297408,
+          "processSeconds": 21.40793487499468,
+          "seconds": 21.349312,
+          "windowCount": 85
+        }
+      ],
+      "candidate": [
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 83345408,
+          "processSeconds": 14.701468333005323,
+          "seconds": 14.510853125,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 82395136,
+          "processSeconds": 13.038172500004293,
+          "seconds": 12.983054792,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 81870848,
+          "processSeconds": 14.690253209002549,
+          "seconds": 14.633232542,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 83836928,
+          "processSeconds": 13.534036915996694,
+          "seconds": 13.483071708,
+          "windowCount": 85
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 80871424,
+          "processSeconds": 14.951828249992104,
+          "seconds": 14.753947334,
+          "windowCount": 85
+        }
+      ]
+    }
+  },
+  "reykjavik-day": {
+    "completeWindowDifferences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 65,
+      "numeric": {
+        "[].peakChartState.aspects[].orb": {
+          "count": 1290,
+          "maxAbsoluteDifference": 2.4229507289419416e-12
+        },
+        "[].peakChartState.declinations.neptune": {
+          "count": 65,
+          "maxAbsoluteDifference": 4.0689673852511987e-13
+        },
+        "[].peakChartState.declinations.pluto": {
+          "count": 65,
+          "maxAbsoluteDifference": 4.263256414560601e-14
+        },
+        "[].peakChartState.declinations.saturn": {
+          "count": 65,
+          "maxAbsoluteDifference": 8.606448886894214e-13
+        },
+        "[].peakChartState.declinations.uranus": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.1671553440683056e-13
+        },
+        "[].peakChartState.positions.neptune": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.021849271864994e-12
+        },
+        "[].peakChartState.positions.pluto": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.7053025658242404e-13
+        },
+        "[].peakChartState.positions.saturn": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.154720846192504e-12
+        },
+        "[].peakChartState.positions.uranus": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.0089706847793423e-12
+        },
+        "[].peakChartState.speeds.neptune": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.0270184702676488e-10
+        },
+        "[].peakChartState.speeds.pluto": {
+          "count": 40,
+          "maxAbsoluteDifference": 8.185452315956354e-12
+        },
+        "[].peakChartState.speeds.saturn": {
+          "count": 65,
+          "maxAbsoluteDifference": 1.921982573094283e-10
+        },
+        "[].peakChartState.speeds.uranus": {
+          "count": 65,
+          "maxAbsoluteDifference": 2.455635694786906e-10
+        },
+        "[].peakFlagInstances[].angularStrength": {
+          "count": 35,
+          "maxAbsoluteDifference": 2.418065747633591e-13
+        },
+        "[].peakFlagInstances[].separation": {
+          "count": 185,
+          "maxAbsoluteDifference": 2.2737367544323206e-12
+        }
+      }
+    },
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.07299825,
+    "medians": {
+      "baseline": 3.244398791,
+      "candidate": 2.209463291
+    },
+    "speedup": 1.4684103620167366,
+    "trials": {
+      "baseline": [
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 66633728,
+          "processSeconds": 3.4174046669941163,
+          "seconds": 3.244398791,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 68812800,
+          "processSeconds": 3.5835931659967173,
+          "seconds": 3.550628917,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 66912256,
+          "processSeconds": 2.9858055829972727,
+          "seconds": 2.958521,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 66863104,
+          "processSeconds": 3.5198429160082014,
+          "seconds": 3.496741625,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 69304320,
+          "processSeconds": 2.9330870830017375,
+          "seconds": 2.9102423330000002,
+          "windowCount": 13
+        }
+      ],
+      "candidate": [
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 73121792,
+          "processSeconds": 2.5776714159874246,
+          "seconds": 2.407524708,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 68550656,
+          "processSeconds": 2.232373042003019,
+          "seconds": 2.209463291,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 71794688,
+          "processSeconds": 2.256172624998726,
+          "seconds": 2.231550833,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 71663616,
+          "processSeconds": 2.1901546659937594,
+          "seconds": 2.167423625,
+          "windowCount": 13
+        },
+        {
+          "exitCode": 0,
+          "peakRSSBytes": 69287936,
+          "processSeconds": 2.218794957996579,
+          "seconds": 2.195468,
+          "windowCount": 13
+        }
+      ]
+    }
+  },
+  "scoring": {
+    "completeWindowDifferences": null,
+    "historicalTargetPassed": false,
+    "historicalTargetSeconds": 0.260501916,
+    "medians": {
+      "baseline": 15.398283584,
+      "candidate": 2.651833375
+    },
+    "speedup": 5.806655776025144,
+    "trials": {
+      "baseline": [
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 47775744,
+          "processSeconds": 16.038607750000665,
+          "scoringCapPassed": true,
+          "seconds": 15.246995833
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 47267840,
+          "processSeconds": 16.02729116700357,
+          "scoringCapPassed": true,
+          "seconds": 15.398283584
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 47841280,
+          "processSeconds": 15.978726290995837,
+          "scoringCapPassed": true,
+          "seconds": 15.381358917
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 48250880,
+          "processSeconds": 16.253852041001664,
+          "scoringCapPassed": true,
+          "seconds": 15.634109
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 48152576,
+          "processSeconds": 16.11632883400307,
+          "scoringCapPassed": true,
+          "seconds": 15.498550416999999
+        }
+      ],
+      "candidate": [
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 51216384,
+          "processSeconds": 2.869937374998699,
+          "scoringCapPassed": true,
+          "seconds": 2.68121775
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 51036160,
+          "processSeconds": 2.6895285840000724,
+          "scoringCapPassed": true,
+          "seconds": 2.651833375
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 50790400,
+          "processSeconds": 2.6803382910002256,
+          "scoringCapPassed": true,
+          "seconds": 2.639791125
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 50823168,
+          "processSeconds": 2.7207369999960065,
+          "scoringCapPassed": true,
+          "seconds": 2.684741916
+        },
+        {
+          "checksum": -81888,
+          "exitCode": 0,
+          "peakRSSBytes": 51331072,
+          "processSeconds": 2.683120083005633,
+          "scoringCapPassed": true,
+          "seconds": 2.644696459
+        }
+      ]
+    }
+  }
+}

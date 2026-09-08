@@ -75,7 +75,7 @@ int main(void)
         return 1;
     }
 
-    time = raw_time(12345.625);
+    time = raw_time(112345.625);
     vector = Astronomy_HelioVector(BODY_MARS, time);       /* warm position */
     if (check_status("warm HelioVector", vector.status))
         return 1;
@@ -89,7 +89,7 @@ int main(void)
     }
     position_calls = trig_calls();
 
-    time = raw_time(-23456.75);
+    time = raw_time(-123456.75);
     state = Astronomy_HelioState(BODY_MERCURY, time);      /* warm coordinates and derivatives */
     if (check_status("warm HelioState", state.status))
         return 1;
@@ -103,7 +103,7 @@ int main(void)
     }
     state_calls = trig_calls();
 
-    time = raw_time(34567.875);
+    time = raw_time(134567.875);
     radius = Astronomy_HelioDistance(BODY_JUPITER, time);  /* warm radius */
     if (check_status("warm HelioDistance", radius.status))
         return 1;

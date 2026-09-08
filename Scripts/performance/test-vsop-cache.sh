@@ -52,3 +52,31 @@ fi
 grep -F "HelioVector repeated the VSOP position series" "$build_dir/negative.log" > /dev/null
 cat "$build_dir/negative.log"
 echo "Cache probe rejected the uncached negative control."
+
+# Separately prove that qualified NEW epochs avoid the full series.
+compile -c "$script_dir/polynomial/work_probe.c" -o "$build_dir/probe.o"
+compile -pthread -include "$build_dir/count.h" -c "$astronomy_source" -o "$build_dir/astronomy.o"
+"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/polynomial-probe"
+"$build_dir/polynomial-probe"
+python3 - "$astronomy_source" "$build_dir/full-only.c" <<'PYTHON'
+import sys
+from pathlib import Path
+source = Path(sys.argv[1]).read_text()
+marker = '#include "polynomial.h"'
+assert source.count(marker) == 1
+# Keep the real fallback implementation, replacing only the polynomial dispatch.
+source = source.replace(marker, 'static int PolynomialPosition(int b, double t, double *p, double *v) { return 0; }')
+Path(sys.argv[2]).write_text(source)
+PYTHON
+compile -pthread -include "$build_dir/count.h" -c "$build_dir/full-only.c" -o "$build_dir/astronomy.o"
+"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/polynomial-probe"
+negative_status=0
+"$build_dir/polynomial-probe" > "$build_dir/negative.log" 2>&1 || negative_status=$?
+if [ "$negative_status" -ne 1 ]; then
+    echo "ERROR: expected a polynomial assertion failure, got exit $negative_status" >&2
+    cat "$build_dir/negative.log" >&2
+    exit 1
+fi
+grep -F "Polynomial path evaluated the VSOP trigonometric series" "$build_dir/negative.log" > /dev/null
+cat "$build_dir/negative.log"
+echo "Polynomial probe rejected the full-series negative control."

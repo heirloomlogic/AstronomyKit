@@ -60,7 +60,7 @@ public enum AstronomyConfig {
     /// Changes to this value require reviewing cached positions and event times.
     /// Persisted numerical caches must also account for platform, architecture,
     /// OS, and toolchain: native math does not guarantee identical output bits.
-    public static let ephemerisVersion = "3.0.0-candidate.2+vsop87b.iau2000b.utc-c72.native-libm"
+    public static let ephemerisVersion = "3.0.0-candidate.3+vsop87b.poly-v1.iau2000b.utc-c72.native-libm"
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the Espenak-Meeus model.

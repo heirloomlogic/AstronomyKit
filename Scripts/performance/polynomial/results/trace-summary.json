@@ -1,0 +1,412 @@
+{
+  "nyc-day": {
+    "differences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 0,
+      "numeric": {
+        ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
+          "count": 1379,
+          "maxAbsoluteDifference": 1.92673568072399e-14
+        },
+        ".chronologicalGroups[].events[].motionAfter.residual": {
+          "count": 1379,
+          "maxAbsoluteDifference": 1.6626700008316015e-12
+        },
+        ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
+          "count": 1380,
+          "maxAbsoluteDifference": 2.4436670135324912e-14
+        },
+        ".chronologicalGroups[].events[].motionBefore.residual": {
+          "count": 1379,
+          "maxAbsoluteDifference": 1.7621459846850485e-12
+        },
+        ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 1380,
+          "maxAbsoluteDifference": 3.2481953634747466e-06
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
+          "count": 1367,
+          "maxAbsoluteDifference": 1.2656542480726785e-14
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 1318,
+          "maxAbsoluteDifference": 2.3909445820771702e-11
+        },
+        ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
+          "count": 1378,
+          "maxAbsoluteDifference": 1.3642420526593924e-12
+        },
+        ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
+          "count": 1380,
+          "maxAbsoluteDifference": 2.0707245362849847e-09
+        },
+        ".chronologicalGroups[].events[].residual": {
+          "count": 1378,
+          "maxAbsoluteDifference": 1.3642420526593924e-12
+        },
+        ".events[].motionAfter.derivativePerSecond": {
+          "count": 1379,
+          "maxAbsoluteDifference": 1.92673568072399e-14
+        },
+        ".events[].motionAfter.residual": {
+          "count": 1379,
+          "maxAbsoluteDifference": 1.6626700008316015e-12
+        },
+        ".events[].motionBefore.derivativePerSecond": {
+          "count": 1380,
+          "maxAbsoluteDifference": 2.4436670135324912e-14
+        },
+        ".events[].motionBefore.residual": {
+          "count": 1379,
+          "maxAbsoluteDifference": 1.7621459846850485e-12
+        },
+        ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 1380,
+          "maxAbsoluteDifference": 3.2481953634747466e-06
+        },
+        ".events[].pointSamples[].latitudeDegrees": {
+          "count": 1367,
+          "maxAbsoluteDifference": 1.2656542480726785e-14
+        },
+        ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 1318,
+          "maxAbsoluteDifference": 2.3909445820771702e-11
+        },
+        ".events[].pointSamples[].longitudeDegrees": {
+          "count": 1378,
+          "maxAbsoluteDifference": 1.3642420526593924e-12
+        },
+        ".events[].pointSamples[].speedDegreesPerDay": {
+          "count": 1380,
+          "maxAbsoluteDifference": 2.0707245362849847e-09
+        },
+        ".events[].residual": {
+          "count": 1378,
+          "maxAbsoluteDifference": 1.3642420526593924e-12
+        }
+      }
+    },
+    "failures": [],
+    "maxRootShiftSeconds": 0,
+    "queries": {
+      "baseline": 1463,
+      "candidate": 1463
+    }
+  },
+  "nyc-week": {
+    "differences": {
+      "discrete": {
+        ".chronologicalGroups[].bracket.end": 9,
+        ".chronologicalGroups[].bracket.start": 12,
+        ".chronologicalGroups[].events[].bracket.end": 9,
+        ".chronologicalGroups[].events[].bracket.start": 12,
+        ".chronologicalGroups[].events[].id": 7,
+        ".chronologicalGroups[].events[].instant": 7,
+        ".chronologicalGroups[].id": 7,
+        ".events[].bracket.end": 9,
+        ".events[].bracket.start": 12,
+        ".events[].id": 7,
+        ".events[].instant": 7,
+        ".unresolved.length": 454,
+        ".unresolved[].interval.end": 9568,
+        ".unresolved[].interval.start": 9114,
+        ".unresolved[].target.station._0": 370
+      },
+      "ignoredRandomUUIDs": 0,
+      "numeric": {
+        ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
+          "count": 14191,
+          "maxAbsoluteDifference": 3.975398840411898e-13
+        },
+        ".chronologicalGroups[].events[].motionAfter.residual": {
+          "count": 14200,
+          "maxAbsoluteDifference": 2.156572698468629e-10
+        },
+        ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
+          "count": 14096,
+          "maxAbsoluteDifference": 7.303167402425426e-13
+        },
+        ".chronologicalGroups[].events[].motionBefore.residual": {
+          "count": 14200,
+          "maxAbsoluteDifference": 2.189040060058666e-10
+        },
+        ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 14467,
+          "maxAbsoluteDifference": 0.00018046879292554774
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
+          "count": 14372,
+          "maxAbsoluteDifference": 1.880218203353934e-11
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 14069,
+          "maxAbsoluteDifference": 3.423293426507712e-09
+        },
+        ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
+          "count": 14461,
+          "maxAbsoluteDifference": 2.165960744093809e-10
+        },
+        ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
+          "count": 14464,
+          "maxAbsoluteDifference": 5.8566168803508845e-08
+        },
+        ".chronologicalGroups[].events[].residual": {
+          "count": 14204,
+          "maxAbsoluteDifference": 2.1665091942679737e-10
+        },
+        ".evaluations": {
+          "count": 454,
+          "maxAbsoluteDifference": 5
+        },
+        ".events[].motionAfter.derivativePerSecond": {
+          "count": 14191,
+          "maxAbsoluteDifference": 3.975398840411898e-13
+        },
+        ".events[].motionAfter.residual": {
+          "count": 14200,
+          "maxAbsoluteDifference": 2.156572698468629e-10
+        },
+        ".events[].motionBefore.derivativePerSecond": {
+          "count": 14096,
+          "maxAbsoluteDifference": 7.303167402425426e-13
+        },
+        ".events[].motionBefore.residual": {
+          "count": 14200,
+          "maxAbsoluteDifference": 2.189040060058666e-10
+        },
+        ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 14467,
+          "maxAbsoluteDifference": 0.00018046879292554774
+        },
+        ".events[].pointSamples[].latitudeDegrees": {
+          "count": 14372,
+          "maxAbsoluteDifference": 1.880218203353934e-11
+        },
+        ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 14069,
+          "maxAbsoluteDifference": 3.423293426507712e-09
+        },
+        ".events[].pointSamples[].longitudeDegrees": {
+          "count": 14461,
+          "maxAbsoluteDifference": 2.165960744093809e-10
+        },
+        ".events[].pointSamples[].speedDegreesPerDay": {
+          "count": 14464,
+          "maxAbsoluteDifference": 5.8566168803508845e-08
+        },
+        ".events[].residual": {
+          "count": 14204,
+          "maxAbsoluteDifference": 2.1665091942679737e-10
+        }
+      }
+    },
+    "failures": [],
+    "maxRootShiftSeconds": 1e-06,
+    "queries": {
+      "baseline": 10128,
+      "candidate": 10128
+    }
+  },
+  "reykjavik-day": {
+    "differences": {
+      "discrete": {},
+      "ignoredRandomUUIDs": 0,
+      "numeric": {
+        ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
+          "count": 1300,
+          "maxAbsoluteDifference": 1.997225084968135e-14
+        },
+        ".chronologicalGroups[].events[].motionAfter.residual": {
+          "count": 1297,
+          "maxAbsoluteDifference": 8.422151864806438e-13
+        },
+        ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
+          "count": 1301,
+          "maxAbsoluteDifference": 2.3496775271997228e-14
+        },
+        ".chronologicalGroups[].events[].motionBefore.residual": {
+          "count": 1300,
+          "maxAbsoluteDifference": 8.810729381324156e-13
+        },
+        ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 1300,
+          "maxAbsoluteDifference": 2.2317748542080313e-06
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
+          "count": 1292,
+          "maxAbsoluteDifference": 1.2656542480726785e-14
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 1234,
+          "maxAbsoluteDifference": 2.3909445820771702e-11
+        },
+        ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
+          "count": 1299,
+          "maxAbsoluteDifference": 8.475442569988445e-13
+        },
+        ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
+          "count": 1301,
+          "maxAbsoluteDifference": 2.0707245362849847e-09
+        },
+        ".chronologicalGroups[].events[].residual": {
+          "count": 1299,
+          "maxAbsoluteDifference": 8.475442569988445e-13
+        },
+        ".events[].motionAfter.derivativePerSecond": {
+          "count": 1300,
+          "maxAbsoluteDifference": 1.997225084968135e-14
+        },
+        ".events[].motionAfter.residual": {
+          "count": 1297,
+          "maxAbsoluteDifference": 8.422151864806438e-13
+        },
+        ".events[].motionBefore.derivativePerSecond": {
+          "count": 1301,
+          "maxAbsoluteDifference": 2.3496775271997228e-14
+        },
+        ".events[].motionBefore.residual": {
+          "count": 1300,
+          "maxAbsoluteDifference": 8.810729381324156e-13
+        },
+        ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 1300,
+          "maxAbsoluteDifference": 2.2317748542080313e-06
+        },
+        ".events[].pointSamples[].latitudeDegrees": {
+          "count": 1292,
+          "maxAbsoluteDifference": 1.2656542480726785e-14
+        },
+        ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 1234,
+          "maxAbsoluteDifference": 2.3909445820771702e-11
+        },
+        ".events[].pointSamples[].longitudeDegrees": {
+          "count": 1299,
+          "maxAbsoluteDifference": 8.475442569988445e-13
+        },
+        ".events[].pointSamples[].speedDegreesPerDay": {
+          "count": 1301,
+          "maxAbsoluteDifference": 2.0707245362849847e-09
+        },
+        ".events[].residual": {
+          "count": 1299,
+          "maxAbsoluteDifference": 8.475442569988445e-13
+        }
+      }
+    },
+    "failures": [],
+    "maxRootShiftSeconds": 0,
+    "queries": {
+      "baseline": 1464,
+      "candidate": 1464
+    }
+  },
+  "scoring": {
+    "differences": {
+      "discrete": {
+        ".chronologicalGroups[].bracket.end": 18,
+        ".chronologicalGroups[].bracket.start": 10,
+        ".chronologicalGroups[].events[].bracket.end": 18,
+        ".chronologicalGroups[].events[].bracket.start": 10,
+        ".chronologicalGroups[].events[].id": 8,
+        ".chronologicalGroups[].events[].instant": 8,
+        ".chronologicalGroups[].id": 8,
+        ".events[].bracket.end": 18,
+        ".events[].bracket.start": 10,
+        ".events[].id": 8,
+        ".events[].instant": 8,
+        ".unresolved[].interval.end": 1445,
+        ".unresolved[].interval.start": 1445
+      },
+      "ignoredRandomUUIDs": 0,
+      "numeric": {
+        ".chronologicalGroups[].events[].motionAfter.derivativePerSecond": {
+          "count": 5395,
+          "maxAbsoluteDifference": 8.660243094580447e-11
+        },
+        ".chronologicalGroups[].events[].motionAfter.residual": {
+          "count": 5314,
+          "maxAbsoluteDifference": 4.836765908424109e-09
+        },
+        ".chronologicalGroups[].events[].motionBefore.derivativePerSecond": {
+          "count": 5458,
+          "maxAbsoluteDifference": 9.197312433780574e-11
+        },
+        ".chronologicalGroups[].events[].motionBefore.residual": {
+          "count": 5328,
+          "maxAbsoluteDifference": 5.2072631920704476e-09
+        },
+        ".chronologicalGroups[].events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 5756,
+          "maxAbsoluteDifference": 0.00023096989170452026
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeDegrees": {
+          "count": 5836,
+          "maxAbsoluteDifference": 1.4642065337966415e-11
+        },
+        ".chronologicalGroups[].events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 5742,
+          "maxAbsoluteDifference": 1.1812772982011666e-09
+        },
+        ".chronologicalGroups[].events[].pointSamples[].longitudeDegrees": {
+          "count": 5836,
+          "maxAbsoluteDifference": 1.8400214685243554e-10
+        },
+        ".chronologicalGroups[].events[].pointSamples[].speedDegreesPerDay": {
+          "count": 5736,
+          "maxAbsoluteDifference": 5.3676428357629646e-08
+        },
+        ".chronologicalGroups[].events[].residual": {
+          "count": 5488,
+          "maxAbsoluteDifference": 2.2331343123888865e-09
+        },
+        ".events[].motionAfter.derivativePerSecond": {
+          "count": 5395,
+          "maxAbsoluteDifference": 8.660243094580447e-11
+        },
+        ".events[].motionAfter.residual": {
+          "count": 5314,
+          "maxAbsoluteDifference": 4.836765908424109e-09
+        },
+        ".events[].motionBefore.derivativePerSecond": {
+          "count": 5458,
+          "maxAbsoluteDifference": 9.197312433780574e-11
+        },
+        ".events[].motionBefore.residual": {
+          "count": 5328,
+          "maxAbsoluteDifference": 5.2072631920704476e-09
+        },
+        ".events[].pointSamples[].accelerationDegreesPerDaySquared": {
+          "count": 5756,
+          "maxAbsoluteDifference": 0.00023096989170452026
+        },
+        ".events[].pointSamples[].latitudeDegrees": {
+          "count": 5836,
+          "maxAbsoluteDifference": 1.4642065337966415e-11
+        },
+        ".events[].pointSamples[].latitudeSpeedDegreesPerDay": {
+          "count": 5742,
+          "maxAbsoluteDifference": 1.1812772982011666e-09
+        },
+        ".events[].pointSamples[].longitudeDegrees": {
+          "count": 5836,
+          "maxAbsoluteDifference": 1.8400214685243554e-10
+        },
+        ".events[].pointSamples[].speedDegreesPerDay": {
+          "count": 5736,
+          "maxAbsoluteDifference": 5.3676428357629646e-08
+        },
+        ".events[].residual": {
+          "count": 5488,
+          "maxAbsoluteDifference": 2.2331343123888865e-09
+        }
+      }
+    },
+    "failures": [],
+    "maxRootShiftSeconds": 1e-06,
+    "queries": {
+      "baseline": 1403,
+      "candidate": 1403
+    }
+  }
+}

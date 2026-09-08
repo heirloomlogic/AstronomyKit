@@ -2914,6 +2914,8 @@ static void VsopSphereToRect(double lon, double lat, double radius, double pos[3
 static const double DAYS_PER_MILLENNIUM = 365250.0;
 
 
+#include "polynomial.h"
+
 static astro_vector_t CalcVsop(const vsop_model_t *model, astro_time_t time)
 {
     double t = time.tt / DAYS_PER_MILLENNIUM;
@@ -2923,10 +2925,11 @@ static astro_vector_t CalcVsop(const vsop_model_t *model, astro_time_t time)
     terse_vector_t pos;
 
     /* Calculate the VSOP "B" trigonometric series to obtain ecliptic spherical coordinates. */
-    VsopCoords(model, t, sphere, VsopCache(model, t));
-
-    /* Convert ecliptic spherical coordinates to ecliptic Cartesian coordinates. */
-    VsopSphereToRect(sphere[LON_INDEX], sphere[LAT_INDEX], sphere[RAD_INDEX], eclip);
+    if (!PolynomialPosition((int)(model - vsop), time.tt, eclip, NULL))
+    {
+        VsopCoords(model, t, sphere, VsopCache(model, t));
+        VsopSphereToRect(sphere[LON_INDEX], sphere[LAT_INDEX], sphere[RAD_INDEX], eclip);
+    }
 
     /* Convert ecliptic Cartesian coordinates to equatorial Cartesian coordinates. */
     pos = VsopRotate(eclip);
@@ -2994,6 +2997,14 @@ static body_state_t CalcVsopPosVel(const vsop_model_t *model, double tt)
     double dr_dt, dlat_dt, dlon_dt;
     double r, coslat, coslon, sinlat, sinlon;
 
+    double polynomial_velocity[3];
+    if (PolynomialPosition((int)(model - vsop), tt, eclip, polynomial_velocity))
+    {
+        state.tt = tt;
+        state.r = VsopRotate(eclip);
+        state.v = VsopRotate(polynomial_velocity); /* Already AU/day. */
+        return state;
+    }
     vsop_cache_entry_t *cached = VsopCache(model, t);
 
     state.tt = tt;
@@ -3039,6 +3050,11 @@ static double VsopHelioDistance(const vsop_model_t *model, astro_time_t time)
 {
     int s, i;
     double t = time.tt / DAYS_PER_MILLENNIUM;
+    double polynomial_position[3];
+    if (PolynomialPosition((int)(model - vsop), time.tt, polynomial_position, NULL))
+        return sqrt(polynomial_position[0]*polynomial_position[0] +
+                    polynomial_position[1]*polynomial_position[1] +
+                    polynomial_position[2]*polynomial_position[2]);
     double distance = 0.0;
     double tpower = 1.0;
     const vsop_formula_t *formula = &model->formula[2];     /* [2] is the distance part of the formula */
