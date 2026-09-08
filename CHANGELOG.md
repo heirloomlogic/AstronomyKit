@@ -6,11 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [3.0.0-candidate.2] — Unreleased
 
+### Removed
+- The vendored musl math subset, its `ak_*` C symbols, and the `ak_math.h` header exported from `CLibAstronomy`. The Swift layer calls Foundation's `atan2`, `asin`, and `cos` directly. Code importing `CLibAstronomy` for the `ak_*` symbols must switch to the host libm.
+- The accuracy-investigation, native-math, VSOP-cache, and polynomial benchmark harnesses and their archived results under `Scripts/`, plus the `ACCURACY-INVESTIGATION.md` and `PRODUCTION-INTEGRATION.md` narratives and the paired AstrologyKit migration patch. Everything remains in git history at the merge commits of PRs #32 through #36. Only the generators that produce checked-in tables and the hardware-independent cache/polynomial probes are retained.
+
 ### Changed
-- Use platform-native math on Apple and Linux, preserving full astronomical models, exact-epoch caching, FP contraction policy, and calculation API signatures. Existing `ak_*` symbols forward to native math; historical musl sources remain available for reproducing experiments but are excluded from the library.
+- Use platform-native math on Apple and Linux, preserving full astronomical models, exact-epoch caching, FP contraction policy, and calculation API signatures. A vendored musl subset with FP contraction pinned off delivered cross-platform bit identity but measured 2.2–2.5× slower on fresh-epoch positions and downstream scans, so it was dropped.
 - End the cross-platform bit-identity contract. Shared numerical regression tolerances replace exact numerical goldens; independent accuracy references and Linux CI remain required. Outputs may differ across OS, architecture, toolchain, and build configuration.
 - Advance `AstronomyConfig.ephemerisVersion`. Persisted numerical caches must account for that version and the platform, architecture, OS, and toolchain; consumers should review derived positions and event times after upgrading.
-- Accept independently validated performance improvements incrementally. The historical downstream performance target remains an overall goal; station displacement from historical finite differences is reported separately from independent accuracy and event coverage. See `Scripts/performance/native-math/POLICY.md`.
+- Accept independently validated performance improvements incrementally. The historical downstream performance target remains an overall goal; station displacement from historical finite differences is reported separately from independent accuracy and event coverage.
 
 ## [3.0.0-candidate.1] — Unreleased
 
@@ -25,7 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Bound the native TT inverse so nonfinite/nonconvergent input returns an invalid time instead of looping forever.
 
 ### Qualification
-- This is an unreleased candidate. See `PRODUCTION-INTEGRATION.md` for the frozen event gate, measured cost and completed/pending checks. No universal 60-second UTC accuracy claim is made for 1900–2100 or for unknown future leap seconds and Earth orientation.
+- This is an unreleased candidate. The integrated engine passed all 36 frozen AstrologyKit events within the 60-second gate (maximum 59.5 s), 2,462 independently located station roots over 1900–2100 (maximum 40.8 s), and 24,120 monthly positions against JPL Horizons; the full record is in git history at the merge of PR #32. No universal 60-second UTC accuracy claim is made for 1900–2100 or for unknown future leap seconds and Earth orientation.
 
 ## [2.0.0+upstream-2.1.19]
 

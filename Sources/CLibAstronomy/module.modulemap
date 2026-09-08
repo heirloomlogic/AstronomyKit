@@ -1,5 +1,4 @@
 module CLibAstronomy {
     header "include/astronomy.h"
-    header "include/ak_math.h"
     export *
 }

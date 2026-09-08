@@ -1,6 +1,6 @@
 // Numerical regression fixtures shared by Apple and Linux.
-// Expected values retain the original deterministic-engine bit patterns as
-// reference data, but comparisons allow native-libm rounding differences.
+// Expected values are frozen reference bit patterns; comparisons allow
+// native-libm rounding differences within tight budgets.
 // These tight regression budgets are not absolute astronomical accuracy claims.
 // Independent JPL/Audit and event references remain unchanged.
 
@@ -391,7 +391,7 @@ struct ReproducibilityTests {
             "Full-moon search UT drifted"
         )
 
-        // Illumination at a fixed 45° phase angle exercises ak_cos directly.
+        // Illumination at a fixed 45° phase angle exercises the Swift-side cosine directly.
         #expect(
             close(Moon.illumination(for: 45.0), Self.exact(0x3fc2_bec3_3301_8866), tolerance: 1e-14),
             "Moon illumination at 45° drifted"
@@ -400,7 +400,7 @@ struct ReproducibilityTests {
 
     // MARK: - 5. FixedStar Ecliptic Conversion
 
-    /// Exercises the FixedStar ecliptic path (ak_atan2 / ak_asin) end to end.
+    /// Exercises the FixedStar ecliptic path (Swift-side atan2 / asin) end to end.
     @Test("FixedStar (Sirius) ecliptic conversion at 2000-01-01T00:00Z")
     func fixedStarEcliptic2000() throws {
         let sirius = FixedStar(

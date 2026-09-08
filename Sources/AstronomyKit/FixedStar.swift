@@ -194,7 +194,8 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        try withSlot { cBody in
+        // Only the C call needs the star slot; do the frame math outside the lock.
+        let geo = try withSlot { cBody in
             let geo = Astronomy_GeoVector(cBody, time.raw, ABERRATION)
             guard geo.status == ASTRO_SUCCESS else {
                 if let error = AstronomyError(status: geo.status) {
@@ -202,20 +203,20 @@ public struct FixedStar: Sendable, Hashable {
                 }
                 throw AstronomyError.internalError
             }
-
-            let rotation = Astronomy_Rotation_EQJ_ECL()
-            let rotated = Astronomy_RotateVector(rotation, geo)
-            let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-            var longitude = ak_atan2(rotated.y, rotated.x) * 180.0 / .pi
-            if longitude < 0 {
-                longitude += 360.0
-            }
-
-            let latitude = ak_asin(rotated.z / dist) * 180.0 / .pi
-
-            return Ecliptic(latitude: latitude, longitude: longitude, distance: dist)
+            return geo
         }
+
+        let rotated = Astronomy_RotateVector(Astronomy_Rotation_EQJ_ECL(), geo)
+        let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
+
+        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
+        if longitude < 0 {
+            longitude += 360.0
+        }
+
+        let latitude = asin(rotated.z / dist) * 180.0 / .pi
+
+        return Ecliptic(latitude: latitude, longitude: longitude, distance: dist)
     }
 
     /// Calculates the star's horizontal coordinates for an observer.
@@ -233,25 +234,13 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer,
         refraction: Refraction = .normal
     ) throws -> Horizon {
-        try withSlot { cBody in
-            var rawTime = time.raw
-            let eqResult = Astronomy_Equator(
-                cBody,
-                &rawTime,
-                try observer.validatedRaw(),
-                EQUATOR_OF_DATE,
-                ABERRATION
-            )
-            let eq = try Equatorial(eqResult, time: time)
-            let result = Astronomy_Horizon(
-                &rawTime,
-                try observer.validatedRaw(),
-                eq.rightAscension,
-                eq.declination,
-                refraction.raw
-            )
-            return Horizon(result)
+        let rawObserver = try observer.validatedRaw()
+        var rawTime = time.raw
+        let eq = try withSlot { cBody in
+            try Equatorial(Astronomy_Equator(cBody, &rawTime, rawObserver, EQUATOR_OF_DATE, ABERRATION), time: time)
         }
+        let result = Astronomy_Horizon(&rawTime, rawObserver, eq.rightAscension, eq.declination, refraction.raw)
+        return Horizon(result)
     }
 
     /// Determines which constellation contains the star.

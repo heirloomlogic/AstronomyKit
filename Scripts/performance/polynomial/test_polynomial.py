@@ -3,9 +3,13 @@ import ctypes as C
 import math
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
-from experiment import HERE, ROOT, START, STOP, SUFFIX
+
+from embed import ROOT, START, STOP
+
+SUFFIX = '.dylib' if sys.platform == 'darwin' else '.so'
 
 
 class PolynomialTests(unittest.TestCase):

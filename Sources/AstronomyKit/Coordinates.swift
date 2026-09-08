@@ -359,26 +359,14 @@ public struct Horizon: Sendable, Equatable, Hashable {
         altitude > 0
     }
 
+    private static let compassDirections = [
+        "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+        "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW",
+    ]
+
     /// The cardinal/intercardinal direction name for the azimuth.
     public var compassDirection: String {
-        let directions = [
-            "N",
-            "NNE",
-            "NE",
-            "ENE",
-            "E",
-            "ESE",
-            "SE",
-            "SSE",
-            "S",
-            "SSW",
-            "SW",
-            "WSW",
-            "W",
-            "WNW",
-            "NW",
-            "NNW",
-        ]
+        let directions = Self.compassDirections
         guard azimuth.isFinite else { return directions[0] }
         // Normalize into [0, 360) so out-of-range azimuths cannot index
         // outside the table.

@@ -69,14 +69,14 @@ public struct RotationMatrix: Sendable {
 
 extension RotationMatrix {
     /// The identity rotation matrix (no rotation).
-    public static var identity: RotationMatrix {
+    public static let identity: RotationMatrix = {
         var rot = astro_rotation_t()
         rot.status = ASTRO_SUCCESS
         rot.rot.0 = (1, 0, 0)
         rot.rot.1 = (0, 1, 0)
         rot.rot.2 = (0, 0, 1)
         return RotationMatrix(unchecked: rot)
-    }
+    }()
 
     /// Returns the inverse (transpose) of this rotation.
     ///
