@@ -4,7 +4,7 @@ Transform positions between different astronomical coordinate systems.
 
 ## Overview
 
-AstronomyKit supports multiple coordinate systems and provides rotation matrices for transforming between them. Understanding these systems is essential for precise astronomical work.
+AstronomyKit supports several coordinate systems and provides rotation matrices for transforming between them.
 
 ## Coordinate Systems
 
@@ -158,8 +158,7 @@ print("Velocity: \(state.velocity)")  // AU/day
 
 ## Spherical Coordinates
 
-The `Spherical` type (latitude, longitude, distance) is produced by converting
-a position vector:
+The `Spherical` type (latitude, longitude, distance) comes from converting a position vector:
 
 ```swift
 let vector = try CelestialBody.mars.geocentricPosition(at: .now)

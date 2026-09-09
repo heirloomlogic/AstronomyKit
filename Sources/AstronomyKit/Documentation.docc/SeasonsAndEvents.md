@@ -190,6 +190,4 @@ print("Venus-Mars separation: \(angle)°")
 let result = try CelestialBody.saturn.searchRelativeLongitude(90, after: .now)
 ```
 
-The relative longitude convention measures the heliocentric angle between the planet
-and Earth. At 0° the planet and Earth are on the same side of the Sun (opposition for
-outer planets). At 180° the planet is on the far side of the Sun (superior conjunction).
+The relative longitude convention measures the heliocentric angle between the planet and Earth. At 0° the planet and Earth are on the same side of the Sun (opposition for outer planets). At 180° the planet is on the far side of the Sun (superior conjunction).

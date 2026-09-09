@@ -1,6 +1,6 @@
 # ``AstronomyKit``
 
-Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library.
+Swift bindings for Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) library.
 
 @Metadata {
     @DisplayName("AstronomyKit")
@@ -15,13 +15,14 @@ AstronomyKit wraps Don Cross's [Astronomy Engine](https://github.com/cosinekitty
 
 ### Features
 
-- **Celestial Body Positions** — Calculate positions for the Sun, Moon, planets, and Jupiter's moons
-- **Moon Phases** — Phase angles, quarter searches, illumination, and libration
-- **Rise/Set Times** — Sunrise, sunset, moonrise, culmination, and custom altitude searches
-- **Eclipses** — Predict lunar and solar eclipses with detailed timing
-- **Seasons** — Find equinoxes and solstices for any year
-- **Coordinate Systems** — Transform between equatorial, ecliptic, horizontal, and galactic frames
-- **Swift 6 Ready** — Full `Sendable` conformance for safe concurrency
+- Positions for the Sun, Moon, planets, and Jupiter's moons
+- Ecliptic position and velocity in one call: longitude, latitude, distance, and their rates
+- Moon phase angles, quarter searches, illumination, and libration
+- Sunrise, sunset, moonrise, culmination, and custom altitude searches
+- Lunar and solar eclipse prediction with timing
+- Equinoxes and solstices for any year
+- Transforms between equatorial, ecliptic, horizontal, and galactic frames
+- Full `Sendable` conformance for Swift 6
 
 ### Quick Start
 
@@ -47,23 +48,13 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 
 ### Planetary evaluation
 
-Qualified segments from 1900 through 2100 TT use compiled polynomial approximations
-of the full VSOP87B model. Position and heliocentric velocity share one representation.
-Dates outside that interval and unqualified segments use the full series, preserving
-the supported date range. The tables add roughly 11 MB before platform packaging.
+Qualified segments from 1900 through 2100 TT use compiled polynomial approximations of the full VSOP87B model. Position and heliocentric velocity share one representation. Dates outside that interval and unqualified segments use the full series, so the supported date range is unchanged. The tables add about 11.5 MB before platform packaging.
 
 ### Numerical compatibility
 
-AstronomyKit prioritizes Apple performance and uses platform-native math. Linux
-remains supported with the same astronomical accuracy tests. Results may differ
-slightly across platforms, architectures, OS releases, toolchains, and build
-configurations; cross-platform bit identity is not guaranteed. These rounding
-differences can be amplified in event-time calculations.
+AstronomyKit uses platform-native math. Linux is supported with the same astronomical accuracy tests. Results may differ slightly across platforms, architectures, OS releases, toolchains, and build configurations; cross-platform bit identity is not guaranteed. Event-time calculations can amplify these rounding differences.
 
-For persisted numerical caches, include `AstronomyConfig.ephemerisVersion` and
-the platform, architecture, OS, and toolchain identity. Review stored positions
-and event times when upgrading. Numerical regression tolerances are separate
-from absolute astronomical accuracy limits.
+For persisted numerical caches, include `AstronomyConfig.ephemerisVersion` and the platform, architecture, OS, and toolchain identity. Review stored positions and event times when upgrading. Numerical regression tolerances are separate from absolute astronomical accuracy limits.
 
 ## Topics
 

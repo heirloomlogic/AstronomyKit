@@ -6,7 +6,7 @@
 
 A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
 
-Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
+Built on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux-blue.svg)](https://swift.org)
@@ -16,6 +16,7 @@ Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronom
 ## Features
 
 - Positions for the Sun, Moon, planets, and Jupiter's moons
+- Ecliptic position and velocity in one call: longitude, latitude, distance, and their rates
 - Moon phase angles, quarters, illumination, and libration
 - User-defined fixed stars from J2000 catalog coordinates
 - Gravity-simulated position for 2060 Chiron
@@ -30,14 +31,15 @@ Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronom
 
 ## Planetary calculation performance
 
-For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates immutable
-polynomial approximations of the complete VSOP87B model. Position and heliocentric
-velocity use the same polynomial; distance comes from its position vector. Segments
-that fail the numerical regression checks, and dates outside this coverage, use
-the complete original series. Supported dates are unchanged.
+For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates polynomial approximations of the complete VSOP87B model. Position and heliocentric velocity use the same polynomial; distance comes from its position vector. Segments that fail the numerical regression checks, and dates outside this coverage, use the complete original series. Supported dates are unchanged.
 
-The tables add about 11 MB before platform packaging. No files are downloaded or
-loaded at runtime. See the [polynomial evaluation notes](Scripts/performance/polynomial/README.md).
+The tables add about 11.5 MB before platform packaging. No files are downloaded or loaded at runtime. See the [polynomial evaluation notes](Scripts/performance/polynomial/README.md).
+
+## Numerical compatibility
+
+AstronomyKit uses platform-native math. Linux is supported with the same astronomical accuracy tests. Results may differ slightly across platforms, architectures, OS releases, toolchains, and build configurations; cross-platform bit identity is not guaranteed. Event-time calculations can amplify these rounding differences.
+
+For persisted numerical caches, include `AstronomyConfig.ephemerisVersion` and the platform, architecture, OS, and toolchain identity. Review stored positions and event times when upgrading. Numerical regression tolerances are separate from absolute astronomical accuracy limits.
 
 ## Installation
 
@@ -47,7 +49,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "1.0.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "3.0.0")
 ]
 ```
 
@@ -132,6 +134,21 @@ print("Dec: \(eq.declinationFormatted)")     // "+12° 34' 56.7""
 // Distance from Sun
 let au = try CelestialBody.mars.distanceFromSun(at: .now)
 ```
+
+### Position and Velocity
+
+```swift
+// Apparent geocentric ecliptic position and rates, true ecliptic and equinox of date
+let mars = try CelestialBody.mars.geocentricEclipticState(at: .now)
+print("Longitude: \(mars.longitude)°, rate: \(mars.longitudeRate)°/day")
+if mars.longitudeRate < 0 { print("Mars is retrograde") }
+
+// Sun and Moon
+let sun = try Sun.eclipticState(at: .now)
+let moon = try Moon.eclipticState(at: .now)
+```
+
+The position fields match the corresponding position call bit for bit. Rates are per Terrestrial Time day; see the DocC article on celestial positions for what they include.
 
 ### Moon Phases
 
@@ -258,6 +275,7 @@ print("Venus-Mars separation: \(angle)°")
 | `Chiron` | Gravity-simulated position for 2060 Chiron |
 | `Constellation` | Constellation identification |
 | `Ecliptic` | Ecliptic longitude and latitude coordinates |
+| `EclipticState` | Ecliptic position plus longitude, latitude, and distance rates |
 | `Elongation` | Angular separation from the Sun |
 | `Equatorial` | Right ascension and declination coordinates |
 | `FixedStar` | User-defined star from J2000 coordinates |
@@ -292,9 +310,12 @@ All other AstronomyKit types wrap Astronomy Engine C functions directly.
 
 ## Documentation
 
-DocC documentation is available. Build it locally:
+The DocC documentation is hosted at [heirloomlogic.github.io/AstronomyKit](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/).
+
+To build it locally, enable the dev tooling first (the DocC plugin is gated behind the same sentinel as the formatter; see [Toolchain Alignment](#toolchain-alignment)):
 
 ```bash
+touch .dev-tooling
 swift package generate-documentation --target AstronomyKit
 ```
 
@@ -319,8 +340,8 @@ The format plugin is **dev-gated** and does not ship to consumers: it only resol
 
 ## Built With AstronomyKit
 
-- **[Fallow](https://heirloomlogic.com/fallow)** — Lunar fasting companion. Calculates Ekadashi and moon cycle timing.
-- **[Edict](https://heirloomlogic.com/edict)** — Electional astrology planner. Scans planetary positions to find timing windows for decisions.
+- [Fallow](https://heirloomlogic.com/fallow), a lunar fasting companion. Calculates Ekadashi and moon cycle timing.
+- [Edict](https://heirloomlogic.com/edict), an electional astrology planner. Scans planetary positions to find timing windows for decisions.
 
 ## Contributing
 
@@ -328,21 +349,8 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## Credits
 
-- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross — the underlying C library (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
+- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross, the underlying C library (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
 
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
-
-## Numerical compatibility
-
-AstronomyKit prioritizes Apple performance and uses platform-native math. Linux
-remains supported with the same astronomical accuracy tests. Results may differ
-slightly across platforms, architectures, OS releases, toolchains, and build
-configurations; cross-platform bit identity is not guaranteed. These rounding
-differences can be amplified in event-time calculations.
-
-For persisted numerical caches, include `AstronomyConfig.ephemerisVersion` and
-the platform, architecture, OS, and toolchain identity. Review stored positions
-and event times when upgrading. Numerical regression tolerances are separate
-from absolute astronomical accuracy limits.

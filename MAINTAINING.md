@@ -66,7 +66,7 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
            Sources/CLibAstronomy/astronomy.c
    ```
 
-3. **Apply the upstream changes**, then **re-apply the local patches** above (or, if upstream has adopted equivalent fixes, confirm that and note it). The patch sites are marked in context by the vendoring note; search for `pluto_cache_mutex`, `DeltaTFunc`, `VsopCache`, `PolynomialPosition`, and the counter names.
+3. **Apply the upstream changes**, then **re-apply the local patches** above (or, if upstream has adopted equivalent fixes, confirm that and note it). The patch sites are marked in context by the vendoring note; search for `pluto_cache_mutex`, `DeltaTFunc`, `VsopCache`, `PolynomialPosition`, `VSOP_COMPENSATED_ADD`, `Astronomy_GeoEclipticState`, and the counter names.
 
 4. **Refresh the vendoring note** at the top of `astronomy.c`: update the upstream commit hash and date, and adjust the patch list if anything changed.
 

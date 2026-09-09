@@ -4,7 +4,7 @@ Calculate moon phases, quarters, libration, and lunar nodes.
 
 ## Overview
 
-The ``Moon`` type provides comprehensive lunar calculations including phase angles, illumination, quarter searches, libration data, and node crossings.
+The ``Moon`` type covers phase angles, illumination, quarter searches, position and velocity, libration, and node crossings.
 
 ## Phase Angle
 
@@ -88,9 +88,21 @@ print("Latitude: \(position.latitude)°")
 print("Distance: \(position.distance) AU")
 ```
 
-### Moon State (Position and Velocity)
+### Ecliptic Position and Velocity
 
-Get the Moon's complete state vector including velocity:
+For the Moon's speed along the ecliptic, ask for the state instead of differencing two positions:
+
+```swift
+let state = try Moon.eclipticState(at: .now)
+print("Longitude: \(state.longitude)°")
+print("Rate: \(state.longitudeRate)°/day")  // About 12 to 15
+```
+
+The position fields match `Moon.ecliptic(at:)` bit for bit. The rates are a central difference of the lunar series inside the engine, per Terrestrial Time day, accurate to roughly 1e-7 degrees per day. See <doc:CelestialPositions> for the full rate contract.
+
+### Cartesian State
+
+Get the Moon's geocentric state vector in equatorial J2000 coordinates:
 
 ```swift
 let state = try Moon.geoState(at: .now)
@@ -107,8 +119,7 @@ let speed = sqrt(
 print("Speed: \(speed) AU/day")
 ```
 
-> Tip: Use `geoState(at:)` for velocity calculations instead of differencing 
-> ecliptic longitude positions, which gives inaccurate results.
+> Tip: Use `eclipticState(at:)` or `geoState(at:)` for velocities. Differencing two positions a short interval apart is noisier and costs two calls.
 
 ### Using CelestialBody
 
@@ -152,8 +163,8 @@ print("\(node.kind.symbol) \(node.kind.name) at \(node.time)")
 
 ### Node Types
 
-- **Ascending (☊)**: Moon crosses from south to north of the ecliptic
-- **Descending (☋)**: Moon crosses from north to south
+- Ascending (☊): the Moon crosses from south to north of the ecliptic
+- Descending (☋): the Moon crosses from north to south
 
 ### All Nodes in a Range
 
