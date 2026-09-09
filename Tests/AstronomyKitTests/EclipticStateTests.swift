@@ -19,7 +19,11 @@ struct EclipticStateTests {
     /// 4e-12 day, a 4e-10 relative error in the stencil width that a finite
     /// difference cannot distinguish from a rate error.
     static func grid(count: Int, from start: Double = -36_524.5, to end: Double = 36_889.5) -> [Double] {
-        (0..<count).map { ((start + (end - start) * (Double($0) + 0.5) / Double(count)) * 1_024).rounded() / 1_024 }
+        (0..<count).map { index -> Double in
+            let fraction = (Double(index) + 0.5) / Double(count)
+            let value = start + (end - start) * fraction
+            return (value * 1_024).rounded() / 1_024
+        }
     }
 
     /// Stencil half-widths that are exact binary fractions of a day.
@@ -28,7 +32,10 @@ struct EclipticStateTests {
 
     /// Central five-point derivative of a periodic-safe scalar sampled in TT.
     static func fivePoint(_ f: (Double) throws -> Double, at tt: Double, step h: Double) rethrows -> Double {
-        let f2p = try f(tt + 2 * h), f1p = try f(tt + h), f1m = try f(tt - h), f2m = try f(tt - 2 * h)
+        let f2p = try f(tt + 2 * h)
+        let f1p = try f(tt + h)
+        let f1m = try f(tt - h)
+        let f2m = try f(tt - 2 * h)
         return (-f2p + 8 * f1p - 8 * f1m + f2m) / (12 * h)
     }
 
@@ -39,7 +46,9 @@ struct EclipticStateTests {
 
     // MARK: - 1. Position bit identity
 
-    @Test("geocentricEclipticState matches geocentricPosition().toEcliptic() bit for bit", arguments: [Aberration.corrected, .none])
+    @Test(
+        "geocentricEclipticState matches geocentricPosition().toEcliptic() bit for bit",
+        arguments: [Aberration.corrected, .none])
     func geocentricIdentity(aberration: Aberration) throws {
         let instants = Self.grid(count: 1_000) + [-55_000, -40_000, 40_000, 55_000]
         for tt in instants {
@@ -79,7 +88,9 @@ struct EclipticStateTests {
         }
     }
 
-    @Test("Unsupported bodies throw invalidBody", arguments: [CelestialBody.earth, .earthMoonBarycenter, .solarSystemBarycenter, .io])
+    @Test(
+        "Unsupported bodies throw invalidBody",
+        arguments: [CelestialBody.earth, .earthMoonBarycenter, .solarSystemBarycenter, .io])
     func unsupportedBodies(body: CelestialBody) {
         #expect(throws: AstronomyError.invalidBody) {
             try body.geocentricEclipticState(at: AstroTime(tt: 0))
@@ -116,7 +127,9 @@ struct EclipticStateTests {
         }
     }
 
-    @Test("Rates equal the five-point derivative of geocentricPosition().toEcliptic()", arguments: [Aberration.corrected, .none])
+    @Test(
+        "Rates equal the five-point derivative of geocentricPosition().toEcliptic()",
+        arguments: [Aberration.corrected, .none])
     func geocentricRates(aberration: Aberration) throws {
         let h = Self.narrowStep
         for body in Self.stateBodies {
@@ -128,7 +141,8 @@ struct EclipticStateTests {
                 func ecliptic(_ t: Double) throws -> Ecliptic {
                     try body.geocentricPosition(at: AstroTime(tt: t), aberration: aberration).toEcliptic()
                 }
-                let lonRate = try Self.fivePoint({ Self.unwrap(try ecliptic($0).longitude, near: state.longitude) }, at: tt, step: h)
+                let lonRate = try Self.fivePoint(
+                    { Self.unwrap(try ecliptic($0).longitude, near: state.longitude) }, at: tt, step: h)
                 let latRate = try Self.fivePoint({ try ecliptic($0).latitude }, at: tt, step: h)
                 let distRate = try Self.fivePoint({ try ecliptic($0).distance }, at: tt, step: h)
                 worst.longitude = max(worst.longitude, abs(lonRate - state.longitudeRate))
@@ -155,7 +169,8 @@ struct EclipticStateTests {
                 }
                 func rates(step h: Double) throws -> (Double, Double, Double) {
                     (
-                        try Self.fivePoint({ Self.unwrap(try ecliptic($0).longitude, near: state.longitude) }, at: tt, step: h),
+                        try Self.fivePoint(
+                            { Self.unwrap(try ecliptic($0).longitude, near: state.longitude) }, at: tt, step: h),
                         try Self.fivePoint({ try ecliptic($0).latitude }, at: tt, step: h),
                         try Self.fivePoint({ try ecliptic($0).distance }, at: tt, step: h)
                     )
@@ -172,7 +187,9 @@ struct EclipticStateTests {
                 worst.distance = max(worst.distance, abs(narrow.2 - state.distanceRate))
             }
             #expect(clean >= instants.count / 2, "\(body): only \(clean) clean instants of \(instants.count)")
-            #expect(worst.longitude <= budget.longitude, "\(body) longitude rate: worst \(worst.longitude) deg/day over \(clean) instants")
+            #expect(
+                worst.longitude <= budget.longitude,
+                "\(body) longitude rate: worst \(worst.longitude) deg/day over \(clean) instants")
             #expect(worst.latitude <= budget.latitude, "\(body) latitude rate: worst \(worst.latitude) deg/day")
             #expect(worst.distance <= budget.distance, "\(body) distance rate: worst \(worst.distance) AU/day")
         }
@@ -183,10 +200,17 @@ struct EclipticStateTests {
         var worst = 0.0
         for tt in Self.grid(count: 300, from: -36_000, to: 36_500) {
             let state = try Sun.eclipticState(at: AstroTime(tt: tt))
-            let lonRate = try Self.fivePoint({ Self.unwrap(try Sun.position(at: AstroTime(tt: $0)).longitude, near: state.longitude) }, at: tt, step: Self.narrowStep)
-            let latRate = try Self.fivePoint({ try Sun.position(at: AstroTime(tt: $0)).latitude }, at: tt, step: Self.narrowStep)
-            let distRate = try Self.fivePoint({ try Sun.position(at: AstroTime(tt: $0)).distance }, at: tt, step: Self.narrowStep)
-            worst = max(worst, abs(lonRate - state.longitudeRate), abs(latRate - state.latitudeRate), abs(distRate - state.distanceRate) * 1e3)
+            let lonRate = try Self.fivePoint(
+                { Self.unwrap(try Sun.position(at: AstroTime(tt: $0)).longitude, near: state.longitude) }, at: tt,
+                step: Self.narrowStep)
+            let latRate = try Self.fivePoint(
+                { try Sun.position(at: AstroTime(tt: $0)).latitude }, at: tt, step: Self.narrowStep)
+            let distRate = try Self.fivePoint(
+                { try Sun.position(at: AstroTime(tt: $0)).distance }, at: tt, step: Self.narrowStep)
+            let lonError = abs(lonRate - state.longitudeRate)
+            let latError = abs(latRate - state.latitudeRate)
+            let distError = abs(distRate - state.distanceRate) * 1e3
+            worst = max(worst, lonError, latError, distError)
         }
         #expect(worst <= 5e-8, "worst \(worst)")
     }
@@ -196,9 +220,13 @@ struct EclipticStateTests {
         var worst = (longitude: 0.0, latitude: 0.0, distance: 0.0)
         for tt in Self.grid(count: 300, from: -36_000, to: 36_500) {
             let state = try Moon.eclipticState(at: AstroTime(tt: tt))
-            let lonRate = try Self.fivePoint({ Self.unwrap(try Moon.ecliptic(at: AstroTime(tt: $0)).longitude, near: state.longitude) }, at: tt, step: Self.narrowStep)
-            let latRate = try Self.fivePoint({ try Moon.ecliptic(at: AstroTime(tt: $0)).latitude }, at: tt, step: Self.narrowStep)
-            let distRate = try Self.fivePoint({ try Moon.ecliptic(at: AstroTime(tt: $0)).distance }, at: tt, step: Self.narrowStep)
+            let lonRate = try Self.fivePoint(
+                { Self.unwrap(try Moon.ecliptic(at: AstroTime(tt: $0)).longitude, near: state.longitude) }, at: tt,
+                step: Self.narrowStep)
+            let latRate = try Self.fivePoint(
+                { try Moon.ecliptic(at: AstroTime(tt: $0)).latitude }, at: tt, step: Self.narrowStep)
+            let distRate = try Self.fivePoint(
+                { try Moon.ecliptic(at: AstroTime(tt: $0)).distance }, at: tt, step: Self.narrowStep)
             worst.longitude = max(worst.longitude, abs(lonRate - state.longitudeRate))
             worst.latitude = max(worst.latitude, abs(latRate - state.latitudeRate))
             worst.distance = max(worst.distance, abs(distRate - state.distanceRate))
@@ -229,11 +257,20 @@ struct EclipticStateTests {
                     let rotated = Astronomy_RotateVector(rot, vector)
                     return [rotated.x, rotated.y, rotated.z]
                 }
-                let plus2 = column(tt + 2 * h), plus1 = column(tt + h), minus1 = column(tt - h), minus2 = column(tt - 2 * h)
-                let expected = (0..<3).map { (-plus2[$0] + 8 * plus1[$0] - 8 * minus1[$0] + minus2[$0]) / (12 * h) }
+                let plus2 = column(tt + 2 * h)
+                let plus1 = column(tt + h)
+                let minus1 = column(tt - h)
+                let minus2 = column(tt - 2 * h)
+                var expected = [0.0, 0.0, 0.0]
+                for k in 0..<3 {
+                    let numerator = -plus2[k] + 8 * plus1[k] - 8 * minus1[k] + minus2[k]
+                    expected[k] = numerator / (12 * h)
+                }
                 let actual = [state.vx, state.vy, state.vz]
                 let here = column(tt)
-                #expect(here[0].bitPattern == state.x.bitPattern && here[1].bitPattern == state.y.bitPattern && here[2].bitPattern == state.z.bitPattern)
+                #expect(here[0].bitPattern == state.x.bitPattern)
+                #expect(here[1].bitPattern == state.y.bitPattern)
+                #expect(here[2].bitPattern == state.z.bitPattern)
                 for k in 0..<3 {
                     worst = max(worst, abs(expected[k] - actual[k]))
                 }
@@ -249,7 +286,8 @@ struct EclipticStateTests {
         var worst = 0.0
         for tt in Self.grid(count: 100, from: -40_000, to: 40_000) {
             var time = AstroTime(tt: tt).raw
-            var dpsi = 0.0, deps = 0.0
+            var dpsi = 0.0
+            var deps = 0.0
             _Astronomy_Iau2000bRates(&time, &dpsi, &deps)
 
             var check = AstroTime(tt: tt).raw
@@ -263,10 +301,15 @@ struct EclipticStateTests {
                 return (raw.psi, raw.eps)
             }
             let h = Self.narrowStep
-            let p2 = angles(tt + 2 * h), p1 = angles(tt + h), m1 = angles(tt - h), m2 = angles(tt - 2 * h)
+            let p2 = angles(tt + 2 * h)
+            let p1 = angles(tt + h)
+            let m1 = angles(tt - h)
+            let m2 = angles(tt - 2 * h)
             let psiRate = (-p2.0 + 8 * p1.0 - 8 * m1.0 + m2.0) / (12 * h)
             let epsRate = (-p2.1 + 8 * p1.1 - 8 * m1.1 + m2.1) / (12 * h)
-            worst = max(worst, abs(psiRate - dpsi), abs(epsRate - deps))
+            let psiError = abs(psiRate - dpsi)
+            let epsError = abs(epsRate - deps)
+            worst = max(worst, psiError, epsError)
         }
         #expect(worst <= 1e-9, "worst \(worst) arcsec/day")
     }
@@ -321,7 +364,10 @@ struct EclipticStateTests {
                 let below = Astronomy_HelioState(body, AstroTime(tt: boundary.nextDown).raw)
                 let above = Astronomy_HelioState(body, AstroTime(tt: boundary.nextUp).raw)
                 #expect(below.status == ASTRO_SUCCESS && above.status == ASTRO_SUCCESS)
-                worst = max(worst, abs(below.vx - above.vx), abs(below.vy - above.vy), abs(below.vz - above.vz))
+                let jumpX = abs(below.vx - above.vx)
+                let jumpY = abs(below.vy - above.vy)
+                let jumpZ = abs(below.vz - above.vz)
+                worst = max(worst, jumpX, jumpY, jumpZ)
                 boundary += width
             }
             #expect(worst <= 1e-12, "body \(body.rawValue): worst seam velocity jump \(worst) AU/day")
@@ -332,7 +378,8 @@ struct EclipticStateTests {
 
     /// Bisects `f` for a sign change on [lo, hi] down to `tolerance` days.
     static func bisect(_ f: (Double) throws -> Double, lo: Double, hi: Double, tolerance: Double) throws -> Double? {
-        var lo = lo, hi = hi
+        var lo = lo
+        var hi = hi
         var flo = try f(lo)
         let fhi = try f(hi)
         guard flo * fhi <= 0 else { return nil }
@@ -357,10 +404,12 @@ struct EclipticStateTests {
             lo: center - 1, hi: center + 1, tolerance: 1e-7)
         let differenced = try Self.bisect(
             { tt in
-                try Self.fivePoint({ t in
-                    let lon = try CelestialBody.mercury.geocentricPosition(at: AstroTime(tt: t)).toEcliptic().longitude
-                    return Self.unwrap(lon, near: 180)
-                }, at: tt, step: 0.01)
+                try Self.fivePoint(
+                    { t in
+                        let lon = try CelestialBody.mercury.geocentricPosition(at: AstroTime(tt: t)).toEcliptic()
+                            .longitude
+                        return Self.unwrap(lon, near: 180)
+                    }, at: tt, step: 0.01)
             },
             lo: center - 1, hi: center + 1, tolerance: 1e-7)
         let a = try #require(analytic)
@@ -379,14 +428,19 @@ struct EclipticStateTests {
             lo: reference - 0.01, hi: reference + 0.01, tolerance: 1e-8)
         let differenced = try Self.bisect(
             { tt in
-                try Self.fivePoint({ t in
-                    Self.unwrap(try CelestialBody.mars.geocentricPosition(at: AstroTime(tt: t)).toEcliptic().longitude, near: 180)
-                }, at: tt, step: 0.01)
+                try Self.fivePoint(
+                    { t in
+                        Self.unwrap(
+                            try CelestialBody.mars.geocentricPosition(at: AstroTime(tt: t)).toEcliptic().longitude,
+                            near: 180)
+                    }, at: tt, step: 0.01)
             },
             lo: reference - 0.01, hi: reference + 0.01, tolerance: 1e-8)
         let a = try #require(analytic)
         let d = try #require(differenced)
-        #expect(abs(a - reference) * 86_400 < 60, "model root is \(abs(a - reference) * 86_400) s from the independent time")
+        #expect(
+            abs(a - reference) * 86_400 < 60, "model root is \(abs(a - reference) * 86_400) s from the independent time"
+        )
         #expect(abs(a - d) * 86_400 < 0.01, "analytic and differenced roots differ by \((a - d) * 86_400) s")
     }
 }
