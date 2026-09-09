@@ -20,6 +20,6 @@ AstronomyKit is an on-device computation library. It performs no network I/O, re
 
 - Memory-safety bugs in the bridged C layer (`CLibAstronomy`)
 - Numerical inputs that cause crashes, infinite loops, or undefined behavior
-- Thread-safety issues in shared state (e.g. the fixed-star calculation slot)
+- Thread-safety issues in shared state (e.g. the fixed-star calculation slots or the Pluto orbit cache)
 
 Reports on cosmetic issues, DocC content, or upstream Astronomy Engine bugs unrelated to the Swift bridge should be filed as regular GitHub issues.

@@ -17,9 +17,9 @@ print("\(eclipse.kind.name) lunar eclipse at \(eclipse.peak)")
 
 ### Eclipse Types
 
-- **Penumbral**: Moon passes through Earth's outer shadow
-- **Partial**: Part of Moon enters Earth's umbra
-- **Total**: Entire Moon enters Earth's umbra
+- Penumbral: the Moon passes through Earth's outer shadow
+- Partial: part of the Moon enters Earth's umbra
+- Total: the entire Moon enters Earth's umbra
 
 ```swift
 switch eclipse.kind {
@@ -78,9 +78,9 @@ if eclipse.kind == .total || eclipse.kind == .annular {
 
 ### Eclipse Types
 
-- **Partial**: Only part of the Sun is covered
-- **Annular**: Moon is too far to fully cover the Sun (ring of fire)
-- **Total**: Moon completely covers the Sun
+- Partial: only part of the Sun is covered
+- Annular: the Moon is too far away to cover the Sun, leaving a ring
+- Total: the Moon covers the Sun completely
 
 ### All Solar Eclipses in a Range
 
@@ -162,6 +162,4 @@ for eclipse in eclipses {
 
 ## Eclipse Search Tips
 
-1. **Search far ahead**: Eclipses are rare—search years in advance
-2. **Check visibility**: Local eclipses may occur when the Sun is below the horizon
-3. **Consider obscuration**: Even partial eclipses can be interesting when obscuration is high
+Eclipses are rare, so search years ahead. A local eclipse can occur while the Sun is below the horizon, so check `isVisible` before announcing one. Partial eclipses with high obscuration are often worth reporting.

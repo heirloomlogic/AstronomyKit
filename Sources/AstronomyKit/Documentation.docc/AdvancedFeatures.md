@@ -4,7 +4,7 @@ N-body simulations, Lagrange points, Jupiter's moons, and more.
 
 ## Overview
 
-AstronomyKit includes advanced features for specialized astronomical calculations, including gravity simulations, Lagrange point positions, Jupiter's Galilean moons, planetary rotation axes, and atmospheric modeling.
+Gravity simulations, Lagrange points, Jupiter's Galilean moons, rotation axes, atmospheric modeling, fixed stars, and Chiron.
 
 ## N-Body Gravity Simulation
 
@@ -235,7 +235,7 @@ let observer = Observer(latitude: 40.7, longitude: -74.0)
 let horizon = try Chiron.horizon(at: .now, from: observer)
 ```
 
-Accuracy is highest near the reference epochs and degrades as distance increases. Within ±5 years of an epoch, error is expected to be less than 1 arcminute.
+Accuracy is highest near the reference epochs and degrades with distance from them. Within ±5 years of an epoch, error is expected to be less than 1 arcminute. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``.
 
 ## Observer Gravity
 

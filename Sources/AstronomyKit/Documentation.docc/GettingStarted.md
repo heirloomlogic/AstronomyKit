@@ -12,7 +12,7 @@ Add AstronomyKit to your Swift package:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "1.0.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "3.0.0")
 ]
 ```
 
@@ -100,6 +100,6 @@ do {
 
 ## Next Steps
 
-- <doc:TimeAndObservers> — Deep dive into time and location handling
-- <doc:CelestialPositions> — Calculate positions for any celestial body
-- <doc:MoonPhases> — Explore moon phase calculations
+- <doc:TimeAndObservers> for time scales and observer locations
+- <doc:CelestialPositions> for positions and velocities of any body
+- <doc:MoonPhases> for phases, quarters, libration, and nodes

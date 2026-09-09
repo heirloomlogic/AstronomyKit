@@ -1,6 +1,6 @@
 # Contributing to AstronomyKit
 
-AstronomyKit is the open-source astronomy library powering [Fallow](https://heirloomlogic.com/fallow) and [Edict](https://heirloomlogic.com/edict) by [Heirloom Logic](https://heirloomlogic.com). Contributions that improve the library benefit everyone building with it.
+AstronomyKit is the open-source astronomy library behind [Fallow](https://heirloomlogic.com/fallow) and [Edict](https://heirloomlogic.com/edict) by [Heirloom Logic](https://heirloomlogic.com).
 
 ## Reporting Bugs
 
@@ -16,7 +16,7 @@ Open a [bug report](https://github.com/heirloomlogic/AstronomyKit/issues/new?tem
 2. Run `touch .dev-tooling` once, **before your first build**, to enable the swift-format build plugin (see [Code Style](#code-style)).
 3. Make your changes.
 4. Run `swift build` and resolve any swift-format lint warnings.
-5. Run `swift test` and confirm all tests pass.
+5. Run `swift test --no-parallel` and confirm all tests pass (see [Tests](#tests) for why the flag matters).
 6. Open a pull request describing what you changed and why.
 
 ### Code Style
@@ -31,9 +31,11 @@ Your local toolchain must match CI's Swift major.minor version; see [Toolchain A
 
 New functionality should include tests. Bug fixes should include a test that would have caught the issue.
 
+Run the whole suite with `swift test --no-parallel`. The Delta T thread-safety test swaps the process-global model on purpose, and Swift Testing's `.serialized` trait only orders tests inside that suite, so a parallel run can see unrelated suites fail intermittently. CI runs every job with the flag.
+
 ### Updating the vendored C library
 
-AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with a few local thread-safety patches. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
+AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, and the analytic ecliptic state. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
 
 ## Code of Conduct
 
