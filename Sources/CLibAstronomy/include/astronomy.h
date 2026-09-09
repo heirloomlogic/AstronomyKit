@@ -503,6 +503,32 @@ typedef struct
 astro_ecliptic_t;
 
 /**
+ * @brief Geocentric ecliptic position and velocity in the true ecliptic and equinox of date (ECT).
+ *
+ * AstronomyKit local patch. The position fields are bit-identical to the position
+ * function each state function mirrors; the rate fields are its time derivative
+ * with respect to Terrestrial Time days, holding Delta T fixed.
+ */
+typedef struct
+{
+    astro_status_t status;  /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
+    astro_time_t t;         /**< The observation time, as the mirrored position function reports it. */
+    double elon;            /**< Ecliptic longitude in degrees, [0, 360). */
+    double elat;            /**< Ecliptic latitude in degrees. */
+    double dist;            /**< Geocentric distance in AU. */
+    double elon_rate;       /**< Rate of `elon` in degrees per TT day. */
+    double elat_rate;       /**< Rate of `elat` in degrees per TT day. */
+    double dist_rate;       /**< Rate of `dist` in AU per TT day. */
+    double x;               /**< ECT Cartesian position x in AU. */
+    double y;               /**< ECT Cartesian position y in AU. */
+    double z;               /**< ECT Cartesian position z in AU. */
+    double vx;              /**< ECT Cartesian velocity x in AU/day. */
+    double vy;              /**< ECT Cartesian velocity y in AU/day. */
+    double vz;              /**< ECT Cartesian velocity z in AU/day. */
+}
+astro_ecliptic_state_t;
+
+/**
  * @brief Coordinates of a celestial body as seen by a topocentric observer.
  *
  * Contains horizontal and equatorial coordinates seen by an observer on or near
@@ -1232,6 +1258,11 @@ double Astronomy_ObserverGravity(double latitude, double height);
 
 astro_ecliptic_t Astronomy_SunPosition(astro_time_t time);
 astro_ecliptic_t Astronomy_Ecliptic(astro_vector_t eqj);
+
+/* AstronomyKit local patch: apparent geocentric ecliptic state (position and analytic velocity). */
+astro_ecliptic_state_t Astronomy_GeoEclipticState(astro_body_t body, astro_time_t time, astro_aberration_t aberration);
+astro_ecliptic_state_t Astronomy_SunEclipticState(astro_time_t time);
+astro_ecliptic_state_t Astronomy_MoonEclipticState(astro_time_t time);
 astro_angle_result_t Astronomy_EclipticLongitude(astro_body_t body, astro_time_t time);
 
 astro_horizon_t Astronomy_Horizon(
@@ -1423,6 +1454,12 @@ astro_status_t Astronomy_DefineStar(
     double dec,
     double distanceLightYears
 );
+
+/** @cond DOXYGEN_SKIP */
+/* AstronomyKit internal test hooks for the ecliptic-state patch. Not upstream API; do not use. */
+void _Astronomy_Iau2000bRates(astro_time_t *time, double *dpsi_rate_asec_per_day, double *deps_rate_asec_per_day);
+astro_ecliptic_state_t _Astronomy_EclipticStateFromEqj(const double pos[3], const double vel[3], astro_time_t time);
+/** @endcond */
 
 #ifdef __cplusplus
 }

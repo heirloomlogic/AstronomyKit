@@ -105,6 +105,23 @@ let sunPos = try Sun.position(at: .now)
 print("Sun: λ=\(sunPos.longitude)°, β=\(sunPos.latitude)°")
 ```
 
+### Ecliptic Position and Velocity
+
+When you need the rate of motion as well as the position, ask for the state in one call instead of differencing positions:
+
+```swift
+// Apparent geocentric position and velocity, true ecliptic and equinox of date
+let mars = try CelestialBody.mars.geocentricEclipticState(at: .now)
+print("Mars: λ=\(mars.longitude)°, λ̇=\(mars.longitudeRate)°/day")
+if mars.longitudeRate < 0 { print("Mars is retrograde") }
+
+// Sun and Moon through their dedicated ephemerides
+let sun = try Sun.eclipticState(at: .now)
+let moon = try Moon.eclipticState(at: .now)
+```
+
+The position fields are bit-identical to the position call each state mirrors: `geocentricPosition(at:aberration:).toEcliptic()`, `Sun.position(at:)`, and `Moon.ecliptic(at:)`. The rates are the time derivative of that position in degrees (or AU) per Terrestrial Time day with Delta T held fixed. For the Sun and planets they are analytic and include the light-time derivative, the observer's motion under the aberration approximation, and the rotation of the true ecliptic and equinox of date, so they stay smooth where a finite difference would be noisy, such as near a station. The Moon's rates are a central difference of the lunar series inside the engine over about 43 seconds, accurate to roughly 1e-7 degrees per day.
+
 ## Position Vectors
 
 Cartesian coordinates in 3D space:

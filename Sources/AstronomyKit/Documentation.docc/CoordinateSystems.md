@@ -44,6 +44,15 @@ let sunPos = try Sun.position(at: .now)
 print("λ: \(sunPos.longitude)°, β: \(sunPos.latitude)°")
 ```
 
+Position and velocity together, in the true ecliptic and equinox of date:
+
+```swift
+let state = try CelestialBody.mars.geocentricEclipticState(at: .now)
+print("λ: \(state.longitude)°, λ̇: \(state.longitudeRate)°/day")
+```
+
+See <doc:CelestialPositions> for what the rates include.
+
 ### Horizontal (HOR)
 
 Local sky coordinates for an observer:

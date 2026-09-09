@@ -133,6 +133,7 @@ from absolute astronomical accuracy limits.
 
 - ``Equatorial``
 - ``Ecliptic``
+- ``EclipticState``
 - ``Horizon``
 - ``Spherical``
 - ``Vector3D``
