@@ -27,6 +27,36 @@ extension CelestialBody {
         return try Vector3D(result)
     }
 
+    /// Calculates the apparent geocentric ecliptic position and velocity of this body.
+    ///
+    /// The position fields are bit-identical to
+    /// `geocentricPosition(at: time, aberration: aberration).toEcliptic()`. The rates
+    /// are the analytic time derivative of that position in degrees (or AU) per
+    /// Terrestrial Time day with Delta T held fixed, including the light-time
+    /// derivative, the observer's motion under the aberration approximation, and the
+    /// rotation of the true ecliptic and equinox of date. The Moon's rates are a
+    /// central difference of the lunar series over about 43 seconds; every other
+    /// supported body's rates are analytic. Pluto's velocity is the exact derivative
+    /// of its interpolated position, which has small kinks at the interpolation
+    /// table's 146-day steps.
+    ///
+    /// Supported bodies are the Sun, the Moon, Mercury through Neptune except
+    /// Earth, and Pluto. Other bodies throw ``AstronomyError/invalidBody``.
+    ///
+    /// - Parameters:
+    ///   - time: The observation time.
+    ///   - aberration: Whether to correct for aberration. Defaults to `.corrected`.
+    ///     Ignored for the Moon, as in `geocentricPosition(at:aberration:)`.
+    /// - Returns: The ecliptic position and velocity.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public func geocentricEclipticState(
+        at time: AstroTime,
+        aberration: Aberration = .corrected
+    ) throws -> EclipticState {
+        let result = Astronomy_GeoEclipticState(raw, time.raw, aberration.raw)
+        return try EclipticState(result)
+    }
+
     /// Calculates the heliocentric position of this body.
     ///
     /// Returns the position relative to the Sun's center at the specified time.
@@ -229,6 +259,20 @@ public enum Sun {
     public static func position(at time: AstroTime) throws -> Ecliptic {
         let result = Astronomy_SunPosition(time.raw)
         return try Ecliptic(result)
+    }
+
+    /// Calculates the Sun's ecliptic position and velocity.
+    ///
+    /// The position fields are bit-identical to ``position(at:)``, including its
+    /// fixed one-AU light-time adjustment. The rates are the analytic time derivative
+    /// of that position per Terrestrial Time day with Delta T held fixed.
+    ///
+    /// - Parameter time: The time at which to calculate the state.
+    /// - Returns: The ecliptic position and velocity of the Sun.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public static func eclipticState(at time: AstroTime) throws -> EclipticState {
+        let result = Astronomy_SunEclipticState(time.raw)
+        return try EclipticState(result)
     }
 
     /// Searches for the next time the Sun reaches the specified ecliptic longitude.

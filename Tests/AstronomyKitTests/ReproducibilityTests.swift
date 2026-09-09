@@ -426,4 +426,305 @@ struct ReproducibilityTests {
             "Chiron 2026"
         )
     }
+
+    // MARK: - 7. Geocentric Ecliptic Rates
+
+    /// Compares ecliptic rates in degrees per day and AU per day. The Moon's rates
+    /// come from a central difference of the lunar series inside the engine and
+    /// carry that stencil's platform noise, so they get a wider budget.
+    private func expectEclipticRates(
+        _ state: EclipticState,
+        lonRate: UInt64,
+        latRate: UInt64,
+        distRate: UInt64,
+        _ label: String,
+        moon: Bool = false,
+        sourceLocation: SourceLocation = #_sourceLocation
+    ) {
+        let angleTolerance = moon ? 5e-7 : 1e-9
+        let distanceTolerance = moon ? 1e-10 : 1e-12
+        #expect(
+            close(state.longitudeRate, Self.exact(lonRate), tolerance: angleTolerance),
+            "\(label): longitude rate drifted",
+            sourceLocation: sourceLocation
+        )
+        #expect(
+            close(state.latitudeRate, Self.exact(latRate), tolerance: angleTolerance),
+            "\(label): latitude rate drifted",
+            sourceLocation: sourceLocation
+        )
+        #expect(
+            close(state.distanceRate, Self.exact(distRate), tolerance: distanceTolerance),
+            "\(label): distance rate drifted",
+            sourceLocation: sourceLocation
+        )
+    }
+
+    @Test("Geocentric ecliptic rates at 1980-03-20T12:00Z")
+    func eclipticRates1980() throws {
+        let t = Self.t1980
+        expectEclipticRates(
+            try CelestialBody.sun.geocentricEclipticState(at: t),
+            lonRate: 0x3fef_caca_3ed2_750c, latRate: 0xbedb_c838_b73b_198e, distRate: 0x3f32_1522_ce5d_f67a,
+            "Sun 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.moon.geocentricEclipticState(at: t),
+            lonRate: 0x402c_abd6_e5ce_c5ee, latRate: 0xbfc4_6b93_5c96_43a2, distRate: 0x3f03_9b80_3865_64a1,
+            "Moon 1980",
+            moon: true
+        )
+        expectEclipticRates(
+            try CelestialBody.mercury.geocentricEclipticState(at: t),
+            lonRate: 0x3fb6_d999_8b14_9a8f, latRate: 0xbfce_ba52_45be_0c0b, distRate: 0x3f89_0231_0a81_e718,
+            "Mercury 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.venus.geocentricEclipticState(at: t),
+            lonRate: 0x3ff1_3804_c4a7_cef7, latRate: 0x3fb3_279f_42a5_d56c, distRate: 0xbf7e_e7fd_9a3b_d5f6,
+            "Venus 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.mars.geocentricEclipticState(at: t),
+            lonRate: 0xbfcb_bf85_f2c0_4a3e, latRate: 0xbfa3_f1c5_639c_6592, distRate: 0x3f73_3320_6bf3_62fe,
+            "Mars 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.jupiter.geocentricEclipticState(at: t),
+            lonRate: 0xbfba_9c56_94df_e21f, latRate: 0xbf4f_6013_7b69_2a5b, distRate: 0x3f7e_4467_c9fc_2411,
+            "Jupiter 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.saturn.geocentricEclipticState(at: t),
+            lonRate: 0xbfb4_0c84_a367_05cc, latRate: 0x3f34_ead7_0c6c_b954, distRate: 0x3f60_88d7_f291_5759,
+            "Saturn 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.uranus.geocentricEclipticState(at: t),
+            lonRate: 0xbf91_ed92_823f_52f7, latRate: 0x3f10_d8ce_a5aa_6fbb, distRate: 0xbf8c_bf76_313e_3cbd,
+            "Uranus 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.neptune.geocentricEclipticState(at: t),
+            lonRate: 0x3f63_4b70_25d0_b13c, latRate: 0x3f45_c532_ff32_922c, distRate: 0xbf91_7c02_82ae_c475,
+            "Neptune 1980"
+        )
+        expectEclipticRates(
+            try CelestialBody.pluto.geocentricEclipticState(at: t),
+            lonRate: 0xbf9a_55b8_e7d9_af59, latRate: 0x3f6f_4046_383d_f5d3, distRate: 0xbf7a_3a08_10bf_e6d6,
+            "Pluto 1980"
+        )
+        expectEclipticRates(
+            try Sun.eclipticState(at: t),
+            lonRate: 0x3fef_cacd_70b1_2a17, latRate: 0xbedb_c87f_47db_62d9, distRate: 0x3f32_1524_adec_5fc1,
+            "Sun.eclipticState 1980"
+        )
+        expectEclipticRates(
+            try Moon.eclipticState(at: t),
+            lonRate: 0x402c_abd6_e5ce_c5ee, latRate: 0xbfc4_6b93_5c96_43be, distRate: 0x3f03_9b80_358b_ec00,
+            "Moon.eclipticState 1980",
+            moon: true
+        )
+    }
+
+    @Test("Geocentric ecliptic rates at 2000-01-01T00:00Z")
+    func eclipticRates2000() throws {
+        let t = Self.t2000
+        expectEclipticRates(
+            try CelestialBody.sun.geocentricEclipticState(at: t),
+            lonRate: 0x3ff0_4f63_f625_53d0, latRate: 0xbec3_3b9a_bddc_58a6, distRate: 0xbee4_2626_fb8a_1c84,
+            "Sun 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.moon.geocentricEclipticState(at: t),
+            lonRate: 0x4028_34d9_c073_528b, latRate: 0xbfb0_4c15_f8dd_a24f, distRate: 0x3ef7_18ec_11b5_771c,
+            "Moon 2000",
+            moon: true
+        )
+        expectEclipticRates(
+            try CelestialBody.mercury.geocentricEclipticState(at: t),
+            lonRate: 0x3ff8_dbad_dcbf_f535, latRate: 0xbfb9_5b60_172b_5ff5, distRate: 0x3f74_077c_0869_b977,
+            "Mercury 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.venus.geocentricEclipticState(at: t),
+            lonRate: 0x3ff3_55e0_d871_f6d4, latRate: 0xbf9c_18d7_2615_478d, distRate: 0x3f7a_9e09_5746_596c,
+            "Venus 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.mars.geocentricEclipticState(at: t),
+            lonRate: 0x3fe8_d22f_33e1_654d, latRate: 0x3f89_8040_46cf_2382, distRate: 0x3f76_34b8_54ed_ddbe,
+            "Mars 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.jupiter.geocentricEclipticState(at: t),
+            lonRate: 0x3fa4_00e9_d9ed_bcb1, latRate: 0x3f75_3aac_ae6e_e501, distRate: 0x3f8f_b5ca_4472_cd11,
+            "Jupiter 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.saturn.geocentricEclipticState(at: t),
+            lonRate: 0xbf95_5bc0_197d_2c9f, latRate: 0x3f73_6349_ec63_ae52, distRate: 0x3f8d_49fc_429e_907d,
+            "Saturn 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.uranus.geocentricEclipticState(at: t),
+            lonRate: 0x3fa9_a945_79fa_4a52, latRate: 0x3f30_5efd_72c9_db94, distRate: 0x3f84_884e_5e8d_436c,
+            "Uranus 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.neptune.geocentricEclipticState(at: t),
+            lonRate: 0x3fa2_27da_2d7f_b3ff, latRate: 0xbf2e_19af_a012_3a5b, distRate: 0x3f7c_36b1_2bc5_4cf9,
+            "Neptune 2000"
+        )
+        expectEclipticRates(
+            try CelestialBody.pluto.geocentricEclipticState(at: t),
+            lonRate: 0x3fa2_0fac_7cf9_2933, latRate: 0x3f57_35a3_4531_a28b, distRate: 0xbf7f_e768_edbd_3f78,
+            "Pluto 2000"
+        )
+        expectEclipticRates(
+            try Sun.eclipticState(at: t),
+            lonRate: 0x3ff0_4f63_d721_796c, latRate: 0xbec3_39f0_38c9_71c7, distRate: 0xbee4_2662_a279_9024,
+            "Sun.eclipticState 2000"
+        )
+        expectEclipticRates(
+            try Moon.eclipticState(at: t),
+            lonRate: 0x4028_34d9_c073_5289, latRate: 0xbfb0_4c15_f8dd_a247, distRate: 0x3ef7_18ec_1009_c000,
+            "Moon.eclipticState 2000",
+            moon: true
+        )
+    }
+
+    @Test("Geocentric ecliptic rates at 2026-07-24T00:00Z")
+    func eclipticRates2026() throws {
+        let t = Self.t2026
+        expectEclipticRates(
+            try CelestialBody.sun.geocentricEclipticState(at: t),
+            lonRate: 0x3fee_8e80_fbf7_1452, latRate: 0xbeaf_33ab_a495_2bea, distRate: 0xbf18_5f28_4b97_d3f7,
+            "Sun 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.moon.geocentricEclipticState(at: t),
+            lonRate: 0x4027_d8bc_7c3d_b0c7, latRate: 0xbf8d_6eef_5a6b_b91f, distRate: 0x3ee9_621d_e550_637b,
+            "Moon 2026",
+            moon: true
+        )
+        expectEclipticRates(
+            try CelestialBody.mercury.geocentricEclipticState(at: t),
+            lonRate: 0x3f70_b9be_79df_c4f8, latRate: 0x3fc8_c469_64c9_e433, distRate: 0x3f91_0c83_76f6_3340,
+            "Mercury 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.venus.geocentricEclipticState(at: t),
+            lonRate: 0x3ff1_22bd_3147_0507, latRate: 0xbfb2_5762_c0be_7479, distRate: 0xbf80_4bfa_c25c_1a57,
+            "Venus 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.mars.geocentricEclipticState(at: t),
+            lonRate: 0x3fe5_ed1a_a492_a7ea, latRate: 0x3f8a_c632_297a_024e, distRate: 0xbf6e_fb7e_a706_4f4f,
+            "Mars 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.jupiter.geocentricEclipticState(at: t),
+            lonRate: 0x3fcc_5403_6a48_10fc, latRate: 0x3f55_9b24_d109_6c01, distRate: 0x3f56_1458_d2b3_34ed,
+            "Jupiter 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.saturn.geocentricEclipticState(at: t),
+            lonRate: 0x3f73_b779_c1e3_5f81, latRate: 0xbf73_1f3b_784c_dae5, distRate: 0xbf90_4fe1_ba63_0f97,
+            "Saturn 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.uranus.geocentricEclipticState(at: t),
+            lonRate: 0x3fa3_6267_8af9_5d52, latRate: 0x3f04_43d8_4e8c_b774, distRate: 0xbf8c_fa9f_3747_1640,
+            "Uranus 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.neptune.geocentricEclipticState(at: t),
+            lonRate: 0xbf81_e9b9_d926_f1c4, latRate: 0xbf4b_1ded_62ef_5f5e, distRate: 0xbf8e_c022_293b_c243,
+            "Neptune 2026"
+        )
+        expectEclipticRates(
+            try CelestialBody.pluto.geocentricEclipticState(at: t),
+            lonRate: 0xbf97_eea6_51e2_d452, latRate: 0xbf58_b942_8a14_5396, distRate: 0xbf2b_9337_758b_ff50,
+            "Pluto 2026"
+        )
+        expectEclipticRates(
+            try Sun.eclipticState(at: t),
+            lonRate: 0x3fee_8e7f_d113_e993, latRate: 0xbeaf_2d71_7e31_697b, distRate: 0xbf18_5f2d_a0d8_33fa,
+            "Sun.eclipticState 2026"
+        )
+        expectEclipticRates(
+            try Moon.eclipticState(at: t),
+            lonRate: 0x4027_d8bc_7c3d_b0c8, latRate: 0xbf8d_6eef_5a6b_ba53, distRate: 0x3ee9_621d_e3e5_2000,
+            "Moon.eclipticState 2026",
+            moon: true
+        )
+    }
+
+    @Test("Geocentric ecliptic rates at 2050-12-21T06:00Z")
+    func eclipticRates2050() throws {
+        let t = Self.t2050
+        expectEclipticRates(
+            try CelestialBody.sun.geocentricEclipticState(at: t),
+            lonRate: 0x3ff0_4a74_18f2_0e17, latRate: 0xbeff_31f7_965f_8da1, distRate: 0xbf14_7c66_6379_36c5,
+            "Sun 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.moon.geocentricEclipticState(at: t),
+            lonRate: 0x402c_3d4e_99d9_a43d, latRate: 0xbfef_04d1_3f09_a25b, distRate: 0x3ebc_2f6d_9e7b_399e,
+            "Moon 2050",
+            moon: true
+        )
+        expectEclipticRates(
+            try CelestialBody.mercury.geocentricEclipticState(at: t),
+            lonRate: 0xbfa3_6b85_da3e_6de4, latRate: 0xbf9c_1d30_3fe7_a17d, distRate: 0x3f95_9207_fba2_9ba8,
+            "Mercury 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.venus.geocentricEclipticState(at: t),
+            lonRate: 0x3fef_12de_9d84_9f6c, latRate: 0x3f9f_b225_1ed4_3ea7, distRate: 0x3f7e_f39d_9b24_97e9,
+            "Venus 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.mars.geocentricEclipticState(at: t),
+            lonRate: 0x3fe4_1364_308c_df39, latRate: 0x3f9b_d37f_7d0c_84b2, distRate: 0x3f81_5e61_52f8_62fb,
+            "Mars 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.jupiter.geocentricEclipticState(at: t),
+            lonRate: 0x3f50_26c9_7e03_6e55, latRate: 0x3f72_1bc4_d222_ea89, distRate: 0xbf8d_a463_cb64_fe3c,
+            "Jupiter 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.saturn.geocentricEclipticState(at: t),
+            lonRate: 0x3fba_77e9_b893_a3c8, latRate: 0xbf43_539d_10d8_159d, distRate: 0x3f84_76a8_2b63_d03a,
+            "Saturn 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.uranus.geocentricEclipticState(at: t),
+            lonRate: 0x3f82_5be4_8fe8_0a33, latRate: 0x3f46_fb7f_ea50_410b, distRate: 0xbf91_9f73_a918_b9d8,
+            "Uranus 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.neptune.geocentricEclipticState(at: t),
+            lonRate: 0xbf97_13bd_729e_8f9f, latRate: 0x3f44_a06e_f66f_2f65, distRate: 0x3f83_a5c0_ede9_ee3a,
+            "Neptune 2050"
+        )
+        expectEclipticRates(
+            try CelestialBody.pluto.geocentricEclipticState(at: t),
+            lonRate: 0x3f89_0952_68dc_6602, latRate: 0x3f71_b6a1_1ae6_e856, distRate: 0x3f90_e199_108e_7e6f,
+            "Pluto 2050"
+        )
+        expectEclipticRates(
+            try Sun.eclipticState(at: t),
+            lonRate: 0x3ff0_4a73_98ca_b12f, latRate: 0xbeff_31cf_d804_d70e, distRate: 0xbf14_7c6d_c10a_d293,
+            "Sun.eclipticState 2050"
+        )
+        expectEclipticRates(
+            try Moon.eclipticState(at: t),
+            lonRate: 0x402c_3d4e_99d9_a43d, latRate: 0xbfef_04d1_3f09_a25b, distRate: 0x3ebc_2f6d_9b31_c000,
+            "Moon.eclipticState 2050",
+            moon: true
+        )
+    }
 }

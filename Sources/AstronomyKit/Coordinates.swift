@@ -309,6 +309,86 @@ extension Ecliptic: CustomStringConvertible {
     }
 }
 
+// MARK: - Ecliptic State
+
+/// Geocentric ecliptic position and velocity in the true ecliptic and equinox of date.
+///
+/// The position fields are bit-identical to the position function each state
+/// function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``,
+/// ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields
+/// are the time derivative of that position with respect to Terrestrial Time days,
+/// holding Delta T fixed. For the Sun and planets they are analytic and include
+/// the light-time derivative, the observer's motion under the engine's aberration
+/// approximation, and the rotation of the true ecliptic and equinox of date. For
+/// the Moon they are a central difference of the lunar series inside the engine.
+public struct EclipticState: Sendable, Equatable, Hashable {
+    /// Ecliptic longitude in degrees (0 to 360).
+    public let longitude: Double
+
+    /// Ecliptic latitude in degrees (-90 to +90).
+    public let latitude: Double
+
+    /// Distance in AU.
+    public let distance: Double
+
+    /// Rate of change of longitude in degrees per TT day.
+    public let longitudeRate: Double
+
+    /// Rate of change of latitude in degrees per TT day.
+    public let latitudeRate: Double
+
+    /// Rate of change of distance in AU per TT day.
+    public let distanceRate: Double
+
+    /// The observation time.
+    public let time: AstroTime
+
+    /// Creates an ecliptic state.
+    public init(
+        longitude: Double,
+        latitude: Double,
+        distance: Double,
+        longitudeRate: Double,
+        latitudeRate: Double,
+        distanceRate: Double,
+        time: AstroTime
+    ) {
+        self.longitude = longitude
+        self.latitude = latitude
+        self.distance = distance
+        self.longitudeRate = longitudeRate
+        self.latitudeRate = latitudeRate
+        self.distanceRate = distanceRate
+        self.time = time
+    }
+
+    /// Creates a state from the C structure.
+    init(_ raw: astro_ecliptic_state_t) throws {
+        if let error = AstronomyError(status: raw.status) {
+            throw error
+        }
+        self.longitude = raw.elon
+        self.latitude = raw.elat
+        self.distance = raw.dist
+        self.longitudeRate = raw.elon_rate
+        self.latitudeRate = raw.elat_rate
+        self.distanceRate = raw.dist_rate
+        self.time = AstroTime(raw: raw.t)
+    }
+
+    /// The position part of the state.
+    public var ecliptic: Ecliptic {
+        Ecliptic(latitude: latitude, longitude: longitude, distance: distance)
+    }
+}
+
+extension EclipticState: CustomStringConvertible {
+    /// A textual representation showing longitude, latitude, and longitude rate.
+    public var description: String {
+        String(format: "λ: %.2f°, β: %.2f°, λ̇: %.4f°/day", longitude, latitude, longitudeRate)
+    }
+}
+
 // MARK: - Horizon
 
 /// Horizontal coordinates (altitude and azimuth) for an observer on Earth.

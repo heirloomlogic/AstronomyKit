@@ -268,6 +268,21 @@ public enum Moon {
         return try Ecliptic(result)
     }
 
+    /// Calculates the Moon's ecliptic position and velocity.
+    ///
+    /// The position fields are bit-identical to ``ecliptic(at:)``. The rates are a
+    /// central difference of the lunar series over about 43 seconds of Terrestrial
+    /// Time, carried through the analytic rotation rates of the mean obliquity,
+    /// nutation, and true obliquity; expect about 1e-7 degrees per day of noise.
+    ///
+    /// - Parameter time: The time at which to calculate the state.
+    /// - Returns: The ecliptic position and velocity of the Moon.
+    /// - Throws: `AstronomyError` if the calculation fails.
+    public static func eclipticState(at time: AstroTime) throws -> EclipticState {
+        let result = Astronomy_MoonEclipticState(time.raw)
+        return try EclipticState(result)
+    }
+
     /// Calculates the Moon's geocentric state (position and velocity).
     ///
     /// The state vector contains both position and velocity, which is useful

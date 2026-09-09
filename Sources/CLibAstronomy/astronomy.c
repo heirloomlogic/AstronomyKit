@@ -21,6 +21,14 @@
       - Bounded TT inverse with finite-input, representational-precision, and
         discontinuity-gap checks; the Espenak-Meeus default and Delta T values
         are unchanged.
+      - Analytic geocentric ecliptic state (Astronomy_GeoEclipticState,
+        Astronomy_SunEclipticState, Astronomy_MoonEclipticState): apparent
+        position bit-identical to the position function each mirrors, plus
+        its derivative per TT day through the light-time solution, the
+        backdated-observer aberration term, and the precession/nutation/
+        obliquity rotation rates (iau2000b_eval, precession_rot_rate,
+        nutation_rot_rate, GeoStateBackdate). CalcPluto gains an
+        exact_velocity flag; existing callers pass 0. See MAINTAINING.md.
       - pthread mutex (pluto_cache_mutex) protecting the Pluto orbit cache:
         CalcPluto holds the lock across segment lookup and use, and
         Astronomy_Reset takes it before freeing the cache.
@@ -1499,36 +1507,86 @@ astro_observer_t Astronomy_MakeObserver(double latitude, double longitude, doubl
 /* AstronomyKit: full 77-term IAU2000B, replacing the upstream 5-term truncation. */
 #include "generated/iau2000b_full.h"
 
+/*
+    AstronomyKit local patch (analytic ecliptic state): evaluate the nutation
+    series and, when requested, its time derivative in the same pass. The value
+    accumulation is the upstream expression, term for term and in the same order,
+    so `psi` and `eps` keep their bits whether or not rates are requested.
+    Values and rates are in 0.1 microarcseconds (per Julian century for rates).
+*/
+static void iau2000b_eval(double t, double *dp, double *de, double *dp_rate, double *de_rate)
+{
+    /* Simon et al. fundamental arguments; IAU2000B uses the linear terms. */
+    const double args[5] = {
+        fmod(485868.249036 + t * 1717915923.2178, ASEC360) * ASEC2RAD,
+        fmod(1287104.79305 + t * 129596581.0481, ASEC360) * ASEC2RAD,
+        fmod(335779.526232 + t * 1739527262.8478, ASEC360) * ASEC2RAD,
+        fmod(1072260.70369 + t * 1602961601.2090, ASEC360) * ASEC2RAD,
+        fmod(450160.398036 + t * -6962890.5431, ASEC360) * ASEC2RAD
+    };
+    /* Rates of the same arguments in radians per Julian century. */
+    const double args_rate[5] = {
+        1717915923.2178 * ASEC2RAD,
+        129596581.0481 * ASEC2RAD,
+        1739527262.8478 * ASEC2RAD,
+        1602961601.2090 * ASEC2RAD,
+        -6962890.5431 * ASEC2RAD
+    };
+    double p = 0.0, e = 0.0, pr = 0.0, er = 0.0;
+    /* Sum smallest terms first, in a fixed order on every platform. */
+    for (int i = 76; i >= 0; --i)
+    {
+        double arg = 0.0;
+        for (int j = 0; j < 5; ++j)
+            arg += iau2000b_terms[i].n[j] * args[j];
+        const double sarg = sin(arg);
+        const double carg = cos(arg);
+        const double *c = iau2000b_terms[i].c;
+        p += (c[0] + c[1]*t)*sarg + c[2]*carg;
+        e += (c[3] + c[4]*t)*carg + c[5]*sarg;
+        if (dp_rate != NULL)
+        {
+            double argdot = 0.0;
+            for (int j = 0; j < 5; ++j)
+                argdot += iau2000b_terms[i].n[j] * args_rate[j];
+            pr += c[1]*sarg + ((c[0] + c[1]*t)*carg - c[2]*sarg)*argdot;
+            er += c[4]*carg + (c[5]*carg - (c[3] + c[4]*t)*sarg)*argdot;
+        }
+    }
+    *dp = p;
+    *de = e;
+    if (dp_rate != NULL)
+    {
+        *dp_rate = pr;
+        *de_rate = er;
+    }
+}
+
 static void iau2000b(astro_time_t *time)
 {
     if ((time != NULL) && isnan(time->psi))
     {
-        const double t = time->tt / 36525.0;
-        /* Simon et al. fundamental arguments; IAU2000B uses the linear terms. */
-        const double args[5] = {
-            fmod(485868.249036 + t * 1717915923.2178, ASEC360) * ASEC2RAD,
-            fmod(1287104.79305 + t * 129596581.0481, ASEC360) * ASEC2RAD,
-            fmod(335779.526232 + t * 1739527262.8478, ASEC360) * ASEC2RAD,
-            fmod(1072260.70369 + t * 1602961601.2090, ASEC360) * ASEC2RAD,
-            fmod(450160.398036 + t * -6962890.5431, ASEC360) * ASEC2RAD
-        };
-        double dp = 0.0, de = 0.0;
-        /* Sum smallest terms first, in a fixed order on every platform. */
-        for (int i = 76; i >= 0; --i)
-        {
-            double arg = 0.0;
-            for (int j = 0; j < 5; ++j)
-                arg += iau2000b_terms[i].n[j] * args[j];
-            const double sarg = sin(arg);
-            const double carg = cos(arg);
-            const double *c = iau2000b_terms[i].c;
-            dp += (c[0] + c[1]*t)*sarg + c[2]*carg;
-            de += (c[3] + c[4]*t)*carg + c[5]*sarg;
-        }
+        double dp, de;
+        iau2000b_eval(time->tt / 36525.0, &dp, &de, NULL, NULL);
         /* 0.1 microarcseconds -> arcseconds, with fixed planetary offsets. */
         time->psi = -0.000135 + dp * 1.0e-7;
         time->eps = +0.000388 + de * 1.0e-7;
     }
+}
+
+/* Nutation angle rates in arcseconds per day. Caches psi/eps in `time` exactly as iau2000b does. */
+static void iau2000b_rates(astro_time_t *time, double *dpsi_rate, double *deps_rate)
+{
+    const double t = time->tt / 36525.0;
+    double dp, de, pr, er;
+    iau2000b_eval(t, &dp, &de, &pr, &er);
+    if (isnan(time->psi))
+    {
+        time->psi = -0.000135 + dp * 1.0e-7;
+        time->eps = +0.000388 + de * 1.0e-7;
+    }
+    *dpsi_rate = pr * 1.0e-7 / 36525.0;
+    *deps_rate = er * 1.0e-7 / 36525.0;
 }
 
 static double mean_obliq(double tt)
@@ -1542,6 +1600,20 @@ static double mean_obliq(double tt)
              - 46.836769     ) * t + 84381.406;
 
     return asec / 3600.0;
+}
+
+/* AstronomyKit local patch: time derivative of mean_obliq in degrees per day. */
+static double mean_obliq_rate(double tt)
+{
+    double t = tt / 36525.0;
+    double asec_per_century =
+        ((((5 * -0.0000000434   * t
+          + 4 * -0.000000576  ) * t
+          + 3 *  0.00200340   ) * t
+          + 2 * -0.0001831    ) * t
+          -      46.836769    );
+
+    return asec_per_century / 3600.0 / 36525.0;
 }
 
 /** @cond DOXYGEN_SKIP */
@@ -1572,6 +1644,32 @@ static earth_tilt_t e_tilt(astro_time_t *time)
     et.ee = et.dpsi * cos(et.mobl * DEG2RAD) / 15.0;
 
     return et;
+}
+
+/* AstronomyKit local patch: rates of the e_tilt angles. */
+typedef struct
+{
+    double dpsi_rate;   /* arcseconds per day */
+    double deps_rate;   /* arcseconds per day */
+    double mobl_rate;   /* degrees per day */
+    double tobl_rate;   /* degrees per day */
+}
+earth_tilt_rate_t;
+
+/*
+    Evaluates the nutation series once and caches psi/eps in `time`, so a
+    following e_tilt or nutation_rot call on the same time reuses them.
+    Callers that need both values and rates call this first.
+*/
+static earth_tilt_rate_t e_tilt_rate(astro_time_t *time)
+{
+    earth_tilt_rate_t rate;
+
+    iau2000b_rates(time, &rate.dpsi_rate, &rate.deps_rate);
+    rate.mobl_rate = mean_obliq_rate(time->tt);
+    rate.tobl_rate = rate.mobl_rate + (rate.deps_rate / 3600.0);
+
+    return rate;
 }
 
 static void obl_ecl2equ_vec(double obl, astro_time_t time, const double ecl[3], double equ[3])
@@ -1672,6 +1770,125 @@ static astro_rotation_t precession_rot(astro_time_t time, precess_dir_t dir)
         rotation.rot[2][0] = zx;
         rotation.rot[2][1] = zy;
         rotation.rot[2][2] = zz;
+    }
+
+    rotation.status = ASTRO_SUCCESS;
+    return rotation;
+}
+
+
+/*
+    AstronomyKit local patch: time derivative of precession_rot, in radians per day,
+    stored in the same slots as the matrix it differentiates. Each entry below is
+    the product-rule derivative of the identically named expression in precession_rot;
+    keep the two functions side by side. The value matrix always comes from precession_rot.
+*/
+static astro_rotation_t precession_rot_rate(astro_time_t time, precess_dir_t dir)
+{
+    astro_rotation_t rotation;
+    double t, psia, omegaa, chia, psidot, omegadot, chidot;
+    double sa, ca, sb, cb, sc, cc, sd, cd;
+    double dsb, dcb, dsc, dcc, dsd, dcd;
+    double dxx, dyx, dzx, dxy, dyy, dzy, dxz, dyz, dzz;
+    double eps0 = 84381.406;
+
+    t = time.tt / 36525;
+
+    psia   = (((((-    0.0000000951  * t
+                 +    0.000132851 ) * t
+                 -    0.00114045  ) * t
+                 -    1.0790069   ) * t
+                 + 5038.481507    ) * t);
+
+    omegaa = (((((+    0.0000003337  * t
+                 -    0.000000467 ) * t
+                 -    0.00772503  ) * t
+                 +    0.0512623   ) * t
+                 -    0.025754    ) * t + eps0);
+
+    chia   = (((((-    0.0000000560  * t
+                 +    0.000170663 ) * t
+                 -    0.00121197  ) * t
+                 -    2.3814292   ) * t
+                 +   10.556403    ) * t);
+
+    /* Derivatives of the three polynomials, arcseconds per Julian century. */
+    psidot   = ((((5 * -0.0000000951  * t
+                 + 4 *  0.000132851 ) * t
+                 + 3 * -0.00114045  ) * t
+                 + 2 * -1.0790069   ) * t
+                 +   5038.481507    );
+
+    omegadot = ((((5 *  0.0000003337  * t
+                 + 4 * -0.000000467 ) * t
+                 + 3 * -0.00772503  ) * t
+                 + 2 *  0.0512623   ) * t
+                 -      0.025754    );
+
+    chidot   = ((((5 * -0.0000000560  * t
+                 + 4 *  0.000170663 ) * t
+                 + 3 * -0.00121197  ) * t
+                 + 2 * -2.3814292   ) * t
+                 +     10.556403    );
+
+    eps0 = eps0 * ASEC2RAD;
+    psia = psia * ASEC2RAD;
+    omegaa = omegaa * ASEC2RAD;
+    chia = chia * ASEC2RAD;
+    psidot = psidot * ASEC2RAD / 36525.0;
+    omegadot = omegadot * ASEC2RAD / 36525.0;
+    chidot = chidot * ASEC2RAD / 36525.0;
+
+    sa = sin(eps0);
+    ca = cos(eps0);
+    sb = sin(-psia);
+    cb = cos(-psia);
+    sc = sin(-omegaa);
+    cc = cos(-omegaa);
+    sd = sin(chia);
+    cd = cos(chia);
+
+    /* eps0 is constant. The b and c angles carry a minus sign; d does not. */
+    dsb = -cb * psidot;
+    dcb =  sb * psidot;
+    dsc = -cc * omegadot;
+    dcc =  sc * omegadot;
+    dsd =  cd * chidot;
+    dcd = -sd * chidot;
+
+    dxx = dcd*cb + cd*dcb - (dsb*sd*cc + sb*dsd*cc + sb*sd*dcc);
+    dyx = (dcd*sb + cd*dsb)*ca + (dsd*cc*cb + sd*dcc*cb + sd*cc*dcb)*ca - sa*(dsd*sc + sd*dsc);
+    dzx = (dcd*sb + cd*dsb)*sa + (dsd*cc*cb + sd*dcc*cb + sd*cc*dcb)*sa + ca*(dsd*sc + sd*dsc);
+    dxy = -(dsd*cb + sd*dcb) - (dsb*cd*cc + sb*dcd*cc + sb*cd*dcc);
+    dyy = -(dsd*sb + sd*dsb)*ca + (dcd*cc*cb + cd*dcc*cb + cd*cc*dcb)*ca - sa*(dcd*sc + cd*dsc);
+    dzy = -(dsd*sb + sd*dsb)*sa + (dcd*cc*cb + cd*dcc*cb + cd*cc*dcb)*sa + ca*(dcd*sc + cd*dsc);
+    dxz = dsb*sc + sb*dsc;
+    dyz = -(dsc*cb + sc*dcb)*ca - sa*dcc;
+    dzz = -(dsc*cb + sc*dcb)*sa + dcc*ca;
+
+    if (dir == INTO_2000)
+    {
+        rotation.rot[0][0] = dxx;
+        rotation.rot[0][1] = dyx;
+        rotation.rot[0][2] = dzx;
+        rotation.rot[1][0] = dxy;
+        rotation.rot[1][1] = dyy;
+        rotation.rot[1][2] = dzy;
+        rotation.rot[2][0] = dxz;
+        rotation.rot[2][1] = dyz;
+        rotation.rot[2][2] = dzz;
+    }
+    else
+    {
+        rotation.rot[0][0] = dxx;
+        rotation.rot[0][1] = dxy;
+        rotation.rot[0][2] = dxz;
+        rotation.rot[1][0] = dyx;
+        rotation.rot[1][1] = dyy;
+        rotation.rot[1][2] = dyz;
+        rotation.rot[2][0] = dzx;
+        rotation.rot[2][1] = dzy;
+        rotation.rot[2][2] = dzz;
     }
 
     rotation.status = ASTRO_SUCCESS;
@@ -1829,6 +2046,85 @@ static astro_rotation_t nutation_rot(astro_time_t *time, precess_dir_t dir)
         rotation.rot[2][0] = xz;
         rotation.rot[2][1] = yz;
         rotation.rot[2][2] = zz;
+    }
+
+    rotation.status = ASTRO_SUCCESS;
+    return rotation;
+}
+
+/*
+    AstronomyKit local patch: time derivative of nutation_rot, in radians per day,
+    stored in the same slots as the matrix it differentiates. Each entry is the
+    product-rule derivative of the identically named expression in nutation_rot.
+    `rate` must come from e_tilt_rate on the same time; that call also primes the
+    psi/eps cache that e_tilt reads here.
+*/
+static astro_rotation_t nutation_rot_rate(astro_time_t *time, const earth_tilt_rate_t *rate, precess_dir_t dir)
+{
+    astro_rotation_t rotation;
+    earth_tilt_t tilt;
+    double oblm, oblt, psi, cobm, sobm, cobt, sobt, cpsi, spsi;
+    double oblm_rate, oblt_rate, psi_rate;
+    double dcobm, dsobm, dcobt, dsobt, dcpsi, dspsi;
+    double dxx, dyx, dzx, dxy, dyy, dzy, dxz, dyz, dzz;
+
+    if (time == NULL || rate == NULL)
+        return RotationErr(ASTRO_INVALID_PARAMETER);
+
+    tilt = e_tilt(time);
+    oblm = tilt.mobl * DEG2RAD;
+    oblt = tilt.tobl * DEG2RAD;
+    psi = tilt.dpsi * ASEC2RAD;
+    cobm = cos(oblm);
+    sobm = sin(oblm);
+    cobt = cos(oblt);
+    sobt = sin(oblt);
+    cpsi = cos(psi);
+    spsi = sin(psi);
+
+    oblm_rate = rate->mobl_rate * DEG2RAD;
+    oblt_rate = rate->tobl_rate * DEG2RAD;
+    psi_rate = rate->dpsi_rate * ASEC2RAD;
+    dcobm = -sobm * oblm_rate;
+    dsobm =  cobm * oblm_rate;
+    dcobt = -sobt * oblt_rate;
+    dsobt =  cobt * oblt_rate;
+    dcpsi = -spsi * psi_rate;
+    dspsi =  cpsi * psi_rate;
+
+    dxx = dcpsi;
+    dyx = -(dspsi * cobm + spsi * dcobm);
+    dzx = -(dspsi * sobm + spsi * dsobm);
+    dxy = dspsi * cobt + spsi * dcobt;
+    dyy = dcpsi * cobm * cobt + cpsi * dcobm * cobt + cpsi * cobm * dcobt + dsobm * sobt + sobm * dsobt;
+    dzy = dcpsi * sobm * cobt + cpsi * dsobm * cobt + cpsi * sobm * dcobt - dcobm * sobt - cobm * dsobt;
+    dxz = dspsi * sobt + spsi * dsobt;
+    dyz = dcpsi * cobm * sobt + cpsi * dcobm * sobt + cpsi * cobm * dsobt - dsobm * cobt - sobm * dcobt;
+    dzz = dcpsi * sobm * sobt + cpsi * dsobm * sobt + cpsi * sobm * dsobt + dcobm * cobt + cobm * dcobt;
+
+    if (dir == FROM_2000)
+    {
+        rotation.rot[0][0] = dxx;
+        rotation.rot[0][1] = dxy;
+        rotation.rot[0][2] = dxz;
+        rotation.rot[1][0] = dyx;
+        rotation.rot[1][1] = dyy;
+        rotation.rot[1][2] = dyz;
+        rotation.rot[2][0] = dzx;
+        rotation.rot[2][1] = dzy;
+        rotation.rot[2][2] = dzz;
+    }
+    else
+    {
+        rotation.rot[0][0] = dxx;
+        rotation.rot[0][1] = dyx;
+        rotation.rot[0][2] = dzx;
+        rotation.rot[1][0] = dxy;
+        rotation.rot[1][1] = dyy;
+        rotation.rot[1][2] = dzy;
+        rotation.rot[2][0] = dxz;
+        rotation.rot[2][1] = dyz;
+        rotation.rot[2][2] = dzz;
     }
 
     rotation.status = ASTRO_SUCCESS;
@@ -4046,7 +4342,7 @@ static body_grav_calc_t CalcPlutoOneWay(major_bodies_t *bary, const body_state_t
 }
 
 
-static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int helio)
+static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int helio, int exact_velocity)
 {
     terse_vector_t acc, ra, rb, va, vb;
     major_bodies_t bary;
@@ -4114,6 +4410,14 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
         ramp = (time.tt - s1->tt)/PLUTO_DT;
         bstate->r = VecRamp(ra, rb, ramp);
         bstate->v = VecRamp(va, vb, ramp);
+        if (exact_velocity)
+        {
+            /* AstronomyKit local patch: the blended velocity above omits the motion of the
+               blend itself. Add d(ramp)/dt * (rb - ra) so v is the exact derivative of r. */
+            bstate->v.x += (rb.x - ra.x) / PLUTO_DT;
+            bstate->v.y += (rb.y - ra.y) / PLUTO_DT;
+            bstate->v.z += (rb.z - ra.z) / PLUTO_DT;
+        }
 
         /* The segment is no longer needed. */
         pthread_mutex_unlock(&pluto_cache_mutex);
@@ -4523,7 +4827,7 @@ astro_vector_t Astronomy_HelioVector(astro_body_t body, astro_time_t time)
 
     case BODY_PLUTO:
         vector.t = time;
-        vector.status = CalcPluto(&bstate, time, 1);
+        vector.status = CalcPluto(&bstate, time, 1, 0);
         if (vector.status != ASTRO_SUCCESS)
         {
             vector.x = vector.y = vector.z = NAN;
@@ -4881,6 +5185,154 @@ astro_vector_t Astronomy_BackdatePosition(
 }
 
 
+/*
+    AstronomyKit local patch (analytic ecliptic state).
+
+    Heliocentric position and velocity for the bodies Astronomy_GeoEclipticState
+    supports. The position is produced by the same operations as Astronomy_HelioVector,
+    so it keeps that function's bits; the velocity is the analytic derivative of it.
+*/
+static astro_status_t GeoHelioState(astro_body_t body, astro_time_t time, body_state_t *state)
+{
+    switch (body)
+    {
+    case BODY_SUN:
+        memset(state, 0, sizeof(body_state_t));
+        state->tt = time.tt;
+        return ASTRO_SUCCESS;
+
+    case BODY_MERCURY:
+    case BODY_VENUS:
+    case BODY_EARTH:
+    case BODY_MARS:
+    case BODY_JUPITER:
+    case BODY_SATURN:
+    case BODY_URANUS:
+    case BODY_NEPTUNE:
+        *state = CalcVsopPosVel(&vsop[body], time.tt);
+        return ASTRO_SUCCESS;
+
+    case BODY_PLUTO:
+        return CalcPluto(state, time, 1, 1);
+
+    default:
+        return ASTRO_INVALID_BODY;
+    }
+}
+
+/*
+    Apparent geocentric EQJ position and velocity of `body`.
+
+    The position repeats Astronomy_BackdatePosition(time, BODY_EARTH, body, aberration)
+    operation for operation: the same iteration cap, the same 1e-9 day stopping rule,
+    the same Astronomy_AddDays backdating (which recomputes TT from Delta T), the Earth
+    evaluated before the target, and the same subtraction. It therefore keeps the bits of
+    Astronomy_GeoVector.
+
+    The velocity is the exact derivative of the converged light-time fixed point
+    tau = |p(t - tau)| / c, obtained by implicit differentiation rather than by
+    differentiating the iterates, so it does not depend on how many iterations ran:
+
+      ABERRATION    p = r_T(s) - r_E(s), s = t - tau:
+                    dp/dt = v_rel(s) / (1 + q),  q = (p_hat . v_rel(s)) / c
+      NO_ABERRATION p = r_T(s) - r_E(t):
+                    dp/dt = v_T(s) (1 + b) / (1 + a) - v_E(t),
+                    a = (p_hat . v_T(s)) / c,  b = (p_hat . v_E(t)) / c
+
+    Rates are per TT day with Delta T held fixed.
+*/
+static astro_status_t GeoStateBackdate(
+    astro_body_t body,
+    astro_time_t time,
+    astro_aberration_t aberration,
+    double pos[3],
+    double vel[3])
+{
+    body_state_t earth_now, observer, target;
+    astro_status_t status;
+    astro_vector_t p;
+    astro_time_t ltime, ltime2;
+    double distance, dt, ux, uy, uz;
+    int iter;
+
+    memset(&earth_now, 0, sizeof(earth_now));
+    switch (aberration)
+    {
+    case NO_ABERRATION:
+        earth_now = CalcVsopPosVel(&vsop[BODY_EARTH], time.tt);
+        break;
+
+    case ABERRATION:
+        break;
+
+    default:
+        return ASTRO_INVALID_PARAMETER;
+    }
+
+    ltime = time;
+    for (iter = 0; iter < 10; ++iter)
+    {
+        if (aberration == NO_ABERRATION)
+            observer = earth_now;
+        else
+            observer = CalcVsopPosVel(&vsop[BODY_EARTH], ltime.tt);
+
+        status = GeoHelioState(body, ltime, &target);
+        if (status != ASTRO_SUCCESS)
+            return status;
+
+        p.status = ASTRO_SUCCESS;
+        p.t = ltime;
+        p.x = target.r.x - observer.r.x;
+        p.y = target.r.y - observer.r.y;
+        p.z = target.r.z - observer.r.z;
+
+        distance = Astronomy_VectorLength(p);
+        if (distance > C_AUDAY)
+            return ASTRO_INVALID_PARAMETER;
+
+        ltime2 = Astronomy_AddDays(time, -distance/C_AUDAY);
+        dt = fabs(ltime2.tt - ltime.tt);
+        if (dt < 1.0e-9)        /* 86.4 microseconds */
+            break;
+
+        ltime = ltime2;
+    }
+    if (iter == 10)
+        return ASTRO_NO_CONVERGE;
+
+    pos[0] = p.x;
+    pos[1] = p.y;
+    pos[2] = p.z;
+
+    ux = p.x / distance;
+    uy = p.y / distance;
+    uz = p.z / distance;
+
+    if (aberration == ABERRATION)
+    {
+        double rx = target.v.x - observer.v.x;
+        double ry = target.v.y - observer.v.y;
+        double rz = target.v.z - observer.v.z;
+        double scale = 1.0 / (1.0 + (ux*rx + uy*ry + uz*rz) / C_AUDAY);
+        vel[0] = rx * scale;
+        vel[1] = ry * scale;
+        vel[2] = rz * scale;
+    }
+    else
+    {
+        double a = (ux*target.v.x + uy*target.v.y + uz*target.v.z) / C_AUDAY;
+        double b = (ux*earth_now.v.x + uy*earth_now.v.y + uz*earth_now.v.z) / C_AUDAY;
+        double scale = (1.0 + b) / (1.0 + a);
+        vel[0] = target.v.x * scale - earth_now.v.x;
+        vel[1] = target.v.y * scale - earth_now.v.y;
+        vel[2] = target.v.z * scale - earth_now.v.z;
+    }
+
+    return ASTRO_SUCCESS;
+}
+
+
 /**
  * @brief Calculates geocentric Cartesian coordinates of a body in the J2000 equatorial system.
  *
@@ -4974,7 +5426,7 @@ astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time)
 
     if (body == BODY_PLUTO)
     {
-        astro_status_t status = CalcPluto(&planet, time, 0);
+        astro_status_t status = CalcPluto(&planet, time, 0, 0);
         if (status != ASTRO_SUCCESS)
             return StateVecError(status, time);
         return ExportState(planet, time);
@@ -5108,7 +5560,7 @@ astro_state_vector_t Astronomy_HelioState(astro_body_t body, astro_time_t time)
         return ExportState(planet, time);
 
     case BODY_PLUTO:
-        status = CalcPluto(&planet, time, 1);
+        status = CalcPluto(&planet, time, 1, 0);
         if (status != ASTRO_SUCCESS)
             return StateVecError(status, time);
         return ExportState(planet, time);
@@ -6153,6 +6605,367 @@ static astro_ecliptic_t RotateEquatorialToEcliptic(const double pos[3], double o
     ecl.status = ASTRO_SUCCESS;
     return ecl;
 }
+
+/*---------------------- begin AstronomyKit ecliptic state patch ----------------------*/
+/*
+    Apparent geocentric ecliptic position and analytic velocity in the true ecliptic
+    and equinox of date. Three public functions each mirror one position function
+    and keep its position bits: Astronomy_GeoEclipticState mirrors Astronomy_GeoVector
+    followed by Astronomy_Ecliptic, Astronomy_SunEclipticState mirrors
+    Astronomy_SunPosition, and Astronomy_MoonEclipticState mirrors
+    Astronomy_EclipticGeoMoon. Every position below is produced by the same helper
+    calls in the same order as the mirrored function; the velocity code never feeds
+    back into the position code.
+*/
+
+static astro_ecliptic_state_t EclStateError(astro_status_t status, astro_time_t time)
+{
+    astro_ecliptic_state_t state;
+    memset(&state, 0, sizeof(state));
+    state.status = status;
+    state.t = time;
+    state.elon = state.elat = state.dist = NAN;
+    state.elon_rate = state.elat_rate = state.dist_rate = NAN;
+    state.x = state.y = state.z = NAN;
+    state.vx = state.vy = state.vz = NAN;
+    return state;
+}
+
+/*
+    Shared tail: true-equator-of-date (EQD) state to ECT state.
+    `tobl` is the true obliquity in degrees and `tobl_rate` its rate in degrees per day.
+    The position goes through RotateEquatorialToEcliptic exactly as the mirrored
+    functions call it; `dist` uses the expression of the Swift `Ecliptic` wrapper.
+*/
+static astro_ecliptic_state_t EclipticStateFromEqd(
+    const double eqd_pos[3],
+    const double eqd_vel[3],
+    double tobl,
+    double tobl_rate,
+    astro_time_t report_time)
+{
+    astro_ecliptic_state_t state;
+    astro_ecliptic_t ecl;
+    double obliq_radians, cos_ob, sin_ob, ob_rate;
+    double x, y, z, vx, vy, vz, rho2, rho, rho_rate;
+
+    obliq_radians = tobl * DEG2RAD;
+    ecl = RotateEquatorialToEcliptic(eqd_pos, obliq_radians, report_time);
+    if (ecl.status != ASTRO_SUCCESS)
+        return EclStateError(ecl.status, report_time);
+
+    x = ecl.vec.x;
+    y = ecl.vec.y;
+    z = ecl.vec.z;
+
+    /* d/dt of the obliquity rotation: X(e) applied to the velocity plus dX/dt applied to the position. */
+    cos_ob = cos(obliq_radians);
+    sin_ob = sin(obliq_radians);
+    ob_rate = tobl_rate * DEG2RAD;
+    vx = eqd_vel[0];
+    vy = eqd_vel[1]*cos_ob + eqd_vel[2]*sin_ob + ob_rate*z;
+    vz = -eqd_vel[1]*sin_ob + eqd_vel[2]*cos_ob - ob_rate*y;
+
+    rho2 = x*x + y*y;
+    if (!(rho2 > 0.0))
+        return EclStateError(ASTRO_BAD_VECTOR, report_time);
+    rho = sqrt(rho2);
+    rho_rate = (x*vx + y*vy) / rho;
+
+    state.status = ASTRO_SUCCESS;
+    state.t = report_time;
+    state.elon = ecl.elon;
+    state.elat = ecl.elat;
+    state.dist = sqrt(x*x + y*y + z*z);
+    state.elon_rate = RAD2DEG * (x*vy - y*vx) / rho2;
+    state.elat_rate = RAD2DEG * (rho*vz - z*rho_rate) / (rho2 + z*z);
+    state.dist_rate = (x*vx + y*vy + z*vz) / state.dist;
+    state.x = x;
+    state.y = y;
+    state.z = z;
+    state.vx = vx;
+    state.vy = vy;
+    state.vz = vz;
+    return state;
+}
+
+/*
+    EQJ state to ECT state through the Astronomy_Ecliptic sequence: e_tilt,
+    precession FROM_2000, nutation FROM_2000, obliquity rotation. `frame_time` selects
+    the frame (Astronomy_SunPosition uses the light-time adjusted instant) and
+    `report_time` is stored in the result. The nutation series is evaluated once.
+*/
+static astro_ecliptic_state_t ecliptic_state_from_eqj(
+    const double pos[3],
+    const double vel[3],
+    astro_time_t frame_time,
+    astro_time_t report_time)
+{
+    earth_tilt_rate_t etr;
+    earth_tilt_t et;
+    astro_rotation_t prec, prec_rate, nut, nut_rate;
+    double mean_pos[3], mean_vel[3], eqd_pos[3], eqd_vel[3], a[3], b[3];
+    int k;
+
+    etr = e_tilt_rate(&frame_time);
+    et = e_tilt(&frame_time);
+    prec = precession_rot(frame_time, FROM_2000);
+    nut = nutation_rot(&frame_time, FROM_2000);
+
+    /* Position, as Astronomy_Ecliptic computes it. */
+    rotate(pos, prec.rot, mean_pos);
+    rotate(mean_pos, nut.rot, eqd_pos);
+
+    /* Velocity by the product rule through the same two rotations. */
+    prec_rate = precession_rot_rate(frame_time, FROM_2000);
+    nut_rate = nutation_rot_rate(&frame_time, &etr, FROM_2000);
+    rotate(vel, prec.rot, a);
+    rotate(pos, prec_rate.rot, b);
+    for (k = 0; k < 3; ++k)
+        mean_vel[k] = a[k] + b[k];
+    rotate(mean_vel, nut.rot, a);
+    rotate(mean_pos, nut_rate.rot, b);
+    for (k = 0; k < 3; ++k)
+        eqd_vel[k] = a[k] + b[k];
+
+    return EclipticStateFromEqd(eqd_pos, eqd_vel, et.tobl, etr.tobl_rate, report_time);
+}
+
+/*
+    Half-width of the central difference that supplies the Moon's velocity, in TT days
+    (about 43 seconds). CalcMoon has no analytic derivative in this engine; the step balances
+    the series' last-bit noise against the h^2 truncation term at roughly 1e-7 degrees/day.
+*/
+#define MOON_STATE_STEP_DAYS 5.0e-4
+
+/* The Cartesian conversion used by Astronomy_GeoMoon and Astronomy_EclipticGeoMoon, verbatim. */
+static void MoonSphereToRect(double lon, double lat, double dist, double pos[3])
+{
+    double dist_cos_lat = dist * cos(lat);
+    pos[0] = dist_cos_lat * cos(lon);
+    pos[1] = dist_cos_lat * sin(lon);
+    pos[2] = dist * sin(lat);
+}
+
+/*
+    Moon position and differenced velocity in the mean ecliptic of date (ECM).
+    `lon`, `lat` (radians) and `dist` (AU) are the CalcMoon outputs at `time`.
+*/
+static void MoonEcmState(
+    astro_time_t time,
+    double ecm[3],
+    double ecm_vel[3],
+    double *lon,
+    double *lat,
+    double *dist,
+    double *dist_rate)
+{
+    double plus[3], minus[3], lon2, lat2, dist_plus, dist_minus;
+    int k;
+
+    CalcMoon(time.tt / 36525.0, lon, lat, dist);
+    MoonSphereToRect(*lon, *lat, *dist, ecm);
+
+    CalcMoon((time.tt + MOON_STATE_STEP_DAYS) / 36525.0, &lon2, &lat2, &dist_plus);
+    MoonSphereToRect(lon2, lat2, dist_plus, plus);
+    CalcMoon((time.tt - MOON_STATE_STEP_DAYS) / 36525.0, &lon2, &lat2, &dist_minus);
+    MoonSphereToRect(lon2, lat2, dist_minus, minus);
+
+    for (k = 0; k < 3; ++k)
+        ecm_vel[k] = (plus[k] - minus[k]) / (2 * MOON_STATE_STEP_DAYS);
+    *dist_rate = (dist_plus - dist_minus) / (2 * MOON_STATE_STEP_DAYS);
+}
+
+/* Derivative of obl_ecl2equ_vec: equ = R_x(-obl) ecl, so d(equ)/dt = R_x(-obl) d(ecl)/dt + obl_rate * (0, -equ_z, equ_y). */
+static void EclToEquVel(
+    const double ecl_vel[3],
+    const double equ_pos[3],
+    double obl_rad,
+    double obl_rate,
+    double equ_vel[3])
+{
+    double cos_obl = cos(obl_rad);
+    double sin_obl = sin(obl_rad);
+
+    equ_vel[0] = ecl_vel[0];
+    equ_vel[1] = ecl_vel[1]*cos_obl - ecl_vel[2]*sin_obl - obl_rate*equ_pos[2];
+    equ_vel[2] = ecl_vel[1]*sin_obl + ecl_vel[2]*cos_obl + obl_rate*equ_pos[1];
+}
+
+/* Geocentric EQJ state of the Moon along the Astronomy_GeoMoon path (no light travel, no aberration). */
+static void GeoMoonStateEqj(astro_time_t time, double pos[3], double vel[3])
+{
+    double ecm[3], ecm_vel[3], eqm_pos[3], eqm_vel[3], a[3], b[3];
+    double lon, lat, dist, dist_rate;
+    astro_rotation_t prec, prec_rate;
+    int k;
+
+    MoonEcmState(time, ecm, ecm_vel, &lon, &lat, &dist, &dist_rate);
+
+    /* Position, as Astronomy_GeoMoon computes it. */
+    ecl2equ_vec(time, ecm, eqm_pos);
+    prec = precession_rot(time, INTO_2000);
+    rotate(eqm_pos, prec.rot, pos);
+
+    /* Velocity through the same two rotations and their rates. */
+    EclToEquVel(ecm_vel, eqm_pos, mean_obliq(time.tt) * DEG2RAD, mean_obliq_rate(time.tt) * DEG2RAD, eqm_vel);
+    prec_rate = precession_rot_rate(time, INTO_2000);
+    rotate(eqm_vel, prec.rot, a);
+    rotate(eqm_pos, prec_rate.rot, b);
+    for (k = 0; k < 3; ++k)
+        vel[k] = a[k] + b[k];
+}
+
+/**
+ * @brief Apparent geocentric ecliptic position and velocity of a body (AstronomyKit local patch).
+ *
+ * The position fields repeat #Astronomy_GeoVector followed by #Astronomy_Ecliptic
+ * operation for operation and are bit-identical to them. The rate fields are the
+ * analytic time derivative of that position with respect to Terrestrial Time days,
+ * holding Delta T fixed: they include the derivative of the light-time solution,
+ * the observer's motion under the engine's backdated-observer aberration approximation,
+ * and the rotation of the true ecliptic and equinox of date. The Moon's velocity is a
+ * central difference of the lunar series over `MOON_STATE_STEP_DAYS`; every other body's
+ * velocity is analytic.
+ *
+ * Supported bodies: the Sun, the Moon, Mercury through Neptune except the Earth, and Pluto.
+ * Any other body returns `ASTRO_INVALID_BODY`.
+ *
+ * @param body          The body to observe from the center of the Earth.
+ * @param time          The observation time.
+ * @param aberration    `ABERRATION` or `NO_ABERRATION`, as for #Astronomy_GeoVector. Ignored for the Moon.
+ * @return              The ecliptic state; check `status` before use.
+ */
+astro_ecliptic_state_t Astronomy_GeoEclipticState(astro_body_t body, astro_time_t time, astro_aberration_t aberration)
+{
+    double pos[3], vel[3];
+    astro_status_t status;
+
+    if (aberration != ABERRATION && aberration != NO_ABERRATION)
+        return EclStateError(ASTRO_INVALID_PARAMETER, time);
+
+    switch (body)
+    {
+    case BODY_MOON:
+        /* Astronomy_GeoVector applies neither light travel nor aberration to the Moon. */
+        GeoMoonStateEqj(time, pos, vel);
+        status = ASTRO_SUCCESS;
+        break;
+
+    case BODY_SUN:
+    case BODY_MERCURY:
+    case BODY_VENUS:
+    case BODY_MARS:
+    case BODY_JUPITER:
+    case BODY_SATURN:
+    case BODY_URANUS:
+    case BODY_NEPTUNE:
+    case BODY_PLUTO:
+        status = GeoStateBackdate(body, time, aberration, pos, vel);
+        break;
+
+    default:
+        status = ASTRO_INVALID_BODY;
+        break;
+    }
+
+    if (status != ASTRO_SUCCESS)
+        return EclStateError(status, time);
+
+    return ecliptic_state_from_eqj(pos, vel, time, time);
+}
+
+/**
+ * @brief Geocentric ecliptic position and velocity of the Sun (AstronomyKit local patch).
+ *
+ * The position fields repeat #Astronomy_SunPosition operation for operation and are
+ * bit-identical to it, including its fixed one-AU light-time adjustment and its use of
+ * the adjusted instant for the frame. The rate fields are the analytic derivative of
+ * that position with respect to Terrestrial Time days, holding Delta T fixed.
+ *
+ * @param time  The observation time.
+ * @return      The ecliptic state; check `status` before use.
+ */
+astro_ecliptic_state_t Astronomy_SunEclipticState(astro_time_t time)
+{
+    astro_time_t adjusted_time;
+    body_state_t earth;
+    double pos[3], vel[3];
+
+    /* Correct for light travel time from the Sun, as Astronomy_SunPosition does. */
+    adjusted_time = Astronomy_AddDays(time, -1.0 / C_AUDAY);
+    earth = CalcVsopPosVel(&vsop[BODY_EARTH], adjusted_time.tt);
+
+    pos[0] = -earth.r.x;
+    pos[1] = -earth.r.y;
+    pos[2] = -earth.r.z;
+    vel[0] = -earth.v.x;
+    vel[1] = -earth.v.y;
+    vel[2] = -earth.v.z;
+
+    return ecliptic_state_from_eqj(pos, vel, adjusted_time, time);
+}
+
+/**
+ * @brief Geocentric ecliptic position and velocity of the Moon (AstronomyKit local patch).
+ *
+ * The position fields repeat #Astronomy_EclipticGeoMoon operation for operation and are
+ * bit-identical to it; `dist` is the lunar series' own distance. The rate fields are a
+ * central difference of the lunar series over `MOON_STATE_STEP_DAYS`, carried through
+ * the analytic rotation rates of the mean obliquity, nutation, and true obliquity.
+ *
+ * @param time  The observation time.
+ * @return      The ecliptic state; check `status` before use.
+ */
+astro_ecliptic_state_t Astronomy_MoonEclipticState(astro_time_t time)
+{
+    astro_ecliptic_state_t state;
+    earth_tilt_rate_t etr;
+    earth_tilt_t et;
+    astro_rotation_t nut, nut_rate;
+    double ecm[3], ecm_vel[3], eqm[3], eqm_vel[3], eqd[3], eqd_vel[3], a[3], b[3];
+    double lon, lat, dist, dist_rate;
+    int k;
+
+    MoonEcmState(time, ecm, ecm_vel, &lon, &lat, &dist, &dist_rate);
+
+    /* Position, as Astronomy_EclipticGeoMoon computes it. */
+    etr = e_tilt_rate(&time);
+    et = e_tilt(&time);
+    obl_ecl2equ_vec(et.mobl, time, ecm, eqm);
+    nut = nutation_rot(&time, FROM_2000);
+    rotate(eqm, nut.rot, eqd);
+
+    /* Velocity through the same rotations and their rates. */
+    EclToEquVel(ecm_vel, eqm, et.mobl * DEG2RAD, etr.mobl_rate * DEG2RAD, eqm_vel);
+    nut_rate = nutation_rot_rate(&time, &etr, FROM_2000);
+    rotate(eqm_vel, nut.rot, a);
+    rotate(eqm, nut_rate.rot, b);
+    for (k = 0; k < 3; ++k)
+        eqd_vel[k] = a[k] + b[k];
+
+    state = EclipticStateFromEqd(eqd, eqd_vel, et.tobl, etr.tobl_rate, time);
+    if (state.status == ASTRO_SUCCESS)
+    {
+        /* Astronomy_EclipticGeoMoon reports the lunar series' distance directly. */
+        state.dist = dist;
+        state.dist_rate = dist_rate;
+    }
+    return state;
+}
+
+/* Test hooks; see astronomy.h. */
+void _Astronomy_Iau2000bRates(astro_time_t *time, double *dpsi_rate_asec_per_day, double *deps_rate_asec_per_day)
+{
+    iau2000b_rates(time, dpsi_rate_asec_per_day, deps_rate_asec_per_day);
+}
+
+astro_ecliptic_state_t _Astronomy_EclipticStateFromEqj(const double pos[3], const double vel[3], astro_time_t time)
+{
+    return ecliptic_state_from_eqj(pos, vel, time, time);
+}
+
+/*---------------------- end AstronomyKit ecliptic state patch ----------------------*/
 
 static astro_func_result_t sun_offset(void *context, astro_time_t time)
 {
