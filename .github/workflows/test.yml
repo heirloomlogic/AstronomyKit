@@ -38,8 +38,10 @@ jobs:
           python3 Scripts/performance/polynomial/embed.py --check
           python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py' -v
 
-      - name: Verify polynomial evaluation and full-model cache reuse
-        run: sh Scripts/performance/test-vsop-cache.sh
+      - name: Verify work-avoidance paths
+        run: |
+          sh Scripts/performance/test-vsop-cache.sh
+          sh Scripts/performance/test-nutation-cache.sh
 
       - name: Test
         run: swift test --no-parallel
@@ -63,8 +65,10 @@ jobs:
           python3 Scripts/performance/polynomial/embed.py --check
           python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py' -v
 
-      - name: Verify polynomial evaluation and full-model cache reuse
-        run: sh Scripts/performance/test-vsop-cache.sh
+      - name: Verify work-avoidance paths
+        run: |
+          sh Scripts/performance/test-vsop-cache.sh
+          sh Scripts/performance/test-nutation-cache.sh
 
       - name: Test
         run: swift test --no-parallel
