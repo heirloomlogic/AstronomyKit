@@ -56,6 +56,8 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
 
 13. **Exact nutation cache.** A 32-entry thread-local cache retains the IAU2000B nutation angles and their rates. Both value-only and rate callers populate the full tuple, so an angle calculation can warm a later state calculation at the same instant. Keys use the exact bits of the scaled TT consumed by the series, including signed zero; nonfinite inputs bypass the cache. Entries exclude caller-owned `astro_time_t` metadata and mutable engine settings, and a caller's populated `psi`/`eps` memo remains authoritative. Storage lasts for the thread's lifetime and needs no cleanup in `Astronomy_Reset`.
 
+14. **Exact Moon cache.** A 32-entry thread-local cache retains the complete longitude, latitude, and distance tuple from `CalcMoonRaw`. Every existing lunar client continues to call the `CalcMoon` wrapper, including the center and two offset samples in `MoonEcmState`, so repeated state calls reuse three exact epochs without changing the rate stencil. Keys use the exact bits of the scaled TT consumed by the series, including signed zero; nonfinite inputs bypass the cache. Entries contain no caller time metadata or mutable engine settings. Storage lasts for the thread's lifetime and needs no cleanup in `Astronomy_Reset`.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the corresponding `+upstream-A.B.C` engine version.
@@ -68,7 +70,7 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
            Sources/CLibAstronomy/astronomy.c
    ```
 
-3. **Apply the upstream changes**, then **re-apply the local patches** above (or, if upstream has adopted equivalent fixes, confirm that and note it). The patch sites are marked in context by the vendoring note; search for `pluto_cache_mutex`, `DeltaTFunc`, `VsopCache`, `PolynomialPosition`, `VSOP_COMPENSATED_ADD`, `Astronomy_GeoEclipticState`, and the counter names.
+3. **Apply the upstream changes**, then **re-apply the local patches** above (or, if upstream has adopted equivalent fixes, confirm that and note it). The patch sites are marked in context by the vendoring note; search for `pluto_cache_mutex`, `DeltaTFunc`, `VsopCache`, `MoonCache`, `PolynomialPosition`, `VSOP_COMPENSATED_ADD`, `Astronomy_GeoEclipticState`, and the counter names.
 
 4. **Refresh the vendoring note** at the top of `astronomy.c`: update the upstream commit hash and date, and adjust the patch list if anything changed.
 
@@ -96,6 +98,7 @@ python3 Scripts/performance/polynomial/embed.py --check
 python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py'
 sh Scripts/performance/test-vsop-cache.sh
 sh Scripts/performance/test-nutation-cache.sh
+sh Scripts/performance/test-moon-cache.sh
 ```
 
 Keep whole-suite runs nonparallel: the Delta T thread-safety test intentionally swaps the process-global model. Swift Testing's `.serialized` trait orders tests inside that suite only and does not isolate unrelated suites from those swaps.
