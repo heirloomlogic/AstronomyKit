@@ -54,6 +54,8 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
 
 12. **Analytic geocentric ecliptic state.** `Astronomy_GeoEclipticState`, `Astronomy_SunEclipticState`, and `Astronomy_MoonEclipticState` return apparent geocentric position and velocity in the true ecliptic and equinox of date (`astro_ecliptic_state_t`). Each mirrors one position function (`Astronomy_GeoVector` + `Astronomy_Ecliptic`, `Astronomy_SunPosition`, `Astronomy_EclipticGeoMoon`) by calling the same helpers in the same order, so the position fields are bit-identical to it; the rate fields are the derivative of that position per TT day with Delta T fixed. Helpers: `iau2000b_eval` (the nutation series with optional rates; the value accumulation is the upstream expression verbatim, so `psi`/`eps` bits do not move), `iau2000b_rates`, `mean_obliq_rate`, `e_tilt_rate`, `precession_rot_rate` and `nutation_rot_rate` (entrywise product-rule derivatives of the identically named expressions in `precession_rot` and `nutation_rot`, stored in the same slots; keep them side by side with the functions they differentiate), `GeoHelioState`, `GeoStateBackdate` (the light-time loop of `Astronomy_CorrectLightTravel` and `BodyPosition` repeated with states; the velocity is the implicit derivative of the converged fixed point, so it does not depend on the iteration count), `ecliptic_state_from_eqj`, `EclipticStateFromEqd`, `MoonEcmState` (central difference of `CalcMoon` over `MOON_STATE_STEP_DAYS`), `EclToEquVel`, `GeoMoonStateEqj`, and the `_Astronomy_Iau2000bRates` / `_Astronomy_EclipticStateFromEqj` test hooks. `CalcPluto` takes an `exact_velocity` flag that adds the `(rb - ra) / PLUTO_DT` term the blended velocity omits; every pre-existing caller passes 0. Invariants: backdate through `Astronomy_AddDays` (it recomputes TT from Delta T), never `tt - tau`; rate helpers never produce a value matrix; `dist` in `EclipticStateFromEqd` uses the same `sqrt(x*x + y*y + z*z)` expression as the Swift `Ecliptic` wrapper; new code stays below the `FP_CONTRACT OFF` pragma.
 
+13. **Exact nutation cache.** A 32-entry thread-local cache retains the IAU2000B nutation angles and their rates. Both value-only and rate callers populate the full tuple, so an angle calculation can warm a later state calculation at the same instant. Keys use the exact bits of the scaled TT consumed by the series, including signed zero; nonfinite inputs bypass the cache. Entries exclude caller-owned `astro_time_t` metadata and mutable engine settings, and a caller's populated `psi`/`eps` memo remains authoritative. Storage lasts for the thread's lifetime and needs no cleanup in `Astronomy_Reset`.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the corresponding `+upstream-A.B.C` engine version.
@@ -93,6 +95,7 @@ python3 Scripts/generate-time-table.py --check
 python3 Scripts/performance/polynomial/embed.py --check
 python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py'
 sh Scripts/performance/test-vsop-cache.sh
+sh Scripts/performance/test-nutation-cache.sh
 ```
 
 Keep whole-suite runs nonparallel: the Delta T thread-safety test intentionally swaps the process-global model. Swift Testing's `.serialized` trait orders tests inside that suite only and does not isolate unrelated suites from those swaps.

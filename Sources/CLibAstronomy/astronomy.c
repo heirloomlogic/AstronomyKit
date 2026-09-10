@@ -9,6 +9,8 @@
         generated offline into generated/ from pinned upstream source data.
       - Bounded thread-local caching of pure VSOP series at exact TT keys;
         caller time metadata and mutable engine configuration are never cached.
+      - Bounded thread-local caching of IAU2000B nutation angles and rates at
+        exact scaled-TT keys, shared by value-only and state calculations.
       - Polynomial evaluation (polynomial.h, generated/polynomial-data.h) of
         the full VSOP87B model for qualified segments from 1900 through 2100
         TT; CalcVsop, CalcVsopPosVel and VsopHelioDistance fall back to the
@@ -1562,31 +1564,96 @@ static void iau2000b_eval(double t, double *dp, double *de, double *dp_rate, dou
     }
 }
 
+/* The key is the exact scaled TT consumed by iau2000b_eval, including signed
+   zero. Nonfinite input bypasses the cache so its existing propagation remains
+   untouched. Each thread owns fixed storage and needs no locks or reset. */
+#define NUTATION_CACHE_SLOTS 32
+
+typedef struct
+{
+    double psi;
+    double eps;
+    double psi_rate;
+    double eps_rate;
+}
+iau2000b_result_t;
+
+typedef struct
+{
+    uint64_t key;
+    int valid;
+    iau2000b_result_t result;
+}
+nutation_cache_entry_t;
+
+static _Thread_local nutation_cache_entry_t nutation_cache[NUTATION_CACHE_SLOTS];
+static _Thread_local unsigned nutation_cache_next;
+
+static nutation_cache_entry_t *NutationCache(double t)
+{
+    uint64_t key;
+    unsigned i;
+    nutation_cache_entry_t *entry;
+
+    if (!isfinite(t))
+        return NULL;
+    memcpy(&key, &t, sizeof(key));
+    for (i=0; i < NUTATION_CACHE_SLOTS; ++i)
+    {
+        entry = &nutation_cache[i];
+        if (entry->valid && entry->key == key)
+            return entry;
+    }
+    entry = &nutation_cache[nutation_cache_next];
+    nutation_cache_next = (nutation_cache_next + 1) % NUTATION_CACHE_SLOTS;
+    entry->key = key;
+    entry->valid = 0;
+    return entry;
+}
+
+static iau2000b_result_t Iau2000bResult(double t)
+{
+    nutation_cache_entry_t *cached = NutationCache(t);
+    iau2000b_result_t result;
+    double dp, de, pr, er;
+
+    if (cached != NULL && cached->valid)
+        return cached->result;
+
+    iau2000b_eval(t, &dp, &de, &pr, &er);
+    result.psi = -0.000135 + dp * 1.0e-7;
+    result.eps = +0.000388 + de * 1.0e-7;
+    result.psi_rate = pr * 1.0e-7 / 36525.0;
+    result.eps_rate = er * 1.0e-7 / 36525.0;
+    if (cached != NULL)
+    {
+        cached->result = result;
+        cached->valid = 1;
+    }
+    return result;
+}
+
 static void iau2000b(astro_time_t *time)
 {
     if ((time != NULL) && isnan(time->psi))
     {
-        double dp, de;
-        iau2000b_eval(time->tt / 36525.0, &dp, &de, NULL, NULL);
-        /* 0.1 microarcseconds -> arcseconds, with fixed planetary offsets. */
-        time->psi = -0.000135 + dp * 1.0e-7;
-        time->eps = +0.000388 + de * 1.0e-7;
+        iau2000b_result_t result = Iau2000bResult(time->tt / 36525.0);
+        time->psi = result.psi;
+        time->eps = result.eps;
     }
 }
 
 /* Nutation angle rates in arcseconds per day. Caches psi/eps in `time` exactly as iau2000b does. */
 static void iau2000b_rates(astro_time_t *time, double *dpsi_rate, double *deps_rate)
 {
-    const double t = time->tt / 36525.0;
-    double dp, de, pr, er;
-    iau2000b_eval(t, &dp, &de, &pr, &er);
+    iau2000b_result_t result = Iau2000bResult(time->tt / 36525.0);
     if (isnan(time->psi))
     {
-        time->psi = -0.000135 + dp * 1.0e-7;
-        time->eps = +0.000388 + de * 1.0e-7;
+        time->psi = result.psi;
+        time->eps = result.eps;
     }
-    *dpsi_rate = pr * 1.0e-7 / 36525.0;
-    *deps_rate = er * 1.0e-7 / 36525.0;
+    *dpsi_rate = result.psi_rate;
+    *deps_rate = result.eps_rate;
 }
 
 static double mean_obliq(double tt)
