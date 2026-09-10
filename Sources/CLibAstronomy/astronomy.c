@@ -11,6 +11,8 @@
         caller time metadata and mutable engine configuration are never cached.
       - Bounded thread-local caching of IAU2000B nutation angles and rates at
         exact scaled-TT keys, shared by value-only and state calculations.
+      - Bounded thread-local caching of complete CalcMoon results at exact
+        scaled-TT keys, shared by every lunar position and state client.
       - Polynomial evaluation (polynomial.h, generated/polynomial-data.h) of
         the full VSOP87B model for qualified segments from 1900 through 2100
         TT; CalcVsop, CalcVsopPosVel and VsopHelioDistance fall back to the
@@ -2625,7 +2627,46 @@ static void Planetary(MoonContext *ctx)
 
 _Atomic int _CalcMoonCount;     /* Undocumented global for performance tuning. */
 
-static void CalcMoon(
+#define MOON_CACHE_SLOTS 32
+
+typedef struct
+{
+    uint64_t t_bits;
+    double lon;
+    double lat;
+    double dist;
+    int valid;
+}
+moon_cache_entry_t;
+
+static _Thread_local moon_cache_entry_t moon_cache[MOON_CACHE_SLOTS];
+static _Thread_local unsigned moon_cache_next;
+
+static moon_cache_entry_t *MoonCache(double t)
+{
+    uint64_t t_bits;
+    unsigned i;
+    moon_cache_entry_t *entry;
+
+    if (!isfinite(t))
+        return NULL;
+
+    memcpy(&t_bits, &t, sizeof(t_bits));
+    for (i=0; i < MOON_CACHE_SLOTS; ++i)
+    {
+        entry = &moon_cache[i];
+        if (entry->valid && entry->t_bits == t_bits)
+            return entry;
+    }
+
+    entry = &moon_cache[moon_cache_next];
+    moon_cache_next = (moon_cache_next + 1) % MOON_CACHE_SLOTS;
+    entry->t_bits = t_bits;
+    entry->valid = 0;
+    return entry;
+}
+
+static void CalcMoonRaw(
     double centuries_since_j2000,
     double *geo_eclip_lon,      /* (LAMBDA) equinox of date */
     double *geo_eclip_lat,      /* (BETA)   equinox of date */
@@ -2775,6 +2816,32 @@ static void CalcMoon(
 #undef DS
 #undef CO
 #undef SI
+
+static void CalcMoon(
+    double centuries_since_j2000,
+    double *geo_eclip_lon,
+    double *geo_eclip_lat,
+    double *distance_au)
+{
+    moon_cache_entry_t *cached = MoonCache(centuries_since_j2000);
+
+    if (cached != NULL && cached->valid)
+    {
+        *geo_eclip_lon = cached->lon;
+        *geo_eclip_lat = cached->lat;
+        *distance_au = cached->dist;
+        return;
+    }
+
+    CalcMoonRaw(centuries_since_j2000, geo_eclip_lon, geo_eclip_lat, distance_au);
+    if (cached != NULL)
+    {
+        cached->lon = *geo_eclip_lon;
+        cached->lat = *geo_eclip_lat;
+        cached->dist = *distance_au;
+        cached->valid = 1;
+    }
+}
 
 /** @endcond */
 

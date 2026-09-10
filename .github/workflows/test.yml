@@ -42,6 +42,7 @@ jobs:
         run: |
           sh Scripts/performance/test-vsop-cache.sh
           sh Scripts/performance/test-nutation-cache.sh
+          sh Scripts/performance/test-moon-cache.sh
 
       - name: Test
         run: swift test --no-parallel
@@ -69,6 +70,7 @@ jobs:
         run: |
           sh Scripts/performance/test-vsop-cache.sh
           sh Scripts/performance/test-nutation-cache.sh
+          sh Scripts/performance/test-moon-cache.sh
 
       - name: Test
         run: swift test --no-parallel
