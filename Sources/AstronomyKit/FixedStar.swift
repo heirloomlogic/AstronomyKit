@@ -6,7 +6,6 @@
 //
 
 import CLibAstronomy
-import Foundation
 import Synchronization
 
 /// A fixed star defined by its J2000 equatorial coordinates.
@@ -17,7 +16,8 @@ import Synchronization
 ///
 /// Unlike solar system bodies (which require orbital calculations), fixed stars
 /// are defined by their J2000 mean equator coordinates and distance. The library
-/// handles precession, nutation, and aberration automatically.
+/// handles precession, nutation, and aberration automatically. Ecliptic results
+/// are in the true ecliptic and equinox of date, like the planet positions.
 ///
 /// ## Example
 ///
@@ -170,7 +170,9 @@ public struct FixedStar: Sendable, Hashable {
 
     /// Calculates the star's ecliptic longitude at a given time.
     ///
-    /// This is the value commonly used in astrological calculations.
+    /// The longitude is measured from the true equinox of date along the
+    /// true ecliptic of date, the same frame as the planet positions. See
+    /// ``ecliptic(at:)``.
     ///
     /// - Parameter time: The time at which to calculate the longitude.
     /// - Returns: The ecliptic longitude in degrees (0-360).
@@ -181,6 +183,9 @@ public struct FixedStar: Sendable, Hashable {
 
     /// Calculates the star's ecliptic latitude at a given time.
     ///
+    /// The latitude is measured from the true ecliptic of date. See
+    /// ``ecliptic(at:)``.
+    ///
     /// - Parameter time: The time at which to calculate the latitude.
     /// - Returns: The ecliptic latitude in degrees (-90 to +90).
     /// - Throws: `AstronomyError` if the calculation fails.
@@ -190,33 +195,22 @@ public struct FixedStar: Sendable, Hashable {
 
     /// Calculates the star's full ecliptic coordinates at a given time.
     ///
+    /// The coordinates are geocentric, corrected for annual aberration, and
+    /// referred to the true ecliptic and equinox of date: the frame
+    /// `Vector3D.toEcliptic()` and the geocentric planet, Sun, and Moon
+    /// positions use, so a star and a planet at the same instant compare
+    /// directly. They are not J2000 ecliptic coordinates, which drift from
+    /// these by general precession (about 50″ a year from 2000).
+    ///
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        // Only the C call needs the star slot; do the frame math outside the lock.
+        // Only the GeoVector call needs the star slot; convert frames outside the lock.
         let geo = try withSlot { cBody in
-            let geo = Astronomy_GeoVector(cBody, time.raw, ABERRATION)
-            guard geo.status == ASTRO_SUCCESS else {
-                if let error = AstronomyError(status: geo.status) {
-                    throw error
-                }
-                throw AstronomyError.internalError
-            }
-            return geo
+            Astronomy_GeoVector(cBody, time.raw, ABERRATION)
         }
-
-        let rotated = Astronomy_RotateVector(Astronomy_Rotation_EQJ_ECL(), geo)
-        let dist = sqrt(rotated.x * rotated.x + rotated.y * rotated.y + rotated.z * rotated.z)
-
-        var longitude = atan2(rotated.y, rotated.x) * 180.0 / .pi
-        if longitude < 0 {
-            longitude += 360.0
-        }
-
-        let latitude = asin(rotated.z / dist) * 180.0 / .pi
-
-        return Ecliptic(latitude: latitude, longitude: longitude, distance: dist)
+        return try Ecliptic(Astronomy_Ecliptic(geo))
     }
 
     /// Calculates the star's horizontal coordinates for an observer.

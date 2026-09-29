@@ -182,7 +182,7 @@ let algol = FixedStar(
     distance: 92.95    // Distance in light-years
 )
 
-// Ecliptic longitude
+// Ecliptic longitude (true ecliptic and equinox of date, same frame as the planets)
 let longitude = try algol.eclipticLongitude(at: .now)
 print("Algol is at \(longitude)°")
 
