@@ -188,6 +188,69 @@ struct AstroTimeTests {
             #expect(sidereal < 24)
         }
 
+        @Test("Local sidereal time wraps into [0, 24) for any finite longitude")
+        func localSiderealTimeWrapsFiniteLongitudes() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
+            let longitudes: [Double] = [
+                0, -0.0, 180, -180, 360, -360, 721.5, -721.5, 1e6, -1e6,
+                1e300, -1e300, .greatestFiniteMagnitude, -.greatestFiniteMagnitude,
+                .leastNonzeroMagnitude, -.leastNonzeroMagnitude,
+            ]
+            for longitude in longitudes {
+                let lst = time.siderealTime(longitude: longitude)
+                #expect(lst >= 0, "longitude \(longitude) gave \(lst)")
+                #expect(lst < 24, "longitude \(longitude) gave \(lst)")
+                #expect(lst.sign == .plus, "longitude \(longitude) gave negative zero")
+            }
+        }
+
+        @Test("Local sidereal time matches Greenwich time plus longitude for ordinary longitudes")
+        func localSiderealTimeOrdinary() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
+            let greenwich = time.siderealTime
+            for longitude in [-122.4, -75.0, 0, 30.5, 139.7] {
+                let expected = (greenwich + longitude / 15.0).truncatingRemainder(dividingBy: 24)
+                let wrapped = expected < 0 ? expected + 24 : expected
+                #expect(abs(time.siderealTime(longitude: longitude) - wrapped) < 1e-12)
+            }
+            #expect(time.siderealTime(longitude: 0) == greenwich)
+        }
+
+        @Test("Local sidereal time is periodic in 360 degrees of longitude")
+        func localSiderealTimePeriodic() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
+            let base = time.siderealTime(longitude: 10)
+            #expect(abs(time.siderealTime(longitude: 370) - base) < 1e-9)
+            #expect(abs(time.siderealTime(longitude: -350) - base) < 1e-9)
+        }
+
+        @Test("Local sidereal time never returns 24 when the wrap rounds up")
+        func localSiderealTimeNeverExactly24() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
+            let greenwich = time.siderealTime
+            // Step the longitude across the point where the local sidereal time
+            // crosses 0. Just below it, the remainder is a tiny negative number and
+            // adding 24 rounds to exactly 24.
+            var roundsUpTo24 = 0
+            var longitude = -greenwich * 15.0
+            for _ in 0..<64 {
+                let raw = greenwich + longitude / 15.0
+                if raw < 0, raw + 24.0 == 24.0 { roundsUpTo24 += 1 }
+                let lst = time.siderealTime(longitude: longitude)
+                #expect(lst >= 0 && lst < 24, "longitude \(longitude) gave \(lst)")
+                longitude = longitude.nextDown
+            }
+            #expect(roundsUpTo24 > 0, "the sweep never reached the rounding case")
+        }
+
+        @Test("Local sidereal time is NaN for non-finite longitudes and does not hang")
+        func localSiderealTimeNonFinite() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12)
+            #expect(time.siderealTime(longitude: .infinity).isNaN)
+            #expect(time.siderealTime(longitude: -.infinity).isNaN)
+            #expect(time.siderealTime(longitude: .nan).isNaN)
+        }
+
         @Test("Date property round-trips correctly")
         func dateRoundTrip() {
             let original = AstroTime(year: 2_025, month: 7, day: 4, hour: 18, minute: 30, second: 0)

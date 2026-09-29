@@ -102,6 +102,8 @@ let lst = AstroTime.now.siderealTime(longitude: observer.longitude)
 print("Local Sidereal Time: \(lst) hours")
 ```
 
+The result is in 0 up to, but not including, 24 hours for any finite longitude. An infinite or NaN longitude returns `.nan`.
+
 ## Working with Observers
 
 ### Creating Observers
