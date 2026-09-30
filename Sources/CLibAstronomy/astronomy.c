@@ -49,6 +49,16 @@
       - Compute denial-of-service guard (PLUTO_MAX_CRAWL_DAYS) in CalcPluto:
         times more than ~100 years outside the PlutoStateTable range return
         ASTRO_BAD_TIME instead of triggering an unbounded step-integration.
+      - Extreme-input guards, marked "extreme-input guards" at each site.
+        InternalSearchAltitude (rise/set and altitude searches) rejects a
+        non-finite limit and stops when a 0.42-day step does not advance the
+        time (|ut| >= 2^52). CalcPluto rejects a non-finite TT before
+        GetSegment, whose ClampIndex converted NaN to int.
+        Astronomy_SearchMoonNode stops when its 10-day step does not advance
+        the time. BruteSearchPlanetApsis (Neptune, Pluto) rejects a
+        non-finite start. LongitudeOffset and NormalizeLongitude reduce with
+        fmod before their loops, which took |x|/360 steps; the result is
+        bit-identical for |x| < 2^56.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -446,9 +456,21 @@ static int QuadInterp(
     double tm, double dt, double fa, double fm, double fb,
     double *t, double *df_dt);
 
+/*
+    AstronomyKit local patch (extreme-input guards): upstream wraps these two
+    angles by adding or subtracting 360 in a loop, which takes |x|/360 steps
+    and never ends for an infinity. Reducing with fmod first leaves the loops
+    at most one step. For |x| < 2^56 every upstream step is exact, so the
+    result is the same double; "+ 0.0" turns the -0 that fmod returns for a
+    negative multiple of 360 into the +0 the loop reached. fmod turns an
+    infinity into NaN, which the loops pass through.
+*/
 static double LongitudeOffset(double diff)
 {
     double offset = diff;
+
+    if (offset != 0.0)
+        offset = fmod(offset, 360.0) + 0.0;
 
     while (offset <= -180.0)
         offset += 360.0;
@@ -461,6 +483,9 @@ static double LongitudeOffset(double diff)
 
 static double NormalizeLongitude(double lon)
 {
+    if (lon != 0.0)
+        lon = fmod(lon, 360.0) + 0.0;
+
     while (lon < 0.0)
         lon += 360.0;
 
@@ -4490,6 +4515,12 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
 
     memset(bstate, 0, sizeof(body_state_t));
     bstate->tt = time.tt;
+
+    /* AstronomyKit local patch (extreme-input guards): a NaN TT fails both
+       table-range comparisons in GetSegment, then reaches (int) floor(NaN)
+       in ClampIndex, which is undefined behavior. */
+    if (!isfinite(time.tt))
+        return ASTRO_BAD_TIME;
 
     /* Hold the cache mutex across both the segment lookup and the
        interpolation that reads it, so Astronomy_Reset cannot free the
@@ -8628,6 +8659,12 @@ static astro_search_result_t InternalSearchAltitude(
     if (!isfinite(targetAltitude) || targetAltitude < -90.0 || targetAltitude > +90.0)
         return SearchError(ASTRO_INVALID_PARAMETER);
 
+    /* AstronomyKit local patch (extreme-input guards): the loop below ends only
+       when a step passes startTime.ut + limitDays, which never happens for a
+       non-finite limit. See also the step checks inside the loop. */
+    if (!isfinite(limitDays))
+        return SearchError(ASTRO_INVALID_PARAMETER);
+
     func_result = MaxAltitudeSlope(body, observer.latitude);
     if (func_result.status != ASTRO_SUCCESS)
         return SearchError(func_result.status);
@@ -8652,6 +8689,11 @@ static astro_search_result_t InternalSearchAltitude(
         if (limitDays < 0.0)
         {
             t1 = Astronomy_AddDays(t2, -RISE_SET_DT);
+            /* AstronomyKit local patch (extreme-input guards): from |ut| >= 2^52,
+               adding RISE_SET_DT no longer changes ut, and the search would
+               never reach the end of its window. */
+            if (!(t1.ut < t2.ut))
+                return SearchError(ASTRO_BAD_TIME);
             func_result = altitude_diff(&context, t1);
             if (func_result.status != ASTRO_SUCCESS)
                 return SearchError(func_result.status);
@@ -8660,6 +8702,8 @@ static astro_search_result_t InternalSearchAltitude(
         else
         {
             t2 = Astronomy_AddDays(t1, +RISE_SET_DT);
+            if (!(t1.ut < t2.ut))
+                return SearchError(ASTRO_BAD_TIME);     /* AstronomyKit local patch, as above */
             func_result = altitude_diff(&context, t2);
             if (func_result.status != ASTRO_SUCCESS)
                 return SearchError(func_result.status);
@@ -9698,6 +9742,12 @@ static astro_apsis_t BruteSearchPlanetApsis(astro_body_t body, astro_time_t star
         Sample points around this orbital arc and find when the distance
         is greatest and smallest.
     */
+    /* AstronomyKit local patch (extreme-input guards): a non-finite start makes
+       the sample interval NaN, and PlanetExtreme never narrows it below its
+       one-minute exit threshold. */
+    if (!isfinite(startTime.ut))
+        return ApsisError(ASTRO_BAD_TIME);
+
     period = Astronomy_PlanetOrbitalPeriod(body);
     t1 = Astronomy_AddDays(startTime, period * ( -30.0 / 360.0));
     t2 = Astronomy_AddDays(startTime, period * (+270.0 / 360.0));
@@ -13060,6 +13110,12 @@ astro_node_event_t Astronomy_SearchMoonNode(astro_time_t startTime)
     for(;;)
     {
         time2 = Astronomy_AddDays(time1, MOON_NODE_STEP_DAYS);
+        /* AstronomyKit local patch (extreme-input guards): a non-finite start
+           never advances, and from |ut| >= 2^57 adding the step no longer
+           changes ut. Either way the NaN or repeated latitude never brackets
+           a node, and the loop would run forever. */
+        if (!(time1.ut < time2.ut))
+            return NodeError(ASTRO_BAD_TIME);
         eclip2 = Astronomy_EclipticGeoMoon(time2);      /* never returns a failure code */
         if (eclip1.lat * eclip2.lat <= 0.0)
         {

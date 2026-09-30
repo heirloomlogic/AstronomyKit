@@ -109,4 +109,43 @@ struct AltitudeSearchTests {
 
         #expect(result == nil)
     }
+
+    // MARK: - Extreme Inputs (#57)
+
+    @Test(
+        "Non-finite limitDays throws invalidParameter when the altitude is never reached",
+        arguments: [Double.infinity, -.infinity, .nan]
+    )
+    func nonFiniteLimit(limitDays: Double) {
+        // The Sun never climbs to 89° at 80° N, so the old loop searched forever.
+        #expect(throws: AstronomyError.invalidParameter) {
+            _ = try CelestialBody.sun.searchAltitude(
+                89,
+                direction: .rise,
+                after: AstroTime(ut: 9_500),
+                from: Observer(latitude: 80, longitude: 0),
+                limitDays: limitDays
+            )
+        }
+    }
+
+    @Test(
+        "A window that runs into 2^52 days throws badTime instead of stalling there",
+        arguments: [(1.0, 10.0), (-1.0, -10.0)]
+    )
+    func windowReachingStallPoint(sign: Double, limitDays: Double) {
+        // The start itself steps normally (0.5 days just below 2^52), so a
+        // start-only check would miss this. An altitude of exactly 90° is never
+        // crossed, so the search keeps stepping until adding the step stops
+        // changing the time, and must then give up.
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.moon.searchAltitude(
+                90,
+                direction: .rise,
+                after: AstroTime(ut: sign * (0x1p52 - 3)),
+                from: .primeMeridian,
+                limitDays: limitDays
+            )
+        }
+    }
 }

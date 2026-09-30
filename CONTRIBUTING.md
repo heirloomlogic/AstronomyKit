@@ -39,7 +39,7 @@ Run the whole suite with `swift test`. Suites run in parallel in one process, an
 
 ### Updating the vendored C library
 
-AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, and the analytic ecliptic state. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
+AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, the analytic ecliptic state, and guards against non-finite or extreme inputs. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
 
 ## Code of Conduct
 

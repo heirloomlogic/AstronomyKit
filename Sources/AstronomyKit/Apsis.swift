@@ -154,7 +154,8 @@ extension CelestialBody {
     ///
     /// - Parameter startTime: The time to start searching from.
     /// - Returns: The next apsis event.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` for Neptune or Pluto at a non-finite
+    ///   `startTime`, or another `AstronomyError` if the calculation fails.
     ///
     /// ## Example
     ///

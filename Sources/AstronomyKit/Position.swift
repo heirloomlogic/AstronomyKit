@@ -286,12 +286,14 @@ public enum Sun {
     ///   - limitDays: Maximum number of days to search. Defaults to 366.
     /// - Returns: The time when the Sun reaches the target longitude, or
     ///   `nil` if it does not do so within `limitDays`.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.invalidParameter` if `targetLongitude` is not
+    ///   finite, or another `AstronomyError` if the calculation fails.
     public static func searchLongitude(
         _ targetLongitude: Double,
         after startTime: AstroTime,
         limitDays: Double = 366
     ) throws -> AstroTime? {
+        guard targetLongitude.isFinite else { throw AstronomyError.invalidParameter }
         let result = Astronomy_SearchSunLongitude(targetLongitude, startTime.raw, limitDays)
         if result.status == ASTRO_SEARCH_FAILURE {
             return nil

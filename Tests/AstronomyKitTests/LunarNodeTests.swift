@@ -53,4 +53,17 @@ struct LunarNodeTests {
         #expect(nodes.count >= 3)
         #expect(nodes.count <= 5)
     }
+
+    /// The node search steps 10 days at a time until the Moon's latitude
+    /// changes sign. A non-finite start gives a NaN latitude that never does,
+    /// and from 2^57 days the step no longer changes the time.
+    @Test(
+        "Search from a start time it cannot step from throws badTime",
+        arguments: [Double.nan, .infinity, -.infinity, 1e300, -1e300]
+    )
+    func unsteppableStartThrows(ut: Double) {
+        #expect(throws: AstronomyError.badTime) {
+            _ = try Moon.searchNode(after: AstroTime(ut: ut))
+        }
+    }
 }

@@ -427,6 +427,49 @@ struct RiseSetTests {
         }
     }
 
+    // MARK: - Extreme Inputs (#57)
+
+    /// The rise/set loop steps 0.42 days at a time until it passes
+    /// `start + limitDays`. These inputs used to keep it stepping forever.
+    /// `AltitudeSearchTests` covers a window that runs into the stall point,
+    /// since both searches share the loop.
+    @Suite("Extreme Inputs")
+    struct ExtremeInputTests {
+        static let start = AstroTime(ut: 9_500)
+
+        @Test("Non-finite limitDays throws invalidParameter", arguments: [Double.infinity, -.infinity, .nan])
+        func nonFiniteLimit(limitDays: Double) {
+            // The Moon rises every day, so the old loop returned for it; the
+            // limit is now checked before the search starts.
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try CelestialBody.moon.riseTime(
+                    after: Self.start, from: RiseSetTests.nyc, limitDays: limitDays)
+            }
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try CelestialBody.sun.setTime(
+                    after: Self.start, from: RiseSetTests.nyc, limitDays: limitDays)
+            }
+        }
+
+        @Test(
+            "A start time where the 0.42-day step cannot advance throws badTime",
+            arguments: [1e16, -1e16, 0x1p52]
+        )
+        func stalledStart(ut: Double) {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try CelestialBody.moon.riseTime(after: AstroTime(ut: ut), from: .primeMeridian, limitDays: 1)
+            }
+        }
+
+        @Test("A non-finite start time throws", arguments: [Double.nan, .infinity, -.infinity])
+        func nonFiniteStart(ut: Double) {
+            // The first altitude evaluation fails before the loop starts.
+            #expect(throws: AstronomyError.self) {
+                _ = try CelestialBody.moon.riseTime(after: AstroTime(ut: ut), from: .primeMeridian, limitDays: 1)
+            }
+        }
+    }
+
     // MARK: - Hour Angle Tests
 
     @Suite("Hour Angle")

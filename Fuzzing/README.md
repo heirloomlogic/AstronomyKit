@@ -7,8 +7,10 @@
 - `Astronomy_Constellation`
 - `Astronomy_Pivot`
 - `Astronomy_SearchRiseSetEx` (the header's `Astronomy_SearchRiseSet` is a macro for it with `metersAboveGround = 0`)
+- `Astronomy_Libration`, `Astronomy_SearchMoonNode`, and `Astronomy_SearchPlanetApsis`, which step or wrap values derived from the time
+- `Astronomy_SearchSunLongitude` and `Astronomy_SearchRelativeLongitude`, which take a target angle
 
-Every call must return a known `astro_status_t`. A crash, an AddressSanitizer or UndefinedBehaviorSanitizer report, an unknown status, or a timeout is a finding. The harness does not check numerical accuracy; the Swift test suite does that.
+Every call except `Astronomy_Libration`, which has no status, must return a known `astro_status_t`. A crash, an AddressSanitizer or UndefinedBehaviorSanitizer report, an unknown status, or a timeout is a finding. The harness does not check numerical accuracy; the Swift test suite does that.
 
 Nothing here is part of the Swift package. `Package.swift` does not reference this directory, and `swift build` and `swift test` ignore it.
 
@@ -61,23 +63,19 @@ Fields are read in a fixed order. Reading past the end of the input yields zero 
 - A body is one byte indexing `BodyValues`: every `astro_body_t`, then values outside the enum.
 - An enum is one byte: 0 and 1 are the two valid values, and the rest are values outside the enum. The rise/set direction is the exception: its byte's low bit picks rise (0) or set (1).
 
-The order is: flags (bit 0 builds the time from TT instead of UT, bit 1 selects the JPL Horizons Delta T model), user-defined star 1 (RA, Dec, distance), time, body, observer (latitude, longitude, height), `GeoVector` aberration, `Equator` equator date and aberration, constellation RA and Dec, rotation status byte and nine matrix entries, pivot axis byte and angle, rise/set direction, limit days, and meters above ground.
+The order is: flags (bit 0 builds the time from TT instead of UT, bit 1 selects the JPL Horizons Delta T model), user-defined star 1 (RA, Dec, distance), time, body, observer (latitude, longitude, height), `GeoVector` aberration, `Equator` equator date and aberration, constellation RA and Dec, rotation status byte and nine matrix entries, pivot axis byte and angle, rise/set direction, limit days, and meters above ground. The pivot angle is also the target angle of the two longitude searches, and the limit days is also the limit of the Sun longitude search.
 
-## Known defects excluded from fuzzing
+## Restrictions
 
-The harness skips inputs that reach defects already tracked, so fuzzing can find new ones. Delete each filter when its fix lands.
-
-- `RiseSetKnownHang`, [#57](https://github.com/heirloomlogic/AstronomyKit/issues/57): the rise/set search loops forever when `limitDays` is not finite and the body never crosses the horizon, or when the start time is so large that adding its 0.42-day step no longer changes it. Rise/set calls with `|limitDays| > 400` or `|ut| >= 2^52` are skipped. 400 days covers the Swift default of 366.
-- `PlutoKnownUndefinedBehavior`, [#58](https://github.com/heirloomlogic/AstronomyKit/issues/58): Pluto at a NaN TT converts NaN to `int` in the state table lookup. Body calls for that combination are skipped.
-
-Two more restrictions keep the rise/set search inside what the Swift layer can pass it. Neither is a tracked defect, because the package cannot forward these inputs:
+Three restrictions limit the rise/set search to inputs the Swift layer can pass and that finish within the timeout. None is a defect:
 
 - `SwiftAcceptsObserver`: Swift's `Observer.validatedRaw()` rejects non-finite coordinates and latitudes outside ±90° before any engine call, so the search only gets observers that pass the same check. With a non-finite longitude every altitude is NaN, and the search takes seconds to report no crossing. `Astronomy_Equator` still gets the unvalidated observer.
 - Direction: Swift's `RiseSetDirection` is only rise (+1) or set (-1), so the harness only passes those. The C search does not validate direction, and any other value makes it search every step exhaustively (67 seconds for the Sun over 366 days).
+- `RiseSetWithinCostBound`: the search evaluates the body's altitude every 0.42 days of its window, so its running time is proportional to a finite `limitDays`, and the engine does not cap it (MAINTAINING.md, patch 15). The harness skips finite limits beyond ±400 days, which covers the Swift default of 366. Non-finite limits and every start time are fuzzed.
 
 ## Seed corpus
 
-`corpus/` holds 21 seeds that `make_corpus.py` writes. Their dates, bodies, observers, and coordinates come from `JPLValidationTests`, `AuditValidationTests`, `RiseSetTests`, `FixedStarTests`, and `RotationTests`, plus a few edge cases: the ends of the Pluto state table, a polar observer, and non-finite values. Change the input format and the seeds together:
+`corpus/` holds 25 seeds that `make_corpus.py` writes. Their dates, bodies, observers, and coordinates come from `JPLValidationTests`, `AuditValidationTests`, `RiseSetTests`, `FixedStarTests`, and `RotationTests`, plus a few edge cases: the ends of the Pluto state table, a polar observer, and non-finite values. Four `fixed-*` seeds replay fixed findings: the rise/set search running into 2^52 days and running with an infinite limit (#57), Pluto at a NaN time (#58), and a longitude search for a target angle far outside 0 to 360. Change the input format and the seeds together:
 
 ```sh
 python3 Fuzzing/make_corpus.py          # rewrite corpus/

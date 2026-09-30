@@ -31,10 +31,15 @@ extension CelestialBody {
     ///   - direction: Whether to search for rising or setting.
     ///   - startTime: The time to start searching from.
     ///   - observer: The geographic observer location.
-    ///   - limitDays: Maximum days to search. Defaults to 366.
+    ///   - limitDays: Maximum days to search. Defaults to 366. Must be finite. The search
+    ///     samples the body every 0.42 days, so its running time grows in proportion to
+    ///     `limitDays`.
     ///   - metersAboveGround: Observer height above ground (affects horizon). Defaults to 0.
     /// - Returns: The time when the body rises or sets, or `nil` if not found.
-    /// - Throws: `AstronomyError` if the search encounters an error.
+    /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
+    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
+    ///   years), where the search step no longer advances the time, or another `AstronomyError`
+    ///   if the search fails.
     public func searchRiseSet(
         direction: RiseSetDirection,
         after startTime: AstroTime,
@@ -68,9 +73,14 @@ extension CelestialBody {
     /// - Parameters:
     ///   - startTime: The time to start searching from.
     ///   - observer: The geographic observer location.
-    ///   - limitDays: Maximum days to search. Defaults to 366.
+    ///   - limitDays: Maximum days to search. Defaults to 366. Must be finite. The search
+    ///     samples the body every 0.42 days, so its running time grows in proportion to
+    ///     `limitDays`.
     /// - Returns: The rise time, or `nil` if not found.
-    /// - Throws: `AstronomyError` if the search encounters an error.
+    /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
+    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
+    ///   years), where the search step no longer advances the time, or another `AstronomyError`
+    ///   if the search fails.
     public func riseTime(
         after startTime: AstroTime,
         from observer: Observer,
@@ -89,9 +99,14 @@ extension CelestialBody {
     /// - Parameters:
     ///   - startTime: The time to start searching from.
     ///   - observer: The geographic observer location.
-    ///   - limitDays: Maximum days to search. Defaults to 366.
+    ///   - limitDays: Maximum days to search. Defaults to 366. Must be finite. The search
+    ///     samples the body every 0.42 days, so its running time grows in proportion to
+    ///     `limitDays`.
     /// - Returns: The set time, or `nil` if not found.
-    /// - Throws: `AstronomyError` if the search encounters an error.
+    /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
+    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
+    ///   years), where the search step no longer advances the time, or another `AstronomyError`
+    ///   if the search fails.
     public func setTime(
         after startTime: AstroTime,
         from observer: Observer,
@@ -115,9 +130,14 @@ extension CelestialBody {
     ///   - direction: Whether the body is rising toward or setting from the altitude.
     ///   - startTime: The time to start searching from.
     ///   - observer: The geographic observer location.
-    ///   - limitDays: Maximum days to search. Defaults to 366.
+    ///   - limitDays: Maximum days to search. Defaults to 366. Must be finite. The search
+    ///     samples the body every 0.42 days, so its running time grows in proportion to
+    ///     `limitDays`.
     /// - Returns: The time when the body reaches the altitude, or `nil` if not found.
-    /// - Throws: `AstronomyError` if the search encounters an error.
+    /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
+    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
+    ///   years), where the search step no longer advances the time, or another `AstronomyError`
+    ///   if the search fails.
     ///
     /// ## Example
     ///

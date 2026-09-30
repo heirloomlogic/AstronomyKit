@@ -138,6 +138,18 @@ SEEDS = {
                            star=(math.nan, math.inf, -math.inf), constellation=(math.nan, math.inf),
                            rotation=(math.nan,) * 9, angle=math.inf, limit_days=0.0,
                            meters_above_ground=math.nan),
+    # Fixed findings. Each hung or hit undefined behavior before the extreme-input
+    # guards (MAINTAINING.md, patch 15).
+    # #57: a window that runs into 2^52 days, where the 0.42-day step stops
+    # advancing. The start alone steps normally. Libration hung here too.
+    "fixed-riseset-stall": seed("moon", 2.0**52 - 3.0, PRIME, limit_days=10.0),
+    # #57: an infinite limit for a circumpolar star, which never rises.
+    "fixed-riseset-infinite-limit": seed("star1", JPL_DATE, (80.0, 0.0, 0.0), star=(0.0, 89.0, 1000.0),
+                                         limit_days=math.inf),
+    # #58: Pluto at a NaN time, which also reaches the Moon node and Pluto apsis searches.
+    "fixed-pluto-nan": seed("pluto", math.nan, PRIME),
+    # Longitude searches for a target angle far outside 0-360.
+    "fixed-longitude-huge-target": seed("mars", JPL_DATE, PRIME, angle=1.0e20),
 }
 
 
