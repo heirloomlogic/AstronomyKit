@@ -33,6 +33,10 @@ New functionality should include tests. Bug fixes should include a test that wou
 
 Run the whole suite with `swift test`. Suites run in parallel in one process, and Swift Testing's `.serialized` trait only orders tests inside a single suite, so a test that changes process-wide state such as the Delta T model can make unrelated suites fail intermittently. The Delta T thread-safety test avoids this: its writers swap between two functions that return identical results, so ThreadSanitizer still sees a real pointer swap while other suites see no change.
 
+### Fuzzing the C bridge
+
+`Fuzzing/` holds a libFuzzer harness for the vendored C library, outside the Swift package. If you change how the Swift layer passes numbers into the C code, or change the C code itself, replay the seed corpus under AddressSanitizer and UndefinedBehaviorSanitizer with `sh Fuzzing/build.sh replay && .build/fuzz/replay-bridge Fuzzing/corpus`. That works with Apple clang; fuzzing for new inputs needs clang from LLVM. See [Fuzzing/README.md](Fuzzing/README.md).
+
 ### Updating the vendored C library
 
 AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, and the analytic ecliptic state. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
