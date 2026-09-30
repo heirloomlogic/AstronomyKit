@@ -76,17 +76,35 @@ struct HugeTimeTests {
     func bodyQueries(ut: Double) {
         let time = AstroTime(ut: ut)
         for body in CelestialBody.allCases {
-            #expect(Self.finiteOrThrows { Self.components(try body.heliocentricPosition(at: time)) }, "\(body) heliocentricPosition")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.heliocentricPosition(at: time)) },
+                "\(body) heliocentricPosition")
             #expect(Self.finiteOrThrows { [try body.distanceFromSun(at: time)] }, "\(body) distanceFromSun")
-            #expect(Self.finiteOrThrows { Self.components(try body.heliocentricState(at: time)) }, "\(body) heliocentricState")
-            #expect(Self.finiteOrThrows { Self.components(try body.barycentricState(at: time)) }, "\(body) barycentricState")
-            #expect(Self.finiteOrThrows { Self.components(try body.geocentricPosition(at: time)) }, "\(body) geocentricPosition")
-            #expect(Self.finiteOrThrows { Self.components(try body.geocentricPosition(at: time).toEcliptic()) }, "\(body) toEcliptic")
-            #expect(Self.finiteOrThrows { Self.components(try body.backdatedPosition(at: time, seenFrom: .earth)) }, "\(body) backdatedPosition")
-            #expect(Self.finiteOrThrows { Self.components(try body.geocentricEclipticState(at: time)) }, "\(body) geocentricEclipticState")
-            #expect(Self.finiteOrThrows { Self.components(try body.equatorial(at: time, equatorDate: .ofDate)) }, "\(body) equatorial")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.heliocentricState(at: time)) },
+                "\(body) heliocentricState")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.barycentricState(at: time)) }, "\(body) barycentricState"
+            )
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.geocentricPosition(at: time)) },
+                "\(body) geocentricPosition")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.geocentricPosition(at: time).toEcliptic()) },
+                "\(body) toEcliptic")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.backdatedPosition(at: time, seenFrom: .earth)) },
+                "\(body) backdatedPosition")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.geocentricEclipticState(at: time)) },
+                "\(body) geocentricEclipticState")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.equatorial(at: time, equatorDate: .ofDate)) },
+                "\(body) equatorial")
             #expect(Self.finiteOrThrows { Self.components(try body.illumination(at: time)) }, "\(body) illumination")
-            #expect(Self.finiteOrThrows { Self.components(try body.horizon(at: time, from: Self.observer)) }, "\(body) horizon")
+            #expect(
+                Self.finiteOrThrows { Self.components(try body.horizon(at: time, from: Self.observer)) },
+                "\(body) horizon")
             #expect(Self.finiteOrThrows { [try body.eclipticLongitude(at: time)] }, "\(body) eclipticLongitude")
             #expect(Self.finiteOrThrows { [try body.angleFromSun(at: time)] }, "\(body) angleFromSun")
         }
@@ -97,20 +115,24 @@ struct HugeTimeTests {
         let time = AstroTime(ut: ut)
         #expect(Self.finiteOrThrows { Self.components(try Sun.position(at: time)) }, "Sun.position")
         #expect(Self.finiteOrThrows { Self.components(try Sun.eclipticState(at: time)) }, "Sun.eclipticState")
-        #expect(Self.finiteOrThrows { Self.components(try Moon.geocentricPosition(at: time)) }, "Moon.geocentricPosition")
+        #expect(
+            Self.finiteOrThrows { Self.components(try Moon.geocentricPosition(at: time)) }, "Moon.geocentricPosition")
         #expect(Self.finiteOrThrows { Self.components(try Moon.ecliptic(at: time)) }, "Moon.ecliptic")
         #expect(Self.finiteOrThrows { Self.components(try Moon.eclipticState(at: time)) }, "Moon.eclipticState")
         #expect(Self.finiteOrThrows { Self.components(try Moon.geoState(at: time)) }, "Moon.geoState")
-        #expect(Self.finiteOrThrows { Self.components(try CelestialBody.earthMoonBaryState(at: time)) }, "earthMoonBaryState")
+        #expect(
+            Self.finiteOrThrows { Self.components(try CelestialBody.earthMoonBaryState(at: time)) },
+            "earthMoonBaryState")
     }
 
     @Test("Fixed star positions are finite or throw", arguments: allTimes)
     func fixedStarQueries(ut: Double) {
         let time = AstroTime(ut: ut)
         let star = FixedStarTests.algol
-        #expect(Self.finiteOrThrows {
-            Self.components(try star.equatorial(at: time, from: Self.observer, equatorDate: .ofDate))
-        }, "equatorial")
+        #expect(
+            Self.finiteOrThrows {
+                Self.components(try star.equatorial(at: time, from: Self.observer, equatorDate: .ofDate))
+            }, "equatorial")
         #expect(Self.finiteOrThrows { Self.components(try star.ecliptic(at: time)) }, "ecliptic")
         #expect(Self.finiteOrThrows { Self.components(try star.horizon(at: time, from: Self.observer)) }, "horizon")
     }
@@ -118,15 +140,18 @@ struct HugeTimeTests {
     @Test("Jupiter's moons and Lagrange points are finite or throw", arguments: allTimes)
     func derivedPositions(ut: Double) {
         let time = AstroTime(ut: ut)
-        #expect(Self.finiteOrThrows {
-            let moons = try Jupiter.moons(at: time)
-            return [moons.io, moons.europa, moons.ganymede, moons.callisto].flatMap(Self.components)
-        }, "Jupiter.moons")
+        #expect(
+            Self.finiteOrThrows {
+                let moons = try Jupiter.moons(at: time)
+                return [moons.io, moons.europa, moons.ganymede, moons.callisto].flatMap(Self.components)
+            }, "Jupiter.moons")
         for (major, minor) in [(CelestialBody.sun, CelestialBody.earth), (.earth, .moon)] {
             for point in LagrangePointID.allCases {
-                #expect(Self.finiteOrThrows {
-                    Self.components(try LagrangePoint.calculate(point: point, at: time, majorBody: major, minorBody: minor))
-                }, "\(major)-\(minor) \(point)")
+                #expect(
+                    Self.finiteOrThrows {
+                        Self.components(
+                            try LagrangePoint.calculate(point: point, at: time, majorBody: major, minorBody: minor))
+                    }, "\(major)-\(minor) \(point)")
             }
         }
     }
@@ -162,9 +187,10 @@ struct HugeTimeTests {
         let time = AstroTime(ut: ut)
         for body in CelestialBody.allCases where body.isPlanet && body != .earth {
             #expect(Self.finiteOrThrows { Self.components(try body.searchApsis(after: time)) }, "\(body) searchApsis")
-            #expect(Self.finiteOrThrows {
-                Self.components(try body.nextApsis(after: try body.searchApsis(after: time)))
-            }, "\(body) nextApsis")
+            #expect(
+                Self.finiteOrThrows {
+                    Self.components(try body.nextApsis(after: try body.searchApsis(after: time)))
+                }, "\(body) nextApsis")
         }
         #expect(Self.finiteOrThrows { Self.components(try Moon.searchApsis(after: time)) }, "Moon.searchApsis")
     }
@@ -174,7 +200,9 @@ struct HugeTimeTests {
     @Test("Overflowed ephemeris results throw badTime", arguments: overflowTimes)
     func overflowThrowsBadTime(ut: Double) {
         let time = AstroTime(ut: ut)
-        for body in [CelestialBody.mercury, .earth, .mars, .neptune, .moon, .earthMoonBarycenter, .solarSystemBarycenter] {
+        for body in [
+            CelestialBody.mercury, .earth, .mars, .neptune, .moon, .earthMoonBarycenter, .solarSystemBarycenter,
+        ] {
             #expect(throws: AstronomyError.badTime, "\(body) heliocentricPosition") {
                 _ = try body.heliocentricPosition(at: time)
             }
@@ -197,7 +225,9 @@ struct HugeTimeTests {
         #expect(throws: AstronomyError.badTime) { _ = try Sun.position(at: time) }
         // Earth's geocentric vector is zero, but the rotation into the ecliptic
         // of date at the vector's time is not finite here.
-        #expect(throws: AstronomyError.badTime) { _ = try CelestialBody.earth.geocentricPosition(at: time).toEcliptic() }
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.earth.geocentricPosition(at: time).toEcliptic()
+        }
         #expect(throws: AstronomyError.badTime) { _ = try Moon.geocentricPosition(at: time) }
         #expect(throws: AstronomyError.badTime) { _ = try Moon.ecliptic(at: time) }
         #expect(throws: AstronomyError.badTime) { _ = try Moon.geoState(at: time) }
