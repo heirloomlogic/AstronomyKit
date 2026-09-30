@@ -107,6 +107,15 @@ The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert agains
 
 CI runs all of these on every pull request, plus release-configuration tests and iOS/tvOS/watchOS builds.
 
+After an upstream sync, also replay the fuzz corpus through the C library under ASan and UBSan. CI does not run this yet:
+
+```sh
+sh Fuzzing/build.sh replay && .build/fuzz/replay-bridge Fuzzing/corpus
+python3 Fuzzing/make_corpus.py --check
+```
+
+The harness skips inputs that reach known engine defects; each filter names its issue. When a sync fixes one of them, delete its filter. See [Fuzzing/README.md](Fuzzing/README.md).
+
 ## Generated tables
 
 Three generators produce checked-in sources from pinned, checksummed inputs. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
