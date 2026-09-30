@@ -225,4 +225,90 @@ struct LagrangePointTests {
             #expect(result.position.magnitude > 0)
         }
     }
+
+    // MARK: - Degenerate Input Tests
+
+    @Suite("Degenerate Input")
+    struct DegenerateInput {
+        let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
+
+        @Test(
+            "The same body as major and minor throws invalidBody",
+            arguments: [CelestialBody.earth, .sun],
+            LagrangePointID.allCases
+        )
+        func sameBodyThrowsInvalidBody(body: CelestialBody, point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidBody) {
+                _ = try LagrangePoint.calculate(point: point, at: testTime, majorBody: body, minorBody: body)
+            }
+        }
+
+        @Test("The same body throws invalidBody at a huge time too", arguments: LagrangePointID.allCases)
+        func sameBodyAtHugeTime(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidBody) {
+                _ = try LagrangePoint.calculate(
+                    point: point,
+                    at: AstroTime(ut: 1e70),
+                    majorBody: .earth,
+                    minorBody: .earth
+                )
+            }
+        }
+
+        @Test("Coincident states throw invalidParameter", arguments: LagrangePointID.allCases)
+        func coincidentStatesThrowInvalidParameter(point: LagrangePointID) throws {
+            let state = try CelestialBody.earth.barycentricState(at: testTime)
+            let sunMass = try #require(CelestialBody.sun.massProduct)
+            let earthMass = try #require(CelestialBody.earth.massProduct)
+
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try LagrangePoint.calculateFast(
+                    point: point,
+                    majorState: state,
+                    majorMass: sunMass,
+                    minorState: state,
+                    minorMass: earthMass
+                )
+            }
+        }
+
+        /// Calls `calculateFast` on a unit-mass major body at the origin and a minor body
+        /// at `position` moving at `velocity`.
+        private func calculateFast(
+            _ point: LagrangePointID,
+            minorPosition position: Vector3D,
+            minorVelocity velocity: Vector3D
+        ) throws -> StateVector {
+            let origin = Vector3D(x: 0, y: 0, z: 0, time: testTime)
+            return try LagrangePoint.calculateFast(
+                point: point,
+                majorState: StateVector(position: origin, velocity: origin, time: testTime),
+                majorMass: 1,
+                minorState: StateVector(position: position, velocity: velocity, time: testTime),
+                minorMass: 1e-6
+            )
+        }
+
+        @Test("Coincident positions with different velocities throw invalidParameter", arguments: LagrangePointID.allCases)
+        func coincidentPositionsThrowInvalidParameter(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: 0, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0.01, y: 0.02, z: 0, time: testTime)
+                )
+            }
+        }
+
+        @Test("A separation that overflows throws invalidParameter", arguments: LagrangePointID.allCases)
+        func infiniteSeparationThrowsInvalidParameter(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: 1e200, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0, z: 0, time: testTime)
+                )
+            }
+        }
+    }
 }

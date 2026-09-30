@@ -69,6 +69,10 @@
         moon_distance_slope reports ASTRO_BAD_TIME for a slope that is not
         finite, so Astronomy_SearchLunarApsis returns it instead of
         ASTRO_INTERNAL_ERROR.
+        Astronomy_LagrangePoint returns ASTRO_INVALID_BODY when both bodies
+        are the same, and Astronomy_LagrangePointFast returns
+        ASTRO_INVALID_PARAMETER when the bodies coincide or their separation
+        is not finite, instead of dividing by zero.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -5938,6 +5942,13 @@ astro_state_vector_t Astronomy_LagrangePoint(
     if (minor_mass <= 0.0)
         return StateVecError(ASTRO_INVALID_BODY, time);
 
+    /*
+        AstronomyKit local patch (non-finite result guards). A body has no
+        Lagrange point with itself, and its zero separation gave NaN.
+    */
+    if (major_body == minor_body)
+        return StateVecError(ASTRO_INVALID_BODY, time);
+
     /* Calculate the state vectors for the major and minor bodies. */
     if (major_body == BODY_EARTH && minor_body == BODY_MOON)
     {
@@ -5972,13 +5983,7 @@ astro_state_vector_t Astronomy_LagrangePoint(
         minor_mass
     );
 
-    /*
-        AstronomyKit local patch (non-finite result guards). The same body
-        passed twice has zero separation, so its NaN does not come from the
-        time; that result is returned unchecked.
-    */
-    if (major_body == minor_body)
-        return result;
+    /* AstronomyKit local patch (non-finite result guards) */
     return CheckStateResult(result);
 }
 
@@ -6048,6 +6053,13 @@ astro_state_vector_t Astronomy_LagrangePointFast(
     dy = minor_state.y - major_state.y;
     dz = minor_state.z - major_state.z;
     R2 = (dx*dx + dy*dy + dz*dz);
+
+    /*
+        AstronomyKit local patch (non-finite result guards). Coincident bodies
+        or a separation that is not finite would divide by zero below.
+    */
+    if (R2 == 0.0 || !isfinite(R2))
+        return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
 
     /* R = Total distance between the bodies. */
     R = sqrt(R2);
