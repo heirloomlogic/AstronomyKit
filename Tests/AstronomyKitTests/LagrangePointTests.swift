@@ -289,7 +289,9 @@ struct LagrangePointTests {
             )
         }
 
-        @Test("Coincident positions with different velocities throw invalidParameter", arguments: LagrangePointID.allCases)
+        @Test(
+            "Coincident positions with different velocities throw invalidParameter", arguments: LagrangePointID.allCases
+        )
         func coincidentPositionsThrowInvalidParameter(point: LagrangePointID) {
             #expect(throws: AstronomyError.invalidParameter) {
                 _ = try calculateFast(
