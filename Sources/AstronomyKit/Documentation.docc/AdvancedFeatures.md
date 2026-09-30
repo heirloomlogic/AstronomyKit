@@ -196,7 +196,7 @@ let sirius = FixedStar(
 ### Getting Positions
 
 ```swift
-// Ecliptic longitude (for astrological calculations)
+// Ecliptic longitude, true ecliptic and equinox of date (same frame as the planets)
 let longitude = try algol.eclipticLongitude(at: .now)
 
 // Position in local sky

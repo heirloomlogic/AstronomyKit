@@ -4,6 +4,11 @@ All notable changes to AstronomyKit will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Version tags include an `+upstream-X.Y.Z` suffix identifying the bundled Astronomy Engine C library version.
 
+## [Unreleased]
+
+### Fixed
+- `FixedStar.ecliptic(at:)`, `eclipticLongitude(at:)`, and `eclipticLatitude(at:)` now return coordinates in the true ecliptic and equinox of date, the frame `Vector3D.toEcliptic()` and the geocentric planet, Sun, and Moon positions use (issue #47). They previously rotated the star into the fixed J2000 ecliptic, so a star and a planet at the same instant were in frames that drift apart by general precession, about 50″ a year from 2000. Returned values change: Regulus moves from 149.833° to 148.441° on 1900-01-01, from 149.824° to 150.198° on 2026-07-24, and from 149.833° to 151.231° on 2100-01-01. Latitudes move too, by about 20″ for Regulus and 23″ for Spica in 1900 and 2100. Callers who want J2000 ecliptic coordinates can rotate `equatorial(at:)` with `RotationMatrix.equatorialJ2000ToEcliptic()`. Stored star longitudes and anything derived from them need recomputing.
+
 ## [3.0.0+upstream-2.1.19] - 2026-09-09
 
 ### Added
@@ -195,6 +200,7 @@ Initial public release.
 - DocC documentation and GitHub Actions workflows for tests and documentation publishing.
 - Full `Sendable` conformance for Swift 6.
 
+[Unreleased]: https://github.com/heirloomlogic/AstronomyKit/compare/3.0.0+upstream-2.1.19...HEAD
 [3.0.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.4.0+upstream-2.1.19...3.0.0+upstream-2.1.19
 [2.4.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.3.0+upstream-2.1.19...2.4.0+upstream-2.1.19
 [2.3.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.2.0+upstream-2.1.19...2.3.0+upstream-2.1.19

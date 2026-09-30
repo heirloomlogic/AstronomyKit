@@ -400,7 +400,7 @@ struct ReproducibilityTests {
 
     // MARK: - 5. FixedStar Ecliptic Conversion
 
-    /// Exercises the FixedStar ecliptic path (Swift-side atan2 / asin) end to end.
+    /// Exercises the FixedStar ecliptic path (true ecliptic and equinox of date) end to end.
     @Test("FixedStar (Sirius) ecliptic conversion at 2000-01-01T00:00Z")
     func fixedStarEcliptic2000() throws {
         let sirius = FixedStar(
@@ -411,7 +411,7 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try sirius.ecliptic(at: Self.t2000),
-            lon: 0x405a_05b4_e327_e577, lat: 0xc043_cd71_c04e_7976, dist: 0x4120_9907_31c0_263a,
+            lon: 0x405a_0575_2c42_0892, lat: 0xc043_cd71_c1b8_e50d, dist: 0x4120_9907_31c0_2639,
             "Sirius 2000"
         )
     }
