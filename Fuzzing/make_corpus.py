@@ -150,6 +150,11 @@ SEEDS = {
     "fixed-pluto-nan": seed("pluto", math.nan, PRIME),
     # Longitude searches for a target angle far outside 0-360.
     "fixed-longitude-huge-target": seed("mars", JPL_DATE, PRIME, angle=1.0e20),
+    # #62: positions and apsides that succeeded with NaN before the non-finite
+    # result guards (patch 16). At ut 1e300 TT is infinite; at 1e70 it is finite
+    # but the lunar series overflow.
+    "fixed-neptune-huge-time": seed("neptune", 1.0e300, PRIME),
+    "fixed-moon-overflow": seed("moon", 1.0e70, PRIME),
 }
 
 
