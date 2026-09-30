@@ -2,7 +2,7 @@
 
 `fuzz_bridge.c` is a libFuzzer harness for the vendored Astronomy Engine C library in `Sources/CLibAstronomy/`. It decodes each input into times, bodies, observer coordinates, sky coordinates, a rotation matrix, and search limits, then calls the entry points the Swift layer forwards user-supplied numbers into:
 
-- `Astronomy_HelioVector` and `Astronomy_GeoVector`
+- `Astronomy_HelioVector`, `Astronomy_HelioDistance`, and `Astronomy_GeoVector`
 - `Astronomy_Equator`
 - `Astronomy_Constellation`
 - `Astronomy_Pivot`
@@ -10,7 +10,7 @@
 - `Astronomy_Libration`, `Astronomy_SearchMoonNode`, and `Astronomy_SearchPlanetApsis`, which step or wrap values derived from the time
 - `Astronomy_SearchSunLongitude` and `Astronomy_SearchRelativeLongitude`, which take a target angle
 
-Every call except `Astronomy_Libration`, which has no status, must return a known `astro_status_t`. A crash, an AddressSanitizer or UndefinedBehaviorSanitizer report, an unknown status, or a timeout is a finding. The harness does not check numerical accuracy; the Swift test suite does that.
+Every call except `Astronomy_Libration`, which has no status, must return a known `astro_status_t`. The time-driven ephemeris calls (`Astronomy_HelioVector`, `Astronomy_HelioDistance`, `Astronomy_GeoVector`, `Astronomy_SearchMoonNode`, and `Astronomy_SearchPlanetApsis`) must not report success with a non-finite value, and `Astronomy_HelioDistance` must not report success with a negative distance (#62, MAINTAINING.md patch 16). User-defined stars are exempt from that check, because a huge input distance overflows to infinity whatever the time. A crash, an AddressSanitizer or UndefinedBehaviorSanitizer report, an unknown status, a success with a non-finite value or negative distance, or a timeout is a finding. The harness does not otherwise check numerical accuracy; the Swift test suite does that.
 
 Nothing here is part of the Swift package. `Package.swift` does not reference this directory, and `swift build` and `swift test` ignore it.
 
@@ -59,7 +59,7 @@ libFuzzer writes a failing input to `crash-*`, `timeout-*`, or `slow-unit-*`. Ei
 
 Fields are read in a fixed order. Reading past the end of the input yields zero bytes, so any input decodes, including an empty one.
 
-- A double is a tag byte and a payload. The tag's low two bits select the encoding: `0` is 8 bytes of raw little-endian IEEE 754 bits, `1` picks an entry from `SpecialValues` (NaN, infinities, `DBL_MAX`, subnormals, angle and hour boundaries, the Pluto table and crawl limits) using the tag's upper six bits, `2` is a 16-bit signed integer divided by 256, and `3` is a 32-bit signed integer.
+- A double is a tag byte and a payload. The tag's low two bits select the encoding: `0` is 8 bytes of raw little-endian IEEE 754 bits, `1` picks an entry from `SpecialValues` (NaN, infinities, `DBL_MAX`, subnormals, angle and hour boundaries, the Pluto table and crawl limits, the ends of the accepted time range) using the tag's upper six bits, `2` is a 16-bit signed integer divided by 256, and `3` is a 32-bit signed integer.
 - A body is one byte indexing `BodyValues`: every `astro_body_t`, then values outside the enum.
 - An enum is one byte: 0 and 1 are the two valid values, and the rest are values outside the enum. The rise/set direction is the exception: its byte's low bit picks rise (0) or set (1).
 
@@ -75,7 +75,7 @@ Three restrictions limit the rise/set search to inputs the Swift layer can pass 
 
 ## Seed corpus
 
-`corpus/` holds 25 seeds that `make_corpus.py` writes. Their dates, bodies, observers, and coordinates come from `JPLValidationTests`, `AuditValidationTests`, `RiseSetTests`, `FixedStarTests`, and `RotationTests`, plus a few edge cases: the ends of the Pluto state table, a polar observer, and non-finite values. Four `fixed-*` seeds replay fixed findings: the rise/set search running into 2^52 days and running with an infinite limit (#57), Pluto at a NaN time (#58), and a longitude search for a target angle far outside 0 to 360. Change the input format and the seeds together:
+`corpus/` holds 29 seeds that `make_corpus.py` writes. Their dates, bodies, observers, and coordinates come from `JPLValidationTests`, `AuditValidationTests`, `RiseSetTests`, `FixedStarTests`, and `RotationTests`, plus a few edge cases: the ends of the Pluto state table, the last accepted time and the first rejected one at the ends of the accepted time range, a polar observer, and non-finite values. Six `fixed-*` seeds replay fixed findings: the rise/set search running into 2^52 days and running with an infinite limit (#57), Pluto at a NaN time (#58), a longitude search for a target angle far outside 0 to 360, and the Neptune apsis search at 10^300 days and Mars's heliocentric distance at 10^10 days, which returned success with a NaN and a negative distance (#62). The accepted time range now rejects the #57 stall and #58 seeds at their first ephemeris evaluation, before the guards they were written for; they stay as regression inputs. Change the input format and the seeds together:
 
 ```sh
 python3 Fuzzing/make_corpus.py          # rewrite corpus/

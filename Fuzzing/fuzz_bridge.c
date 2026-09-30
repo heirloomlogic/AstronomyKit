@@ -3,8 +3,10 @@
 
     Decodes the fuzz input into doubles, integers, and enum values, then calls
     the C entry points that the Swift layer forwards user-controlled numbers
-    into. The only oracle is "returns a status code": a crash, sanitizer
-    report, unknown status value, or timeout is a finding.
+    into. The main oracle is "returns a status code": a crash, sanitizer
+    report, unknown status value, or timeout is a finding. The time-driven
+    ephemeris calls also must not report success with a non-finite value, or
+    with a negative distance (#62).
 
     See README.md in this directory for the input format, build modes, and
     how to reproduce a finding.
@@ -45,7 +47,9 @@ static uint64_t TakeLittleEndian(reader_t *reader, int count)
 
 /* Values at the edges of the engine's domains: non-finite values, extremes,
    angle and hour boundaries, the ends of the Pluto state table and its crawl
-   guard, and times where adding the rise/set step no longer changes a double. */
+   guard, the ends of the accepted time range (EPHEMERIS_MAX_TT_DAYS), and times
+   where adding the rise/set step no longer changes a double. The table holds
+   64 entries, the most a tag byte's upper six bits can index. */
 static const double SpecialValues[] =
 {
     0.0, -0.0, 1.0, -1.0, 0.5,
@@ -57,7 +61,7 @@ static const double SpecialValues[] =
     9007199254740992.0, -9007199254740992.0, 1.0e16, -1.0e16,
     1.0e9, -1.0e9, 2147483647.0, -2147483648.0, 4294967296.0,
     -730000.0, 730000.0, -766525.0, 766525.0, -766525.5, 766525.5,
-    36525.0, -36525.0, 3652500.0, -3652500.0,
+    36525.0, -36525.0, 1461000.0, -1461000.0,
     366.0, -366.0, 0.42, -0.42, 100000.0, -500.0, 100000.5, -500.5,
     3.141592653589793, 6.283185307179586, 1.0e-9, -1.0e-9, 1.0e-15,
     63241.07708426628, 0.9999999999999999, 1.0000000000000002,
@@ -125,6 +129,30 @@ static void CheckStatus(astro_status_t status, const char *function)
         fprintf(stderr, "%s returned unknown status %d\n", function, (int)status);
         abort();
     }
+}
+
+/* A time-driven ephemeris call that reports success must return finite values.
+   Before the accepted time range (MAINTAINING.md, patch 16), a far-off time
+   returned success with NaN or absurd values. User-defined stars are exempt:
+   their distance comes from the input, and a huge one overflows to infinity
+   whatever the time. */
+static void RequireFinite(astro_status_t status, int count, const double *values, const char *function)
+{
+    if (status != ASTRO_SUCCESS)
+        return;
+    for (int i = 0; i < count; ++i)
+    {
+        if (!isfinite(values[i]))
+        {
+            fprintf(stderr, "%s returned success with non-finite value %g\n", function, values[i]);
+            abort();
+        }
+    }
+}
+
+static int IsUserDefinedStar(astro_body_t body)
+{
+    return body >= BODY_STAR1 && body <= BODY_STAR8;
 }
 
 /* The same check as Swift's Observer.validatedRaw(). Only the rise/set search
@@ -207,12 +235,31 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     meters_above_ground = TakeDouble(&reader);
 
     {
+        int time_driven = !IsUserDefinedStar(body);
+
         astro_vector_t vector = Astronomy_HelioVector(body, time);
         CheckStatus(vector.status, "Astronomy_HelioVector");
+        if (time_driven)
+            RequireFinite(vector.status, 3, (const double[]){ vector.x, vector.y, vector.z }, "Astronomy_HelioVector");
         Sink = vector.x + vector.y + vector.z;
+
+        astro_func_result_t distance = Astronomy_HelioDistance(body, time);
+        CheckStatus(distance.status, "Astronomy_HelioDistance");
+        if (time_driven)
+        {
+            RequireFinite(distance.status, 1, &distance.value, "Astronomy_HelioDistance");
+            if (distance.status == ASTRO_SUCCESS && distance.value < 0.0)
+            {
+                fprintf(stderr, "Astronomy_HelioDistance returned success with negative distance %g\n", distance.value);
+                abort();
+            }
+        }
+        Sink = distance.value;
 
         vector = Astronomy_GeoVector(body, time, geo_aberration);
         CheckStatus(vector.status, "Astronomy_GeoVector");
+        if (time_driven)
+            RequireFinite(vector.status, 3, (const double[]){ vector.x, vector.y, vector.z }, "Astronomy_GeoVector");
         Sink = vector.x + vector.y + vector.z;
 
         /* Astronomy_Equator may fill in the time's cached nutation fields. */
@@ -230,10 +277,13 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
         astro_node_event_t node = Astronomy_SearchMoonNode(time);
         CheckStatus(node.status, "Astronomy_SearchMoonNode");
+        RequireFinite(node.status, 2, (const double[]){ node.time.ut, node.time.tt }, "Astronomy_SearchMoonNode");
         Sink = node.time.ut;
 
         astro_apsis_t apsis = Astronomy_SearchPlanetApsis(body, time);
         CheckStatus(apsis.status, "Astronomy_SearchPlanetApsis");
+        RequireFinite(apsis.status, 3, (const double[]){ apsis.time.tt, apsis.dist_au, apsis.dist_km },
+                      "Astronomy_SearchPlanetApsis");
         Sink = apsis.time.ut + apsis.dist_au;
 
         astro_search_result_t sunlon = Astronomy_SearchSunLongitude(angle, time, limit_days);

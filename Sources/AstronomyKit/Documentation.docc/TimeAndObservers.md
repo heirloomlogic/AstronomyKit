@@ -68,6 +68,12 @@ let fromTT = AstroTime(tt: 9132.5)
 
 AstronomyKit applies the difference (ΔT) for you.
 
+### Accepted Range
+
+Positions, states, distances, and the searches built on them accept a Terrestrial Time within 4,000 Julian years of J2000: `abs(time.terrestrialTime) <= 1_461_000` days, roughly the years −2000 to +6000. That is about the span over which the VSOP87 planetary theory claims validity. Outside it, and for a non-finite time, they throw ``AstronomyError/badTime``. Pluto accepts a narrower span, about the years −100 to +4100.
+
+A calculation that samples nearby times can throw within a short distance of either edge: light-travel correction looks back up to a few hours, the Moon's state vectors sample about a second either side, and searches step by days to years, sometimes backward before stepping forward. Creating an `AstroTime` outside the range is not an error; only the calculations reject it.
+
 ### Delta T Configuration
 
 The difference between TT and UT (ΔT) varies over time and comes from a model. AstronomyKit defaults to the Espenak-Meeus model. Set the model once at startup, before any other AstronomyKit call, if you want a different one:

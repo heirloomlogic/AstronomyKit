@@ -97,7 +97,8 @@ public enum Moon {
     ///   - 90° = First Quarter
     ///   - 180° = Full Moon
     ///   - 270° = Third Quarter
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func phaseAngle(at time: AstroTime) throws -> Double {
         let result = Astronomy_MoonPhase(time.raw)
         if let error = AstronomyError(status: result.status) {
@@ -249,7 +250,8 @@ public enum Moon {
     ///
     /// - Parameter time: The time at which to calculate the position.
     /// - Returns: The geocentric position vector.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
         let result = Astronomy_GeoMoon(time.raw)
         return try Vector3D(result)
@@ -262,7 +264,8 @@ public enum Moon {
     ///
     /// - Parameter time: The time at which to calculate.
     /// - Returns: The ecliptic coordinates.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func ecliptic(at time: AstroTime) throws -> Ecliptic {
         let result = Astronomy_EclipticGeoMoon(time.raw)
         return try Ecliptic(result)
@@ -277,7 +280,8 @@ public enum Moon {
     ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The ecliptic position and velocity of the Moon.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func eclipticState(at time: AstroTime) throws -> EclipticState {
         let result = Astronomy_MoonEclipticState(time.raw)
         return try EclipticState(result)
@@ -290,7 +294,8 @@ public enum Moon {
     ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The geocentric state vector with position in AU and velocity in AU/day.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     ///
     /// ## Example
     ///

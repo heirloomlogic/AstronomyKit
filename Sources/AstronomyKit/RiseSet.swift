@@ -37,9 +37,8 @@ extension CelestialBody {
     ///   - metersAboveGround: Observer height above ground (affects horizon). Defaults to 0.
     /// - Returns: The time when the body rises or sets, or `nil` if not found.
     /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
-    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
-    ///   years), where the search step no longer advances the time, or another `AstronomyError`
-    ///   if the search fails.
+    ///   `AstronomyError.badTime` if the window leaves the accepted time range (see
+    ///   ``AstroTime``), or another `AstronomyError` if the search fails.
     public func searchRiseSet(
         direction: RiseSetDirection,
         after startTime: AstroTime,
@@ -78,9 +77,8 @@ extension CelestialBody {
     ///     `limitDays`.
     /// - Returns: The rise time, or `nil` if not found.
     /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
-    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
-    ///   years), where the search step no longer advances the time, or another `AstronomyError`
-    ///   if the search fails.
+    ///   `AstronomyError.badTime` if the window leaves the accepted time range (see
+    ///   ``AstroTime``), or another `AstronomyError` if the search fails.
     public func riseTime(
         after startTime: AstroTime,
         from observer: Observer,
@@ -104,9 +102,8 @@ extension CelestialBody {
     ///     `limitDays`.
     /// - Returns: The set time, or `nil` if not found.
     /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
-    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
-    ///   years), where the search step no longer advances the time, or another `AstronomyError`
-    ///   if the search fails.
+    ///   `AstronomyError.badTime` if the window leaves the accepted time range (see
+    ///   ``AstroTime``), or another `AstronomyError` if the search fails.
     public func setTime(
         after startTime: AstroTime,
         from observer: Observer,
@@ -135,9 +132,8 @@ extension CelestialBody {
     ///     `limitDays`.
     /// - Returns: The time when the body reaches the altitude, or `nil` if not found.
     /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not finite,
-    ///   `AstronomyError.badTime` if the window reaches 2^52 days from J2000 (about 12 trillion
-    ///   years), where the search step no longer advances the time, or another `AstronomyError`
-    ///   if the search fails.
+    ///   `AstronomyError.badTime` if the window leaves the accepted time range (see
+    ///   ``AstroTime``), or another `AstronomyError` if the search fails.
     ///
     /// ## Example
     ///
