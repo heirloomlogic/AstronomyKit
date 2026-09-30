@@ -147,7 +147,7 @@ SEEDS = {
     # guards (MAINTAINING.md, patch 15).
     # #57: a window that runs into 2^52 days, where the 0.42-day step stops
     # advancing. The start alone steps normally. Libration hung here too. Since
-    # the accepted time range (patch 16) the first altitude evaluation rejects
+    # the accepted time range (patch 17) the first altitude evaluation rejects
     # this start, so the step guard is no longer reached from here.
     "fixed-riseset-stall": seed("moon", 2.0**52 - 3.0, PRIME, limit_days=10.0),
     # #57: an infinite limit for a circumpolar star, which never rises.
@@ -158,10 +158,13 @@ SEEDS = {
     "fixed-pluto-nan": seed("pluto", math.nan, PRIME),
     # Longitude searches for a target angle far outside 0-360.
     "fixed-longitude-huge-target": seed("mars", JPL_DATE, PRIME, angle=1.0e20),
-    # #62: far-off finite times, which returned success with NaN or absurd values.
-    # Neptune's apsis search at 1e300 days returned its start time and a NaN
-    # distance; Mars's heliocentric distance at 1e10 days was -1.1e14 AU.
-    "fixed-neptune-apsis-huge-time": seed("neptune", 1.0e300, PRIME),
+    # #62: far-off times that returned success with NaN or absurd values. Before
+    # the non-finite result guards (patch 16) Neptune at ut 1e300, where TT is
+    # infinite, and the Moon at ut 1e70, where TT is finite but the lunar series
+    # overflow, succeeded with NaN. Before the accepted time range (patch 17)
+    # Mars's heliocentric distance at 1e10 days was -1.1e14 AU.
+    "fixed-neptune-huge-time": seed("neptune", 1.0e300, PRIME),
+    "fixed-moon-overflow": seed("moon", 1.0e70, PRIME),
     "fixed-mars-distance-far-time": seed("mars", 1.0e10, PRIME),
 }
 
