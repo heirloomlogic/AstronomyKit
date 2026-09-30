@@ -69,6 +69,13 @@
         moon_distance_slope reports ASTRO_BAD_TIME for a slope that is not
         finite, so Astronomy_SearchLunarApsis returns it instead of
         ASTRO_INTERNAL_ERROR.
+        Astronomy_LagrangePoint returns ASTRO_INVALID_BODY when both bodies
+        are the same: their zero separation reached a division by zero.
+        Astronomy_LagrangePointFast returns ASTRO_INVALID_PARAMETER when the
+        squared distance between the two positions is zero, which would
+        divide by zero, or not finite, which the arithmetic that follows
+        turns into NaN (an infinite distance through terms such as inf/inf
+        and inf - inf).
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -5938,6 +5945,13 @@ astro_state_vector_t Astronomy_LagrangePoint(
     if (minor_mass <= 0.0)
         return StateVecError(ASTRO_INVALID_BODY, time);
 
+    /*
+        AstronomyKit local patch (non-finite result guards). A body has no
+        Lagrange point with itself, and its zero separation gave NaN.
+    */
+    if (major_body == minor_body)
+        return StateVecError(ASTRO_INVALID_BODY, time);
+
     /* Calculate the state vectors for the major and minor bodies. */
     if (major_body == BODY_EARTH && minor_body == BODY_MOON)
     {
@@ -5972,13 +5986,7 @@ astro_state_vector_t Astronomy_LagrangePoint(
         minor_mass
     );
 
-    /*
-        AstronomyKit local patch (non-finite result guards). The same body
-        passed twice has zero separation, so its NaN does not come from the
-        time; that result is returned unchecked.
-    */
-    if (major_body == minor_body)
-        return result;
+    /* AstronomyKit local patch (non-finite result guards) */
     return CheckStateResult(result);
 }
 
@@ -6048,6 +6056,17 @@ astro_state_vector_t Astronomy_LagrangePointFast(
     dy = minor_state.y - major_state.y;
     dz = minor_state.z - major_state.z;
     R2 = (dx*dx + dy*dy + dz*dz);
+
+    /*
+        AstronomyKit local patch (non-finite result guards). A zero R2, from
+        coincident positions or a separation that underflows when squared,
+        would divide by zero below. A non-finite R2, from a non-finite
+        coordinate or a separation that overflows when squared, makes R
+        infinite or NaN; an infinite R becomes NaN through terms below such
+        as inf/inf and inf - inf.
+    */
+    if (R2 == 0.0 || !isfinite(R2))
+        return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
 
     /* R = Total distance between the bodies. */
     R = sqrt(R2);
