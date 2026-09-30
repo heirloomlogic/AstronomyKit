@@ -180,17 +180,27 @@ public struct AstroTime: Sendable {
 
     /// The local sidereal time at a given geographic longitude.
     ///
+    /// Any finite longitude is accepted, including values outside -180 to +180,
+    /// and wraps by whole sidereal days. A non-finite longitude has no local
+    /// sidereal time: the result is `.nan`, so a caller that forwards an
+    /// unvalidated longitude gets a value it can test with `isNaN` and never a hang.
+    ///
     /// - Parameter longitude: The geographic longitude in degrees (-180 to +180).
     ///   Positive values are east of the prime meridian.
-    /// - Returns: The local sidereal time in hours (0 to 24).
+    /// - Returns: The local sidereal time in hours, in the half-open range 0 to 24
+    ///   (never negative zero and never exactly 24), or `.nan` if `longitude` is
+    ///   infinite or NaN.
     public func siderealTime(longitude: Double) -> Double {
         // Local sidereal time = Greenwich sidereal time + longitude/15
         // (since 15° = 1 hour of sidereal time)
-        var lst = siderealTime + longitude / 15.0
-        // Normalize to 0-24 range
-        while lst < 0 { lst += 24.0 }
-        while lst >= 24 { lst -= 24.0 }
-        return lst
+        let lst = siderealTime + longitude / 15.0
+        guard lst.isFinite else { return .nan }
+        // fmod is exact and takes constant time however large the input is.
+        var wrapped = fmod(lst, 24.0)
+        if wrapped < 0 { wrapped += 24.0 }
+        // A tiny negative remainder rounds to exactly 24 when 24 is added.
+        // Adding 0 turns -0 into +0.
+        return wrapped >= 24.0 ? 0.0 : wrapped + 0.0
     }
 }
 
