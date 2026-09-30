@@ -3,8 +3,9 @@
 
     Decodes the fuzz input into doubles, integers, and enum values, then calls
     the C entry points that the Swift layer forwards user-controlled numbers
-    into. The only oracle is "returns a status code": a crash, sanitizer
-    report, unknown status value, or timeout is a finding.
+    into. The oracle is "returns a status code, and a position that reports
+    success is finite": a crash, sanitizer report, unknown status value,
+    non-finite successful position, or timeout is a finding.
 
     See README.md in this directory for the input format, build modes, and
     how to reproduce a finding.
@@ -127,6 +128,18 @@ static void CheckStatus(astro_status_t status, const char *function)
     }
 }
 
+/* Positions, distances, and apsides report ASTRO_BAD_TIME rather than
+   success when their result is not finite (MAINTAINING.md, patch 16). */
+static void CheckFiniteSuccess(astro_status_t status, double a, double b, double c, const char *function)
+{
+    CheckStatus(status, function);
+    if (status == ASTRO_SUCCESS && !(isfinite(a) && isfinite(b) && isfinite(c)))
+    {
+        fprintf(stderr, "%s succeeded with a non-finite result\n", function);
+        abort();
+    }
+}
+
 /* The same check as Swift's Observer.validatedRaw(). Only the rise/set search
    is limited to it; see "Restrictions" in README.md. */
 static int SwiftAcceptsObserver(astro_observer_t observer)
@@ -208,17 +221,17 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     {
         astro_vector_t vector = Astronomy_HelioVector(body, time);
-        CheckStatus(vector.status, "Astronomy_HelioVector");
+        CheckFiniteSuccess(vector.status, vector.x, vector.y, vector.z, "Astronomy_HelioVector");
         Sink = vector.x + vector.y + vector.z;
 
         vector = Astronomy_GeoVector(body, time, geo_aberration);
-        CheckStatus(vector.status, "Astronomy_GeoVector");
+        CheckFiniteSuccess(vector.status, vector.x, vector.y, vector.z, "Astronomy_GeoVector");
         Sink = vector.x + vector.y + vector.z;
 
         /* Astronomy_Equator may fill in the time's cached nutation fields. */
         astro_time_t equator_time = time;
         astro_equatorial_t equ = Astronomy_Equator(body, &equator_time, observer, equdate, equator_aberration);
-        CheckStatus(equ.status, "Astronomy_Equator");
+        CheckFiniteSuccess(equ.status, equ.ra, equ.dec, equ.dist, "Astronomy_Equator");
         Sink = equ.ra + equ.dec + equ.dist + equ.vec.x;
     }
 
@@ -233,7 +246,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         Sink = node.time.ut;
 
         astro_apsis_t apsis = Astronomy_SearchPlanetApsis(body, time);
-        CheckStatus(apsis.status, "Astronomy_SearchPlanetApsis");
+        CheckFiniteSuccess(apsis.status, apsis.time.ut, apsis.dist_au, apsis.dist_km, "Astronomy_SearchPlanetApsis");
         Sink = apsis.time.ut + apsis.dist_au;
 
         astro_search_result_t sunlon = Astronomy_SearchSunLongitude(angle, time, limit_days);

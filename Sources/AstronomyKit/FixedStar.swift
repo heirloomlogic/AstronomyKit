@@ -210,7 +210,7 @@ public struct FixedStar: Sendable, Hashable {
         let geo = try withSlot { cBody in
             Astronomy_GeoVector(cBody, time.raw, ABERRATION)
         }
-        return try Ecliptic(Astronomy_Ecliptic(geo))
+        return try Ecliptic(positionAtTime: Astronomy_Ecliptic(geo))
     }
 
     /// Calculates the star's horizontal coordinates for an observer.

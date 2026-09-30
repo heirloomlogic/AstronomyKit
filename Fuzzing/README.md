@@ -10,7 +10,7 @@
 - `Astronomy_Libration`, `Astronomy_SearchMoonNode`, and `Astronomy_SearchPlanetApsis`, which step or wrap values derived from the time
 - `Astronomy_SearchSunLongitude` and `Astronomy_SearchRelativeLongitude`, which take a target angle
 
-Every call except `Astronomy_Libration`, which has no status, must return a known `astro_status_t`. A crash, an AddressSanitizer or UndefinedBehaviorSanitizer report, an unknown status, or a timeout is a finding. The harness does not check numerical accuracy; the Swift test suite does that.
+Every call except `Astronomy_Libration`, which has no status, must return a known `astro_status_t`, and `Astronomy_HelioVector`, `Astronomy_GeoVector`, `Astronomy_Equator`, and `Astronomy_SearchPlanetApsis` must not report success with a NaN or infinite result (MAINTAINING.md, patch 16). A crash, an AddressSanitizer or UndefinedBehaviorSanitizer report, an unknown status, a non-finite successful result, or a timeout is a finding. The harness does not check numerical accuracy; the Swift test suite does that.
 
 Nothing here is part of the Swift package. `Package.swift` does not reference this directory, and `swift build` and `swift test` ignore it.
 
@@ -75,7 +75,7 @@ Three restrictions limit the rise/set search to inputs the Swift layer can pass 
 
 ## Seed corpus
 
-`corpus/` holds 25 seeds that `make_corpus.py` writes. Their dates, bodies, observers, and coordinates come from `JPLValidationTests`, `AuditValidationTests`, `RiseSetTests`, `FixedStarTests`, and `RotationTests`, plus a few edge cases: the ends of the Pluto state table, a polar observer, and non-finite values. Four `fixed-*` seeds replay fixed findings: the rise/set search running into 2^52 days and running with an infinite limit (#57), Pluto at a NaN time (#58), and a longitude search for a target angle far outside 0 to 360. Change the input format and the seeds together:
+`corpus/` holds 27 seeds that `make_corpus.py` writes. Their dates, bodies, observers, and coordinates come from `JPLValidationTests`, `AuditValidationTests`, `RiseSetTests`, `FixedStarTests`, and `RotationTests`, plus a few edge cases: the ends of the Pluto state table, a polar observer, and non-finite values. Six `fixed-*` seeds replay fixed findings: the rise/set search running into 2^52 days and running with an infinite limit (#57), Pluto at a NaN time (#58), a longitude search for a target angle far outside 0 to 360, and Neptune at ut = 1e300 and the Moon at ut = 1e70, whose positions succeeded with NaN (#62). Change the input format and the seeds together:
 
 ```sh
 python3 Fuzzing/make_corpus.py          # rewrite corpus/

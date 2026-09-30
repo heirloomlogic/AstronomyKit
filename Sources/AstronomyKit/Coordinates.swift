@@ -287,6 +287,17 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
     }
 
+    /// Creates coordinates for a body's position at a given time, throwing
+    /// `AstronomyError.badTime` if the distance computed here overflows.
+    ///
+    /// The engine rejects non-finite fields in its own results (#62). The distance
+    /// is computed here from the vector, and squaring the components of a huge
+    /// finite vector overflows. Far from J2000 the series return such vectors.
+    init(positionAtTime raw: astro_ecliptic_t) throws {
+        try self.init(raw)
+        guard distance.isFinite else { throw AstronomyError.badTime }
+    }
+
     /// Creates coordinates from a spherical C structure.
     ///
     /// Some engine functions (such as `Astronomy_EclipticGeoMoon`) report

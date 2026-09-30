@@ -59,6 +59,13 @@
         non-finite start. LongitudeOffset and NormalizeLongitude reduce with
         fmod before their loops, which took |x|/360 steps; the result is
         bit-identical for |x| < 2^56.
+      - Non-finite result guards, marked "non-finite result guards" at each
+        site. Far from J2000 the models overflow, and the public position,
+        state, distance, equatorial, illumination, Jupiter moon, Lagrange
+        point, and ecliptic state functions report ASTRO_BAD_TIME instead of
+        ASTRO_SUCCESS when a result field is not finite. Functions with
+        several return paths keep the upstream body as a static *Unguarded
+        function behind a checking wrapper. Finite results are unchanged.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -751,6 +758,40 @@ static astro_search_result_t SearchError(astro_status_t status)
     result.time = TimeError();
     result.status = status;
     return result;
+}
+
+/*
+    AstronomyKit local patch (non-finite result guards): the engine's models
+    accept any time, and far enough from J2000 their results overflow to NaN
+    or infinity. The public position, state, and distance functions that
+    reported ASTRO_SUCCESS with such a result report ASTRO_BAD_TIME instead.
+    Finite results pass through unchanged. Functions with several return
+    paths keep the upstream body as a static *Unguarded function behind a
+    checking wrapper.
+*/
+static int FiniteTriple(double a, double b, double c)
+{
+    return isfinite(a) && isfinite(b) && isfinite(c);
+}
+
+static int FiniteVector(astro_vector_t vector)
+{
+    return FiniteTriple(vector.x, vector.y, vector.z);
+}
+
+static astro_vector_t CheckVectorResult(astro_vector_t vector)
+{
+    if (vector.status == ASTRO_SUCCESS && !FiniteVector(vector))
+        return VecError(ASTRO_BAD_TIME, vector.t);
+    return vector;
+}
+
+static astro_state_vector_t CheckStateResult(astro_state_vector_t state)
+{
+    if (state.status == ASTRO_SUCCESS &&
+        !(FiniteTriple(state.x, state.y, state.z) && FiniteTriple(state.vx, state.vy, state.vz)))
+        return StateVecError(ASTRO_BAD_TIME, state.t);
+    return state;
 }
 
 static astro_constellation_t ConstelErr(astro_status_t status)
@@ -2918,6 +2959,8 @@ astro_vector_t Astronomy_GeoMoon(astro_time_t time)
     vector.y = mpos2[1];
     vector.z = mpos2[2];
     vector.t = time;
+    /* AstronomyKit local patch (non-finite result guards). */
+    vector = CheckVectorResult(vector);
     return vector;
 }
 
@@ -2980,6 +3023,9 @@ astro_spherical_t Astronomy_EclipticGeoMoon(astro_time_t time)
     sphere.status = eclip.status;
     sphere.lat = eclip.elat;
     sphere.lon = eclip.elon;
+    /* AstronomyKit local patch (non-finite result guards). */
+    if (sphere.status == ASTRO_SUCCESS && !FiniteTriple(sphere.lat, sphere.lon, sphere.dist))
+        sphere = SphereError(ASTRO_BAD_TIME);
     return sphere;
 }
 
@@ -3031,6 +3077,8 @@ astro_state_vector_t Astronomy_GeoMoonState(astro_time_t time)
     s.t = time;
     s.status = ASTRO_SUCCESS;
 
+    /* AstronomyKit local patch (non-finite result guards). */
+    s = CheckStateResult(s);
     return s;
 }
 
@@ -4925,6 +4973,12 @@ astro_jupiter_moons_t Astronomy_JupiterMoons(astro_time_t time)
     jm.ganymede = CalcJupiterMoon(time, 2);
     jm.callisto = CalcJupiterMoon(time, 3);
 
+    /* AstronomyKit local patch (non-finite result guards). */
+    jm.io       = CheckStateResult(jm.io);
+    jm.europa   = CheckStateResult(jm.europa);
+    jm.ganymede = CheckStateResult(jm.ganymede);
+    jm.callisto = CheckStateResult(jm.callisto);
+
     return jm;
 }
 
@@ -4953,7 +5007,7 @@ astro_jupiter_moons_t Astronomy_JupiterMoons(astro_time_t time)
  * @param time  The date and time for which to calculate the position.
  * @return      A heliocentric position vector of the center of the given body.
  */
-astro_vector_t Astronomy_HelioVector(astro_body_t body, astro_time_t time)
+static astro_vector_t HelioVectorUnguarded(astro_body_t body, astro_time_t time)
 {
     astro_vector_t vector, earth;
     body_state_t bstate;
@@ -5029,6 +5083,12 @@ astro_vector_t Astronomy_HelioVector(astro_body_t body, astro_time_t time)
     }
 }
 
+/* AstronomyKit local patch (non-finite result guards). */
+astro_vector_t Astronomy_HelioVector(astro_body_t body, astro_time_t time)
+{
+    return CheckVectorResult(HelioVectorUnguarded(body, time));
+}
+
 /**
  * @brief Calculates the distance from a body to the Sun at a given time.
  *
@@ -5049,7 +5109,7 @@ astro_vector_t Astronomy_HelioVector(astro_body_t body, astro_time_t time)
  *      and whose `value` holds the heliocentric distance in AU.
  *      Otherwise, `status` reports an error condition.
  */
-astro_func_result_t Astronomy_HelioDistance(astro_body_t body, astro_time_t time)
+static astro_func_result_t HelioDistanceUnguarded(astro_body_t body, astro_time_t time)
 {
     astro_vector_t vector;
     astro_func_result_t result;
@@ -5091,6 +5151,18 @@ astro_func_result_t Astronomy_HelioDistance(astro_body_t body, astro_time_t time
         result.value = Astronomy_VectorLength(vector);
         return result;
     }
+}
+
+/*
+    AstronomyKit local patch (non-finite result guards). The planetary apsis
+    searches measure every sample through this function.
+*/
+astro_func_result_t Astronomy_HelioDistance(astro_body_t body, astro_time_t time)
+{
+    astro_func_result_t result = HelioDistanceUnguarded(body, time);
+    if (result.status == ASTRO_SUCCESS && !isfinite(result.value))
+        return FuncError(ASTRO_BAD_TIME);
+    return result;
 }
 
 
@@ -5256,7 +5328,7 @@ static astro_vector_t BodyPosition(void *context, astro_time_t time)
  *      the backdated time in its `t` field, along with the apparent relative position.
  *      If an error occurs, `status` will hold an error code and the remaining fields should be ignored.
  */
-astro_vector_t Astronomy_BackdatePosition(
+static astro_vector_t BackdatePositionUnguarded(
     astro_time_t time,
     astro_body_t observerBody,
     astro_body_t targetBody,
@@ -5347,6 +5419,16 @@ astro_vector_t Astronomy_BackdatePosition(
 
         return Astronomy_CorrectLightTravel(&context, BodyPosition, time);
     }
+}
+
+/* AstronomyKit local patch (non-finite result guards). */
+astro_vector_t Astronomy_BackdatePosition(
+    astro_time_t time,
+    astro_body_t observerBody,
+    astro_body_t targetBody,
+    astro_aberration_t aberration)
+{
+    return CheckVectorResult(BackdatePositionUnguarded(time, observerBody, targetBody, aberration));
 }
 
 
@@ -5552,6 +5634,8 @@ astro_vector_t Astronomy_GeoVector(astro_body_t body, astro_time_t time, astro_a
     }
 
     vector.t = time;    /* tricky: return the observation time, not the backdated time */
+    /* AstronomyKit local patch (non-finite result guards). */
+    vector = CheckVectorResult(vector);
     return vector;
 }
 
@@ -5573,7 +5657,7 @@ astro_vector_t Astronomy_GeoVector(astro_body_t body, astro_time_t time, astro_a
  * @return
  *      A structure that contains barycentric position and velocity vectors.
  */
-astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time)
+static astro_state_vector_t BaryStateUnguarded(astro_body_t body, astro_time_t time)
 {
     astro_state_vector_t state;
     major_bodies_t bary;
@@ -5645,6 +5729,12 @@ astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time)
     }
 }
 
+/* AstronomyKit local patch (non-finite result guards). */
+astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time)
+{
+    return CheckStateResult(BaryStateUnguarded(body, time));
+}
+
 
 /**
  * @brief  Calculates heliocentric position and velocity vectors for the given body.
@@ -5670,7 +5760,7 @@ astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time)
  * @return
  *      A structure that contains heliocentric position and velocity vectors.
  */
-astro_state_vector_t Astronomy_HelioState(astro_body_t body, astro_time_t time)
+static astro_state_vector_t HelioStateUnguarded(astro_body_t body, astro_time_t time)
 {
     astro_status_t status;
     astro_state_vector_t state;
@@ -5748,6 +5838,12 @@ astro_state_vector_t Astronomy_HelioState(astro_body_t body, astro_time_t time)
     default:
         return StateVecError(ASTRO_INVALID_BODY, time);
     }
+}
+
+/* AstronomyKit local patch (non-finite result guards). */
+astro_state_vector_t Astronomy_HelioState(astro_body_t body, astro_time_t time)
+{
+    return CheckStateResult(HelioStateUnguarded(body, time));
 }
 
 
@@ -5828,6 +5924,7 @@ astro_state_vector_t Astronomy_LagrangePoint(
     astro_body_t minor_body)
 {
     astro_state_vector_t major_state, minor_state;
+    astro_state_vector_t result;    /* AstronomyKit local patch (non-finite result guards) */
     double major_mass, minor_mass;
 
     major_mass = Astronomy_MassProduct(major_body);
@@ -5864,13 +5961,22 @@ astro_state_vector_t Astronomy_LagrangePoint(
             return minor_state;
     }
 
-    return Astronomy_LagrangePointFast(
+    result = Astronomy_LagrangePointFast(
         point,
         major_state,
         major_mass,
         minor_state,
         minor_mass
     );
+
+    /*
+        AstronomyKit local patch (non-finite result guards). The same body
+        passed twice has zero separation, so its NaN does not come from the
+        time; that result is returned unchecked.
+    */
+    if (major_body == minor_body)
+        return result;
+    return CheckStateResult(result);
 }
 
 
@@ -6105,7 +6211,7 @@ astro_state_vector_t Astronomy_LagrangePointFast(
  * @param aberration    Selects whether or not to correct for aberration.
  * @return              Topocentric equatorial coordinates of the celestial body.
  */
-astro_equatorial_t Astronomy_Equator(
+static astro_equatorial_t EquatorUnguarded(
     astro_body_t body,
     astro_time_t *time,
     astro_observer_t observer,
@@ -6150,6 +6256,21 @@ astro_equatorial_t Astronomy_Equator(
     default:
         return EquError(ASTRO_INVALID_PARAMETER);
     }
+}
+
+/* AstronomyKit local patch (non-finite result guards). */
+astro_equatorial_t Astronomy_Equator(
+    astro_body_t body,
+    astro_time_t *time,
+    astro_observer_t observer,
+    astro_equator_date_t equdate,
+    astro_aberration_t aberration)
+{
+    astro_equatorial_t equ = EquatorUnguarded(body, time, observer, equdate, aberration);
+    if (equ.status == ASTRO_SUCCESS &&
+        !(FiniteTriple(equ.ra, equ.dec, equ.dist) && FiniteVector(equ.vec)))
+        return EquError(ASTRO_BAD_TIME);
+    return equ;
 }
 
 /**
@@ -6640,6 +6761,7 @@ astro_ecliptic_t Astronomy_SunPosition(astro_time_t time)
     double stemp[3];
     double sun_ofdate[3];
     double true_obliq;
+    astro_ecliptic_t ecliptic;  /* AstronomyKit local patch (non-finite result guards) */
 
     /* Correct for light travel time from the Sun. */
     /* Otherwise season calculations (equinox, solstice) will all be early by about 8 minutes! */
@@ -6660,7 +6782,13 @@ astro_ecliptic_t Astronomy_SunPosition(astro_time_t time)
 
     /* Convert equatorial coordinates to ecliptic coordinates. */
     true_obliq = DEG2RAD * e_tilt(&adjusted_time).tobl;
-    return RotateEquatorialToEcliptic(sun_ofdate, true_obliq, time);
+    ecliptic = RotateEquatorialToEcliptic(sun_ofdate, true_obliq, time);
+
+    /* AstronomyKit local patch (non-finite result guards). */
+    if (ecliptic.status == ASTRO_SUCCESS &&
+        !(FiniteVector(ecliptic.vec) && isfinite(ecliptic.elat) && isfinite(ecliptic.elon)))
+        return EclError(ASTRO_BAD_TIME);
+    return ecliptic;
 }
 
 /**
@@ -6793,6 +6921,18 @@ static astro_ecliptic_state_t EclStateError(astro_status_t status, astro_time_t 
     state.elon_rate = state.elat_rate = state.dist_rate = NAN;
     state.x = state.y = state.z = NAN;
     state.vx = state.vy = state.vz = NAN;
+    return state;
+}
+
+/* AstronomyKit local patch (non-finite result guards). */
+static astro_ecliptic_state_t CheckEclipticStateResult(astro_ecliptic_state_t state)
+{
+    if (state.status == ASTRO_SUCCESS &&
+        !(FiniteTriple(state.elon, state.elat, state.dist) &&
+          FiniteTriple(state.elon_rate, state.elat_rate, state.dist_rate) &&
+          FiniteTriple(state.x, state.y, state.z) &&
+          FiniteTriple(state.vx, state.vy, state.vz)))
+        return EclStateError(ASTRO_BAD_TIME, state.t);
     return state;
 }
 
@@ -7037,7 +7177,7 @@ astro_ecliptic_state_t Astronomy_GeoEclipticState(astro_body_t body, astro_time_
     if (status != ASTRO_SUCCESS)
         return EclStateError(status, time);
 
-    return ecliptic_state_from_eqj(pos, vel, time, time);
+    return CheckEclipticStateResult(ecliptic_state_from_eqj(pos, vel, time, time));
 }
 
 /**
@@ -7068,7 +7208,7 @@ astro_ecliptic_state_t Astronomy_SunEclipticState(astro_time_t time)
     vel[1] = -earth.v.y;
     vel[2] = -earth.v.z;
 
-    return ecliptic_state_from_eqj(pos, vel, adjusted_time, time);
+    return CheckEclipticStateResult(ecliptic_state_from_eqj(pos, vel, adjusted_time, time));
 }
 
 /**
@@ -7116,7 +7256,7 @@ astro_ecliptic_state_t Astronomy_MoonEclipticState(astro_time_t time)
         state.dist = dist;
         state.dist_rate = dist_rate;
     }
-    return state;
+    return CheckEclipticStateResult(state);
 }
 
 /* Test hooks; see astronomy.h. */
@@ -9277,6 +9417,12 @@ astro_illum_t Astronomy_Illumination(astro_body_t body, astro_time_t time)
     illum.phase_fraction = (1.0 + cos(DEG2RAD * phase.angle)) / 2.0;
     illum.helio_dist = helio_dist;
     illum.ring_tilt = ring_tilt;
+
+    /* AstronomyKit local patch (non-finite result guards). */
+    if (illum.status == ASTRO_SUCCESS &&
+        !(FiniteTriple(illum.mag, illum.phase_angle, illum.phase_fraction) &&
+          isfinite(illum.helio_dist) && isfinite(illum.ring_tilt)))
+        return IllumError(ASTRO_BAD_TIME);
 
     return illum;
 }
