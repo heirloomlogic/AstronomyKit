@@ -1,6 +1,20 @@
 import AstronomyKit
-import Foundation
+import CLibAstronomy
+import Synchronization
 import Testing
+
+/// Calls made through ``espenakMeeusStandIn``.
+private let standInCalls = Atomic<Int>(0)
+
+/// A second Delta T function that returns the same bits as Espenak-Meeus.
+///
+/// Swapping between this and the real Espenak-Meeus function changes the
+/// global function pointer without changing any result, so suites running in
+/// parallel cannot tell that a swap happened.
+private let espenakMeeusStandIn: astro_deltat_func = { ut in
+    standInCalls.add(1, ordering: .relaxed)
+    return Astronomy_DeltaT_EspenakMeeus(ut)
+}
 
 /// Verifies that the Delta T model can be swapped while calculations run on
 /// other threads.
@@ -8,44 +22,39 @@ import Testing
 /// The underlying C library stores the active Delta T model in a global
 /// function pointer that every time construction reads. A local patch makes
 /// that pointer atomic; this suite exercises concurrent writers and readers
-/// so ThreadSanitizer can prove the patch holds.
-@Suite("Delta T Thread Safety", .serialized)
+/// so ThreadSanitizer can prove the patch holds. Other suites construct times
+/// in parallel, so the writers only swap in ``espenakMeeusStandIn``; a model
+/// with different results, such as JPL Horizons, would shift their answers.
+@Suite("Delta T Thread Safety")
 struct DeltaTThreadSafetyTests {
-    /// A moment ~100 years after J2000, far enough out that the
-    /// Espenak-Meeus and JPL Horizons models diverge.
-    static let farFutureUT = 36_525.0
-
     @Test("Concurrent model swaps never corrupt time construction")
     func concurrentModelSwapIsSafe() async {
         defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
 
-        let ut = Self.farFutureUT
-        let ttEspenakMeeus = ut + AstronomyConfig.deltaTEspenakMeeus(universalTime: ut) / 86_400
-        let ttJplHorizons = ut + AstronomyConfig.deltaTJplHorizons(universalTime: ut) / 86_400
-
-        // The two models must disagree here, or the test proves nothing.
-        #expect(ttEspenakMeeus != ttJplHorizons)
+        // ~100 years after J2000, where Delta T is large and changing.
+        let ut = 36_525.0
+        let expectedTT = ut + AstronomyConfig.deltaTEspenakMeeus(universalTime: ut) / 86_400
 
         await withTaskGroup(of: Void.self) { group in
             // Hammer time construction on several tasks...
             for _ in 0..<8 {
                 group.addTask {
                     for _ in 0..<200 {
-                        let tt = AstroTime(ut: ut).terrestrialTime
-                        // Whichever model wins the race, the result must be
-                        // one of the two valid answers, never a torn value.
-                        #expect(tt == ttEspenakMeeus || tt == ttJplHorizons)
+                        // Whichever pointer wins the race, never a torn value.
+                        #expect(AstroTime(ut: ut).terrestrialTime == expectedTT)
                     }
                 }
             }
 
-            // ...while other tasks repeatedly swap the Delta T model.
+            // ...while other tasks repeatedly swap the Delta T function.
             for _ in 0..<2 {
                 group.addTask {
                     for iteration in 0..<100 {
-                        AstronomyConfig.setDeltaTModel(
-                            iteration.isMultiple(of: 2) ? .jplHorizons : .espenakMeeus
-                        )
+                        if iteration.isMultiple(of: 2) {
+                            Astronomy_SetDeltaTFunction(espenakMeeusStandIn)
+                        } else {
+                            AstronomyConfig.setDeltaTModel(.espenakMeeus)
+                        }
                         await Task.yield()
                     }
                 }
@@ -53,5 +62,12 @@ struct DeltaTThreadSafetyTests {
 
             await group.waitForAll()
         }
+
+        // The swap only tests something if time construction reads the pointer
+        // the writers store. Install the stand-in once more and check it runs.
+        Astronomy_SetDeltaTFunction(espenakMeeusStandIn)
+        let callsBefore = standInCalls.load(ordering: .relaxed)
+        _ = AstroTime(ut: ut)
+        #expect(standInCalls.load(ordering: .relaxed) > callsBefore)
     }
 }
