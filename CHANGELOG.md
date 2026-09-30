@@ -10,6 +10,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - `AstroTime.siderealTime(longitude:)` no longer hangs on a huge or infinite longitude (issue #48). It looped one 24-hour step at a time, so `1e300` ran effectively forever and `.infinity` never terminated. It now wraps in constant time and returns a value in 0 to 24 for any finite longitude, including ones far outside -180 to +180; the result is never `-0` and never exactly 24. A non-finite longitude (infinite or NaN) returns `.nan`. The signature is unchanged. Results for longitudes in -180 to +180 are unchanged. Callers that forward unvalidated observer longitudes should test the result with `isNaN` or validate the observer first.
 - `FixedStar.ecliptic(at:)`, `eclipticLongitude(at:)`, and `eclipticLatitude(at:)` now return coordinates in the true ecliptic and equinox of date, the frame `Vector3D.toEcliptic()` and the geocentric planet, Sun, and Moon positions use (issue #47). They previously rotated the star into the fixed J2000 ecliptic, so a star and a planet at the same instant were in frames that drift apart by general precession, about 50″ a year from 2000. Returned values change: Regulus moves from 149.833° to 148.441° on 1900-01-01, from 149.824° to 150.198° on 2026-07-24, and from 149.833° to 151.231° on 2100-01-01. Latitudes move too, by about 20″ for Regulus and 23″ for Spica in 1900 and 2100. Callers who want J2000 ecliptic coordinates can rotate `equatorial(at:)` with `RotationMatrix.equatorialJ2000ToEcliptic()`. Stored star longitudes and anything derived from them need recomputing.
 
+## [3.1.0+upstream-2.1.19] - 2026-09-10
+
+### Added
+- CodeQL scanning for the vendored C target (PR #45). A pinned CodeQL v4 workflow scans `c-cpp` with the `security-and-quality` query suite after SwiftPM compiles `CLibAstronomy`. It runs for pull requests that change the C target or the workflow, every Monday at 06:00 UTC, and on manual dispatch.
+
+### Changed
+- Reuse exact IAU2000B nutation results in a 32-entry thread-local cache (local patch 13 in `MAINTAINING.md`, PR #43). Repeated calls at one instant previously re-summed the 77-term series, and state calls evaluated it unconditionally for rates. Angle-only and rate callers share one cached `(psi, eps, psi_rate, eps_rate)` tuple, so an angle calculation can warm a later state calculation at the same instant. Keys are the exact bits of the scaled TT, so signed zero stays distinct; nonfinite inputs bypass the cache. Twelve same-time `Astronomy_GeoEclipticState` calls now evaluate the series once.
+- Reuse exact lunar series results in a 32-entry thread-local cache around `CalcMoonRaw` (local patch 14 in `MAINTAINING.md`, PR #44). Every `CalcMoon` client shares it: position, state, libration, distance and search, and eclipse paths. The three-point rate stencil in `Astronomy_MoonEclipticState` is unchanged, but repeated state calls now reuse three cached epochs; twelve same-time calls perform three series evaluations instead of 36. Keys and nonfinite handling match the nutation cache.
+- Cached and uncached results are bit-identical in both caches, so positions, rates, and event times are unchanged and `AstronomyConfig.ephemerisVersion` stays `3.0.0+vsop87b-comp.poly-v2.iau2000b.utc-c72.native-libm`. No separate downstream station or event qualification was run for the Moon cache.
+
 ## [3.0.0+upstream-2.1.19] - 2026-09-09
 
 ### Added
@@ -201,7 +211,8 @@ Initial public release.
 - DocC documentation and GitHub Actions workflows for tests and documentation publishing.
 - Full `Sendable` conformance for Swift 6.
 
-[Unreleased]: https://github.com/heirloomlogic/AstronomyKit/compare/3.0.0+upstream-2.1.19...HEAD
+[Unreleased]: https://github.com/heirloomlogic/AstronomyKit/compare/3.1.0+upstream-2.1.19...HEAD
+[3.1.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/3.0.0+upstream-2.1.19...3.1.0+upstream-2.1.19
 [3.0.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.4.0+upstream-2.1.19...3.0.0+upstream-2.1.19
 [2.4.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.3.0+upstream-2.1.19...2.4.0+upstream-2.1.19
 [2.3.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.2.0+upstream-2.1.19...2.3.0+upstream-2.1.19
