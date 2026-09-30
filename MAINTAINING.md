@@ -101,7 +101,7 @@ sh Scripts/performance/test-nutation-cache.sh
 sh Scripts/performance/test-moon-cache.sh
 ```
 
-Keep whole-suite runs nonparallel: the Delta T thread-safety test intentionally swaps the process-global model. Swift Testing's `.serialized` trait orders tests inside that suite only and does not isolate unrelated suites from those swaps.
+Plain `swift test` is enough locally. The Delta T thread-safety test swaps the process-global model, but only between two functions that return identical results, so suites running in parallel cannot see the swap. CI still passes `--no-parallel`.
 
 The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert against JPL Horizons and audit reference positions to roughly ±1 arcminute; a regression there requires investigation before release. `ReproducibilityTests` holds tight numerical regression budgets against frozen reference bits; tolerance failures also require investigation. Do not widen budgets or regenerate independent reference data to make a change pass.
 
