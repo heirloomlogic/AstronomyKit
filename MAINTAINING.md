@@ -82,7 +82,7 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
 
 6. **Verify** (see below).
 
-7. **Changelog & tag.** Add a `CHANGELOG.md` entry, then tag `X.Y.Z+upstream-A.B.C`.
+7. **Tag & release.** Tag `X.Y.Z+upstream-A.B.C` and publish a GitHub release for it with the release notes.
 
 ## Numerical compatibility
 
