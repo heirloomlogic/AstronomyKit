@@ -300,7 +300,7 @@ struct LagrangePointTests {
             }
         }
 
-        @Test("A separation that overflows throws invalidParameter", arguments: LagrangePointID.allCases)
+        @Test("A separation whose square overflows throws invalidParameter", arguments: LagrangePointID.allCases)
         func infiniteSeparationThrowsInvalidParameter(point: LagrangePointID) {
             #expect(throws: AstronomyError.invalidParameter) {
                 _ = try calculateFast(

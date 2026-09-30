@@ -164,8 +164,9 @@ public enum LagrangePoint {
     ///   - minorState: The state vector of the smaller body.
     ///   - minorMass: The mass product (GM) of the smaller body in AU³/day².
     /// - Returns: The state vector of the Lagrange point.
-    /// - Throws: ``AstronomyError/invalidParameter`` if the two states coincide or their
-    ///   separation is not finite, or if either mass is not a positive finite number.
+    /// - Throws: ``AstronomyError/invalidParameter`` if the squared distance between the two
+    ///   positions is zero or not finite (coincident positions or a non-finite coordinate, for
+    ///   example), or if either mass is not a positive finite number.
     ///   Other `AstronomyError` values if the calculation fails.
     public static func calculateFast(
         point: LagrangePointID,
