@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [3.2.0+upstream-2.1.19] - 2026-09-30
+
 ### Added
 - A libFuzzer harness for the vendored C bridge (issue #25, PR #59). `Fuzzing/` sits outside the Swift package and calls the C entry points the Swift layer forwards into, including the position, rise/set, libration, lunar node, apsis, and longitude searches, with NaN, infinities, huge magnitudes, and out-of-range bodies. A call passes when it returns a known status with no crash, sanitizer report, or timeout. `Fuzzing/build.sh replay` runs the seed corpus under ASan and UBSan on any clang; `build.sh libfuzzer` needs a clang with the libFuzzer runtime. See `Fuzzing/README.md`.
 - A fuzz workflow (PR #60). It checks the seed corpus is current, replays it under ASan and UBSan, and fuzzes for 20 minutes every Monday at 06:00 UTC and on manual dispatch, and for 2 minutes on pull requests that change the C target, `Fuzzing/`, or the workflow. Crash, timeout, and slow inputs are uploaded as the `fuzz-artifacts` artifact.
+
+### Changed
+- `AstronomyConfig.ephemerisVersion` is `3.2.0+vsop87b-comp.poly-v2.iau2000b.utc-c72.native-libm`. Planetary, Sun, and Moon outputs are unchanged from 3.1.0; the version moves because fixed-star ecliptic coordinates changed (issue #47, below), so caches keyed on it drop stale star longitudes.
 
 ### Fixed
 - Searches and positions no longer hang or hit undefined behavior on non-finite or extreme inputs (issues #57 and #58, PR #61; local patch 15 in `MAINTAINING.md`). Rise/set and altitude searches throw `invalidParameter` for a non-finite `limitDays` and `badTime` when a step stops advancing the time, which happens from a start of about 2^52 days. Pluto throws `badTime` for a NaN or infinite time instead of reporting success with a NaN vector. The lunar node search throws `badTime` for a non-finite start or one past about 2^57 days, and the Neptune and Pluto apsis searches for a non-finite start. `Moon.libration(at:)` no longer hangs around 10^15 days from J2000. `Sun.searchLongitude` and `searchRelativeLongitude` throw `invalidParameter` for a non-finite target angle and return promptly for a huge one. Inputs that already returned promptly get the same results as before. A large finite `limitDays` is still not capped: running time is proportional to it.
@@ -216,7 +221,8 @@ Initial public release.
 - DocC documentation and GitHub Actions workflows for tests and documentation publishing.
 - Full `Sendable` conformance for Swift 6.
 
-[Unreleased]: https://github.com/heirloomlogic/AstronomyKit/compare/3.1.0+upstream-2.1.19...HEAD
+[Unreleased]: https://github.com/heirloomlogic/AstronomyKit/compare/3.2.0+upstream-2.1.19...HEAD
+[3.2.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/3.1.0+upstream-2.1.19...3.2.0+upstream-2.1.19
 [3.1.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/3.0.0+upstream-2.1.19...3.1.0+upstream-2.1.19
 [3.0.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.4.0+upstream-2.1.19...3.0.0+upstream-2.1.19
 [2.4.0+upstream-2.1.19]: https://github.com/heirloomlogic/AstronomyKit/compare/2.3.0+upstream-2.1.19...2.4.0+upstream-2.1.19
