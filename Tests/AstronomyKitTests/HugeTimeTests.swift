@@ -131,6 +131,32 @@ struct HugeTimeTests {
         }
     }
 
+    /// Far from J2000 the body states can overflow the Lagrange point
+    /// arithmetic, and `calculate` reports that as `badTime`, not
+    /// `invalidParameter`. L4 and L5 mirror each other across the line between
+    /// the bodies, so they coincide only when the unit tangent comes out zero,
+    /// as it did when the tangent's squared length overflowed.
+    @Test("Lagrange points far from J2000 are finite or throw badTime", arguments: allTimes + [1e40, -1e40])
+    func lagrangePointsThrowBadTime(ut: Double) {
+        let time = AstroTime(ut: ut)
+        for (major, minor) in [(CelestialBody.sun, CelestialBody.earth), (.sun, .neptune), (.earth, .moon)] {
+            var results: [LagrangePointID: StateVector] = [:]
+            for point in LagrangePointID.allCases {
+                do {
+                    let state = try LagrangePoint.calculate(point: point, at: time, majorBody: major, minorBody: minor)
+                    let isFinite = Self.components(state).allSatisfy(\.isFinite)
+                    #expect(isFinite, "\(major)-\(minor) \(point)")
+                    results[point] = state
+                } catch {
+                    #expect(error as? AstronomyError == .badTime, "\(major)-\(minor) \(point)")
+                }
+            }
+            if let l4 = results[.l4], let l5 = results[.l5] {
+                #expect(Self.components(l4.position) != Self.components(l5.position), "\(major)-\(minor) L4 == L5")
+            }
+        }
+    }
+
     @Test("Apsis searches are finite or throw", arguments: allTimes)
     func apsisSearches(ut: Double) {
         let time = AstroTime(ut: ut)

@@ -65,7 +65,8 @@
         point, and ecliptic state functions report ASTRO_BAD_TIME instead of
         ASTRO_SUCCESS when a result field is not finite. Functions with
         several return paths keep the upstream body as a static *Unguarded
-        function behind a checking wrapper. Finite results are unchanged.
+        function behind a checking wrapper. Finite results are unchanged,
+        except for the Lagrange point L4 and L5 results described below.
         moon_distance_slope reports ASTRO_BAD_TIME for a slope that is not
         finite, so Astronomy_SearchLunarApsis returns it instead of
         ASTRO_INTERNAL_ERROR.
@@ -75,7 +76,27 @@
         squared distance between the two positions is zero, which would
         divide by zero, or not finite, which the arithmetic that follows
         turns into NaN (an infinite distance through terms such as inf/inf
-        and inf - inf).
+        and inf - inf). For L4 and L5 it returns ASTRO_INVALID_PARAMETER
+        when U, the length of the tangent vector, is zero or not finite. U
+        is zero when the relative velocity is zero or exactly parallel to
+        the separation, where the orbital plane is undefined, or when the
+        tangent or its squared length underflows; dividing by it gave NaN
+        or infinity. U is infinite when that squared length overflows, and
+        dividing a finite tangent by it gave a zero vector and a finite but
+        wrong point, which Astronomy_LagrangePoint reported as success far
+        from J2000. U is infinite or NaN when the relative velocity is not
+        finite or the cross products overflow. A last check returns
+        ASTRO_INVALID_PARAMETER for a result field that is not finite, such
+        as from an L1 to L3 relative velocity that is not finite.
+        Astronomy_LagrangePointFast returns ASTRO_NO_CONVERGE when its L1
+        to L3 Newton iteration has not converged after 10000 steps; for
+        some finite inputs, including some L3 inputs with masses of similar
+        size, the iteration did not converge and the function hung.
+        Astronomy_LagrangePoint returns ASTRO_BAD_TIME when
+        Astronomy_LagrangePointFast returns ASTRO_INVALID_PARAMETER for a
+        point from 1 to 5: its masses are the engine's own and its states
+        succeeded, so the rejected input is a state, which comes from the
+        time.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -5986,7 +6007,17 @@ astro_state_vector_t Astronomy_LagrangePoint(
         minor_mass
     );
 
-    /* AstronomyKit local patch (non-finite result guards) */
+    /*
+        AstronomyKit local patch (non-finite result guards). With a valid
+        point, two distinct bodies with positive mass products, and
+        successful states, the only inputs left for
+        Astronomy_LagrangePointFast to reject are the states, which come
+        from the time. Far from J2000 they are large enough to overflow its
+        arithmetic.
+    */
+    if (result.status == ASTRO_INVALID_PARAMETER && point >= 1 && point <= 5)
+        return StateVecError(ASTRO_BAD_TIME, time);
+
     return CheckStateResult(result);
 }
 
@@ -6038,6 +6069,8 @@ astro_state_vector_t Astronomy_LagrangePointFast(
     double vx, vy, vz;
     double R2, R, r1, r2, x, deltax, dr1, dr2, numer1, numer2, omega2, accel, deriv;
     astro_state_vector_t  p;
+    const int iter_limit = 10000;   /* AstronomyKit local patch (non-finite result guards) */
+    int iter = 0;                   /* AstronomyKit local patch (non-finite result guards) */
 
     if (point < 1 || point > 5)
         return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
@@ -6103,6 +6136,22 @@ astro_state_vector_t Astronomy_LagrangePointFast(
 
         /* Convert the tangential direction vector to a unit vector. */
         U = sqrt(ux*ux + uy*uy + uz*uz);
+
+        /*
+            AstronomyKit local patch (non-finite result guards). U is zero
+            when the tangent is zero: the relative velocity is zero or
+            exactly parallel to the separation, so the orbital plane is
+            undefined, or the cross products underflow to zero. It is also
+            zero when the squared length of the tangent underflows. Dividing
+            by a zero U gives NaN or infinity. U is infinite when that
+            squared length overflows; dividing a finite tangent by it gives
+            a zero vector, and the result is finite but wrong. U is infinite
+            or NaN when the relative velocity is not finite or the cross
+            products overflow.
+        */
+        if (U == 0.0 || !isfinite(U))
+            return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
+
         ux /= U;
         uy /= U;
         uz /= U;
@@ -6186,6 +6235,15 @@ astro_state_vector_t Astronomy_LagrangePointFast(
         x = R*scale - r1;
         do
         {
+            /*
+                AstronomyKit local patch (non-finite result guards). For
+                some finite inputs, including some L3 inputs with masses of
+                similar size, the iteration does not converge, and this loop
+                used to hang.
+            */
+            if (++iter > iter_limit)
+                return StateVecError(ASTRO_NO_CONVERGE, major_state.t);
+
             dr1 = x - r1;
             dr2 = x - r2;
             accel = omega2*x + numer1/(dr1*dr1) + numer2/(dr2*dr2);
@@ -6203,6 +6261,16 @@ astro_state_vector_t Astronomy_LagrangePointFast(
         p.vy = scale * vy;
         p.vz = scale * vz;
     }
+
+    /*
+        AstronomyKit local patch (non-finite result guards). Inputs the
+        checks above let through can still give a field that is not finite,
+        such as, for L1 to L3, a relative velocity that is not finite or
+        that overflows when scaled, or masses whose sum overflows.
+    */
+    if (!(FiniteTriple(p.x, p.y, p.z) && FiniteTriple(p.vx, p.vy, p.vz)))
+        return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
+
     p.t = major_state.t;
     p.status = ASTRO_SUCCESS;
     return p;
