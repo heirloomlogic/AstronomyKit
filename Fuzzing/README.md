@@ -36,7 +36,11 @@ mkdir -p .build/fuzz/corpus
 .build/fuzz/fuzz-bridge -timeout=25 -max_total_time=600 .build/fuzz/corpus Fuzzing/corpus
 ```
 
-If Homebrew LLVM's AddressSanitizer runtime hangs at process start, as LLVM 21's did on the macOS 27 beta even for an empty program, build a libFuzzer binary with `-fsanitize=fuzzer,undefined` by hand for exploration, and replay what it finds with the Apple clang `replay` build to get the ASan check. The scheduled CI job that runs the libFuzzer build on Linux is the next part of [#25](https://github.com/heirloomlogic/AstronomyKit/issues/25).
+If Homebrew LLVM's AddressSanitizer runtime hangs at process start, as LLVM 21's did on the macOS 27 beta even for an empty program, build a libFuzzer binary with `-fsanitize=fuzzer,undefined` by hand for exploration, and replay what it finds with the Apple clang `replay` build to get the ASan check. CI runs the full libFuzzer build on Linux (below).
+
+## CI
+
+`.github/workflows/fuzz.yml` runs on ubuntu-latest every Monday at 06:00 UTC, on manual dispatch, and on pull requests that change `Sources/CLibAstronomy/`, `Fuzzing/`, or the workflow itself. It runs `make_corpus.py --check`, replays `corpus/` through the `replay` build, then builds the `libfuzzer` target with the runner's clang and fuzzes a scratch corpus with the seeds as the second corpus, as above. Scheduled and manual runs fuzz for 20 minutes; pull request runs for 2. A crash, sanitizer report, or timeout fails the job. Whatever libFuzzer saved, including `slow-unit-*` inputs that took over 10 seconds without failing, is uploaded as the `fuzz-artifacts` artifact. Download it and reproduce it as described below.
 
 ## Reproducing a finding
 

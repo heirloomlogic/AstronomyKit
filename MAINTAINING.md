@@ -107,7 +107,7 @@ The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert agains
 
 CI runs all of these on every pull request, plus release-configuration tests and iOS/tvOS/watchOS builds.
 
-After an upstream sync, also replay the fuzz corpus through the C library under ASan and UBSan. CI does not run this yet:
+After an upstream sync, also replay the fuzz corpus through the C library under ASan and UBSan. The Fuzz workflow runs these, plus a libFuzzer run, on pull requests that touch the C library and every week ([Fuzzing/README.md](Fuzzing/README.md#ci)):
 
 ```sh
 sh Fuzzing/build.sh replay && .build/fuzz/replay-bridge Fuzzing/corpus
