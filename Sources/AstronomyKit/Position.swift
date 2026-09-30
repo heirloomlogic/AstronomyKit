@@ -258,7 +258,7 @@ public enum Sun {
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func position(at time: AstroTime) throws -> Ecliptic {
         let result = Astronomy_SunPosition(time.raw)
-        return try Ecliptic(positionAtTime: result)
+        return try Ecliptic(result)
     }
 
     /// Calculates the Sun's ecliptic position and velocity.

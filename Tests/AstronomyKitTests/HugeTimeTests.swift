@@ -81,6 +81,8 @@ struct HugeTimeTests {
             #expect(Self.finiteOrThrows { Self.components(try body.heliocentricState(at: time)) }, "\(body) heliocentricState")
             #expect(Self.finiteOrThrows { Self.components(try body.barycentricState(at: time)) }, "\(body) barycentricState")
             #expect(Self.finiteOrThrows { Self.components(try body.geocentricPosition(at: time)) }, "\(body) geocentricPosition")
+            #expect(Self.finiteOrThrows { Self.components(try body.geocentricPosition(at: time).toEcliptic()) }, "\(body) toEcliptic")
+            #expect(Self.finiteOrThrows { Self.components(try body.backdatedPosition(at: time, seenFrom: .earth)) }, "\(body) backdatedPosition")
             #expect(Self.finiteOrThrows { Self.components(try body.geocentricEclipticState(at: time)) }, "\(body) geocentricEclipticState")
             #expect(Self.finiteOrThrows { Self.components(try body.equatorial(at: time, equatorDate: .ofDate)) }, "\(body) equatorial")
             #expect(Self.finiteOrThrows { Self.components(try body.illumination(at: time)) }, "\(body) illumination")
@@ -167,6 +169,9 @@ struct HugeTimeTests {
         #expect(throws: AstronomyError.badTime) { _ = try CelestialBody.moon.equatorial(at: time) }
         #expect(throws: AstronomyError.badTime) { _ = try CelestialBody.sun.illumination(at: time) }
         #expect(throws: AstronomyError.badTime) { _ = try Sun.position(at: time) }
+        // Earth's geocentric vector is zero, but the rotation into the ecliptic
+        // of date at the vector's time is not finite here.
+        #expect(throws: AstronomyError.badTime) { _ = try CelestialBody.earth.geocentricPosition(at: time).toEcliptic() }
         #expect(throws: AstronomyError.badTime) { _ = try Moon.geocentricPosition(at: time) }
         #expect(throws: AstronomyError.badTime) { _ = try Moon.ecliptic(at: time) }
         #expect(throws: AstronomyError.badTime) { _ = try Moon.geoState(at: time) }
@@ -179,5 +184,6 @@ struct HugeTimeTests {
                 _ = try body.searchApsis(after: time)
             }
         }
+        #expect(throws: AstronomyError.badTime) { _ = try Moon.searchApsis(after: time) }
     }
 }

@@ -22,8 +22,9 @@ public enum AstronomyError: Error, Equatable, Hashable, Sendable {
     /// The provided date/time is outside the allowed range.
     ///
     /// Position, distance, and apsis calculations also throw this when their
-    /// result at the requested time is not finite. The planetary and lunar
-    /// series overflow to NaN or infinity far enough from J2000.
+    /// result at the requested time is not finite, and `Vector3D.toEcliptic()`
+    /// throws it when its result is not finite. The planetary and lunar series
+    /// overflow to NaN or infinity far enough from J2000.
     case badTime
 
     /// Vector magnitude is too small to normalize.

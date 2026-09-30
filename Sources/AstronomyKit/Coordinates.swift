@@ -90,6 +90,12 @@ extension Vector3D {
 
     /// Converts this equatorial J2000 vector to the true ecliptic and equinox
     /// of date, using the vector's associated time.
+    ///
+    /// - Throws: `AstronomyError.badTime` if the latitude, longitude, or
+    ///   distance is not finite. That happens when the vector's time is far
+    ///   enough from J2000 that the rotation into the ecliptic of date is not
+    ///   finite, and for a vector longer than about 1e154 AU, whose distance
+    ///   overflows.
     public func toEcliptic() throws -> Ecliptic {
         let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
         let result = Astronomy_Ecliptic(raw)
@@ -277,7 +283,12 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.distance = distance
     }
 
-    /// Creates coordinates from the C structure.
+    /// Creates coordinates from the C structure, throwing
+    /// `AstronomyError.badTime` if a coordinate is not finite.
+    ///
+    /// Far from J2000 the rotation into the ecliptic of date is not finite, and
+    /// the series return vectors long enough that the distance, computed here
+    /// by squaring the components, overflows (#62).
     init(_ raw: astro_ecliptic_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
@@ -285,17 +296,9 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.latitude = raw.elat
         self.longitude = raw.elon
         self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
-    }
-
-    /// Creates coordinates for a body's position at a given time, throwing
-    /// `AstronomyError.badTime` if the distance computed here overflows.
-    ///
-    /// The engine rejects non-finite fields in its own results (#62). The distance
-    /// is computed here from the vector, and squaring the components of a huge
-    /// finite vector overflows. Far from J2000 the series return such vectors.
-    init(positionAtTime raw: astro_ecliptic_t) throws {
-        try self.init(raw)
-        guard distance.isFinite else { throw AstronomyError.badTime }
+        guard latitude.isFinite, longitude.isFinite, distance.isFinite else {
+            throw AstronomyError.badTime
+        }
     }
 
     /// Creates coordinates from a spherical C structure.

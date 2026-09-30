@@ -66,6 +66,9 @@
         ASTRO_SUCCESS when a result field is not finite. Functions with
         several return paths keep the upstream body as a static *Unguarded
         function behind a checking wrapper. Finite results are unchanged.
+        moon_distance_slope reports ASTRO_BAD_TIME for a slope that is not
+        finite, so Astronomy_SearchLunarApsis returns it instead of
+        ASTRO_INTERNAL_ERROR.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -7177,6 +7180,7 @@ astro_ecliptic_state_t Astronomy_GeoEclipticState(astro_body_t body, astro_time_
     if (status != ASTRO_SUCCESS)
         return EclStateError(status, time);
 
+    /* AstronomyKit local patch (non-finite result guards). */
     return CheckEclipticStateResult(ecliptic_state_from_eqj(pos, vel, time, time));
 }
 
@@ -7208,6 +7212,7 @@ astro_ecliptic_state_t Astronomy_SunEclipticState(astro_time_t time)
     vel[1] = -earth.v.y;
     vel[2] = -earth.v.z;
 
+    /* AstronomyKit local patch (non-finite result guards). */
     return CheckEclipticStateResult(ecliptic_state_from_eqj(pos, vel, adjusted_time, time));
 }
 
@@ -7256,6 +7261,7 @@ astro_ecliptic_state_t Astronomy_MoonEclipticState(astro_time_t time)
         state.dist = dist;
         state.dist_rate = dist_rate;
     }
+    /* AstronomyKit local patch (non-finite result guards). */
     return CheckEclipticStateResult(state);
 }
 
@@ -9616,6 +9622,15 @@ static astro_func_result_t moon_distance_slope(void *context, astro_time_t time)
     dist2 = MoonDistance(t2);
     result.value = direction * (dist2 - dist1) / dt;
     result.status = ASTRO_SUCCESS;
+
+    /*
+        AstronomyKit local patch (non-finite result guards). Far from J2000
+        the lunar distance is NaN. A NaN slope never shows a sign change,
+        so without this check Astronomy_SearchLunarApsis steps through two
+        synodic months and reports ASTRO_INTERNAL_ERROR.
+    */
+    if (!isfinite(result.value))
+        return FuncError(ASTRO_BAD_TIME);
     return result;
 }
 
