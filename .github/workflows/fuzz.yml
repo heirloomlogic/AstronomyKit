@@ -1,0 +1,70 @@
+name: Fuzz
+
+# Fuzzes the vendored C library through the harness in Fuzzing/. See the CI
+# section of Fuzzing/README.md.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/fuzz.yml"
+      - "Fuzzing/**"
+      - "Sources/CLibAstronomy/**"
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+# Only pull request runs are superseded by a newer push; a scheduled or manual
+# run always finishes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      FUZZ_SECONDS: ${{ github.event_name == 'pull_request' && 120 || 1200 }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify seed corpus
+        run: python3 Fuzzing/make_corpus.py --check
+
+      - name: Replay seed corpus (ASan + UBSan)
+        run: |
+          sh Fuzzing/build.sh replay
+          .build/fuzz/replay-bridge Fuzzing/corpus
+
+      - name: Build libFuzzer target
+        run: sh Fuzzing/build.sh libfuzzer
+
+      - name: Fuzz
+        # libFuzzer writes new inputs into the first corpus directory, so it
+        # gets a scratch one and the checked-in seeds come second, read-only.
+        # A crash, sanitizer report, or input slower than 25 s stops the run
+        # and fails the job; the input is saved in .build/fuzz/artifacts/.
+        run: |
+          mkdir -p .build/fuzz/corpus .build/fuzz/artifacts
+          .build/fuzz/fuzz-bridge \
+            -timeout=25 \
+            -max_total_time="$FUZZ_SECONDS" \
+            -print_final_stats=1 \
+            -artifact_prefix=.build/fuzz/artifacts/ \
+            .build/fuzz/corpus Fuzzing/corpus
+
+      # Also runs on success: libFuzzer saves inputs slower than 10 s as
+      # slow-unit-* without failing, and those are worth a look before they
+      # become timeouts.
+      - name: Upload fuzzer artifacts
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fuzz-artifacts
+          path: .build/fuzz/artifacts/
+          if-no-files-found: ignore

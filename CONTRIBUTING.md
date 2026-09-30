@@ -35,7 +35,7 @@ Run the whole suite with `swift test`. Suites run in parallel in one process, an
 
 ### Fuzzing the C bridge
 
-`Fuzzing/` holds a libFuzzer harness for the vendored C library, outside the Swift package. If you change how the Swift layer passes numbers into the C code, or change the C code itself, replay the seed corpus under AddressSanitizer and UndefinedBehaviorSanitizer with `sh Fuzzing/build.sh replay && .build/fuzz/replay-bridge Fuzzing/corpus`. That works with Apple clang; fuzzing for new inputs needs clang from LLVM. See [Fuzzing/README.md](Fuzzing/README.md).
+`Fuzzing/` holds a libFuzzer harness for the vendored C library, outside the Swift package. If you change how the Swift layer passes numbers into the C code, or change the C code itself, replay the seed corpus under AddressSanitizer and UndefinedBehaviorSanitizer with `sh Fuzzing/build.sh replay && .build/fuzz/replay-bridge Fuzzing/corpus`. That works with Apple clang; fuzzing for new inputs needs clang from LLVM. The Fuzz workflow replays the corpus and fuzzes on Linux for pull requests that touch the C library. See [Fuzzing/README.md](Fuzzing/README.md).
 
 ### Updating the vendored C library
 
