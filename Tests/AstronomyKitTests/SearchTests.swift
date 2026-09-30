@@ -132,4 +132,23 @@ struct SearchTests {
         }
         #expect(counter.count == 1, "C search must abort on the first thrown error")
     }
+
+    @Test(
+        "Sun.searchLongitude throws invalidParameter for a non-finite target",
+        arguments: [Double.nan, .infinity, -.infinity]
+    )
+    func sunLongitudeNonFiniteTarget(target: Double) {
+        #expect(throws: AstronomyError.invalidParameter) {
+            _ = try Sun.searchLongitude(target, after: AstroTime(year: 2025, month: 1, day: 1))
+        }
+    }
+
+    @Test("Sun.searchLongitude wraps a target far outside 0-360 in constant time")
+    func sunLongitudeWrappedTarget() throws {
+        // 90 + 360 * 10^9 used to take 10^9 loop steps per function evaluation.
+        let start = AstroTime(year: 2025, month: 1, day: 1)
+        let direct = try #require(try Sun.searchLongitude(90, after: start))
+        let wrapped = try #require(try Sun.searchLongitude(90 + 360 * 1e9, after: start))
+        #expect(abs(wrapped.universalTime - direct.universalTime) * 86_400 < 60)
+    }
 }

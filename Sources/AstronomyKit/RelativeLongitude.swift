@@ -41,11 +41,13 @@ extension CelestialBody {
     ///   - targetAngle: The target relative longitude in degrees (0–360).
     ///   - startTime: The time to start searching from.
     /// - Returns: The time when the target relative longitude is reached.
-    /// - Throws: `AstronomyError` if the search fails.
+    /// - Throws: `AstronomyError.invalidParameter` if `targetAngle` is not finite,
+    ///   or another `AstronomyError` if the search fails.
     public func searchRelativeLongitude(
         _ targetAngle: Double,
         after startTime: AstroTime
     ) throws -> AstroTime {
+        guard targetAngle.isFinite else { throw AstronomyError.invalidParameter }
         let result = Astronomy_SearchRelativeLongitude(raw, targetAngle, startTime.raw)
         if let error = AstronomyError(status: result.status) {
             throw error

@@ -128,26 +128,20 @@ static void CheckStatus(astro_status_t status, const char *function)
 }
 
 /* The same check as Swift's Observer.validatedRaw(). Only the rise/set search
-   is limited to it; see "Known defects excluded from fuzzing" in README.md. */
+   is limited to it; see "Restrictions" in README.md. */
 static int SwiftAcceptsObserver(astro_observer_t observer)
 {
     return isfinite(observer.latitude) && isfinite(observer.longitude) && isfinite(observer.height)
         && observer.latitude >= -90.0 && observer.latitude <= 90.0;
 }
 
-/* Known defect #57: the rise/set search never ends for a non-finite limit or a
-   start time where its 0.42-day step stops advancing (2^52 days). 400 days
-   covers the Swift default of 366. Delete when #57 is fixed. */
-static int RiseSetKnownHang(astro_time_t start, double limit_days)
+/* The rise/set search evaluates the body's altitude every 0.42 days of its
+   window, so a large finite limit is slow by design, not hung: 10^9 days is
+   about 2.4 billion evaluations. Non-finite limits are still fuzzed, and so is
+   every start time. 400 days covers the Swift default of 366. */
+static int RiseSetWithinCostBound(double limit_days)
 {
-    return !(fabs(limit_days) <= 400.0) || !(fabs(start.ut) < 4503599627370496.0);
-}
-
-/* Known defect #58: Pluto at a NaN TT converts NaN to int in the state table
-   lookup, which is undefined behavior. Delete when #58 is fixed. */
-static int PlutoKnownUndefinedBehavior(astro_body_t body, astro_time_t time)
-{
-    return body == BODY_PLUTO && isnan(time.tt);
+    return !isfinite(limit_days) || fabs(limit_days) <= 400.0;
 }
 
 /* Keeps results observable so the calls cannot be optimized away. */
@@ -169,7 +163,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     double angle;
     astro_direction_t direction;
     double limit_days, meters_above_ground;
-    int run_body_calls;
 
     /* Decode every field before calling anything, so skipping a call never
        shifts the fields after it. */
@@ -213,9 +206,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     limit_days = TakeDouble(&reader);
     meters_above_ground = TakeDouble(&reader);
 
-    run_body_calls = !PlutoKnownUndefinedBehavior(body, time);
-
-    if (run_body_calls)
     {
         astro_vector_t vector = Astronomy_HelioVector(body, time);
         CheckStatus(vector.status, "Astronomy_HelioVector");
@@ -230,6 +220,29 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         astro_equatorial_t equ = Astronomy_Equator(body, &equator_time, observer, equdate, equator_aberration);
         CheckStatus(equ.status, "Astronomy_Equator");
         Sink = equ.ra + equ.dec + equ.dist + equ.vec.x;
+    }
+
+    /* Searches and functions that step or wrap a value derived from the time
+       or from a target angle. The pivot angle doubles as the target angle. */
+    {
+        astro_libration_t lib = Astronomy_Libration(time);    /* has no status */
+        Sink = lib.elon + lib.elat + lib.mlon + lib.dist_km;
+
+        astro_node_event_t node = Astronomy_SearchMoonNode(time);
+        CheckStatus(node.status, "Astronomy_SearchMoonNode");
+        Sink = node.time.ut;
+
+        astro_apsis_t apsis = Astronomy_SearchPlanetApsis(body, time);
+        CheckStatus(apsis.status, "Astronomy_SearchPlanetApsis");
+        Sink = apsis.time.ut + apsis.dist_au;
+
+        astro_search_result_t sunlon = Astronomy_SearchSunLongitude(angle, time, limit_days);
+        CheckStatus(sunlon.status, "Astronomy_SearchSunLongitude");
+        Sink = sunlon.time.ut;
+
+        astro_search_result_t rlon = Astronomy_SearchRelativeLongitude(body, angle, time);
+        CheckStatus(rlon.status, "Astronomy_SearchRelativeLongitude");
+        Sink = rlon.time.ut;
     }
 
     {
@@ -251,7 +264,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     /* The issue's Astronomy_SearchRiseSet is a header macro that calls
        Astronomy_SearchRiseSetEx with metersAboveGround = 0. */
-    if (run_body_calls && SwiftAcceptsObserver(observer) && !RiseSetKnownHang(time, limit_days))
+    if (SwiftAcceptsObserver(observer) && RiseSetWithinCostBound(limit_days))
     {
         astro_search_result_t result = Astronomy_SearchRiseSetEx(
             body, observer, direction, time, limit_days, meters_above_ground);

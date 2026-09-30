@@ -94,7 +94,9 @@ extension Moon {
     ///
     /// - Parameter startTime: The time to start searching from.
     /// - Returns: The next node crossing.
-    /// - Throws: `AstronomyError` if the search fails.
+    /// - Throws: `AstronomyError.badTime` if the search cannot step forward from
+    ///   `startTime` (a non-finite time, or one 2^57 days or more from J2000), or another
+    ///   `AstronomyError` if the search fails.
     public static func searchNode(after startTime: AstroTime) throws -> LunarNode {
         let result = Astronomy_SearchMoonNode(startTime.raw)
         return try LunarNode(result)
