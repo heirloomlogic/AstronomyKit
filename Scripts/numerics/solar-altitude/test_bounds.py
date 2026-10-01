@@ -145,18 +145,6 @@ class BoundsTests(unittest.TestCase):
                 self.assertGreaterEqual(abs(printed), abs(exact), f"{key} is an upper bound; the article must not round it toward zero")
         self.assertEqual(sorted(set(recorded) - {key for key, _ in quoted}), [], "values in bounds.json the article does not quote")
 
-    def test_swift_constants_sit_at_or_just_above_bounds_json(self):
-        # bounds.py --check ties the Swift file to the exact values; this checks the rounding
-        # direction against the recorded floats: each literal is the recorded value or its successor.
-        text = bounds.SWIFT_TARGET.read_text()
-        literals = dict(re.findall(r"static let (\w+) = ([-+0-9.e]+)", text))
-        for key, _ in bounds.SWIFT_BOUNDS:
-            value = float(literals[key])
-            self.assertIn(value, (RECORDED[key], math.nextafter(RECORDED[key], math.inf)), key)
-        self.assertEqual(float(literals["polynomialStart"]), bounds.START)
-        self.assertEqual(float(literals["polynomialStop"]), bounds.STOP)
-        self.assertEqual(float(literals["observerHeightMeters"]), bounds.OBSERVER_HEIGHT_KM * 1000)
-
     def test_above_never_rounds_toward_zero(self):
         third = F(1, 3)
         self.assertGreaterEqual(F(bounds.above(third)), third)

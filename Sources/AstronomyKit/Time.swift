@@ -95,7 +95,7 @@ public struct AstroTime: Sendable {
 
     /// Seconds from the Unix epoch (1970-01-01 00:00 UTC) to the J2000
     /// civil calendar reference moment (2000-01-01 12:00 UTC).
-    private static let j2000UnixOffset = 946_728_000.0
+    static let j2000UnixOffset = 946_728_000.0
 
     /// Creates a time from a Foundation `Date`.
     ///
@@ -105,7 +105,7 @@ public struct AstroTime: Sendable {
     ///     date's TT and that derived times use. `nil` captures the process
     ///     default at this moment.
     public init(_ date: Date, deltaTModel: DeltaTModel? = nil) {
-        self.init(civilDays: Self.civilDays(of: date), deltaTModel: deltaTModel)
+        self = Self.civil(days: Self.civilDays(of: date), deltaTModel: deltaTModel).time
     }
 
     /// Civil UTC days since J2000 noon of a Foundation `Date`.
@@ -149,15 +149,16 @@ public struct AstroTime: Sendable {
             Int32(clamping: minute),
             second
         )
-        self.init(civilDays: calendar.ut, deltaTModel: deltaTModel)
+        self = Self.civil(days: calendar.ut, deltaTModel: deltaTModel).time
     }
 
-    private init(civilDays: Double, deltaTModel: DeltaTModel?) {
-        if let tt = CivilTime.terrestrialTime(utcDays: civilDays) {
-            self.init(tt: tt, deltaTModel: deltaTModel)
-        } else {
-            self.init(ut: civilDays, deltaTModel: deltaTModel)
+    /// The time of a civil day count, and whether the bundled UTC table
+    /// converted it to TT (`true`) or it was taken as UT1 (`false`, before 1961).
+    static func civil(days: Double, deltaTModel: DeltaTModel?) -> (time: AstroTime, fromTable: Bool) {
+        if let tt = CivilTime.terrestrialTime(utcDays: days) {
+            return (AstroTime(tt: tt, deltaTModel: deltaTModel), true)
         }
+        return (AstroTime(ut: days, deltaTModel: deltaTModel), false)
     }
 
     /// Creates a time from modeled UT1 days since J2000.

@@ -67,21 +67,9 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         /// The sum of the four terms. Each addition rounds up when its
         /// floating-point result fell short, so the total is never below the
         /// exact sum.
-        public let total: Double
-
-        init(
-            civilConversion: Double,
-            scaleConversion: Double,
-            lightTimeTermination: Double,
-            earthRotationAngle: Double
-        ) {
-            self.civilConversion = civilConversion
-            self.scaleConversion = scaleConversion
-            self.lightTimeTermination = lightTimeTermination
-            self.earthRotationAngle = earthRotationAngle
-            var total = Self.addingUp(civilConversion, scaleConversion)
-            total = Self.addingUp(total, lightTimeTermination)
-            self.total = Self.addingUp(total, earthRotationAngle)
+        public var total: Double {
+            let conversions = Self.addingUp(civilConversion, scaleConversion)
+            return Self.addingUp(Self.addingUp(conversions, lightTimeTermination), earthRotationAngle)
         }
 
         /// `a + b`, moved up one unit when the rounded sum is below the exact sum.
@@ -156,13 +144,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
     /// covers, in meters.
     public static let maximumObserverHeight = SolarAltitudeBounds.observerHeightMeters
 
-    init(
-        time: AstroTime,
-        reference: Reference,
-        civilConversion: Double,
-        observer: Observer,
-        deltaTModel: DeltaTModel
-    ) throws {
+    init(time: AstroTime, reference: Reference, observer: Observer, deltaTModel: DeltaTModel) throws {
         _ = try observer.validatedRaw()
         guard abs(observer.height) <= SolarAltitudeBounds.observerHeightMeters else {
             throw Unsupported.observerHeightOutsideBudget
@@ -171,25 +153,31 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         let tt = time.terrestrialTime
         guard ut.isFinite, tt.isFinite else { throw AstronomyError.badTime }
 
-        let forwardTT = Self.forwardTT(ut: ut, under: deltaTModel)
+        // The TT the model gives for `ut`. A time built from `ut` has exactly it.
+        let forwardTT: Double
+        let civilConversion: Double
         let scaleConversion: Double
         switch reference {
         case .terrestrialTime, .civilUTC:
+            forwardTT = AstroTime(ut: ut, deltaTModel: deltaTModel).terrestrialTime
             // The engine's inverse accepts this residual as converged; a TT in
             // a gap is stored with a UT whose residual exceeds it.
-            let tolerance = max(1e-12, 2 * Double.ulpOfOne * abs(tt))
-            guard abs(tt - forwardTT) <= tolerance else {
+            guard abs(tt - forwardTT) <= Self.inverseTolerance(terrestrialTime: tt) else {
                 throw Unsupported.terrestrialTimeInDeltaTGap
             }
+            civilConversion = reference == .civilUTC ? SolarAltitudeBounds.civilToTTDegrees : 0
             scaleConversion = SolarAltitudeBounds.ttInverseDegrees
         case .universalTime, .civilUT1:
+            forwardTT = tt
+            civilConversion = reference == .civilUT1 ? SolarAltitudeBounds.civilToUTDegrees : 0
             scaleConversion = SolarAltitudeBounds.forwardTTDegrees
         }
 
         // The light-time loop evaluates the Earth at the input TT first, then
         // at the TT derived from `ut - tau` for tau up to the backdate bound.
         let coverage = Self.polynomialCoverage
-        let earliestTT = Self.forwardTT(ut: ut - SolarAltitudeBounds.backdateMaxDays, under: deltaTModel)
+        let earliest = AstroTime(ut: ut - SolarAltitudeBounds.backdateMaxDays, deltaTModel: deltaTModel)
+        let earliestTT = earliest.terrestrialTime
         guard coverage.contains(tt), coverage.contains(forwardTT), coverage.contains(earliestTT) else {
             throw Unsupported.outsidePolynomialCoverage
         }
@@ -207,10 +195,10 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         )
     }
 
-    /// The TT the engine derives from `ut`, by the same expression it uses, so
-    /// a time built from `ut` has exactly this TT.
-    static func forwardTT(ut: Double, under model: DeltaTModel) -> Double {
-        ut + model.function(ut) / 86_400
+    /// The residual `|tt - time.tt|` the engine's TT to UT inverse accepts as
+    /// converged, as it writes the expression.
+    static func inverseTolerance(terrestrialTime tt: Double) -> Double {
+        max(SolarAltitudeBounds.inverseToleranceFloorDays, SolarAltitudeBounds.inverseTolerancePerDay * abs(tt))
     }
 }
 
@@ -246,12 +234,10 @@ extension Sun {
         guard !nearSegmentStart else {
             throw SolarAltitudeObservation.Unsupported.civilDateAtSegmentStart
         }
-        let fromTable = CivilTime.terrestrialTime(utcDays: civilDays) != nil
+        let civil = AstroTime.civil(days: civilDays, deltaTModel: deltaTModel)
         return try SolarAltitudeObservation(
-            time: AstroTime(date, deltaTModel: deltaTModel),
-            reference: fromTable ? .civilUTC : .civilUT1,
-            civilConversion: fromTable
-                ? SolarAltitudeBounds.civilToTTDegrees : SolarAltitudeBounds.civilToUTDegrees,
+            time: civil.time,
+            reference: civil.fromTable ? .civilUTC : .civilUT1,
             observer: observer,
             deltaTModel: deltaTModel
         )
@@ -281,7 +267,6 @@ extension Sun {
         try SolarAltitudeObservation(
             time: AstroTime(tt: terrestrialTime, deltaTModel: deltaTModel),
             reference: .terrestrialTime,
-            civilConversion: 0,
             observer: observer,
             deltaTModel: deltaTModel
         )
@@ -312,7 +297,6 @@ extension Sun {
         try SolarAltitudeObservation(
             time: AstroTime(ut: universalTime, deltaTModel: deltaTModel),
             reference: .universalTime,
-            civilConversion: 0,
             observer: observer,
             deltaTModel: deltaTModel
         )
