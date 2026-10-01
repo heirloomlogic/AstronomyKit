@@ -1,0 +1,172 @@
+{
+  "comparisons": [
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "mercury-position-cold-warm-em"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "mars-state-jpl"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "pluto-position-em"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "pluto-state-jpl"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "seasons-2025-em"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "seasons-1600-jpl"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "sirius-ecliptic-em"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "gravity-forward-jpl"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "chiron-2020-em"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "bad-time-position-jpl"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-nyc-day-position"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-nyc-day-state"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-nyc-week-position"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-nyc-week-state"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-reykjavik-day-position"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-reykjavik-day-state"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-scoring-position"
+    },
+    {
+      "differenceCount": 0,
+      "differences": [],
+      "id": "downstream-scoring-state"
+    }
+  ],
+  "contract": "exact parsed JSON equality; numerical and external-accuracy contracts are deferred to chain link 3",
+  "negativeControls": [
+    {
+      "detected": [
+        {
+          "actual": -0.38850670127140435,
+          "expected": -0.3885067022714044,
+          "kind": "value",
+          "path": "$.samples[0].value.x"
+        }
+      ],
+      "name": "numeric"
+    },
+    {
+      "detected": [
+        {
+          "actual": "bad-time",
+          "expected": "success",
+          "kind": "value",
+          "path": "$.status"
+        }
+      ],
+      "name": "status"
+    },
+    {
+      "detected": [
+        {
+          "actual": "jpl-horizons",
+          "expected": "espenak-meeus",
+          "kind": "value",
+          "path": "$.model"
+        }
+      ],
+      "name": "timeModel"
+    },
+    {
+      "detected": [
+        {
+          "actual": "June Solstice",
+          "expected": "March Equinox",
+          "kind": "value",
+          "path": "$.events[0].name"
+        },
+        {
+          "actual": 9302.61339477493,
+          "expected": 9209.876860125893,
+          "kind": "value",
+          "path": "$.events[0].time.tt"
+        },
+        {
+          "actual": 9302.612529868193,
+          "expected": 9209.87599699714,
+          "kind": "value",
+          "path": "$.events[0].time.ut"
+        },
+        {
+          "actual": "March Equinox",
+          "expected": "June Solstice",
+          "kind": "value",
+          "path": "$.events[1].name"
+        },
+        {
+          "actual": 9209.876860125893,
+          "expected": 9302.61339477493,
+          "kind": "value",
+          "path": "$.events[1].time.tt"
+        },
+        {
+          "actual": 9209.87599699714,
+          "expected": 9302.612529868193,
+          "kind": "value",
+          "path": "$.events[1].time.ut"
+        }
+      ],
+      "name": "eventOrder"
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -1,6 +1,6 @@
 # Engine migration foundation
 
-Issue #80 freezes the patched C engine before the Swift engine is evaluated. This first chain link records the reference source and current contracts. The separate-process comparison archive, representative corpus, negative controls, measured performance baseline, and acceptance budgets belong to the next two links and remain open.
+Issue #80 freezes the patched C engine before the Swift engine is evaluated. The first chain link records the reference source and current contracts. The second link adds the separate-process comparison protocol and evidence archive. The measured performance baseline and acceptance budgets remain open for the third link.
 
 ## Frozen C oracle
 
@@ -24,3 +24,16 @@ python3 -m unittest Scripts/migration/test_foundation.py -v
 ```
 
 The generator fails when it finds an unowned Swift source, test file, generated artifact, C dependency, or patch group. Every run extracts the public symbol graph with the active Swift toolchain; compiler-synthesized ownership spelling is normalized so Swift 6.3 and 6.4 describe the same source API consistently. Updating a mapped surface requires assigning its migration issue and regenerating the inventory; changing the frozen revision requires inspecting and deliberately rewriting the oracle lock.
+
+## Separate-process comparison
+
+[`corpus.json`](../../Tools/Migration/Comparison/corpus.json) defines the hand-selected position, derivative, event, cold/warm, Delta T, fixed-star, Pluto, gravity, Chiron, and error cases. [`downstream-populations-lock.json`](../../Tools/Migration/Comparison/downstream-populations-lock.json) pins four request populations from commit `1add73ec6c117e9b6f3d26e745a3487262ff4c75` by path, compressed byte count, and SHA-256. The coordinator validates and reads every fixed-size record, archives counts and TT ranges, and selects the first active position and state request from each population for comparison.
+
+The coordinator builds the content-addressed C oracle outside SwiftPM and the `AstronomyMigrationRunner` target in Release mode. That executable target is not part of the shipping `AstronomyKit` library product. Each case launches one fresh C process and one fresh Swift process. The checked-in [reference archive](../../Tools/Migration/Comparison/Artifacts/reference) records canonical inputs, parsed outputs, astronomical statuses, process exits, stderr, stdout hashes, source and executable hashes, build metadata, environment, exact machine-readable differences, and downstream population provenance.
+
+```sh
+python3 Scripts/migration/run-comparison.py --check
+python3 -m unittest Scripts/migration/test_comparison.py -v
+```
+
+`--check` rebuilds both executables, replays all 18 cases, recovers all 7,746,010 downstream records, and rejects a stale archive or any C/Swift difference. The archive also proves that deliberate numeric, status, Delta T model, and event-order mutations are detected, and that invalid requests fail in both runner processes. Its current comparison contract is exact parsed JSON equality because the Swift surface still delegates to the frozen C implementation. Link 3 will define the separate numerical-regression and independent-accuracy contracts needed for a native Swift candidate.

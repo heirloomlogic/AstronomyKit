@@ -1,0 +1,500 @@
+{
+  "populations": [
+    {
+      "compressedBytes": 4182016,
+      "counts": [
+        {
+          "active": 1,
+          "body": 0,
+          "count": 73431,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 1,
+          "count": 72732,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 483589,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 3,
+          "count": 100167,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 108915,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 86853,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 6,
+          "count": 1779,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 7,
+          "count": 2372,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 2115,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 2179,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 2179,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 6,
+          "count": 2179,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 7,
+          "count": 2179,
+          "kind": 1
+        }
+      ],
+      "name": "nyc-day",
+      "recordCount": 940669,
+      "selectedRecords": [
+        {
+          "active": 1,
+          "body": 2,
+          "caseId": "downstream-nyc-day-position",
+          "kind": 0,
+          "thread": 0,
+          "tt": 9296.495025222299
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "caseId": "downstream-nyc-day-state",
+          "kind": 1,
+          "thread": 3,
+          "tt": 0.0
+        }
+      ],
+      "source": {
+        "path": "Scripts/performance/polynomial/data/requests/nyc-day-requests.bin.gz",
+        "revision": "1add73ec6c117e9b6f3d26e745a3487262ff4c75",
+        "sha256": "4f805a74974993f09f3e182dc377e61ef30bd9c68196ab8201f6ea258077812d"
+      },
+      "ttRange": {
+        "maximum": 29200.0,
+        "minimum": 0.0
+      },
+      "uncompressedBytes": 22576056
+    },
+    {
+      "compressedBytes": 23789422,
+      "counts": [
+        {
+          "active": 1,
+          "body": 0,
+          "count": 415125,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 1,
+          "count": 377571,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 2713164,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 3,
+          "count": 602919,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 616492,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 475863,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 6,
+          "count": 12363,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 7,
+          "count": 16484,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 14715,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 12763,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 12763,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 6,
+          "count": 12763,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 7,
+          "count": 12763,
+          "kind": 1
+        }
+      ],
+      "name": "nyc-week",
+      "recordCount": 5295748,
+      "selectedRecords": [
+        {
+          "active": 1,
+          "body": 2,
+          "caseId": "downstream-nyc-week-position",
+          "kind": 0,
+          "thread": 0,
+          "tt": 9296.491553000076
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "caseId": "downstream-nyc-week-state",
+          "kind": 1,
+          "thread": 0,
+          "tt": 0.0
+        }
+      ],
+      "source": {
+        "path": "Scripts/performance/polynomial/data/requests/nyc-week-requests.bin.gz",
+        "revision": "1add73ec6c117e9b6f3d26e745a3487262ff4c75",
+        "sha256": "263484957ec6afa8e1092a155a55650e542121fbf7877dae9fb046434961e68e"
+      },
+      "ttRange": {
+        "maximum": 29200.0,
+        "minimum": 0.0
+      },
+      "uncompressedBytes": 127097952
+    },
+    {
+      "compressedBytes": 3801033,
+      "counts": [
+        {
+          "active": 1,
+          "body": 0,
+          "count": 75780,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 1,
+          "count": 76620,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 427568,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 3,
+          "count": 82089,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 87561,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 66090,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 6,
+          "count": 1779,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 7,
+          "count": 2372,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 2115,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 2179,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 2179,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 6,
+          "count": 2179,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 7,
+          "count": 2179,
+          "kind": 1
+        }
+      ],
+      "name": "reykjavik-day",
+      "recordCount": 830690,
+      "selectedRecords": [
+        {
+          "active": 1,
+          "body": 2,
+          "caseId": "downstream-reykjavik-day-position",
+          "kind": 0,
+          "thread": 0,
+          "tt": 9296.491553000076
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "caseId": "downstream-reykjavik-day-state",
+          "kind": 1,
+          "thread": 1,
+          "tt": 0.0
+        }
+      ],
+      "source": {
+        "path": "Scripts/performance/polynomial/data/requests/reykjavik-day-requests.bin.gz",
+        "revision": "1add73ec6c117e9b6f3d26e745a3487262ff4c75",
+        "sha256": "5327526fcdbbd3ad247816378c2b314ee7ee22be81d725cfedcf1a5c62cfed67"
+      },
+      "ttRange": {
+        "maximum": 29200.0,
+        "minimum": 0.0
+      },
+      "uncompressedBytes": 19936560
+    },
+    {
+      "compressedBytes": 2485853,
+      "counts": [
+        {
+          "active": 0,
+          "body": 0,
+          "count": 768,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 0,
+          "count": 62847,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 1,
+          "count": 768,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 1,
+          "count": 61884,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 2,
+          "count": 21575,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 329970,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 3,
+          "count": 768,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 3,
+          "count": 57222,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 4,
+          "count": 768,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 4,
+          "count": 70365,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 5,
+          "count": 768,
+          "kind": 0
+        },
+        {
+          "active": 1,
+          "body": 5,
+          "count": 60384,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 6,
+          "count": 864,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 7,
+          "count": 864,
+          "kind": 0
+        },
+        {
+          "active": 0,
+          "body": 2,
+          "count": 64,
+          "kind": 1
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "count": 2240,
+          "kind": 1
+        },
+        {
+          "active": 0,
+          "body": 4,
+          "count": 1696,
+          "kind": 1
+        },
+        {
+          "active": 0,
+          "body": 5,
+          "count": 1696,
+          "kind": 1
+        },
+        {
+          "active": 0,
+          "body": 6,
+          "count": 1696,
+          "kind": 1
+        },
+        {
+          "active": 0,
+          "body": 7,
+          "count": 1696,
+          "kind": 1
+        }
+      ],
+      "name": "scoring",
+      "recordCount": 678903,
+      "selectedRecords": [
+        {
+          "active": 1,
+          "body": 2,
+          "caseId": "downstream-scoring-position",
+          "kind": 0,
+          "thread": 2,
+          "tt": -16091.047428702868
+        },
+        {
+          "active": 1,
+          "body": 2,
+          "caseId": "downstream-scoring-state",
+          "kind": 1,
+          "thread": 2,
+          "tt": -16091.04130318446
+        }
+      ],
+      "source": {
+        "path": "Scripts/performance/polynomial/data/requests/scoring-requests.bin.gz",
+        "revision": "1add73ec6c117e9b6f3d26e745a3487262ff4c75",
+        "sha256": "f0618cd29f70e11b1c613de735947bb927022d88877aaca556c5e2a4f4fd8973"
+      },
+      "ttRange": {
+        "maximum": 29200.0,
+        "minimum": -29200.0
+      },
+      "uncompressedBytes": 16293672
+    }
+  ],
+  "recordFormat": "<Iiiid",
+  "schemaVersion": 1
+}
