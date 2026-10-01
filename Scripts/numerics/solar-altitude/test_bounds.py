@@ -110,6 +110,10 @@ class BoundsTests(unittest.TestCase):
         # init(year:...) reaches CivilTime.terrestrialTime through Astronomy_MakeTime, whose three
         # additions each round at u |utc| before the conversion's own sum does.
         self.assertGreaterEqual(RECORDED["civilToTTDays"], float(4 * bounds.U * bounds.STOP))
+        # init(_:) rounds three times: Foundation's reference-date sum at the magnitude of the
+        # seconds since 1970, then the two operations that make days from seconds.
+        unix_days = bounds.swift_constant("j2000UnixOffset") / bounds.SECONDS_PER_DAY
+        self.assertGreaterEqual(RECORDED["civilCalendarDays"], float(bounds.U * (3 * bounds.STOP + unix_days)))
         # Before 1961 a civil date is taken as UT, so the same roundings reach the UT sensitivity.
         self.assertGreaterEqual(RECORDED["civilToUTDegrees"], RECORDED["civilCalendarDays"] * RECORDED["utSensitivityDegPerDay"] * 0.999)
 

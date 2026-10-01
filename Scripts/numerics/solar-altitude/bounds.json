@@ -1,10 +1,10 @@
 {
   "computed": {
     "backdateMaxDays": 0.005926605298166121,
-    "civilCalendarDays": 1.2287448836190153e-11,
-    "civilToTTDays": 1.638311767960134e-11,
-    "civilToTTDegrees": 4.108569072200655e-15,
-    "civilToUTDegrees": 4.449312450474429e-09,
+    "civilCalendarDays": 1.3503531626213316e-11,
+    "civilToTTDays": 1.759920050610699e-11,
+    "civilToTTDegrees": 4.41353912661444e-15,
+    "civilToUTDegrees": 4.889658723373775e-09,
     "contraction": 0.00010804543497477138,
     "deltaTJumpSeconds": {
       "y1900": -0.08840036806848105,

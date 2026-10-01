@@ -30,6 +30,7 @@ ENGINE = (ROOT / "Sources/CLibAstronomy/astronomy.c").read_text()
 HEADER = (ROOT / "Sources/CLibAstronomy/include/astronomy.h").read_text()
 NUTATION = ROOT / "Sources/CLibAstronomy/generated/iau2000b_full.h"
 CIVIL_TABLE = (ROOT / "Sources/AstronomyKit/UTCOffsetTable.swift").read_text()
+TIME_SWIFT = (ROOT / "Sources/AstronomyKit/Time.swift").read_text()
 TARGET = HERE / "bounds.json"
 
 START, STOP = F(embed.START), F(embed.STOP)  # polynomial coverage, TT days from J2000
@@ -52,6 +53,14 @@ def header_constant(name):
 def engine_constant(name):
     """A `static const double` from astronomy.c, as the exact value of its literal."""
     return F(re.search(rf"static const double {name} = ([-+0-9.eE]+);", ENGINE).group(1))
+
+
+def swift_constant(name):
+    """A `static let` literal from Time.swift, as the exact value of its decimal literal."""
+    match = re.search(rf"static let {name} = ([-+0-9_.eE]+)", TIME_SWIFT)
+    if match is None:
+        raise ValueError(f"Time.swift no longer defines {name}; update bounds.py")
+    return F(match.group(1).replace("_", ""))
 
 
 def engine_function(name):
@@ -333,8 +342,12 @@ def compute():
     tolerance = max(floor, factor * EPSILON * STOP)
     inverse_days = (tolerance / (1 - U) + forward_rounding(ut_max)) * ut_per_tt
 
-    # Calendar arithmetic. init(_:): (seconds - offset) / 86400, two operations.
-    magnitude, error = rounded(utc_max)
+    # Calendar arithmetic. init(_:): Foundation's `timeIntervalSince1970` adds
+    # the reference-date offset to the interval a Date stores, rounding at the
+    # magnitude of the seconds since 1970; then (seconds - offset) / 86400,
+    # two more operations.
+    magnitude, error = rounded(utc_max + swift_constant("j2000UnixOffset") / SECONDS_PER_DAY)
+    magnitude, error = rounded(utc_max, error)
     magnitude, date_days = rounded(magnitude, error)
     # init(year:...): Astronomy_MakeTime adds hour/24, minute/1440, second/86400
     # to the day number. For in-range components the three quotients sum to
