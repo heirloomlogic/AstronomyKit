@@ -34,13 +34,13 @@ The Delta T slope, `deltaTSlopeSecondsPerDay` = 0.00647 s per UT day, is the lar
 
 ## Time conversion
 
-Each initializer rounds differently, and a certificate adds the terms for the one that built its time.
+Each initializer rounds differently, and a certificate adds the terms for the one that built its time. An error in one scale reaches the other through the model: `init(tt:)` derives `ut` from the stored `tt`, and the forward path derives `tt` from the stored `ut`, so each term below carries its error through both sensitivities where the other scale follows from it. `init(tt:)` stores `tt` exactly, `init(ut:)` stores `ut` exactly, and `init(tt:ut:)` stores both, so those paths carry one scale only.
 
 Calendar arithmetic. `init(_:)` turns a `Date` into days in three operations: Foundation's `timeIntervalSince1970` adds the reference-date offset to the interval a `Date` stores, rounding at the magnitude of the seconds since 1970, then `(seconds - offset) / 86400`. `init(year:...)` goes through `Astronomy_MakeTime`, which adds `hour / 24`, `minute / 1440`, and `second / 86400` to the day number: three sums rounding at up to `u (|utc| + 1)` each, with the three quotients together within `u` for components in their documented ranges. Either way the civil day count is within `civilCalendarDays` = 1.36e-11 day of the exact value, for a civil time within a day of the coverage. Derived.
 
-Civil UTC to TT, from 1961 on (`CivilTime.terrestrialTime`, Swift) is `utc + (offset + rate × (utc - start)) / 86400`: five operations plus the rounding of the `offset` and `rate` literals, bounded for the segment of the bundled table where `offset + rate × span` is largest, with the calendar error arriving through the conversion's slope `1 + rate / 86400`. Together `civilToTTDays` = 1.76e-11 day (1.53 µs), which through the TT sensitivity moves the altitude by `civilToTTDegrees` = 4.42e-15°. Derived. The TT then goes through the inverse below. A civil time within the calendar rounding of a segment start, including the table's first, can land on either side of it; the stored `tt` then differs from the exact conversion by that segment's step, not by this bound.
+Civil UTC to TT, from 1961 on (`CivilTime.terrestrialTime`, Swift) is `utc + (offset + rate × (utc - start)) / 86400`: five operations plus the rounding of the `offset` and `rate` literals, bounded for the segment of the bundled table where `offset + rate × span` is largest, with the calendar error arriving through the conversion's slope `1 + rate / 86400`. Together `civilToTTDays` = 1.76e-11 day (1.53 µs). The stored `tt` is off by that, and `init(tt:)` then derives `ut` from the stored `tt`, so the model's UT for it is off from the exact civil instant's UT by the same amount times `1 / (1 - slope / 86400)`, on top of the inverse term below. Through both sensitivities, `civilToTTDegrees` = 6.38e-9°. Derived. A civil time within the calendar rounding of a segment start, including the table's first, can land on either side of it; the stored `tt` then differs from the exact conversion by that segment's step, not by this bound.
 
-Civil dates before 1961-01-01, where the table starts, are taken as UT1: the calendar rounding lands on `ut` instead, worth `civilToUTDegrees` = 4.89e-9° through the UT sensitivity, and TT follows forward.
+Civil dates before 1961-01-01, where the table starts, are taken as UT1: the calendar rounding lands on `ut` instead, and TT follows forward from that `ut`, so the stored `tt` is off by the same amount times `1 + slope / 86400` on top of the forward rounding below. Through both sensitivities, `civilToUTDegrees` = 4.89e-9°. Derived.
 
 UT to TT (`TimeFromDaysWithDeltaT`: `init(ut:)`, the civil path before 1961, and every backdated time) is `fl(ut + fl(ΔT(ut) / 86400))`: two roundings, `forwardTTDays` = 4.10e-12 day at the coverage edge, plus the rounding of the Delta T polynomial itself, measured below 6.0e-13 s (6.9e-18 day) over the grid. Through the TT sensitivity, `forwardTTDegrees` = 1.03e-15°. Derived.
 
@@ -117,11 +117,11 @@ For a time inside the coverage with a finite `ut` and `tt`, a TT outside the Del
 | Term | Degrees | Status |
 |---|---|---|
 | TT to UT inverse, if the engine derived `ut` (`init(tt:)`, `init(_:)` and `init(year:...)` from 1961 on) | `ttInverseDegrees` = 7.42e-9 | Derived |
-| Calendar rounding taken as UT (`init(_:)` and `init(year:...)` before 1961) | `civilToUTDegrees` = 4.89e-9 | Derived |
+| Calendar and civil UTC to TT rounding, carried into the derived `ut` (`init(_:)` and `init(year:...)` from 1961 on) | `civilToTTDegrees` = 6.38e-9 | Derived |
+| Calendar rounding taken as UT, carried into the forward `tt` (`init(_:)` and `init(year:...)` before 1961) | `civilToUTDegrees` = 4.89e-9 | Derived |
 | Light-time termination | `lightTimeDegrees` = 1.12e-9 | Derived |
 | Earth Rotation Angle rounding | `eraDegrees` = 1.64e-11 | Derived |
 | Join discontinuity, per boundary crossed | `joinDegrees` = 1.29e-11 | Derived |
-| Calendar and civil UTC to TT rounding (`init(_:)` and `init(year:...)` from 1961 on) | `civilToTTDegrees` = 4.42e-15 | Derived |
 | UT to TT rounding, if the engine derived `tt` (`init(ut:)`, civil before 1961) | `forwardTTDegrees` = 1.03e-15 | Derived |
 | Polynomial evaluation, frames, sidereal time, horizon transform, libm, Delta T polynomial | in the 1e-11° decade or below on all but the 27 light-time flips observed on 1,168,398 samples; no bound | Measured |
 

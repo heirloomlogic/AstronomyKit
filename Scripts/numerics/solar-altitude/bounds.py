@@ -347,7 +347,7 @@ def compute():
     # magnitude of the seconds since 1970; then (seconds - offset) / 86400,
     # two more operations.
     magnitude, error = rounded(utc_max + swift_constant("j2000UnixOffset") / SECONDS_PER_DAY)
-    magnitude, error = rounded(utc_max, error)
+    magnitude, error = rounded(utc_max + error, error)
     magnitude, date_days = rounded(magnitude, error)
     # init(year:...): Astronomy_MakeTime adds hour/24, minute/1440, second/86400
     # to the day number. For in-range components the three quotients sum to
@@ -430,6 +430,14 @@ def compute():
     parallax_rate = (1 + era_rate) * 2 * F(math.pi) * observer_au / radius * DEG
     ut_sensitivity = (1 + era_rate) * 360 + sun_rate * tt_per_ut + parallax_rate
     tt_sensitivity = frame["ttSensitivityDegPerDay"]
+    # An error in one scale reaches the other through the model. From 1961 on
+    # the civil tt seeds init(tt:), so the derived ut is off by the tt error
+    # times ut_per_tt on top of the inverse term; before 1961 the civil ut seeds
+    # the forward tt, off by the ut error times tt_per_ut on top of the forward
+    # rounding. init(tt:) stores tt exactly, init(ut:) stores ut exactly, and
+    # the pair initializer stores both, so those rows carry one scale only.
+    civil_tt_degrees = civil_tt_days * (tt_sensitivity + ut_per_tt * ut_sensitivity)
+    civil_ut_degrees = calendar_days * (ut_sensitivity + tt_per_ut * tt_sensitivity)
     return {
         "earth": {key: (value if isinstance(value, int) else float(value)) for key, value in earth.items()},
         "frameRates": {key: float(value) for key, value in frame.items()},
@@ -439,8 +447,8 @@ def compute():
         "backdateMaxDays": float(backdate),
         "civilCalendarDays": float(calendar_days),
         "civilToTTDays": float(civil_tt_days),
-        "civilToTTDegrees": float(civil_tt_days * tt_sensitivity),
-        "civilToUTDegrees": float(calendar_days * ut_sensitivity),
+        "civilToTTDegrees": float(civil_tt_degrees),
+        "civilToUTDegrees": float(civil_ut_degrees),
         "forwardTTDays": float(forward_tt_days),
         "forwardTTDegrees": float(forward_tt_days * tt_sensitivity),
         "ttInverseDays": float(inverse_days),

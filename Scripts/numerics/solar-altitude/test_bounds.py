@@ -114,8 +114,12 @@ class BoundsTests(unittest.TestCase):
         # seconds since 1970, then the two operations that make days from seconds.
         unix_days = bounds.swift_constant("j2000UnixOffset") / bounds.SECONDS_PER_DAY
         self.assertGreaterEqual(RECORDED["civilCalendarDays"], float(bounds.U * (3 * bounds.STOP + unix_days)))
-        # Before 1961 a civil date is taken as UT, so the same roundings reach the UT sensitivity.
-        self.assertGreaterEqual(RECORDED["civilToUTDegrees"], RECORDED["civilCalendarDays"] * RECORDED["utSensitivityDegPerDay"] * 0.999)
+        # An error in one scale reaches the other: from 1961 on the rounded tt seeds init(tt:), which
+        # derives ut from it, and before 1961 the rounded ut seeds the forward tt. Each civil term
+        # must carry its error through both sensitivities.
+        both = RECORDED["utSensitivityDegPerDay"] + RECORDED["frameRates"]["ttSensitivityDegPerDay"]
+        self.assertGreaterEqual(RECORDED["civilToTTDegrees"], RECORDED["civilToTTDays"] * both * (1 - 1e-12))
+        self.assertGreaterEqual(RECORDED["civilToUTDegrees"], RECORDED["civilCalendarDays"] * both * (1 - 1e-12))
 
     def test_article_quotes_bounds_json(self):
         # Every value the article takes from bounds.json is written next to its key, prints
