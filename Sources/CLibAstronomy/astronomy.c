@@ -97,6 +97,18 @@
         point from 1 to 5: its masses are the engine's own and its states
         succeeded, so the rejected input is a state, which comes from the
         time.
+      - Accepted time range, marked "accepted time range" at each site. The
+        ephemeris evaluators return ASTRO_BAD_TIME unless |TT| <= 1,461,000
+        days (EPHEMERIS_MAX_TT_DAYS, 4000 Julian years from J2000), which
+        also rejects a non-finite TT: CalcVsop, Astronomy_HelioVector,
+        Astronomy_HelioDistance, Astronomy_GeoVector, Astronomy_BaryState,
+        Astronomy_HelioState, Astronomy_GeoMoon, Astronomy_EclipticGeoMoon,
+        Astronomy_JupiterMoons, the ecliptic states (GeoHelioState for each
+        backdated time), Astronomy_GravSimInit and Astronomy_GravSimUpdate,
+        and moon_distance_slope. Callers that assumed Astronomy_GeoMoon or
+        Astronomy_EclipticGeoMoon never fail (Astronomy_GeoMoonState, the
+        Moon node search) now check their status. Results inside the range
+        are bit-identical; Pluto keeps its narrower range.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -176,6 +188,13 @@ extern "C" {
    years beyond the PlutoStateTable range so a far-off time cannot trigger an
    unbounded step-integration (a compute denial-of-service). */
 #define PLUTO_MAX_CRAWL_DAYS 36525.0
+
+/* AstronomyKit local patch (accepted time range): the ephemeris models are
+   evaluated only for TT within 4000 Julian years of J2000 (years about -2000
+   to +6000), roughly the validity VSOP87 states. Far outside it they return
+   absurd values (negative distances from about 10^10 days) and then NaN.
+   Pluto keeps its own narrower range (PLUTO_MAX_CRAWL_DAYS above). */
+#define EPHEMERIS_MAX_TT_DAYS 1461000.0
 
 
 
@@ -640,6 +659,14 @@ double Astronomy_PlanetOrbitalPeriod(astro_body_t body)
     case BODY_PLUTO:    return  90560.0;
     default:            return  0.0;        /* invalid body */
     }
+}
+
+/* AstronomyKit local patch (accepted time range): nonzero when `time` is one
+   the ephemeris models accept. False for a NaN TT, so a non-finite time is
+   rejected too. */
+static int EphemerisTimeOk(astro_time_t time)
+{
+    return fabs(time.tt) <= EPHEMERIS_MAX_TT_DAYS;
 }
 
 static astro_vector_t VecError(astro_status_t status, astro_time_t time)
@@ -2971,6 +2998,10 @@ astro_vector_t Astronomy_GeoMoon(astro_time_t time)
     double mpos1[3];
     double mpos2[3];
 
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
+
     CalcMoon(time.tt / 36525.0, &geo_eclip_lon, &geo_eclip_lat, &distance_au);
 
     /* Convert geocentric ecliptic spherical coordinates to Cartesian coordinates. */
@@ -3025,6 +3056,10 @@ astro_spherical_t Astronomy_EclipticGeoMoon(astro_time_t time)
     astro_ecliptic_t eclip;
     earth_tilt_t et;
     double dist_cos_lat, ecm[3], eqm[3], eqd[3];
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return SphereError(ASTRO_BAD_TIME);
 
     /* CalcMoon produces ecliptic coordinates in mean equinox of date (ECM). */
     CalcMoon(time.tt / 36525.0, &sphere.lon, &sphere.lat, &sphere.dist);
@@ -3095,6 +3130,13 @@ astro_state_vector_t Astronomy_GeoMoonState(astro_time_t time)
 
     r1 = Astronomy_GeoMoon(t1);
     r2 = Astronomy_GeoMoon(t2);
+
+    /* AstronomyKit local patch (accepted time range): Astronomy_GeoMoon can
+       now fail, and its NaN vector must not reach the average below. */
+    if (r1.status != ASTRO_SUCCESS)
+        return StateVecError(r1.status, time);
+    if (r2.status != ASTRO_SUCCESS)
+        return StateVecError(r2.status, time);
 
     /* The desired position is the average of the two calculated positions. */
     s.x = (r1.x + r2.x) / 2;
@@ -3486,6 +3528,10 @@ static astro_vector_t CalcVsop(const vsop_model_t *model, astro_time_t time)
     double eclip[3];
     astro_vector_t vector;
     terse_vector_t pos;
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
 
     /* Calculate the VSOP "B" trigonometric series to obtain ecliptic spherical coordinates. */
     if (!PolynomialPosition((int)(model - vsop), time.tt, eclip, NULL))
@@ -4022,6 +4068,11 @@ astro_status_t Astronomy_GravSimInit(
     if (originBody < BODY_MERCURY || originBody > BODY_SSB)
         return ASTRO_INVALID_BODY;
 
+    /* AstronomyKit local patch (accepted time range): the simulation places
+       the Sun and planets with the VSOP models at every step. */
+    if (!EphemerisTimeOk(time))
+        return ASTRO_BAD_TIME;
+
     /* Verify that all the state vectors are valid and have matching times. */
     for (i = 0; i < numBodies; ++i)
     {
@@ -4164,6 +4215,11 @@ astro_status_t Astronomy_GravSimUpdate(
     */
     if (numBodies != sim->numBodies)
         return ASTRO_INVALID_PARAMETER;
+
+    /* AstronomyKit local patch (accepted time range), as in Astronomy_GravSimInit.
+       Checked before the swap, so a rejected step leaves the simulation as it was. */
+    if (!EphemerisTimeOk(time))
+        return ASTRO_BAD_TIME;
 
     dt = time.tt - sim->curr->time.tt;
 
@@ -4999,6 +5055,13 @@ astro_jupiter_moons_t Astronomy_JupiterMoons(astro_time_t time)
 {
     astro_jupiter_moons_t jm;
 
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+    {
+        jm.io = jm.europa = jm.ganymede = jm.callisto = StateVecError(ASTRO_BAD_TIME, time);
+        return jm;
+    }
+
     jm.io       = CalcJupiterMoon(time, 0);
     jm.europa   = CalcJupiterMoon(time, 1);
     jm.ganymede = CalcJupiterMoon(time, 2);
@@ -5043,6 +5106,12 @@ static astro_vector_t HelioVectorUnguarded(astro_body_t body, astro_time_t time)
     astro_vector_t vector, earth;
     body_state_t bstate;
     const stardef_t *star;
+
+    /* AstronomyKit local patch (accepted time range): checked for every body,
+       including the Sun, the barycenters, and user-defined stars, so every
+       position at one time fails or succeeds together. */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
 
     star = UserDefinedStar(body);
     if (star != NULL)
@@ -5145,6 +5214,10 @@ static astro_func_result_t HelioDistanceUnguarded(astro_body_t body, astro_time_
     astro_vector_t vector;
     astro_func_result_t result;
     const stardef_t *star;
+
+    /* AstronomyKit local patch (accepted time range), as in Astronomy_HelioVector */
+    if (!EphemerisTimeOk(time))
+        return FuncError(ASTRO_BAD_TIME);
 
     star = UserDefinedStar(body);
     if (star != NULL)
@@ -5472,6 +5545,11 @@ astro_vector_t Astronomy_BackdatePosition(
 */
 static astro_status_t GeoHelioState(astro_body_t body, astro_time_t time, body_state_t *state)
 {
+    /* AstronomyKit local patch (accepted time range), as in Astronomy_HelioVector.
+       GeoStateBackdate evaluates the Earth at the same times as the target. */
+    if (!EphemerisTimeOk(time))
+        return ASTRO_BAD_TIME;
+
     switch (body)
     {
     case BODY_SUN:
@@ -5643,6 +5721,11 @@ astro_vector_t Astronomy_GeoVector(astro_body_t body, astro_time_t time, astro_a
 {
     astro_vector_t vector;
 
+    /* AstronomyKit local patch (accepted time range): the other bodies fail
+       through Astronomy_HelioVector or Astronomy_GeoMoon; this covers the Earth. */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
+
     switch (body)
     {
     case BODY_EARTH:
@@ -5693,6 +5776,10 @@ static astro_state_vector_t BaryStateUnguarded(astro_body_t body, astro_time_t t
     astro_state_vector_t state;
     major_bodies_t bary;
     body_state_t planet, earth;
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return StateVecError(ASTRO_BAD_TIME, time);
 
     if (body == BODY_SSB)
     {
@@ -5797,6 +5884,10 @@ static astro_state_vector_t HelioStateUnguarded(astro_body_t body, astro_time_t 
     astro_state_vector_t state;
     major_bodies_t bary;
     body_state_t planet, earth;
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return StateVecError(ASTRO_BAD_TIME, time);
 
     if (UserDefinedStar(body))
     {
@@ -7239,6 +7330,11 @@ astro_ecliptic_state_t Astronomy_GeoEclipticState(astro_body_t body, astro_time_
     if (aberration != ABERRATION && aberration != NO_ABERRATION)
         return EclStateError(ASTRO_INVALID_PARAMETER, time);
 
+    /* AstronomyKit local patch (accepted time range). GeoHelioState also
+       checks each backdated time. */
+    if (!EphemerisTimeOk(time))
+        return EclStateError(ASTRO_BAD_TIME, time);
+
     switch (body)
     {
     case BODY_MOON:
@@ -7290,6 +7386,10 @@ astro_ecliptic_state_t Astronomy_SunEclipticState(astro_time_t time)
 
     /* Correct for light travel time from the Sun, as Astronomy_SunPosition does. */
     adjusted_time = Astronomy_AddDays(time, -1.0 / C_AUDAY);
+    /* AstronomyKit local patch (accepted time range): the adjusted time, which
+       is what CalcVsop checks for Astronomy_SunPosition. */
+    if (!EphemerisTimeOk(adjusted_time))
+        return EclStateError(ASTRO_BAD_TIME, time);
     earth = CalcVsopPosVel(&vsop[BODY_EARTH], adjusted_time.tt);
 
     pos[0] = -earth.r.x;
@@ -7323,6 +7423,10 @@ astro_ecliptic_state_t Astronomy_MoonEclipticState(astro_time_t time)
     double ecm[3], ecm_vel[3], eqm[3], eqm_vel[3], eqd[3], eqd_vel[3], a[3], b[3];
     double lon, lat, dist, dist_rate;
     int k;
+
+    /* AstronomyKit local patch (accepted time range), as in Astronomy_EclipticGeoMoon */
+    if (!EphemerisTimeOk(time))
+        return EclStateError(ASTRO_BAD_TIME, time);
 
     MoonEcmState(time, ecm, ecm_vel, &lon, &lat, &dist, &dist_rate);
 
@@ -9704,6 +9808,11 @@ static astro_func_result_t moon_distance_slope(void *context, astro_time_t time)
     double dist1, dist2;
     int direction = *((int *)context);
     astro_func_result_t result;
+
+    /* AstronomyKit local patch (accepted time range): MoonDistance has no
+       status, and every lunar apsis evaluation passes through here. */
+    if (!EphemerisTimeOk(t1) || !EphemerisTimeOk(t2))
+        return FuncError(ASTRO_BAD_TIME);
 
     dist1 = MoonDistance(t1);
     dist2 = MoonDistance(t2);
@@ -13313,6 +13422,9 @@ static astro_func_result_t MoonNodeSearchFunc(void *context, astro_time_t time)
     astro_node_kind_t kind = *((astro_node_kind_t *)context);
 
     eclip = Astronomy_EclipticGeoMoon(time);
+    /* AstronomyKit local patch (accepted time range): it can now fail. */
+    if (eclip.status != ASTRO_SUCCESS)
+        return FuncError(eclip.status);
 
     result.value = eclip.lat * (double)kind;
     result.status = ASTRO_SUCCESS;
@@ -13354,6 +13466,10 @@ astro_node_event_t Astronomy_SearchMoonNode(astro_time_t startTime)
     /* Step 10 days at a time, searching for an interval where that latitude crosses zero. */
     time1 = startTime;
     eclip1 = Astronomy_EclipticGeoMoon(time1);    /* never returns a failure code */
+    /* AstronomyKit local patch (accepted time range): it now fails outside the
+       accepted range, and a NaN latitude never brackets a node. */
+    if (eclip1.status != ASTRO_SUCCESS)
+        return NodeError(eclip1.status);
 
     for(;;)
     {
@@ -13365,6 +13481,8 @@ astro_node_event_t Astronomy_SearchMoonNode(astro_time_t startTime)
         if (!(time1.ut < time2.ut))
             return NodeError(ASTRO_BAD_TIME);
         eclip2 = Astronomy_EclipticGeoMoon(time2);      /* never returns a failure code */
+        if (eclip2.status != ASTRO_SUCCESS)
+            return NodeError(eclip2.status);            /* AstronomyKit local patch, as above */
         if (eclip1.lat * eclip2.lat <= 0.0)
         {
             /* There is a node somewhere inside this closed time interval. */

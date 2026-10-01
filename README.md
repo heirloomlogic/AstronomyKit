@@ -29,6 +29,10 @@ Built on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy)
 - Generic root-finding search for custom astronomical events
 - Full `Sendable` conformance for Swift 6
 
+## Supported dates
+
+Positions, states, distances, and the searches built on them accept a Terrestrial Time within 4,000 Julian years of J2000, roughly the years −2000 to +6000, and throw `AstronomyError.badTime` outside it. Pluto's range is narrower, about the years −100 to +4100. See "Accepted Range" in the `AstroTime` documentation.
+
 ## Planetary calculation performance
 
 For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates polynomial approximations of the complete VSOP87B model. Position and heliocentric velocity use the same polynomial; distance comes from its position vector. Segments that fail the numerical regression checks, and dates outside this coverage, use the complete original series. Supported dates are unchanged.

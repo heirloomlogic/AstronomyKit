@@ -137,7 +137,9 @@ struct AltitudeSearchTests {
         // The start itself steps normally (0.5 days just below 2^52), so a
         // start-only check would miss this. An altitude of exactly 90° is never
         // crossed, so the search keeps stepping until adding the step stops
-        // changing the time, and must then give up.
+        // changing the time, and must then give up. Since #62 the accepted time
+        // range rejects this start at the first altitude evaluation, before the
+        // step check is reached; the test still pins the outcome.
         #expect(throws: AstronomyError.badTime) {
             _ = try CelestialBody.moon.searchAltitude(
                 90,

@@ -103,9 +103,11 @@ int main(void)
     if (require_count("signed-zero keys were not cached separately", 2))
         return 1;
 
+    /* Astronomy_GeoMoon rejects a non-finite time before CalcMoon, but
+       Astronomy_Libration has no status and still evaluates the series. */
     reset_count();
-    Astronomy_GeoMoon(raw_time(INFINITY));
-    Astronomy_GeoMoon(raw_time(INFINITY));
+    Astronomy_Libration(raw_time(INFINITY));
+    Astronomy_Libration(raw_time(INFINITY));
     if (require_count("nonfinite keys entered the cache", 2))
         return 1;
 

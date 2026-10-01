@@ -66,7 +66,8 @@ public enum Jupiter {
     ///
     /// - Parameter time: The time at which to calculate the moon states.
     /// - Returns: State vectors for Io, Europa, Ganymede, and Callisto.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     ///
     /// ## Example
     ///

@@ -35,6 +35,18 @@ import Foundation
 /// let tomorrow = now.addingDays(1)
 /// let lastWeek = now.addingDays(-7)
 /// ```
+///
+/// ## Accepted Range
+///
+/// Creating an `AstroTime` never fails, but positions, states, distances, and the
+/// searches built on them accept only a Terrestrial Time within 4,000 Julian years
+/// of J2000: `abs(terrestrialTime) <= 1_461_000` days, roughly
+/// the years −2000 to +6000, about the span VSOP87 claims validity for. Outside it,
+/// and for a non-finite time, they throw ``AstronomyError/badTime`` instead of
+/// returning meaningless or NaN values. Pluto accepts a narrower span, about the years
+/// −100 to +4100. A calculation that samples nearby times (light-travel correction,
+/// the Moon's state vectors, searches) can throw within a short distance of either
+/// edge. See <doc:TimeAndObservers>.
 public struct AstroTime: Sendable {
     /// The underlying C time structure.
     var raw: astro_time_t
@@ -86,6 +98,8 @@ public struct AstroTime: Sendable {
     /// arithmetic (for example, February 31 rolls over into March).
     /// Components are clamped to the `Int32` range; the underlying engine
     /// produces meaningful results for years roughly within ±999,999.
+    /// Ephemeris calculations accept a much narrower span, roughly the years
+    /// −2000 to +6000; see "Accepted Range" under ``AstroTime``.
     public init(
         year: Int,
         month: Int,

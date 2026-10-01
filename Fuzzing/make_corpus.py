@@ -5,8 +5,8 @@ Each seed encodes one set of harness fields in the input format decoded by
 fuzz_bridge.c. The times, bodies, observers, and coordinates come from the
 package's reference tests (JPLValidationTests, AuditValidationTests,
 RiseSetTests, FixedStarTests, RotationTests), plus a few seeds at the edges the
-engine guards: the Pluto table and crawl limits, a polar observer, and
-non-finite values.
+engine guards: the Pluto table and crawl limits, the accepted time range, a
+polar observer, and non-finite values.
 
     python3 Fuzzing/make_corpus.py          # rewrite Fuzzing/corpus/
     python3 Fuzzing/make_corpus.py --check  # fail if Fuzzing/corpus/ is stale
@@ -133,6 +133,11 @@ SEEDS = {
     # (PLUTO_MAX_CRAWL_DAYS), a polar summer, and non-finite values.
     "edge-pluto-table-start": seed("pluto", -730000.0, terrestrial=True, limit_days=1.0),
     "edge-pluto-crawl-limit": seed("pluto", 766525.0, terrestrial=True, limit_days=1.0),
+    # The accepted time range (EPHEMERIS_MAX_TT_DAYS): its last accepted TT, and
+    # the first double past its other end.
+    "edge-time-range-limit": seed("mars", 1461000.0, terrestrial=True, limit_days=1.0),
+    "edge-time-range-outside": seed("moon", -math.nextafter(1461000.0, math.inf), terrestrial=True,
+                                    limit_days=1.0),
     "edge-polar-sun": seed("sun", ut_days(2025, 6, 21), (89.9, 0.0, 0.0)),
     "edge-nonfinite": seed("earth", math.inf, (math.nan, math.inf, -math.inf),
                            star=(math.nan, math.inf, -math.inf), constellation=(math.nan, math.inf),
@@ -141,20 +146,26 @@ SEEDS = {
     # Fixed findings. Each hung or hit undefined behavior before the extreme-input
     # guards (MAINTAINING.md, patch 15).
     # #57: a window that runs into 2^52 days, where the 0.42-day step stops
-    # advancing. The start alone steps normally. Libration hung here too.
+    # advancing. The start alone steps normally. Libration hung here too. Since
+    # the accepted time range (patch 17) the first altitude evaluation rejects
+    # this start, so the step guard is no longer reached from here.
     "fixed-riseset-stall": seed("moon", 2.0**52 - 3.0, PRIME, limit_days=10.0),
     # #57: an infinite limit for a circumpolar star, which never rises.
     "fixed-riseset-infinite-limit": seed("star1", JPL_DATE, (80.0, 0.0, 0.0), star=(0.0, 89.0, 1000.0),
                                          limit_days=math.inf),
     # #58: Pluto at a NaN time, which also reaches the Moon node and Pluto apsis searches.
+    # The accepted time range now rejects it before CalcPluto's own NaN check.
     "fixed-pluto-nan": seed("pluto", math.nan, PRIME),
     # Longitude searches for a target angle far outside 0-360.
     "fixed-longitude-huge-target": seed("mars", JPL_DATE, PRIME, angle=1.0e20),
-    # #62: positions and apsides that succeeded with NaN before the non-finite
-    # result guards (patch 16). At ut 1e300 TT is infinite; at 1e70 it is finite
-    # but the lunar series overflow.
+    # #62: far-off times that returned success with NaN or absurd values. Before
+    # the non-finite result guards (patch 16) Neptune at ut 1e300, where TT is
+    # infinite, and the Moon at ut 1e70, where TT is finite but the lunar series
+    # overflow, succeeded with NaN. Before the accepted time range (patch 17)
+    # Mars's heliocentric distance at 1e10 days was -1.1e14 AU.
     "fixed-neptune-huge-time": seed("neptune", 1.0e300, PRIME),
     "fixed-moon-overflow": seed("moon", 1.0e70, PRIME),
+    "fixed-mars-distance-far-time": seed("mars", 1.0e10, PRIME),
 }
 
 

@@ -65,7 +65,9 @@ public final class GravitySimulation: @unchecked Sendable {
     ///   - origin: The body to use as the reference origin for state vectors.
     ///   - time: The starting time for the simulation.
     ///   - initialState: The initial state vector of the body to track.
-    /// - Throws: `AstronomyError` if the simulation cannot be initialized.
+    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
+    ///   (see ``AstroTime``), or another `AstronomyError` if the simulation cannot be
+    ///   initialized.
     public init(
         origin: CelestialBody,
         time: AstroTime,
@@ -101,7 +103,9 @@ public final class GravitySimulation: @unchecked Sendable {
     ///
     /// - Parameter newTime: The target time for the simulation.
     /// - Returns: The updated state vector for the tracked body.
-    /// - Throws: `AstronomyError` if the update fails.
+    /// - Throws: `AstronomyError.badTime` if `newTime` is outside the accepted range
+    ///   (see ``AstroTime``), which leaves the simulation unchanged, or another
+    ///   `AstronomyError` if the update fails.
     @discardableResult
     public func update(to newTime: AstroTime) throws -> StateVector {
         try lock.withLock { simState in

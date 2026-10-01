@@ -102,7 +102,9 @@ extension Moon {
     ///
     /// - Parameter startTime: The time to start searching from.
     /// - Returns: The next apsis event.
-    /// - Throws: `AstronomyError` if the search fails.
+    /// - Throws: `AstronomyError.badTime` if the search would evaluate the Moon outside
+    ///   the accepted time range (see ``AstroTime``), or another `AstronomyError` if the
+    ///   search fails.
     public static func searchApsis(after startTime: AstroTime) throws -> Apsis {
         let result = Astronomy_SearchLunarApsis(startTime.raw)
         return try Apsis(result)
@@ -154,8 +156,11 @@ extension CelestialBody {
     ///
     /// - Parameter startTime: The time to start searching from.
     /// - Returns: The next apsis event.
-    /// - Throws: `AstronomyError.badTime` for Neptune or Pluto at a non-finite
-    ///   `startTime`, or another `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.badTime` if the search would evaluate the planet
+    ///   outside the accepted time range (see ``AstroTime``), which includes a
+    ///   non-finite `startTime`, or another `AstronomyError` if the calculation fails.
+    ///   The search samples the orbit ahead of `startTime` (Neptune's up to about 123
+    ///   years ahead and 14 years behind), so it can throw well inside the range's edges.
     ///
     /// ## Example
     ///
