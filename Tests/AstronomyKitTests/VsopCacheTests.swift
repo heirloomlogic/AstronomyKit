@@ -51,7 +51,8 @@ struct VsopCacheTests {
             tt: tt,
             psi: metadataSeed + 0.125,
             eps: metadataSeed - 0.25,
-            st: -metadataSeed
+            st: -metadataSeed,
+            deltat_func: nil
         )
     }
 

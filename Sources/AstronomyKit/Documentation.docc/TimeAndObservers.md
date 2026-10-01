@@ -74,13 +74,33 @@ Positions, states, distances, and the searches built on them accept a Terrestria
 
 A calculation that samples nearby times can throw within a short distance of either edge: light-travel correction looks back up to a few hours, the Moon's state vectors sample about a second either side, and searches step by days to years, sometimes backward before stepping forward. Creating an `AstroTime` outside the range is not an error; only the calculations reject it.
 
-### Delta T Configuration
+### Delta T Models
 
-The difference between TT and UT (ΔT) varies over time and comes from a model. AstronomyKit defaults to the Espenak-Meeus model. Set the model once at startup, before any other AstronomyKit call, if you want a different one:
+The difference between TT and UT (ΔT) varies over time and comes from a model. AstronomyKit defaults to the Espenak-Meeus model. Each `AstroTime` carries the model that relates its two scales, and every time derived from it, by `addingDays`, by a search, or by the light-time correction inside a position, uses the same model. A calculation that starts from a time uses one model from its input to its result, whatever the process default does in the meantime.
+
+Pass `deltaTModel:` to any initializer to pick the model for one value without touching the process default:
 
 ```swift
-// Switch to the JPL Horizons Delta T model
+let date = ISO8601DateFormatter().date(from: "2049-12-21T12:00:00Z")!
+let espenakMeeus = AstroTime(date, deltaTModel: .espenakMeeus)
+let jplHorizons = AstroTime(date, deltaTModel: .jplHorizons)
+
+// Civil UTC fixes TT; only UT follows the model.
+espenakMeeus.terrestrialTime == jplHorizons.terrestrialTime  // true
+(jplHorizons.universalTime - espenakMeeus.universalTime) * 86_400  // about 22.95 seconds
+```
+
+`deltaTModel` names a time's model. `init(tt:ut:deltaTModel:)` rebuilds a time from recorded `terrestrialTime`, `universalTime`, and model values without deriving either scale again:
+
+```swift
+let rebuilt = AstroTime(tt: time.terrestrialTime, ut: time.universalTime, deltaTModel: time.deltaTModel)
+```
+
+`AstronomyConfig.setDeltaTModel` selects the default for times created afterwards without an explicit model. Existing times, and calculations that start from them, keep their model:
+
+```swift
 AstronomyConfig.setDeltaTModel(.jplHorizons)
+let later = AstroTime.now  // carries .jplHorizons
 
 // Query Delta T for a specific time
 let deltaT = AstronomyConfig.deltaTEspenakMeeus(universalTime: 0)  // Seconds at J2000
@@ -90,6 +110,8 @@ AstronomyConfig.setDeltaTModel(.espenakMeeus)
 ```
 
 `AstronomyConfig.reset()` does not touch the Delta T model. It only frees the Pluto orbit cache.
+
+`AstroTime` equality, hashing, and `Codable` use `universalTime` only. A decoded time derives TT under the process default at the moment of decoding, so record `deltaTModel` beside a serialized time when its TT must be reproduced.
 
 ### Sidereal Time
 
@@ -199,4 +221,4 @@ let timeData = try JSONEncoder().encode(time)
 
 `universalTime` and `init(ut:)` are modeled UT1 coordinates, not UTC timestamps. `terrestrialTime` and `init(tt:)` are TT. Native search results already carry both scales; their `.date` uses the same civil inverse as every other time. `addingDays` and `addingHours` add UT1 coordinate intervals. For civil calendar arithmetic, use Foundation and construct a new `AstroTime` from the resulting date.
 
-Foundation cannot represent leap seconds. TT instants in positive UTC gaps map to the next transition; negative historical steps choose the later civil occurrence. Those instants cannot round-trip through `Date`. Positive gaps in the selected Delta T model similarly map TT to the first UT1 coordinate after the jump. At negative overlaps, fixed-point iteration returns the first solution reached from its initial `ut = tt` estimate. TT remains exact in memory, but numeric Codable remains UT1-based, so decoding a gap-clamped value derives TT again from the selected model. The table's future convention and the modeled UT1 values do not establish future UTC or Earth-orientation accuracy. Review serialized times and invalidate version-dependent cached calculations when upgrading.
+Foundation cannot represent leap seconds. TT instants in positive UTC gaps map to the next transition; negative historical steps choose the later civil occurrence. Those instants cannot round-trip through `Date`. Positive gaps in the time's Delta T model similarly map TT to the first UT1 coordinate after the jump. At negative overlaps, fixed-point iteration returns the first solution reached from its initial `ut = tt` estimate. TT remains exact in memory, but numeric Codable remains UT1-based, so decoding a gap-clamped value derives TT again from the process default model. The table's future convention and the modeled UT1 values do not establish future UTC or Earth-orientation accuracy. Review serialized times and invalidate version-dependent cached calculations when upgrading.

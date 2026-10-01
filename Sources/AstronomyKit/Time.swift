@@ -36,6 +36,18 @@ import Foundation
 /// let lastWeek = now.addingDays(-7)
 /// ```
 ///
+/// ## Delta T Model
+///
+/// Each time carries the Delta T model that relates its two scales: the model
+/// passed to its initializer, or the process default selected by
+/// ``AstronomyConfig/setDeltaTModel(_:)`` at the moment it was created. Every
+/// time derived from it, by ``addingDays(_:)``, by a search, or by the
+/// light-time correction inside a position, uses the same model. A later
+/// `setDeltaTModel` call does not change a calculation that starts from an
+/// existing time. ``deltaTModel`` names the model, and
+/// ``init(tt:ut:deltaTModel:)`` rebuilds a time from recorded scales.
+/// Equality, hashing, and `Codable` consider only ``universalTime``.
+///
 /// ## Accepted Range
 ///
 /// Creating an `AstroTime` never fails, but positions, states, distances, and the
@@ -63,6 +75,14 @@ public struct AstroTime: Sendable {
     /// such as planetary orbits.
     public var terrestrialTime: Double { raw.tt }
 
+    /// The Delta T model this time carries; see "Delta T Model" above.
+    ///
+    /// `nil` for an invalid time, whose ``universalTime`` or
+    /// ``terrestrialTime`` is not finite, or when the engine's Delta T
+    /// function was replaced through the C API with one AstronomyKit does not
+    /// name.
+    public var deltaTModel: DeltaTModel? { DeltaTModel(function: raw.deltat_func) }
+
     /// The current time.
     public static var now: AstroTime {
         AstroTime(Date())
@@ -79,9 +99,16 @@ public struct AstroTime: Sendable {
 
     /// Creates a time from a Foundation `Date`.
     ///
-    /// - Parameter date: The date to convert.
-    public init(_ date: Date) {
-        self.init(civilDays: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400)
+    /// - Parameters:
+    ///   - date: The date to convert.
+    ///   - deltaTModel: The Delta T model that derives UT from the civil
+    ///     date's TT and that derived times use. `nil` captures the process
+    ///     default at this moment.
+    public init(_ date: Date, deltaTModel: DeltaTModel? = nil) {
+        self.init(
+            civilDays: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400,
+            deltaTModel: deltaTModel
+        )
     }
 
     /// Creates a time from calendar components.
@@ -93,6 +120,9 @@ public struct AstroTime: Sendable {
     ///   - hour: The hour (0-23). Defaults to 0.
     ///   - minute: The minute (0-59). Defaults to 0.
     ///   - second: The second (0.0-59.999...). Defaults to 0.
+    ///   - deltaTModel: The Delta T model that derives UT from the civil
+    ///     date's TT and that derived times use. `nil` captures the process
+    ///     default at this moment.
     ///
     /// Out-of-range components are tolerated and treated as calendar
     /// arithmetic (for example, February 31 rolls over into March).
@@ -106,7 +136,8 @@ public struct AstroTime: Sendable {
         day: Int,
         hour: Int = 0,
         minute: Int = 0,
-        second: Double = 0
+        second: Double = 0,
+        deltaTModel: DeltaTModel? = nil
     ) {
         let calendar = Astronomy_MakeTime(
             Int32(clamping: year),
@@ -116,42 +147,67 @@ public struct AstroTime: Sendable {
             Int32(clamping: minute),
             second
         )
-        self.init(civilDays: calendar.ut)
+        self.init(civilDays: calendar.ut, deltaTModel: deltaTModel)
     }
 
-    private init(civilDays: Double) {
+    private init(civilDays: Double, deltaTModel: DeltaTModel?) {
         if let tt = CivilTime.terrestrialTime(utcDays: civilDays) {
-            self.init(tt: tt)
+            self.init(tt: tt, deltaTModel: deltaTModel)
         } else {
-            self.init(ut: civilDays)
+            self.init(ut: civilDays, deltaTModel: deltaTModel)
         }
     }
 
     /// Creates a time from modeled UT1 days since J2000.
     ///
-    /// - Parameter ut: UT1 days since the UT1 calendar coordinate 2000-01-01 noon.
-    ///   Use ``init(_:)`` for a civil UTC date.
-    public init(ut: Double) {
-        self.raw = Astronomy_TimeFromDays(ut)
+    /// - Parameters:
+    ///   - ut: UT1 days since the UT1 calendar coordinate 2000-01-01 noon.
+    ///     Use ``init(_:deltaTModel:)`` for a civil UTC date.
+    ///   - deltaTModel: The Delta T model that derives TT and that derived
+    ///     times use. `nil` captures the process default at this moment.
+    public init(ut: Double, deltaTModel: DeltaTModel? = nil) {
+        self.raw = Astronomy_TimeFromDaysWithDeltaT(ut, deltaTModel?.function)
     }
 
     /// Creates a time from Terrestrial Time days since J2000.
     ///
     /// Terrestrial Time is used for calculations not involving Earth's rotation
     /// (planetary orbits, eclipses, etc.). This initializer is the inverse of
-    /// ``init(ut:)`` — it starts from a TT value and derives the corresponding UT.
+    /// ``init(ut:deltaTModel:)`` — it starts from a TT value and derives the
+    /// corresponding UT.
     ///
-    /// If TT falls in a positive discontinuity gap in the selected Delta T model,
+    /// If TT falls in a positive discontinuity gap in the time's Delta T model,
     /// UT clamps to the first representable coordinate after the jump while TT
     /// remains unchanged. At a negative jump with two solutions, fixed-point
     /// iteration returns the first solution reached from its initial `ut = tt`
     /// estimate. Because `Codable` stores UT, encoding a gap-clamped value and
-    /// decoding it derives TT again from the selected model.
+    /// decoding it derives TT again, under the process default model.
     ///
     /// Nonfinite or nonconvergent input produces an invalid time with NaN fields.
-    /// - Parameter tt: Terrestrial Time days since noon on January 1, 2000.
-    public init(tt: Double) {
-        self.raw = Astronomy_TerrestrialTime(tt)
+    /// - Parameters:
+    ///   - tt: Terrestrial Time days since noon on January 1, 2000.
+    ///   - deltaTModel: The Delta T model that derives UT and that derived
+    ///     times use. `nil` captures the process default at this moment.
+    public init(tt: Double, deltaTModel: DeltaTModel? = nil) {
+        self.raw = Astronomy_TerrestrialTimeWithDeltaT(tt, deltaTModel?.function)
+    }
+
+    /// Creates a time from both scales, stored exactly as given.
+    ///
+    /// Use this to rebuild a time from recorded ``terrestrialTime``,
+    /// ``universalTime``, and ``deltaTModel`` values without deriving either
+    /// scale again. The pair is not checked against the model; times derived
+    /// from the result use the model, starting from `ut`.
+    ///
+    /// A nonfinite value in either scale produces an invalid time with NaN
+    /// fields, as ``init(tt:deltaTModel:)`` does for a nonfinite TT.
+    /// - Parameters:
+    ///   - tt: Terrestrial Time days since noon on January 1, 2000.
+    ///   - ut: UT1 days since the UT1 calendar coordinate 2000-01-01 noon.
+    ///   - deltaTModel: The Delta T model that derived times use. `nil`
+    ///     captures the process default at this moment.
+    public init(tt: Double, ut: Double, deltaTModel: DeltaTModel? = nil) {
+        self.raw = Astronomy_TimeFromPair(ut, tt, deltaTModel?.function)
     }
 
     /// Converts TT to a civil UTC `Date` using the bundled offset table.
@@ -168,6 +224,8 @@ public struct AstroTime: Sendable {
     ///
     /// This preserves native search arithmetic. It is not civil calendar
     /// arithmetic or a count of uniform TT days across leap-second transitions.
+    /// The result derives its TT with this time's ``deltaTModel`` and carries
+    /// the same model.
     ///
     /// - Parameter days: The number of days to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given days.
@@ -260,6 +318,9 @@ extension AstroTime: CustomStringConvertible {
 
 extension AstroTime: Codable {
     /// Creates a time by decoding a Universal Time value.
+    ///
+    /// The process default Delta T model at the moment of decoding derives TT;
+    /// the encoded form does not record a model.
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let ut = try container.decode(Double.self)

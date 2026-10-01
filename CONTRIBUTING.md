@@ -31,7 +31,7 @@ Your local toolchain must match CI's Swift major.minor version; see [Toolchain A
 
 New functionality should include tests. Bug fixes should include a test that would have caught the issue.
 
-Run the whole suite with `swift test`. Suites run in parallel in one process, and Swift Testing's `.serialized` trait only orders tests inside a single suite, so a test that changes process-wide state such as the Delta T model can make unrelated suites fail intermittently. The Delta T thread-safety test avoids this: its writers swap between two functions that return identical results, so ThreadSanitizer still sees a real pointer swap while other suites see no change.
+Run the whole suite with `swift test`. Suites run in parallel in one process, and Swift Testing's `.serialized` trait only orders tests inside a single suite, so a test that changes process-wide state such as the Delta T model can make unrelated suites fail intermittently. The Delta T thread-safety test avoids this: its writers swap between two functions that return identical results, so ThreadSanitizer still sees a real pointer swap while other suites get the same values. A time created during a swap can carry the stand-in and report a `nil` `deltaTModel`, so check values, not `deltaTModel`, for times made under the process default. The thread-safety test's own checks never assume which function is the default, because another suite can construct a time or reset the model between any two of its statements.
 
 ### Fuzzing the C bridge
 
@@ -39,7 +39,7 @@ Run the whole suite with `swift test`. Suites run in parallel in one process, an
 
 ### Updating the vendored C library
 
-AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, the analytic ecliptic state, guards against non-finite or extreme inputs, checks that reject non-finite results, and an accepted time range for the ephemeris models. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
+AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, the analytic ecliptic state, guards against non-finite or extreme inputs, checks that reject non-finite results, an accepted time range for the ephemeris models, and a Delta T function captured in each time value. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
 
 ## Code of Conduct
 

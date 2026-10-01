@@ -43,13 +43,36 @@ import CLibAstronomy
 // MARK: - Delta T Models
 
 /// The Delta T model used to convert between Universal Time and Terrestrial Time.
-public enum DeltaTModel: Sendable {
+public enum DeltaTModel: Sendable, CaseIterable {
     /// The Espenak-Meeus model (default).
     case espenakMeeus
 
     /// Legacy approximation of the Horizons delta-T model. This is not the
     /// civil UTC leap-second conversion used by `AstroTime(Date)`.
     case jplHorizons
+}
+
+extension DeltaTModel {
+    /// The engine function that evaluates this model.
+    var function: astro_deltat_func {
+        switch self {
+        case .espenakMeeus: Astronomy_DeltaT_EspenakMeeus
+        case .jplHorizons: Astronomy_DeltaT_JplHorizons
+        }
+    }
+
+    /// The model that `function` evaluates, or `nil` for a function
+    /// AstronomyKit does not name, such as one installed through the C API.
+    init?(function: astro_deltat_func?) {
+        guard let function else { return nil }
+        // C function pointers are not Equatable in Swift; compare addresses.
+        let address = unsafeBitCast(function, to: UnsafeRawPointer.self)
+        let named = Self.allCases.first { model in
+            unsafeBitCast(model.function, to: UnsafeRawPointer.self) == address
+        }
+        guard let named else { return nil }
+        self = named
+    }
 }
 
 // MARK: - Module-Level Functions
@@ -80,25 +103,24 @@ public enum AstronomyConfig {
         Astronomy_DeltaT_JplHorizons(universalTime)
     }
 
-    /// Sets the Delta T model used for all subsequent calculations.
+    /// Selects the Delta T model for times created afterwards.
     ///
     /// Delta T is the difference between Terrestrial Time and Universal Time.
     /// Different models produce slightly different values, especially for
     /// dates far from the present.
     ///
-    /// - Note: This is safe to call from any thread at any time. A
-    ///   calculation already in flight on another thread may use either the
-    ///   old or the new model for that one calculation, so for reproducible
-    ///   results set the model once at startup.
+    /// An existing ``AstroTime`` keeps the model it captured, and so does every
+    /// calculation that starts from it; see "Delta T Model" under `AstroTime`.
+    /// To pick a model for one value instead of the whole process, pass
+    /// `deltaTModel:` to the `AstroTime` initializer.
+    ///
+    /// - Note: This is safe to call from any thread at any time. A time being
+    ///   created on another thread at the same moment captures either the old
+    ///   or the new model.
     ///
     /// - Parameter model: The Delta T model to use.
     public static func setDeltaTModel(_ model: DeltaTModel) {
-        switch model {
-        case .espenakMeeus:
-            Astronomy_SetDeltaTFunction(Astronomy_DeltaT_EspenakMeeus)
-        case .jplHorizons:
-            Astronomy_SetDeltaTFunction(Astronomy_DeltaT_JplHorizons)
-        }
+        Astronomy_SetDeltaTFunction(model.function)
     }
 
     /// Frees all dynamic memory allocated by the Astronomy Engine.

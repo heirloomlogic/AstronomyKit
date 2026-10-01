@@ -37,9 +37,21 @@
         CalcPluto holds the lock across segment lookup and use, and
         Astronomy_Reset takes it before freeing the cache.
       - C11 _Atomic on the DeltaTFunc function pointer (stdatomic.h):
-        Astronomy_SetDeltaTFunction stores with release ordering and
-        TerrestrialTime loads with acquire ordering, so the Delta T model
+        Astronomy_SetDeltaTFunction stores with release ordering and the
+        time constructors load with acquire ordering, so the Delta T model
         can be swapped while calculations run on other threads.
+      - Captured Delta T function, marked "captured Delta T" at each site.
+        astro_time_t carries the Delta T function that produced it
+        (deltat_func); Astronomy_AddDays and the search steps that built a
+        time from the process-wide function (TimeFromDaysLike in
+        Astronomy_Search, FindAscent, BruteSearchPlanetApsis) derive from
+        that function instead, so a calculation keeps one model from its
+        input time to its result. Astronomy_TimeFromDaysWithDeltaT,
+        Astronomy_TerrestrialTimeWithDeltaT and Astronomy_TimeFromPair take
+        the function explicitly; NULL selects the process-wide function at
+        the time of the call. A time whose ut or tt is not finite carries
+        NULL. Every tt expression is unchanged, so results under one model
+        are bit-identical.
       - C11 _Atomic on the undocumented performance counters _CalcMoonCount,
         _AltitudeDiffCallCount, and _FindAscentMaxRecursionDepth, which are
         otherwise incremented racily from concurrent calculations.
@@ -700,6 +712,7 @@ static astro_time_t TimeError(void)
 {
     astro_time_t time;
     time.tt = time.ut = time.eps = time.psi = time.st = NAN;
+    time.deltat_func = NULL;
     return time;
 }
 
@@ -1110,19 +1123,38 @@ void Astronomy_SetDeltaTFunction(astro_deltat_func func)
     atomic_store_explicit(&DeltaTFunc, func, memory_order_release);
 }
 
-static double TerrestrialTime(double ut)
+/* AstronomyKit local patch (captured Delta T): `func` may be NULL, which
+   selects the process-wide function at this moment. */
+static astro_deltat_func ResolveDeltaTFunc(astro_deltat_func func)
 {
-    astro_deltat_func func = atomic_load_explicit(&DeltaTFunc, memory_order_acquire);
-    return ut + func(ut)/86400.0;
+    if (func != NULL)
+        return func;
+    return atomic_load_explicit(&DeltaTFunc, memory_order_acquire);
+}
+
+/* AstronomyKit local patch (captured Delta T): every field of a time value.
+   A time whose ut or tt is not finite is invalid and carries no function. */
+static astro_time_t MakeTimeFields(double ut, double tt, astro_deltat_func func)
+{
+    astro_time_t time;
+    time.ut = ut;
+    time.tt = tt;
+    time.psi = time.eps = time.st = NAN;
+    time.deltat_func = (isfinite(ut) && isfinite(tt)) ? func : NULL;
+    return time;
 }
 
 static astro_time_t TimeFromDaysWithDeltaT(double ut, astro_deltat_func func)
 {
-    astro_time_t time;
-    time.ut = ut;
-    time.tt = ut + func(ut)/86400.0;
-    time.psi = time.eps = time.st = NAN;
-    return time;
+    return MakeTimeFields(ut, ut + func(ut)/86400.0, func);
+}
+
+/* AstronomyKit local patch (captured Delta T): a time derived inside a
+   calculation keeps the function of the time it was derived from. A time
+   that carries none (NULL) takes the process-wide function at this moment. */
+static astro_time_t TimeFromDaysLike(double ut, astro_time_t like)
+{
+    return Astronomy_TimeFromDaysWithDeltaT(ut, like.deltat_func);
 }
 
 /**
@@ -1138,12 +1170,66 @@ static astro_time_t TimeFromDaysWithDeltaT(double ut, astro_deltat_func func)
  *      a time value based on atomic Terrestrial Time (TT).
  *
  * @returns
- *      An #astro_time_t value for the given `ut` value.
+ *      An #astro_time_t value for the given `ut` value. It carries the
+ *      Delta T function selected at the time of the call, or `NULL` when
+ *      `ut` or the derived `tt` is not finite.
  */
 astro_time_t Astronomy_TimeFromDays(double ut)
 {
-    astro_deltat_func func = atomic_load_explicit(&DeltaTFunc, memory_order_acquire);
-    return TimeFromDaysWithDeltaT(ut, func);
+    return Astronomy_TimeFromDaysWithDeltaT(ut, NULL);
+}
+
+/**
+ * @brief Converts a J2000 day value to an #astro_time_t value under a given Delta T function.
+ *
+ * AstronomyKit local patch (captured Delta T). Like #Astronomy_TimeFromDays,
+ * but the caller names the Delta T function instead of using the process-wide
+ * selection. The returned time carries `func`, so every time derived from it
+ * uses the same function. A time whose `ut` or `tt` is not finite carries
+ * `NULL` instead.
+ *
+ * @param ut
+ *      The floating point number of days since noon UTC on January 1, 2000.
+ *
+ * @param func
+ *      The Delta T function to derive `tt` with, or `NULL` for the function
+ *      selected at the time of the call.
+ *
+ * @returns
+ *      An #astro_time_t value for the given `ut` value.
+ */
+astro_time_t Astronomy_TimeFromDaysWithDeltaT(double ut, astro_deltat_func func)
+{
+    return TimeFromDaysWithDeltaT(ut, ResolveDeltaTFunc(func));
+}
+
+/**
+ * @brief Creates an #astro_time_t value from both time scales.
+ *
+ * AstronomyKit local patch (captured Delta T). The caller supplies `ut` and
+ * `tt` as they are to be stored; neither is derived from the other, and the
+ * pair is not checked against `func`. Times derived from the result use
+ * `func`, starting from the stored `ut`.
+ *
+ * @param ut
+ *      Universal Time days since noon UTC on January 1, 2000.
+ *
+ * @param tt
+ *      Terrestrial Time days since noon on January 1, 2000.
+ *
+ * @param func
+ *      The Delta T function for derived times, or `NULL` for the function
+ *      selected at the time of the call.
+ *
+ * @returns
+ *      An #astro_time_t value holding `ut` and `tt` unchanged, or an invalid
+ *      time with `NAN` fields when either is not finite.
+ */
+astro_time_t Astronomy_TimeFromPair(double ut, double tt, astro_deltat_func func)
+{
+    if (!isfinite(ut) || !isfinite(tt))
+        return TimeError();
+    return MakeTimeFields(ut, tt, ResolveDeltaTFunc(func));
 }
 
 
@@ -1169,11 +1255,36 @@ astro_time_t Astronomy_TimeFromDays(double ut)
  *      first representable coordinate after the jump and `tt` is preserved.
  *      Where a negative jump has two solutions, fixed-point iteration returns
  *      the first solution reached from its initial `ut = tt` estimate. Nonfinite
- *      or nonconvergent input returns an invalid time.
+ *      or nonconvergent input returns an invalid time. The result carries the
+ *      Delta T function selected at the time of the call.
  */
 astro_time_t Astronomy_TerrestrialTime(double tt)
 {
-    astro_deltat_func func;
+    return Astronomy_TerrestrialTimeWithDeltaT(tt, NULL);
+}
+
+/**
+ * @brief Converts a terrestrial time value into an #astro_time_t value under a given Delta T function.
+ *
+ * AstronomyKit local patch (captured Delta T). Like #Astronomy_TerrestrialTime,
+ * but the caller names the Delta T function that the inverse runs under. The
+ * returned time carries `func`, so every time derived from it uses the same
+ * function.
+ *
+ * @param tt
+ *      The floating point number of days of uniformly flowing
+ *      Terrestrial Time since the J2000 epoch.
+ *
+ * @param func
+ *      The Delta T function to invert, or `NULL` for the function selected
+ *      at the time of the call.
+ *
+ * @returns
+ *      An #astro_time_t value for the given `tt` value, with the gap and
+ *      convergence behavior of #Astronomy_TerrestrialTime.
+ */
+astro_time_t Astronomy_TerrestrialTimeWithDeltaT(double tt, astro_deltat_func func)
+{
     astro_time_t time, below, above;
     double tolerance;
 
@@ -1181,7 +1292,7 @@ astro_time_t Astronomy_TerrestrialTime(double tt)
         return TimeError();
 
     /* Keep one model for the entire inverse, even if another thread changes the global selection. */
-    func = atomic_load_explicit(&DeltaTFunc, memory_order_acquire);
+    func = ResolveDeltaTFunc(func);
     time = TimeFromDaysWithDeltaT(tt, func);
     below = above = TimeError();
     tolerance = fmax(1.0e-12, 2.0 * 2.2204460492503131e-16 * fabs(tt));
@@ -1262,7 +1373,6 @@ astro_time_t Astronomy_TerrestrialTime(double tt)
  */
 astro_time_t Astronomy_CurrentTime(void)
 {
-    astro_time_t t;
     double sec;         /* Seconds since midnight January 1, 1970. */
 
 #if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__))
@@ -1284,10 +1394,7 @@ astro_time_t Astronomy_CurrentTime(void)
 #endif
 
     /* Convert seconds to days, then subtract to get days since noon on January 1, 2000. */
-    t.ut = (sec / SECONDS_PER_DAY) - 10957.5;
-    t.tt = TerrestrialTime(t.ut);
-    t.psi = t.eps = t.st = NAN;
-    return t;
+    return Astronomy_TimeFromDays((sec / SECONDS_PER_DAY) - 10957.5);
 }
 #endif
 
@@ -1314,7 +1421,6 @@ astro_time_t Astronomy_CurrentTime(void)
  */
 astro_time_t Astronomy_MakeTime(int year, int month, int day, int hour, int minute, double second)
 {
-    astro_time_t time;
     int64_t y = (int64_t)year;
     int64_t m = (int64_t)month;
     int64_t d = (int64_t)day;
@@ -1336,11 +1442,7 @@ astro_time_t Astronomy_MakeTime(int year, int month, int day, int hour, int minu
         - (3*((y + 1000100 - f) / 100))/4
     );
 
-    time.ut = (y2000 - 0.5) + (hour / 24.0) + (minute / 1440.0) + (second / 86400.0);
-    time.tt = TerrestrialTime(time.ut);
-    time.psi = time.eps = time.st = NAN;
-
-    return time;
+    return Astronomy_TimeFromDays((y2000 - 0.5) + (hour / 24.0) + (minute / 1440.0) + (second / 86400.0));
 }
 
 /**
@@ -1372,13 +1474,10 @@ astro_time_t Astronomy_AddDays(astro_time_t time, double days)
         This is based on a typical drift of 1 second per year between UT and TT.
     */
 
-    astro_time_t sum;
-
-    sum.ut = time.ut + days;
-    sum.tt = TerrestrialTime(sum.ut);
-    sum.eps = sum.psi = sum.st = NAN;
-
-    return sum;
+    /* AstronomyKit local patch (captured Delta T): the sum keeps the function
+       `time` carries, so a calculation cannot see a later model change. The
+       expression for tt is unchanged. */
+    return TimeFromDaysLike(time.ut + days, time);
 }
 
 /**
@@ -7661,7 +7760,7 @@ astro_search_result_t Astronomy_Search(
 
         if (QuadInterp(tmid.ut, t2.ut - tmid.ut, f1, fmid, f2, &q_ut, &q_df_dt))
         {
-            tq = Astronomy_TimeFromDays(q_ut);
+            tq = TimeFromDaysLike(q_ut, t1);    /* AstronomyKit local patch (captured Delta T) */
             CALLFUNC(fq, tq);
             if (q_df_dt != 0.0)
             {
@@ -8872,7 +8971,7 @@ static ascent_t FindAscent(
     }
 
     /* Bisect the time interval and evaluate the altitude at the midpoint. */
-    tm = Astronomy_TimeFromDays((t1.ut + t2.ut)/2);
+    tm = TimeFromDaysLike((t1.ut + t2.ut)/2, t1);    /* AstronomyKit local patch (captured Delta T) */
     alt = altitude_diff(context, tm);
     if (alt.status != ASTRO_SUCCESS)
         return AscentError(ASTRO_SEARCH_FAILURE);
@@ -10115,7 +10214,7 @@ static astro_apsis_t BruteSearchPlanetApsis(astro_body_t body, astro_time_t star
     for (i=0; i < npoints; ++i)
     {
         double ut = t1.ut + (i * interval);
-        time = Astronomy_TimeFromDays(ut);
+        time = TimeFromDaysLike(ut, t1);    /* AstronomyKit local patch (captured Delta T) */
         result = Astronomy_HelioDistance(body, time);
         if (result.status != ASTRO_SUCCESS)
             return ApsisError(result.status);
