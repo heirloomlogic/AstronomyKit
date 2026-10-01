@@ -6,20 +6,32 @@ repo_root=$(CDPATH='' cd -- "$script_dir/../../.." && pwd)
 negative_revision=42cc23924f404a4f35a4a3221dd8bf7ba8486da0
 compiler=${CC:-clang}
 build_dir=$(mktemp -d "${TMPDIR:-/tmp}/astronomykit-thread-safety.XXXXXX")
-if [ "${KEEP_TSAN_ARTIFACTS:-0}" = 1 ]; then
-    trap 'echo "preserved ThreadSanitizer artifacts: $build_dir"' EXIT
-else
-    trap 'rm -rf "$build_dir"' EXIT HUP INT TERM
-fi
+cleanup() {
+    cleanup_status=$?
+    trap - EXIT HUP INT TERM
+    if [ "${KEEP_TSAN_ARTIFACTS:-0}" = 1 ]; then
+        echo "preserved ThreadSanitizer artifacts: $build_dir"
+    else
+        rm -rf "$build_dir"
+    fi
+    exit "$cleanup_status"
+}
 
-mkdir -p "$build_dir/patched/include" "$build_dir/unpatched/include" "$build_dir/logs"
+trap cleanup EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+mkdir -p "$build_dir/patched/include" "$build_dir/historical/include" "$build_dir/constellation-instrumented/include" "$build_dir/logs"
 cp "$repo_root/Sources/CLibAstronomy/astronomy.c" "$build_dir/patched/astronomy.c"
 cp "$repo_root/Sources/CLibAstronomy/include/astronomy.h" "$build_dir/patched/include/astronomy.h"
 cp "$repo_root/Sources/CLibAstronomy/polynomial.h" "$build_dir/patched/polynomial.h"
 cp -R "$repo_root/Sources/CLibAstronomy/generated" "$build_dir/patched/generated"
-git -C "$repo_root" show "$negative_revision:Sources/CLibAstronomy/astronomy.c" > "$build_dir/unpatched/astronomy.c"
-git -C "$repo_root" show "$negative_revision:Sources/CLibAstronomy/include/astronomy.h" > "$build_dir/unpatched/include/astronomy.h"
-python3 - "$build_dir/unpatched/astronomy.c" <<'PY'
+git -C "$repo_root" show "$negative_revision:Sources/CLibAstronomy/astronomy.c" > "$build_dir/historical/astronomy.c"
+git -C "$repo_root" show "$negative_revision:Sources/CLibAstronomy/include/astronomy.h" > "$build_dir/historical/include/astronomy.h"
+cp "$build_dir/historical/astronomy.c" "$build_dir/constellation-instrumented/astronomy.c"
+cp "$build_dir/historical/include/astronomy.h" "$build_dir/constellation-instrumented/include/astronomy.h"
+python3 - "$build_dir/constellation-instrumented/astronomy.c" <<'PY'
 from pathlib import Path
 import sys
 
@@ -60,33 +72,42 @@ run_patched() {
     echo "patched $mode: clean bounded run"
 }
 
+negative_report_matches() {
+    report_status=$1
+    report_log=$2
+    expected_pattern=$3
+    [ "$report_status" -eq 66 ] && grep -q "WARNING: ThreadSanitizer" "$report_log" && grep -Eq "$expected_pattern" "$report_log"
+}
+
 run_negative() {
     mode=$1
     expected=$2
-    log="$build_dir/logs/unpatched-$mode.log"
+    probe_variant=$3
+    log="$build_dir/logs/$probe_variant-$mode.log"
     set +e
-    TSAN_OPTIONS="halt_on_error=1:exitcode=66" "$build_dir/unpatched-probe" "$mode" >"$log" 2>&1
-    status=$?
+    TSAN_OPTIONS="halt_on_error=1:abort_on_error=0:exitcode=66" "$build_dir/$probe_variant-probe" "$mode" >"$log" 2>&1
+    probe_status=$?
     set -e
-    if [ "$status" -ne 0 ] && grep -q "WARNING: ThreadSanitizer" "$log" && grep -Eq "$expected" "$log"; then
-        echo "unpatched $mode: expected race reproduced"
+    if negative_report_matches "$probe_status" "$log" "$expected"; then
+        echo "$probe_variant $mode: expected race reproduced"
         return 0
     fi
     sed -n '1,200p' "$log" >&2
-    echo "unpatched $mode did not produce the expected race report" >&2
+    echo "$probe_variant $mode did not produce the expected race report (status $probe_status, expected 66)" >&2
     return 1
 }
 
 compile_probe patched
-compile_probe unpatched
+compile_probe historical
+compile_probe constellation-instrumented
 
 for mode in delta-t pluto counters constellation; do
     run_patched "$mode"
 done
 
-run_negative delta-t 'Astronomy_SetDeltaTFunction|TerrestrialTime|DeltaTFunc'
-run_negative pluto 'Astronomy_Reset|GetSegment|CalcPluto|pluto_cache'
-run_negative counters 'CalcMoon|_CalcMoonCount'
-run_negative constellation 'Astronomy_Constellation|rot|epoch2000'
+run_negative delta-t 'Astronomy_SetDeltaTFunction|TerrestrialTime|DeltaTFunc' historical
+run_negative pluto 'Astronomy_Reset|GetSegment|CalcPluto|pluto_cache' historical
+run_negative counters 'CalcMoon|_CalcMoonCount' historical
+run_negative constellation 'Astronomy_Constellation|rot|epoch2000' constellation-instrumented
 
 echo "ThreadSanitizer controls passed."
