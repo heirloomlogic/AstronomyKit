@@ -77,8 +77,10 @@ public struct AstroTime: Sendable {
 
     /// The Delta T model this time carries; see "Delta T Model" above.
     ///
-    /// `nil` for an invalid time, or when the engine's Delta T function was
-    /// replaced through the C API with one AstronomyKit does not name.
+    /// `nil` for an invalid time, whose ``universalTime`` or
+    /// ``terrestrialTime`` is not finite, or when the engine's Delta T
+    /// function was replaced through the C API with one AstronomyKit does not
+    /// name.
     public var deltaTModel: DeltaTModel? { DeltaTModel(function: raw.deltat_func) }
 
     /// The current time.
@@ -198,7 +200,7 @@ public struct AstroTime: Sendable {
     /// from the result use the model, starting from `ut`.
     ///
     /// A nonfinite value in either scale produces an invalid time with NaN
-    /// fields, which every calculation rejects with ``AstronomyError/badTime``.
+    /// fields, as ``init(tt:deltaTModel:)`` does for a nonfinite TT.
     /// - Parameters:
     ///   - tt: Terrestrial Time days since noon on January 1, 2000.
     ///   - ut: UT1 days since the UT1 calendar coordinate 2000-01-01 noon.

@@ -379,6 +379,7 @@ typedef struct
      * correction, uses this function, so a later #Astronomy_SetDeltaTFunction
      * call does not change a calculation that starts from this value.
      * `NULL` means the function selected when the derived time is made.
+     * A time whose `ut` or `tt` is not finite carries `NULL`.
      */
     astro_deltat_func deltat_func;
 }

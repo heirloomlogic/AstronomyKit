@@ -115,6 +115,23 @@ struct DeltaTModelCaptureTests {
         }
     }
 
+    @Test("A time with a non-finite scale carries no model")
+    func nonFiniteTimeHasNoModel() {
+        let times = [
+            AstroTime(ut: .nan),
+            AstroTime(ut: .infinity),
+            AstroTime(ut: -.infinity, deltaTModel: .jplHorizons),
+            // Finite UT whose Espenak-Meeus TT overflows.
+            AstroTime(ut: 1e200, deltaTModel: .espenakMeeus),
+            AstroTime(tt: .nan).addingDays(1),
+            AstroTime(ut: .nan, deltaTModel: .jplHorizons).addingDays(1),
+        ]
+        for time in times {
+            #expect(!(time.universalTime.isFinite && time.terrestrialTime.isFinite))
+            #expect(time.deltaTModel == nil)
+        }
+    }
+
     @Test("Derived times and search results keep the model")
     func derivedTimesKeepModel() throws {
         let start = AstroTime(year: 2_030, month: 6, day: 1, deltaTModel: .jplHorizons)
@@ -130,9 +147,11 @@ struct DeltaTModelCaptureTests {
         let neptune = try CelestialBody.neptune.searchApsis(after: start)
         #expect(Self.derived(neptune.time, under: .jplHorizons))
 
-        // The default model is unchanged by any of the above.
+        // The default model is unchanged by any of the above. Compare TT, not
+        // `deltaTModel`: the thread-safety suite may install a stand-in default
+        // that returns the Espenak-Meeus values under another function.
         let plainRise = try #require(try CelestialBody.sun.riseTime(after: AstroTime(year: 2_030, month: 6, day: 1), from: .greenwich))
-        #expect(Self.derived(plainRise, under: .espenakMeeus))
+        #expect(plainRise.terrestrialTime == Self.tt(ut: plainRise.universalTime, under: .espenakMeeus))
         #expect(plainRise.universalTime != rise.universalTime)
     }
 

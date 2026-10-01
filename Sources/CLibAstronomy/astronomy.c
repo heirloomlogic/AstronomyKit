@@ -49,8 +49,9 @@
         input time to its result. Astronomy_TimeFromDaysWithDeltaT,
         Astronomy_TerrestrialTimeWithDeltaT and Astronomy_TimeFromPair take
         the function explicitly; NULL selects the process-wide function at
-        the time of the call. Every tt expression is unchanged, so results
-        under one model are bit-identical.
+        the time of the call. A time whose ut or tt is not finite carries
+        NULL. Every tt expression is unchanged, so results under one model
+        are bit-identical.
       - C11 _Atomic on the undocumented performance counters _CalcMoonCount,
         _AltitudeDiffCallCount, and _FindAscentMaxRecursionDepth, which are
         otherwise incremented racily from concurrent calculations.
@@ -1131,14 +1132,15 @@ static astro_deltat_func ResolveDeltaTFunc(astro_deltat_func func)
     return atomic_load_explicit(&DeltaTFunc, memory_order_acquire);
 }
 
-/* AstronomyKit local patch (captured Delta T): every field of a time value. */
+/* AstronomyKit local patch (captured Delta T): every field of a time value.
+   A time whose ut or tt is not finite is invalid and carries no function. */
 static astro_time_t MakeTimeFields(double ut, double tt, astro_deltat_func func)
 {
     astro_time_t time;
     time.ut = ut;
     time.tt = tt;
     time.psi = time.eps = time.st = NAN;
-    time.deltat_func = func;
+    time.deltat_func = (isfinite(ut) && isfinite(tt)) ? func : NULL;
     return time;
 }
 
@@ -1169,7 +1171,8 @@ static astro_time_t TimeFromDaysLike(double ut, astro_time_t like)
  *
  * @returns
  *      An #astro_time_t value for the given `ut` value. It carries the
- *      Delta T function selected at the time of the call.
+ *      Delta T function selected at the time of the call, or `NULL` when
+ *      `ut` or the derived `tt` is not finite.
  */
 astro_time_t Astronomy_TimeFromDays(double ut)
 {
@@ -1182,7 +1185,8 @@ astro_time_t Astronomy_TimeFromDays(double ut)
  * AstronomyKit local patch (captured Delta T). Like #Astronomy_TimeFromDays,
  * but the caller names the Delta T function instead of using the process-wide
  * selection. The returned time carries `func`, so every time derived from it
- * uses the same function.
+ * uses the same function. A time whose `ut` or `tt` is not finite carries
+ * `NULL` instead.
  *
  * @param ut
  *      The floating point number of days since noon UTC on January 1, 2000.
