@@ -125,12 +125,18 @@ class ContractInventoryTests(unittest.TestCase):
             "ASCENDING_NODE",
             "VISIBLE_MORNING",
             "Astronomy_SearchLunarApsis",
+            "astro_deltat_func",
             "astro_apsis_t",
             "astro_apsis_t.kind",
             "astro_apsis_t.dist_au",
             "astro_local_solar_eclipse_t.partial_begin",
         }
         self.assertTrue(expected.issubset(dependencies), expected - dependencies)
+
+    def test_callback_typedefs_are_discovered_from_declarations(self):
+        header = (ROOT / "Sources/CLibAstronomy/include/astronomy.h").read_text()
+        typedefs = self.generator.c_typedefs(header)
+        self.assertTrue({"astro_deltat_func", "astro_search_func_t", "astro_position_func_t"}.issubset(typedefs))
 
     def test_inventory_generation_always_reads_a_symbol_graph(self):
         with mock.patch.object(self.generator, "load_symbol_graph", return_value={"symbols": [], "relationships": []}) as load:

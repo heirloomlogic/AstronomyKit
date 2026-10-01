@@ -329,7 +329,21 @@ def public_api(graph, root):
     return sorted(entries, key=lambda item: item["id"])
 
 
-def c_structs(header):
+def c_typedefs(header):
+    without_comments = re.sub(r"/\*.*?\*/", "", header, flags=re.DOTALL)
+    names = set(re.findall(r"\btypedef\b[^;{}]*?\(\s*\*\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)\s*\([^;{}]*\)\s*;", without_comments))
+    names.update(re.findall(r"}\s*([A-Za-z_][A-Za-z0-9_]*)\s*;", without_comments))
+    for match in re.finditer(r"\btypedef\b(?P<body>[^;{}]+);", without_comments):
+        body = match.group("body").strip()
+        if "(*" in body:
+            continue
+        name = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*$", body)
+        if name:
+            names.add(name.group(1))
+    return names
+
+
+def c_structs(header, typedefs):
     without_comments = re.sub(r"/\*.*?\*/", "", header, flags=re.DOTALL)
     structs = {}
     for match in re.finditer(r"typedef\s+struct(?:\s+[A-Za-z_][A-Za-z0-9_]*)?\s*\{(?P<body>.*?)\}\s*(?P<name>astro_[A-Za-z0-9_]+_t)\s*;", without_comments, re.DOTALL):
@@ -337,16 +351,16 @@ def c_structs(header):
         for declaration_text in match.group("body").split(";"):
             field = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^]]*\]\s*)*$", declaration_text.strip())
             if field:
-                fields[field.group(1)] = set(re.findall(r"\bastro_[A-Za-z0-9_]+_t\b", declaration_text))
+                fields[field.group(1)] = typedefs.intersection(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", declaration_text))
         structs[match.group("name")] = fields
     return structs
 
 
 def c_dependencies(root):
     header = (root / "Sources/CLibAstronomy/include/astronomy.h").read_text()
-    structs = c_structs(header)
+    types = c_typedefs(header)
+    structs = c_structs(header, types)
     functions = set(re.findall(r"\b(Astronomy_[A-Za-z0-9_]+)\s*\(", header))
-    types = set(re.findall(r"\bastro_[A-Za-z0-9_]+_t\b", header))
     constants = set(re.findall(r"^\s*([A-Z][A-Z0-9_]+)\s*(?:=|,|$)", re.sub(r"/\*.*?\*/", "", header, flags=re.DOTALL), re.MULTILINE))
     declared = functions | types | constants
     return_types = {

@@ -16,7 +16,7 @@ The build removes any prior executable and metadata before reading the lock or c
 
 ## Contract inventory
 
-[`contract-inventory.json`](contract-inventory.json) is generated from the compiler's public AstronomyKit symbol graph and the checked-in sources. It owns every public symbol, C function, type, constant, and struct field consumed by Swift, documented local patch, generated source or data artifact, cross-cutting contract, and Swift, Python, or shell test file. Public entries classify errors, optional results, serialization, supported-date behavior, and mutable state. Test files are classified by the evidence they provide: independent reference, regression fixture, invariant, or smoke coverage.
+[`contract-inventory.json`](contract-inventory.json) is generated from the compiler's public AstronomyKit symbol graph and the checked-in sources. It owns every public symbol, C function, typedef, constant, and struct field consumed by Swift, documented local patch, generated source or data artifact, cross-cutting contract, and Swift, Python, or shell test file. Public entries classify errors, optional results, serialization, supported-date behavior, and mutable state. Test files are classified by the evidence they provide: independent reference, regression fixture, invariant, or smoke coverage.
 
 ```sh
 Scripts/migration/generate-contract-inventory.py --check

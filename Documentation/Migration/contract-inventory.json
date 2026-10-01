@@ -1490,6 +1490,14 @@
     },
     {
       "additionalMigrationIssues": [],
+      "id": "astro_deltat_func",
+      "migrationIssue": 96,
+      "references": [
+        "Sources/AstronomyKit/AstronomyKit.swift"
+      ]
+    },
+    {
+      "additionalMigrationIssues": [],
       "id": "astro_direction_t",
       "migrationIssue": 92,
       "references": [
@@ -2841,13 +2849,13 @@
     }
   ],
   "counts": {
-    "cDependencies": 333,
+    "cDependencies": 334,
     "crossCuttingContracts": 5,
     "generatedArtifacts": 6,
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 56,
-    "tests": 722
+    "tests": 723
   },
   "crossCuttingContracts": [
     {
@@ -2947,7 +2955,7 @@
   ],
   "inputHashes": {
     "MAINTAINING.md": "4c6d10c7b4a182faf316fe04ecf42edf48d3b7cdaf37f6ccced9b98fc8e1d544",
-    "Scripts/migration/test_foundation.py": "9d6a9d1ecb781dc0c9efe09ce6b0f32822a0edbe1d74260b5bf4a7ca0baaf295",
+    "Scripts/migration/test_foundation.py": "e526462722b15073fd162383fd6b88456751c660de1fc1ca40eca3c53f898bf1",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
     "Scripts/performance/polynomial/test_polynomial.py": "aa7b84265a0e51932906ebfbf3d000041898b352ecff90eb6b6b97a046111adc",
     "Scripts/performance/test-moon-cache.sh": "58d7a71ed74515e7e7c3616d124ccaf3117acebed648e724af865706d96203f2",
@@ -12389,7 +12397,7 @@
       "id": "Scripts/migration/test_foundation.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_foundation.py",
-      "testCount": 15
+      "testCount": 16
     },
     {
       "classification": "invariant",
