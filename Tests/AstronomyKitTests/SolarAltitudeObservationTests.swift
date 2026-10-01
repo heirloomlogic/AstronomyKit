@@ -111,6 +111,28 @@ struct SolarAltitudeObservationTests {
         #expect(universal.errorBound.total > 1.1e-9 && universal.errorBound.total < 1.2e-9)
     }
 
+    @Test("A Date's civil term covers the rounding carried into UT")
+    func civilTermReachesUniversalTime() throws {
+        // From 1961 on the table's TT seeds init(tt:), which derives UT from
+        // it; before 1961 the civil day count is UT. Either way the calendar
+        // rounding reaches UT, and UT turns the Earth more than 360 degrees a
+        // day, so the civil term is at least that rounding times 360. The floor
+        // does not read the civil constants it checks.
+        let civil = try Self.observe(try Self.date("1972-07-01T12:00:00Z"))
+        let fromTT = AstroTime(tt: civil.time.terrestrialTime, deltaTModel: .espenakMeeus)
+        #expect(civil.time.universalTime == fromTT.universalTime)
+        let proxy = try Self.observe(try Self.date("1950-06-01T12:00:00Z"))
+        #expect(proxy.time.universalTime == AstroTime.civilDays(of: try Self.date("1950-06-01T12:00:00Z")))
+
+        let earthTurn = Bounds.civilCalendarDays * 360
+        for observation in [civil, proxy] {
+            let bound = observation.errorBound
+            #expect(bound.civilConversion >= earthTurn)
+            let others = bound.scaleConversion + bound.lightTimeTermination + bound.earthRotationAngle
+            #expect(bound.total >= earthTurn + others)
+        }
+    }
+
     @Test("A rounded sum is moved up to cover the exact sum")
     func addingUp() {
         typealias Bound = SolarAltitudeObservation.ErrorBound
@@ -134,8 +156,8 @@ struct SolarAltitudeObservationTests {
         let jpl = try Self.observe(date, deltaTModel: .jplHorizons)
         #expect(em.time.terrestrialTime == jpl.time.terrestrialTime)
         #expect(abs(em.altitude - jpl.altitude) > 5e-4)
-        #expect(em.errorBound.total < 1e-8)
-        #expect(jpl.errorBound.total < 1e-8)
+        let largerBound = max(em.errorBound.total, jpl.errorBound.total)
+        #expect(abs(em.altitude - jpl.altitude) > 10_000 * largerBound)
     }
 
     @Test("Times outside the polynomial coverage are refused")

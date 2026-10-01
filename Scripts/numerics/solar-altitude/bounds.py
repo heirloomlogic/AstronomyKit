@@ -487,8 +487,8 @@ def above(value):
 SWIFT_BOUNDS = [
     ("backdateMaxDays", "Days the light-time loop can backdate the Earth position, at most."),
     ("civilCalendarDays", "Rounding of a civil day count, in days."),
-    ("civilToTTDegrees", "Calendar and civil UTC to TT rounding, through the TT sensitivity."),
-    ("civilToUTDegrees", "Calendar rounding taken as UT, through the UT sensitivity."),
+    ("civilToTTDegrees", "Calendar and civil UTC to TT rounding and what it carries into the derived UT, through both sensitivities."),
+    ("civilToUTDegrees", "Calendar rounding taken as UT and what it carries into the forward TT, through both sensitivities."),
     ("forwardTTDegrees", "UT to TT rounding when the engine derived TT, through the TT sensitivity."),
     ("ttInverseDegrees", "TT to UT inverse when the engine derived UT, through the UT sensitivity."),
     ("lightTimeDegrees", "Light-time termination."),

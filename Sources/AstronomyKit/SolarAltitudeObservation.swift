@@ -51,7 +51,8 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
     /// The derived terms that apply to one observation, in degrees.
     public struct ErrorBound: Sendable, Equatable, Hashable {
         /// Calendar rounding and, from 1961 on, the civil UTC to TT
-        /// conversion. Zero unless the time came from a `Date`.
+        /// conversion, with what that error carries into the scale the model
+        /// derives from it. Zero unless the time came from a `Date`.
         public let civilConversion: Double
 
         /// The TT to UT inverse when the engine derived UT, or the UT to TT
@@ -209,10 +210,11 @@ extension Sun {
     /// derived error bound.
     ///
     /// The time is `AstroTime(date, deltaTModel: deltaTModel)`. From 1961 on
-    /// the bound adds the calendar and civil-to-TT rounding and the TT to UT
-    /// inverse; before 1961 it adds the calendar rounding taken as UT and the
-    /// UT to TT rounding. Either way it adds light-time termination and Earth
-    /// Rotation Angle rounding.
+    /// the bound adds the calendar and civil-to-TT rounding, carried into the
+    /// derived UT, and the TT to UT inverse; before 1961 it adds the calendar
+    /// rounding taken as UT, carried into the derived TT, and the UT to TT
+    /// rounding. Either way it adds light-time termination and Earth Rotation
+    /// Angle rounding.
     ///
     /// - Parameters:
     ///   - date: The civil UTC instant.
@@ -220,7 +222,8 @@ extension Sun {
     ///   - deltaTModel: The Delta T model that relates the time's scales.
     /// - Returns: The altitude, its inputs, and the derived bound.
     /// - Throws: ``SolarAltitudeObservation/Unsupported`` for a case the
-    ///   budget excludes, ``AstronomyError/badTime`` for a non-finite date,
+    ///   budget excludes, ``AstronomyError/badTime`` for a non-finite date or,
+    ///   from 1961 on, a TT the inverse does not converge for,
     ///   ``AstronomyError/invalidParameter`` for an invalid observer.
     public static func altitudeObservation(
         at date: Date,

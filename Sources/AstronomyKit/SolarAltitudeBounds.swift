@@ -30,10 +30,10 @@ enum SolarAltitudeBounds {
     /// Rounding of a civil day count, in days.
     static let civilCalendarDays = 1.350353162621332e-11
 
-    /// Calendar and civil UTC to TT rounding, through the TT sensitivity.
+    /// Calendar and civil UTC to TT rounding and what it carries into the derived UT, through both sensitivities.
     static let civilToTTDegrees = 6.3727143904084985e-09
 
-    /// Calendar rounding taken as UT, through the UT sensitivity.
+    /// Calendar rounding taken as UT and what it carries into the forward TT, through both sensitivities.
     static let civilToUTDegrees = 4.889662109798609e-09
 
     /// UT to TT rounding when the engine derived TT, through the TT sensitivity.
