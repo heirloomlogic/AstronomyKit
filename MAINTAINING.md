@@ -102,6 +102,9 @@ swift test --no-parallel -c release
 swift test --no-parallel --sanitize=thread
 python3 Scripts/generate-models.py --check
 python3 Scripts/generate-time-table.py --check
+Tools/Migration/Oracle/freeze-oracle.py --check
+Scripts/migration/generate-contract-inventory.py --check
+python3 -m unittest Scripts/migration/test_foundation.py -v
 python3 Scripts/performance/polynomial/embed.py --check
 python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py'
 sh Scripts/performance/test-vsop-cache.sh
