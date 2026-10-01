@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -85,6 +86,22 @@ class ComparisonProtocolTests(unittest.TestCase):
     def test_archive_names_the_exact_candidate_sources(self):
         metadata = json.loads((ARTIFACTS / "metadata.json").read_text())
         self.assertEqual(self.comparison.source_hashes(), metadata["sourceHashes"])
+
+    def test_executable_fingerprint_ignores_build_paths_but_detects_code_changes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            executables = []
+            for name, result in (("first", 0), ("second", 0), ("changed", 1)):
+                directory = root / name
+                directory.mkdir()
+                source = directory / "probe.c"
+                executable = directory / "probe"
+                source.write_text(f"int main(void) {{ return {result}; }}\n")
+                subprocess.run(["clang", "-g", str(source), "-o", str(executable)], check=True)
+                executables.append(executable)
+            first, second, changed = map(self.comparison.executable_fingerprint, executables)
+            self.assertEqual(first, second)
+            self.assertNotEqual(first, changed)
 
     def test_downstream_populations_match_pinned_git_objects(self):
         lock = json.loads((ROOT / "Tools/Migration/Comparison/downstream-populations-lock.json").read_text())

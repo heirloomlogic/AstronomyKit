@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 6,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 57,
-    "tests": 732
+    "testOwners": 58,
+    "tests": 741
   },
   "crossCuttingContracts": [
     {
@@ -2954,9 +2954,10 @@
     }
   ],
   "inputHashes": {
-    "MAINTAINING.md": "9a9bc7726eee24ccf8268f6fca05a7bb0f7da7a39ca76ec44f0c0abfd3ac7246",
-    "Scripts/migration/test_comparison.py": "b4bfcfd2bcca03b85edc9b1b7de378092881f590201dd604beec1971ed8213e2",
-    "Scripts/migration/test_foundation.py": "e526462722b15073fd162383fd6b88456751c660de1fc1ca40eca3c53f898bf1",
+    "MAINTAINING.md": "8ceacac11321eca239c10913a03ae84065e045d64e7b8952de4a1b0a5315e9c4",
+    "Scripts/migration/test_comparison.py": "05634bf236321c7a4b1f56aa264d7f36901ec6423ea8c38115c2b8933048900d",
+    "Scripts/migration/test_foundation.py": "eebffac50dd14dd5ceb831b7dfd82d16b5bea5778603733e1115d17dc93669f3",
+    "Scripts/migration/test_performance.py": "c27cef3948faffcd36614104711a648db25f64545c862d145932c83fe186252d",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
     "Scripts/performance/polynomial/test_polynomial.py": "aa7b84265a0e51932906ebfbf3d000041898b352ecff90eb6b6b97a046111adc",
     "Scripts/performance/test-moon-cache.sh": "58d7a71ed74515e7e7c3616d124ccaf3117acebed648e724af865706d96203f2",
@@ -12398,14 +12399,21 @@
       "id": "Scripts/migration/test_comparison.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison.py",
-      "testCount": 9
+      "testCount": 10
     },
     {
       "classification": "smoke",
       "id": "Scripts/migration/test_foundation.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_foundation.py",
-      "testCount": 16
+      "testCount": 19
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/migration/test_performance.py",
+      "migrationIssue": 80,
+      "path": "Scripts/migration/test_performance.py",
+      "testCount": 5
     },
     {
       "classification": "invariant",

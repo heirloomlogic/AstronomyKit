@@ -104,6 +104,7 @@ TEST_ISSUES = {
 SCRIPT_TEST_ISSUES = {
     "Scripts/migration/test_comparison.py": 80,
     "Scripts/migration/test_foundation.py": 80,
+    "Scripts/migration/test_performance.py": 80,
     "Scripts/numerics/solar-altitude/test_bounds.py": 94,
     "Scripts/performance/polynomial/test_polynomial.py": 85,
     "Scripts/performance/test-moon-cache.sh": 95,

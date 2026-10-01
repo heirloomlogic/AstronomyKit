@@ -41,7 +41,8 @@
       "sha256": "07bd24cd8b647d70d0ace18df3551966a72cf96c7ec26fd4138aa72410111f11"
     },
     "swiftCandidate": {
-      "sha256": "d44c41c318e903efa01fa88fe7c81dafba74c36479b3095af0fa466c45498c6c"
+      "fingerprintSHA256": "7a30e55375aef79cee5d318cb2d819f902f0db4d2e1551ffdfceeb5cbc126b4c",
+      "normalization": "strip debug and symbols; remove the code signature and UUID from the host-built thin Mach-O on Darwin"
     }
   },
   "failureControls": {
@@ -86,8 +87,8 @@
   },
   "schemaVersion": 1,
   "sourceHashes": {
-    "Package.swift": "7db4d6ff1ea6e364b0fd63a3a42a4cc7e2477cff7d17d052f5caa5b3ea16e56a",
-    "Scripts/migration/run-comparison.py": "70679914810d2f907a3171c563303c85b688f2a8dcffcc6d35af705468bf0ed0",
+    "Package.swift": "f2f899c932bf8497d7849ca5604990a9ec37b6ede20c3d035c0a1ef286fd2998",
+    "Scripts/migration/run-comparison.py": "bd3c08f404502576aedf584c0212a934ad4b1c25a30520fbb0f37cbcc37223fa",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",

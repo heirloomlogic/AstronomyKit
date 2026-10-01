@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "scope": "Pure-Swift engine migration acceptance evidence",
+  "classes": {
+    "exactEquality": [
+      {
+        "id": "public-api-and-value-contracts",
+        "migrationIssue": 96,
+        "obligation": "Preserve public names, signatures, conformances, Codable shape, units, frames, synchronous calling behavior, nil results, and error cases exactly.",
+        "scope": "native-swift-candidate",
+        "appliesToNativeSwiftCandidate": true,
+        "evidence": [
+          "Documentation/Migration/contract-inventory.json",
+          "Tests/AstronomyKitTests/AstronomyErrorTests.swift",
+          "Tests/AstronomyKitTests/AstroTimeTests.swift"
+        ]
+      },
+      {
+        "id": "time-model-state-and-event-identity",
+        "migrationIssue": 84,
+        "obligation": "Preserve UT equality and hashing, captured Delta T identity, accepted-date and mutable-state behavior, event identity and ordering, and success, nil, or error status exactly.",
+        "scope": "native-swift-candidate",
+        "appliesToNativeSwiftCandidate": true,
+        "evidence": [
+          "Tests/AstronomyKitTests/AstroTimeTests.swift",
+          "Tests/AstronomyKitTests/DeltaTModelCaptureTests.swift",
+          "Tools/Migration/Comparison/Artifacts/reference/c-output.json",
+          "Tools/Migration/Comparison/Artifacts/reference/metadata.json"
+        ]
+      },
+      {
+        "id": "coefficient-and-qualification-data",
+        "migrationIssue": 85,
+        "obligation": "Preserve coefficient bits, term order, qualification masks, and offline artifact provenance exactly unless a separately reviewed numerical change replaces them.",
+        "scope": "native-swift-candidate",
+        "appliesToNativeSwiftCandidate": true,
+        "evidence": [
+          "Scripts/model-data/manifest.json",
+          "Scripts/performance/polynomial/data/generation.json",
+          "Scripts/performance/polynomial/data/shipping-validity.json"
+        ]
+      },
+      {
+        "id": "cache-replay-and-paired-position-fields",
+        "migrationIssue": 95,
+        "obligation": "Preserve exact within-build cache replay, caller time metadata, signed-zero key behavior, and position fields shared by paired position and state APIs.",
+        "scope": "native-swift-candidate-within-one-build",
+        "appliesToNativeSwiftCandidate": true,
+        "evidence": [
+          "Tests/AstronomyKitTests/VsopCacheTests.swift",
+          "Tests/AstronomyKitTests/NutationCacheTests.swift",
+          "Tests/AstronomyKitTests/MoonCacheTests.swift",
+          "Tests/AstronomyKitTests/EclipticStateTests.swift"
+        ]
+      },
+      {
+        "id": "comparison-runner-current-backend",
+        "migrationIssue": 80,
+        "obligation": "Require exact parsed JSON equality while the Swift comparison runner still calls the frozen C engine. A native Swift candidate is judged by the exact contracts above plus regression and independent-accuracy evidence, not by cross-implementation bit identity.",
+        "scope": "current-c-backed-swift-only",
+        "appliesToNativeSwiftCandidate": false,
+        "evidence": [
+          "Scripts/migration/run-comparison.py",
+          "Tools/Migration/Comparison/Artifacts/reference/diffs.json"
+        ]
+      }
+    ],
+    "numericalRegression": [
+      {
+        "id": "platform-libm-fixtures",
+        "migrationIssue": 97,
+        "obligation": "Reject non-finite values; compare periodic angles after wrapping; allow 1e-8 degrees for angles, 1e-8/15 hours for right ascension, max(1e-12 AU, abs(reference) * 1e-12) for distances, and 1e-14 for illumination against frozen engine fixtures.",
+        "evidence": [
+          "Tests/AstronomyKitTests/ReproducibilityTests.swift"
+        ]
+      },
+      {
+        "id": "existing-event-time-fixtures",
+        "migrationIssue": 97,
+        "obligation": "Keep the existing rise/set and full-moon regression fixtures within 0.01 seconds without regenerating their expected values to make a candidate pass.",
+        "evidence": [
+          "Tests/AstronomyKitTests/ReproducibilityTests.swift"
+        ]
+      },
+      {
+        "id": "ecliptic-rate-fixtures",
+        "migrationIssue": 89,
+        "obligation": "Keep non-lunar ecliptic longitude and latitude rates within 1e-9 degrees per day and distance rates within 1e-12 AU per day. Lunar rates use 5e-7 degrees per day and 1e-10 AU per day because the shipped lunar state uses a finite-difference stencil.",
+        "evidence": [
+          "Tests/AstronomyKitTests/ReproducibilityTests.swift"
+        ]
+      },
+      {
+        "id": "polynomial-full-model-agreement",
+        "migrationIssue": 85,
+        "obligation": "Keep polynomial positions and derivatives within max(1e-12 AU, abs(reference) * 1e-12) of the compensated full model; qualification uses 2.5e-13 AU and AU/day screening.",
+        "evidence": [
+          "Scripts/performance/polynomial/README.md",
+          "Scripts/performance/polynomial/test_polynomial.py",
+          "Scripts/performance/polynomial/data/shipping-validity.json"
+        ]
+      }
+    ],
+    "independentAccuracy": [
+      {
+        "id": "jpl-equatorial-positions",
+        "migrationIssue": 81,
+        "obligation": "Match the checked-in JPL Horizons geocentric ICRF samples within 1 arcminute for the Sun, Moon, and inner planets and 1.5 arcminutes for Uranus and Neptune.",
+        "evidence": [
+          "Tests/AstronomyKitTests/JPLValidationTests.swift"
+        ]
+      },
+      {
+        "id": "published-accuracy-claim",
+        "migrationIssue": 81,
+        "obligation": "Do not broaden the published plus-or-minus 1 arcminute claim without new independent evidence. Regression agreement with the C engine does not establish this limit.",
+        "evidence": [
+          "README.md",
+          "Tests/AstronomyKitTests/JPLValidationTests.swift"
+        ]
+      }
+    ],
+    "derivedBounds": [
+      {
+        "id": "solar-altitude-bound",
+        "migrationIssue": 94,
+        "obligation": "Re-derive the solar-altitude bound from shipped Swift expressions. Sample agreement and the current C-derived certificate do not certify a rewritten expression.",
+        "evidence": [
+          "Scripts/numerics/solar-altitude/README.md",
+          "Scripts/numerics/solar-altitude/bounds.json",
+          "Scripts/numerics/solar-altitude/test_bounds.py"
+        ]
+      }
+    ]
+  }
+}

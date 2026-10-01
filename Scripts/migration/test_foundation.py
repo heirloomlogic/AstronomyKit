@@ -11,6 +11,7 @@ from unittest import mock
 ROOT = Path(__file__).resolve().parents[2]
 INVENTORY_PATH = ROOT / "Documentation/Migration/contract-inventory.json"
 LOCK_PATH = ROOT / "Tools/Migration/Oracle/oracle-lock.json"
+EVIDENCE_PATH = ROOT / "Documentation/Migration/numerical-evidence.json"
 
 
 def load_generator():
@@ -206,6 +207,33 @@ class OracleLockTests(unittest.TestCase):
                 )
             self.assertFalse(binary.exists())
             self.assertFalse(metadata.exists())
+
+
+class NumericalEvidenceContractTests(unittest.TestCase):
+    def test_evidence_classes_are_separate_and_owned(self):
+        evidence = json.loads(EVIDENCE_PATH.read_text())
+        self.assertEqual(1, evidence["schemaVersion"])
+        classes = evidence["classes"]
+        self.assertEqual({"exactEquality", "numericalRegression", "independentAccuracy", "derivedBounds"}, set(classes))
+        for name, entries in classes.items():
+            with self.subTest(name=name):
+                self.assertTrue(entries)
+                self.assertTrue(all(entry["migrationIssue"] in range(80, 100) for entry in entries))
+                self.assertTrue(all(entry["evidence"] for entry in entries))
+
+    def test_regression_and_accuracy_limits_are_not_cross_classified(self):
+        evidence = json.loads(EVIDENCE_PATH.read_text())
+        regression = {entry["id"] for entry in evidence["classes"]["numericalRegression"]}
+        accuracy = {entry["id"] for entry in evidence["classes"]["independentAccuracy"]}
+        self.assertIn("platform-libm-fixtures", regression)
+        self.assertIn("jpl-equatorial-positions", accuracy)
+        self.assertTrue(regression.isdisjoint(accuracy))
+
+    def test_native_candidate_does_not_inherit_exact_c_output_requirement(self):
+        evidence = json.loads(EVIDENCE_PATH.read_text())
+        comparison = next(entry for entry in evidence["classes"]["exactEquality"] if entry["id"] == "comparison-runner-current-backend")
+        self.assertEqual("current-c-backed-swift-only", comparison["scope"])
+        self.assertFalse(comparison["appliesToNativeSwiftCandidate"])
 
 
 if __name__ == "__main__":
