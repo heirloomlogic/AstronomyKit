@@ -3417,20 +3417,7 @@ astro_libration_t Astronomy_Libration(astro_time_t time)
 /*------------------ VSOP ------------------*/
 
 /** @cond DOXYGEN_SKIP */
-typedef struct
-{
-    double amplitude;
-    double phase;
-    double frequency;
-}
-vsop_term_t;
-
-typedef struct
-{
-    int nterms;
-    const vsop_term_t *term;
-}
-vsop_series_t;
+#include "generated/vsop87b_full.h"
 
 typedef struct
 {
@@ -3456,8 +3443,6 @@ typedef struct
 }
 jupiter_moon_t;
 /** @endcond */
-
-#include "generated/vsop87b_full.h"
 
 /** @cond DOXYGEN_SKIP */
 #define VSOPFORMULA(x)    { ASTRO_ARRAYSIZE(x), x }
