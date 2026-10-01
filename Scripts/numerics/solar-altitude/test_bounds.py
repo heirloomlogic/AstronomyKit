@@ -1,5 +1,6 @@
 """Checks of bounds.py and of the article's use of bounds.json."""
 import json
+import math
 import re
 import unittest
 from decimal import Decimal
@@ -143,6 +144,14 @@ class BoundsTests(unittest.TestCase):
                 self.assertEqual(printed >= 0, exact >= 0, key)
                 self.assertGreaterEqual(abs(printed), abs(exact), f"{key} is an upper bound; the article must not round it toward zero")
         self.assertEqual(sorted(set(recorded) - {key for key, _ in quoted}), [], "values in bounds.json the article does not quote")
+
+    def test_above_never_rounds_toward_zero(self):
+        third = F(1, 3)
+        self.assertGreaterEqual(F(bounds.above(third)), third)
+        self.assertEqual(bounds.above(F(1, 4)), 0.25)
+        # 2/3 rounds to nearest below the exact value, so the successor is returned.
+        self.assertGreater(F(bounds.above(F(2, 3))), F(2, 3))
+        self.assertEqual(bounds.above(F(2, 3)), math.nextafter(2 / 3, math.inf))
 
 
 if __name__ == "__main__":

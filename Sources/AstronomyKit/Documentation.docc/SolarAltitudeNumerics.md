@@ -138,6 +138,14 @@ A certificate can add the derived terms that apply to how its time was construct
 - A `ut` far outside the coverage grows the Earth Rotation Angle term linearly with `0.779 + 0.0027378 |ut| + 1` revolutions.
 - Nothing here covers other platforms' libm, other toolchains, or `-ffast-math` builds, which this package does not use.
 
+## From Swift
+
+`Sun.altitudeObservation(at:from:deltaTModel:)` takes a civil `Date`, `altitudeObservation(terrestrialTime:from:deltaTModel:)` a TT, and `altitudeObservation(universalTime:from:deltaTModel:)` a UT; the Delta T model is a required argument. Each builds the ``AstroTime`` with the matching initializer, evaluates `horizon(refraction: .none)`, and returns a ``SolarAltitudeObservation``: the time with both scales and its model, the observer, the altitude, and an ``SolarAltitudeObservation/ErrorBound`` that sums the derived terms for that construction. A `Date` from 1961 on adds `civilToTTDegrees` and `ttInverseDegrees`; a `Date` before 1961 adds `civilToUTDegrees` and `forwardTTDegrees`; a TT adds `ttInverseDegrees`; a UT adds `forwardTTDegrees`; every observation adds `lightTimeDegrees` and `eraDegrees`. The total rounds each addition up, so it is never below the exact sum. The measured line is not in the bound, and the type's documentation says so.
+
+The constants live in `Sources/AstronomyKit/SolarAltitudeBounds.swift`, which `bounds.py --write` generates from the same exact values as `bounds.json`, each rounded to binary64 away from zero, together with the engine's inverse tolerance expression as it is written in `astronomy.c`, and `bounds.py --check` verifies. No number in the Swift API is typed by hand, and the forward TT the gap check compares against comes from the engine through `AstroTime(ut:deltaTModel:)`.
+
+The entry points throw ``SolarAltitudeObservation/Unsupported`` for the cases listed above: a TT outside the coverage, including the first `backdateMaxDays` of it, where the loop backdates into the series; a TT inside a Delta T gap, detected because the stored pair's residual `|tt - fl(ut + fl(ΔT(ut) / 86400))|` exceeds the inverse tolerance, which a converged inverse never does and a bisected one always does; a civil date within `civilCalendarDays` of a UTC segment start; an observer more than 10 km from the ellipsoid. A non-finite time throws `badTime` and an invalid observer `invalidParameter`, as `horizon` does. No entry point takes an ``AstroTime``: a time does not record which initializer built it, and the terms depend on that. A time the engine derived, such as a search result, is rebuilt exactly from its `universalTime` and `deltaTModel`. For an enclosure over an interval, ``SolarAltitudeObservation/joinDiscontinuityDegrees`` is the step per polynomial boundary and ``SolarAltitudeObservation/polynomialSegmentDays`` the boundary spacing from the start of ``SolarAltitudeObservation/polynomialCoverage``.
+
 ## Reproducing
 
 ```sh

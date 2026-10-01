@@ -136,6 +136,7 @@ For persisted numerical caches, include `AstronomyConfig.ephemerisVersion` and t
 
 - <doc:SolarAltitudeNumerics>
 - ``AstroTime``
+- ``SolarAltitudeObservation``
 
 ### Configuration
 

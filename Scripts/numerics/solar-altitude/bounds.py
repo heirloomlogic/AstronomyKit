@@ -32,7 +32,9 @@ NUTATION = ROOT / "Sources/CLibAstronomy/generated/iau2000b_full.h"
 CIVIL_TABLE = (ROOT / "Sources/AstronomyKit/UTCOffsetTable.swift").read_text()
 TIME_SWIFT = (ROOT / "Sources/AstronomyKit/Time.swift").read_text()
 TARGET = HERE / "bounds.json"
+SWIFT_TARGET = ROOT / "Sources/AstronomyKit/SolarAltitudeBounds.swift"
 
+EARTH_ROW = next(r for r in embed.manifest() if r["body"] == "Earth")
 START, STOP = F(embed.START), F(embed.STOP)  # polynomial coverage, TT days from J2000
 CENTURIES = F("1.01")  # Julian centuries from J2000 spanned by the coverage, rounded outward
 U = F(1, 2**53)  # binary64 unit roundoff
@@ -147,7 +149,7 @@ def polynomial_range_bound(coefficients, low, high):
 
 def polynomial_bounds():
     """Speed, radius, and join-discontinuity bounds from the Earth archive."""
-    row = next(r for r in embed.manifest() if r["body"] == "Earth")
+    row = EARTH_ROW
     coefficients, valid = embed.load_body(row)
     degree, width, count = row["degree"], row["width"], row["segments"]
     if not all(valid):
@@ -341,6 +343,7 @@ def compute():
         raise ValueError("the inverse tolerance no longer uses DBL_EPSILON; update bounds.py")
     tolerance = max(floor, factor * EPSILON * STOP)
     inverse_days = (tolerance / (1 - U) + forward_rounding(ut_max)) * ut_per_tt
+    inverse_tolerance = {"floorDays": floor, "perDay": factor * EPSILON}  # the engine's own expression, for the Swift gap check
 
     # Calendar arithmetic. init(_:): Foundation's `timeIntervalSince1970` adds
     # the reference-date offset to the interval a Date stores, rounding at the
@@ -439,52 +442,110 @@ def compute():
     civil_tt_degrees = civil_tt_days * (tt_sensitivity + ut_per_tt * ut_sensitivity)
     civil_ut_degrees = calendar_days * (ut_sensitivity + tt_per_ut * tt_sensitivity)
     return {
-        "earth": {key: (value if isinstance(value, int) else float(value)) for key, value in earth.items()},
-        "frameRates": {key: float(value) for key, value in frame.items()},
-        "deltaTSlopeSecondsPerDay": float(slope),
-        "deltaTMagnitudeSeconds": float(delta_t["magnitudeSeconds"]),
-        "deltaTJumpSeconds": {key: float(value) for key, value in delta_t["jumpSeconds"].items()},
-        "backdateMaxDays": float(backdate),
-        "civilCalendarDays": float(calendar_days),
-        "civilToTTDays": float(civil_tt_days),
-        "civilToTTDegrees": float(civil_tt_degrees),
-        "civilToUTDegrees": float(civil_ut_degrees),
-        "forwardTTDays": float(forward_tt_days),
-        "forwardTTDegrees": float(forward_tt_days * tt_sensitivity),
-        "ttInverseDays": float(inverse_days),
-        "ttInverseDegrees": float(inverse_days * ut_sensitivity),
-        "eraRevolutions": float(era_revolutions),
-        "eraDegrees": float(era_deg),
-        "contraction": float(k),
-        "lightTimeStepDays": float(step_days),
-        "lightTimeDays": float(light_time_days),
-        "lightTimeAU": float(light_time_au),
-        "lightTimeDegrees": float(direction_degrees(light_time_au)),
-        "joinDegrees": float(direction_degrees(earth["joinMaxAU"])),
-        "sunRateDegPerDay": float(sun_rate),
-        "parallaxRateDegPerDay": float(parallax_rate),
-        "utSensitivityDegPerDay": float(ut_sensitivity),
-    }
+        "earth": earth,
+        "frameRates": frame,
+        "deltaTSlopeSecondsPerDay": slope,
+        "deltaTMagnitudeSeconds": delta_t["magnitudeSeconds"],
+        "deltaTJumpSeconds": delta_t["jumpSeconds"],
+        "backdateMaxDays": backdate,
+        "civilCalendarDays": calendar_days,
+        "civilToTTDays": civil_tt_days,
+        "civilToTTDegrees": civil_tt_degrees,
+        "civilToUTDegrees": civil_ut_degrees,
+        "forwardTTDays": forward_tt_days,
+        "forwardTTDegrees": forward_tt_days * tt_sensitivity,
+        "ttInverseDays": inverse_days,
+        "ttInverseDegrees": inverse_days * ut_sensitivity,
+        "eraRevolutions": era_revolutions,
+        "eraDegrees": era_deg,
+        "contraction": k,
+        "lightTimeStepDays": step_days,
+        "lightTimeDays": light_time_days,
+        "lightTimeAU": light_time_au,
+        "lightTimeDegrees": direction_degrees(light_time_au),
+        "joinDegrees": direction_degrees(earth["joinMaxAU"]),
+        "sunRateDegPerDay": sun_rate,
+        "parallaxRateDegPerDay": parallax_rate,
+        "utSensitivityDegPerDay": ut_sensitivity,
+    }, inverse_tolerance
+
+
+def nearest(value):
+    """The exact value as the JSON number float() gives it: an int stays an int."""
+    if isinstance(value, dict):
+        return {key: nearest(entry) for key, entry in value.items()}
+    return value if isinstance(value, int) else float(value)
+
+
+def above(value):
+    """The smallest binary64 at or above `value`, so a Swift constant never sits below its bound."""
+    nearest_float = float(value)
+    return math.nextafter(nearest_float, math.inf) if F(nearest_float) < value else nearest_float
+
+
+# The constants the Swift API reads, in bounds.json's own names; each is an upper bound.
+SWIFT_BOUNDS = [
+    ("backdateMaxDays", "Days the light-time loop can backdate the Earth position, at most."),
+    ("civilCalendarDays", "Rounding of a civil day count, in days."),
+    ("civilToTTDegrees", "Calendar and civil UTC to TT rounding and what it carries into the derived UT, through both sensitivities."),
+    ("civilToUTDegrees", "Calendar rounding taken as UT and what it carries into the forward TT, through both sensitivities."),
+    ("forwardTTDegrees", "UT to TT rounding when the engine derived TT, through the TT sensitivity."),
+    ("ttInverseDegrees", "TT to UT inverse when the engine derived UT, through the UT sensitivity."),
+    ("lightTimeDegrees", "Light-time termination."),
+    ("eraDegrees", "Earth Rotation Angle rounding."),
+    ("joinDegrees", "Direction change at one Earth polynomial segment boundary."),
+]
+
+
+def swift_source(computed, inverse_tolerance):
+    """Sources/AstronomyKit/SolarAltitudeBounds.swift from the exact values."""
+    constants = [
+        ("polynomialStart", "TT days from J2000 where the Earth polynomial coverage starts, inclusive.", START, float),
+        ("polynomialStop", "TT days from J2000 where the Earth polynomial coverage stops, exclusive.", STOP, float),
+        ("polynomialSegmentDays", "Width of one Earth polynomial segment in TT days.", F(EARTH_ROW["width"]), float),
+        ("observerHeightMeters", "Observer height above the ellipsoid the budget allows, in meters.", OBSERVER_HEIGHT_KM * 1000, above),
+        # The engine's literals round to nearest, so these two copy its expression exactly.
+        ("inverseToleranceFloorDays", "The TT to UT inverse's convergence tolerance: this floor, or the next constant times |tt|.", inverse_tolerance["floorDays"], float),
+        ("inverseTolerancePerDay", "The TT to UT inverse's convergence tolerance per day of |tt|, as the engine writes it.", inverse_tolerance["perDay"], float),
+    ] + [(key, doc, computed[key], above) for key, doc in SWIFT_BOUNDS]
+    lines = [
+        "// Generated by Scripts/numerics/solar-altitude/bounds.py --write; do not edit.",
+        "// Each bound is the exact value derived there, rounded to binary64 away from zero",
+        "// when it is not representable, so no bound here is below the value it stands for.",
+        "// The inverse tolerance copies the engine's expression, whose literals round to nearest.",
+        "// The derivations are in <doc:SolarAltitudeNumerics>; bounds.py --check verifies this file.",
+        "",
+        "/// The derived terms of the geometric solar altitude error budget, in degrees unless named otherwise.",
+        "enum SolarAltitudeBounds {",
+    ]
+    for name, doc, value, rounding in constants:
+        lines += [f"    /// {doc}", f"    static let {name} = {rounding(value)!r}", ""]
+    lines[-1:] = ["}", ""]
+    return "\n".join(lines)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--write", action="store_true", help="record the bounds in bounds.json")
-    parser.add_argument("--check", action="store_true", help="verify bounds.json against the sources")
+    parser.add_argument("--write", action="store_true", help="record the bounds in bounds.json and the Swift constants")
+    parser.add_argument("--check", action="store_true", help="verify bounds.json and the Swift constants against the sources")
     args = parser.parse_args()
-    computed = compute()
+    computed, inverse_tolerance = compute()
+    swift = swift_source(computed, inverse_tolerance)
     existing = json.loads(TARGET.read_text()) if TARGET.exists() else {}
     if args.write:
         # The ceilings are review decisions for measure.py --check, not computed values.
-        document = {"computed": computed, "measuredCeilings": existing.get("measuredCeilings", {})}
+        document = {"computed": nearest(computed), "measuredCeilings": existing.get("measuredCeilings", {})}
         TARGET.write_text(json.dumps(document, indent=2, sort_keys=True) + "\n")
-        print(f"wrote {TARGET.relative_to(ROOT)}")
+        SWIFT_TARGET.write_text(swift)
+        print(f"wrote {TARGET.relative_to(ROOT)} and {SWIFT_TARGET.relative_to(ROOT)}")
     elif args.check:
-        if existing.get("computed") != computed:
+        if existing.get("computed") != nearest(computed):
             raise SystemExit("bounds.json is stale; run bounds.py --write and review the article")
-        print("bounds.json matches the sources")
+        if not SWIFT_TARGET.exists() or SWIFT_TARGET.read_text() != swift:
+            raise SystemExit(f"{SWIFT_TARGET.relative_to(ROOT)} is stale; run bounds.py --write")
+        print("bounds.json and the Swift constants match the sources")
     else:
-        print(json.dumps(computed, indent=2, sort_keys=True))
+        print(json.dumps(nearest(computed), indent=2, sort_keys=True))
 
 
 if __name__ == "__main__":
