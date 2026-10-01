@@ -33,6 +33,13 @@ jobs:
           python3 Scripts/generate-models.py --check
           python3 Scripts/generate-time-table.py --check
 
+      - name: Verify migration foundation
+        run: |
+          git cat-file -e cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit} || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
+          Tools/Migration/Oracle/freeze-oracle.py --check
+          Scripts/migration/generate-contract-inventory.py --check
+          python3 -m unittest Scripts/migration/test_foundation.py -v
+
       - name: Verify polynomial artifacts and analytic evaluator
         run: |
           python3 Scripts/performance/polynomial/embed.py --check
