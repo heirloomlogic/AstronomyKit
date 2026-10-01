@@ -24,7 +24,8 @@ struct NutationCacheTests {
             tt: tt,
             psi: psi,
             eps: eps,
-            st: -metadataSeed
+            st: -metadataSeed,
+            deltat_func: nil
         )
     }
 

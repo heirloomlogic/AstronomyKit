@@ -20,6 +20,7 @@ static astro_time_t raw_time(double tt, double metadata)
     time.psi = NAN;
     time.eps = NAN;
     time.st = -metadata;
+    time.deltat_func = NULL;    /* AstronomyKit local patch (captured Delta T) */
     return time;
 }
 

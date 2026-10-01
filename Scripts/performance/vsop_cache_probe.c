@@ -40,6 +40,7 @@ static astro_time_t raw_time(double tt)
     time.psi = 1.25;
     time.eps = -2.5;
     time.st = 3.75;
+    time.deltat_func = NULL;    /* AstronomyKit local patch (captured Delta T) */
     return time;
 }
 

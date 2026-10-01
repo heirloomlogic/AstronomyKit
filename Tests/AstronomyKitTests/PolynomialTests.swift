@@ -12,7 +12,7 @@ struct PolynomialTests {
         ]
         for boundary in boundaries {
             for tt in [boundary.nextDown, boundary, boundary.nextUp] {
-                let time = astro_time_t(ut: 123, tt: tt, psi: 0.125, eps: -0.25, st: 3)
+                let time = astro_time_t(ut: 123, tt: tt, psi: 0.125, eps: -0.25, st: 3, deltat_func: nil)
                 for body in bodies {
                     let position = Astronomy_HelioVector(body, time)
                     let state = Astronomy_HelioState(body, time)

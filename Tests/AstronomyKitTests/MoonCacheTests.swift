@@ -60,7 +60,7 @@ struct MoonCacheTests {
     @Test("Nonfinite TT keeps propagating nonfinite lunar output")
     func nonfinite() {
         for tt in [Double.infinity, -Double.infinity, Double.nan] {
-            let time = astro_time_t(ut: tt, tt: tt, psi: .nan, eps: .nan, st: .nan)
+            let time = astro_time_t(ut: tt, tt: tt, psi: .nan, eps: .nan, st: .nan, deltat_func: nil)
             let vector = Astronomy_GeoMoon(time)
             let sphere = Astronomy_EclipticGeoMoon(time)
             #expect(!vector.x.isFinite)
