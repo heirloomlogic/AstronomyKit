@@ -50,6 +50,30 @@ The baseline host was a Mac13,1 with macOS 27.0.1, Apple Swift 6.4, and Apple cl
 
 The pure-Swift pilot must stay at or below 30,166 ns median latency, 11,182,080 bytes peak resident memory, 14,389,145 stripped bytes, 42.900 seconds for the slowest clean build, and 12.668 seconds for the slowest touched-source build. Cold and warm median throughput must stay at or above 10,604,102 and 11,306,621 operations per second. These figures give latency and build time 50% headroom, throughput 20%, peak memory 25%, and deterministic binary size 10%. Candidate measurement uses the same five runtime trials, three build trials, one build preflight, runner, host, and toolchain.
 
+## Full Swift model representation prototype
+
+Issue #82 generated a development-only immutable Swift representation from the pinned polynomial, VSOP87B, and IAU2000B archives. Twenty-nine bounded source units contain all 1,431,768 polynomial binary64 bit patterns, 36,712 validity bits including 413 disabled segments, 35,080 VSOP terms with 135 series index records, and 77 nutation rows. The generator validates every input checksum, writes raw `UInt64` bit patterns instead of reformatted floating-point literals, and records recursive input and output hashes in `Scripts/model-data/swift-prototype-manifest.json`.
+
+The generated storage is split across one module per polynomial body plus VSOP and nutation modules. A single module did not finish a bounded Release build after 129 seconds and sampled a 4.83 GB compiler process. The modular layout compiled, and the compiled whole-model FNV-1a checksum is `0x0cd4295bc6da4d62`. The prototype targets are available only when the ignored `.model-prototype` sentinel exists, so ordinary package builds do not compile the failed representation.
+
+[`model-prototype-evidence.json`](model-prototype-evidence.json) records the isolated Apple-host measurements. Clean Release builds took 41.232, 42.647, and 51.130 seconds, so the slowest trial fails the fixed 42.900-second gate. Touched-source Release builds passed at 2.292 to 3.310 seconds, and the stripped runner passed at 12,513,696 bytes. Five fresh-process first accesses took 7,958 to 16,333 ns and used 5,931,008 bytes peak RSS. The full checksum sweep took 5.564 to 11.876 ms and used 18.252 to 18.285 MB peak RSS; that sweep deliberately touches every table page and is not the issue #80 request workload.
+
+An isolated Debug preflight did not finish within 180 seconds. Linux measurements and the issue #80 astronomical latency and throughput workloads are absent. The representation therefore fails issue #82 and does not unblock the Sun-path pilot. No runtime-loaded storage alternative, budget change, or numerical-tolerance change was adopted.
+
+Regeneration and verification use the committed archives and need no network access:
+
+```sh
+python3 Scripts/generate-models.py --swift-prototype
+python3 Scripts/generate-models.py --check-swift-prototype
+python3 -m unittest discover -s Scripts/model-prototype -p 'test_*.py' -v
+touch .model-prototype
+swift package purge-cache
+swift test -c release --filter ModelDataTests
+python3 Scripts/model-prototype/measure.py --measure
+```
+
+The committed generated sources let a clean prototype build run without Python, downloads, or runtime data files. Python is required only to regenerate or verify the source from the frozen archives. Remove `.model-prototype` and purge the package cache after prototype work.
+
 ```sh
 python3 Scripts/migration/performance_baseline.py --check
 python3 Scripts/migration/performance_baseline.py --compare

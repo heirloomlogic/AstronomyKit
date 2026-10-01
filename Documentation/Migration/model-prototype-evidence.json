@@ -1,0 +1,141 @@
+{
+  "phase": "measured-with-acceptance-gaps",
+  "postMeasurementChanges": {
+    "Package.swift": {
+      "currentSHA256": "dbe5231a0511fa9f0f94c14ac86e8ae3c8ae0c1d0957bdf2740f06566875270e",
+      "measuredSHA256": "e4e6574393b3ed64f15584ad9cf554a271684e716404ba7a16e8744713bdc3a4",
+      "reason": "The measured prototype targets were moved behind the ignored .model-prototype sentinel after the failed Debug build so ordinary package builds do not compile them. The enabled target graph is unchanged."
+    }
+  },
+  "consumerPackaging": {
+    "networkDependencies": false,
+    "runtimeDataFiles": false,
+    "scriptsCopied": false
+  },
+  "environment": {
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "processorCount": 10,
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.30.4 clang-2100.3.30.1)\nTarget: arm64-apple-macosx27.0.0"
+  },
+  "fixedBudgets": {
+    "cleanBuildSeconds": 42.9,
+    "coldThroughputOperationsPerSecond": 10604102,
+    "incrementalBuildSeconds": 12.668,
+    "latencyNanosecondsPerOperation": 30166,
+    "peakResidentBytes": 11182080,
+    "strippedBinaryBytes": 14389145,
+    "warmThroughputOperationsPerSecond": 11306621
+  },
+  "inputSHA256": {
+    "Package.swift": "e4e6574393b3ed64f15584ad9cf554a271684e716404ba7a16e8744713bdc3a4",
+    "Sources/AstronomyModelPrototype/Generated/Metadata.swift": "98d34530bd2ffdff60962375c5f20ccf0dbc64f464fb438619d6259383777f14",
+    "Sources/AstronomyModelPrototype/ModelData.swift": "3dd57d08ba8f1ef028a950e7995993aa6d8c89c5cb0fd5b5d9d56eed16aba2ee",
+    "Sources/AstronomyNutationPrototype/Generated/Nutation.swift": "210abe7a6cd7439c6417c849f4b03de94bfbd40855721da5391af035b15c66f7",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/Access.swift": "1054432ebd5867a1baaf498788880bb363f23fb2d1cb52489421b42971a3a4fc",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth0.swift": "07e617462b355aef387ca545fda426869127eeaed2257ec052d03c0918fecb91",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth1.swift": "1723e52640c13c81835595d260bbedf53b11307aa410257e9e31fb02f11b5536",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth2.swift": "f7c945d3fa14cb86e30e5905f0635ef7ed29f8e2c342dab5a29759759d93e227",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth3.swift": "4cfd51a610f4ac642369b1b67d1d6364dbf99465576821f9610d9ef425b8853a",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth4.swift": "5b8be3a00847b25a59835a5713280bc7cf5576bc8731e12ffbdbf126233678cf",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth5.swift": "0fd093d52ce698dfb71e1ee543217c664a0bfebe3a2606786c728905b804e2d7",
+    "Sources/AstronomyPolynomialJupiterPrototype/Generated/Access.swift": "4cb879a36e750ec4eaab3c6b1425d60c5240f76be41952fcaff7ff5d0c45ce18",
+    "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter0.swift": "f92e4464bfb6e7a22db33de2cec9439b4ce2d5cc286719ae98a7a37fa58b03d4",
+    "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter1.swift": "46b88b219b1ad158abfd712860e334136583b3bc61035fbca1cd683bf2b5eaad",
+    "Sources/AstronomyPolynomialMarsPrototype/Generated/Access.swift": "d4c7f363f944eb9d1bb7d63c98ce4153febb08886e688fe4007cb4dada9ceb3a",
+    "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars0.swift": "629525470ce979bda24438b6df9fce9b6101f64200425b762d617392aec63427",
+    "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars1.swift": "19df80b35495396cca3deec0ff733328ea3982f082a74c6d3e6993028e9e80e1",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/Access.swift": "67cf152b3a7f462654e74eb423b151516f64644ef45f755dade997a4f1dc17fb",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury0.swift": "bb10a1e647f798c9acbf162e3df613ee23f0618a527c48696fc2d2ed722cb944",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury1.swift": "ba9be218133078c1b1a1f9691da28fe50a15a256c3f43b7decb92b8e66665fa6",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury2.swift": "7dc4d5b8ac4f16d8c1d4d4faaba60343245cff84930ddc1a7ceda1e6b244d900",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury3.swift": "cf953f80a7aab99310cd9bb29167a63057a3c76be13c251854a832f80b0090bf",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury4.swift": "fba046c8bd049c854568a2209c52d85c773f237b063406e36b3a0270dbf6a86b",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury5.swift": "6bff2db458cc487f31e68aaaa8ea0f4c1cee61a417ef8844eae02a6ea11d14d6",
+    "Sources/AstronomyPolynomialNeptunePrototype/Generated/Access.swift": "d02c39c2d8b8ed1bf65898f8339c17fe56789be7c3bd568395bd6d9b3fa4b818",
+    "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune0.swift": "e0107924d61c6d866284f4958135970d22080bd549773e6f58ce6a9a233135db",
+    "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune1.swift": "855d096f1a1aa306b59113f3afc78f4ae0bd60d205a13d196b83b8ab7071c1dd",
+    "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune2.swift": "5654d98a2c1c873437b8fc806234180a1456f86720b50ba6289e931dce7e89b9",
+    "Sources/AstronomyPolynomialSaturnPrototype/Generated/Access.swift": "aaa2e03f9d60910986d64a75041152f8bb244c5a7636e1e020ba58b7ec71ada4",
+    "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn0.swift": "f9cb9a20bed2c720804982ffa24d69b4f7bdd525a4ae0883a8e75135ddaa82f1",
+    "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn1.swift": "fd9605e9154454a3aecaf1443fb62a919aba2dec316936ae838774f6150e4e45",
+    "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn2.swift": "00a5a2c9e1e1f2e20ba5f6141e360ea289ab15af2ac3efdb31ddef5e24baa7de",
+    "Sources/AstronomyPolynomialUranusPrototype/Generated/Access.swift": "4ec2ae2dbd3a5e8b95397c81bc4a544f981145c8fc5194b1c3c6ba0b614727bf",
+    "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus0.swift": "93d702c2af492a9ec999f6c0b6424382fe75c33c98cf972906ca861c7b55207f",
+    "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus1.swift": "a18534e24e1ef83f3ccebad5c48ecd843aaf838572d37d040dd42832e5622f94",
+    "Sources/AstronomyPolynomialVenusPrototype/Generated/Access.swift": "b7990a03d19d7d07c3a81aa4b1bbf3ab266e353374a2341795dffb1c7e7d2e86",
+    "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus0.swift": "1d799b79b325cc87734fe39e18befb1568c176b4abbad23cb6de48981728e09f",
+    "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus1.swift": "7bfd419556067919f0e6bb4e88d6a7d20db68cc524500dcd1f8dc18f5fc5f7fa",
+    "Sources/AstronomyVSOPPrototype/Generated/VSOPTerms.swift": "49385e01d189544cfecbde32febf6afcf155a929b82517d85894a09c7b40572c",
+    "Tools/Migration/ModelPrototypeRunner/main.swift": "cc584cda3c8024d05991af496a20257c9c9d5e3096c60e4009a05029f2234bf2"
+  },
+  "limitations": [
+    "The first-access and full-sweep workloads are representation probes, not the issue #80 astronomical request workload.",
+    "Issue #80 latency and throughput gates cannot be evaluated until issue #83 supplies the Sun-path calculation.",
+    "Full-sweep RSS touches every table page and is reported separately from first access and the issue #80 workload.",
+    "This record covers the recorded Apple host and toolchain; Linux wall-clock and peak-memory measurements are absent.",
+    "An isolated modular Debug preflight was terminated after 180 seconds without completing, so Debug artifact, incremental-build, and runtime measurements are absent."
+  ],
+  "measurements": {
+    "cleanDebugBuildCompleted": false,
+    "cleanDebugBuildLowerBoundSeconds": 180,
+    "cleanReleaseSeconds": [
+      41.231681540986756,
+      42.647434125014115,
+      51.13023870799225
+    ],
+    "firstAccessNanoseconds": [
+      16333,
+      7958,
+      9583,
+      8333,
+      10584
+    ],
+    "firstAccessPeakResidentBytes": [
+      5931008,
+      5931008,
+      5931008,
+      5931008,
+      5931008
+    ],
+    "fullSweepNanoseconds": [
+      11876250,
+      5712542,
+      5763542,
+      5842167,
+      5563875
+    ],
+    "fullSweepPeakResidentBytes": [
+      18268160,
+      18284544,
+      18268160,
+      18251776,
+      18251776
+    ],
+    "incrementalReleaseSeconds": [
+      3.309673499985365,
+      2.5025897920131683,
+      2.291710666992003
+    ],
+    "releaseCompilerPeakResidentBytes": [
+      1728249856,
+      1693351936,
+      1721729024
+    ],
+    "strippedExecutableBytes": 12513696
+  },
+  "releaseBuildEvaluation": {
+    "failures": [
+      "cleanReleaseSeconds"
+    ],
+    "passed": false,
+    "summary": {
+      "cleanReleaseSeconds": 51.13023870799225,
+      "incrementalReleaseSeconds": 3.309673499985365
+    }
+  },
+  "schemaVersion": 1,
+  "status": "incomplete",
+  "scope": "Development-only full Swift coefficient representation",
+  "workloadSHA256": "cc584cda3c8024d05991af496a20257c9c9d5e3096c60e4009a05029f2234bf2"
+}
