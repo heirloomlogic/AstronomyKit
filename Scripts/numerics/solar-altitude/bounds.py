@@ -171,14 +171,14 @@ def polynomial_bounds():
     # A boundary jump is the vector difference between the end of one segment
     # and the start of the next; the direction bound needs its length.
     jumps = [root_above(sum((ends[s][1][axis] - ends[s + 1][0][axis]) ** 2 for axis in range(3))) for s in range(count - 1)]
-    # Every instant is within half a day of a grid point of its own segment,
-    # or of the next segment's first point, which differs by at most one jump.
+    # The grid holds both ends of every segment, so every instant is within
+    # half a day of a grid point of its own segment.
     return {
         "segments": count,
         "speedAUPerDay": speed,
         "radiusGridAU": radius_grid,
-        "radiusAU": radius_grid - speed / 2 - max(jumps),
-        "radiusMaxAU": root_above(radius2_max) + speed / 2 + max(jumps),
+        "radiusAU": radius_grid - speed / 2,
+        "radiusMaxAU": root_above(radius2_max) + speed / 2,
         "joinMaxAU": max(jumps),
         "joinSumAU": sum(jumps),
     }
@@ -383,16 +383,18 @@ def compute():
     # the UT values differ by up to lightTimeStepDays. The map tau -> |E(t - tau)| / c
     # is a contraction with constant k; each realized iterate also evaluates the
     # distance at the forward-rounded TT, which moves it by at most speed times
-    # that rounding. So the last tau is within (step + rounding) / (1 - k) of the
-    # exact fixed point, and the position returned, evaluated at the
-    # forward-rounded TT of that tau, is within
-    # speed * (forward rounding + tt_per_ut * lightTimeDays) of the exact one.
-    # The rounding of the Earth position itself enters the distance too; it is
-    # measured, not derived, and left to the measured line.
+    # that rounding, and Astronomy_VectorLength rounds three squares, two sums,
+    # and a square root, within (1 + u)^3 of the exact length. So the last tau
+    # is within (step + rounding) / (1 - k) of the exact fixed point, and the
+    # position returned, evaluated at the forward-rounded TT of that tau, is
+    # within speed * (forward rounding + tt_per_ut * lightTimeDays) of the
+    # exact one. The rounding of the Earth position itself enters the distance
+    # too; it is measured, not derived, and left to the measured line.
     expression("Astronomy_CorrectLightTravel", "if (dt < 1.0e-9)")
     stop = F(1, 10**9)
     k = speed * tt_per_ut / c_auday
-    magnitude, error = rounded(backdate)
+    length_rounding = ((1 + U) ** 3 - 1) * earth["radiusMaxAU"]
+    magnitude, error = rounded(backdate, length_rounding / c_auday)
     magnitude, backdate_rounding = rounded(ut_max + magnitude, error)
     iterate_rounding = backdate_rounding + speed * forward_rounding(ut_max) / c_auday
     step_days = (stop / (1 - U) + 2 * forward_rounding(ut_max)) * ut_per_tt
