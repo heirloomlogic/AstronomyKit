@@ -15,7 +15,7 @@ let package = Package(
         .library(
             name: "AstronomyKit",
             targets: ["AstronomyKit"]
-        )
+        ),
     ],
     targets: [
         .target(
@@ -29,6 +29,11 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("include")
             ]
+        ),
+        .executableTarget(
+            name: "AstronomyMigrationRunner",
+            dependencies: ["AstronomyKit"],
+            path: "Tools/Migration/SwiftRunner"
         ),
         .testTarget(
             name: "AstronomyKitTests",

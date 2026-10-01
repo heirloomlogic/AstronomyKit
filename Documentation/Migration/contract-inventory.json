@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 6,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 56,
-    "tests": 723
+    "testOwners": 57,
+    "tests": 732
   },
   "crossCuttingContracts": [
     {
@@ -2954,7 +2954,8 @@
     }
   ],
   "inputHashes": {
-    "MAINTAINING.md": "4c6d10c7b4a182faf316fe04ecf42edf48d3b7cdaf37f6ccced9b98fc8e1d544",
+    "MAINTAINING.md": "9a9bc7726eee24ccf8268f6fca05a7bb0f7da7a39ca76ec44f0c0abfd3ac7246",
+    "Scripts/migration/test_comparison.py": "b4bfcfd2bcca03b85edc9b1b7de378092881f590201dd604beec1971ed8213e2",
     "Scripts/migration/test_foundation.py": "e526462722b15073fd162383fd6b88456751c660de1fc1ca40eca3c53f898bf1",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
     "Scripts/performance/polynomial/test_polynomial.py": "aa7b84265a0e51932906ebfbf3d000041898b352ecff90eb6b6b97a046111adc",
@@ -12392,6 +12393,13 @@
   "schemaVersion": 1,
   "scope": "AstronomyKit public API and patched C engine migration ownership",
   "testOwners": [
+    {
+      "classification": "independent-reference",
+      "id": "Scripts/migration/test_comparison.py",
+      "migrationIssue": 80,
+      "path": "Scripts/migration/test_comparison.py",
+      "testCount": 9
+    },
     {
       "classification": "smoke",
       "id": "Scripts/migration/test_foundation.py",
