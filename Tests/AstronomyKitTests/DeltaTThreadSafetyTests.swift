@@ -1,8 +1,9 @@
-import AstronomyKit
 import CLibAstronomy
 import Foundation
 import Synchronization
 import Testing
+
+@testable import AstronomyKit
 
 /// Calls made through ``espenakMeeusStandIn``.
 private let standInCalls = Atomic<Int>(0)
@@ -17,15 +18,18 @@ private let espenakMeeusStandIn: astro_deltat_func = { ut in
     return Astronomy_DeltaT_EspenakMeeus(ut)
 }
 
-/// Calls made through ``selfReplacingStandIn``.
-private let selfReplacingCalls = Atomic<Int>(0)
+/// Calls made through ``defaultChangingStandIn``.
+private let defaultChangingCalls = Atomic<Int>(0)
 
 /// A Delta T function that returns the Espenak-Meeus bits and, on every call,
-/// selects Espenak-Meeus as the process default. A calculation that keeps
-/// calling it after its first derived time has kept its captured function.
-private let selfReplacingStandIn: astro_deltat_func = { ut in
-    selfReplacingCalls.add(1, ordering: .relaxed)
-    AstronomyConfig.setDeltaTModel(.espenakMeeus)
+/// installs ``espenakMeeusStandIn`` as the process default. A calculation that
+/// calls it more than once kept using it after the default changed.
+///
+/// It is never installed as the default itself, so a time built by another
+/// suite cannot capture it.
+private let defaultChangingStandIn: astro_deltat_func = { ut in
+    defaultChangingCalls.add(1, ordering: .relaxed)
+    Astronomy_SetDeltaTFunction(espenakMeeusStandIn)
     return Astronomy_DeltaT_EspenakMeeus(ut)
 }
 
@@ -39,39 +43,35 @@ private let selfReplacingStandIn: astro_deltat_func = { ut in
 /// so ThreadSanitizer can prove the patch holds. Other suites construct times
 /// in parallel, so the writers only swap in ``espenakMeeusStandIn``; a model
 /// with different results, such as JPL Horizons, would shift their answers.
-/// The suite is serialized because both tests install a stand-in and then
-/// check which function a construction called.
-@Suite("Delta T Thread Safety", .serialized)
+/// Other suites can also construct times or set the default between any two
+/// statements here, so no assertion depends on which default is installed.
+@Suite("Delta T Thread Safety")
 struct DeltaTThreadSafetyTests {
     @Test("A calculation keeps its time's model when the default changes mid-calculation")
     func calculationKeepsCapturedModel() throws {
         defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
         let observer = Observer(latitude: 40, longitude: 0)
-
-        // Constructing the time captures the stand-in; that first call also
-        // puts Espenak-Meeus back as the default.
         let date = try #require(ISO8601DateFormatter().date(from: "2049-12-21T12:00:00Z"))
-        Astronomy_SetDeltaTFunction(selfReplacingStandIn)
-        let time = AstroTime(date)
-        #expect(time.deltaTModel == nil)
-        #expect(AstroTime(ut: 0).deltaTModel == .espenakMeeus)
+        let reference = AstroTime(date, deltaTModel: .espenakMeeus)
 
-        // The calculation's first derived time replaces the default again.
-        // Every later derived time still calls the captured stand-in.
-        Astronomy_SetDeltaTFunction(selfReplacingStandIn)
-        let before = selfReplacingCalls.load(ordering: .relaxed)
+        // Pass the stand-in to the time directly. Installing it as the default
+        // first would let a time built by another suite capture it, or another
+        // suite's default replace it, before this construction reads it.
+        let time = AstroTime(
+            raw: Astronomy_TimeFromPair(reference.universalTime, reference.terrestrialTime, defaultChangingStandIn)
+        )
+        #expect(time.deltaTModel == nil)
+
+        // Each derived time calls the captured stand-in, and each call changes
+        // the default. A second call came after the first change.
+        let before = defaultChangingCalls.load(ordering: .relaxed)
         let horizon = try CelestialBody.sun.horizon(at: time, from: observer, refraction: .none)
-        #expect(selfReplacingCalls.load(ordering: .relaxed) - before >= 2)
-        #expect(AstroTime(ut: 0).deltaTModel == .espenakMeeus)
+        #expect(defaultChangingCalls.load(ordering: .relaxed) - before >= 2)
 
         // The stand-in returns the Espenak-Meeus bits, so the result is the
         // one a plain Espenak-Meeus time gives.
-        let reference = try CelestialBody.sun.horizon(
-            at: AstroTime(date, deltaTModel: .espenakMeeus),
-            from: observer,
-            refraction: .none
-        )
-        #expect(horizon == reference)
+        let expected = try CelestialBody.sun.horizon(at: reference, from: observer, refraction: .none)
+        #expect(horizon == expected)
     }
 
     @Test("Concurrent model swaps never corrupt time construction")
@@ -111,10 +111,16 @@ struct DeltaTThreadSafetyTests {
         }
 
         // The swap only tests something if time construction reads the pointer
-        // the writers store. Install the stand-in once more and check it runs.
-        Astronomy_SetDeltaTFunction(espenakMeeusStandIn)
-        let callsBefore = standInCalls.load(ordering: .relaxed)
-        _ = AstroTime(ut: ut)
-        #expect(standInCalls.load(ordering: .relaxed) > callsBefore)
+        // the writers store. Install the stand-in and check it runs. Another
+        // suite can restore the default between the two steps, so retry until
+        // a construction calls the stand-in.
+        var called = false
+        for _ in 0..<1_000 where !called {
+            Astronomy_SetDeltaTFunction(espenakMeeusStandIn)
+            let callsBefore = standInCalls.load(ordering: .relaxed)
+            _ = AstroTime(ut: ut)
+            called = standInCalls.load(ordering: .relaxed) > callsBefore
+        }
+        #expect(called)
     }
 }

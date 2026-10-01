@@ -150,7 +150,8 @@ struct DeltaTModelCaptureTests {
         // The default model is unchanged by any of the above. Compare TT, not
         // `deltaTModel`: the thread-safety suite may install a stand-in default
         // that returns the Espenak-Meeus values under another function.
-        let plainRise = try #require(try CelestialBody.sun.riseTime(after: AstroTime(year: 2_030, month: 6, day: 1), from: .greenwich))
+        let plainStart = AstroTime(year: 2_030, month: 6, day: 1)
+        let plainRise = try #require(try CelestialBody.sun.riseTime(after: plainStart, from: .greenwich))
         #expect(plainRise.terrestrialTime == Self.tt(ut: plainRise.universalTime, under: .espenakMeeus))
         #expect(plainRise.universalTime != rise.universalTime)
     }
