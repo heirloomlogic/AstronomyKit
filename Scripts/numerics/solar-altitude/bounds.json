@@ -1,16 +1,35 @@
 {
   "computed": {
-    "civilToTTDays": 8.191114723551632e-12,
-    "civilToTTDegrees": 2.0541731603340694e-15,
-    "deltaTSlopeSecondsPerDay": 0.04826878287356578,
+    "backdateMaxDays": 0.005926605298167386,
+    "civilCalendarDays": 1.2287448836190153e-11,
+    "civilToTTDays": 1.638311767960134e-11,
+    "civilToTTDegrees": 4.108569072200655e-15,
+    "civilToUTDegrees": 4.449312450474432e-09,
+    "contraction": 0.00010804543497477138,
+    "deltaTJumpSeconds": {
+      "y1900": -0.08840036806848105,
+      "y1920": 0.01238,
+      "y1941": 0.0008818337493744218,
+      "y1961": 0.029618591260801852,
+      "y1986": 0.009882599307066638,
+      "y2005": -0.05007121875,
+      "y2050": -0.001
+    },
+    "deltaTMagnitudeSeconds": 205.0142262100546,
+    "deltaTSlopeSecondsPerDay": 0.006464130145157682,
     "earth": {
-      "joinMaxAU": 2.0665582028984918e-13,
-      "joinSumAU": 2.5534453691507197e-10,
-      "radiusAU": 0.973837775638414,
+      "joinMaxAU": 2.1911251195570887e-13,
+      "joinSumAU": 2.842133830367142e-10,
+      "radiusAU": 0.9738377756381948,
+      "radiusGridAU": 0.9831915185145824,
+      "radiusMaxAU": 1.0261598974182071,
       "segments": 9177,
       "speedAUPerDay": 0.018707485752336852
     },
-    "eraDegrees": 1.6430947766724837e-11,
+    "eraDegrees": 1.6359843392832137e-11,
+    "eraRevolutions": 102.77557627359168,
+    "forwardTTDays": 4.095558017008729e-12,
+    "forwardTTDegrees": 1.0270867444867774e-15,
     "frameRates": {
       "equinoxesDegPerDay": 7.364626867169006e-05,
       "nutationDegPerDay": 0.00010322762841742115,
@@ -19,12 +38,16 @@
       "siderealPolynomialDegPerDay": 3.509748006712899e-05,
       "ttSensitivityDegPerDay": 0.0002507806604671005
     },
-    "lightTimeDays": 1.0164920562249102e-09,
-    "lightTimeDegrees": 1.1188082757634325e-09,
-    "sunRateDegPerDay": 1.1007745107138678,
-    "ttInverseDays": 8.191114453381942e-12,
-    "ttInverseDegrees": 2.966020344037623e-09,
-    "utSensitivityDegPerDay": 362.10217314360864
+    "joinDegrees": 1.2891492287146722e-11,
+    "lightTimeAU": 1.901601356147173e-11,
+    "lightTimeDays": 1.012396577604183e-09,
+    "lightTimeDegrees": 1.1188078214791472e-09,
+    "lightTimeStepDays": 1.0081911914631735e-09,
+    "parallaxRateDegPerDay": 0.015828948200533724,
+    "sunRateDegPerDay": 1.1007745107230147,
+    "ttInverseDays": 2.0477788455845412e-11,
+    "ttInverseDegrees": 7.415052575146657e-09,
+    "utSensitivityDegPerDay": 362.1022158293671
   },
   "measuredCeilings": {
     "altitude_deg": 5e-09,
