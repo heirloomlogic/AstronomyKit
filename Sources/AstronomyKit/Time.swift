@@ -105,10 +105,12 @@ public struct AstroTime: Sendable {
     ///     date's TT and that derived times use. `nil` captures the process
     ///     default at this moment.
     public init(_ date: Date, deltaTModel: DeltaTModel? = nil) {
-        self.init(
-            civilDays: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400,
-            deltaTModel: deltaTModel
-        )
+        self.init(civilDays: Self.civilDays(of: date), deltaTModel: deltaTModel)
+    }
+
+    /// Civil UTC days since J2000 noon of a Foundation `Date`.
+    static func civilDays(of date: Date) -> Double {
+        (date.timeIntervalSince1970 - j2000UnixOffset) / 86_400
     }
 
     /// Creates a time from calendar components.

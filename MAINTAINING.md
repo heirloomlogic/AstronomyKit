@@ -129,8 +129,9 @@ The harness skips inputs that reach known engine defects; each filter names its 
 
 ## Generated tables
 
-Three generators produce checked-in sources from pinned, checksummed inputs. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
+Four generators produce checked-in sources from pinned, checksummed inputs or the shipped sources. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
 
 - `Scripts/generate-models.py` reads `Scripts/model-data/` (full VSOP87B and IAU2000B source tables pinned to the vendored upstream revision) and writes `Sources/CLibAstronomy/generated/vsop87b_full.h` and `iau2000b_full.h`.
 - `Scripts/generate-time-table.py` reads `Scripts/time-data/` (archived USNO TAI-UTC and IERS Bulletin C records) and writes `Sources/AstronomyKit/UTCOffsetTable.swift`. Updating time standards requires a new snapshot, hash manifest, a new `ephemerisVersion`, and transition tests.
 - `Scripts/performance/polynomial/embed.py` reads the frozen coefficient archive in `Scripts/performance/polynomial/data/` and writes `Sources/CLibAstronomy/generated/polynomial-data.h`. See [that directory's README](Scripts/performance/polynomial/README.md) for coverage and provenance.
+- `Scripts/numerics/solar-altitude/bounds.py` derives the solar altitude error budget from the shipped sources in exact arithmetic and writes `Scripts/numerics/solar-altitude/bounds.json` and `Sources/AstronomyKit/SolarAltitudeBounds.swift`, the constants `Sun.altitudeObservation` reports. See [that directory's README](Scripts/numerics/solar-altitude/README.md).
