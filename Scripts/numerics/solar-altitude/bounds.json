@@ -1,0 +1,46 @@
+{
+  "computed": {
+    "civilToTTDays": 8.191114723551632e-12,
+    "civilToTTDegrees": 2.0541731603340694e-15,
+    "deltaTSlopeSecondsPerDay": 0.04826878287356578,
+    "earth": {
+      "joinMaxAU": 2.0665582028984918e-13,
+      "joinSumAU": 2.5534453691507197e-10,
+      "radiusAU": 0.973837775638414,
+      "segments": 9177,
+      "speedAUPerDay": 0.018707485752336852
+    },
+    "eraDegrees": 1.6430947766724837e-11,
+    "frameRates": {
+      "equinoxesDegPerDay": 7.364626867169006e-05,
+      "nutationDegPerDay": 0.00010322762841742115,
+      "obliquityDegPerDay": 3.5624969554068425e-07,
+      "precessionDegPerDay": 3.8453033615319586e-05,
+      "siderealPolynomialDegPerDay": 3.509748006712899e-05,
+      "ttSensitivityDegPerDay": 0.0002507806604671005
+    },
+    "lightTimeDays": 1.0164920562249102e-09,
+    "lightTimeDegrees": 1.1188082757634325e-09,
+    "sunRateDegPerDay": 1.1007745107138678,
+    "ttInverseDays": 8.191114453381942e-12,
+    "ttInverseDegrees": 2.966020344037623e-09,
+    "utSensitivityDegPerDay": 362.10217314360864
+  },
+  "measuredCeilings": {
+    "altitude_deg": 5e-09,
+    "azimuth_deg": 2e-08,
+    "dec_deg": 2e-09,
+    "dec_j2000_deg": 2e-09,
+    "deltat_s": 5e-12,
+    "dist_au": 1e-12,
+    "earth_x_au": 1e-14,
+    "earth_y_au": 1e-14,
+    "earth_z_au": 1e-14,
+    "geo_x_au": 1e-10,
+    "geo_y_au": 1e-10,
+    "geo_z_au": 1e-10,
+    "ra_hours": 5e-10,
+    "ra_j2000_hours": 5e-10,
+    "sidereal_hours": 2e-12
+  }
+}

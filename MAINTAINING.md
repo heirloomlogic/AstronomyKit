@@ -107,6 +107,9 @@ python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py'
 sh Scripts/performance/test-vsop-cache.sh
 sh Scripts/performance/test-nutation-cache.sh
 sh Scripts/performance/test-moon-cache.sh
+python3 Scripts/numerics/solar-altitude/bounds.py --check
+python3 -m unittest discover -s Scripts/numerics/solar-altitude -p 'test_*.py'
+python3 Scripts/numerics/solar-altitude/measure.py --check   # Linux, or macOS with QUAD_CC=gcc-15
 ```
 
 Plain `swift test` is enough locally. The Delta T thread-safety test swaps the process-global model, but only between two functions that return identical results, so suites running in parallel get the same values. A time created during a swap can carry the stand-in, whose `deltaTModel` is `nil`, so tests outside that suite compare values rather than `deltaTModel` for times made under the default. CI still passes `--no-parallel`.

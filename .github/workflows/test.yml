@@ -72,6 +72,14 @@ jobs:
           sh Scripts/performance/test-nutation-cache.sh
           sh Scripts/performance/test-moon-cache.sh
 
+      # Exact arithmetic gives the same bounds on every platform, and the
+      # measurement needs GCC's libquadmath, so this runs here and not on macOS.
+      - name: Verify the solar altitude error budget
+        run: |
+          python3 Scripts/numerics/solar-altitude/bounds.py --check
+          python3 -m unittest discover -s Scripts/numerics/solar-altitude -p 'test_*.py' -v
+          python3 Scripts/numerics/solar-altitude/measure.py --check
+
       - name: Test
         run: swift test --no-parallel
 
