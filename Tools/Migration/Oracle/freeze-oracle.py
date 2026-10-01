@@ -17,6 +17,7 @@ PREFIXES = (
 )
 EXCLUDED = {"Sources/CLibAstronomy/generated/.gitattributes"}
 BUILD_FLAGS = ["-std=c11", "-O3", "-DNDEBUG", "-fno-fast-math", "-ffp-contract=off", "-fno-ident"]
+DRIVER_FILES = ("Tools/Migration/Oracle/oracle-main.c",)
 
 
 def git(root, *arguments, text=False):
@@ -58,6 +59,7 @@ def lock(root, recorded_environment):
         "upstreamRepository": "https://github.com/cosinekitty/astronomy",
         "upstreamRevision": UPSTREAM_REVISION,
         "files": {path: object_hash(root, path) for path in paths},
+        "driverFiles": {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in DRIVER_FILES},
         "build": {
             "compiler": "/usr/bin/clang",
             "flags": BUILD_FLAGS,

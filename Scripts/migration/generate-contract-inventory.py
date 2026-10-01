@@ -101,6 +101,15 @@ TEST_ISSUES = {
     "VsopCacheTests.swift": 95,
 }
 
+SCRIPT_TEST_ISSUES = {
+    "Scripts/migration/test_foundation.py": 80,
+    "Scripts/numerics/solar-altitude/test_bounds.py": 94,
+    "Scripts/performance/polynomial/test_polynomial.py": 85,
+    "Scripts/performance/test-moon-cache.sh": 95,
+    "Scripts/performance/test-nutation-cache.sh": 95,
+    "Scripts/performance/test-vsop-cache.sh": 95,
+}
+
 PATCH_ISSUES = {
     1: 95,
     2: 95,
@@ -123,6 +132,7 @@ PATCH_ISSUES = {
 }
 
 GENERATED_ISSUES = {
+    "Scripts/numerics/solar-altitude/bounds.json": 94,
     "Sources/AstronomyKit/SolarAltitudeBounds.swift": 94,
     "Sources/AstronomyKit/UTCOffsetTable.swift": 84,
     "Sources/CLibAstronomy/generated/iau2000b_full.h": 86,
@@ -131,6 +141,7 @@ GENERATED_ISSUES = {
 }
 
 GENERATORS = {
+    "Scripts/numerics/solar-altitude/bounds.json": "Scripts/numerics/solar-altitude/bounds.py",
     "Sources/AstronomyKit/SolarAltitudeBounds.swift": "Scripts/numerics/solar-altitude/bounds.py",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "Scripts/generate-time-table.py",
     "Sources/CLibAstronomy/generated/iau2000b_full.h": "Scripts/generate-models.py",
@@ -180,8 +191,11 @@ def load_symbol_graph(root):
     supplied = os.environ.get("ASTRONOMYKIT_SYMBOL_GRAPH")
     if supplied:
         return json.loads(Path(supplied).read_text())
-    run(["swift", "build", "--target", "AstronomyKit"], root, stdout=subprocess.DEVNULL)
-    bin_path = subprocess.check_output(["swift", "build", "--show-bin-path"], cwd=root, text=True).strip()
+    swift_version = subprocess.check_output(["swift", "--version"], text=True)
+    scratch_path = root / ".build/contract-inventory" / hashlib.sha256(swift_version.encode()).hexdigest()[:16]
+    build_options = ["--scratch-path", str(scratch_path)]
+    run(["swift", "build", *build_options, "--target", "AstronomyKit"], root, stdout=subprocess.DEVNULL)
+    bin_path = subprocess.check_output(["swift", "build", *build_options, "--show-bin-path"], cwd=root, text=True).strip()
     target_info = json.loads(subprocess.check_output(["swift", "-print-target-info"], cwd=root, text=True))
     target = target_info["target"]
     if platform.system() == "Darwin":
@@ -200,6 +214,8 @@ def load_symbol_graph(root):
             "-I",
             bin_path,
             "-I",
+            str(Path(bin_path) / "Modules"),
+            "-I",
             str(root / "Sources/CLibAstronomy/include"),
             "-Xcc",
             f"-fmodule-map-file={root / 'Sources/CLibAstronomy/module.modulemap'}",
@@ -217,7 +233,36 @@ def load_symbol_graph(root):
 
 
 def declaration(symbol):
-    return "".join(fragment["spelling"] for fragment in symbol.get("declarationFragments", []))
+    signature = "".join(fragment["spelling"] for fragment in symbol.get("declarationFragments", []))
+    if "::SYNTHESIZED::" in symbol["identifier"]["precise"]:
+        signature = re.sub(r"\b(?:borrowing|consuming)\s+", "", signature)
+    return signature
+
+
+def is_optional_type(type_text):
+    normalized = re.sub(r"\s+", "", type_text.split("{", 1)[0])
+    return normalized.endswith(("?", "!")) or normalized.startswith(("Optional<", "ImplicitlyUnwrappedOptional<"))
+
+
+def nil_result_contract(kind, signature):
+    if kind == "swift.init":
+        return "optional" if re.search(r"\binit[?!]\s*\(", signature) else "nonoptional"
+    if "->" in signature:
+        return "optional" if is_optional_type(signature.rsplit("->", 1)[1]) else "nonoptional"
+    if kind.endswith("property") and ":" in signature:
+        return "optional" if is_optional_type(signature.split(":", 1)[1]) else "nonoptional"
+    return "nonoptional"
+
+
+def mutable_state_contract(path_components, kind):
+    path = ".".join(path_components)
+    if path_components[0] == "GravitySimulation":
+        return "instance-mutable"
+    if path in {"AstronomyConfig.setDeltaTModel(_:)", "AstronomyConfig.reset()"}:
+        return "process-global-mutable"
+    if path_components[0] == "FixedStar" and kind == "swift.method":
+        return "process-global-mutable"
+    return "value-or-stateless"
 
 
 def source_location(symbol, symbols, parents, root):
@@ -261,23 +306,19 @@ def public_api(graph, root):
             top_identifier = parents[top_identifier]
         top_conformances = conformances.get(top_identifier, set())
         path_components = symbol["pathComponents"]
-        mutable_state = "value-or-stateless"
-        if path_components[0] == "GravitySimulation":
-            mutable_state = "instance-mutable"
-        elif path_components[0] == "FixedStar" and any("define" in component.lower() for component in path_components):
-            mutable_state = "process-global-mutable"
+        kind = symbol["kind"]["identifier"]
         contracts = {
             "errors": "throws" if "throws" in signature else "nonthrowing",
-            "nil-results": "optional" if "?" in signature or "Optional<" in signature else "nonoptional",
+            "nil-results": nil_result_contract(kind, signature),
             "serialization": "codable-shape" if {"s:SE", "s:Se"}.issubset(top_conformances) else "not-codable",
             "supported-dates": "accepted-domain-applies" if "AstroTime" in signature or "Date" in signature or path_components[0] in {"AstroTime", "CivilTime"} else "not-time-evaluating",
-            "mutable-state": mutable_state,
+            "mutable-state": mutable_state_contract(path_components, kind),
         }
         entries.append(
             {
-                "id": precise,
+                "id": f"{'.'.join(path_components)}::{kind}::{signature}",
                 "path": ".".join(path_components),
-                "kind": symbol["kind"]["identifier"],
+                "kind": kind,
                 "signature": signature,
                 "source": path,
                 "line": line,
@@ -288,14 +329,62 @@ def public_api(graph, root):
     return sorted(entries, key=lambda item: item["id"])
 
 
+def c_structs(header):
+    without_comments = re.sub(r"/\*.*?\*/", "", header, flags=re.DOTALL)
+    structs = {}
+    for match in re.finditer(r"typedef\s+struct(?:\s+[A-Za-z_][A-Za-z0-9_]*)?\s*\{(?P<body>.*?)\}\s*(?P<name>astro_[A-Za-z0-9_]+_t)\s*;", without_comments, re.DOTALL):
+        fields = {}
+        for declaration_text in match.group("body").split(";"):
+            field = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[[^]]*\]\s*)*$", declaration_text.strip())
+            if field:
+                fields[field.group(1)] = set(re.findall(r"\bastro_[A-Za-z0-9_]+_t\b", declaration_text))
+        structs[match.group("name")] = fields
+    return structs
+
+
 def c_dependencies(root):
     header = (root / "Sources/CLibAstronomy/include/astronomy.h").read_text()
-    declared = set(re.findall(r"\b(?:Astronomy|_Astronomy|astro|ASTRO|BODY|TIME|DIRECTION|REFRACTION|EQUATOR|ABERRATION)_[A-Za-z0-9_]+\b", header))
+    structs = c_structs(header)
+    functions = set(re.findall(r"\b(Astronomy_[A-Za-z0-9_]+)\s*\(", header))
+    types = set(re.findall(r"\bastro_[A-Za-z0-9_]+_t\b", header))
+    constants = set(re.findall(r"^\s*([A-Z][A-Z0-9_]+)\s*(?:=|,|$)", re.sub(r"/\*.*?\*/", "", header, flags=re.DOTALL), re.MULTILINE))
+    declared = functions | types | constants
+    return_types = {
+        function: return_type
+        for return_type, function in re.findall(r"\b(astro_[A-Za-z0-9_]+_t)\s+(Astronomy_[A-Za-z0-9_]+)\s*\(", header)
+    }
     references = {}
+    referenced_types = set()
     for path in sorted((root / "Sources/AstronomyKit").glob("*.swift")):
         source = path.read_text()
-        for identifier in declared.intersection(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", source)):
-            references.setdefault(identifier, []).append(path.relative_to(root).as_posix())
+        relative = path.relative_to(root).as_posix()
+        identifiers = set(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", source))
+        for identifier in declared.intersection(identifiers):
+            references.setdefault(identifier, set()).add(relative)
+            if identifier in types:
+                referenced_types.add(identifier)
+            if identifier in return_types:
+                referenced_types.add(return_types[identifier])
+    pending = list(referenced_types)
+    while pending:
+        struct = pending.pop()
+        for nested_types in structs.get(struct, {}).values():
+            for nested in nested_types:
+                if nested not in referenced_types:
+                    referenced_types.add(nested)
+                    pending.append(nested)
+    for struct in referenced_types:
+        struct_references = references.get(struct, set())
+        if not struct_references:
+            struct_references = {
+                reference
+                for function, return_type in return_types.items()
+                if return_type == struct
+                for reference in references.get(function, set())
+            }
+        references.setdefault(struct, set()).update(struct_references)
+        for field in structs.get(struct, {}):
+            references.setdefault(f"{struct}.{field}", set()).update(struct_references)
     entries = []
     for identifier, paths in references.items():
         issues = sorted({SOURCE_ISSUES[Path(path).name] for path in paths})
@@ -304,7 +393,7 @@ def c_dependencies(root):
                 "id": identifier,
                 "migrationIssue": issues[0],
                 "additionalMigrationIssues": issues[1:],
-                "references": paths,
+                "references": sorted(paths),
             }
         )
     return sorted(entries, key=lambda item: item["id"])
@@ -336,60 +425,77 @@ def sha256(path):
 
 
 def input_hashes(root):
+    tests = [root / path for path in test_paths(root)]
     paths = [
         root / "MAINTAINING.md",
         root / "Sources/CLibAstronomy/include/astronomy.h",
         *sorted((root / "Sources/AstronomyKit").glob("*.swift")),
-        *sorted((root / "Tests").rglob("*.swift")),
+        *tests,
     ]
     return {path.relative_to(root).as_posix(): sha256(path) for path in paths}
 
 
-def has_recorded_swift_toolchain(root):
-    lock = json.loads((root / "Tools/Migration/Oracle/oracle-lock.json").read_text())
-    current = subprocess.check_output(["swift", "--version"], text=True, stderr=subprocess.DEVNULL).splitlines()[0]
-    return current == lock["recordedEnvironment"]["swift"]
+def load_inventory_symbol_graph(root):
+    return load_symbol_graph(root)
 
 
 def generated_artifacts(root):
-    paths = sorted(path for path in (root / "Sources").rglob("*") if path.is_file() and is_generated_source(path))
+    marked = {path.relative_to(root).as_posix() for search_root in (root / "Sources", root / "Scripts") for path in search_root.rglob("*") if path.is_file() and is_generated_source(path)}
+    discovered = marked | set(GENERATED_ISSUES)
     entries = []
-    for path in paths:
-        relative = path.relative_to(root).as_posix()
+    for relative in sorted(discovered):
+        path = root / relative
+        if not path.is_file():
+            raise RuntimeError(f"Generated artifact is missing: {relative}")
         if relative not in GENERATED_ISSUES:
             raise RuntimeError(f"No migration issue for generated artifact {relative}")
         entries.append({"id": relative, "path": relative, "sha256": sha256(path), "generator": GENERATORS[relative], "migrationIssue": GENERATED_ISSUES[relative]})
     return entries
 
 
+def test_paths(root):
+    paths = {path.relative_to(root).as_posix() for path in (root / "Tests").rglob("*.swift")}
+    paths.update(path.relative_to(root).as_posix() for path in (root / "Scripts").rglob("test_*.py"))
+    paths.update(path.relative_to(root).as_posix() for path in (root / "Scripts").rglob("test-*.sh"))
+    return paths
+
+
 def test_owners(root):
     entries = []
-    for path in sorted((root / "Tests").rglob("*.swift")):
-        if path.name not in TEST_ISSUES:
-            raise RuntimeError(f"No migration issue for test file {path.name}")
+    for relative in sorted(test_paths(root)):
+        path = root / relative
+        issue = TEST_ISSUES.get(path.name, SCRIPT_TEST_ISSUES.get(relative))
+        if issue is None:
+            raise RuntimeError(f"No migration issue for test file {relative}")
         if path.name in {"JPLValidationTests.swift", "AuditValidationTests.swift"}:
             classification = "independent-reference"
         elif path.name in {"ReproducibilityTests.swift", "PolynomialTests.swift"}:
             classification = "regression-fixture"
+        elif relative == "Scripts/migration/test_foundation.py" or path.suffix == ".sh":
+            classification = "smoke"
         else:
             classification = "invariant"
         source = path.read_text()
+        if path.suffix == ".swift":
+            test_count = len(re.findall(r"@Test\b|\bfunc test[A-Za-z0-9_]*\s*\(", source))
+        elif path.suffix == ".py":
+            test_count = len(re.findall(r"^\s*def test_[A-Za-z0-9_]*\s*\(", source, re.MULTILINE))
+        else:
+            test_count = 1
         entries.append(
             {
-                "id": path.relative_to(root).as_posix(),
-                "path": path.relative_to(root).as_posix(),
-                "testCount": len(re.findall(r"@Test\b|\bfunc test[A-Za-z0-9_]*\s*\(", source)),
+                "id": relative,
+                "path": relative,
+                "testCount": test_count,
                 "classification": classification,
-                "migrationIssue": TEST_ISSUES[path.name],
+                "migrationIssue": issue,
             }
         )
     return entries
 
 
-def generate_inventory(root, graph, frozen_api=None):
-    api = public_api(graph, root) if graph is not None else frozen_api
-    if api is None:
-        raise RuntimeError("A compiler symbol graph or frozen API inventory is required")
+def generate_inventory(root, graph):
+    api = public_api(graph, root)
     dependencies = c_dependencies(root)
     patches = local_patches(root)
     artifacts = generated_artifacts(root)
@@ -425,11 +531,7 @@ def main():
     arguments = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     output = root / OUTPUT
-    existing = json.loads(output.read_text()) if output.exists() else None
-    can_extract = bool(os.environ.get("ASTRONOMYKIT_SYMBOL_GRAPH")) or has_recorded_swift_toolchain(root)
-    if not can_extract and existing is None:
-        raise SystemExit("The recorded Swift toolchain is required for the first inventory generation")
-    inventory = generate_inventory(root, load_symbol_graph(root) if can_extract else None, existing["publicSwiftAPI"] if existing else None)
+    inventory = generate_inventory(root, load_inventory_symbol_graph(root))
     rendered = json.dumps(inventory, indent=2, sort_keys=True) + "\n"
     if arguments.write:
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -438,8 +540,7 @@ def main():
     elif not output.exists() or output.read_text() != rendered:
         raise SystemExit(f"{OUTPUT} is stale; run {Path(__file__).name} --write")
     else:
-        mode = "compiler symbol graph" if can_extract else "frozen API plus input hashes"
-        print(f"Verified {OUTPUT} with {inventory['counts']} using {mode}")
+        print(f"Verified {OUTPUT} with {inventory['counts']} using the current compiler symbol graph")
 
 
 if __name__ == "__main__":

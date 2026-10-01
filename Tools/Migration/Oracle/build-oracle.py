@@ -27,6 +27,10 @@ def main():
     root = Path(__file__).resolve().parents[3]
     output = Path(sys.argv[1]).resolve()
     output.mkdir(parents=True, exist_ok=True)
+    binary_path = output / "astronomy-oracle"
+    metadata_path = output / "build-metadata.json"
+    binary_path.unlink(missing_ok=True)
+    metadata_path.unlink(missing_ok=True)
     lock = json.loads(Path(__file__).with_name("oracle-lock.json").read_text())
     revision = lock["baselineRevision"]
     with tempfile.TemporaryDirectory(prefix="astronomy-oracle-") as temporary:
@@ -38,19 +42,30 @@ def main():
         mismatches = [path for path, digest in lock["files"].items() if sha256(source_root / path) != digest]
         if mismatches:
             raise SystemExit(f"oracle source hash mismatch: {', '.join(mismatches)}")
+        driver_mismatches = []
+        for path, digest in lock["driverFiles"].items():
+            source = root / path
+            if sha256(source) != digest:
+                driver_mismatches.append(path)
+                continue
+            frozen_driver = source_root / path
+            frozen_driver.parent.mkdir(parents=True, exist_ok=True)
+            frozen_driver.write_bytes(source.read_bytes())
+        if driver_mismatches:
+            raise SystemExit(f"oracle driver hash mismatch: {', '.join(driver_mismatches)}")
         compiler = os.environ.get("CC") or lock["build"]["compiler"]
         if not Path(compiler).exists():
             compiler = shutil.which("cc")
         if not compiler:
             raise SystemExit("no C compiler found")
         object_path = Path(temporary) / "astronomy.o"
-        binary_path = output / "astronomy-oracle"
         engine = source_root / "Sources/CLibAstronomy"
         common = [compiler, *lock["build"]["flags"], "-I", str(engine / "include"), "-I", str(engine)]
         environment = dict(os.environ, SOURCE_DATE_EPOCH="0", ZERO_AR_DATE="1")
         subprocess.run(common + ["-c", str(engine / "astronomy.c"), "-o", str(object_path)], check=True, env=environment)
         link_flags = ["-lm", "-pthread"]
-        subprocess.run(common + [str(Path(__file__).with_name("oracle-main.c")), str(object_path), *link_flags, "-o", str(binary_path)], check=True, env=environment)
+        driver = source_root / next(iter(lock["driverFiles"]))
+        subprocess.run(common + [str(driver), str(object_path), *link_flags, "-o", str(binary_path)], check=True, env=environment)
         actual_environment = {
             "os": platform.system(),
             "osVersion": platform.mac_ver()[0] or platform.release(),
@@ -67,7 +82,7 @@ def main():
             "environmentMatchesRecorded": all(actual_environment[key] == lock["recordedEnvironment"][key] for key in actual_environment),
             "buildFlags": lock["build"]["flags"],
         }
-        (output / "build-metadata.json").write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
+        metadata_path.write_text(json.dumps(metadata, indent=2, sort_keys=True) + "\n")
         print(json.dumps(metadata, sort_keys=True))
 
 
