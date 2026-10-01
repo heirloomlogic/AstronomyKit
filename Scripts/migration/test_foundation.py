@@ -226,7 +226,7 @@ class NumericalEvidenceContractTests(unittest.TestCase):
         regression = {entry["id"] for entry in evidence["classes"]["numericalRegression"]}
         accuracy = {entry["id"] for entry in evidence["classes"]["independentAccuracy"]}
         self.assertIn("platform-libm-fixtures", regression)
-        self.assertIn("jpl-equatorial-positions", accuracy)
+        self.assertIn("jpl-geocentric-equatorial-positions", accuracy)
         self.assertTrue(regression.isdisjoint(accuracy))
 
     def test_native_candidate_does_not_inherit_exact_c_output_requirement(self):
@@ -234,6 +234,33 @@ class NumericalEvidenceContractTests(unittest.TestCase):
         comparison = next(entry for entry in evidence["classes"]["exactEquality"] if entry["id"] == "comparison-runner-current-backend")
         self.assertEqual("current-c-backed-swift-only", comparison["scope"])
         self.assertFalse(comparison["appliesToNativeSwiftCandidate"])
+
+    def test_independent_accuracy_records_every_existing_suite_and_tolerance(self):
+        evidence = json.loads(EVIDENCE_PATH.read_text())
+        accuracy = {entry["id"]: entry for entry in evidence["classes"]["independentAccuracy"]}
+        geocentric = accuracy["jpl-geocentric-equatorial-positions"]
+        self.assertEqual(
+            {
+                "Sun": 1.0,
+                "Moon": 1.0,
+                "Mercury": 1.0,
+                "Venus": 1.0,
+                "Mars": 1.0,
+                "Jupiter": 1.0,
+                "Saturn": 1.0,
+                "Uranus": 1.0,
+                "Neptune": 1.5,
+                "Pluto": 1.0,
+            },
+            geocentric["maximumAngularErrorArcminutes"],
+        )
+        topocentric = accuracy["jpl-topocentric-equatorial-positions"]
+        self.assertEqual(
+            {"Moon": 1.0, "Mercury": 1.0, "Venus": 1.0, "Mars": 1.0, "Jupiter": 1.0, "Saturn": 1.0, "Uranus": 1.0, "Neptune": 1.5, "Pluto": 1.5},
+            topocentric["maximumAngularErrorArcminutes"],
+        )
+        audit = accuracy["independent-audit-validation"]
+        self.assertEqual(["Tests/AstronomyKitTests/AuditValidationTests.swift"], audit["evidence"])
 
 
 if __name__ == "__main__":

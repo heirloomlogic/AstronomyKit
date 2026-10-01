@@ -103,11 +103,50 @@
     ],
     "independentAccuracy": [
       {
-        "id": "jpl-equatorial-positions",
+        "id": "jpl-geocentric-equatorial-positions",
         "migrationIssue": 81,
-        "obligation": "Match the checked-in JPL Horizons geocentric ICRF samples within 1 arcminute for the Sun, Moon, and inner planets and 1.5 arcminutes for Uranus and Neptune.",
+        "obligation": "Match every checked-in JPL Horizons geocentric ICRF sample without widening the test's existing limit.",
+        "maximumAngularErrorArcminutes": {
+          "Sun": 1.0,
+          "Moon": 1.0,
+          "Mercury": 1.0,
+          "Venus": 1.0,
+          "Mars": 1.0,
+          "Jupiter": 1.0,
+          "Saturn": 1.0,
+          "Uranus": 1.0,
+          "Neptune": 1.5,
+          "Pluto": 1.0
+        },
         "evidence": [
           "Tests/AstronomyKitTests/JPLValidationTests.swift"
+        ]
+      },
+      {
+        "id": "jpl-topocentric-equatorial-positions",
+        "migrationIssue": 81,
+        "obligation": "Match every checked-in Asheville topocentric JPL Horizons ICRF sample without widening the test's existing limit.",
+        "maximumAngularErrorArcminutes": {
+          "Moon": 1.0,
+          "Mercury": 1.0,
+          "Venus": 1.0,
+          "Mars": 1.0,
+          "Jupiter": 1.0,
+          "Saturn": 1.0,
+          "Uranus": 1.0,
+          "Neptune": 1.5,
+          "Pluto": 1.5
+        },
+        "evidence": [
+          "Tests/AstronomyKitTests/JPLValidationTests.swift"
+        ]
+      },
+      {
+        "id": "independent-audit-validation",
+        "migrationIssue": 81,
+        "obligation": "Preserve the independent audit checks for ecliptic position, velocity, horizon, time conversion, and lunar state behavior.",
+        "evidence": [
+          "Tests/AstronomyKitTests/AuditValidationTests.swift"
         ]
       },
       {

@@ -73,7 +73,7 @@ def executable_fingerprint(path):
         normalized = Path(directory) / path.name
         shutil.copy2(path, normalized)
         if platform.system() == "Darwin":
-            subprocess.run(["codesign", "--remove-signature", str(normalized)], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(["codesign", "--remove-signature", str(normalized)], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             strip_command = ["strip", "-S", str(normalized)]
         else:
             strip_command = ["strip", "--strip-debug", str(normalized)]

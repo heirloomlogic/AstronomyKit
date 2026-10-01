@@ -6,6 +6,7 @@ import json
 import math
 import os
 import platform
+import re
 import shutil
 import statistics
 import subprocess
@@ -30,6 +31,15 @@ INPUT_PATHS = (
     "Package.swift",
     "Scripts/migration/performance_baseline.py",
     "Tools/Migration/PerformanceRunner/main.swift",
+)
+PROVENANCE_FIELDS = (
+    "baseRevision",
+    "environment",
+    "commands",
+    "inputSHA256",
+    "protocol",
+    "runnerSHA256",
+    "runnerChecksums",
 )
 
 
@@ -91,17 +101,59 @@ def evaluate_candidate(baseline, measurements):
 
 
 def make_record_for_test(measurements):
-    return {
+    record = {
         "schemaVersion": 1,
         "baseRevision": "0" * 40,
         "scope": "test fixture",
-        "environment": {"system": "test", "machine": "test", "swift": "test", "clang": "test"},
-        "commands": {"runtime": ["runner"], "build": ["swift", "build"]},
+        "environment": {
+            "system": "test",
+            "machine": "test",
+            "hardwareModel": "test",
+            "platform": "test",
+            "processorCount": 1,
+            "swift": "test",
+            "clang": "test",
+        },
+        "commands": measurement_commands(),
         "inputSHA256": {"fixture": "0" * 64},
+        "protocol": {
+            "schemaVersion": 1,
+            "commands": measurement_commands(),
+            "buildWarmupRuns": 1,
+            "buildTrials": BUILD_TRIALS,
+            "runtimeTrials": RUNTIME_TRIALS,
+            "coordinatorSHA256": "0" * 64,
+            "runnerSourceSHA256": "0" * 64,
+        },
         "runnerSHA256": "0" * 64,
+        "runnerChecksums": [{"representativeLatency": 1.0, "coldThroughput": 2.0, "warmThroughput": 3.0}] * RUNTIME_TRIALS,
         "measurements": measurements,
         "budgets": derive_budgets(measurements),
     }
+    record["provenanceSHA256"] = provenance_sha256(record)
+    return record
+
+
+def measurement_commands():
+    return {
+        "runtime": ["{runner}"],
+        "build": [
+            "swift",
+            "build",
+            "-c",
+            "release",
+            "--product",
+            "AstronomyMigrationPerformanceRunner",
+            "--scratch-path",
+            "{scratch}",
+        ],
+    }
+
+
+def provenance_sha256(record):
+    provenance = {field: record.get(field) for field in PROVENANCE_FIELDS}
+    payload = json.dumps(provenance, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    return hashlib.sha256(payload).hexdigest()
 
 
 def validate_record(record):
@@ -125,60 +177,105 @@ def validate_record(record):
         raise ValueError("strippedBinaryBytes must be a positive integer")
     if record.get("budgets") != derive_budgets(measurements):
         raise ValueError("budgets do not match the recorded measurements")
+    revision = record.get("baseRevision")
+    if not isinstance(revision, str) or re.fullmatch(r"[0-9a-f]{40}", revision) is None:
+        raise ValueError("baseRevision must be a full lowercase Git object identifier")
+    expected_environment = {"system", "machine", "hardwareModel", "platform", "processorCount", "swift", "clang"}
+    environment_record = record.get("environment")
+    if not isinstance(environment_record, dict) or set(environment_record) != expected_environment:
+        raise ValueError("environment is incomplete")
+    if not all(environment_record[key] for key in expected_environment - {"processorCount"}):
+        raise ValueError("environment contains an empty value")
+    if not isinstance(environment_record["processorCount"], int) or environment_record["processorCount"] <= 0:
+        raise ValueError("environment processorCount must be positive")
+    if record.get("commands") != measurement_commands():
+        raise ValueError("commands do not match the measurement protocol")
+    inputs = record.get("inputSHA256")
+    if not isinstance(inputs, dict) or not inputs or not all(isinstance(path, str) and path and isinstance(digest, str) and re.fullmatch(r"[0-9a-f]{64}", digest) for path, digest in inputs.items()):
+        raise ValueError("inputSHA256 is invalid")
+    protocol = record.get("protocol")
+    if not isinstance(protocol, dict) or protocol.get("schemaVersion") != 1 or protocol.get("commands") != measurement_commands():
+        raise ValueError("measurement protocol is invalid")
+    if protocol.get("buildWarmupRuns") != 1 or protocol.get("buildTrials") != BUILD_TRIALS or protocol.get("runtimeTrials") != RUNTIME_TRIALS:
+        raise ValueError("measurement protocol workload is invalid")
+    for field in ("coordinatorSHA256", "runnerSourceSHA256"):
+        if not isinstance(protocol.get(field), str) or re.fullmatch(r"[0-9a-f]{64}", protocol[field]) is None:
+            raise ValueError(f"measurement protocol {field} is invalid")
+    runner_hash = record.get("runnerSHA256")
+    if not isinstance(runner_hash, str) or re.fullmatch(r"[0-9a-f]{64}", runner_hash) is None:
+        raise ValueError("runnerSHA256 is invalid")
+    checksums = record.get("runnerChecksums")
+    checksum_keys = {"representativeLatency", "coldThroughput", "warmThroughput"}
+    if not isinstance(checksums, list) or len(checksums) != RUNTIME_TRIALS:
+        raise ValueError("runnerChecksums must contain five trials")
+    if not all(isinstance(checksum, dict) and set(checksum) == checksum_keys and all(isinstance(value, (int, float)) and math.isfinite(value) for value in checksum.values()) for checksum in checksums):
+        raise ValueError("runnerChecksums contains an invalid checksum")
+    if any(checksum != checksums[0] for checksum in checksums[1:]):
+        raise ValueError("runnerChecksums changed between trials")
+    if record.get("provenanceSHA256") != provenance_sha256(record):
+        raise ValueError("performance baseline provenance checksum does not match")
     return record
 
 
-def run(command, **kwargs):
-    return subprocess.run(command, cwd=ROOT, check=True, text=True, **kwargs)
+def run(command, cwd=ROOT, **kwargs):
+    return subprocess.run(command, cwd=cwd, check=True, text=True, **kwargs)
 
 
-def command_output(command):
-    return subprocess.check_output(command, cwd=ROOT, text=True).strip()
+def command_output(command, cwd=ROOT):
+    return subprocess.check_output(command, cwd=cwd, text=True).strip()
 
 
-def source_hashes():
-    paths = [ROOT / relative for relative in INPUT_PATHS]
-    paths.extend(sorted((ROOT / "Sources/AstronomyKit").glob("*.swift")))
-    paths.extend(sorted(path for path in (ROOT / "Sources/CLibAstronomy").rglob("*") if path.is_file()))
-    return {path.relative_to(ROOT).as_posix(): sha256(path) for path in paths}
+def source_hashes(root=ROOT):
+    paths = [root / relative for relative in INPUT_PATHS]
+    paths.extend(sorted((root / "Sources/AstronomyKit").rglob("*.swift")))
+    paths.extend(sorted(path for path in (root / "Sources/CLibAstronomy").rglob("*") if path.is_file()))
+    return {path.relative_to(root).as_posix(): sha256(path) for path in paths}
 
 
-def without_dev_tooling(operation):
-    sentinel = ROOT / ".dev-tooling"
-    parked = ROOT / ".dev-tooling.performance-baseline"
-    if parked.exists():
-        raise RuntimeError(f"temporary sentinel path already exists: {parked}")
-    moved = sentinel.exists()
-    if moved:
-        sentinel.rename(parked)
-    try:
-        return operation()
-    finally:
-        if moved:
-            parked.rename(sentinel)
+def copy_measurement_workspace(source, destination):
+    destination.mkdir()
+    shutil.copy2(source / "Package.swift", destination / "Package.swift")
+    shutil.copytree(source / "Sources", destination / "Sources")
+    shutil.copytree(source / "Tests", destination / "Tests")
+    shutil.copytree(source / "Tools", destination / "Tools")
 
 
-def build_measurements(scratch):
+def remove_scratch(scratch):
+    if scratch.exists():
+        shutil.rmtree(scratch)
+
+
+def capture_snapshot():
+    return {"baseRevision": command_output(["git", "rev-parse", "HEAD"]), "inputSHA256": source_hashes()}
+
+
+def require_unchanged_snapshot(before, after):
+    if before != after:
+        raise RuntimeError("sources changed during measurement")
+
+
+def build_measurements(package_root, scratch):
     command = ["swift", "build", "-c", "release", "--product", "AstronomyMigrationPerformanceRunner", "--scratch-path", str(scratch)]
+    run(command, cwd=package_root, stdout=subprocess.DEVNULL)
     clean = []
     for _ in range(BUILD_TRIALS):
-        shutil.rmtree(scratch, ignore_errors=True)
+        remove_scratch(scratch)
         started = time.perf_counter()
-        run(command, stdout=subprocess.DEVNULL)
+        run(command, cwd=package_root, stdout=subprocess.DEVNULL)
         clean.append(time.perf_counter() - started)
     incremental = []
-    source = ROOT / "Sources/AstronomyKit/AstronomyKit.swift"
+    source = package_root / "Sources/AstronomyKit/AstronomyKit.swift"
     original_times = source.stat()
     try:
         for index in range(BUILD_TRIALS):
             timestamp = time.time() + index + 1
             os.utime(source, (timestamp, timestamp))
             started = time.perf_counter()
-            run(command, stdout=subprocess.DEVNULL)
+            run(command, cwd=package_root, stdout=subprocess.DEVNULL)
             incremental.append(time.perf_counter() - started)
     finally:
         os.utime(source, ns=(original_times.st_atime_ns, original_times.st_mtime_ns))
-    bin_path = command_output(["swift", "build", "-c", "release", "--show-bin-path", "--scratch-path", str(scratch)])
+    bin_path = command_output(["swift", "build", "-c", "release", "--show-bin-path", "--scratch-path", str(scratch)], cwd=package_root)
     return command, clean, incremental, Path(bin_path) / "AstronomyMigrationPerformanceRunner"
 
 
@@ -246,29 +343,41 @@ def environment():
 
 
 def measure():
-    scratch = ROOT / ".build/migration-performance-baseline"
-
-    def operation():
-        build_command, clean, incremental, executable = build_measurements(scratch)
+    before = capture_snapshot()
+    measured_environment = environment()
+    with tempfile.TemporaryDirectory(prefix="astronomykit-performance-workspace-") as temporary:
+        package_root = Path(temporary) / "package"
+        copy_measurement_workspace(ROOT, package_root)
+        scratch = package_root / ".build/migration-performance-baseline"
+        _, clean, incremental, executable = build_measurements(package_root, scratch)
         runtime, checksums = runtime_measurements(executable)
         runtime["strippedBinaryBytes"] = stripped_size(executable)
         runtime["cleanBuildSeconds"] = clean
         runtime["incrementalBuildSeconds"] = incremental
-        return build_command, executable, runtime, checksums
-
-    build_command, executable, measurements, checksums = without_dev_tooling(operation)
-    record = {
-        "schemaVersion": 1,
-        "baseRevision": command_output(["git", "rev-parse", "HEAD"]),
-        "scope": "Pure-Swift migration pilot measured on the recorded host and toolchain",
-        "environment": environment(),
-        "commands": {"runtime": [str(executable)], "build": build_command},
-        "inputSHA256": source_hashes(),
-        "runnerSHA256": sha256(executable),
-        "runnerChecksums": checksums,
-        "measurements": measurements,
-        "budgets": derive_budgets(measurements),
-    }
+        after = capture_snapshot()
+        require_unchanged_snapshot(before, after)
+        record = {
+            "schemaVersion": 1,
+            "baseRevision": before["baseRevision"],
+            "scope": "Pure-Swift migration pilot measured on the recorded host and toolchain",
+            "environment": measured_environment,
+            "commands": measurement_commands(),
+            "inputSHA256": before["inputSHA256"],
+            "protocol": {
+                "schemaVersion": 1,
+                "commands": measurement_commands(),
+                "buildWarmupRuns": 1,
+                "buildTrials": BUILD_TRIALS,
+                "runtimeTrials": RUNTIME_TRIALS,
+                "coordinatorSHA256": before["inputSHA256"]["Scripts/migration/performance_baseline.py"],
+                "runnerSourceSHA256": before["inputSHA256"]["Tools/Migration/PerformanceRunner/main.swift"],
+            },
+            "runnerSHA256": sha256(executable),
+            "runnerChecksums": checksums,
+            "measurements": runtime,
+            "budgets": derive_budgets(runtime),
+        }
+        record["provenanceSHA256"] = provenance_sha256(record)
     validate_record(record)
     return record
 
@@ -282,6 +391,11 @@ def check_record(record):
     if not result["passed"]:
         raise ValueError(f"recorded baseline fails its own budgets: {result['failures']}")
     return result
+
+
+def validate_candidate_protocol(baseline, candidate):
+    if candidate["protocol"] != baseline["protocol"]:
+        raise ValueError("candidate measurement protocol differs from the baseline")
 
 
 def main():
@@ -307,6 +421,7 @@ def main():
     candidate = measure()
     if candidate["environment"] != baseline["environment"]:
         raise SystemExit("candidate environment differs from the recorded baseline; record a new baseline instead")
+    validate_candidate_protocol(baseline, candidate)
     result = evaluate_candidate(baseline, candidate["measurements"])
     print(json.dumps({"candidate": candidate, "evaluation": result}, indent=2, sort_keys=True))
     if not result["passed"]:

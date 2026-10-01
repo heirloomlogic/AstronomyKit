@@ -1,7 +1,9 @@
 import copy
 import importlib.util
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -74,6 +76,82 @@ class PerformanceBudgetTests(unittest.TestCase):
         record["budgets"]["strippedBinaryBytes"] += 1
         with self.assertRaisesRegex(ValueError, "budgets do not match"):
             self.module.validate_record(record)
+
+    def test_source_hashes_include_nested_swift_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for relative in self.module.INPUT_PATHS:
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(relative)
+            nested = root / "Sources/AstronomyKit/Internal/Nested.swift"
+            nested.parent.mkdir(parents=True)
+            nested.write_text("struct Nested {}\n")
+            c_source = root / "Sources/CLibAstronomy/astronomy.c"
+            c_source.parent.mkdir(parents=True)
+            c_source.write_text("int astronomy;\n")
+            hashes = self.module.source_hashes(root)
+        self.assertIn("Sources/AstronomyKit/Internal/Nested.swift", hashes)
+
+    def test_measurement_workspace_never_moves_the_dev_sentinel(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "source"
+            destination = Path(temporary) / "measurement"
+            root.mkdir()
+            (root / "Package.swift").write_text("// package\n")
+            (root / "Sources").mkdir()
+            (root / "Tests").mkdir()
+            runner = root / "Tools/Migration/PerformanceRunner"
+            runner.mkdir(parents=True)
+            (runner / "main.swift").write_text("print(0)\n")
+            sentinel = root / ".dev-tooling"
+            sentinel.write_text("")
+            self.module.copy_measurement_workspace(root, destination)
+            self.assertTrue(sentinel.exists())
+            self.assertFalse((destination / ".dev-tooling").exists())
+
+    def test_clean_build_fails_when_scratch_cannot_be_removed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            scratch = Path(temporary) / "scratch"
+            scratch.mkdir()
+            with mock.patch.object(self.module.shutil, "rmtree", side_effect=PermissionError("denied")):
+                with self.assertRaisesRegex(PermissionError, "denied"):
+                    self.module.remove_scratch(scratch)
+
+    def test_record_rejects_missing_or_altered_provenance(self):
+        record = self.module.make_record_for_test(self.measurements)
+        for field in ("baseRevision", "environment", "commands", "inputSHA256", "runnerSHA256", "runnerChecksums"):
+            with self.subTest(missing=field):
+                malformed = copy.deepcopy(record)
+                del malformed[field]
+                with self.assertRaises(ValueError):
+                    self.module.validate_record(malformed)
+        for field in ("baseRevision", "environment", "commands", "runnerSHA256", "runnerChecksums"):
+            with self.subTest(altered=field):
+                malformed = copy.deepcopy(record)
+                malformed[field] = "altered"
+                with self.assertRaises(ValueError):
+                    self.module.validate_record(malformed)
+
+    def test_candidate_protocol_must_match_baseline(self):
+        baseline = self.module.make_record_for_test(self.measurements)
+        self.assertEqual(1, baseline["protocol"]["buildWarmupRuns"])
+        self.assertEqual(3, baseline["protocol"]["buildTrials"])
+        self.assertEqual(5, baseline["protocol"]["runtimeTrials"])
+        candidate = copy.deepcopy(baseline)
+        candidate["protocol"]["runnerSourceSHA256"] = "1" * 64
+        candidate["provenanceSHA256"] = self.module.provenance_sha256(candidate)
+        with self.assertRaisesRegex(ValueError, "measurement protocol differs"):
+            self.module.validate_candidate_protocol(baseline, candidate)
+
+    def test_measurement_rejects_a_source_change_during_trials(self):
+        before = {"Package.swift": "0" * 64}
+        after = {"Package.swift": "1" * 64}
+        with self.assertRaisesRegex(RuntimeError, "sources changed during measurement"):
+            self.module.require_unchanged_snapshot(
+                {"baseRevision": "0" * 40, "inputSHA256": before},
+                {"baseRevision": "0" * 40, "inputSHA256": after},
+            )
 
 
 if __name__ == "__main__":
