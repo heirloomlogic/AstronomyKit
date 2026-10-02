@@ -28,6 +28,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Set up the frozen evidence Python runtime
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+
       - name: Verify generated model and time tables
         run: |
           python3 Scripts/generate-models.py --check
@@ -35,9 +40,9 @@ jobs:
 
       - name: Verify migration foundation
         run: |
-          git cat-file -e cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit} || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
-          git cat-file -e 1add73ec6c117e9b6f3d26e745a3487262ff4c75^{commit} || git fetch --no-tags --depth=1 origin 1add73ec6c117e9b6f3d26e745a3487262ff4c75
-          git cat-file -e fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff^{commit} || git fetch --no-tags --depth=1 origin fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff
+          git cat-file -e "cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit}" || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
+          git cat-file -e "1add73ec6c117e9b6f3d26e745a3487262ff4c75^{commit}" || git fetch --no-tags --depth=1 origin 1add73ec6c117e9b6f3d26e745a3487262ff4c75
+          git cat-file -e "fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff^{commit}" || git fetch --no-tags --depth=1 origin fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff
           Tools/Migration/Oracle/freeze-oracle.py --check
           Scripts/migration/generate-contract-inventory.py --check
           python3 -m unittest Scripts/migration/test_foundation.py -v

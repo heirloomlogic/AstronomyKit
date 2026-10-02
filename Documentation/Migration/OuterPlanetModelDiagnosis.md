@@ -52,6 +52,8 @@ All modern barycenter recipes use Horizons commands `7`/`8`, Sun origin `500@10`
 
 ## Evidence and reproduction
 
+Use CPython 3.14.7 for the frozen offline evidence commands below; `python3` must resolve to that runtime. The macOS workflow installs it explicitly. Python 3.9 computes slightly different floating-point norms and can change byte-exact distance replay and a rounding-only diagnostic summary, even when every frozen distance allowance still passes. This runtime requirement preserves the historical reports and source hashes; it does not claim portable bit identity or alter an astronomical acceptance budget.
+
 All small reference bytes, parameters, source identifiers, version information, hashes, extracted states, decimal independent sums, and per-epoch results are under [sources/distance/model-diagnostics/outer-planets](../../Scripts/reference-data/sources/distance/model-diagnostics/outer-planets). `report.json` binds the executable diagnostic, coefficient manifest/data, production C/header inputs, existing probe, and every archived reference/recipe by SHA-256. The offline check verifies recipes and source metadata, recomputes every row and summary, and rejects changed hashes, epochs, target/center/solution semantics, nonfinite numbers, caveats, or report structure. Its `0.0001 km`/`2e-12 rad` comparison allowances address compiler/libm reproduction only; they are not model-accuracy requirements.
 
 Run the offline reproduction and evidence-contract tests from the workspace root using only Python's standard library and a C compiler:

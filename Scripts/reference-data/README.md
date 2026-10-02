@@ -1,6 +1,6 @@
 # Independent reference archive
 
-This directory builds the offline fixtures used by `AuditValidationTests`. Tests never contact a network service.
+This directory builds the offline fixtures used by `AuditValidationTests`. Tests never contact a network service. Frozen distance and model-diagnostic replay requires CPython 3.14.7, installed explicitly by the macOS workflow; ensure `python3 --version` reports that version before running the evidence commands. The exact reports are runtime-specific reproduction evidence, while the frozen distance allowances remain unchanged.
 
 The separate distance archive supports `DistanceAccuracyTests`. `python3 Scripts/reference-data/distance-accuracy.py check` verifies its raw responses, query recipes, frozen characterization binding, allowances, generated fixture, and held-out report offline. `python3 -m unittest Scripts/reference-data/test_distance_accuracy.py -v` checks metadata corruption, query/response detachment, disjoint epoch selection, and refusal to grow a frozen allowance after a held-out failure. [DistanceAccuracyEvidence.md](../../Documentation/Migration/DistanceAccuracyEvidence.md) records the 1900–2100 TT scope, owner-selected 2× policy, distinct geometric and received-light observables, Sun-motion bridge, and remaining model-accuracy gaps. These engineering allowances belong to the new finite distance fixtures; the original observer diagnostics below retain their existing classification.
 

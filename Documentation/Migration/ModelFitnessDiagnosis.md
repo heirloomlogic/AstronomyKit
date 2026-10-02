@@ -47,6 +47,8 @@ The [NAIF use rules](https://naif.jpl.nasa.gov/naif/rules.html) permit unmodifie
 
 ## Offline reproduction
 
+Use CPython 3.14.7 for the frozen offline evidence commands below; `python3` must resolve to that runtime. The macOS workflow installs it explicitly. Python 3.9 computes slightly different floating-point norms and can change byte-exact distance replay and a rounding-only diagnostic summary, even when every frozen distance allowance still passes. This runtime requirement preserves the historical reports and source hashes; it does not claim portable bit identity or alter an astronomical acceptance budget.
+
 Run these source-bound diagnostic checks and evidence-contract tests from the workspace root. They use archived reference bytes; acquisition and expensive exploratory replays are separate explicit commands described in the individual reports.
 
 ```sh

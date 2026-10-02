@@ -54,6 +54,8 @@ The largest sampled production-versus-complete-series vector difference is below
 
 ## Reproduction and remaining work
 
+Use CPython 3.14.7 for the frozen offline evidence commands below; `python3` must resolve to that runtime. The macOS workflow installs it explicitly. Python 3.9 computes slightly different floating-point norms and can change byte-exact distance replay and a rounding-only diagnostic summary, even when every frozen distance allowance still passes. This runtime requirement preserves the historical reports and source hashes; it does not claim portable bit identity or alter an astronomical acceptance budget.
+
 Run the existing offline checks without refreshing or refreezing any tolerance:
 
 ```sh

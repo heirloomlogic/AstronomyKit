@@ -81,6 +81,8 @@ The initial plan's 146-day off-node samples near seed boundaries show a larger *
 
 ## Reproduction and proof limits
 
+Use CPython 3.14.7 for the frozen offline evidence commands below; `python3` must resolve to that runtime. The macOS workflow installs it explicitly. Python 3.9 computes slightly different floating-point norms and can change byte-exact distance replay and a rounding-only diagnostic summary, even when every frozen distance allowance still passes. This runtime requirement preserves the historical reports and source hashes; it does not claim portable bit identity or alter an astronomical acceptance budget.
+
 All small responses, exact query recipes, plans, reports, and source hashes are under [`sources/distance/model-diagnostics/pluto`](../../Scripts/reference-data/sources/distance/model-diagnostics/pluto). Downloaded `TOP2013.dat`, `TOP2013.f`, and `TOP2013.ctl`, generated C variants, binaries, and the isolated Python environment remain in `.context/pluto-model`; the repository retains their source URLs and required hashes without redistributing the official evaluator or control files. [`pluto-model-diagnostic.py`](../../Scripts/reference-data/pluto-model-diagnostic.py) and [`pluto-diagnostic-probe.c`](../../Scripts/reference-data/pluto-diagnostic-probe.c) reproduce the experiments. Query parsing rejects changed targets, centers, solution tags, frames, time scales, units, epoch order, nonfinite states, malformed state lengths, and API signature changes. The manifest binds the driver/probe and the production source plus included coefficient/header files.
 
 ```sh

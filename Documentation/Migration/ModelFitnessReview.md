@@ -34,6 +34,12 @@ The official TOP2013 evaluator and control downloads now remain beside the coeff
 
 The complete local Swift suite passed 703 tests in 186 suites. All 41 reference-data unit tests and the 20 migration-foundation tests passed. The unchanged distance check passed 2,546 held-out comparisons, and the regenerated migration inventory verifies the additional mutation-test declaration. An alternate GCC 15 probe exactly reproduced 38 held-out rows spanning all 19 body/observable pairs on this local host; this representative compiler check does not establish Linux or hosted macOS results. Current toolchain differences from the historical oracle record remain explicit; local foundation rebuilds agreed with each other.
 
+## Frozen Python runtime follow-up
+
+A clean-checkout replay exposed different `math.hypot` rounding in macOS Python 3.9.6 versus the measured CPython 3.14.7. The older runtime changes 848 held-out reference radii by at most `7.105427357601002e-15` AU and the Pluto archived radial arithmetic by at most `2.1259766072034836e-06` km. All 2,546 original distance allowances still pass, but the historical byte-exact distance report, Pluto arithmetic threshold, and an outer-planet rounding-only summary epoch do not reproduce. These are runtime-reproduction failures rather than demonstrated astronomical acceptance failures.
+
+The workflow now installs CPython 3.14.7 through a commit-pinned `actions/setup-python` step before offline evidence checks, and reproduction instructions declare that exact runtime. No diagnostic driver, frozen distance measurement script, trajectory/reference report, fixture, allowance, or protected baseline hash was changed for this runtime fix. All three replays and all 41 reference-data unit tests pass under the declared runtime in a clean tracked-source snapshot without cached TOP2013 downloads. Workflow lint passes after quoting the existing frozen Git commit expressions. Alternate Python/runtime/compiler and hosted-machine bit identity remain outside the evidence. The independent reviewer approved preserving the exact archive with an explicit tested runtime instead of silently relaxing the reports.
+
 ## Final reviewed artifact hashes
 
 - `Scripts/reference-data/outer-planet-diagnostic.py`: `c4b16bc93a1a30e21b0fd6ae65051622643c4461ad9c989dbf7fc482197f0ecd`.
