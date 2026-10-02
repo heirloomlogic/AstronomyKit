@@ -57,13 +57,14 @@ def validate_evidence(record):
 
 
 def write_checkpoint(path, phase, measurements, failure=None):
+    has_failure = failure is not None
     record = {
         "schemaVersion": 1,
-        "status": "incomplete" if failure else "running",
+        "status": "incomplete" if has_failure else "running",
         "phase": phase,
         "measurements": measurements,
     }
-    if failure:
+    if has_failure:
         record["failure"] = failure
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
@@ -306,7 +307,7 @@ def measure():
         return record
     except BaseException as error:
         try:
-            write_checkpoint(OUTPUT, phase, partial, str(error))
+            write_checkpoint(OUTPUT, phase, partial, str(error) or type(error).__name__)
         except BaseException:
             OUTPUT.unlink(missing_ok=True)
         raise

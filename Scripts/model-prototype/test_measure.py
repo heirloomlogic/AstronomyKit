@@ -38,6 +38,14 @@ class MeasurementTests(unittest.TestCase):
             self.assertEqual(record["measurements"]["cleanReleaseSeconds"], [41.0, 42.0, 51.0])
             self.assertEqual(record["failure"], "timed out")
 
+    def test_checkpoint_treats_empty_failure_as_incomplete(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "evidence.json"
+            MEASURE.write_checkpoint(path, "runtime-first", {}, "")
+            record = json.loads(path.read_text())
+            self.assertEqual(record["status"], "incomplete")
+            self.assertEqual(record["failure"], "")
+
     def test_protocol_inputs_bind_coordinator_and_baseline(self):
         inputs = MEASURE.prototype_inputs(MEASURE.ROOT)
         self.assertIn("Scripts/model-prototype/measure.py", inputs)
@@ -66,6 +74,18 @@ class MeasurementTests(unittest.TestCase):
             self.assertEqual(record["status"], "incomplete")
             self.assertEqual(record["phase"], "runtime-first")
             self.assertEqual(record["failure"], "runner failed")
+
+    def test_post_build_interrupt_finalizes_checkpoint(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "evidence.json"
+            release = {"cleanSeconds": [1.0, 1.0, 1.0], "incrementalSeconds": [1.0, 1.0, 1.0], "cleanPeakResidentBytes": [1, 1, 1]}
+            with patch.object(MEASURE, "OUTPUT", output), patch.object(MEASURE, "prototype_inputs", return_value={"Package.swift": "0" * 64, "Tools/Migration/ModelPrototypeRunner/main.swift": "1" * 64}), patch.object(MEASURE, "copy_workspace"), patch.object(MEASURE, "build_trials", return_value=(release, Path("runner"))), patch.object(MEASURE, "bounded_debug_build", return_value={"completed": False, "elapsedSeconds": 0.01, "timeoutSeconds": 180}), patch.object(MEASURE, "timed_runner", side_effect=KeyboardInterrupt):
+                with self.assertRaises(KeyboardInterrupt):
+                    MEASURE.measure()
+            record = json.loads(output.read_text())
+            self.assertEqual(record["status"], "incomplete")
+            self.assertEqual(record["phase"], "runtime-first")
+            self.assertEqual(record["failure"], "KeyboardInterrupt")
 
     def test_measurement_records_observed_debug_preflight(self):
         with tempfile.TemporaryDirectory() as directory:
