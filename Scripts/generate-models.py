@@ -165,12 +165,65 @@ def load_swift_model():
     return SwiftModel(load_polynomials(), terms, series, load_nutation())
 
 
+def encode_ascii7_bits(values):
+    """Pack exact little-endian UInt64 words into a continuous seven-bit ASCII stream."""
+    result = bytearray()
+    pending = available = 0
+    for value in values:
+        for byte in value.to_bytes(8, "little"):
+            pending |= byte << available
+            available += 8
+            while available >= 7:
+                result.append(pending & 127)
+                pending >>= 7
+                available -= 7
+    if available:
+        result.append(pending)
+    return bytes(result)
+
+
+def escape_ascii7(payload):
+    """Emit Swift source escapes without changing any ASCII payload code unit."""
+    return "".join("\\u{" + format(value, "x") + "}" if value < 32 or value == 127 else "\\\\" if value == 92 else '\\"' if value == 34 else chr(value) for value in payload)
+
+
 def render_bits(name, values, visibility="internal"):
-    lines = [f"{visibility} let {name}: [UInt64] = ["]
-    for offset in range(0, len(values), 8):
-        lines.append("    " + ", ".join(f"0x{value:016x}" for value in values[offset:offset + 8]) + ",")
-    lines.append("]")
-    return "\n".join(lines) + "\n"
+    literal = escape_ascii7(encode_ascii7_bits(values))
+    return f'{visibility} let {name}: [UInt64] = decodeModelBits("{literal}", count: {len(values)})\n'
+
+
+def render_bit_decoder():
+    return """
+internal func decodeModelBits(_ payload: StaticString, count: Int) -> [UInt64] {
+    payload.withUTF8Buffer { bytes in
+        precondition(bytes.count == (count * 64 + 6) / 7)
+        return Array(unsafeUninitializedCapacity: count) { storage, initializedCount in
+            var cursor = 0
+            var pending: UInt64 = 0
+            var available = 0
+            for index in 0..<count {
+                var value: UInt64 = 0
+                var offset = 0
+                while offset < 64 {
+                    if available == 0 {
+                        pending = UInt64(bytes[cursor])
+                        precondition(pending < 128)
+                        cursor += 1
+                        available = 7
+                    }
+                    let take = min(64 - offset, available)
+                    value |= (pending & ((UInt64(1) << take) - 1)) << offset
+                    pending >>= take
+                    available -= take
+                    offset += take
+                }
+                storage.initializeElement(at: index, to: value)
+            }
+            initializedCount = count
+        }
+    }
+}
+"""
 
 
 def render_swift_model():
@@ -189,17 +242,23 @@ def render_swift_model():
         for chunk_number, (symbol, start, _) in enumerate(chunks):
             access.append(f"    case {chunk_number}: return {symbol}[index - {start}]")
         access.extend(["    default: return nil", "    }", "}", ""])
-        files[f"{target}/Generated/Access.swift"] = "\n".join(access)
+        files[f"{target}/Generated/Access.swift"] = "\n".join(access) + render_bit_decoder()
 
     flattened_terms = tuple(value for term in model.vsop_terms for value in term)
-    vsop = [notice, render_bits("vsopTermBits", flattened_terms, "public"), "public struct GeneratedVSOPSeries: Sendable {", "    public let body: Int", "    public let coordinate: Int", "    public let power: Int", "    public let offset: Int", "    public let count: Int", "}", "", "public let generatedVSOPSeries: [GeneratedVSOPSeries] = ["]
+    vsop = [notice, f"public let generatedVSOPTermCount = {len(model.vsop_terms)}", "", "public func vsopTermBitPattern(at index: Int) -> UInt64? {", f"    guard index >= 0 && index < {len(flattened_terms)} else {{ return nil }}", f"    switch index / {SWIFT_CHUNK_SIZE} {{"]
+    for number, start in enumerate(range(0, len(flattened_terms), SWIFT_CHUNK_SIZE)):
+        symbol = f"vsopTermBits{number}"
+        relative = f"AstronomyVSOPPrototype/Generated/VSOPBits{number}.swift"
+        files[relative] = notice + render_bits(symbol, flattened_terms[start:start + SWIFT_CHUNK_SIZE])
+        vsop.append(f"    case {number}: return {symbol}[index - {start}]")
+    vsop.extend(["    default: return nil", "    }", "}", "", "public struct GeneratedVSOPSeries: Sendable {", "    public let body: Int", "    public let coordinate: Int", "    public let power: Int", "    public let offset: Int", "    public let count: Int", "}", "", "public let generatedVSOPSeries: [GeneratedVSOPSeries] = ["])
     for row in model.vsop_series:
         vsop.append(f"    GeneratedVSOPSeries(body: {row.body}, coordinate: {row.coordinate}, power: {row.power}, offset: {row.offset}, count: {row.count}),")
     vsop.extend(["]", ""])
-    files["AstronomyVSOPPrototype/Generated/VSOPTerms.swift"] = "\n".join(vsop)
+    files["AstronomyVSOPPrototype/Generated/VSOPTerms.swift"] = "\n".join(vsop) + render_bit_decoder()
     nutation_integer = tuple(value & 0xffffffffffffffff for row in model.nutation_rows for value in row[0])
     nutation_bits = tuple(value for row in model.nutation_rows for value in row[1])
-    files["AstronomyNutationPrototype/Generated/Nutation.swift"] = notice + render_bits("nutationIntegerBits", nutation_integer, "public") + "\n" + render_bits("nutationCoefficientBits", nutation_bits, "public")
+    files["AstronomyNutationPrototype/Generated/Nutation.swift"] = notice + render_bits("nutationIntegerBits", nutation_integer, "public") + "\n" + render_bits("nutationCoefficientBits", nutation_bits, "public") + render_bit_decoder()
 
     metadata = [
         notice,
@@ -226,6 +285,14 @@ def render_swift_model():
 
 def swift_output_manifest(outputs):
     model = load_swift_model()
+    payload_counts = [
+        min(SWIFT_CHUNK_SIZE, len(body.coefficient_bits) - start)
+        for body in model.polynomials
+        for start in range(0, len(body.coefficient_bits), SWIFT_CHUNK_SIZE)
+    ]
+    vsop_bits = len(model.vsop_terms) * 3
+    payload_counts.extend(min(SWIFT_CHUNK_SIZE, vsop_bits - start) for start in range(0, vsop_bits, SWIFT_CHUNK_SIZE))
+    payload_counts.extend((len(model.nutation_rows) * 5, len(model.nutation_rows) * 6))
     return {
         "schemaVersion": 1,
         "inputs": swift_input_manifest(),
@@ -238,6 +305,20 @@ def swift_output_manifest(outputs):
             "nutationRows": len(model.nutation_rows),
         },
         "chunkSize": SWIFT_CHUNK_SIZE,
+        "storageLayout": {
+            "encoding": "StaticString-ASCII7",
+            "wordBitWidth": 64,
+            "codeUnitBitWidth": 7,
+            "wordByteOrder": "little-endian",
+            "streamBitOrder": "least-significant-first",
+            "tailPadding": "zero",
+            "decodedStorage": "lazy-once immutable UInt64 arrays",
+            "payloadArrays": len(payload_counts),
+            "words": sum(payload_counts),
+            "decodedPayloadBytes": sum(payload_counts) * 8,
+            "encodedPayloadBytes": sum((count * 64 + 6) // 7 for count in payload_counts),
+            "maximumWordsPerPayload": max(payload_counts),
+        },
     }
 
 

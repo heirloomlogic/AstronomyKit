@@ -54,6 +54,8 @@ The pure-Swift pilot must stay at or below 30,166 ns median latency, 11,182,080 
 
 ## Full Swift model representation prototype
 
+[ModelRepresentationProtocol.md](ModelRepresentationProtocol.md) defines the complete Apple/Linux qualification campaign and the current lossless embedded ASCII7 candidate. The historical array measurements below remain preserved; they do not qualify the new representation. A new same-environment comparison baseline preserves the original margins while accounting explicitly for toolchain drift.
+
 Issue #82 generated a development-only immutable Swift representation from the pinned polynomial, VSOP87B, and IAU2000B archives. One hundred and one generated source units contain all 1,431,768 polynomial binary64 bit patterns, 36,712 validity bits including 413 disabled segments, 35,080 VSOP terms with 135 series index records, and 77 nutation rows. Polynomial array expressions are limited to 16,384 elements. The generator validates every input checksum, writes raw `UInt64` bit patterns instead of reformatted floating-point literals, and records recursive input and output hashes in `Scripts/model-data/swift-prototype-manifest.json`.
 
 The generated storage remains split across one module per polynomial body plus VSOP and nutation modules. With smaller expressions, the measured Release compiler peak RSS is lower than the historical layout without changing the embedded data or runtime access path. A 26-target grouped-chunk experiment and a 90-target isolated-chunk experiment were rejected because the default Swift Build backend failed during graph initialization with `Unknown error parsing property list`; the deprecated native backend began compiling the 90-target graph, but it is outside the fixed protocol. The selected layout compiles in Release, and the compiled whole-model FNV-1a checksum is `0x0cd4295bc6da4d62`. The prototype targets are available only when the ignored `.model-prototype` sentinel exists, so ordinary package builds do not compile the prototype.
@@ -71,7 +73,7 @@ python3 -m unittest discover -s Scripts/model-prototype -p 'test_*.py' -v
 touch .model-prototype
 swift package purge-cache
 swift test -c release --filter ModelDataTests
-python3 Scripts/model-prototype/measure.py --measure
+python3 Scripts/model-prototype/measure.py --measure --baseline /path/to/comparison-baseline.json --output /path/to/representation-evidence.json
 ```
 
 The committed generated sources let a clean prototype build run without Python, downloads, or runtime data files. Python is required only to regenerate or verify the source from the frozen archives. Remove `.model-prototype` and purge the package cache after prototype work.
