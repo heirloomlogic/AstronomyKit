@@ -144,13 +144,9 @@ struct IndependentReferenceArchive: Decodable {
     }
 
     static let shared: IndependentReferenceArchive = {
-        guard
-            let url = Bundle.module.url(
-                forResource: "reference-fixtures", withExtension: "json",
-                subdirectory: "IndependentReferences")
-        else {
-            fatalError("Independent reference fixture is missing")
-        }
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("Fixtures/IndependentReferences/reference-fixtures.json")
         do {
             return try JSONDecoder().decode(IndependentReferenceArchive.self, from: Data(contentsOf: url))
         } catch {
