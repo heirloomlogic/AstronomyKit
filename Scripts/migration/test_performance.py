@@ -1,5 +1,6 @@
 import copy
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,10 +9,18 @@ from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[2]
 MODULE_PATH = ROOT / "Scripts/migration/performance_baseline.py"
+VERIFIER_PATH = ROOT / "Scripts/migration/verify_performance_baseline.py"
 
 
 def load_module():
     spec = importlib.util.spec_from_file_location("performance_baseline", MODULE_PATH)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_verifier():
+    spec = importlib.util.spec_from_file_location("verify_performance_baseline", VERIFIER_PATH)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -152,6 +161,36 @@ class PerformanceBudgetTests(unittest.TestCase):
                 {"baseRevision": "0" * 40, "inputSHA256": before},
                 {"baseRevision": "0" * 40, "inputSHA256": after},
             )
+
+    def test_frozen_baseline_matches_immutable_input_revision(self):
+        verifier = load_verifier()
+        record = json.loads(self.module.BASELINE_PATH.read_text())
+        frozen_hashes = verifier.revision_source_hashes()
+        result = verifier.verify_record(record, frozen_hashes)
+        self.assertEqual(len(frozen_hashes), 43)
+        self.assertTrue(result["passed"])
+
+    def test_frozen_snapshot_rejects_recomputed_path_and_digest_tampering(self):
+        verifier = load_verifier()
+        record = self.module.make_record_for_test(self.measurements)
+        record["inputSHA256"]["other"] = "2" * 64
+        record["provenanceSHA256"] = self.module.provenance_sha256(record)
+        frozen_hashes = copy.deepcopy(record["inputSHA256"])
+        mutations = []
+        missing = copy.deepcopy(record)
+        del missing["inputSHA256"]["other"]
+        mutations.append((missing, "input paths"))
+        extra = copy.deepcopy(record)
+        extra["inputSHA256"]["extra"] = "3" * 64
+        mutations.append((extra, "input paths"))
+        digest = copy.deepcopy(record)
+        digest["inputSHA256"]["fixture"] = "4" * 64
+        mutations.append((digest, "input hashes"))
+        for tampered, message in mutations:
+            with self.subTest(message=message):
+                tampered["provenanceSHA256"] = self.module.provenance_sha256(tampered)
+                with self.assertRaisesRegex(ValueError, message):
+                    verifier.verify_record(tampered, frozen_hashes)
 
 
 if __name__ == "__main__":
