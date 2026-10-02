@@ -14,7 +14,7 @@ struct AuditValidationTests {
 
     @Test("Archived references declare reproducible provenance")
     func provenanceIsComplete() {
-        #expect(archive.schemaVersion == 1)
+        #expect(archive.schemaVersion == 2)
         #expect(
             Set(archive.provenance.keys) == [
                 "astronomyEngineApsides", "eclipseWiseLocalSolar", "espenakMoonNodes",
@@ -173,7 +173,7 @@ struct AuditValidationTests {
 
     @Test("Published lunar quarters", arguments: IndependentReferenceArchive.shared.lunarPhases)
     func lunarQuarter(reference: IndependentReferenceArchive.LunarPhase) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let actual = try Moon.searchQuarter(after: expected.addingDays(-2))
         let phase: MoonPhase =
             switch reference.phase {
@@ -184,14 +184,24 @@ struct AuditValidationTests {
             default: fatalError("unexpected phase \(reference.phase)")
             }
         #expect(actual.phase == phase)
-        let error = IndependentReferenceDate.seconds(actual.time, expected)
-        if reference.utc == "2100-01-18T12:35:00.000Z" {
-            withKnownIssue("Future lunar-event timing is tracked by #110") {
-                #expect(error <= reference.toleranceSeconds)
-            }
-        } else {
-            #expect(error <= reference.toleranceSeconds)
+        let error = IndependentReferenceDate.terrestrialSeconds(actual.time, expected)
+        #expect(error <= reference.toleranceSeconds)
+        if reference.sourceTime == "2100-01-18T12:35:00.000Z" {
+            let civilTime = IndependentReferenceDate.civil(reference.sourceTime)
+            #expect(IndependentReferenceDate.seconds(actual.time, civilTime).isFinite)
         }
+    }
+
+    @Test("Archived lunar coordinates use their specified Delta T model")
+    func lunarReferenceDateUsesSpecifiedDeltaTModel() throws {
+        let date = try #require(ISO8601DateFormatter().date(from: "2100-01-18T12:35:00Z"))
+        let time = IndependentReferenceDate.universal(
+            "2100-01-18T12:35:00.000Z", deltaTModel: .jplHorizons)
+        let expectedUT = AstroTime.civilDays(of: date)
+        let expectedTT = expectedUT + AstronomyConfig.deltaTJplHorizons(universalTime: expectedUT) / 86_400
+        #expect(time.universalTime == expectedUT)
+        #expect(time.terrestrialTime == expectedTT)
+        #expect(time.deltaTModel == .jplHorizons)
     }
 
     @Test(
@@ -255,15 +265,13 @@ struct AuditValidationTests {
 
     @Test("Published lunar eclipses", arguments: IndependentReferenceArchive.shared.lunarEclipses)
     func lunarEclipse(reference: IndependentReferenceArchive.LunarEclipse) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.universal(reference.universalTime, deltaTModel: .espenakMeeus)
         let actual = try Eclipse.searchLunar(after: expected.addingDays(-10))
-        let peakError = IndependentReferenceDate.seconds(actual.peak, expected)
-        if reference.utc == "2099-04-05T08:27Z" {
-            withKnownIssue("Future lunar-event timing is tracked by #110") {
-                #expect(peakError <= reference.toleranceSeconds)
-            }
-        } else {
-            #expect(peakError <= reference.toleranceSeconds)
+        let peakError = IndependentReferenceDate.universalSeconds(actual.peak, expected)
+        #expect(peakError <= reference.toleranceSeconds)
+        if reference.universalTime == "2099-04-05T08:27Z" {
+            let civilTime = IndependentReferenceDate.civil(reference.universalTime)
+            #expect(IndependentReferenceDate.seconds(actual.peak, civilTime).isFinite)
         }
         #expect(
             abs(actual.partialDuration - reference.partialSemiDurationMinutes)
@@ -357,15 +365,19 @@ struct AuditValidationTests {
         #expect(mutatedError > reference.angularToleranceArcminutes)
     }
 
-    @Test("Time-scale mutation exceeds the event tolerance")
+    @Test("Civil UTC mutation exceeds the source-compatible event tolerance")
     func timeScaleMutationFails() throws {
-        let reference = try #require(archive.lunarPhases.first { $0.utc.hasPrefix("2100-") })
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let reference = try #require(
+            archive.lunarPhases.first { $0.sourceTime == "2100-01-18T12:35:00.000Z" })
+        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let correct = try Moon.searchQuarter(after: expected.addingDays(-2))
-        let misreadAsTerrestrial = AstroTime(tt: expected.universalTime)
-        #expect(IndependentReferenceDate.seconds(correct.time, expected) <= reference.toleranceSeconds)
+        let misreadAsCivil = IndependentReferenceDate.civil(reference.sourceTime)
         #expect(
-            IndependentReferenceDate.seconds(misreadAsTerrestrial, expected) > reference.toleranceSeconds)
+            IndependentReferenceDate.terrestrialSeconds(correct.time, expected)
+                <= reference.toleranceSeconds)
+        #expect(
+            IndependentReferenceDate.seconds(correct.time, misreadAsCivil)
+                > reference.toleranceSeconds)
     }
 
     @Test("Sign and unit mutations exceed archived tolerances")
@@ -393,11 +405,15 @@ struct AuditValidationTests {
     @Test("Event-selection mutation exceeds the archived phase tolerance")
     func eventSelectionMutationFails() throws {
         let reference = archive.lunarPhases[0]
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let correct = try Moon.searchQuarter(after: expected.addingDays(-2))
         let wrong = try Moon.nextQuarter(after: correct)
-        #expect(IndependentReferenceDate.seconds(correct.time, expected) <= reference.toleranceSeconds)
-        #expect(IndependentReferenceDate.seconds(wrong.time, expected) > reference.toleranceSeconds)
+        #expect(
+            IndependentReferenceDate.terrestrialSeconds(correct.time, expected)
+                <= reference.toleranceSeconds)
+        #expect(
+            IndependentReferenceDate.terrestrialSeconds(wrong.time, expected)
+                > reference.toleranceSeconds)
         #expect(wrong.phase != correct.phase)
     }
 

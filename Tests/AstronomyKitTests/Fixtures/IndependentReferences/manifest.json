@@ -1,8 +1,33 @@
 {
   "archive": "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json",
-  "archiveSHA256": "4bf360222eb76ae27234ca9d40362b6895e693d842c5b3791530a9933890a4c4",
+  "archiveSHA256": "0e74a6d10cbe6111deb0f8e0fdbdb4eeca81b79ea4c6d618a4195f17be3f3083",
   "generator": "Scripts/reference-data/build-fixtures.py",
   "sources": [
+    {
+      "path": "Scripts/reference-data/sources/astronomy-engine.c",
+      "sha256": "3ef243a3ee4c10fc05a5cb460d753e4e17eb2f57dad7892690e12599088717ac",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/source/c/astronomy.c"
+    },
+    {
+      "path": "Scripts/reference-data/sources/astronomy-engine-ctest.c",
+      "sha256": "f498d483e5d2b488b5b40e492f6ede838ff69a0110aac9e03c80a8bbb5b6d1a4",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/ctest.c"
+    },
+    {
+      "path": "Scripts/reference-data/sources/parse-moon-phases.js",
+      "sha256": "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/parse_moon_phases.js"
+    },
+    {
+      "path": "Scripts/reference-data/sources/normalize-eclipses.py",
+      "sha256": "27aad287e710b6e55c13cb2ccbc6da588bcec718ba9b6fddacb47bd8896c3f6f",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/norm.py"
+    },
+    {
+      "path": "Scripts/reference-data/sources/readme-lunar-eclipse.txt",
+      "sha256": "9fed27ab68cf32b1d3b28f6910dc0f3645947ce75f350da33b3e419b776df170",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/readme_lunar_eclipse.txt"
+    },
     {
       "path": "Scripts/reference-data/sources/seasons.txt",
       "sha256": "92a0b2a5f8c67510b49f342f6f7a763cb6eee1ef32413344e71ce169a3582383",

@@ -104,5 +104,20 @@ class JupiterMoonToleranceDomainTests(unittest.TestCase):
         )
 
 
+class LunarReferenceConventionTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_tolerances_and_comparison_scales_come_from_pinned_harness(self):
+        conventions = self.builder.lunar_reference_conventions()
+
+        self.assertEqual(90.0, conventions["phaseToleranceSeconds"])
+        self.assertEqual("terrestrialTimeDerivedFromUT", conventions["phaseComparisonScale"])
+        self.assertEqual(120.0, conventions["eclipseToleranceSeconds"])
+        self.assertEqual("universalTime", conventions["eclipseComparisonScale"])
+        self.assertEqual("Astronomy_DeltaT_EspenakMeeus", conventions["deltaTModel"])
+
+
 if __name__ == "__main__":
     unittest.main()
