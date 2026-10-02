@@ -29,7 +29,9 @@ private struct DistanceReferenceArchive: Decodable {
 
 @Suite("Finite independent distance allowances")
 struct DistanceAccuracyTests {
-    @Test("Held-out heliocentric radius and matched geocentric range", arguments: DistanceReferenceArchive.shared.references)
+    @Test(
+        "Held-out heliocentric radius and matched geocentric range",
+        arguments: DistanceReferenceArchive.shared.references)
     fileprivate func heldOutDistance(reference: DistanceReferenceArchive.Reference) throws {
         let body = try #require(CelestialBody.allCases.first { $0.name == reference.body })
         let time = AstroTime(tt: reference.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
@@ -41,7 +43,10 @@ struct DistanceAccuracyTests {
             actual = try body.geocentricPosition(at: time, aberration: .none).magnitude
         }
         let errorKm = abs(actual - reference.referenceRangeAU) * 149_597_870.7
-        #expect(errorKm <= reference.allowedErrorKm, "\(reference.body) \(reference.mode), JDTT \(reference.julianDateTT): \(errorKm) km; allowance \(reference.allowedErrorKm) km")
+        #expect(
+            errorKm <= reference.allowedErrorKm,
+            "\(reference.body) \(reference.mode), JDTT \(reference.julianDateTT): \(errorKm) km; allowance \(reference.allowedErrorKm) km"
+        )
     }
 
     @Test("Distance comparisons reject unit and observer-selection mistakes")
