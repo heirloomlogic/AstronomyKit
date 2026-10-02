@@ -130,14 +130,11 @@ struct AuditValidationTests {
             actual: state.position, expected: reference.positionAU)
         let velocityError = IndependentReferenceMath.relativeVectorError(
             actual: state.velocity, expected: reference.velocityAUPerDay)
-        if reference.body == "io" && reference.julianDateTDB != 2_451_544.5 {
-            withKnownIssue("Io century-edge accuracy is tracked by #109") {
-                #expect(positionError <= reference.relativeTolerance!)
-                #expect(velocityError <= reference.relativeTolerance!)
-            }
-        } else {
-            #expect(positionError <= reference.relativeTolerance!)
-            #expect(velocityError <= reference.relativeTolerance!)
+        #expect(positionError.isFinite)
+        #expect(velocityError.isFinite)
+        if let relativeTolerance = reference.relativeTolerance {
+            #expect(positionError <= relativeTolerance)
+            #expect(velocityError <= relativeTolerance)
         }
     }
 

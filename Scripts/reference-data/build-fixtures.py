@@ -53,6 +53,9 @@ HORIZONS_VECTOR_QUERIES = {
     "callisto-vector": ("504", "500@599", [2415020.5, 2451544.5, 2488069.5]),
 }
 
+JUPITER_MOON_RELATIVE_TOLERANCE = 9e-4
+JUPITER_MOON_TOLERANCE_JD_TDB_RANGE = (2_426_545.0, 2_476_545.0)
+
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -365,6 +368,13 @@ def data_lines(result: str) -> list[str]:
     return result.split("$$SOE\n", 1)[1].split("$$EOE", 1)[0].strip().splitlines()
 
 
+def jupiter_moon_relative_tolerance(julian_date_tdb: float) -> float | None:
+    start, end = JUPITER_MOON_TOLERANCE_JD_TDB_RANGE
+    if start <= julian_date_tdb <= end:
+        return JUPITER_MOON_RELATIVE_TOLERANCE
+    return None
+
+
 def parse_horizons() -> dict[str, list[dict[str, object]]]:
     observations = []
     body_names = {"moon-observer": "moon", "mars-observer": "mars", "pluto-observer": "pluto", "mercury-station": "mercury"}
@@ -378,7 +388,8 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
     for name, (body, origin) in vector_names.items():
         for line in data_lines(horizons_result(name)):
             columns = [column.strip() for column in line.split(",")]
-            vectors.append({"body": body, "origin": origin, "julianDateTDB": float(columns[0]), "tdb": columns[1].replace("A.D. ", ""), "positionAU": [float(columns[2]), float(columns[3]), float(columns[4])], "velocityAUPerDay": [float(columns[5]), float(columns[6]), float(columns[7])], "relativeTolerance": 9e-4 if origin == "jupiter" else None, "sanityToleranceAU": 0.01 if body == "chiron" else None})
+            julian_date_tdb = float(columns[0])
+            vectors.append({"body": body, "origin": origin, "julianDateTDB": julian_date_tdb, "tdb": columns[1].replace("A.D. ", ""), "positionAU": [float(columns[2]), float(columns[3]), float(columns[4])], "velocityAUPerDay": [float(columns[5]), float(columns[6]), float(columns[7])], "relativeTolerance": jupiter_moon_relative_tolerance(julian_date_tdb) if origin == "jupiter" else None, "sanityToleranceAU": 0.01 if body == "chiron" else None})
     return {"observations": observations, "vectors": vectors}
 
 
@@ -400,7 +411,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
     nasa_license = "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license"
     return {
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
-        "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "1900, 2000, and 2100 samples", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "UTC calendar timestamps", "timeScale": "UTC as serialized by the archived USNO API transformations", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "USNO-derived records from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parse scripts and tables under {upstream}/seasons and {upstream}/moonphase"},
         "espenakMoonNodes": {"version": UPSTREAM_REVISION, "frame": "geocentric equator and equinox of date as consumed by the pinned harness", "origin": "Earth center", "units": "UTC calendar timestamps, right ascension hours, and declination degrees", "timeScale": "UTC as serialized by the pinned transformation", "aberration": "not documented by the source table", "refraction": "not applicable to geocentric node events", "domain": "published table 2001 through 2100; sampled at 2001, 2050, and 2100", "license": f"Fred Espenak table with attribution; {mit_license}", "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html", "recipe": f"Pinned README, parser, and table under {upstream}/moon_nodes"},
         "astronomyEngineApsides": {"version": UPSTREAM_REVISION, "frame": "scalar Earth-Moon and Sun-Earth distances; no orientation frame", "origin": "Earth center for lunar distance and Sun center for Earth distance", "units": "UTC-like calendar timestamps, km, and AU", "timeScale": "calendar strings are interpreted as UT/UTC by the pinned harness; original acquisition metadata is absent", "aberration": "not documented in the pinned tables", "refraction": "not applicable to scalar apsis distances", "domain": "pinned lunar and Earth tables beginning in 2001; sampled at 2001, 2050, and 2100", "license": mit_license, "url": f"{upstream}/apsides", "recipe": "Pinned moon.txt and earth.txt are parsed directly; evidence is classified as third-party parity because upstream does not retain the original acquisition recipe"},
