@@ -66,7 +66,7 @@ struct IndependentReferenceArchive: Decodable {
 
     struct LunarPhase: Decodable {
         let phase: String
-        let utc: String
+        let sourceTime: String
         let toleranceSeconds: Double
     }
 
@@ -99,7 +99,7 @@ struct IndependentReferenceArchive: Decodable {
     }
 
     struct LunarEclipse: Decodable {
-        let utc: String
+        let universalTime: String
         let partialSemiDurationMinutes: Double
         let totalSemiDurationMinutes: Double
         let toleranceSeconds: Double
@@ -157,6 +157,14 @@ struct IndependentReferenceArchive: Decodable {
 
 enum IndependentReferenceDate {
     static func civil(_ text: String) -> AstroTime {
+        AstroTime(date(text))
+    }
+
+    static func universal(_ text: String) -> AstroTime {
+        AstroTime(ut: AstroTime.civilDays(of: date(text)))
+    }
+
+    private static func date(_ text: String) -> Date {
         let isoFormatter: ISO8601DateFormatter = {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -189,7 +197,7 @@ enum IndependentReferenceDate {
         if let date = isoFormatter.date(from: text) ?? isoMinuteFormatter.date(from: text)
             ?? minuteFormatter.date(from: text) ?? horizonsFormatter.date(from: text)
         {
-            return AstroTime(date)
+            return date
         }
         fatalError("invalid reference date: \(text)")
     }
@@ -204,6 +212,14 @@ enum IndependentReferenceDate {
 
     static func seconds(_ lhs: AstroTime, _ rhs: AstroTime) -> Double {
         abs(lhs.date.timeIntervalSince(rhs.date))
+    }
+
+    static func universalSeconds(_ lhs: AstroTime, _ rhs: AstroTime) -> Double {
+        abs(lhs.universalTime - rhs.universalTime) * 86_400
+    }
+
+    static func terrestrialSeconds(_ lhs: AstroTime, _ rhs: AstroTime) -> Double {
+        abs(lhs.terrestrialTime - rhs.terrestrialTime) * 86_400
     }
 }
 

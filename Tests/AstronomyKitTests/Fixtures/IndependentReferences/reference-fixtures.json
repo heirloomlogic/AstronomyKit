@@ -168,21 +168,21 @@
       "partialSemiDurationMinutes": 76,
       "toleranceSeconds": 120.0,
       "totalSemiDurationMinutes": 0,
-      "utc": "1800-04-09T16:26Z"
+      "universalTime": "1800-04-09T16:26Z"
     },
     {
       "durationToleranceMinutes": 2.0,
       "partialSemiDurationMinutes": 102,
       "toleranceSeconds": 120.0,
       "totalSemiDurationMinutes": 39,
-      "utc": "2000-01-21T04:44Z"
+      "universalTime": "2000-01-21T04:44Z"
     },
     {
       "durationToleranceMinutes": 2.0,
       "partialSemiDurationMinutes": 45,
       "toleranceSeconds": 120.0,
       "totalSemiDurationMinutes": 0,
-      "utc": "2099-04-05T08:27Z"
+      "universalTime": "2099-04-05T08:27Z"
     }
   ],
   "lunarNodes": [
@@ -238,63 +238,63 @@
   "lunarPhases": [
     {
       "phase": "new",
-      "toleranceSeconds": 90.0,
-      "utc": "1800-01-25T03:21:00.000Z"
+      "sourceTime": "1800-01-25T03:21:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "firstQuarter",
-      "toleranceSeconds": 90.0,
-      "utc": "1800-01-02T22:57:00.000Z"
+      "sourceTime": "1800-01-02T22:57:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "full",
-      "toleranceSeconds": 90.0,
-      "utc": "1800-01-11T02:20:00.000Z"
+      "sourceTime": "1800-01-11T02:20:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "lastQuarter",
-      "toleranceSeconds": 90.0,
-      "utc": "1800-01-18T07:53:00.000Z"
+      "sourceTime": "1800-01-18T07:53:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "new",
-      "toleranceSeconds": 90.0,
-      "utc": "2000-01-06T18:14:00.000Z"
+      "sourceTime": "2000-01-06T18:14:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "firstQuarter",
-      "toleranceSeconds": 90.0,
-      "utc": "2000-01-14T13:34:00.000Z"
+      "sourceTime": "2000-01-14T13:34:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "full",
-      "toleranceSeconds": 90.0,
-      "utc": "2000-01-21T04:40:00.000Z"
+      "sourceTime": "2000-01-21T04:40:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "lastQuarter",
-      "toleranceSeconds": 90.0,
-      "utc": "2000-01-28T07:57:00.000Z"
+      "sourceTime": "2000-01-28T07:57:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "new",
-      "toleranceSeconds": 90.0,
-      "utc": "2100-01-10T12:57:00.000Z"
+      "sourceTime": "2100-01-10T12:57:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "firstQuarter",
-      "toleranceSeconds": 90.0,
-      "utc": "2100-01-18T12:35:00.000Z"
+      "sourceTime": "2100-01-18T12:35:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "full",
-      "toleranceSeconds": 90.0,
-      "utc": "2100-01-26T02:51:00.000Z"
+      "sourceTime": "2100-01-26T02:51:00.000Z",
+      "toleranceSeconds": 90.0
     },
     {
       "phase": "lastQuarter",
-      "toleranceSeconds": 90.0,
-      "utc": "2100-01-03T13:05:00.000Z"
+      "sourceTime": "2100-01-03T13:05:00.000Z",
+      "toleranceSeconds": 90.0
     }
   ],
   "observations": [
@@ -540,9 +540,9 @@
       "frame": "geocentric Earth-shadow geometry",
       "license": "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license",
       "origin": "Earth center",
-      "recipe": "Pinned catalog pages and source key under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse",
+      "recipe": "Pinned catalog pages, source key, normalizer, C validation harness, and engine source under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse, https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/ctest.c, and the matching source/c tree",
       "refraction": "not applicable to geocentric eclipse geometry",
-      "timeScale": "UT",
+      "timeScale": "UT; the pinned C harness compares eclipse.peak.ut with the parsed catalog coordinate under its default Espenak-Meeus Delta T model",
       "units": "UT calendar timestamps and minutes",
       "url": "https://eclipse.gsfc.nasa.gov/lunar.html",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
@@ -575,14 +575,14 @@
     },
     "usnoSeasonsAndPhases": {
       "aberration": "not separately configurable or documented in the archived API output",
-      "domain": "USNO-derived records from 1800 through 2100; sampled at 1800, 2000, and 2100",
+      "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100",
       "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs",
       "license": "U.S. government factual output is public domain; transformed files also retain the archived Astronomy Engine MIT license",
       "origin": "Earth center",
-      "recipe": "Pinned parse scripts and tables under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons and https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase",
+      "recipe": "Pinned parser, C validation harness, engine source, and table under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase, https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/ctest.c, and the matching source/c tree",
       "refraction": "not applicable to geocentric event times",
-      "timeScale": "UTC as serialized by the archived USNO API transformations",
-      "units": "UTC calendar timestamps",
+      "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model",
+      "units": "calendar timestamps",
       "url": "https://aa.usno.navy.mil/data/api",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     }

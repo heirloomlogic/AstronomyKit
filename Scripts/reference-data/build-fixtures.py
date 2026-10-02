@@ -21,6 +21,11 @@ UPSTREAM_REVISION = "865d3da7d8112bbc7911238052c6af4aaf877181"
 UPSTREAM_BASE = f"https://raw.githubusercontent.com/cosinekitty/astronomy/{UPSTREAM_REVISION}"
 
 UPSTREAM_SOURCES = {
+    "astronomy-engine.c": ("source/c/astronomy.c", "3ef243a3ee4c10fc05a5cb460d753e4e17eb2f57dad7892690e12599088717ac"),
+    "astronomy-engine-ctest.c": ("generate/ctest.c", "f498d483e5d2b488b5b40e492f6ede838ff69a0110aac9e03c80a8bbb5b6d1a4"),
+    "parse-moon-phases.js": ("generate/moonphase/parse_moon_phases.js", "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263"),
+    "normalize-eclipses.py": ("generate/eclipse/norm.py", "27aad287e710b6e55c13cb2ccbc6da588bcec718ba9b6fddacb47bd8896c3f6f"),
+    "readme-lunar-eclipse.txt": ("generate/eclipse/readme_lunar_eclipse.txt", "9fed27ab68cf32b1d3b28f6910dc0f3645947ce75f350da33b3e419b776df170"),
     "seasons.txt": ("generate/seasons/seasons.txt", "92a0b2a5f8c67510b49f342f6f7a763cb6eee1ef32413344e71ce169a3582383"),
     "moonphases.txt": ("generate/moonphase/moonphases.txt", "959ec955d89b4d9d2366a737ecffad0ace1deafdb7d54947c94a0585b316c064"),
     "moon_nodes.txt": ("generate/moon_nodes/moon_nodes.txt", "c6140f77c8642be53687a4f7be00497c2bae6cc78ac6d9d6c61be73c06a4a1d5"),
@@ -198,7 +203,43 @@ def selected_lines(name: str, predicate) -> list[str]:
     return [line for line in source_text(name).splitlines() if predicate(line)]
 
 
+def lunar_reference_conventions() -> dict[str, object]:
+    harness = source_text("astronomy-engine-ctest.c")
+    engine = source_text("astronomy-engine.c")
+    phase = re.search(
+        r"static int MoonPhase\(void\)\s*\{(?P<body>.*?)static int MoonReversePhase",
+        harness,
+        re.DOTALL,
+    )
+    eclipse = re.search(
+        r"static int LunarEclipseTest\(void\)\s*\{(?P<body>.*?)/\*-+\*/",
+        harness,
+        re.DOTALL,
+    )
+    if phase is None or eclipse is None:
+        raise RuntimeError("pinned lunar validation functions are missing")
+    phase_limit = re.search(r"threshold_seconds = ([0-9.]+)", phase["body"])
+    eclipse_limit = re.search(r"diff_limit = ([0-9.]+)", eclipse["body"])
+    if phase_limit is None or eclipse_limit is None:
+        raise RuntimeError("pinned lunar validation tolerances are missing")
+    if "mq.time.tt - expected_time.tt" not in phase["body"]:
+        raise RuntimeError("pinned lunar phase comparison no longer uses TT")
+    if "eclipse.peak.ut - peak_time.ut" not in eclipse["body"]:
+        raise RuntimeError("pinned lunar eclipse comparison no longer uses UT")
+    delta_t_model = "Astronomy_DeltaT_EspenakMeeus"
+    if f"DeltaTFunc = {delta_t_model};" not in engine:
+        raise RuntimeError("pinned default Delta T model changed")
+    return {
+        "phaseToleranceSeconds": float(phase_limit.group(1)),
+        "phaseComparisonScale": "terrestrialTimeDerivedFromUT",
+        "eclipseToleranceSeconds": 60 * float(eclipse_limit.group(1)),
+        "eclipseComparisonScale": "universalTime",
+        "deltaTModel": delta_t_model,
+    }
+
+
 def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
+    lunar_conventions = lunar_reference_conventions()
     seasons = []
     for line in selected_lines("seasons.txt", lambda item: item[:4] in {"1800", "2000", "2100"} and ("Equinox" in item or "Solstice" in item)):
         timestamp, kind = line.split()
@@ -213,7 +254,7 @@ def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
         quarter_text, timestamp = line.split()
         year, quarter = int(timestamp[:4]), int(quarter_text)
         if year in {1800, 2000, 2100}:
-            by_year_and_quarter.setdefault((year, quarter), {"phase": phase_names[quarter], "utc": timestamp, "toleranceSeconds": 90.0})
+            by_year_and_quarter.setdefault((year, quarter), {"phase": phase_names[quarter], "sourceTime": timestamp, "toleranceSeconds": lunar_conventions["phaseToleranceSeconds"]})
     phases.extend(by_year_and_quarter[key] for key in sorted(by_year_and_quarter))
 
     nodes = []
@@ -275,6 +316,7 @@ def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
 
 
 def parse_eclipses() -> dict[str, list[dict[str, object]]]:
+    lunar_conventions = lunar_reference_conventions()
     month = {name: index + 1 for index, name in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split())}
     lunar_pattern = re.compile(r"^\s{2}(\d{4})\s+(\w{3})\s+(\d{2})\s+(\d{2}):(\d{2})\s+\S+\s+\d+\s+\S+\s+\S+\s+\S+\s+(\d+m|-)\s+(\d+m|-)")
     lunar = []
@@ -285,8 +327,8 @@ def parse_eclipses() -> dict[str, list[dict[str, object]]]:
                 continue
             partial = 0 if match.group(6) == "-" else int(match.group(6)[:-1])
             total = 0 if match.group(7) == "-" else int(match.group(7)[:-1])
-            if not lunar or int(match.group(1)) != int(lunar[-1]["utc"][:4]):
-                lunar.append({"utc": f"{match.group(1)}-{month[match.group(2)]:02d}-{int(match.group(3)):02d}T{int(match.group(4)):02d}:{int(match.group(5)):02d}Z", "partialSemiDurationMinutes": partial, "totalSemiDurationMinutes": total, "toleranceSeconds": 120.0, "durationToleranceMinutes": 2.0})
+            if not lunar or int(match.group(1)) != int(lunar[-1]["universalTime"][:4]):
+                lunar.append({"universalTime": f"{match.group(1)}-{month[match.group(2)]:02d}-{int(match.group(3)):02d}T{int(match.group(4)):02d}:{int(match.group(5)):02d}Z", "partialSemiDurationMinutes": partial, "totalSemiDurationMinutes": total, "toleranceSeconds": lunar_conventions["eclipseToleranceSeconds"], "durationToleranceMinutes": lunar_conventions["eclipseToleranceSeconds"] / 60})
 
     solar_pattern = re.compile(r'^<a\s+href="[^"]+">\d+</a>\s+(\d{4})\s+(\w{3})\s+(\d{2})\s+(\d{2}):(\d{2}):(\d{2})\s+-?\d+\s+\S+\s+<a\s+href="[^"]+">\d+</a>\s+([PATH])\S?\s+\S+\s+\S+\s+(\d+\.\d[NS])\s+(\d+\.\d[EW])')
     solar = []
@@ -412,11 +454,11 @@ def source_catalog() -> dict[str, dict[str, str]]:
     return {
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
-        "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "UTC calendar timestamps", "timeScale": "UTC as serialized by the archived USNO API transformations", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "USNO-derived records from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parse scripts and tables under {upstream}/seasons and {upstream}/moonphase"},
+        "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "calendar timestamps", "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parser, C validation harness, engine source, and table under {upstream}/moonphase, {upstream}/ctest.c, and the matching source/c tree"},
         "espenakMoonNodes": {"version": UPSTREAM_REVISION, "frame": "geocentric equator and equinox of date as consumed by the pinned harness", "origin": "Earth center", "units": "UTC calendar timestamps, right ascension hours, and declination degrees", "timeScale": "UTC as serialized by the pinned transformation", "aberration": "not documented by the source table", "refraction": "not applicable to geocentric node events", "domain": "published table 2001 through 2100; sampled at 2001, 2050, and 2100", "license": f"Fred Espenak table with attribution; {mit_license}", "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html", "recipe": f"Pinned README, parser, and table under {upstream}/moon_nodes"},
         "astronomyEngineApsides": {"version": UPSTREAM_REVISION, "frame": "scalar Earth-Moon and Sun-Earth distances; no orientation frame", "origin": "Earth center for lunar distance and Sun center for Earth distance", "units": "UTC-like calendar timestamps, km, and AU", "timeScale": "calendar strings are interpreted as UT/UTC by the pinned harness; original acquisition metadata is absent", "aberration": "not documented in the pinned tables", "refraction": "not applicable to scalar apsis distances", "domain": "pinned lunar and Earth tables beginning in 2001; sampled at 2001, 2050, and 2100", "license": mit_license, "url": f"{upstream}/apsides", "recipe": "Pinned moon.txt and earth.txt are parsed directly; evidence is classified as third-party parity because upstream does not retain the original acquisition recipe"},
         "usnoRiseSet": {"version": UPSTREAM_REVISION, "frame": "topocentric apparent horizon", "origin": "named terrestrial longitude and latitude", "units": "UTC calendar timestamps and degrees", "timeScale": "UTC", "aberration": "included in the USNO apparent-position service", "refraction": "USNO standard apparent-horizon refraction", "domain": "USNO service years 1700 through 2100; sampled from 1944 through 2026", "license": government_license, "url": "https://aa.usno.navy.mil/data/RS_OneYear", "recipe": f"Pinned acquisition instructions and parsed table under {upstream}/riseset"},
-        "nasaLunarEclipses": {"version": UPSTREAM_REVISION, "frame": "geocentric Earth-shadow geometry", "origin": "Earth center", "units": "UT calendar timestamps and minutes", "timeScale": "UT", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to geocentric eclipse geometry", "domain": "NASA catalog centuries represented by archived pages; sampled at 1800, 2000, and 2099", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/lunar.html", "recipe": f"Pinned catalog pages and source key under {upstream}/eclipse"},
+        "nasaLunarEclipses": {"version": UPSTREAM_REVISION, "frame": "geocentric Earth-shadow geometry", "origin": "Earth center", "units": "UT calendar timestamps and minutes", "timeScale": "UT; the pinned C harness compares eclipse.peak.ut with the parsed catalog coordinate under its default Espenak-Meeus Delta T model", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to geocentric eclipse geometry", "domain": "NASA catalog centuries represented by archived pages; sampled at 1800, 2000, and 2099", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/lunar.html", "recipe": f"Pinned catalog pages, source key, normalizer, C validation harness, and engine source under {upstream}/eclipse, {upstream}/ctest.c, and the matching source/c tree"},
         "nasaGlobalSolarEclipses": {"version": UPSTREAM_REVISION, "frame": "geocentric shadow-axis geometry with terrestrial greatest-eclipse location", "origin": "Earth center and catalog surface coordinates", "units": "TD calendar timestamps and geographic degrees", "timeScale": "Terrestrial Dynamical Time (TD)", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to global shadow geometry", "domain": "NASA catalog centuries represented by archived pages; sampled at 1800, 2024, and 2099", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/solar.html", "recipe": f"Pinned catalog pages and source key under {upstream}/eclipse"},
         "nasaPlanetaryTransits": {"version": UPSTREAM_REVISION, "frame": "geocentric Sun-planet contact geometry", "origin": "Earth center", "units": "UT calendar timestamps and arcseconds converted to arcminutes", "timeScale": "UT", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to geocentric transit contacts", "domain": "Mercury 1601 through 2300 and Venus 2000 BCE through 4000 CE; sampled from 2003 through 2125", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/transit/catalog/", "recipe": f"Pinned Mercury and Venus catalog pages under {upstream}/eclipse"},
         "eclipseWiseLocalSolar": {"version": UPSTREAM_REVISION, "frame": "topocentric apparent solar altitude at local contacts", "origin": "named terrestrial longitude and latitude", "units": "UTC calendar timestamps and degrees", "timeScale": "UTC as serialized by the pinned table", "aberration": "included in the published local circumstances", "refraction": "source altitude convention retained; below-horizon altitudes are not asserted", "domain": "published cases retained by the pinned table; three 2024 geometries sampled", "license": f"EclipseWise/Fred Espenak table with attribution; {mit_license}", "url": "https://www.eclipsewise.com/solar/SEcirc/SEcirc.html", "recipe": f"Pinned local_solar_eclipse.txt under {upstream}/eclipse"},
