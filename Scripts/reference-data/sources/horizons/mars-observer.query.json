@@ -1,0 +1,17 @@
+{
+  "_responseSHA256": "bf7e3f1b312565705475d46e4bc001de5f660324af95b11f5cb6fc600dc48e26",
+  "ANG_FORMAT": "'DEG'",
+  "APPARENT": "'AIRLESS'",
+  "CAL_FORMAT": "'CAL'",
+  "CENTER": "'500@399'",
+  "COMMAND": "'499'",
+  "CSV_FORMAT": "'YES'",
+  "EPHEM_TYPE": "'OBSERVER'",
+  "MAKE_EPHEM": "'YES'",
+  "OBJ_DATA": "'NO'",
+  "QUANTITIES": "'1,3,20,31'",
+  "RANGE_UNITS": "'AU'",
+  "REF_SYSTEM": "'ICRF'",
+  "TIME_DIGITS": "'SECONDS'",
+  "TLIST": "'2415020.5,2451544.5,2488069.5'"
+}

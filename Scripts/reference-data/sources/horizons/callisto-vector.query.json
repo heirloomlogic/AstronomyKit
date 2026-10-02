@@ -1,0 +1,15 @@
+{
+  "_responseSHA256": "ed9c3a527e7a0b30acf0777cc647e8b5f8957ad4e6347b147dd74f34a84a434f",
+  "CENTER": "'500@599'",
+  "COMMAND": "'504'",
+  "CSV_FORMAT": "'YES'",
+  "EPHEM_TYPE": "'VECTORS'",
+  "MAKE_EPHEM": "'YES'",
+  "OBJ_DATA": "'NO'",
+  "OUT_UNITS": "'AU-D'",
+  "REF_PLANE": "'FRAME'",
+  "REF_SYSTEM": "'ICRF'",
+  "TLIST": "'2415020.5,2451544.5,2488069.5'",
+  "VEC_CORR": "'NONE'",
+  "VEC_TABLE": "'2'"
+}

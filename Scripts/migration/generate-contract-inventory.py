@@ -73,6 +73,7 @@ TEST_ISSUES = {
     "GravitySimulationTests.swift": 88,
     "HugeTimeTests.swift": 97,
     "IlluminationTests.swift": 89,
+    "IndependentReferenceFixtures.swift": 81,
     "JPLValidationTests.swift": 81,
     "JupiterMoonsTests.swift": 90,
     "LagrangePointTests.swift": 90,
@@ -110,6 +111,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/migration/test_performance.py": 80,
     "Scripts/numerics/solar-altitude/test_bounds.py": 94,
     "Scripts/performance/polynomial/test_polynomial.py": 85,
+    "Scripts/reference-data/test_build_fixtures.py": 81,
     "Scripts/performance/test-moon-cache.sh": 95,
     "Scripts/performance/test-nutation-cache.sh": 95,
     "Scripts/performance/test-vsop-cache.sh": 95,
@@ -505,7 +507,7 @@ def test_owners(root):
         issue = TEST_ISSUES.get(path.name, SCRIPT_TEST_ISSUES.get(relative))
         if issue is None:
             raise RuntimeError(f"No migration issue for test file {relative}")
-        if path.name in {"JPLValidationTests.swift", "AuditValidationTests.swift"}:
+        if path.name in {"JPLValidationTests.swift", "AuditValidationTests.swift", "IndependentReferenceFixtures.swift"}:
             classification = "independent-reference"
         elif path.name in {"ReproducibilityTests.swift", "PolynomialTests.swift"}:
             classification = "regression-fixture"
