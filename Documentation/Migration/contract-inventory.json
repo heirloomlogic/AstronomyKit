@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 60,
-    "tests": 757
+    "tests": 758
   },
   "crossCuttingContracts": [
     {
@@ -3003,7 +3003,7 @@
     "Tests/AstronomyKitTests/AstroTimeTests.swift": "1183d53c4435fb63f7860b043652779d72312525be1ccf4ad0479a7e49a96ff6",
     "Tests/AstronomyKitTests/AstronomyErrorTests.swift": "dd60689aec9808a2d18d6769c5642c157776f29eb6ec733d4b61922892e4a88e",
     "Tests/AstronomyKitTests/AtmosphereTests.swift": "cf83e324ce348cf62a24f74e0c8db2b10cf6aa0faf20b93607711a1ede24fd04",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "fcdd6900d492f9974edc4b5adeaf54a8b1b177e306753395385ca7d96f0b19bb",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "023e43119c9a442506dbe0894638906de13e9778340d8005ac906e38ee675ac7",
     "Tests/AstronomyKitTests/CelestialBodyTests.swift": "3a884eb7c6c0ca0639b0cf205863c9d5199ebd8ecb0df22bd7a77640f8ef3d9c",
     "Tests/AstronomyKitTests/ChironTests.swift": "49d4ca76971433c19a1d121095a644cbc0cd0b52e877b6234fe40a21b92aff4a",
     "Tests/AstronomyKitTests/CivilTimeTests.swift": "68c207ac72f13ffad89f475bee72b57bc159e0dba54f51b517a42f60a4cf289c",
@@ -12506,7 +12506,7 @@
       "id": "Tests/AstronomyKitTests/AuditValidationTests.swift",
       "migrationIssue": 81,
       "path": "Tests/AstronomyKitTests/AuditValidationTests.swift",
-      "testCount": 20
+      "testCount": 21
     },
     {
       "classification": "invariant",

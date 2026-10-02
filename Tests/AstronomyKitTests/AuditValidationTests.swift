@@ -113,9 +113,31 @@ struct AuditValidationTests {
     }
 
     @Test(
-        "JPL Galilean moon states",
+        "JPL Galilean moon state observations",
         arguments: IndependentReferenceArchive.shared.vectors.filter { $0.origin == "jupiter" })
-    func galileanMoonState(reference: IndependentReferenceArchive.Vector) throws {
+    func galileanMoonStateObservation(reference: IndependentReferenceArchive.Vector) throws {
+        let errors = try galileanMoonErrors(reference: reference)
+        #expect(errors.position.isFinite)
+        #expect(errors.velocity.isFinite)
+    }
+
+    @Test(
+        "JPL Galilean moon states inside the sourced comparison domain",
+        arguments: IndependentReferenceArchive.shared.vectors.filter {
+            $0.origin == "jupiter" && $0.relativeTolerance != nil
+        })
+    func boundedGalileanMoonState(reference: IndependentReferenceArchive.Vector) throws {
+        let errors = try galileanMoonErrors(reference: reference)
+        let relativeTolerance = try #require(reference.relativeTolerance)
+        #expect(errors.position <= relativeTolerance)
+        #expect(errors.velocity <= relativeTolerance)
+    }
+
+    private func galileanMoonErrors(
+        reference: IndependentReferenceArchive.Vector
+    ) throws -> (
+        position: Double, velocity: Double
+    ) {
         let moons = try Jupiter.moons(
             at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB))
         let state: StateVector =
@@ -130,12 +152,7 @@ struct AuditValidationTests {
             actual: state.position, expected: reference.positionAU)
         let velocityError = IndependentReferenceMath.relativeVectorError(
             actual: state.velocity, expected: reference.velocityAUPerDay)
-        #expect(positionError.isFinite)
-        #expect(velocityError.isFinite)
-        if let relativeTolerance = reference.relativeTolerance {
-            #expect(positionError <= relativeTolerance)
-            #expect(velocityError <= relativeTolerance)
-        }
+        return (positionError, velocityError)
     }
 
     @Test("Published seasonal events", arguments: IndependentReferenceArchive.shared.seasons)
