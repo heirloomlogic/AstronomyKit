@@ -3,6 +3,7 @@
 .build-release/
 .context/
 .dev-tooling
+.model-prototype
 .DS_Store
 .swiftpm
 docs/

@@ -98,6 +98,8 @@ class ContractInventoryTests(unittest.TestCase):
             "Sources/CLibAstronomy/generated/polynomial-data.h",
             "Sources/CLibAstronomy/generated/vsop87b_full.h",
         }
+        prototype_manifest = json.loads((ROOT / "Scripts/model-data/swift-prototype-manifest.json").read_text())
+        expected.update(f"Sources/{path}" for path in prototype_manifest["outputs"])
         actual = {entry["path"] for entry in self.inventory["generatedArtifacts"]}
         self.assertEqual(expected, actual)
 
@@ -167,7 +169,7 @@ class OracleLockTests(unittest.TestCase):
                 "Scripts/performance/polynomial/data/**/*",
             )
             for path in ROOT.glob(pattern)
-            if path.is_file() and path.name != ".gitattributes"
+            if path.is_file() and path.name not in {".gitattributes", "swift-prototype-manifest.json"}
         }
         self.assertEqual(expected, set(lock["files"]))
         self.assertTrue(all(len(digest) == 64 for digest in lock["files"].values()))

@@ -1,15 +1,15 @@
 {
   "baselineProvenanceSHA256": "40149c14feb731717d7d9832851eb8139c8d24745cab6a6533063d3ae79b2904",
   "candidate": {
-    "baseRevision": "34fb319bf5a179a57c1a56349bfa37ea2cb0b24a",
+    "baseRevision": "4a565e71d1c56e4bb8e479d9e79f422ee2bbbaf6",
     "budgets": {
-      "cleanBuildSeconds": 13.461,
-      "coldThroughputOperationsPerSecond": 11110339,
-      "incrementalBuildSeconds": 4.839,
-      "latencyNanosecondsPerOperation": 26766,
+      "cleanBuildSeconds": 13.673,
+      "coldThroughputOperationsPerSecond": 10737444,
+      "incrementalBuildSeconds": 6.198,
+      "latencyNanosecondsPerOperation": 30219,
       "peakResidentBytes": 11120640,
       "strippedBinaryBytes": 14388793,
-      "warmThroughputOperationsPerSecond": 11680643
+      "warmThroughputOperationsPerSecond": 11671697
     },
     "commands": {
       "build": [
@@ -36,7 +36,7 @@
       "system": "Darwin"
     },
     "inputSHA256": {
-      "Package.swift": "f2f899c932bf8497d7849ca5604990a9ec37b6ede20c3d035c0a1ef286fd2998",
+      "Package.swift": "440352454599bbb6d699de05f8b949eb45edcec057a4fc1ff603c5cd7baae492",
       "Scripts/migration/performance_baseline.py": "6a93d64c1bd4e4f993102c2fa4097ae7dfabdad59118ee33150ae822bd9e7441",
       "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
       "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
@@ -82,43 +82,43 @@
     },
     "measurements": {
       "cleanBuildSeconds": [
-        8.973815167002613,
-        8.03759320799145,
-        8.797749416989973
+        9.114676833007252,
+        8.659319541009609,
+        9.090684458002215
       ],
       "coldThroughputOperationsPerSecond": [
-        9554634.59494321,
-        14328315.437864365,
-        13887924.449690994,
-        13862775.847578779,
-        14180248.686111333
+        9523809.523809524,
+        14206437.291897891,
+        13421805.400598949,
+        14275135.39073722,
+        13370548.02533719
       ],
       "incrementalBuildSeconds": [
-        3.204782916989643,
-        3.225478332984494,
-        3.0096854169969447
+        3.6936450419889297,
+        4.131437416013796,
+        3.427636792010162
       ],
       "latencyNanosecondsPerOperation": [
-        53661.45,
-        17237.5,
-        17825.0,
-        17843.75,
-        18393.75
+        50361.45,
+        17520.85,
+        20145.825,
+        17693.75,
+        20435.4
       ],
       "peakResidentBytes": [
+        8863744,
         8896512,
         8863744,
-        8863744,
-        8863744,
+        8896512,
         8863744
       ],
       "strippedBinaryBytes": 13080720,
       "warmThroughputOperationsPerSecond": [
-        14573010.78402798,
-        15023474.178403756,
-        14562002.275312856,
-        14600804.869368425,
-        15035191.745679732
+        14589621.30814192,
+        15047069.11306932,
+        14148774.362420855,
+        15052873.21717533,
+        14154031.245023973
       ]
     },
     "protocol": {
@@ -144,7 +144,7 @@
       "runtimeTrials": 5,
       "schemaVersion": 1
     },
-    "provenanceSHA256": "e6efaec40aec11cd27add7a5ded6f12766211de4a1f4e90f21a70180ce53d0d7",
+    "provenanceSHA256": "a264393a357844efd670aa5fb9df6c22a24eb18324280abbf43705294d50bd29",
     "runnerChecksums": [
       {
         "coldThroughput": 15238.436940063162,
@@ -172,7 +172,7 @@
         "warmThroughput": 15181.208162839566
       }
     ],
-    "runnerSHA256": "c639c8ab9f9aefb2b97e2f0697f700027982a380f77dbe1e5f3dc4b8cc8aa277",
+    "runnerSHA256": "3d84662af321239f66e98af54a41aea10b1b7a56d66d42c9523c51e7dfea4210",
     "schemaVersion": 1,
     "scope": "Pure-Swift migration pilot measured on the recorded host and toolchain"
   },
@@ -180,15 +180,15 @@
     "failures": [],
     "passed": true,
     "summary": {
-      "cleanBuildSeconds": 8.973815167002613,
-      "coldThroughputOperationsPerSecond": 13887924.449690994,
-      "incrementalBuildSeconds": 3.225478332984494,
-      "latencyNanosecondsPerOperation": 17843.75,
+      "cleanBuildSeconds": 9.114676833007252,
+      "coldThroughputOperationsPerSecond": 13421805.400598949,
+      "incrementalBuildSeconds": 4.131437416013796,
+      "latencyNanosecondsPerOperation": 20145.825,
       "peakResidentBytes": 8896512,
       "strippedBinaryBytes": 13080720,
-      "warmThroughputOperationsPerSecond": 14600804.869368425
+      "warmThroughputOperationsPerSecond": 14589621.30814192
     }
   },
-  "provenanceSHA256": "6220cb43036e30843b389db95f64f9ba8597bd7331388ab8393af2f22fb3f776",
+  "provenanceSHA256": "f2c0395ea02a079a7fb86281508cba641694ebdb7eba53990ed0080dacea4e3a",
   "schemaVersion": 1
 }
