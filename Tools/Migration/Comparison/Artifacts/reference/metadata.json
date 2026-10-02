@@ -87,7 +87,7 @@
   },
   "schemaVersion": 1,
   "sourceHashes": {
-    "Package.swift": "f2f899c932bf8497d7849ca5604990a9ec37b6ede20c3d035c0a1ef286fd2998",
+    "Package.swift": "440352454599bbb6d699de05f8b949eb45edcec057a4fc1ff603c5cd7baae492",
     "Scripts/migration/run-comparison.py": "f895ccc1fcbf26eb523b63f610ce0fdce47d9926d011e326643c0bf47d49259f",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
