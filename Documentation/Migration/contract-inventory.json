@@ -3775,7 +3775,7 @@
     "Tests/AstronomyKitTests/CoordinatesTests.swift": "946917ddd1eb71c0289a987ccbfdf1c47ede8640dbde4ea393bcba66856e1583",
     "Tests/AstronomyKitTests/DeltaTModelCaptureTests.swift": "c313caa43618e12dae143fb98f64ef3c95f37fc7595d6d893ae3e67983b09802",
     "Tests/AstronomyKitTests/DeltaTThreadSafetyTests.swift": "1edd321c0c3327ddfe14168dd466f120fbbe0d7ce0f169f9fd7fe4bfe3f7e98c",
-    "Tests/AstronomyKitTests/DistanceAccuracyTests.swift": "6b7ec098ba94b3744893c592e05f4c5a4cb38bd87c0d3fa92498ccc91df8f13c",
+    "Tests/AstronomyKitTests/DistanceAccuracyTests.swift": "5c87646922573f5da5ec20cee814f4101e95779e1d2716e6cd531e9902879633",
     "Tests/AstronomyKitTests/EclipseTests.swift": "fc61498f587d757d0d7de76f8b2fe348beecac8ada2e67edbc8aadb8f9d7dc93",
     "Tests/AstronomyKitTests/EclipticStateTests.swift": "be692f833db20fbf72dcdf2d01e0e89aeab5e668b9cb7423d7ce1f08ad677d14",
     "Tests/AstronomyKitTests/ElongationTests.swift": "0a7c9335c9d67144e94f1bbc816d9b4e066ab94b6717feeb9df831f18aab1485",
