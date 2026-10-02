@@ -1,0 +1,908 @@
+{
+  "entries": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0001-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0001-stdout.log",
+          "sha256": "054f5bc06336165de2bd6428566c0b654af7712f46cb50461a369d2d2e5e27b1"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "package",
+        "dump-package"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "files": {
+        "stderr": {
+          "path": "0002-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0002-stdout.log",
+          "sha256": "1e45963478754761fba10a15d4560caec2a42ab8c67e343b90318dc774490bc2"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-63eodpio",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 5.714324917003978,
+      "files": {
+        "stderr": {
+          "path": "0003-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0003-stdout.log",
+          "sha256": "c944209b29fce09b43b6ac6d628fbd04f8b81f2080c3a237afc87d0d06e6735b"
+        },
+        "time": {
+          "path": "0003-time.log",
+          "sha256": "c793db2301ce6ae322bb5863c953ac6aa14c3e90a7c993dff31561bbe76c9fa9"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-01rzdp9i",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 5.249360791989602,
+      "files": {
+        "stderr": {
+          "path": "0004-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0004-stdout.log",
+          "sha256": "9d00177604fde74e81781dbc8dbb3611b96ed6e301d6c8f7bc5dbe367538d377"
+        },
+        "time": {
+          "path": "0004-time.log",
+          "sha256": "9654f71e8b802d3b60aee3029e2c2740d97380dfcf2292b1c26b16135edefa64"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-kgb43y_v",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 5.700390124984551,
+      "files": {
+        "stderr": {
+          "path": "0005-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0005-stdout.log",
+          "sha256": "bd7f77fb2677ac98fa63ab0406dde2c922b0f4c4594332d33ad6d36a3a133840"
+        },
+        "time": {
+          "path": "0005-time.log",
+          "sha256": "60023a009733d11c3b6a24406b1aa1f6859a31291721ea3b353e65d2d1a5df6a"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-b_g859c5",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 5.40318062499864,
+      "files": {
+        "stderr": {
+          "path": "0006-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0006-stdout.log",
+          "sha256": "eead54abfd90d55d1a71c25395710ebd090672ac1d0b36948ce1512c58bd9346"
+        },
+        "time": {
+          "path": "0006-time.log",
+          "sha256": "a134a6478cb4429e5d720ae9b3649a26c1d9be887df455a2904b883cdb283572"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-xuqkexz_",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 1.87772920797579,
+      "files": {
+        "stderr": {
+          "path": "0007-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0007-stdout.log",
+          "sha256": "851f5a4953de18fca61bee112c78b67aff22106d31aa5e77a807418b5a383c01"
+        },
+        "time": {
+          "path": "0007-time.log",
+          "sha256": "77351231eb69d95898ac43a9aae7dd3a518a8ffdb8527c8e2feff45085a89703"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-vqmwgaru",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 1.875085624982603,
+      "files": {
+        "stderr": {
+          "path": "0008-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0008-stdout.log",
+          "sha256": "fcaa2ee24181ae1b49921805c4d090d2b27fe7f939886a991efd920f4bf9f1f7"
+        },
+        "time": {
+          "path": "0008-time.log",
+          "sha256": "936416cfd3a3105d814b3b130d92597f967a1832fe095877a0789908b481ac32"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-a0z8c992",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 1.8714976250194013,
+      "files": {
+        "stderr": {
+          "path": "0009-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0009-stdout.log",
+          "sha256": "fcaa2ee24181ae1b49921805c4d090d2b27fe7f939886a991efd920f4bf9f1f7"
+        },
+        "time": {
+          "path": "0009-time.log",
+          "sha256": "2ed2ffe9b0979923ebc67901127ab66d60ecc7b97c56fe4b7dc774a77bdf7c8d"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--show-bin-path",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "files": {
+        "stderr": {
+          "path": "0010-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0010-stdout.log",
+          "sha256": "13779ed81554ad673500418932c51ddea906cb59d38496e83850dbaf1023a5ce"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-rx3uo933",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 5.932005707989447,
+      "files": {
+        "stderr": {
+          "path": "0011-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0011-stdout.log",
+          "sha256": "f6bb8e1b4c701b6abf85373648146fcbba3050e3ab83997472560963ca7156ea"
+        },
+        "time": {
+          "path": "0011-time.log",
+          "sha256": "6a879eaaa9187d28f3d4f1889f27b6432c21eca7b1edbb43b100005414e1087f"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-ywsz36p3",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 6.269967875035945,
+      "files": {
+        "stderr": {
+          "path": "0012-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0012-stdout.log",
+          "sha256": "1e6654fcd3cf9c9c9c36bd1925cde609cbb7a7ca4abaf179615f9967af88d2f1"
+        },
+        "time": {
+          "path": "0012-time.log",
+          "sha256": "8a04bc116d7c3d4a3b5a8e0a94401eb47fbed3e23ba5508e4c5623e9e9be53a8"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-1ed14oud",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 6.112964917032514,
+      "files": {
+        "stderr": {
+          "path": "0013-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0013-stdout.log",
+          "sha256": "88323a0ff617fe819f63adfbc6d8ab482d7ae8c75a978c19353dbd4adb47a0ec"
+        },
+        "time": {
+          "path": "0013-time.log",
+          "sha256": "2f864a4db3547340873c01ac6ef3f5da1140ec5e04b259d06149ae4891d30564"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-x8jpqw4r",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 5.973132084007375,
+      "files": {
+        "stderr": {
+          "path": "0014-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0014-stdout.log",
+          "sha256": "18975532c443d0db3e217b3d634732e4edf6e5e474b22e913c1ad163c2ef288f"
+        },
+        "time": {
+          "path": "0014-time.log",
+          "sha256": "219074f3c448ec5dcccf24bf288bb4f6ec9b2cfcb3daf007b6de482766fb9f21"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-g4jxhz4m",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 1.6972537079709582,
+      "files": {
+        "stderr": {
+          "path": "0015-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0015-stdout.log",
+          "sha256": "504665cb5910872875ae975b7a34361f5370dc87a9ed4851fb6d3f7de302fe63"
+        },
+        "time": {
+          "path": "0015-time.log",
+          "sha256": "cc87bcd675871fe78720f4cb15fe0696f1884c72833d829797b9596e855e8c3c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-m84mc76d",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 1.6378062500152737,
+      "files": {
+        "stderr": {
+          "path": "0016-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0016-stdout.log",
+          "sha256": "e1494874e91d87ca328773f4fe5f51694f9ddfa50ad667f83670a025cd8bd46b"
+        },
+        "time": {
+          "path": "0016-time.log",
+          "sha256": "22ca0019e5b3a99d077f0b89d0e4dc52089b833827e90322d975eae10313a8b7"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-time-c2q0xb71",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomyModelPrototypeRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "elapsedSeconds": 1.64255841600243,
+      "files": {
+        "stderr": {
+          "path": "0017-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0017-stdout.log",
+          "sha256": "c4327a37f9fb09a76fd18c8d322730d5c1fa045a5b8def41eae4587ed800b351"
+        },
+        "time": {
+          "path": "0017-time.log",
+          "sha256": "010e1fb9d78378cd4ea4020c18ff30ab2f7a9715711531b5e804066a885c6d33"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--show-bin-path",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "files": {
+        "stderr": {
+          "path": "0018-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0018-stdout.log",
+          "sha256": "44775ff963f8e569a3ac4cc1faed771bb9d40034e4dd0215fa2bd91bb399bcc1"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-m984z_uj",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "first"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0019-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0019-stdout.log",
+          "sha256": "bc4b418a2e33fb31a53c4d4c304a7b8b784100ff2c1efa687ee1bde49c1572f6"
+        },
+        "time": {
+          "path": "0019-time.log",
+          "sha256": "ae8a402deef6e5940d1b21e4110dfc086c2d78cc1c9f22831583c4d792367c04"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-e7msjdmh",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "first"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0020-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0020-stdout.log",
+          "sha256": "7da4139b906e0d8b9446f0248e2add5b10341bbd1bdc2a5f99b5d660dfe40216"
+        },
+        "time": {
+          "path": "0020-time.log",
+          "sha256": "4b4ff3582d65e36af778b9cfada9dcdb2763fc47595d0d7e6126c7a00d620ad1"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-bb60qt_o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "first"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0021-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0021-stdout.log",
+          "sha256": "28d6b47f51b6de3aa7a62f8e9a55e1cabbf7674252a7d3ea6d564375a3ff6d51"
+        },
+        "time": {
+          "path": "0021-time.log",
+          "sha256": "574377e91cd263aa001ee0485d8219bb49d1cc588b1576aae5dd10d582bfcf15"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-s8v4bg_p",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "first"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0022-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0022-stdout.log",
+          "sha256": "11c21df37245dd441cbab893737e0c3aee1213254849f1ecacf2802e6c2edbad"
+        },
+        "time": {
+          "path": "0022-time.log",
+          "sha256": "90fd325e011cc48d77bd300729203e6414f4f939e9849618c41a6e8d2e73bd53"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-xgwak93n",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "first"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0023-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0023-stdout.log",
+          "sha256": "074d8c54f29a4df407836453ca050fb9a1d09ffcfa68c49458c1e8a084d50720"
+        },
+        "time": {
+          "path": "0023-time.log",
+          "sha256": "a0837e2a71d43884a43c1ad1fd87f84e486fd4994b9640862660bf0549eb9085"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-pk0jw10r",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "sweep"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0024-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0024-stdout.log",
+          "sha256": "e2fa4877f149fee97f387f6b7bbe34bbfd0697f710adfe0dc6f10098fa99ce84"
+        },
+        "time": {
+          "path": "0024-time.log",
+          "sha256": "4e16b8bf37a26c2fd0cd18108b5a9cce6ab3c564084c09bfa68193e6dc041ce6"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-luzmi1va",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "sweep"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0025-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0025-stdout.log",
+          "sha256": "eb4ad9c91274f811e33a867d44aba955e36ba1a13b211ea4b9258b6da1a303a6"
+        },
+        "time": {
+          "path": "0025-time.log",
+          "sha256": "69f98688676b4f516c476113107b422745d6bc5501664a8fa4d2fedf341ad078"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-xo1gmk0w",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "sweep"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0026-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0026-stdout.log",
+          "sha256": "2ffc8eaaa825a88c6f3f2b52c4983d65a9a66faebed0f0d422575c6449a0e016"
+        },
+        "time": {
+          "path": "0026-time.log",
+          "sha256": "94a536934e3d0f2631906b0fcef56752d3d0805f627da9f54d9c87ac252b93d8"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-4pgm6r76",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "sweep"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0027-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0027-stdout.log",
+          "sha256": "73f6221822f521ffd00dd31e0eb3bbaa46540660dd2ae2c69d360ee8f99d2607"
+        },
+        "time": {
+          "path": "0027-time.log",
+          "sha256": "9c7a7926f9f6abd751053a9a9633a724d082777bc26d3c9e1256b4fe5afe1a93"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-runtime-f1o7e171",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/.build/model-prototype-release/out/Products/Release/AstronomyModelPrototypeRunner",
+        "sweep"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/dili",
+      "files": {
+        "stderr": {
+          "path": "0028-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0028-stdout.log",
+          "sha256": "e50f6453e7fd6fb0443094bd6f0f808bd8f00ee9b4c757198059591328b4e9ff"
+        },
+        "time": {
+          "path": "0028-time.log",
+          "sha256": "32282102f52702997f6233859bbfb288b48d3a63af19210719414b0d30ff9e82"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "strip",
+        "-S",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-strip-i5qwxq5b/AstronomyModelPrototypeRunner"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/model-prototype-strip-i5qwxq5b",
+      "files": {
+        "stderr": {
+          "path": "0029-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0029-stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "package",
+        "dump-package"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package",
+      "files": {
+        "stderr": {
+          "path": "0030-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0030-stdout.log",
+          "sha256": "1e45963478754761fba10a15d4560caec2a42ab8c67e343b90318dc774490bc2"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "ModelConsumer"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/consumer",
+      "files": {
+        "stderr": {
+          "path": "0031-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0031-stdout.log",
+          "sha256": "226be22dfdf4b765314a766b0304af7a885e716c7e3af55f8c0815a1fa83a375"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--show-bin-path"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/consumer",
+      "files": {
+        "stderr": {
+          "path": "0032-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0032-stdout.log",
+          "sha256": "50d22f6d86b86a35f11b286ffde1932a349782fea6095886869089bcee6a65cf"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/private/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/consumer/.build/out/Products/Release/ModelConsumer"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/consumer",
+      "files": {
+        "stderr": {
+          "path": "0033-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0033-stdout.log",
+          "sha256": "28e11c5a790dd473d7e7974295ec3aa117a91dd93451521e0cafc1936555e232"
+        }
+      },
+      "returncode": 0
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+Building for debugging...
+[0/29] Write sources
+[13/29] Write swift-version--6DDE17EDADE5ABEB.txt
+[15/60] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn1.swift
+[16/60] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn10.swift
+[17/60] Compiling AstronomyPolynomialSaturnPrototype Access.swift
+[18/60] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn0.swift
+[19/60] Compiling AstronomyPolynomialVenusPrototype PolynomialVenus3.swift
+[20/60] Compiling AstronomyVSOPPrototype VSOPBits5.swift
+[21/60] Emitting module AstronomyVSOPPrototype
+[22/62] Emitting module AstronomyPolynomialVenusPrototype
+[26/66] Emitting module AstronomyPolynomialSaturnPrototype
+[27/66] Compiling AstronomyVSOPPrototype VSOPBits6.swift
+[28/66] Compiling AstronomyPolynomialVenusPrototype PolynomialVenus5.swift
+[29/66] Compiling AstronomyVSOPPrototype VSOPTerms.swift
+[30/66] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn6.swift
+[34/66] Emitting module AstronomyPolynomialUranusPrototype
+[47/68] Compiling AstronomyPolynomialUranusPrototype PolynomialUranus5.swift
+[48/69] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn7.swift
+[49/69] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn8.swift
+[50/69] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn9.swift
+[54/106] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury13.swift
+[55/106] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury14.swift
+[57/107] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury11.swift
+[58/107] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury12.swift
+[61/115] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury15.swift
+[62/115] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter2.swift
+[63/115] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter3.swift
+[64/115] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter4.swift
+[65/118] Compiling AstronomyPolynomialMarsPrototype PolynomialMars5.swift
+[68/119] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury19.swift
+[69/119] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury2.swift
+[70/119] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury20.swift
+[71/119] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury21.swift
+[72/119] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury3.swift
+[73/119] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury4.swift
+[74/124] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter1.swift
+[76/124] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune7.swift
+[77/124] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune8.swift
+[78/124] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune9.swift
+[79/124] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter5.swift
+[80/124] Emitting module AstronomyPolynomialJupiterPrototype
+[87/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury5.swift
+[88/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury6.swift
+[89/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury7.swift
+[90/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury8.swift
+[91/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury9.swift
+[92/124] Emitting module AstronomyPolynomialNeptunePrototype
+[93/124] Compiling AstronomyPolynomialJupiterPrototype Access.swift
+[94/124] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter0.swift
+[103/126] Emitting module AstronomyPolynomialMarsPrototype
+[106/150] Emitting module AstronomyModelPrototypeGenerated
+[107/150] Emitting module AstronomyNutationPrototype
+[108/150] Compiling AstronomyModelPrototypeGenerated Metadata.swift
+[109/151] Wrapping AST for AstronomyVSOPPrototype for debugging
+[111/151] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth13.swift
+[112/151] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth14.swift
+[113/151] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth15.swift
+[114/151] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth16.swift
+[115/151] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth17.swift
+[116/151] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth18.swift
+[117/156] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth19.swift
+[118/156] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth2.swift
+[119/156] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth20.swift
+[120/156] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth21.swift
+[121/156] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth3.swift
+[122/156] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth4.swift
+[122/156] Wrapping AST for AstronomyPolynomialVenusPrototype for debugging
+[123/156] Wrapping AST for AstronomyPolynomialUranusPrototype for debugging
+[124/156] Wrapping AST for AstronomyPolynomialSaturnPrototype for debugging
+[126/156] Compiling AstronomyNutationPrototype Nutation.swift
+[126/157] Wrapping AST for AstronomyPolynomialNeptunePrototype for debugging
+[128/157] Wrapping AST for AstronomyPolynomialMarsPrototype for debugging
+[129/157] Wrapping AST for AstronomyPolynomialJupiterPrototype for debugging
+[130/157] Wrapping AST for AstronomyModelPrototypeGenerated for debugging
+[132/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth5.swift
+[133/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth6.swift
+[134/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth7.swift
+[135/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth8.swift
+[136/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth9.swift
+[136/157] Wrapping AST for AstronomyNutationPrototype for debugging
+[138/157] Compiling AstronomyPolynomialEarthPrototype Access.swift
+[139/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth0.swift
+[140/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth1.swift
+[141/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth10.swift
+[142/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth11.swift
+[143/157] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth12.swift
+[144/157] Emitting module AstronomyPolynomialMercuryPrototype
+[145/158] Wrapping AST for AstronomyPolynomialMercuryPrototype for debugging
+[147/158] Emitting module AstronomyPolynomialEarthPrototype
+[154/159] Wrapping AST for AstronomyPolynomialEarthPrototype for debugging
+[156/161] Emitting module AstronomyModelPrototype
+[157/161] Compiling AstronomyModelPrototype ModelData.swift
+[158/162] Wrapping AST for AstronomyModelPrototype for debugging
+[160/164] Emitting module AstronomyModelPrototypeRunner
+[161/164] Compiling AstronomyModelPrototypeRunner main.swift
+[162/165] Wrapping AST for AstronomyModelPrototypeRunner for debugging
+[163/165] Write Objects.LinkFileList
+[164/165] Linking AstronomyModelPrototypeRunner
+Build of product 'AstronomyModelPrototypeRunner' complete! (8.99s)

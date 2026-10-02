@@ -1,0 +1,32 @@
+warning: 'package': found 3 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /private/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json
+    /private/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/Tests/AstronomyKitTests/Fixtures/IndependentReferences/manifest.json
+    /private/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/astronomy-model-prototype-o10t4kc0/package/Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1 / 384]
+[Planning deferred tasks]
+[89 / 192]
+[101 / 208] AstronomyPolynomialUranusPrototype
+[102 / 273] AstronomyPolynomialMercuryPrototype
+[113 / 294] AstronomyVSOPPrototype
+[114 / 294] AstronomyPolynomialVenusPrototype
+[125 / 294] AstronomyVSOPPrototype
+[164 / 294] AstronomyModelPrototypeGenerated
+[176 / 294] AstronomyPolynomialMarsPrototype
+[203 / 294] AstronomyPolynomialUranusPrototype
+[212 / 294] AstronomyPolynomialSaturnPrototype
+[221 / 294] AstronomyPolynomialNeptunePrototype
+[229 / 294] AstronomyPolynomialMercuryPrototype
+[234 / 294] AstronomyPolynomialMercuryPrototype
+[240 / 294] AstronomyPolynomialMarsPrototype
+[243 / 294] AstronomyPolynomialMarsPrototype
+[250 / 294] AstronomyPolynomialNeptunePrototype
+[257 / 294] AstronomyPolynomialMarsPrototype
+[263 / 294] AstronomyModelPrototypeGenerated
+[266 / 294] AstronomyPolynomialJupiterPrototype
+[275 / 294] AstronomyPolynomialMercuryPrototype
+[282 / 297] AstronomyModelPrototype
+[293 / 300] AstronomyModelPrototype
+[298 / 300] AstronomyModelPrototypeRunner-product
+Build complete! (5.19 sec)

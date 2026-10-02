@@ -1,0 +1,17 @@
+Building for production...
+[Computing dependencies]
+[Pre-planning 1 / 385]
+[Planning deferred tasks]
+[88 / 177]
+[101 / 192]
+[123 / 201] AstronomyModelPrototypeGenerated
+[124 / 201] AstronomyNutationPrototype
+[136 / 201] AstronomyVSOPPrototype
+[153 / 201] AstronomyPolynomialVenusPrototype
+[177 / 201] AstronomyPolynomialNeptunePrototype
+[177 / 201] AstronomyPolynomialMercuryPrototype
+[192 / 203] AstronomyModelPrototype
+[201 / 205] ModelConsumer-product
+[203 / 205] ModelConsumer-product
+[204 / 205] ModelConsumer-product
+Build complete! (4.87 sec)

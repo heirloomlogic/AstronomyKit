@@ -1,0 +1,234 @@
+warning: 'astronomykit': found 3 file(s) which are unhandled; explicitly declare them as resources or exclude from the target
+    /home/runner/work/AstronomyKit/AstronomyKit/Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json
+    /home/runner/work/AstronomyKit/AstronomyKit/Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json
+    /home/runner/work/AstronomyKit/AstronomyKit/Tests/AstronomyKitTests/Fixtures/IndependentReferences/manifest.json
+Building for debugging...
+[0/52] Write sources
+[18/52] Compiling CLibAstronomy astronomy.c
+[19/52] Write swift-version--6DDE17EDADE5ABEB.txt
+[21/83] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn4.swift
+[22/83] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn5.swift
+[23/83] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn6.swift
+[24/86] Compiling AstronomyPolynomialSaturnPrototype Access.swift
+[25/86] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn0.swift
+[26/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn7.swift
+[27/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn8.swift
+[28/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn9.swift
+[29/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn1.swift
+[30/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn10.swift
+[33/88] Emitting module AstronomyPolynomialVenusPrototype
+[34/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn2.swift
+[35/88] Compiling AstronomyPolynomialSaturnPrototype PolynomialSaturn3.swift
+[36/89] Compiling AstronomyPolynomialVenusPrototype PolynomialVenus5.swift
+[38/90] Emitting module AstronomyPolynomialSaturnPrototype
+[49/91] Emitting module AstronomyVSOPPrototype
+[51/101] Emitting module AstronomyPolynomialUranusPrototype
+[52/101] Compiling AstronomyPolynomialNeptunePrototype Access.swift
+[53/101] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune0.swift
+[54/101] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune1.swift
+[55/101] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune4.swift
+[56/101] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune5.swift
+[57/101] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune6.swift
+[58/121] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury10.swift
+[59/121] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury11.swift
+[60/121] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury12.swift
+[61/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury19.swift
+[62/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury2.swift
+[63/124] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury20.swift
+[64/124] Compiling AstronomyPolynomialUranusPrototype PolynomialUranus5.swift
+[69/133] Emitting module AstronomyPolynomialNeptunePrototype
+[70/135] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune7.swift
+[71/135] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune8.swift
+[72/135] Compiling AstronomyPolynomialNeptunePrototype PolynomialNeptune9.swift
+[79/140] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury13.swift
+[80/140] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury14.swift
+[81/140] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury15.swift
+[82/140] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury16.swift
+[83/140] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury17.swift
+[84/140] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury18.swift
+[85/145] Compiling AstronomyPolynomialJupiterPrototype Access.swift
+[86/145] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter0.swift
+[87/146] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter3.swift
+[88/146] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter4.swift
+[89/147] Emitting module AstronomyPolynomialMarsPrototype
+[90/147] Compiling AstronomyPolynomialMarsPrototype PolynomialMars5.swift
+[91/147] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter5.swift
+[92/147] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury5.swift
+[93/147] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury6.swift
+[94/147] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury7.swift
+[95/147] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury8.swift
+[96/147] Compiling AstronomyPolynomialMercuryPrototype PolynomialMercury9.swift
+[99/147] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter1.swift
+[100/147] Compiling AstronomyPolynomialJupiterPrototype PolynomialJupiter2.swift
+[102/162] Emitting module AstronomyPolynomialJupiterPrototype
+[103/165] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth3.swift
+[104/165] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth4.swift
+[105/165] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth19.swift
+[106/165] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth2.swift
+[109/168] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth20.swift
+[112/173] Emitting module AstronomyNutationPrototype
+[113/173] Compiling AstronomyModelPrototypeGenerated Metadata.swift
+[114/173] Emitting module AstronomyModelPrototypeGenerated
+[116/174] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth13.swift
+[117/174] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth14.swift
+[118/174] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth15.swift
+[119/174] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth16.swift
+[120/174] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth17.swift
+[121/174] Compiling AstronomyPolynomialEarthPrototype PolynomialEarth18.swift
+[122/204] Compiling AstronomyNutationPrototype Nutation.swift
+[123/205] Wrapping AST for AstronomyVSOPPrototype for debugging
+[125/205] Compiling AstronomyKit Elongation.swift
+[126/205] Compiling AstronomyKit FixedStar.swift
+[127/205] Compiling AstronomyKit GravitySimulation.swift
+[128/205] Compiling AstronomyKit Illumination.swift
+[129/205] Compiling AstronomyKit JupiterMoons.swift
+[129/205] Wrapping AST for AstronomyPolynomialVenusPrototype for debugging
+[131/205] Emitting module AstronomyPolynomialEarthPrototype
+[131/205] Wrapping AST for AstronomyPolynomialUranusPrototype for debugging
+[132/205] Wrapping AST for AstronomyPolynomialSaturnPrototype for debugging
+[133/205] Wrapping AST for AstronomyPolynomialNeptunePrototype for debugging
+[135/205] Emitting module AstronomyPolynomialMercuryPrototype
+[136/205] Compiling AstronomyKit Apsis.swift
+[137/205] Compiling AstronomyKit AstronomyError.swift
+[138/205] Compiling AstronomyKit AstronomyKit.swift
+[139/205] Compiling AstronomyKit Atmosphere.swift
+[140/205] Compiling AstronomyKit CelestialBody.swift
+[141/205] Compiling AstronomyKit Chiron.swift
+[141/206] Wrapping AST for AstronomyPolynomialMarsPrototype for debugging
+[143/206] Wrapping AST for AstronomyPolynomialJupiterPrototype for debugging
+[144/206] Wrapping AST for AstronomyNutationPrototype for debugging
+[145/206] Wrapping AST for AstronomyPolynomialMercuryPrototype for debugging
+[146/206] Wrapping AST for AstronomyModelPrototypeGenerated for debugging
+[154/206] Compiling AstronomyKit CivilTime.swift
+[155/206] Compiling AstronomyKit Constellation.swift
+[156/206] Compiling AstronomyKit Libration.swift
+[157/206] Compiling AstronomyKit LunarNode.swift
+[158/206] Compiling AstronomyKit MoonPhase.swift
+[159/206] Compiling AstronomyKit Observer.swift
+[160/207] Wrapping AST for AstronomyPolynomialEarthPrototype for debugging
+[162/209] Emitting module AstronomyModelPrototype
+[163/209] Compiling AstronomyModelPrototype ModelData.swift
+[164/210] Wrapping AST for AstronomyModelPrototype for debugging
+[166/214] Compiling AstronomyModelPrototypeRunner main.swift
+[167/214] Emitting module AstronomyModelPrototypeRunner
+[168/215] Wrapping AST for AstronomyModelPrototypeRunner for debugging
+[169/215] Write Objects.LinkFileList
+[171/215] Emitting module AstronomyModelPrototypeTests
+[172/215] Emitting module AstronomyKit
+[172/223] Linking AstronomyModelPrototypeRunner
+[174/223] Compiling AstronomyModelPrototypeTests ModelDataTests.swift
+[175/224] Wrapping AST for AstronomyModelPrototypeTests for debugging
+[181/224] Compiling AstronomyKit Position.swift
+[182/224] Compiling AstronomyKit RelativeLongitude.swift
+[183/224] Compiling AstronomyKit RiseSet.swift
+[184/224] Compiling AstronomyKit Rotation.swift
+[193/224] Compiling AstronomyKit RotationAxis.swift
+[194/224] Compiling AstronomyKit Search.swift
+[195/224] Compiling AstronomyKit Seasons.swift
+[196/224] Compiling AstronomyKit SolarAltitudeBounds.swift
+[197/224] Compiling AstronomyKit SolarAltitudeObservation.swift
+[198/224] Compiling AstronomyKit Time.swift
+[199/224] Compiling AstronomyKit Transit.swift
+[200/224] Compiling AstronomyKit UTCOffsetTable.swift
+[201/224] Compiling AstronomyKit Coordinates.swift
+[202/224] Compiling AstronomyKit Eclipse.swift
+[208/224] Compiling AstronomyKit LagrangePoint.swift
+[209/225] Wrapping AST for AstronomyKit for debugging
+[211/269] Emitting module AstronomyMigrationRunner
+[212/269] Compiling AstronomyMigrationRunner main.swift
+[213/270] Wrapping AST for AstronomyMigrationRunner for debugging
+[214/270] Write Objects.LinkFileList
+[216/270] Compiling AstronomyMigrationPerformanceRunner main.swift
+[217/270] Emitting module AstronomyMigrationPerformanceRunner
+[218/271] Wrapping AST for AstronomyMigrationPerformanceRunner for debugging
+[219/271] Write Objects.LinkFileList
+[220/271] Linking AstronomyMigrationRunner
+[221/271] Linking AstronomyMigrationPerformanceRunner
+[223/271] Compiling AstronomyKitTests JupiterMoonsTests.swift
+[224/271] Compiling AstronomyKitTests LagrangePointTests.swift
+[225/271] Compiling AstronomyKitTests LibrationTests.swift
+[226/271] Compiling AstronomyKitTests LightTravelTests.swift
+[227/271] Compiling AstronomyKitTests LocalSolarEclipseTests.swift
+[228/271] Compiling AstronomyKitTests LunarNodeTests.swift
+[229/271] Compiling AstronomyKitTests MoonCacheTests.swift
+[230/271] Compiling AstronomyKitTests MoonTests.swift
+[231/271] Compiling AstronomyKitTests NutationCacheTests.swift
+[232/271] Compiling AstronomyKitTests ObserverTests.swift
+[233/271] Compiling AstronomyKitTests ObserverVectorTests.swift
+[234/271] Compiling AstronomyKitTests PlutoRangeTests.swift
+[235/271] Compiling AstronomyKitTests PlutoThreadSafetyTests.swift
+[236/284] Emitting module AstronomyKitTests
+[237/284] Compiling AstronomyKitTests DeltaTModelCaptureTests.swift
+[238/284] Compiling AstronomyKitTests DeltaTThreadSafetyTests.swift
+[239/284] Compiling AstronomyKitTests DistanceAccuracyTests.swift
+[240/284] Compiling AstronomyKitTests EclipseTests.swift
+[241/284] Compiling AstronomyKitTests EclipticStateTests.swift
+[242/284] Compiling AstronomyKitTests ElongationTests.swift
+[243/284] Compiling AstronomyKitTests FixedStarConcurrencyTests.swift
+[244/284] Compiling AstronomyKitTests FixedStarTests.swift
+[245/284] Compiling AstronomyKitTests GravitySimulationTests.swift
+[246/284] Compiling AstronomyKitTests HugeTimeTests.swift
+[247/284] Compiling AstronomyKitTests IlluminationTests.swift
+[248/284] Compiling AstronomyKitTests IndependentReferenceFixtures.swift
+[249/284] Compiling AstronomyKitTests JPLValidationTests.swift
+[250/284] Compiling AstronomyKitTests AcceptedTimeRangeTests.swift
+[251/284] Compiling AstronomyKitTests AltitudeSearchTests.swift
+[252/284] Compiling AstronomyKitTests ApsisTests.swift
+[253/284] Compiling AstronomyKitTests AstroTimeTests.swift
+[254/284] Compiling AstronomyKitTests AstronomyErrorTests.swift
+[255/284] Compiling AstronomyKitTests AtmosphereTests.swift
+[256/284] Compiling AstronomyKitTests AuditValidationTests.swift
+[257/284] Compiling AstronomyKitTests CelestialBodyTests.swift
+[258/284] Compiling AstronomyKitTests ChironTests.swift
+[259/284] Compiling AstronomyKitTests CivilTimeTests.swift
+[260/284] Compiling AstronomyKitTests ConstellationTests.swift
+[261/284] Compiling AstronomyKitTests ConstellationThreadSafetyTests.swift
+[262/284] Compiling AstronomyKitTests CoordinatesTests.swift
+[263/284] Compiling AstronomyKitTests PolynomialTests.swift
+[264/284] Compiling AstronomyKitTests PositionTests.swift
+[265/284] Compiling AstronomyKitTests RelativeLongitudeTests.swift
+[266/284] Compiling AstronomyKitTests ReproducibilityTests.swift
+[267/284] Compiling AstronomyKitTests RiseSetTests.swift
+[268/284] Compiling AstronomyKitTests RotationAxisTests.swift
+[269/284] Compiling AstronomyKitTests RotationTests.swift
+[270/284] Compiling AstronomyKitTests SearchTests.swift
+[271/284] Compiling AstronomyKitTests SeasonsTests.swift
+[272/284] Compiling AstronomyKitTests SolarAltitudeObservationTests.swift
+[273/284] Compiling AstronomyKitTests StateVectorExtensionTests.swift
+[274/284] Compiling AstronomyKitTests TransitTests.swift
+[275/284] Compiling AstronomyKitTests VsopCacheTests.swift
+[276/285] /home/runner/work/AstronomyKit/AstronomyKit/.build/x86_64-unknown-linux-gnu/debug/AstronomyKitPackageDiscoveredTests.derived/all-discovered-tests.swift
+[277/285] Write sources
+[278/285] Wrapping AST for AstronomyKitTests for debugging
+[280/289] Compiling AstronomyKitPackageDiscoveredTests AstronomyKitTests.swift
+[281/289] Compiling AstronomyKitPackageDiscoveredTests all-discovered-tests.swift
+[282/289] Compiling AstronomyKitPackageDiscoveredTests AstronomyModelPrototypeTests.swift
+[283/289] Emitting module AstronomyKitPackageDiscoveredTests
+[284/290] /home/runner/work/AstronomyKit/AstronomyKit/.build/x86_64-unknown-linux-gnu/debug/AstronomyKitPackageTests.derived/runner.swift
+[285/290] Write sources
+[286/290] Wrapping AST for AstronomyKitPackageDiscoveredTests for debugging
+[288/292] Emitting module AstronomyKitPackageTests
+[289/292] Compiling AstronomyKitPackageTests runner.swift
+[290/293] Wrapping AST for AstronomyKitPackageTests for debugging
+[291/293] Write Objects.LinkFileList
+[292/293] Linking AstronomyKitPackageTests.xctest
+Build complete! (56.12s)
+Test Suite 'Selected tests' started at 2026-10-02 22:21:49.164
+Test Suite 'Selected tests' passed at 2026-10-02 22:21:49.172
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.0 (0.0) seconds
+◇ Test run started.
+↳ Testing Library Version: 6.2.1 (c9d57c83568b06d)
+↳ Target Platform: x86_64-unknown-linux-gnu
+◇ Suite "Complete Swift model prototype" started.
+◇ Test "Polynomial metadata retains the TT grid bounds" started.
+◇ Test "Every frozen table row and disabled segment is present" started.
+◇ Test "Accessors reject indexes outside generated metadata" started.
+◇ Test "VSOP term triplets preserve bits across every storage seam" started.
+◇ Test "Compiled tables retain the frozen whole-model checksum" started.
+✔ Test "Polynomial metadata retains the TT grid bounds" passed after 0.001 seconds.
+✔ Test "Accessors reject indexes outside generated metadata" passed after 0.001 seconds.
+✔ Test "Every frozen table row and disabled segment is present" passed after 0.002 seconds.
+✔ Test "VSOP term triplets preserve bits across every storage seam" passed after 0.035 seconds.
+✔ Test "Compiled tables retain the frozen whole-model checksum" passed after 0.436 seconds.
+✔ Suite "Complete Swift model prototype" passed after 0.436 seconds.
+✔ Test run with 5 tests in 1 suite passed after 0.436 seconds.
