@@ -115,7 +115,6 @@ struct ChironTests {
             #expect(abs(position.y - anchor.position.1) < 1e-12)
             #expect(abs(position.z - anchor.position.2) < 1e-12)
         }
-
     }
 
     // MARK: - Multi-Year Tests

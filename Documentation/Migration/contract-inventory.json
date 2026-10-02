@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 61,
-    "tests": 769
+    "tests": 771
   },
   "crossCuttingContracts": [
     {
@@ -2955,7 +2955,7 @@
   ],
   "inputHashes": {
     "MAINTAINING.md": "8ceacac11321eca239c10913a03ae84065e045d64e7b8952de4a1b0a5315e9c4",
-    "Scripts/migration/test_comparison.py": "25a58e0ba83fb7451d3d7d00fc263760102a6aa69221228a2f1658a7f07fdad0",
+    "Scripts/migration/test_comparison.py": "f2e27ae70cff635795aed1c9b40de5012df51f6ff9a0c708cd388d34cd007362",
     "Scripts/migration/test_foundation.py": "b194b1b82fae7cb2a380dc9eeced321288bd1939df4ab13d6863ad4f75d8b5e5",
     "Scripts/migration/test_performance.py": "f3f371ad136a3008dedc971d9deede0ffdd6797e837a9bb85be27245e7a68c41",
     "Scripts/migration/test_performance_candidate.py": "aac319f96b5b30e24e3803ec7d882f5e5834543d5033c799a8d87fe8fc6088b1",
@@ -3006,7 +3006,7 @@
     "Tests/AstronomyKitTests/AtmosphereTests.swift": "cf83e324ce348cf62a24f74e0c8db2b10cf6aa0faf20b93607711a1ede24fd04",
     "Tests/AstronomyKitTests/AuditValidationTests.swift": "306b3eb767f68fb2b26c1fdfd9515e8104b86d3473891b2c53470c6140cb364f",
     "Tests/AstronomyKitTests/CelestialBodyTests.swift": "3a884eb7c6c0ca0639b0cf205863c9d5199ebd8ecb0df22bd7a77640f8ef3d9c",
-    "Tests/AstronomyKitTests/ChironTests.swift": "59a97d9e822bb6b32d1e453c45017b567590b44fc8a8c6f3e91232679d041a83",
+    "Tests/AstronomyKitTests/ChironTests.swift": "5fe54f03da286bfa3639229342d7c803026c9cdf070878764a616f1869932449",
     "Tests/AstronomyKitTests/CivilTimeTests.swift": "68c207ac72f13ffad89f475bee72b57bc159e0dba54f51b517a42f60a4cf289c",
     "Tests/AstronomyKitTests/ConstellationTests.swift": "dd1420e69c0f72ac35b4a3ba658afbea18985417a49d86005df1a29a73de9def",
     "Tests/AstronomyKitTests/ConstellationThreadSafetyTests.swift": "5ef5563b630e48630beb790366362d122ba8569d207c667b32b2252712f0c825",
@@ -12402,7 +12402,7 @@
       "id": "Scripts/migration/test_comparison.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison.py",
-      "testCount": 12
+      "testCount": 14
     },
     {
       "classification": "smoke",

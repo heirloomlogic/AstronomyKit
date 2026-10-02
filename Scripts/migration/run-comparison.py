@@ -5,6 +5,7 @@ import copy
 import gzip
 import hashlib
 import json
+import math
 import platform
 import shutil
 import struct
@@ -112,8 +113,7 @@ def comparison_passes(case, differences):
     accepted = case.get("acceptedDifference")
     if accepted is None:
         return not differences
-    paths = [difference["path"] for difference in differences]
-    return paths == accepted["paths"] and all(difference["kind"] == "value" for difference in differences)
+    return differences == accepted["differences"]
 
 
 def validate_corpus(corpus):
@@ -142,14 +142,25 @@ def validate_corpus(corpus):
             raise ValueError(f"invalid Delta T model in {case['id']}")
         accepted = case.get("acceptedDifference")
         if accepted is not None:
-            if set(accepted) != {"issue", "paths", "evidence", "reason"}:
+            if case["id"] != "chiron-2020-em" or accepted.get("issue") != 108:
+                raise ValueError(f"accepted difference is not authorized for {case['id']}")
+            if set(accepted) != {"issue", "differences", "evidence", "reason"}:
                 raise ValueError(f"invalid accepted difference in {case['id']}")
-            if not isinstance(accepted["issue"], int) or accepted["issue"] <= 0:
-                raise ValueError(f"invalid accepted difference issue in {case['id']}")
-            if not accepted["paths"] or len(accepted["paths"]) != len(set(accepted["paths"])):
-                raise ValueError(f"invalid accepted difference paths in {case['id']}")
-            if not all(isinstance(path, str) and path.startswith("$.") for path in accepted["paths"]):
-                raise ValueError(f"invalid accepted difference path in {case['id']}")
+            differences = accepted["differences"]
+            if not isinstance(differences, list) or not differences:
+                raise ValueError(f"invalid accepted differences in {case['id']}")
+            paths = []
+            for difference in differences:
+                if not isinstance(difference, dict) or set(difference) != {"path", "expected", "actual", "kind"}:
+                    raise ValueError(f"invalid accepted difference record in {case['id']}")
+                if difference["kind"] != "value" or not isinstance(difference["path"], str) or not difference["path"].startswith("$."):
+                    raise ValueError(f"invalid accepted difference kind or path in {case['id']}")
+                values = (difference["expected"], difference["actual"])
+                if not all(isinstance(value, float) and math.isfinite(value) for value in values) or values[0] == values[1]:
+                    raise ValueError(f"invalid accepted difference values in {case['id']}")
+                paths.append(difference["path"])
+            if len(paths) != len(set(paths)):
+                raise ValueError(f"duplicate accepted difference path in {case['id']}")
             if not accepted["evidence"] or not all((ROOT / path).is_file() for path in accepted["evidence"]):
                 raise ValueError(f"missing accepted difference evidence in {case['id']}")
             if not isinstance(accepted["reason"], str) or not accepted["reason"]:

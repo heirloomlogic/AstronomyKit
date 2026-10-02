@@ -48,7 +48,26 @@
       "coverage": ["chiron", "gravity", "positions", "delta-t-espenak-meeus"],
       "acceptedDifference": {
         "issue": 108,
-        "paths": ["$.samples[0].value.x", "$.samples[0].value.y", "$.samples[0].value.z"],
+        "differences": [
+          {
+            "actual": 18.747780777163356,
+            "expected": 18.747780835022272,
+            "kind": "value",
+            "path": "$.samples[0].value.x"
+          },
+          {
+            "actual": 0.9987174662702987,
+            "expected": 0.9987171394548251,
+            "kind": "value",
+            "path": "$.samples[0].value.y"
+          },
+          {
+            "actual": 1.4740252778456004,
+            "expected": 1.4740251790547112,
+            "kind": "value",
+            "path": "$.samples[0].value.z"
+          }
+        ],
         "evidence": ["Tests/AstronomyKitTests/AuditValidationTests.swift", "Scripts/reference-data/sources/astronomy-engine-ctest.c"],
         "reason": "The Swift facade advances Chiron in the pinned upstream harness's half-day steps instead of reproducing the frozen oracle's single long step. The raw coordinate differences remain archived; the independent audit supplies the separate sampled accuracy check."
       }
