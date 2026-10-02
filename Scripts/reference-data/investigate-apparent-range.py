@@ -109,7 +109,9 @@ def build_report(repository_revision=None):
             results.append(
                 {
                     "body": observation["body"],
+                    "comparisonClassification": "unmatched-no-light-time-backdating" if observation["body"] == "moon" else "light-time-convention-aligned",
                     "configurations": configurations,
+                    "productionAppliesLightTimeBackdating": observation["body"] != "moon",
                     "referenceRangeAU": reference,
                     "series": observation["series"],
                     "utc": observation["utc"],
@@ -144,7 +146,7 @@ def build_report(repository_revision=None):
             },
         ],
         "repositoryRevisionAtMeasurement": repository_revision or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
-        "rangeSemantics": "The selected production C-core probe applies down-leg light time with Astronomy_GeoVector and disables its separate stellar-aberration correction to match Horizons quantity 20. Public Swift wrapper behavior is exercised separately by AuditValidationTests.",
+        "rangeSemantics": "For Mercury, Mars, and Pluto, the selected production C-core probe applies down-leg light time with Astronomy_GeoVector and disables its separate stellar-aberration correction to match Horizons quantity 20. Astronomy_GeoVector routes the Moon directly to Astronomy_GeoMoon without light-time backdating or aberration, so the three lunar residuals are unmatched diagnostic observations. Public Swift wrapper behavior is exercised separately by AuditValidationTests.",
         "results": results,
         "schemaVersion": 1,
         "selectedConfiguration": {"aberration": "uncorrected", "deltaTModel": "jpl-horizons"},
@@ -166,6 +168,11 @@ def validate_report(report):
         reference = result["referenceRangeAU"]
         if not math.isfinite(reference) or reference <= 0:
             raise ValueError("reference range must be a positive finite AU value")
+        if result["body"] == "moon":
+            if result["productionAppliesLightTimeBackdating"] or result["comparisonClassification"] != "unmatched-no-light-time-backdating":
+                raise ValueError("Moon must remain classified as an unmatched non-backdated diagnostic")
+        elif not result["productionAppliesLightTimeBackdating"] or result["comparisonClassification"] != "light-time-convention-aligned":
+            raise ValueError("planetary ranges must remain classified as light-time convention aligned")
         for configuration in result["configurations"]:
             difference = configuration["astronomyRangeAU"] - reference
             if not math.isclose(configuration["signedDifferenceAU"], difference, rel_tol=0, abs_tol=1e-18):

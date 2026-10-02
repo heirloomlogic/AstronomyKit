@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 65,
-    "tests": 799
+    "tests": 800
   },
   "crossCuttingContracts": [
     {
@@ -3674,7 +3674,7 @@
     "Scripts/performance/test-nutation-cache.sh": "b71c61dc0c21ea8ca8e41d607aa79f90ede8d1e23520402345accddcbbf139ca",
     "Scripts/performance/test-vsop-cache.sh": "7e6a7365556b0c3c83dd5c14ee360b89d8953fd9e6b58683ae6781bb4380a213",
     "Scripts/reference-data/test_build_fixtures.py": "be1979cfd3d156bb2b9d98875cb67ba958b953d9cc122b257ff20f9180995e12",
-    "Scripts/reference-data/test_investigate_apparent_range.py": "20cbbb7ade7511dec26da16f7e4d9327278dae55086b132132991fcdd0249648",
+    "Scripts/reference-data/test_investigate_apparent_range.py": "36e48f6baa35e3641ca17a5cf8b078fa1f25364b2f97c6c289eee2704c3034a8",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
@@ -13197,7 +13197,7 @@
       "id": "Scripts/reference-data/test_investigate_apparent_range.py",
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_investigate_apparent_range.py",
-      "testCount": 3
+      "testCount": 4
     },
     {
       "classification": "invariant",

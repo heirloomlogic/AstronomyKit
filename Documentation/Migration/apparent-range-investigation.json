@@ -7,7 +7,7 @@
   },
   "inputSHA256": {
     "Scripts/reference-data/apparent-range-probe.c": "88a432ecaba6b3fee23eca75701d538adde489c209d71a092cf61b85d03aa4fc",
-    "Scripts/reference-data/investigate-apparent-range.py": "43c81d93acbf6945ffaa161be10d4fce124b2ffb9134cde579ceec0188340d9f",
+    "Scripts/reference-data/investigate-apparent-range.py": "df18a5c5e4fbc4ca954b075bd3512089dafb35bdeaa98aaff3c91fb0617a065d",
     "Scripts/reference-data/sources/horizons/mars-observer.json": "bf7e3f1b312565705475d46e4bc001de5f660324af95b11f5cb6fc600dc48e26",
     "Scripts/reference-data/sources/horizons/mars-observer.query.json": "b15522b72df9ce43ac2a3d30c0a8d1b529a9fe415297dafa131ea57623ed5730",
     "Scripts/reference-data/sources/horizons/mercury-station.json": "53a3e45c16ae9893616f8a7e34eb9f3b0d75b991833f9d98a01f15672c777e77",
@@ -35,11 +35,12 @@
       "url": "https://ssd.jpl.nasa.gov/doc/Park.2021.AJ.DE440.pdf"
     }
   ],
-  "rangeSemantics": "The selected production C-core probe applies down-leg light time with Astronomy_GeoVector and disables its separate stellar-aberration correction to match Horizons quantity 20. Public Swift wrapper behavior is exercised separately by AuditValidationTests.",
-  "repositoryRevisionAtMeasurement": "9c7cf2aa06f8c94c209bba06a24c2b0e26ad5b18",
+  "rangeSemantics": "For Mercury, Mars, and Pluto, the selected production C-core probe applies down-leg light time with Astronomy_GeoVector and disables its separate stellar-aberration correction to match Horizons quantity 20. Astronomy_GeoVector routes the Moon directly to Astronomy_GeoMoon without light-time backdating or aberration, so the three lunar residuals are unmatched diagnostic observations. Public Swift wrapper behavior is exercised separately by AuditValidationTests.",
+  "repositoryRevisionAtMeasurement": "8bf9bfff0ab2f8bf5d7bcb4befe3a21b72114a94",
   "results": [
     {
       "body": "moon",
+      "comparisonClassification": "unmatched-no-light-time-backdating",
       "configurations": [
         {
           "aberration": "corrected",
@@ -82,12 +83,14 @@
           "universalTimeDaysSinceJ2000": -36524.5
         }
       ],
+      "productionAppliesLightTimeBackdating": false,
       "referenceRangeAU": 0.00246250044096,
       "series": "moon-observer",
       "utc": "1900-Jan-01 00:00:00.000"
     },
     {
       "body": "moon",
+      "comparisonClassification": "unmatched-no-light-time-backdating",
       "configurations": [
         {
           "aberration": "corrected",
@@ -130,12 +133,14 @@
           "universalTimeDaysSinceJ2000": -0.5
         }
       ],
+      "productionAppliesLightTimeBackdating": false,
       "referenceRangeAU": 0.00267983322801,
       "series": "moon-observer",
       "utc": "2000-Jan-01 00:00:00.000"
     },
     {
       "body": "moon",
+      "comparisonClassification": "unmatched-no-light-time-backdating",
       "configurations": [
         {
           "aberration": "corrected",
@@ -178,12 +183,14 @@
           "universalTimeDaysSinceJ2000": 36524.5
         }
       ],
+      "productionAppliesLightTimeBackdating": false,
       "referenceRangeAU": 0.00248451957208,
       "series": "moon-observer",
       "utc": "2100-Jan-01 00:00:00.000"
     },
     {
       "body": "mars",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -226,12 +233,14 @@
           "universalTimeDaysSinceJ2000": -36524.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 2.40096343685815,
       "series": "mars-observer",
       "utc": "1900-Jan-01 00:00:00.000"
     },
     {
       "body": "mars",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -274,12 +283,14 @@
           "universalTimeDaysSinceJ2000": -0.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 1.84697688138615,
       "series": "mars-observer",
       "utc": "2000-Jan-01 00:00:00.000"
     },
     {
       "body": "mars",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -322,12 +333,14 @@
           "universalTimeDaysSinceJ2000": 36524.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 0.86996040716707,
       "series": "mars-observer",
       "utc": "2100-Jan-01 00:00:00.000"
     },
     {
       "body": "pluto",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -370,12 +383,14 @@
           "universalTimeDaysSinceJ2000": -36524.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 46.0790174268648,
       "series": "pluto-observer",
       "utc": "1900-Jan-01 00:00:00.000"
     },
     {
       "body": "pluto",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -418,12 +433,14 @@
           "universalTimeDaysSinceJ2000": -0.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 31.0683074782482,
       "series": "pluto-observer",
       "utc": "2000-Jan-01 00:00:00.000"
     },
     {
       "body": "pluto",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -466,12 +483,14 @@
           "universalTimeDaysSinceJ2000": 36524.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 48.5747723264654,
       "series": "pluto-observer",
       "utc": "2100-Jan-01 00:00:00.000"
     },
     {
       "body": "mercury",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -514,12 +533,14 @@
           "universalTimeDaysSinceJ2000": 9352.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 0.6933196442773,
       "series": "mercury-station",
       "utc": "2025-Aug-10 00:00:00.000"
     },
     {
       "body": "mercury",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -562,12 +583,14 @@
           "universalTimeDaysSinceJ2000": 9353.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 0.71133588509289,
       "series": "mercury-station",
       "utc": "2025-Aug-11 00:00:00.000"
     },
     {
       "body": "mercury",
+      "comparisonClassification": "light-time-convention-aligned",
       "configurations": [
         {
           "aberration": "corrected",
@@ -610,6 +633,7 @@
           "universalTimeDaysSinceJ2000": 9354.5
         }
       ],
+      "productionAppliesLightTimeBackdating": true,
       "referenceRangeAU": 0.73063420010368,
       "series": "mercury-station",
       "utc": "2025-Aug-12 00:00:00.000"

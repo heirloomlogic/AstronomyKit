@@ -29,6 +29,22 @@ class ApparentRangeInvestigationTests(unittest.TestCase):
             self.report["status"],
         )
 
+    def test_moon_is_not_classified_as_light_time_backdated(self):
+        moon_results = [result for result in self.report["results"] if result["body"] == "moon"]
+        planet_results = [result for result in self.report["results"] if result["body"] != "moon"]
+
+        self.assertEqual(3, len(moon_results))
+        self.assertTrue(all(not result["productionAppliesLightTimeBackdating"] for result in moon_results))
+        self.assertEqual(
+            {"unmatched-no-light-time-backdating"},
+            {result["comparisonClassification"] for result in moon_results},
+        )
+        self.assertTrue(all(result["productionAppliesLightTimeBackdating"] for result in planet_results))
+        self.assertEqual(
+            {"light-time-convention-aligned"},
+            {result["comparisonClassification"] for result in planet_results},
+        )
+
     def test_input_hash_mutation_is_rejected(self):
         mutated = copy.deepcopy(self.report)
         path = next(iter(mutated["inputSHA256"]))
