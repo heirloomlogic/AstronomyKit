@@ -14,7 +14,7 @@ struct AuditValidationTests {
 
     @Test("Archived references declare reproducible provenance")
     func provenanceIsComplete() {
-        #expect(archive.schemaVersion == 1)
+        #expect(archive.schemaVersion == 2)
         #expect(
             Set(archive.provenance.keys) == [
                 "astronomyEngineApsides", "eclipseWiseLocalSolar", "espenakMoonNodes",
@@ -173,7 +173,7 @@ struct AuditValidationTests {
 
     @Test("Published lunar quarters", arguments: IndependentReferenceArchive.shared.lunarPhases)
     func lunarQuarter(reference: IndependentReferenceArchive.LunarPhase) throws {
-        let expected = IndependentReferenceDate.universal(reference.sourceTime)
+        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let actual = try Moon.searchQuarter(after: expected.addingDays(-2))
         let phase: MoonPhase =
             switch reference.phase {
@@ -190,6 +190,18 @@ struct AuditValidationTests {
             let civilTime = IndependentReferenceDate.civil(reference.sourceTime)
             #expect(IndependentReferenceDate.seconds(actual.time, civilTime).isFinite)
         }
+    }
+
+    @Test("Archived lunar coordinates use their specified Delta T model")
+    func lunarReferenceDateUsesSpecifiedDeltaTModel() throws {
+        let date = try #require(ISO8601DateFormatter().date(from: "2100-01-18T12:35:00Z"))
+        let time = IndependentReferenceDate.universal(
+            "2100-01-18T12:35:00.000Z", deltaTModel: .jplHorizons)
+        let expectedUT = AstroTime.civilDays(of: date)
+        let expectedTT = expectedUT + AstronomyConfig.deltaTJplHorizons(universalTime: expectedUT) / 86_400
+        #expect(time.universalTime == expectedUT)
+        #expect(time.terrestrialTime == expectedTT)
+        #expect(time.deltaTModel == .jplHorizons)
     }
 
     @Test(
@@ -253,7 +265,7 @@ struct AuditValidationTests {
 
     @Test("Published lunar eclipses", arguments: IndependentReferenceArchive.shared.lunarEclipses)
     func lunarEclipse(reference: IndependentReferenceArchive.LunarEclipse) throws {
-        let expected = IndependentReferenceDate.universal(reference.universalTime)
+        let expected = IndependentReferenceDate.universal(reference.universalTime, deltaTModel: .espenakMeeus)
         let actual = try Eclipse.searchLunar(after: expected.addingDays(-10))
         let peakError = IndependentReferenceDate.universalSeconds(actual.peak, expected)
         #expect(peakError <= reference.toleranceSeconds)
@@ -357,7 +369,7 @@ struct AuditValidationTests {
     func timeScaleMutationFails() throws {
         let reference = try #require(
             archive.lunarPhases.first { $0.sourceTime == "2100-01-18T12:35:00.000Z" })
-        let expected = IndependentReferenceDate.universal(reference.sourceTime)
+        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let correct = try Moon.searchQuarter(after: expected.addingDays(-2))
         let misreadAsCivil = IndependentReferenceDate.civil(reference.sourceTime)
         #expect(
@@ -393,7 +405,7 @@ struct AuditValidationTests {
     @Test("Event-selection mutation exceeds the archived phase tolerance")
     func eventSelectionMutationFails() throws {
         let reference = archive.lunarPhases[0]
-        let expected = IndependentReferenceDate.universal(reference.sourceTime)
+        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let correct = try Moon.searchQuarter(after: expected.addingDays(-2))
         let wrong = try Moon.nextQuarter(after: correct)
         #expect(

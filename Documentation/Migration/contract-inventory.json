@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 60,
-    "tests": 759
+    "tests": 760
   },
   "crossCuttingContracts": [
     {
@@ -3003,7 +3003,7 @@
     "Tests/AstronomyKitTests/AstroTimeTests.swift": "1183d53c4435fb63f7860b043652779d72312525be1ccf4ad0479a7e49a96ff6",
     "Tests/AstronomyKitTests/AstronomyErrorTests.swift": "dd60689aec9808a2d18d6769c5642c157776f29eb6ec733d4b61922892e4a88e",
     "Tests/AstronomyKitTests/AtmosphereTests.swift": "cf83e324ce348cf62a24f74e0c8db2b10cf6aa0faf20b93607711a1ede24fd04",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "afd6b78db654db0772fca8dc1e56e590e4bc654771a2c3c9f1adc79d3c3901e7",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "3474fc1d9afcc0c52045f8fc1e970e82e77fa3151e5c3726c3b4b6499d9b7e99",
     "Tests/AstronomyKitTests/CelestialBodyTests.swift": "3a884eb7c6c0ca0639b0cf205863c9d5199ebd8ecb0df22bd7a77640f8ef3d9c",
     "Tests/AstronomyKitTests/ChironTests.swift": "49d4ca76971433c19a1d121095a644cbc0cd0b52e877b6234fe40a21b92aff4a",
     "Tests/AstronomyKitTests/CivilTimeTests.swift": "68c207ac72f13ffad89f475bee72b57bc159e0dba54f51b517a42f60a4cf289c",
@@ -3020,7 +3020,7 @@
     "Tests/AstronomyKitTests/GravitySimulationTests.swift": "39adf1ad7ebee11844cd5f63f65074d0915b87ef6b3684f31505bcf24bf38576",
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "0c30c412f016d6efb2ec70244abc4793bb5826f197cda2933c2925e29443a063",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "8262af989b58fd6a3dec9bb17edea836d403bb3d59e3f8f207b98d37602d5b3e",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -12506,7 +12506,7 @@
       "id": "Tests/AstronomyKitTests/AuditValidationTests.swift",
       "migrationIssue": 81,
       "path": "Tests/AstronomyKitTests/AuditValidationTests.swift",
-      "testCount": 21
+      "testCount": 22
     },
     {
       "classification": "invariant",

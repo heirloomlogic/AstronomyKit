@@ -437,7 +437,7 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
 
 def build_archive() -> dict[str, object]:
     archive: dict[str, object] = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "provenance": source_catalog(),
     }
     archive.update(parse_upstream_events())

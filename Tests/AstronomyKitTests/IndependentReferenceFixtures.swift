@@ -160,8 +160,8 @@ enum IndependentReferenceDate {
         AstroTime(date(text))
     }
 
-    static func universal(_ text: String) -> AstroTime {
-        AstroTime(ut: AstroTime.civilDays(of: date(text)))
+    static func universal(_ text: String, deltaTModel: DeltaTModel) -> AstroTime {
+        AstroTime(ut: AstroTime.civilDays(of: date(text)), deltaTModel: deltaTModel)
     }
 
     private static func date(_ text: String) -> Date {
