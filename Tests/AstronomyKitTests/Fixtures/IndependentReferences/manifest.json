@@ -1,6 +1,6 @@
 {
   "archive": "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json",
-  "archiveSHA256": "f2d23dde511ed16ae8a8f015cc82d0d175c9a2e74026259a09b2dc415d36159e",
+  "archiveSHA256": "f22647bf94b3e2ac92618c8dc3c28bf330f4d712da8055098eb77e6c5f4821b4",
   "generator": "Scripts/reference-data/build-fixtures.py",
   "sources": [
     {
@@ -85,7 +85,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/callisto-vector.query.json",
-      "sha256": "84bfd3e7986ebc28e88955c78fbbf6a51da2911c0b8c67773df5388d340b4456",
+      "sha256": "5563d44a1a0f0ed1f7dcbbdad3834058181f052d09aefb7ad857d724e5aea236",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -95,7 +95,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/chiron-vector.query.json",
-      "sha256": "4c0a552b8431ad93d3b9695cffb547c0de39881ab13863ec34e306fb3267e8f2",
+      "sha256": "965a49a4450ea91a89ba0baf4b8836e3937f068bdaa5e0940835d916bc8ba72f",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -105,7 +105,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/europa-vector.query.json",
-      "sha256": "66f8f95ce356807c6d9947ab627ac65c3d97b5722affbf4690a7f0f348aa65b4",
+      "sha256": "4a5d5018b32653d60c9c652eb79680385bdd70a46f248a7e3dcabaf446399f44",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -115,7 +115,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/ganymede-vector.query.json",
-      "sha256": "3f04e1e031bd607c534375c13a6643a6e3de9b7b61340d959237865c69c0f4a6",
+      "sha256": "9cd234ea55255992f0f35a7f47b06e05ea7c04355a24ed30ad92c1832c23d59d",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -125,7 +125,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/io-vector.query.json",
-      "sha256": "f3525ea2e5120c8b51282e323a3ad0c423c774a777f11d97d7eed09fbd9aae7e",
+      "sha256": "f20330c61f533ee38a5235929338c4ff17a7bbfd1a59e75e8053536d32da19e6",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -135,7 +135,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/mars-observer.query.json",
-      "sha256": "44f3f65b74f42ad7e5ea6fd17b7432620ca8ac52828d78e59f46c4d0a6fd7b0a",
+      "sha256": "b15522b72df9ce43ac2a3d30c0a8d1b529a9fe415297dafa131ea57623ed5730",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -145,7 +145,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/mercury-station.query.json",
-      "sha256": "387a809b79497fc4d81cd204515b8df3879d454af1ccbc3ba4e2c44ca2a96a14",
+      "sha256": "5709a771eeeb27ff4810948aca367a26ff250144dabf42300b73c3da258749da",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -155,7 +155,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/moon-observer.query.json",
-      "sha256": "6ea8c8bed30484b4fbcfc4331e8d47fdec7ea401d278c47bab44ea46c8001250",
+      "sha256": "d4c0955486186df9f5d54a39117bfd4ff05485ba695351afa2c93709aaec2ba8",
       "url": "generated from the adjacent query recipe"
     },
     {
@@ -165,7 +165,7 @@
     },
     {
       "path": "Scripts/reference-data/sources/horizons/pluto-observer.query.json",
-      "sha256": "e62268849554481e7ede96b23c2c682c0851331824b1f736a793fd4eae8a0569",
+      "sha256": "21cc88e9d9f135171ad20012fd566465330ccddcbb6f8c84b64afd42d7b75f20",
       "url": "generated from the adjacent query recipe"
     }
   ],

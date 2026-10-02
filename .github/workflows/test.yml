@@ -42,6 +42,7 @@ jobs:
           python3 -m unittest Scripts/migration/test_foundation.py -v
           python3 -m unittest Scripts/migration/test_comparison.py -v
           python3 -m unittest Scripts/migration/test_performance.py -v
+          python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
           python3 Scripts/migration/performance_baseline.py --check
 
       - name: Verify polynomial artifacts and analytic evaluator

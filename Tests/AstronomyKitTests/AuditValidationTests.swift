@@ -5,6 +5,11 @@ import Testing
 
 @Suite("Independent astronomical references")
 struct AuditValidationTests {
+    private enum FixtureLabelError: Error {
+        case unknownApsisKind(String)
+        case unknownRiseSetDirection(String)
+    }
+
     let archive = IndependentReferenceArchive.shared
 
     @Test("Archived references declare reproducible provenance")
@@ -196,17 +201,27 @@ struct AuditValidationTests {
     func lunarApsis(reference: IndependentReferenceArchive.Apsis) throws {
         let expected = IndependentReferenceDate.civil(reference.utc)
         let actual = try Moon.searchApsis(after: expected.addingDays(-5))
-        #expect(actual.kind == apsisKind(named: reference.kind))
+        #expect(actual.kind == (try apsisKind(named: reference.kind)))
         #expect(
             IndependentReferenceDate.seconds(actual.time, expected) <= reference.timeToleranceSeconds)
         #expect(abs(actual.distanceKM - reference.distanceKM!) <= reference.distanceToleranceKM!)
+    }
+
+    @Test("Malformed fixture enum labels are rejected")
+    func malformedFixtureEnumLabelsAreRejected() {
+        #expect(throws: FixtureLabelError.self) {
+            _ = try apsisKind(named: "not-an-apsis")
+        }
+        #expect(throws: FixtureLabelError.self) {
+            _ = try riseSetDirection(named: "not-a-direction")
+        }
     }
 
     @Test("Published Earth apsides", arguments: IndependentReferenceArchive.shared.earthApsides)
     func earthApsis(reference: IndependentReferenceArchive.Apsis) throws {
         let expected = IndependentReferenceDate.civil(reference.utc)
         let actual = try CelestialBody.earth.searchApsis(after: expected.addingDays(-5))
-        #expect(actual.kind == apsisKind(named: reference.kind))
+        #expect(actual.kind == (try apsisKind(named: reference.kind)))
         #expect(
             IndependentReferenceDate.seconds(actual.time, expected) <= reference.timeToleranceSeconds)
         #expect(abs(actual.distanceAU - reference.distanceAU!) <= reference.distanceToleranceAU!)
@@ -217,7 +232,7 @@ struct AuditValidationTests {
         let expected = IndependentReferenceDate.civil(reference.utc)
         let observer = Observer(
             latitude: reference.latitudeDegrees, longitude: reference.longitudeDegrees)
-        let direction: RiseSetDirection = reference.direction == "rise" ? .rise : .set
+        let direction = try riseSetDirection(named: reference.direction)
         let result = try body(named: reference.body).searchRiseSet(
             direction: direction, after: expected.addingDays(-0.5), from: observer, limitDays: 370)
         let actual = try #require(result)
@@ -314,14 +329,16 @@ struct AuditValidationTests {
     func frameMutationFails() throws {
         let reference = try #require(archive.observations.first { $0.body == "mars" })
         let time = IndependentReferenceDate.civil(reference.utc)
-        let actual = try CelestialBody.mars.equatorial(at: time)
+        let correct = try CelestialBody.mars.equatorial(
+            at: time, from: .geocentric, equatorDate: .j2000, aberration: .corrected)
+        let wrongFrame = try CelestialBody.mars.equatorial(
+            at: time, from: .geocentric, equatorDate: .ofDate, aberration: .corrected)
         let correctError = IndependentReferenceMath.angularSeparationArcminutes(
-            raDegrees1: actual.rightAscension * 15, decDegrees1: actual.declination,
+            raDegrees1: correct.rightAscension * 15, decDegrees1: correct.declination,
             raDegrees2: reference.rightAscensionDegrees, decDegrees2: reference.declinationDegrees)
         let mutatedError = IndependentReferenceMath.angularSeparationArcminutes(
-            raDegrees1: actual.rightAscension * 15, decDegrees1: actual.declination,
-            raDegrees2: reference.rightAscensionDegrees + 23.43928,
-            decDegrees2: reference.declinationDegrees)
+            raDegrees1: wrongFrame.rightAscension * 15, decDegrees1: wrongFrame.declination,
+            raDegrees2: reference.rightAscensionDegrees, decDegrees2: reference.declinationDegrees)
         #expect(correctError <= reference.angularToleranceArcminutes)
         #expect(mutatedError > reference.angularToleranceArcminutes)
     }
@@ -382,8 +399,20 @@ struct AuditValidationTests {
         }
     }
 
-    private func apsisKind(named name: String) -> ApsisKind {
-        name == "pericenter" ? .pericenter : .apocenter
+    private func apsisKind(named name: String) throws -> ApsisKind {
+        switch name {
+        case "pericenter": .pericenter
+        case "apocenter": .apocenter
+        default: throw FixtureLabelError.unknownApsisKind(name)
+        }
+    }
+
+    private func riseSetDirection(named name: String) throws -> RiseSetDirection {
+        switch name {
+        case "rise": .rise
+        case "set": .set
+        default: throw FixtureLabelError.unknownRiseSetDirection(name)
+        }
     }
 
     private func eclipseKind(named name: String) -> EclipseKind {

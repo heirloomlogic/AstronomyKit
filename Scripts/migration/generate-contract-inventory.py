@@ -108,6 +108,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/migration/test_performance.py": 80,
     "Scripts/numerics/solar-altitude/test_bounds.py": 94,
     "Scripts/performance/polynomial/test_polynomial.py": 85,
+    "Scripts/reference-data/test_build_fixtures.py": 81,
     "Scripts/performance/test-moon-cache.sh": 95,
     "Scripts/performance/test-nutation-cache.sh": 95,
     "Scripts/performance/test-vsop-cache.sh": 95,

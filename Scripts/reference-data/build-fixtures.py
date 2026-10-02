@@ -116,8 +116,31 @@ def vector_query(command: str, center: str, julian_dates: list[float]) -> dict[s
     }
 
 
+def horizons_acquisitions() -> list[tuple[str, dict[str, str]]]:
+    acquisitions = [
+        (name, observer_query(command, dates))
+        for name, (command, dates) in HORIZONS_OBSERVER_QUERIES.items()
+    ]
+    acquisitions.extend(
+        (name, vector_query(command, center, dates))
+        for name, (command, center, dates) in HORIZONS_VECTOR_QUERIES.items()
+    )
+    return acquisitions
+
+
+def validate_horizons_response(name: str, data: bytes) -> None:
+    try:
+        envelope = json.loads(data)
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"invalid Horizons response {name}: {error}") from error
+    result = envelope.get("result")
+    if not isinstance(result, str) or "$$SOE\n" not in result or "$$EOE" not in result:
+        raise RuntimeError(f"Horizons response {name} has no complete result table")
+
+
 def refresh_sources() -> None:
     SOURCE_DIR.mkdir(parents=True, exist_ok=True)
+    writes: dict[Path, bytes] = {}
     for local_name, (remote_path, expected_hash) in UPSTREAM_SOURCES.items():
         destination = SOURCE_DIR / local_name
         if destination.exists() and sha256(destination.read_bytes()) == expected_hash:
@@ -126,17 +149,17 @@ def refresh_sources() -> None:
         actual_hash = sha256(data)
         if actual_hash != expected_hash:
             raise RuntimeError(f"source hash changed for {remote_path}: expected {expected_hash}, got {actual_hash}")
-        destination.write_bytes(data)
+        writes[destination] = data
     horizons_dir = SOURCE_DIR / "horizons"
     horizons_dir.mkdir(parents=True, exist_ok=True)
-    for name, (command, dates) in HORIZONS_OBSERVER_QUERIES.items():
-        parameters = observer_query(command, dates)
-        (horizons_dir / f"{name}.json").write_bytes(download(horizons_url(parameters)))
-        (horizons_dir / f"{name}.query.json").write_text(json.dumps(parameters, indent=2, sort_keys=True) + "\n")
-    for name, (command, center, dates) in HORIZONS_VECTOR_QUERIES.items():
-        parameters = vector_query(command, center, dates)
-        (horizons_dir / f"{name}.json").write_bytes(download(horizons_url(parameters)))
-        (horizons_dir / f"{name}.query.json").write_text(json.dumps(parameters, indent=2, sort_keys=True) + "\n")
+    for name, parameters in horizons_acquisitions():
+        response = download(horizons_url(parameters))
+        validate_horizons_response(name, response)
+        writes[horizons_dir / f"{name}.json"] = response
+        recipe = {**parameters, "_responseSHA256": sha256(response)}
+        writes[horizons_dir / f"{name}.query.json"] = encoded(recipe)
+    for path, data in writes.items():
+        path.write_bytes(data)
 
 
 def verify_sources() -> list[dict[str, str]]:
@@ -149,6 +172,16 @@ def verify_sources() -> list[dict[str, str]]:
         if actual_hash != expected_hash:
             raise RuntimeError(f"source snapshot hash mismatch for {path}: expected {expected_hash}, got {actual_hash}")
         records.append({"path": str(path.relative_to(ROOT)), "sha256": actual_hash, "url": f"{UPSTREAM_BASE}/{remote_path}"})
+    for name, parameters in horizons_acquisitions():
+        response_path = SOURCE_DIR / "horizons" / f"{name}.json"
+        recipe_path = SOURCE_DIR / "horizons" / f"{name}.query.json"
+        if not response_path.exists() or not recipe_path.exists():
+            raise RuntimeError(f"missing Horizons response/recipe pair: {name}; run with --refresh")
+        response = response_path.read_bytes()
+        validate_horizons_response(name, response)
+        expected_recipe = {**parameters, "_responseSHA256": sha256(response)}
+        if json.loads(recipe_path.read_text()) != expected_recipe:
+            raise RuntimeError(f"Horizons recipe or response hash mismatch for {name}")
     for path in sorted((SOURCE_DIR / "horizons").glob("*.json")):
         records.append({"path": str(path.relative_to(ROOT)), "sha256": sha256(path.read_bytes()), "url": "generated from the adjacent query recipe"})
     return records
@@ -338,7 +371,7 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
     for name, body in body_names.items():
         for line in data_lines(horizons_result(name)):
             columns = [column.strip() for column in line.split(",")]
-            observations.append({"series": name, "body": body, "utc": columns[0].replace("A.D. ", ""), "rightAscensionDegrees": float(columns[3]), "declinationDegrees": float(columns[4]), "rightAscensionRateArcsecondsPerHour": float(columns[5]), "declinationRateArcsecondsPerHour": float(columns[6]), "distanceAU": float(columns[7]), "rangeRateKmPerSecond": float(columns[8]), "eclipticLongitudeDegrees": float(columns[9]), "eclipticLatitudeDegrees": float(columns[10]), "angularToleranceArcminutes": 1.5 if body in {"pluto"} else 1.0})
+            observations.append({"series": name, "body": body, "utc": columns[0].replace("A.D. ", ""), "rightAscensionDegrees": float(columns[3]), "declinationDegrees": float(columns[4]), "rightAscensionRateArcsecondsPerHour": float(columns[5]), "declinationRateArcsecondsPerHour": float(columns[6]), "rangeRateKmPerSecond": float(columns[8]), "eclipticLongitudeDegrees": float(columns[9]), "eclipticLatitudeDegrees": float(columns[10]), "angularToleranceArcminutes": 1.5 if body in {"pluto"} else 1.0})
 
     vectors = []
     vector_names = {"chiron-vector": ("chiron", "sun"), "io-vector": ("io", "jupiter"), "europa-vector": ("europa", "jupiter"), "ganymede-vector": ("ganymede", "jupiter"), "callisto-vector": ("callisto", "jupiter")}
@@ -366,8 +399,8 @@ def source_catalog() -> dict[str, dict[str, str]]:
     government_license = "U.S. government factual output is public domain; transformed files also retain the archived Astronomy Engine MIT license"
     nasa_license = "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license"
     return {
-        "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter"},
-        "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "1900, 2000, and 2100 samples", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter"},
+        "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "1900, 2000, and 2100 samples", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "UTC calendar timestamps", "timeScale": "UTC as serialized by the archived USNO API transformations", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "USNO-derived records from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parse scripts and tables under {upstream}/seasons and {upstream}/moonphase"},
         "espenakMoonNodes": {"version": UPSTREAM_REVISION, "frame": "geocentric equator and equinox of date as consumed by the pinned harness", "origin": "Earth center", "units": "UTC calendar timestamps, right ascension hours, and declination degrees", "timeScale": "UTC as serialized by the pinned transformation", "aberration": "not documented by the source table", "refraction": "not applicable to geocentric node events", "domain": "published table 2001 through 2100; sampled at 2001, 2050, and 2100", "license": f"Fred Espenak table with attribution; {mit_license}", "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html", "recipe": f"Pinned README, parser, and table under {upstream}/moon_nodes"},
         "astronomyEngineApsides": {"version": UPSTREAM_REVISION, "frame": "scalar Earth-Moon and Sun-Earth distances; no orientation frame", "origin": "Earth center for lunar distance and Sun center for Earth distance", "units": "UTC-like calendar timestamps, km, and AU", "timeScale": "calendar strings are interpreted as UT/UTC by the pinned harness; original acquisition metadata is absent", "aberration": "not documented in the pinned tables", "refraction": "not applicable to scalar apsis distances", "domain": "pinned lunar and Earth tables beginning in 2001; sampled at 2001, 2050, and 2100", "license": mit_license, "url": f"{upstream}/apsides", "recipe": "Pinned moon.txt and earth.txt are parsed directly; evidence is classified as third-party parity because upstream does not retain the original acquisition recipe"},

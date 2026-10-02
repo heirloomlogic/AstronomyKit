@@ -1,13 +1,14 @@
 # Independent reference evidence
 
-Issue #81 replaces the former one-date audit prints and broad range assertions with an offline archive of 90 reference records. The generated archive is `Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json`; its manifest records every source URL, SHA-256, generator path, upstream revision, and archive SHA-256. The fixture's source catalog separately records source version, frame, origin, units, time scale, aberration, refraction, supported domain, license, URL, and reproduction recipe for each of ten source families.
+This partial implementation for issue #81 replaces the former one-date audit prints and broad range assertions with an offline archive of 92 reference records. The generated archive is `Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json`; its manifest records every source URL, SHA-256, generator path, upstream revision, and archive SHA-256. The fixture's source catalog separately records source version, frame, origin, units, time scale, aberration, refraction, supported domain, license, URL, and reproduction recipe for each of ten source families.
 
 ## Evidence classes
 
 | Family | Samples | Evidence claim |
 | --- | --- | --- |
 | Geocentric positions | Moon, Mars, and Pluto at 1900, 2000, and 2100; Mercury across a 2025 station | JPL comparison in the declared frames and correction modes, using the repository's existing one-arcminute target and 1.5 arcminutes for Pluto |
-| Distance | Lunar and Earth apsides at 2001, 2050, and 2100 | Third-party table parity using the upstream distance limits of 25 km and 0.000012 AU; the upstream apsis tables lack their original acquisition recipe, so this is not classified as independent accuracy evidence |
+| Apsis distance | Lunar and Earth apsides at 2001, 2050, and 2100 | Third-party table parity using the upstream distance limits of 25 km and 0.000012 AU; the upstream apsis tables lack their original acquisition recipe, so this is not classified as independent accuracy evidence |
+| JPL apparent range | Raw Moon, Mars, Pluto, and Mercury observer responses | Archived for follow-up, but not decoded into the generated fixture or asserted because no cited source establishes a scientific tolerance for AstronomyKit's apparent light-time-aberrated range; the independent-distance criterion in #81 remains unmet |
 | Rates and stations | Three daily Mercury samples bracketing a station | Sampled one-day ecliptic motion, with a two-endpoint error bound derived from the positional tolerance; this is not an instantaneous-rate accuracy claim |
 | Seasons and lunar quarters | 1800, 2000, and 2100 | Published event-table comparison using upstream time limits |
 | Lunar nodes and apsides | 2001, 2050, and 2100 | Published event time, node position, and apsis distance comparisons using upstream limits |
@@ -19,7 +20,7 @@ Issue #81 replaces the former one-date audit prints and broad range assertions w
 
 ## Negative controls
 
-The suite proves that frame rotation, UTC/TDB interpretation, a vector-component sign change, AU/km confusion, and selection of the next lunar quarter exceed the corresponding unchanged reference limits. Each control first verifies the unmodified comparison so a broken test oracle cannot satisfy the mutation alone.
+The suite proves that selecting equatorial-of-date for an ICRF/J2000 fixture, interpreting UTC as TDB, changing a vector-component sign, confusing AU with km, and selecting the next lunar quarter exceed the corresponding unchanged reference limits. Each control first verifies the unmodified comparison so a broken test oracle cannot satisfy the mutation alone.
 
 ## Known disagreements
 
@@ -27,10 +28,10 @@ The archive makes three independent defects executable instead of hiding them be
 
 ## Limits
 
-These fixtures establish sampled comparisons only. They do not certify continuous accuracy over AstronomyKit's accepted range of roughly 4000 Julian years on either side of J2000, and no cited source supports such a claim. Chiron's documented 1900–2150 range is especially unsupported away from its 2000–2040 anchors; #108 records the observed edge failure. JPL angular rates and range rates are archived for later direct derivative work, but this change tests the public ecliptic state through endpoint motion because its rate convention differs from the JPL observer columns.
+These fixtures establish sampled comparisons only. They do not certify continuous accuracy over AstronomyKit's accepted range of roughly 4000 Julian years on either side of J2000, and no cited source supports such a claim. Chiron's documented 1900–2150 range is especially unsupported away from its 2000–2040 anchors; #108 records the observed edge failure. JPL angular rates, apparent ranges, and range rates remain in the raw responses for later work. This change tests the public ecliptic state through endpoint motion because its rate convention differs from the JPL observer columns, and it makes no apparent-range claim because it lacks a sourced tolerance for that quantity.
 
 Existing frozen-engine parity evidence covers unchanged behavior where independent sources do not cover the full domain. The lunar and Earth apsis distance tables in this archive are also parity evidence because their pinned upstream source lacks its original acquisition recipe. The JPL position archive and USNO Earth-apsis times provide compensating independent samples for distance-bearing calculations, but they do not turn the apsis distance comparisons into accuracy claims. Accepted-time guards prove rejection outside the declared engine range. `SolarAltitudeNumerics` supplies mathematical interval bounds only for its own solar-altitude work; those bounds do not apply to the reference families in this archive.
 
 ## Reproduction
 
-Run `python3 Scripts/reference-data/build-fixtures.py --check`, then `swift test --filter AuditValidationTests`. The pull request records the exact AstronomyKit commit tested and the complete command results. Regeneration instructions and source licenses are in `Scripts/reference-data/README.md`.
+Run `python3 Scripts/reference-data/build-fixtures.py --check`, `python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v`, then `swift test --filter AuditValidationTests`. The pull request records the exact AstronomyKit commit tested and the complete command results. Regeneration instructions and source licenses are in `Scripts/reference-data/README.md`. Issue #81 remains open pending an independently sourced apparent-range tolerance and a corresponding assertion.
