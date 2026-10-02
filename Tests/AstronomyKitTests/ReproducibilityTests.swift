@@ -420,9 +420,11 @@ struct ReproducibilityTests {
 
     @Test("Chiron ecliptic position at 2026-07-24T00:00Z (within 1900–2150 bounds)")
     func chironEcliptic2026() throws {
+        // Issue #108 intentionally replaces the frozen C oracle's single long
+        // integration step with the pinned upstream harness's half-day steps.
         expectEcliptic(
             try Chiron.ecliptic(at: Self.t2026),
-            lon: 0x403e_e4e4_bfb0_03b2, lat: 0x3fce_bd63_6d4e_176f, dist: 0x4032_44d1_959c_c71d,
+            lon: 0x403e_d067_f549_56d8, lat: 0x3fd0_01bd_28a6_4e04, dist: 0x4032_421b_f154_458f,
             "Chiron 2026"
         )
     }

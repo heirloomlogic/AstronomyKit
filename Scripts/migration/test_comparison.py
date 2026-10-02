@@ -57,6 +57,27 @@ class ComparisonProtocolTests(unittest.TestCase):
         paths = {item["path"] for item in self.comparison.canonical_differences(expected, actual)}
         self.assertEqual({"$.status"}, paths)
 
+    def test_accepted_correction_requires_every_declared_value_path(self):
+        case = {
+            "id": "bounded-correction",
+            "command": ["unused", "espenak-meeus"],
+            "acceptedDifference": {
+                "issue": 108,
+                "paths": ["$.value.x", "$.value.y"],
+                "evidence": ["Tests/AstronomyKitTests/AuditValidationTests.swift"],
+                "reason": "test",
+            },
+        }
+        expected = {"value": {"x": 1.0, "y": 2.0}}
+        actual = {"value": {"x": 1.1, "y": 2.1}}
+        differences = self.comparison.canonical_differences(expected, actual)
+        self.assertTrue(self.comparison.comparison_passes(case, differences))
+
+        missing = self.comparison.canonical_differences(expected, {"value": {"x": 1.1, "y": 2.0}})
+        unexpected = self.comparison.canonical_differences(expected, {"value": {"x": 1.1, "y": 2.1, "z": 3.0}})
+        self.assertFalse(self.comparison.comparison_passes(case, missing))
+        self.assertFalse(self.comparison.comparison_passes(case, unexpected))
+
     def test_time_model_negative_control_is_detected(self):
         expected = {"model": "espenak-meeus", "ut": 0.0, "tt": 0.0}
         actual = {"model": "jpl-horizons", "ut": 0.0, "tt": 0.0}

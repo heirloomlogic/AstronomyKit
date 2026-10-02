@@ -101,15 +101,9 @@ struct AuditValidationTests {
             at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB))
         let error = IndependentReferenceMath.maximumComponentError(
             actual: position, expected: reference.positionAU)
-        if reference.julianDateTDB == 2_451_544.5 {
-            #expect(error <= reference.sanityToleranceAU!)
-        } else {
-            withKnownIssue("Chiron long-span propagation is tracked by #108") {
-                #expect(
-                    error <= reference.sanityToleranceAU!,
-                    "actual ICRF AU vector: [\(position.x), \(position.y), \(position.z)]")
-            }
-        }
+        #expect(
+            error <= reference.sanityToleranceAU!,
+            "actual ICRF AU vector: [\(position.x), \(position.y), \(position.z)]")
     }
 
     @Test(

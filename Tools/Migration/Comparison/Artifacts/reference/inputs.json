@@ -126,6 +126,19 @@
       "id": "gravity-forward-jpl"
     },
     {
+      "acceptedDifference": {
+        "evidence": [
+          "Tests/AstronomyKitTests/AuditValidationTests.swift",
+          "Scripts/reference-data/sources/astronomy-engine-ctest.c"
+        ],
+        "issue": 108,
+        "paths": [
+          "$.samples[0].value.x",
+          "$.samples[0].value.y",
+          "$.samples[0].value.z"
+        ],
+        "reason": "The Swift facade advances Chiron in the pinned upstream harness's half-day steps instead of reproducing the frozen oracle's single long step. The raw coordinate differences remain archived; the independent audit supplies the separate sampled accuracy check."
+      },
       "command": [
         "chiron",
         "7335.5",
