@@ -35,6 +35,11 @@ let package = Package(
             dependencies: ["AstronomyKit"],
             path: "Tools/Migration/SwiftRunner"
         ),
+        .executableTarget(
+            name: "AstronomyMigrationPerformanceRunner",
+            dependencies: ["AstronomyKit"],
+            path: "Tools/Migration/PerformanceRunner"
+        ),
         .testTarget(
             name: "AstronomyKitTests",
             dependencies: ["AstronomyKit"]

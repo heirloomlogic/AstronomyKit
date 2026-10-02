@@ -41,6 +41,8 @@ jobs:
           Scripts/migration/generate-contract-inventory.py --check
           python3 -m unittest Scripts/migration/test_foundation.py -v
           python3 -m unittest Scripts/migration/test_comparison.py -v
+          python3 -m unittest Scripts/migration/test_performance.py -v
+          python3 Scripts/migration/performance_baseline.py --check
 
       - name: Verify polynomial artifacts and analytic evaluator
         run: |

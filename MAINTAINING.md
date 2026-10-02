@@ -2,6 +2,8 @@
 
 This document is for maintainers. It describes how AstronomyKit vendors the [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library and how to update that vendored copy. Day-to-day contribution guidance lives in [CONTRIBUTING.md](CONTRIBUTING.md).
 
+The [engine migration foundation](Documentation/Migration/README.md) pins the development-only C oracle, inventories migration ownership, compares separate C and Swift processes, separates exact, regression, independent-accuracy, and derived-bound evidence, and records the measured Release baseline used to judge the pure-Swift pilot. Performance comparisons must use the recorded runner, host, toolchain, trial counts, and source hashes; numerical acceptance stays independent of timing results.
+
 ## What is vendored
 
 AstronomyKit wraps a single-file C library. Two files are copied from upstream, with the local patches listed below:

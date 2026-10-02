@@ -1,0 +1,176 @@
+{
+  "baseRevision": "9f7a92630c1192adfc323076b17aa4130df4962d",
+  "budgets": {
+    "cleanBuildSeconds": 42.9,
+    "coldThroughputOperationsPerSecond": 10604102,
+    "incrementalBuildSeconds": 12.668,
+    "latencyNanosecondsPerOperation": 30166,
+    "peakResidentBytes": 11182080,
+    "strippedBinaryBytes": 14389145,
+    "warmThroughputOperationsPerSecond": 11306621
+  },
+  "commands": {
+    "build": [
+      "swift",
+      "build",
+      "-c",
+      "release",
+      "--product",
+      "AstronomyMigrationPerformanceRunner",
+      "--scratch-path",
+      "{scratch}"
+    ],
+    "runtime": [
+      "{runner}"
+    ]
+  },
+  "environment": {
+    "clang": "Apple clang version 21.0.0 (clang-2100.3.30.1)",
+    "hardwareModel": "Mac13,1",
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "processorCount": 10,
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.30.4 clang-2100.3.30.1)\nTarget: arm64-apple-macosx27.0.0",
+    "system": "Darwin"
+  },
+  "inputSHA256": {
+    "Package.swift": "f2f899c932bf8497d7849ca5604990a9ec37b6ede20c3d035c0a1ef286fd2998",
+    "Scripts/migration/performance_baseline.py": "6a93d64c1bd4e4f993102c2fa4097ae7dfabdad59118ee33150ae822bd9e7441",
+    "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
+    "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
+    "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
+    "Sources/AstronomyKit/Atmosphere.swift": "8edd5396d88889b10ffb073f25d5186d55e7bf70a75aeca3cf733a6e64f0367a",
+    "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
+    "Sources/AstronomyKit/Chiron.swift": "2b5d8af311b8946638e4fb0b9dd5c1929f3931178aaf4ea4288b30dc4d6cccfe",
+    "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
+    "Sources/AstronomyKit/Constellation.swift": "c29061f321ee0e9fab25b25733f3f5b9c30775e9fa02cce38e2311abfa978950",
+    "Sources/AstronomyKit/Coordinates.swift": "b5fe4378043d41a8ac25da5d30c9225d861c3e81d3270d5072c140eeed5d0e38",
+    "Sources/AstronomyKit/Eclipse.swift": "45202ecff7e18e00897ac31f5b1d3f87eb8acbfce3ecddb5a665b48255412268",
+    "Sources/AstronomyKit/Elongation.swift": "4e89c4adad4fed563282c7b5c1c86bd2d3e2044d2aa0fd513b9057bbdda62675",
+    "Sources/AstronomyKit/FixedStar.swift": "099605bcc2f805c04b246c46b984920999ed4420ff49282c5deb2e5189f79bb6",
+    "Sources/AstronomyKit/GravitySimulation.swift": "a6b5011698cd92626b866d3baee401d95b7e995c0c6fe04645e5b5e3ae72d4a0",
+    "Sources/AstronomyKit/Illumination.swift": "31f7d137968f3c65a612fa59f825b6998d56a844636772f210a696edf78af89f",
+    "Sources/AstronomyKit/JupiterMoons.swift": "08ce6285c62d8ca072092235d8b43bb38cbc23466786fd30e45be9308291ef35",
+    "Sources/AstronomyKit/LagrangePoint.swift": "7c604164729d844ccdc5e299715a4f357f13bfe8c4a5084ee182f8a977ceda87",
+    "Sources/AstronomyKit/Libration.swift": "9282c6133c57e50c638edc48cc1c1eda1a0a8f91ea3e41997d2fff4feaeb628d",
+    "Sources/AstronomyKit/LunarNode.swift": "df22af54f583c35c4bc0ed9b764338572030243e742ea2d53d6e53d08947ee76",
+    "Sources/AstronomyKit/MoonPhase.swift": "59bee7833b966dd9039e4168a8b498c41c1c9b9e7716fa69d8e6b15caf77db2d",
+    "Sources/AstronomyKit/Observer.swift": "f27f4bdce5d10ea39ff90a7dbc46f930108521eab9e57838714501f029dc9cca",
+    "Sources/AstronomyKit/Position.swift": "b540d9fe19a55cb6c2a201d6832879a070076a133947181b1da0c5f614edee7e",
+    "Sources/AstronomyKit/RelativeLongitude.swift": "1c9104d62dd920984b3db2a1153536e2144285d388f20681b74ffde2bc098e4a",
+    "Sources/AstronomyKit/RiseSet.swift": "5ceda1a3b5da765ad5dbeda7c9e5ec9e1f04d53ee861832a2554504b6509d732",
+    "Sources/AstronomyKit/Rotation.swift": "bc9a556b3f1713408a51f31b13417c39299a5af622a32a92a1cbdfce16396503",
+    "Sources/AstronomyKit/RotationAxis.swift": "6cada73120cac597f7e2a3dff1ad431c4197c38fdcae4362b53e90f6ae03e145",
+    "Sources/AstronomyKit/Search.swift": "e5b10408b85b2325c87f86d8895305bdc38dc8c71265718e0c324226ae1c69e9",
+    "Sources/AstronomyKit/Seasons.swift": "848f04fb8540d464407facd304c5f5e4863185d0b10666cce1d87853735e329d",
+    "Sources/AstronomyKit/SolarAltitudeBounds.swift": "88486639304a28ca0f6369d76c7426176401228340b5840bf698035cc4441c09",
+    "Sources/AstronomyKit/SolarAltitudeObservation.swift": "c4284801480b23e69f1679f2b246a8e74cb02eb867ea1533fca5ffe439e72b1f",
+    "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
+    "Sources/AstronomyKit/Transit.swift": "506eec46785f547500396747963463e774e0113d8bfdc0c383744da01cfbc2e9",
+    "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
+    "Sources/CLibAstronomy/astronomy.c": "40c9c17447a2725fd6002f7e450612e9ca149becf9617e71fa57fefca0f491ed",
+    "Sources/CLibAstronomy/generated/.gitattributes": "90c268096c358f13edc650160cd462a5749fe50c49ec9f72745b3b5ddc667656",
+    "Sources/CLibAstronomy/generated/iau2000b_full.h": "969e564ac5173310bb7f730cf683de7a4975b3fcf20566f2a4b45755dcee41c1",
+    "Sources/CLibAstronomy/generated/polynomial-data.h": "689747697bf1b5f1f0f41dbdbab90a1dccfca5eb9ecbb4ba4d0a2162acfd54da",
+    "Sources/CLibAstronomy/generated/vsop87b_full.h": "a30509bde52487ccb13815b415c8d563511545cce3ba8259f86e007137b86d99",
+    "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
+    "Sources/CLibAstronomy/module.modulemap": "af4d69b2fb39a5b940e49239c9bde40a458cbcb283c81897162e9c45f6f43327",
+    "Sources/CLibAstronomy/polynomial.h": "bbb51a7fea1738f4f6dd029842da31a678891518930735d386b797f79e638783",
+    "Tools/Migration/PerformanceRunner/main.swift": "090fb65aa4a6bd5dbf18d1413d601da546c77326391e16a5aa9aefc15bc796ff"
+  },
+  "measurements": {
+    "cleanBuildSeconds": [
+      22.44614141699276,
+      28.599631666002097,
+      20.547485999995843
+    ],
+    "coldThroughputOperationsPerSecond": [
+      9210806.578818599,
+      13236814.891416753,
+      13278008.298755188,
+      13268758.707622902,
+      13255128.07767505
+    ],
+    "incrementalBuildSeconds": [
+      4.634470249991864,
+      7.618020207999507,
+      8.445048666006187
+    ],
+    "latencyNanosecondsPerOperation": [
+      255252.075,
+      20110.425,
+      19695.85,
+      19490.625,
+      23038.55
+    ],
+    "peakResidentBytes": [
+      8945664,
+      8929280,
+      8929280,
+      8929280,
+      8929280
+    ],
+    "strippedBinaryBytes": 13081040,
+    "warmThroughputOperationsPerSecond": [
+      14138397.23594334,
+      14133276.800226133,
+      14133276.800226133,
+      14128035.3200883,
+      14138397.23594334
+    ]
+  },
+  "protocol": {
+    "buildTrials": 3,
+    "buildWarmupRuns": 1,
+    "commands": {
+      "build": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyMigrationPerformanceRunner",
+        "--scratch-path",
+        "{scratch}"
+      ],
+      "runtime": [
+        "{runner}"
+      ]
+    },
+    "coordinatorSHA256": "6a93d64c1bd4e4f993102c2fa4097ae7dfabdad59118ee33150ae822bd9e7441",
+    "runnerSourceSHA256": "090fb65aa4a6bd5dbf18d1413d601da546c77326391e16a5aa9aefc15bc796ff",
+    "runtimeTrials": 5,
+    "schemaVersion": 1
+  },
+  "provenanceSHA256": "40149c14feb731717d7d9832851eb8139c8d24745cab6a6533063d3ae79b2904",
+  "runnerChecksums": [
+    {
+      "coldThroughput": 15238.436940063162,
+      "representativeLatency": 47759.072589912925,
+      "warmThroughput": 15181.208162839566
+    },
+    {
+      "coldThroughput": 15238.436940063162,
+      "representativeLatency": 47759.072589912925,
+      "warmThroughput": 15181.208162839566
+    },
+    {
+      "coldThroughput": 15238.436940063162,
+      "representativeLatency": 47759.072589912925,
+      "warmThroughput": 15181.208162839566
+    },
+    {
+      "coldThroughput": 15238.436940063162,
+      "representativeLatency": 47759.072589912925,
+      "warmThroughput": 15181.208162839566
+    },
+    {
+      "coldThroughput": 15238.436940063162,
+      "representativeLatency": 47759.072589912925,
+      "warmThroughput": 15181.208162839566
+    }
+  ],
+  "runnerSHA256": "aedbda3c2fdf43e93f5d662ebb4a1855eef61cc208d5c72c2c4be57c24323ffd",
+  "schemaVersion": 1,
+  "scope": "Pure-Swift migration pilot measured on the recorded host and toolchain"
+}

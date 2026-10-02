@@ -41,6 +41,46 @@ def sha256_path(path):
     return sha256_bytes(path.read_bytes())
 
 
+def macho_without_uuid(data):
+    if len(data) < 32:
+        return data
+    magic = struct.unpack_from("<I", data)[0]
+    if magic == 0xFEEDFACF:
+        header_size = 32
+    elif magic == 0xFEEDFACE:
+        header_size = 28
+    else:
+        return data
+    command_count = struct.unpack_from("<I", data, 16)[0]
+    normalized = bytearray(data)
+    offset = header_size
+    for _ in range(command_count):
+        if offset + 8 > len(normalized):
+            raise ValueError("truncated Mach-O load command")
+        command, size = struct.unpack_from("<II", normalized, offset)
+        if size < 8 or offset + size > len(normalized):
+            raise ValueError("invalid Mach-O load command size")
+        if command == 0x1B:
+            if size < 24:
+                raise ValueError("invalid Mach-O UUID command")
+            normalized[offset + 8 : offset + 24] = bytes(16)
+        offset += size
+    return bytes(normalized)
+
+
+def executable_fingerprint(path):
+    with tempfile.TemporaryDirectory(prefix="astronomykit-executable-fingerprint-") as directory:
+        normalized = Path(directory) / path.name
+        shutil.copy2(path, normalized)
+        if platform.system() == "Darwin":
+            subprocess.run(["codesign", "--remove-signature", str(normalized)], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            strip_command = ["strip", "-S", str(normalized)]
+        else:
+            strip_command = ["strip", "--strip-debug", str(normalized)]
+        subprocess.run(strip_command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return sha256_bytes(macho_without_uuid(normalized.read_bytes()))
+
+
 def canonical_differences(expected, actual, path="$"):
     differences = []
     if type(expected) is not type(actual):
@@ -270,7 +310,10 @@ def generate_archive():
             "sourceHashes": source_hashes(),
             "executables": {
                 "frozenC": {"sha256": sha256_path(c_binary), "build": oracle_build},
-                "swiftCandidate": {"sha256": sha256_path(swift_binary)},
+                "swiftCandidate": {
+                    "fingerprintSHA256": executable_fingerprint(swift_binary),
+                    "normalization": "strip debug and symbols; remove the code signature and UUID from the host-built thin Mach-O on Darwin",
+                },
             },
             "environment": {
                 "platform": platform.platform(),

@@ -1,6 +1,6 @@
 # Engine migration foundation
 
-Issue #80 freezes the patched C engine before the Swift engine is evaluated. The first chain link records the reference source and current contracts. The second link adds the separate-process comparison protocol and evidence archive. The measured performance baseline and acceptance budgets remain open for the third link.
+Issue #80 freezes the patched C engine before the Swift engine is evaluated. The first chain link records the reference source and current contracts. The second link adds the separate-process comparison protocol and evidence archive. The third link separates the numerical evidence classes and records the measured performance baseline and pilot budgets.
 
 ## Frozen C oracle
 
@@ -29,11 +29,33 @@ The generator fails when it finds an unowned Swift source, test file, generated 
 
 [`corpus.json`](../../Tools/Migration/Comparison/corpus.json) defines the hand-selected position, derivative, event, cold/warm, Delta T, fixed-star, Pluto, gravity, Chiron, and error cases. [`downstream-populations-lock.json`](../../Tools/Migration/Comparison/downstream-populations-lock.json) pins four request populations from commit `1add73ec6c117e9b6f3d26e745a3487262ff4c75` by path, compressed byte count, and SHA-256. The coordinator validates and reads every fixed-size record, archives counts and TT ranges, and selects the first active position and state request from each population for comparison.
 
-The coordinator builds the content-addressed C oracle outside SwiftPM and the `AstronomyMigrationRunner` target in Release mode. That executable target is not part of the shipping `AstronomyKit` library product. Each case launches one fresh C process and one fresh Swift process. The checked-in [reference archive](../../Tools/Migration/Comparison/Artifacts/reference) records canonical inputs, parsed outputs, astronomical statuses, process exits, stderr, stdout hashes, source and executable hashes, build metadata, environment, exact machine-readable differences, and downstream population provenance.
+The coordinator builds the content-addressed C oracle outside SwiftPM and the `AstronomyMigrationRunner` target in Release mode. That executable target is not part of the shipping `AstronomyKit` library product. Each case launches one fresh C process and one fresh Swift process. The checked-in [reference archive](../../Tools/Migration/Comparison/Artifacts/reference) records canonical inputs, parsed outputs, astronomical statuses, process exits, stderr, stdout hashes, source hashes, build metadata, environment, exact machine-readable differences, and downstream population provenance. The C oracle retains its raw executable hash. The Swift runner records a normalized content fingerprint after removing debug data and symbols plus the code signature and UUID from the host-built thin Mach-O; separate scratch paths produce the same fingerprint, while a code mutation changes it.
 
 ```sh
 python3 Scripts/migration/run-comparison.py --check
 python3 -m unittest Scripts/migration/test_comparison.py -v
 ```
 
-`--check` rebuilds both executables, replays all 18 cases, recovers all 7,746,010 downstream records, and rejects a stale archive or any C/Swift difference. The archive also proves that deliberate numeric, status, Delta T model, and event-order mutations are detected, and that invalid requests fail in both runner processes. Its current comparison contract is exact parsed JSON equality because the Swift surface still delegates to the frozen C implementation. Link 3 will define the separate numerical-regression and independent-accuracy contracts needed for a native Swift candidate.
+`--check` rebuilds both executables, replays all 18 cases, recovers all 7,746,010 downstream records, and rejects a stale archive or any C/Swift difference. The archive also proves that deliberate numeric, status, Delta T model, and event-order mutations are detected, and that invalid requests fail in both runner processes. Its current comparison contract is exact parsed JSON equality because the Swift surface still delegates to the frozen C implementation.
+
+## Numerical evidence classes
+
+[`numerical-evidence.json`](numerical-evidence.json) keeps exact contracts, numerical regression tolerances, independent astronomical accuracy limits, and mathematically derived bounds separate. Exact C/Swift JSON equality applies only while both runners call the same C engine. A native Swift candidate must preserve exact API, status, time-model, coefficient, event identity, and within-build replay contracts while meeting the existing regression budgets and independent JPL limits. It cannot widen tolerances, refresh frozen fixtures, or cite C agreement as independent accuracy evidence. The solar-altitude certificate must be re-derived from the shipped Swift expressions.
+
+## Measured Release baseline and pilot budgets
+
+[`performance-baseline.json`](performance-baseline.json) records three clean and touched-source incremental Release builds plus five fresh-process runtime and peak-memory trials. It hashes `Package.swift`, the coordinator, the benchmark runner, and every Swift and C input, including Swift sources in nested directories. The development-only `AstronomyMigrationPerformanceRunner` calls the public Swift API and is not a library product.
+
+The baseline host was a Mac13,1 with macOS 27.0.1, Apple Swift 6.4, and Apple clang 21. The median representative request latency was 20,110.4 ns. Median cold and warm throughput were 13,255,128 and 14,133,277 operations per second. Maximum peak resident memory was 8,945,664 bytes, the stripped probe was 13,081,040 bytes, the slowest clean build took 28.600 seconds, and the slowest touched-source incremental build took 8.445 seconds.
+
+The pure-Swift pilot must stay at or below 30,166 ns median latency, 11,182,080 bytes peak resident memory, 14,389,145 stripped bytes, 42.900 seconds for the slowest clean build, and 12.668 seconds for the slowest touched-source build. Cold and warm median throughput must stay at or above 10,604,102 and 11,306,621 operations per second. These figures give latency and build time 50% headroom, throughput 20%, peak memory 25%, and deterministic binary size 10%. Candidate measurement uses the same five runtime trials, three build trials, one build preflight, runner, host, and toolchain.
+
+```sh
+python3 Scripts/migration/performance_baseline.py --check
+python3 Scripts/migration/performance_baseline.py --compare
+python3 -m unittest Scripts/migration/test_performance.py -v
+```
+
+`--check` validates the archive, source hashes, budget derivation, and baseline self-evaluation without timing CI hardware. `--compare` rebuilds and measures a candidate, rejects a different host or toolchain, and reports every failed metric. The unit tests apply deliberate regressions to latency, both throughput workloads, peak memory, binary size, and both build costs.
+
+Peak resident memory is the allocation/memory gate because it is available for the mixed Swift/C baseline and a native Swift candidate without profiler instrumentation. This record does not contain allocation counts. The build protocol runs one unrecorded preflight build, then deletes the package scratch directory before each recorded clean trial. It measures a scratch-clean build with compiler and package-manager caches warm, not first use of the toolchain on a host. Before the preflight was standardized, the first isolated diagnostic recorded clean trials of 47.927, 26.825, and 15.662 seconds; a repeat recorded 15.466, 10.569, and 10.312 seconds. These diagnostics are excluded from the baseline rather than selected as candidate evidence. The timings came from an otherwise ordinary shared development host, so process scheduling and thermal state remain limitations. A different host or toolchain needs its own reviewed baseline instead of reusing these absolute numbers.
