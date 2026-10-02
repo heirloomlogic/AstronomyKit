@@ -37,13 +37,14 @@ jobs:
         run: |
           git cat-file -e cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit} || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
           git cat-file -e 1add73ec6c117e9b6f3d26e745a3487262ff4c75^{commit} || git fetch --no-tags --depth=1 origin 1add73ec6c117e9b6f3d26e745a3487262ff4c75
+          git cat-file -e fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff^{commit} || git fetch --no-tags --depth=1 origin fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff
           Tools/Migration/Oracle/freeze-oracle.py --check
           Scripts/migration/generate-contract-inventory.py --check
           python3 -m unittest Scripts/migration/test_foundation.py -v
           python3 -m unittest Scripts/migration/test_comparison.py -v
           python3 -m unittest Scripts/migration/test_performance.py -v
           python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
-          python3 Scripts/migration/performance_baseline.py --check
+          python3 Scripts/migration/verify_performance_baseline.py
 
       - name: Verify polynomial artifacts and analytic evaluator
         run: |

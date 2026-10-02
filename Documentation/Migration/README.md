@@ -52,12 +52,36 @@ The baseline host was a Mac13,1 with macOS 27.0.1, Apple Swift 6.4, and Apple cl
 
 The pure-Swift pilot must stay at or below 30,166 ns median latency, 11,182,080 bytes peak resident memory, 14,389,145 stripped bytes, 42.900 seconds for the slowest clean build, and 12.668 seconds for the slowest touched-source build. Cold and warm median throughput must stay at or above 10,604,102 and 11,306,621 operations per second. These figures give latency and build time 50% headroom, throughput 20%, peak memory 25%, and deterministic binary size 10%. Candidate measurement uses the same five runtime trials, three build trials, one build preflight, runner, host, and toolchain.
 
+## Full Swift model representation prototype
+
+Issue #82 generated a development-only immutable Swift representation from the pinned polynomial, VSOP87B, and IAU2000B archives. Twenty-nine bounded source units contain all 1,431,768 polynomial binary64 bit patterns, 36,712 validity bits including 413 disabled segments, 35,080 VSOP terms with 135 series index records, and 77 nutation rows. The generator validates every input checksum, writes raw `UInt64` bit patterns instead of reformatted floating-point literals, and records recursive input and output hashes in `Scripts/model-data/swift-prototype-manifest.json`.
+
+The generated storage is split across one module per polynomial body plus VSOP and nutation modules. A single module did not finish a bounded Release build after 129 seconds and sampled a 4.83 GB compiler process. The modular layout compiled, and the compiled whole-model FNV-1a checksum is `0x0cd4295bc6da4d62`. The prototype targets are available only when the ignored `.model-prototype` sentinel exists, so ordinary package builds do not compile the failed representation.
+
+[`model-prototype-evidence.json`](model-prototype-evidence.json) preserves historical Apple-host measurements from the exact working-tree source hashes in that record. Those hashes identify an uncommitted snapshot rather than a Git commit, and they differ from the current PR head. Clean Release builds took 41.232, 42.647, and 51.130 seconds, so the slowest trial fails the fixed 42.900-second gate. Touched-source Release builds passed at 2.292 to 3.310 seconds, and the stripped runner passed at 12,513,696 bytes. Five fresh-process first accesses took 7,958 to 16,333 ns and used 5,931,008 bytes peak RSS. The full checksum sweep took 5.564 to 11.876 ms and used 18.252 to 18.285 MB peak RSS; that sweep deliberately touches every table page and is not the issue #80 request workload.
+
+The builder's separate bounded Debug preflight did not finish within 180 seconds; the captured coordinator did not run that preflight. The repaired coordinator runs and identifies its own bounded Debug preflight, validates runner values and checksums, hashes its protocol and baseline, and finalizes failed runs as incomplete. No current-head performance run was captured during review repair. Linux measurements and the issue #80 astronomical latency and throughput workloads are absent. The representation therefore fails issue #82 and does not unblock the Sun-path pilot. No runtime-loaded storage alternative, budget change, or numerical-tolerance change was adopted.
+
+Regeneration and verification use the committed archives and need no network access:
+
 ```sh
-python3 Scripts/migration/performance_baseline.py --check
+python3 Scripts/generate-models.py --swift-prototype
+python3 Scripts/generate-models.py --check-swift-prototype
+python3 -m unittest discover -s Scripts/model-prototype -p 'test_*.py' -v
+touch .model-prototype
+swift package purge-cache
+swift test -c release --filter ModelDataTests
+python3 Scripts/model-prototype/measure.py --measure
+```
+
+The committed generated sources let a clean prototype build run without Python, downloads, or runtime data files. Python is required only to regenerate or verify the source from the frozen archives. Remove `.model-prototype` and purge the package cache after prototype work.
+
+```sh
+python3 Scripts/migration/verify_performance_baseline.py
 python3 Scripts/migration/performance_baseline.py --compare
 python3 -m unittest Scripts/migration/test_performance.py -v
 ```
 
-`--check` validates the archive, source hashes, budget derivation, and baseline self-evaluation without timing CI hardware. `--compare` rebuilds and measures a candidate, rejects a different host or toolchain, and reports every failed metric. The unit tests apply deliberate regressions to latency, both throughput workloads, peak memory, binary size, and both build costs.
+The baseline was captured from a dirty working tree at recorded HEAD `9f7a92630c1192adfc323076b17aa4130df4962d`. Merged commit `fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff` later committed the exact 43 recorded input files without changing their bytes. `verify_performance_baseline.py` validates the record, discovers every measured input in that immutable Git tree, verifies every recorded hash, derives the same fixed budgets, and evaluates the baseline against them without timing CI hardware or requiring a candidate checkout to retain the historical package manifest. `--compare` rebuilds and measures a candidate, rejects a different host or toolchain or measurement protocol, and reports every failed metric. The unit tests apply deliberate regressions to latency, both throughput workloads, peak memory, binary size, both build costs, and the frozen input binding.
 
 Peak resident memory is the allocation/memory gate because it is available for the mixed Swift/C baseline and a native Swift candidate without profiler instrumentation. This record does not contain allocation counts. The build protocol runs one unrecorded preflight build, then deletes the package scratch directory before each recorded clean trial. It measures a scratch-clean build with compiler and package-manager caches warm, not first use of the toolchain on a host. Before the preflight was standardized, the first isolated diagnostic recorded clean trials of 47.927, 26.825, and 15.662 seconds; a repeat recorded 15.466, 10.569, and 10.312 seconds. These diagnostics are excluded from the baseline rather than selected as candidate evidence. The timings came from an otherwise ordinary shared development host, so process scheduling and thermal state remain limitations. A different host or toolchain needs its own reviewed baseline instead of reusing these absolute numbers.
