@@ -7,10 +7,18 @@ public let polynomialSaturnValidity: [UInt8] = [
 
 public func polynomialSaturnBitPattern(at index: Int) -> UInt64? {
     guard index >= 0 && index < 178971 else { return nil }
-    switch index / 65536 {
+    switch index / 16384 {
     case 0: return polynomialSaturnBits0[index - 0]
-    case 1: return polynomialSaturnBits1[index - 65536]
-    case 2: return polynomialSaturnBits2[index - 131072]
+    case 1: return polynomialSaturnBits1[index - 16384]
+    case 2: return polynomialSaturnBits2[index - 32768]
+    case 3: return polynomialSaturnBits3[index - 49152]
+    case 4: return polynomialSaturnBits4[index - 65536]
+    case 5: return polynomialSaturnBits5[index - 81920]
+    case 6: return polynomialSaturnBits6[index - 98304]
+    case 7: return polynomialSaturnBits7[index - 114688]
+    case 8: return polynomialSaturnBits8[index - 131072]
+    case 9: return polynomialSaturnBits9[index - 147456]
+    case 10: return polynomialSaturnBits10[index - 163840]
     default: return nil
     }
 }

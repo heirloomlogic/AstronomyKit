@@ -25,7 +25,7 @@ SWIFT_MANIFEST = DATA / "swift-prototype-manifest.json"
 BODIES = dict(zip(("mer", "ven", "ear", "mar", "jup", "sat", "ura", "nep"),
                   ("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune")))
 POLYNOMIAL_START, POLYNOMIAL_STOP = -36524.5, 36889.5
-SWIFT_CHUNK_SIZE = 65536
+SWIFT_CHUNK_SIZE = 16_384
 
 
 @dataclass(frozen=True)
@@ -185,7 +185,7 @@ def render_swift_model():
             relative = f"{target}/Generated/Polynomial{body.name}{number}.swift"
             files[relative] = notice + render_bits(symbol, body.coefficient_bits[start:start + SWIFT_CHUNK_SIZE])
             chunks.append((symbol, start, min(start + SWIFT_CHUNK_SIZE, len(body.coefficient_bits))))
-        access = [notice, f"public let polynomial{body.name}Validity: [UInt8] = [", "    " + ", ".join(map(str, body.validity)), "]", "", f"public func polynomial{body.name}BitPattern(at index: Int) -> UInt64? {{", f"    guard index >= 0 && index < {len(body.coefficient_bits)} else {{ return nil }}", "    switch index / 65536 {"]
+        access = [notice, f"public let polynomial{body.name}Validity: [UInt8] = [", "    " + ", ".join(map(str, body.validity)), "]", "", f"public func polynomial{body.name}BitPattern(at index: Int) -> UInt64? {{", f"    guard index >= 0 && index < {len(body.coefficient_bits)} else {{ return nil }}", f"    switch index / {SWIFT_CHUNK_SIZE} {{"]
         for chunk_number, (symbol, start, _) in enumerate(chunks):
             access.append(f"    case {chunk_number}: return {symbol}[index - {start}]")
         access.extend(["    default: return nil", "    }", "}", ""])

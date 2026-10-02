@@ -7,9 +7,13 @@ public let polynomialUranusValidity: [UInt8] = [
 
 public func polynomialUranusBitPattern(at index: Int) -> UInt64? {
     guard index >= 0 && index < 89505 else { return nil }
-    switch index / 65536 {
+    switch index / 16384 {
     case 0: return polynomialUranusBits0[index - 0]
-    case 1: return polynomialUranusBits1[index - 65536]
+    case 1: return polynomialUranusBits1[index - 16384]
+    case 2: return polynomialUranusBits2[index - 32768]
+    case 3: return polynomialUranusBits3[index - 49152]
+    case 4: return polynomialUranusBits4[index - 65536]
+    case 5: return polynomialUranusBits5[index - 81920]
     default: return nil
     }
 }
