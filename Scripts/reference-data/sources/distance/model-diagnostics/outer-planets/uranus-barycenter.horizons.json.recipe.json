@@ -1,0 +1,27 @@
+{
+  "epochsSHA256": "aa87d839bbbfc60f758ee82c4f3444adb92099f4c2dc4985f60acf731c85fe98",
+  "metadata": {
+    "center": "Sun (10)",
+    "centerSource": "DE441",
+    "target": "Uranus Barycenter (7)",
+    "targetSource": "DE441"
+  },
+  "parameters": {
+    "CENTER": "'500@10'",
+    "COMMAND": "'7'",
+    "CSV_FORMAT": "'YES'",
+    "EPHEM_TYPE": "'VECTORS'",
+    "MAKE_EPHEM": "'YES'",
+    "OBJ_DATA": "'NO'",
+    "OUT_UNITS": "'AU-D'",
+    "REF_PLANE": "'FRAME'",
+    "REF_SYSTEM": "'ICRF'",
+    "TIME_TYPE": "'TT'",
+    "TLIST": "'2415020.50000000,2419586.12500000,2424151.75000000,2428717.37500000,2433283.00000000,2437848.62500000,2442414.25000000,2446979.87500000,2451545.00000000,2451545.50000000,2456111.12500000,2460676.75000000,2465242.37500000,2469808.00000000,2474373.62500000,2478939.25000000,2483504.87500000,2488070.50000000'",
+    "TLIST_TYPE": "'JD'",
+    "VEC_CORR": "'NONE'",
+    "VEC_TABLE": "'3'"
+  },
+  "sha256": "5b724f64706c82c5a2d1813c91cd6c45fbe8ccaf31b86f11ac6fe89075f65acf",
+  "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
+}

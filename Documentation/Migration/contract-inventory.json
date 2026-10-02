@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 107,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 65,
-    "tests": 800
+    "testOwners": 69,
+    "tests": 834
   },
   "crossCuttingContracts": [
     {
@@ -3674,7 +3674,10 @@
     "Scripts/performance/test-nutation-cache.sh": "b71c61dc0c21ea8ca8e41d607aa79f90ede8d1e23520402345accddcbbf139ca",
     "Scripts/performance/test-vsop-cache.sh": "7e6a7365556b0c3c83dd5c14ee360b89d8953fd9e6b58683ae6781bb4380a213",
     "Scripts/reference-data/test_build_fixtures.py": "be1979cfd3d156bb2b9d98875cb67ba958b953d9cc122b257ff20f9180995e12",
+    "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_investigate_apparent_range.py": "36e48f6baa35e3641ca17a5cf8b078fa1f25364b2f97c6c289eee2704c3034a8",
+    "Scripts/reference-data/test_outer_planet_diagnostic.py": "0488c3677b3a641bbdbbd5c42ae5a88f7a711d90227b5e589f3beb38714f6d9c",
+    "Scripts/reference-data/test_pluto_model_diagnostic.py": "23c80690af6439c9ac61fdf05e8949b07b36f9cd2f91e9159ec8604fdfe54de9",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
@@ -3723,6 +3726,7 @@
     "Tests/AstronomyKitTests/CoordinatesTests.swift": "946917ddd1eb71c0289a987ccbfdf1c47ede8640dbde4ea393bcba66856e1583",
     "Tests/AstronomyKitTests/DeltaTModelCaptureTests.swift": "c313caa43618e12dae143fb98f64ef3c95f37fc7595d6d893ae3e67983b09802",
     "Tests/AstronomyKitTests/DeltaTThreadSafetyTests.swift": "1edd321c0c3327ddfe14168dd466f120fbbe0d7ce0f169f9fd7fe4bfe3f7e98c",
+    "Tests/AstronomyKitTests/DistanceAccuracyTests.swift": "6b7ec098ba94b3744893c592e05f4c5a4cb38bd87c0d3fa92498ccc91df8f13c",
     "Tests/AstronomyKitTests/EclipseTests.swift": "fc61498f587d757d0d7de76f8b2fe348beecac8ada2e67edbc8aadb8f9d7dc93",
     "Tests/AstronomyKitTests/EclipticStateTests.swift": "be692f833db20fbf72dcdf2d01e0e89aeab5e668b9cb7423d7ce1f08ad677d14",
     "Tests/AstronomyKitTests/ElongationTests.swift": "0a7c9335c9d67144e94f1bbc816d9b4e066ab94b6717feeb9df831f18aab1485",
@@ -13194,10 +13198,31 @@
     },
     {
       "classification": "invariant",
+      "id": "Scripts/reference-data/test_distance_accuracy.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_distance_accuracy.py",
+      "testCount": 8
+    },
+    {
+      "classification": "invariant",
       "id": "Scripts/reference-data/test_investigate_apparent_range.py",
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_investigate_apparent_range.py",
       "testCount": 4
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_outer_planet_diagnostic.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_outer_planet_diagnostic.py",
+      "testCount": 13
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_pluto_model_diagnostic.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_pluto_model_diagnostic.py",
+      "testCount": 11
     },
     {
       "classification": "invariant",
@@ -13302,6 +13327,13 @@
       "id": "Tests/AstronomyKitTests/DeltaTThreadSafetyTests.swift",
       "migrationIssue": 95,
       "path": "Tests/AstronomyKitTests/DeltaTThreadSafetyTests.swift",
+      "testCount": 2
+    },
+    {
+      "classification": "independent-reference",
+      "id": "Tests/AstronomyKitTests/DistanceAccuracyTests.swift",
+      "migrationIssue": 81,
+      "path": "Tests/AstronomyKitTests/DistanceAccuracyTests.swift",
       "testCount": 2
     },
     {

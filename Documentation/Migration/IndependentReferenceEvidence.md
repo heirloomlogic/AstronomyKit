@@ -2,6 +2,8 @@
 
 This partial implementation for issue #81 replaces the former one-date audit prints and broad range assertions with an offline archive of 92 reference records. The generated archive is `Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json`; its manifest records every source URL, SHA-256, generator path, upstream revision, and archive SHA-256. The fixture's source catalog separately records source version, frame, origin, units, time scale, aberration, refraction, supported domain, license, URL, and reproduction recipe for each of ten source families.
 
+[DistanceAccuracyEvidence.md](DistanceAccuracyEvidence.md) adds separate 1900–2100 TT distance coverage: 2,489 characterization comparisons, frozen body-specific empirical allowances under the owner-selected 2× margin, and 2,546 disjoint held-out assertions in `DistanceAccuracyTests`. Geometric heliocentric radius, geometric lunar range, and planetary received-light range with an explicit independent Sun-motion convention bridge remain distinct. These engineering allowances do not retroactively provide a published scientific tolerance for the original 12 observer samples or certify the full accepted domain.
+
 ## Evidence classes
 
 | Family | Samples | Evidence claim |
@@ -44,4 +46,4 @@ Existing frozen-engine parity evidence covers unchanged behavior where independe
 
 ## Reproduction
 
-Run `python3 Scripts/reference-data/build-fixtures.py --check`, `python3 -m unittest discover -s Scripts/reference-data -p 'test_*.py' -v`, `python3 Scripts/reference-data/investigate-apparent-range.py --check`, then `swift test --filter AuditValidationTests`. The investigation command compiles the committed probe and production C source in a temporary directory, performs no network access, checks every recorded input hash, and reproduces all four bounded configurations. The pull request records the exact AstronomyKit commit tested and the complete command results. Regeneration instructions and source licenses are in `Scripts/reference-data/README.md`. Issue #81 remains open pending an independently sourced apparent-range tolerance and a corresponding assertion.
+Run `python3 Scripts/reference-data/build-fixtures.py --check`, `python3 -m unittest discover -s Scripts/reference-data -p 'test_*.py' -v`, `python3 Scripts/reference-data/investigate-apparent-range.py --check`, `python3 Scripts/reference-data/distance-accuracy.py check`, then `swift test --filter AuditValidationTests` and `swift test --filter DistanceAccuracyTests`. The investigation commands compile the committed probes and production C source in temporary directories, perform no network access, check recorded input hashes, and reproduce their reports. Regeneration instructions and source licenses are in `Scripts/reference-data/README.md`. Issue #81 remains open for the model, observable, and unsupported-domain limitations recorded in the distance evidence and above.

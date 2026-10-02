@@ -1,0 +1,17 @@
+{
+  "frozenUTC": "2026-10-02T18:33:04.176005+00:00",
+  "reason": "Isolate prescribed Sun-origin acceleration from missing inner-planet direct and indirect forces after modern-seed residual remains large",
+  "epochs": "unchanged plan.json epochs",
+  "stepsDays": [
+    73,
+    36.5,
+    18.25
+  ],
+  "seedModel": "modern barycenter heliocentric states",
+  "forceVariants": [
+    "relative-four-giants",
+    "relative-eight-planets"
+  ],
+  "equation": "r_ddot = -GM_sun*r/|r|^3 + sum_i GM_i*((r_i-r)/|r_i-r|^3 - r_i/|r_i|^3)",
+  "scope": "controlled diagnosis; no production repair or selection"
+}
