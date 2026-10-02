@@ -42,7 +42,8 @@ let package = Package(
         ),
         .testTarget(
             name: "AstronomyKitTests",
-            dependencies: ["AstronomyKit"]
+            dependencies: ["AstronomyKit"],
+            resources: [.copy("Fixtures/IndependentReferences")]
         ),
     ]
 )

@@ -1,0 +1,16 @@
+{
+  "ANG_FORMAT": "'DEG'",
+  "APPARENT": "'AIRLESS'",
+  "CAL_FORMAT": "'CAL'",
+  "CENTER": "'500@399'",
+  "COMMAND": "'199'",
+  "CSV_FORMAT": "'YES'",
+  "EPHEM_TYPE": "'OBSERVER'",
+  "MAKE_EPHEM": "'YES'",
+  "OBJ_DATA": "'NO'",
+  "QUANTITIES": "'1,3,20,31'",
+  "RANGE_UNITS": "'AU'",
+  "REF_SYSTEM": "'ICRF'",
+  "TIME_DIGITS": "'SECONDS'",
+  "TLIST": "'2460897.5,2460898.5,2460899.5'"
+}
