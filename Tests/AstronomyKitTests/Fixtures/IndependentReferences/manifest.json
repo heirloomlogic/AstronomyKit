@@ -1,6 +1,6 @@
 {
   "archive": "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json",
-  "archiveSHA256": "f22647bf94b3e2ac92618c8dc3c28bf330f4d712da8055098eb77e6c5f4821b4",
+  "archiveSHA256": "4bf360222eb76ae27234ca9d40362b6895e693d842c5b3791530a9933890a4c4",
   "generator": "Scripts/reference-data/build-fixtures.py",
   "sources": [
     {

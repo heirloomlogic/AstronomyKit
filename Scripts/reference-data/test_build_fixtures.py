@@ -79,5 +79,30 @@ class RefreshSourcesTests(unittest.TestCase):
                     self.builder.verify_sources()
 
 
+class JupiterMoonToleranceDomainTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_relative_tolerance_is_limited_to_upstream_comparison_domain(self):
+        vectors = [
+            vector
+            for vector in self.builder.parse_horizons()["vectors"]
+            if vector["origin"] == "jupiter"
+        ]
+
+        bounded = [vector for vector in vectors if vector["relativeTolerance"] is not None]
+        unbounded = [vector for vector in vectors if vector["relativeTolerance"] is None]
+
+        self.assertEqual(4, len(bounded))
+        self.assertEqual({2_451_544.5}, {vector["julianDateTDB"] for vector in bounded})
+        self.assertEqual({9e-4}, {vector["relativeTolerance"] for vector in bounded})
+        self.assertEqual(8, len(unbounded))
+        self.assertEqual(
+            {2_415_020.5, 2_488_069.5},
+            {vector["julianDateTDB"] for vector in unbounded},
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
