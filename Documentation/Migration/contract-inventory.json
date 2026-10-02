@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 107,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 64,
-    "tests": 794
+    "testOwners": 65,
+    "tests": 799
   },
   "crossCuttingContracts": [
     {
@@ -3673,7 +3673,8 @@
     "Scripts/performance/test-moon-cache.sh": "58d7a71ed74515e7e7c3616d124ccaf3117acebed648e724af865706d96203f2",
     "Scripts/performance/test-nutation-cache.sh": "b71c61dc0c21ea8ca8e41d607aa79f90ede8d1e23520402345accddcbbf139ca",
     "Scripts/performance/test-vsop-cache.sh": "7e6a7365556b0c3c83dd5c14ee360b89d8953fd9e6b58683ae6781bb4380a213",
-    "Scripts/reference-data/test_build_fixtures.py": "d99801c88784cbb181329c45ff6cd114f7f7fac6eff8c6752ba875636263f57a",
+    "Scripts/reference-data/test_build_fixtures.py": "be1979cfd3d156bb2b9d98875cb67ba958b953d9cc122b257ff20f9180995e12",
+    "Scripts/reference-data/test_investigate_apparent_range.py": "20cbbb7ade7511dec26da16f7e4d9327278dae55086b132132991fcdd0249648",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
@@ -3713,7 +3714,7 @@
     "Tests/AstronomyKitTests/AstroTimeTests.swift": "1183d53c4435fb63f7860b043652779d72312525be1ccf4ad0479a7e49a96ff6",
     "Tests/AstronomyKitTests/AstronomyErrorTests.swift": "dd60689aec9808a2d18d6769c5642c157776f29eb6ec733d4b61922892e4a88e",
     "Tests/AstronomyKitTests/AtmosphereTests.swift": "cf83e324ce348cf62a24f74e0c8db2b10cf6aa0faf20b93607711a1ede24fd04",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "306b3eb767f68fb2b26c1fdfd9515e8104b86d3473891b2c53470c6140cb364f",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "a6892c0bae2f3d8899957f12078fa0b28041fdf7627b37d62f302434ebe81191",
     "Tests/AstronomyKitTests/CelestialBodyTests.swift": "3a884eb7c6c0ca0639b0cf205863c9d5199ebd8ecb0df22bd7a77640f8ef3d9c",
     "Tests/AstronomyKitTests/ChironTests.swift": "5fe54f03da286bfa3639229342d7c803026c9cdf070878764a616f1869932449",
     "Tests/AstronomyKitTests/CivilTimeTests.swift": "68c207ac72f13ffad89f475bee72b57bc159e0dba54f51b517a42f60a4cf289c",
@@ -3730,7 +3731,7 @@
     "Tests/AstronomyKitTests/GravitySimulationTests.swift": "39adf1ad7ebee11844cd5f63f65074d0915b87ef6b3684f31505bcf24bf38576",
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "8262af989b58fd6a3dec9bb17edea836d403bb3d59e3f8f207b98d37602d5b3e",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a20a69781d4552b49b51d1b6552ffb2ff4604cc5d3f1ad534eb8c374f7550c3c",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -13189,7 +13190,14 @@
       "id": "Scripts/reference-data/test_build_fixtures.py",
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_build_fixtures.py",
-      "testCount": 4
+      "testCount": 5
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_investigate_apparent_range.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_investigate_apparent_range.py",
+      "testCount": 3
     },
     {
       "classification": "invariant",
@@ -13238,7 +13246,7 @@
       "id": "Tests/AstronomyKitTests/AuditValidationTests.swift",
       "migrationIssue": 81,
       "path": "Tests/AstronomyKitTests/AuditValidationTests.swift",
-      "testCount": 22
+      "testCount": 23
     },
     {
       "classification": "invariant",
