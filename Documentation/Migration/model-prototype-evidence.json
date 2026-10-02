@@ -1,10 +1,17 @@
 {
   "phase": "measured-with-acceptance-gaps",
+  "provenance": {
+    "classification": "historical-working-tree-measurement",
+    "currentBranchCovered": false,
+    "debugPreflight": "The 180-second result came from the builder's separate bounded Debug preflight. The captured coordinator did not execute a Debug build.",
+    "gitCommit": null,
+    "protocolIdentity": "The captured coordinator omitted its own hash and the baseline hash, so this record does not identify the complete measurement protocol.",
+    "sourceIdentity": "inputSHA256 records the measured source files. It identifies an uncommitted working-tree snapshot, not a Git commit."
+  },
   "postMeasurementChanges": {
     "Package.swift": {
-      "currentSHA256": "dbe5231a0511fa9f0f94c14ac86e8ae3c8ae0c1d0957bdf2740f06566875270e",
       "measuredSHA256": "e4e6574393b3ed64f15584ad9cf554a271684e716404ba7a16e8744713bdc3a4",
-      "reason": "The measured prototype targets were moved behind the ignored .model-prototype sentinel after the failed Debug build so ordinary package builds do not compile them. The enabled target graph is unchanged."
+      "reason": "The prototype targets were moved behind the ignored .model-prototype sentinel after measurement. Later review fixes changed the package and prototype sources again. This historical record does not measure the current PR head."
     }
   },
   "consumerPackaging": {
@@ -74,7 +81,7 @@
     "Issue #80 latency and throughput gates cannot be evaluated until issue #83 supplies the Sun-path calculation.",
     "Full-sweep RSS touches every table page and is reported separately from first access and the issue #80 workload.",
     "This record covers the recorded Apple host and toolchain; Linux wall-clock and peak-memory measurements are absent.",
-    "An isolated modular Debug preflight was terminated after 180 seconds without completing, so Debug artifact, incremental-build, and runtime measurements are absent."
+    "The builder's separate bounded modular Debug preflight was terminated after 180 seconds without completing. The captured coordinator did not run that preflight, so the Debug result has external builder provenance and Debug artifact, incremental-build, and runtime measurements are absent."
   ],
   "measurements": {
     "cleanDebugBuildCompleted": false,

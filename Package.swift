@@ -63,9 +63,11 @@ if FileManager.default.fileExists(atPath: modelPrototypeSentinel) {
         .target(name: "AstronomyPolynomialNeptunePrototype"),
         .target(name: "AstronomyVSOPPrototype"),
         .target(name: "AstronomyNutationPrototype"),
+        .target(name: "AstronomyModelPrototypeGenerated"),
         .target(
             name: "AstronomyModelPrototype",
             dependencies: [
+                "AstronomyModelPrototypeGenerated",
                 "AstronomyPolynomialMercuryPrototype",
                 "AstronomyPolynomialVenusPrototype",
                 "AstronomyPolynomialEarthPrototype",
@@ -107,9 +109,20 @@ if FileManager.default.fileExists(atPath: devSentinel) {
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
         .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
     ]
-    // CLibAstronomy has no Swift sources, and the model prototype is generated from
-    // checksum-verified archives; neither target needs source-format linting.
-    for target in package.targets where target.name != "CLibAstronomy" && !target.name.contains("Prototype") {
+    let generatedPrototypeTargets: Set<String> = [
+        "AstronomyModelPrototypeGenerated",
+        "AstronomyNutationPrototype",
+        "AstronomyPolynomialEarthPrototype",
+        "AstronomyPolynomialJupiterPrototype",
+        "AstronomyPolynomialMarsPrototype",
+        "AstronomyPolynomialMercuryPrototype",
+        "AstronomyPolynomialNeptunePrototype",
+        "AstronomyPolynomialSaturnPrototype",
+        "AstronomyPolynomialUranusPrototype",
+        "AstronomyPolynomialVenusPrototype",
+        "AstronomyVSOPPrototype",
+    ]
+    for target in package.targets where target.name != "CLibAstronomy" && !generatedPrototypeTargets.contains(target.name) {
         target.plugins = (target.plugins ?? []) + [.plugin(name: "Persnoop", package: "Persnicket")]
     }
 }

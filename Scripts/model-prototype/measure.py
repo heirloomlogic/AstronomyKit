@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import signal
 import subprocess
 import tempfile
 import time
@@ -19,6 +20,16 @@ BASELINE = ROOT / "Documentation/Migration/performance-baseline.json"
 OUTPUT = ROOT / "Documentation/Migration/model-prototype-evidence.json"
 BUILD_TRIALS = 3
 RUNTIME_TRIALS = 5
+DEBUG_TIMEOUT_SECONDS = 180
+EXPECTED_FIRST_VALUE = 0xbfd0eee034b80b58
+EXPECTED_WHOLE_MODEL_FNV64 = 0x0cd4295bc6da4d62
+
+
+class BuildTimeout(TimeoutError):
+    def __init__(self, elapsed_seconds, timeout_seconds):
+        super().__init__(f"build did not finish within {timeout_seconds} seconds")
+        self.elapsed_seconds = elapsed_seconds
+        self.timeout_seconds = timeout_seconds
 
 
 def evaluate_builds(measurements, budgets):
@@ -38,6 +49,10 @@ def validate_evidence(record):
         raise ValueError("three incremental Release trials are required")
     if re.fullmatch(r"[0-9a-f]{64}", record.get("workloadSHA256", "")) is None:
         raise ValueError("workload SHA-256 is invalid")
+    if type(record.get("cleanDebugBuildCompleted")) is not bool:
+        raise ValueError("Debug build completion status is missing")
+    if record.get("cleanDebugBuildElapsedSeconds", 0) <= 0:
+        raise ValueError("Debug build elapsed time is invalid")
     return record
 
 
@@ -64,7 +79,12 @@ def sha256(path):
 
 
 def prototype_inputs(root):
-    paths = [root / "Package.swift", root / "Tools/Migration/ModelPrototypeRunner/main.swift"]
+    paths = [
+        root / "Documentation/Migration/performance-baseline.json",
+        root / "Package.swift",
+        root / "Scripts/model-prototype/measure.py",
+        root / "Tools/Migration/ModelPrototypeRunner/main.swift",
+    ]
     paths.extend(sorted(path for path in (root / "Sources").rglob("*") if path.is_file() and "Prototype" in path.as_posix()))
     return {path.relative_to(root).as_posix(): sha256(path) for path in paths}
 
@@ -85,13 +105,27 @@ def parse_rss(path):
     raise RuntimeError("compiler RSS was not recorded")
 
 
-def timed_build(package, scratch, configuration):
+def timed_build(package, scratch, configuration, timeout_seconds=None):
     command = ["swift", "build", "-c", configuration, "--product", "AstronomyModelPrototypeRunner", "--scratch-path", str(scratch)]
     with tempfile.NamedTemporaryFile(prefix="model-prototype-time-", delete=False) as stream:
         time_path = Path(stream.name)
     try:
+        command = ["/usr/bin/time", "-l", "-o", str(time_path), *command]
         started = time.perf_counter()
-        subprocess.run(["/usr/bin/time", "-l", "-o", str(time_path), *command], cwd=package, check=True, stdout=subprocess.DEVNULL)
+        process = subprocess.Popen(command, cwd=package, stdout=subprocess.DEVNULL, start_new_session=timeout_seconds is not None)
+        try:
+            return_code = process.wait(timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            elapsed = time.perf_counter() - started
+            os.killpg(process.pid, signal.SIGTERM)
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                process.wait()
+            raise BuildTimeout(elapsed, timeout_seconds) from None
+        if return_code:
+            raise subprocess.CalledProcessError(return_code, command)
         return time.perf_counter() - started, parse_rss(time_path)
     finally:
         time_path.unlink(missing_ok=True)
@@ -132,6 +166,17 @@ def build_trials(package, configuration, checkpoint=None):
     }, Path(bin_path) / "AstronomyModelPrototypeRunner"
 
 
+def bounded_debug_build(package, timeout_seconds=DEBUG_TIMEOUT_SECONDS):
+    scratch = package / ".build/model-prototype-debug"
+    if scratch.exists():
+        shutil.rmtree(scratch)
+    try:
+        elapsed, rss = timed_build(package, scratch, "debug", timeout_seconds=timeout_seconds)
+    except BuildTimeout as error:
+        return {"completed": False, "elapsedSeconds": error.elapsed_seconds, "timeoutSeconds": error.timeout_seconds}
+    return {"completed": True, "elapsedSeconds": elapsed, "timeoutSeconds": timeout_seconds, "peakResidentBytes": rss}
+
+
 def timed_runner(executable, mode):
     with tempfile.NamedTemporaryFile(prefix="model-prototype-runtime-", delete=False) as stream:
         time_path = Path(stream.name)
@@ -140,6 +185,25 @@ def timed_runner(executable, mode):
         return json.loads(completed.stdout), parse_rss(time_path)
     finally:
         time_path.unlink(missing_ok=True)
+
+
+def validate_runner_results(first, sweep):
+    if len(first) != RUNTIME_TRIALS or len(sweep) != RUNTIME_TRIALS:
+        raise ValueError("runner trial count is invalid")
+    for payload, _ in first:
+        if payload.get("mode") != "first":
+            raise ValueError("first-access runner mode is invalid")
+        if payload.get("value") != EXPECTED_FIRST_VALUE:
+            raise ValueError("first-access value does not match the generated model")
+        if type(payload.get("elapsedNanoseconds")) is not int or payload["elapsedNanoseconds"] < 0:
+            raise ValueError("first-access elapsed time is invalid")
+    for payload, _ in sweep:
+        if payload.get("mode") != "sweep":
+            raise ValueError("full-sweep runner mode is invalid")
+        if payload.get("checksum") != EXPECTED_WHOLE_MODEL_FNV64:
+            raise ValueError("whole-model checksum does not match the generated model")
+        if type(payload.get("elapsedNanoseconds")) is not int or payload["elapsedNanoseconds"] < 0:
+            raise ValueError("full-sweep elapsed time is invalid")
 
 
 def stripped_size(executable):
@@ -160,64 +224,92 @@ def environment():
 
 
 def measure():
-    before = prototype_inputs(ROOT)
     partial = {}
+    phase = "initializing"
 
-    def checkpoint(phase, values):
+    def checkpoint(checkpoint_phase, values):
+        nonlocal phase
+        phase = checkpoint_phase
         partial.update(values)
-        write_checkpoint(OUTPUT, phase, partial)
+        write_checkpoint(OUTPUT, checkpoint_phase, partial)
 
-    write_checkpoint(OUTPUT, "initializing", partial)
-    with tempfile.TemporaryDirectory(prefix="astronomy-model-prototype-") as directory:
-        package = Path(directory) / "package"
-        copy_workspace(package)
-        try:
+    try:
+        before = prototype_inputs(ROOT)
+        write_checkpoint(OUTPUT, phase, partial)
+        with tempfile.TemporaryDirectory(prefix="astronomy-model-prototype-") as directory:
+            package = Path(directory) / "package"
+            phase = "workspace-copy"
+            copy_workspace(package)
+            phase = "release-build"
             release, executable = build_trials(package, "release", checkpoint)
-        except Exception as error:
-            write_checkpoint(OUTPUT, "release-build", partial, str(error))
-            raise
-        first = [timed_runner(executable, "first") for _ in range(RUNTIME_TRIALS)]
-        sweep = [timed_runner(executable, "sweep") for _ in range(RUNTIME_TRIALS)]
-        measurements = {
-            "cleanReleaseSeconds": release["cleanSeconds"],
-            "incrementalReleaseSeconds": release["incrementalSeconds"],
-            "releaseCompilerPeakResidentBytes": release["cleanPeakResidentBytes"],
-            "cleanDebugBuildCompleted": False,
-            "cleanDebugBuildLowerBoundSeconds": 180,
-            "firstAccessNanoseconds": [item[0]["elapsedNanoseconds"] for item in first],
-            "firstAccessPeakResidentBytes": [item[1] for item in first],
-            "fullSweepNanoseconds": [item[0]["elapsedNanoseconds"] for item in sweep],
-            "fullSweepPeakResidentBytes": [item[1] for item in sweep],
-            "strippedExecutableBytes": stripped_size(executable),
+            phase = "debug-build"
+            debug = bounded_debug_build(package)
+            partial.update({"cleanDebugBuildCompleted": debug["completed"], "cleanDebugBuildElapsedSeconds": debug["elapsedSeconds"], "cleanDebugBuildTimeoutSeconds": debug["timeoutSeconds"]})
+            phase = "runtime-first"
+            first = [timed_runner(executable, "first") for _ in range(RUNTIME_TRIALS)]
+            phase = "runtime-sweep"
+            sweep = [timed_runner(executable, "sweep") for _ in range(RUNTIME_TRIALS)]
+            phase = "runtime-validation"
+            validate_runner_results(first, sweep)
+            measurements = {
+                "cleanReleaseSeconds": release["cleanSeconds"],
+                "incrementalReleaseSeconds": release["incrementalSeconds"],
+                "releaseCompilerPeakResidentBytes": release["cleanPeakResidentBytes"],
+                "cleanDebugBuildCompleted": debug["completed"],
+                "cleanDebugBuildElapsedSeconds": debug["elapsedSeconds"],
+                "cleanDebugBuildTimeoutSeconds": debug["timeoutSeconds"],
+                "firstAccessNanoseconds": [item[0]["elapsedNanoseconds"] for item in first],
+                "firstAccessPeakResidentBytes": [item[1] for item in first],
+                "fullSweepNanoseconds": [item[0]["elapsedNanoseconds"] for item in sweep],
+                "fullSweepPeakResidentBytes": [item[1] for item in sweep],
+            }
+            if debug["completed"]:
+                measurements["debugCompilerPeakResidentBytes"] = debug["peakResidentBytes"]
+            phase = "strip"
+            measurements["strippedExecutableBytes"] = stripped_size(executable)
+        phase = "input-validation"
+        after = prototype_inputs(ROOT)
+        if before != after:
+            raise RuntimeError("prototype inputs changed during measurement")
+        phase = "baseline"
+        baseline = json.loads(BASELINE.read_text())
+        result = evaluate_builds(measurements, baseline["budgets"])
+        phase = "environment"
+        record = {
+            "schemaVersion": 1,
+            "status": "incomplete",
+            "phase": "measured-with-acceptance-gaps",
+            "scope": "Development-only full Swift coefficient representation",
+            "environment": environment(),
+            "inputSHA256": before,
+            "measurementProtocolSHA256": before["Scripts/model-prototype/measure.py"],
+            "baselineSHA256": before["Documentation/Migration/performance-baseline.json"],
+            "workloadSHA256": before["Tools/Migration/ModelPrototypeRunner/main.swift"],
+            "measurements": measurements,
+            "fixedBudgets": baseline["budgets"],
+            "releaseBuildEvaluation": result,
+            "consumerPackaging": {"scriptsCopied": False, "runtimeDataFiles": False, "networkDependencies": False},
+            "limitations": [
+                "The first-access and full-sweep workloads are representation probes, not the issue #80 astronomical request workload.",
+                "Issue #80 latency and throughput gates cannot be evaluated until issue #83 supplies the Sun-path calculation.",
+                "Full-sweep RSS touches every table page and is reported separately from first access and the issue #80 workload.",
+                "This record covers the recorded Apple host and toolchain; Linux wall-clock and peak-memory measurements are absent.",
+                f"The isolated modular Debug preflight {'completed' if debug['completed'] else 'did not complete'} in {debug['elapsedSeconds']:.3f} seconds with a {debug['timeoutSeconds']}-second limit.",
+            ],
         }
-    after = prototype_inputs(ROOT)
-    if before != after:
-        raise RuntimeError("prototype inputs changed during measurement")
-    baseline = json.loads(BASELINE.read_text())
-    result = evaluate_builds(measurements, baseline["budgets"])
-    record = {
-        "schemaVersion": 1,
-        "status": "incomplete",
-        "phase": "measured-with-acceptance-gaps",
-        "scope": "Development-only full Swift coefficient representation",
-        "environment": environment(),
-        "inputSHA256": before,
-        "workloadSHA256": before["Tools/Migration/ModelPrototypeRunner/main.swift"],
-        "measurements": measurements,
-        "fixedBudgets": baseline["budgets"],
-        "releaseBuildEvaluation": result,
-        "consumerPackaging": {"scriptsCopied": False, "runtimeDataFiles": False, "networkDependencies": False},
-        "limitations": [
-            "The first-access and full-sweep workloads are representation probes, not the issue #80 astronomical request workload.",
-            "Issue #80 latency and throughput gates cannot be evaluated until issue #83 supplies the Sun-path calculation.",
-            "Full-sweep RSS touches every table page and is reported separately from first access and the issue #80 workload.",
-            "This record covers the recorded Apple host and toolchain; Linux wall-clock and peak-memory measurements are absent.",
-            "An isolated modular Debug preflight was terminated after 180 seconds without completing, so Debug artifact, incremental-build, and runtime measurements are absent.",
-        ],
-    }
-    validate_evidence(measurements | {"workloadSHA256": record["workloadSHA256"]})
-    OUTPUT.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
-    return record
+        phase = "evidence-validation"
+        validate_evidence(measurements | {"workloadSHA256": record["workloadSHA256"]})
+        phase = "final-write"
+        temporary = OUTPUT.with_suffix(OUTPUT.suffix + ".tmp")
+        temporary.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
+        temporary.replace(OUTPUT)
+        return record
+    except BaseException as error:
+        try:
+            write_checkpoint(OUTPUT, phase, partial, str(error))
+        except BaseException:
+            OUTPUT.unlink(missing_ok=True)
+        raise
 
 
 if __name__ == "__main__":

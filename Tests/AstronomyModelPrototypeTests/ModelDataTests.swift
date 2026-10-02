@@ -23,7 +23,19 @@ struct ModelDataTests {
         #expect(PrototypeModelData.polynomialBitPattern(body: .mercury, index: -1) == nil)
         #expect(PrototypeModelData.polynomialBitPattern(body: .neptune, index: 178_971) == nil)
         #expect(PrototypeModelData.polynomialValidity(body: .earth, segment: 9_177) == nil)
+        #expect(PrototypeModelData.vsopTermBitPatterns(at: Int.min) == nil)
+        #expect(PrototypeModelData.vsopTermBitPatterns(at: Int.max) == nil)
         #expect(PrototypeModelData.vsopTermBitPatterns(at: 35_080) == nil)
+        #expect(PrototypeModelData.nutationRow(at: Int.min) == nil)
+        #expect(PrototypeModelData.nutationRow(at: Int.max) == nil)
         #expect(PrototypeModelData.nutationRow(at: 77) == nil)
+    }
+
+    @Test("Polynomial metadata retains the TT grid bounds")
+    func polynomialGridBounds() {
+        for metadata in PrototypeModelData.polynomialMetadata {
+            #expect(metadata.startTT == -36_524.5)
+            #expect(metadata.stopTT == 36_889.5)
+        }
     }
 }

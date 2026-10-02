@@ -201,11 +201,26 @@ def render_swift_model():
     nutation_bits = tuple(value for row in model.nutation_rows for value in row[1])
     files["AstronomyNutationPrototype/Generated/Nutation.swift"] = notice + render_bits("nutationIntegerBits", nutation_integer, "public") + "\n" + render_bits("nutationCoefficientBits", nutation_bits, "public")
 
-    metadata = [notice, "internal let generatedPolynomialMetadata: [PolynomialMetadata] = ["]
+    metadata = [
+        notice,
+        "public struct GeneratedPolynomialMetadata: Sendable {",
+        "    public let name: String",
+        "    public let startTT: Double",
+        "    public let stopTT: Double",
+        "    public let degree: Int",
+        "    public let width: Int",
+        "    public let segments: Int",
+        "    public let coefficientCount: Int",
+        "    public let coefficientSHA256: String",
+        "    public let validitySHA256: String",
+        "}",
+        "",
+        "public let generatedPolynomialMetadata: [GeneratedPolynomialMetadata] = [",
+    ]
     for body in model.polynomials:
-        metadata.append(f"    PolynomialMetadata(name: \"{body.name}\", degree: {body.degree}, width: {body.width}, segments: {body.segments}, coefficientCount: {len(body.coefficient_bits)}, coefficientSHA256: \"{body.coefficient_sha256}\", validitySHA256: \"{body.validity_sha256}\"),")
+        metadata.append(f"    GeneratedPolynomialMetadata(name: \"{body.name}\", startTT: Double(bitPattern: 0x{double_bits(str(POLYNOMIAL_START)):016x}), stopTT: Double(bitPattern: 0x{double_bits(str(POLYNOMIAL_STOP)):016x}), degree: {body.degree}, width: {body.width}, segments: {body.segments}, coefficientCount: {len(body.coefficient_bits)}, coefficientSHA256: \"{body.coefficient_sha256}\", validitySHA256: \"{body.validity_sha256}\"),")
     metadata.extend(["]", ""])
-    files["AstronomyModelPrototype/Generated/Metadata.swift"] = "\n".join(metadata)
+    files["AstronomyModelPrototypeGenerated/Generated/Metadata.swift"] = "\n".join(metadata)
     return files
 
 
@@ -229,8 +244,7 @@ def swift_output_manifest(outputs):
 def write_swift_model(check):
     outputs = render_swift_model()
     manifest = json.dumps(swift_output_manifest(outputs), indent=2, sort_keys=True) + "\n"
-    generated_directories = {path.parent for name in outputs for path in [SWIFT_OUTPUT / name]}
-    actual = {path.relative_to(SWIFT_OUTPUT).as_posix() for directory in generated_directories if directory.exists() for path in directory.glob("*.swift")}
+    actual = {path.relative_to(SWIFT_OUTPUT).as_posix() for path in SWIFT_OUTPUT.glob("Astronomy*Prototype*/Generated/*.swift")}
     expected = set(outputs)
     if check:
         for name, content in outputs.items():

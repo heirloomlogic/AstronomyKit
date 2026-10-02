@@ -9,14 +9,17 @@ let mode = CommandLine.arguments.dropFirst().first ?? "first"
 switch mode {
 case "first":
     let start = ContinuousClock.now
-    let value = PrototypeModelData.polynomialBitPattern(body: .earth, index: 0)!
+    guard let value = PrototypeModelData.polynomialBitPattern(body: .earth, index: 0) else {
+        preconditionFailure("Generated Earth polynomial table is empty")
+    }
     let elapsed = start.duration(to: .now)
     print("{\"mode\":\"first\",\"elapsedNanoseconds\":\(nanoseconds(elapsed)),\"value\":\(value)}")
 case "sweep":
     let start = ContinuousClock.now
     let checksum = PrototypeModelData.wholeModelFNV64()
     let elapsed = start.duration(to: .now)
-    print("{\"mode\":\"sweep\",\"elapsedNanoseconds\":\(nanoseconds(elapsed)),\"checksum\":\(checksum)}")
+    print(
+        "{\"mode\":\"sweep\",\"elapsedNanoseconds\":\(nanoseconds(elapsed)),\"checksum\":\(checksum)}")
 default:
     fatalError("Expected first or sweep")
 }

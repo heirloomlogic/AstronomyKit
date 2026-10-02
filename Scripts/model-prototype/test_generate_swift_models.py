@@ -41,6 +41,11 @@ class SwiftModelGenerationTests(unittest.TestCase):
         for name, content in first.items():
             self.assertEqual(manifest["outputs"][name], hashlib.sha256(content.encode()).hexdigest())
 
+    def test_generated_metadata_includes_exact_polynomial_grid_bounds(self):
+        metadata = GENERATOR.render_swift_model()["AstronomyModelPrototypeGenerated/Generated/Metadata.swift"]
+        self.assertIn("startTT: Double(bitPattern: 0xc0e1d59000000000)", metadata)
+        self.assertIn("stopTT: Double(bitPattern: 0x40e2033000000000)", metadata)
+
     def test_input_manifest_covers_every_archive_file(self):
         manifest = GENERATOR.swift_input_manifest()
         expected = {

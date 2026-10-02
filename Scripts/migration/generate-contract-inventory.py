@@ -49,6 +49,7 @@ SOURCE_ISSUES = {
 }
 
 TEST_ISSUES = {
+    "ModelDataTests.swift": 82,
     "AcceptedTimeRangeTests.swift": 97,
     "AltitudeSearchTests.swift": 92,
     "ApsisTests.swift": 92,
@@ -102,6 +103,8 @@ TEST_ISSUES = {
 }
 
 SCRIPT_TEST_ISSUES = {
+    "Scripts/model-prototype/test_generate_swift_models.py": 82,
+    "Scripts/model-prototype/test_measure.py": 82,
     "Scripts/migration/test_comparison.py": 80,
     "Scripts/migration/test_foundation.py": 80,
     "Scripts/migration/test_performance.py": 80,
@@ -141,6 +144,20 @@ GENERATED_ISSUES = {
     "Sources/CLibAstronomy/generated/polynomial-data.h": 85,
     "Sources/CLibAstronomy/generated/vsop87b_full.h": 85,
 }
+
+PROTOTYPE_GENERATED_PREFIXES = (
+    "Sources/AstronomyModelPrototypeGenerated/Generated/",
+    "Sources/AstronomyNutationPrototype/Generated/",
+    "Sources/AstronomyPolynomialEarthPrototype/Generated/",
+    "Sources/AstronomyPolynomialJupiterPrototype/Generated/",
+    "Sources/AstronomyPolynomialMarsPrototype/Generated/",
+    "Sources/AstronomyPolynomialMercuryPrototype/Generated/",
+    "Sources/AstronomyPolynomialNeptunePrototype/Generated/",
+    "Sources/AstronomyPolynomialSaturnPrototype/Generated/",
+    "Sources/AstronomyPolynomialUranusPrototype/Generated/",
+    "Sources/AstronomyPolynomialVenusPrototype/Generated/",
+    "Sources/AstronomyVSOPPrototype/Generated/",
+)
 
 GENERATORS = {
     "Scripts/numerics/solar-altitude/bounds.json": "Scripts/numerics/solar-altitude/bounds.py",
@@ -463,9 +480,14 @@ def generated_artifacts(root):
         path = root / relative
         if not path.is_file():
             raise RuntimeError(f"Generated artifact is missing: {relative}")
-        if relative not in GENERATED_ISSUES:
+        issue = GENERATED_ISSUES.get(relative)
+        generator = GENERATORS.get(relative)
+        if issue is None and relative.startswith(PROTOTYPE_GENERATED_PREFIXES):
+            issue = 82
+            generator = "Scripts/generate-models.py"
+        if issue is None:
             raise RuntimeError(f"No migration issue for generated artifact {relative}")
-        entries.append({"id": relative, "path": relative, "sha256": sha256(path), "generator": GENERATORS[relative], "migrationIssue": GENERATED_ISSUES[relative]})
+        entries.append({"id": relative, "path": relative, "sha256": sha256(path), "generator": generator, "migrationIssue": issue})
     return entries
 
 

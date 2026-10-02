@@ -41,7 +41,7 @@
     "Scripts/performance/polynomial/data/shipping-validity.json": "1a8133b139047f4aafdb3475d6059d540af14f7f5ff2bbe6580d2a2be8788459"
   },
   "outputs": {
-    "AstronomyModelPrototype/Generated/Metadata.swift": "98d34530bd2ffdff60962375c5f20ccf0dbc64f464fb438619d6259383777f14",
+    "AstronomyModelPrototypeGenerated/Generated/Metadata.swift": "75c31f8fa548881329baa062e879454829eaa9e4d19d8af25523bfdd651dac76",
     "AstronomyNutationPrototype/Generated/Nutation.swift": "210abe7a6cd7439c6417c849f4b03de94bfbd40855721da5391af035b15c66f7",
     "AstronomyPolynomialEarthPrototype/Generated/Access.swift": "1054432ebd5867a1baaf498788880bb363f23fb2d1cb52489421b42971a3a4fc",
     "AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth0.swift": "07e617462b355aef387ca545fda426869127eeaed2257ec052d03c0918fecb91",
