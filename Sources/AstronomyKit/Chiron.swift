@@ -48,6 +48,9 @@ import Foundation
 /// print("Chiron position: \(position)")
 /// ```
 public enum Chiron {
+    /// Maximum gravity-solver step, matching the pinned upstream validation harness.
+    private static let integrationStepDays = 0.5
+
     // MARK: - Supported Range
 
     /// The earliest time Chiron calculations support.
@@ -306,20 +309,18 @@ public enum Chiron {
     /// instance is never shared between threads, no locking is required and
     /// concurrent Chiron queries cannot corrupt one another's integration.
     ///
-    /// Reuse is bounded by an error budget: numerical integration error grows
-    /// with the path traveled, so the simulation re-anchors at the reference
-    /// epoch once the accumulated path would exceed twice the span of a fresh
-    /// integration. This keeps a reused simulation's worst-case error
-    /// comparable to a fresh one while making light-travel iteration cheap.
+    /// Reuse is bounded by the path traveled. The simulation re-anchors at the
+    /// reference epoch once its accumulated path would exceed twice the span
+    /// of a fresh integration.
     ///
     /// `@unchecked Sendable` lets an instance be captured by the `@Sendable`
     /// light-travel closure. The C solver invokes that closure synchronously
     /// and serially on the calling thread, so the instance is never touched
     /// concurrently.
-    private final class ReusableSimulation: @unchecked Sendable {
+    final class ReusableSimulation: @unchecked Sendable {
         private var epochIndex: Int?
         private var simulation: GravitySimulation?
-        private var lastUniversalTime = 0.0
+        private var lastTerrestrialTime = 0.0
         private var pathDays = 0.0
 
         /// Simulates Chiron's heliocentric state at the target time, reusing
@@ -339,16 +340,16 @@ public enum Chiron {
                 throw AstronomyError.internalError
             }
 
-            let targetUT = time.universalTime
-            let freshPath = abs(targetUT - epoch.time.universalTime)
+            let targetTT = time.terrestrialTime
+            let freshPath = abs(targetTT - epoch.time.terrestrialTime)
 
             // Reuse the anchored simulation when it sits at the same epoch and
             // stepping it stays within the error budget.
             if let simulation, let epochIndex, epochIndex == index {
-                let step = abs(targetUT - lastUniversalTime)
+                let step = abs(targetTT - lastTerrestrialTime)
                 if pathDays + step <= max(2 * freshPath, 365) {
-                    let state = try simulation.update(to: time)
-                    lastUniversalTime = targetUT
+                    let state = try advance(simulation, to: time)
+                    lastTerrestrialTime = targetTT
                     pathDays += step
                     return state
                 }
@@ -360,13 +361,33 @@ public enum Chiron {
                 time: epoch.time,
                 initialState: epoch.state
             )
-            let state = try simulation.update(to: time)
+            let state = try advance(simulation, to: time)
             self.simulation = simulation
             epochIndex = index
-            lastUniversalTime = targetUT
+            lastTerrestrialTime = targetTT
             pathDays = freshPath
             return state
         }
+    }
+
+    /// Advances the solver in half-day-or-smaller Terrestrial Time increments.
+    private static func advance(
+        _ simulation: GravitySimulation,
+        to target: AstroTime
+    ) throws -> StateVector {
+        let startTT = simulation.time.terrestrialTime
+        let interval = target.terrestrialTime - startTT
+        let stepCount = max(1, Int(ceil(abs(interval) / integrationStepDays)))
+
+        for step in 1..<stepCount {
+            let nextTime = AstroTime(
+                tt: startTT + interval * Double(step) / Double(stepCount),
+                deltaTModel: target.deltaTModel
+            )
+            try simulation.update(to: nextTime)
+        }
+
+        return try simulation.update(to: target)
     }
 
     /// Selects the closest reference epoch and simulates to the target time.

@@ -57,6 +57,54 @@ class ComparisonProtocolTests(unittest.TestCase):
         paths = {item["path"] for item in self.comparison.canonical_differences(expected, actual)}
         self.assertEqual({"$.status"}, paths)
 
+    def test_accepted_correction_requires_the_recorded_values(self):
+        expected = {"value": {"x": 1.0, "y": 2.0}}
+        corrected = {"value": {"x": 1.1, "y": 2.1}}
+        recorded = self.comparison.canonical_differences(expected, corrected)
+        case = {
+            "id": "bounded-correction",
+            "command": ["unused", "espenak-meeus"],
+            "acceptedDifference": {
+                "issue": 108,
+                "differences": recorded,
+                "evidence": ["Tests/AstronomyKitTests/AuditValidationTests.swift"],
+                "reason": "test",
+            },
+        }
+        self.assertTrue(self.comparison.comparison_passes(case, recorded))
+
+        arbitrary = self.comparison.canonical_differences(expected, {"value": {"x": 1.2, "y": 2.2}})
+        missing = self.comparison.canonical_differences(expected, {"value": {"x": 1.1, "y": 2.0}})
+        unexpected = self.comparison.canonical_differences(expected, {"value": {"x": 1.1, "y": 2.1, "z": 3.0}})
+        nonvalue = self.comparison.canonical_differences(expected, {"value": {"x": "1.1", "y": 2.1}})
+        tampered = json.loads(json.dumps(case))
+        tampered["acceptedDifference"]["differences"][0]["actual"] = 1.2
+        self.assertFalse(self.comparison.comparison_passes(case, arbitrary))
+        self.assertFalse(self.comparison.comparison_passes(case, missing))
+        self.assertFalse(self.comparison.comparison_passes(case, unexpected))
+        self.assertFalse(self.comparison.comparison_passes(case, nonvalue))
+        self.assertFalse(self.comparison.comparison_passes(tampered, recorded))
+        self.assertFalse(self.comparison.comparison_passes({"id": "missing-disposition"}, recorded))
+
+    def test_chiron_correction_disposition_matches_the_archived_raw_outputs(self):
+        case = next(case for case in self.corpus["cases"] if case["id"] == "chiron-2020-em")
+        frozen = json.loads((ARTIFACTS / "c-output.json").read_text())
+        candidate = json.loads((ARTIFACTS / "swift-output.json").read_text())
+        frozen_result = next(item["result"] for item in frozen["cases"] if item["id"] == case["id"])
+        candidate_result = next(
+            item["result"] for item in candidate["cases"] if item["id"] == case["id"]
+        )
+        recorded = self.comparison.canonical_differences(frozen_result, candidate_result)
+        self.assertEqual(recorded, case["acceptedDifference"]["differences"])
+
+    def test_corpus_rejects_a_difference_disposition_on_another_case(self):
+        corpus = json.loads(json.dumps(self.corpus))
+        chiron = next(case for case in corpus["cases"] if case["id"] == "chiron-2020-em")
+        other = next(case for case in corpus["cases"] if case["id"] != "chiron-2020-em")
+        other["acceptedDifference"] = chiron.pop("acceptedDifference")
+        with self.assertRaisesRegex(ValueError, "not authorized"):
+            self.comparison.validate_corpus(corpus)
+
     def test_time_model_negative_control_is_detected(self):
         expected = {"model": "espenak-meeus", "ut": 0.0, "tt": 0.0}
         actual = {"model": "jpl-horizons", "ut": 0.0, "tt": 0.0}

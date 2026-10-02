@@ -5,6 +5,7 @@ import copy
 import gzip
 import hashlib
 import json
+import math
 import platform
 import shutil
 import struct
@@ -108,6 +109,13 @@ def canonical_differences(expected, actual, path="$"):
     return differences
 
 
+def comparison_passes(case, differences):
+    accepted = case.get("acceptedDifference")
+    if accepted is None:
+        return not differences
+    return differences == accepted["differences"]
+
+
 def validate_corpus(corpus):
     required = {
         "positions",
@@ -132,6 +140,31 @@ def validate_corpus(corpus):
     for case in corpus["cases"]:
         if case["command"][-1] not in {"espenak-meeus", "jpl-horizons"}:
             raise ValueError(f"invalid Delta T model in {case['id']}")
+        accepted = case.get("acceptedDifference")
+        if accepted is not None:
+            if case["id"] != "chiron-2020-em" or accepted.get("issue") != 108:
+                raise ValueError(f"accepted difference is not authorized for {case['id']}")
+            if set(accepted) != {"issue", "differences", "evidence", "reason"}:
+                raise ValueError(f"invalid accepted difference in {case['id']}")
+            differences = accepted["differences"]
+            if not isinstance(differences, list) or not differences:
+                raise ValueError(f"invalid accepted differences in {case['id']}")
+            paths = []
+            for difference in differences:
+                if not isinstance(difference, dict) or set(difference) != {"path", "expected", "actual", "kind"}:
+                    raise ValueError(f"invalid accepted difference record in {case['id']}")
+                if difference["kind"] != "value" or not isinstance(difference["path"], str) or not difference["path"].startswith("$."):
+                    raise ValueError(f"invalid accepted difference kind or path in {case['id']}")
+                values = (difference["expected"], difference["actual"])
+                if not all(isinstance(value, float) and math.isfinite(value) for value in values) or values[0] == values[1]:
+                    raise ValueError(f"invalid accepted difference values in {case['id']}")
+                paths.append(difference["path"])
+            if len(paths) != len(set(paths)):
+                raise ValueError(f"duplicate accepted difference path in {case['id']}")
+            if not accepted["evidence"] or not all((ROOT / path).is_file() for path in accepted["evidence"]):
+                raise ValueError(f"missing accepted difference evidence in {case['id']}")
+            if not isinstance(accepted["reason"], str) or not accepted["reason"]:
+                raise ValueError(f"missing accepted difference reason in {case['id']}")
 
 
 def git_blob(revision, path):
@@ -213,6 +246,7 @@ def compare_cases(cases, c_binary, swift_binary):
     c_outputs = []
     swift_outputs = []
     comparisons = []
+    failed = []
     for case in cases:
         c_record = {"id": case["id"], **run_process(c_binary, case["command"])}
         swift_record = {"id": case["id"], **run_process(swift_binary, case["command"])}
@@ -228,8 +262,15 @@ def compare_cases(cases, c_binary, swift_binary):
                     "kind": "value",
                 }
             )
-        comparisons.append({"id": case["id"], "differenceCount": len(differences), "differences": differences})
-    return c_outputs, swift_outputs, comparisons
+        passed = comparison_passes(case, differences)
+        comparison = {"id": case["id"], "differenceCount": len(differences), "differences": differences}
+        if accepted := case.get("acceptedDifference"):
+            comparison["acceptedDifference"] = accepted
+            comparison["accepted"] = passed
+        comparisons.append(comparison)
+        if not passed:
+            failed.append(case["id"])
+    return c_outputs, swift_outputs, comparisons, failed
 
 
 def negative_controls(c_outputs):
@@ -287,8 +328,7 @@ def generate_archive():
         subprocess.run(["swift", "build", "-c", "release", "--target", "AstronomyMigrationRunner"], cwd=ROOT, check=True)
         swift_binary = Path(command_output(["swift", "build", "-c", "release", "--show-bin-path"])) / "AstronomyMigrationRunner"
         c_binary = oracle_directory / "astronomy-oracle"
-        c_outputs, swift_outputs, comparisons = compare_cases(cases, c_binary, swift_binary)
-        failed = [item["id"] for item in comparisons if item["differenceCount"]]
+        c_outputs, swift_outputs, comparisons, failed = compare_cases(cases, c_binary, swift_binary)
         if failed:
             raise ValueError(f"candidate differs from frozen oracle: {failed}")
         failure_controls = {

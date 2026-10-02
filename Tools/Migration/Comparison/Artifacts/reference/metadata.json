@@ -41,7 +41,7 @@
       "sha256": "07bd24cd8b647d70d0ace18df3551966a72cf96c7ec26fd4138aa72410111f11"
     },
     "swiftCandidate": {
-      "fingerprintSHA256": "a780f9effe89aa889628e6ecd2576a35afd33af4e36a75d3328c2c22ff48d306",
+      "fingerprintSHA256": "c1d0a7bbc8ca126abae53f3c1c07ca59b098de8c2e5a3b88e24c786752098176",
       "normalization": "strip debug and symbols; remove the code signature and UUID from the host-built thin Mach-O on Darwin"
     }
   },
@@ -88,13 +88,13 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "Package.swift": "440352454599bbb6d699de05f8b949eb45edcec057a4fc1ff603c5cd7baae492",
-    "Scripts/migration/run-comparison.py": "f895ccc1fcbf26eb523b63f610ce0fdce47d9926d011e326643c0bf47d49259f",
+    "Scripts/migration/run-comparison.py": "8946e1e8215440847219d83436aad23efb22293c56666b41930be3474a330d78",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
     "Sources/AstronomyKit/Atmosphere.swift": "8edd5396d88889b10ffb073f25d5186d55e7bf70a75aeca3cf733a6e64f0367a",
     "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
-    "Sources/AstronomyKit/Chiron.swift": "2b5d8af311b8946638e4fb0b9dd5c1929f3931178aaf4ea4288b30dc4d6cccfe",
+    "Sources/AstronomyKit/Chiron.swift": "cd6aeb4e31cdf531cb43d827760f4e20c085172e2386c1346abdd53a7a4991f0",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Constellation.swift": "c29061f321ee0e9fab25b25733f3f5b9c30775e9fa02cce38e2311abfa978950",
     "Sources/AstronomyKit/Coordinates.swift": "b5fe4378043d41a8ac25da5d30c9225d861c3e81d3270d5072c140eeed5d0e38",
@@ -121,7 +121,7 @@
     "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
     "Sources/AstronomyKit/Transit.swift": "506eec46785f547500396747963463e774e0113d8bfdc0c383744da01cfbc2e9",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
-    "Tools/Migration/Comparison/corpus.json": "30390991e2152d940ed0fb3aca18aa6f8a81b8e37d3251e4e540c3f25310e7ae",
+    "Tools/Migration/Comparison/corpus.json": "dd916d193784240c6bec375ee66d2ec789c0c48d0dfb50adc188facedf35e011",
     "Tools/Migration/Comparison/downstream-populations-lock.json": "8d50dd7b785f10fce3735f1b9a0532cd5acdf141311ffec30563e3551af0501d",
     "Tools/Migration/Oracle/oracle-lock.json": "2ec3c24f3ff88a230efae8e6a06ad884311bb4dfc12de5061103d0ef6a21b216",
     "Tools/Migration/Oracle/oracle-main.c": "b072ddaa1677ef6e5f9083d9739e1fa6334c1e7661b4a82c43f04b3ce172659e",
