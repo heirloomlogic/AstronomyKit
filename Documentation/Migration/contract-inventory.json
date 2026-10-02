@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 61,
-    "tests": 767
+    "tests": 769
   },
   "crossCuttingContracts": [
     {
@@ -3218,7 +3218,7 @@
     "Scripts/migration/test_foundation.py": "fe3b6efc4e85c7b817eb616333f46cb4ff0105ecb7523e4b0efd8aabc2f6272a",
     "Scripts/migration/test_performance.py": "f3f371ad136a3008dedc971d9deede0ffdd6797e837a9bb85be27245e7a68c41",
     "Scripts/model-prototype/test_generate_swift_models.py": "433c6691889b8e9368b3eacd413e09fe5d0c20a220ebc983d6af193e9afbcba1",
-    "Scripts/model-prototype/test_measure.py": "b7b4d933ee91412c67af0f0d7437262f06153426b61cb25894b71cec149d5851",
+    "Scripts/model-prototype/test_measure.py": "be283cc83b114218026bda0d3c27f9fe8e7ba7d136a7b05315628633901feb12",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
     "Scripts/performance/polynomial/test_polynomial.py": "aa7b84265a0e51932906ebfbf3d000041898b352ecff90eb6b6b97a046111adc",
     "Scripts/performance/test-moon-cache.sh": "58d7a71ed74515e7e7c3616d124ccaf3117acebed648e724af865706d96203f2",
@@ -12689,7 +12689,7 @@
       "id": "Scripts/model-prototype/test_measure.py",
       "migrationIssue": 82,
       "path": "Scripts/model-prototype/test_measure.py",
-      "testCount": 8
+      "testCount": 10
     },
     {
       "classification": "invariant",
