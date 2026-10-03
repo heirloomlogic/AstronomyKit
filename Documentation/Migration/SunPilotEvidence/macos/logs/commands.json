@@ -1,0 +1,1103 @@
+{
+  "entries": [
+    {
+      "command": [
+        "swiftc",
+        "-O",
+        "-parse-as-library",
+        "-emit-ir",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/compensation.swift",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/compensation.ll"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0001-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0001-stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/clang",
+        "-std=c11",
+        "-O3",
+        "-DNDEBUG",
+        "-fno-fast-math",
+        "-ffp-contract=off",
+        "-fno-ident",
+        "-I",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-oracle-ul7p7vwo/Sources/CLibAstronomy",
+        "-I",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-oracle-ul7p7vwo/Sources/CLibAstronomy/include",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/Tools/Migration/SunPilotOracle/main.c",
+        "-lm",
+        "-pthread",
+        "-o",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0002-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0002-stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0003-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0003-stdout.log",
+          "sha256": "36a6428f7228fa2134e23727fa42a72621f076d570127c962f1cdb4671fa209c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpl_ffcvk6",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0004-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0004-stdout.log",
+          "sha256": "9e0b22c00d503266819bed205ae8516aa5bae95661a8f2e0c8bcac12077f8aa6"
+        },
+        "time": {
+          "path": "0004-time.log",
+          "sha256": "0cbefc8cdd55dac428ba8dc0ed3354149261be00d0be9bb454ad2d135acff97f"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpk2gxk0fa",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0005-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0005-stdout.log",
+          "sha256": "eb87b35ab286fdd1ade46ef9079630e02a869f7fa20d10af939d5248411e98b2"
+        },
+        "time": {
+          "path": "0005-time.log",
+          "sha256": "06a3897ac9358fe24f5b75b1529280a900fc826fe7f90cd150c946a14d2f0b69"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpg1b1a6vp",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0006-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0006-stdout.log",
+          "sha256": "f17a7bf26c0f0b849e0ed1642a46317f51a54c2e911d2615aedf47d8dc1d1db2"
+        },
+        "time": {
+          "path": "0006-time.log",
+          "sha256": "fac88ad599908877c414568c981edcb2b8e5d5931c317fdbad9708b68d49b1ca"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpjqe8y3az",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0007-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0007-stdout.log",
+          "sha256": "8cbd6bd4a8662659691f34cb99a7fc848046d3bebd3b95a75228202b85211fe0"
+        },
+        "time": {
+          "path": "0007-time.log",
+          "sha256": "c607f834da366dbe9cf32106567738c430d95d37ae9b76505f4866129ccb3d5e"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp8t22x7j0",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-oracle",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0008-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0008-stdout.log",
+          "sha256": "9223d34139331d313630103e7fa3b5099b65173f1f866e027fece0f8beb849e0"
+        },
+        "time": {
+          "path": "0008-time.log",
+          "sha256": "a4de2c218e29b4ecf53b46f9b7bbf41fdb13d5b27997445d1867197efffc7f6d"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "package",
+        "dump-package"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "files": {
+        "stderr": {
+          "path": "0009-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0009-stdout.log",
+          "sha256": "c3a6f85181bd9196e42817c208bf2a9165c01fed599d81cbe003e653d6557ccc"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp0c2oyvxz",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 11.315732667047996,
+      "files": {
+        "stderr": {
+          "path": "0010-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0010-stdout.log",
+          "sha256": "df42807cb953feef37b19d389fe1b4ce7e3b787117e3af6f4cc2e7cf9bdf9d24"
+        },
+        "time": {
+          "path": "0010-time.log",
+          "sha256": "2d3854a7697e07b86abd097826d03bc377d005050634ff7b84803e487e7f3f0e"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpzuxc3j01",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 10.340770582959522,
+      "files": {
+        "stderr": {
+          "path": "0011-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0011-stdout.log",
+          "sha256": "1de5219202a1cb1ab48ee72e156a73d8b780c01967bfe3340414233539fbae28"
+        },
+        "time": {
+          "path": "0011-time.log",
+          "sha256": "610eb268c0e0505566749aa775ecc769270ac7b5ce9ed1d39a33b3d998dd269b"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpatbd3mcx",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 10.090157750004437,
+      "files": {
+        "stderr": {
+          "path": "0012-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0012-stdout.log",
+          "sha256": "7a4d326c998e0649621828ad22061d96870bf53f33c768b33717af5202e7d88f"
+        },
+        "time": {
+          "path": "0012-time.log",
+          "sha256": "f318d043df15711f2e8ed90210f78b6f00a9aa0e9bfdadae79d308819a095f35"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp6lsj6ey0",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 10.95433287502965,
+      "files": {
+        "stderr": {
+          "path": "0013-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0013-stdout.log",
+          "sha256": "3472b03d333085083c34e4cd77b7a6caaa3598de2645d91e5a63f6910c9ab23c"
+        },
+        "time": {
+          "path": "0013-time.log",
+          "sha256": "fa440f2768634ae01558a5d7a8aa89b573ff19d2eccc6902136243b798dbc5e4"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp579vzbea",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 1.9215885000303388,
+      "files": {
+        "stderr": {
+          "path": "0014-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0014-stdout.log",
+          "sha256": "bf15e670297ae5a0bda19d9315b486d7136455b759f61c1e2ec07a6abc9456b6"
+        },
+        "time": {
+          "path": "0014-time.log",
+          "sha256": "3ad239118c1923c0171e850e68f7f04928d91cd1dce92f28aebcc1c2aee4d433"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpfgbar275",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 1.8647278749849647,
+      "files": {
+        "stderr": {
+          "path": "0015-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0015-stdout.log",
+          "sha256": "a319b00748bf22a13921b1bf95bb3349d4442312159ca7c7767fa31bb1e452c7"
+        },
+        "time": {
+          "path": "0015-time.log",
+          "sha256": "27c899d0049e4704bc5bceec660aa57fc897b20a4f89f1cb1d58df6c9d4a8c88"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmppdesf_8w",
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 1.8554860830190592,
+      "files": {
+        "stderr": {
+          "path": "0016-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0016-stdout.log",
+          "sha256": "0b5126ead3317dfa37ab629bc03a9235ae9b43fe5c3a44c408078be149673202"
+        },
+        "time": {
+          "path": "0016-time.log",
+          "sha256": "0781f729e8565ff66df20c809ad27f6f725818b64d7681f7de44a2207ce0826b"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "debug",
+        "--show-bin-path",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "files": {
+        "stderr": {
+          "path": "0017-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0017-stdout.log",
+          "sha256": "73460b6ccdc254b7399854d9755dd7ec6555e02768a871e139292714f5d234f3"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0018-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0018-stdout.log",
+          "sha256": "36a6428f7228fa2134e23727fa42a72621f076d570127c962f1cdb4671fa209c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner",
+        "--perturb-fallback"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0019-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0019-stdout.log",
+          "sha256": "36a6428f7228fa2134e23727fa42a72621f076d570127c962f1cdb4671fa209c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpwsm__rmn",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0020-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0020-stdout.log",
+          "sha256": "75a5e089e77d3e42812cb1aae5382f0950257b1e3173285967f66cabd2a517ae"
+        },
+        "time": {
+          "path": "0020-time.log",
+          "sha256": "cbde069ec518d3fcc87b6ce1777f8947d2578e432a19af46a75c636fdf32504e"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpehrw_b5u",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0021-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0021-stdout.log",
+          "sha256": "c8a1bb9ecdd79060c75cc88099539becef0730a1749c7bbb0f67f5aeba2a9108"
+        },
+        "time": {
+          "path": "0021-time.log",
+          "sha256": "8497d26325dc5d03f4b1d0d0b7f382f84e85b36c217e07e3cfe8ee06ba2a6f4a"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmptl1xxn02",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0022-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0022-stdout.log",
+          "sha256": "c9378bb84dddec769256742a8bb47a671b45e213391680c3f3e7c34f16767a06"
+        },
+        "time": {
+          "path": "0022-time.log",
+          "sha256": "dc8263d31cef9cfcbca506e19b342f9090383292fc0bafa68c1f5b4ec806af74"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp75h8c241",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0023-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0023-stdout.log",
+          "sha256": "88427e08169a7aaeb43a3585b36c68c46fd31522b0e2dbd289c76556cd4e9add"
+        },
+        "time": {
+          "path": "0023-time.log",
+          "sha256": "5a18cb131a21607e66b766ff536f7fa2074a5a48ca63d6a02cbe7067067eda75"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpjina_w_b",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-debug/out/Products/Debug/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0024-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0024-stdout.log",
+          "sha256": "2277e6e190a1a3959576a4df81862f5f8f3a863c4d25032e6979153265a9e385"
+        },
+        "time": {
+          "path": "0024-time.log",
+          "sha256": "c132f690c9e0a1dcc998e2d5b4ee6d2fb37ab1f1083bd4067dc20a32f9449db8"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "strip",
+        "-S",
+        "-x",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-debug-stripped"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0025-stderr.log",
+          "sha256": "9763d39fcd1fe7f07fbfa63946e41961e501807ab5d9ce6d4a70fc5995823cd4"
+        },
+        "stdout": {
+          "path": "0025-stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp_526teju",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 11.621842041960917,
+      "files": {
+        "stderr": {
+          "path": "0026-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0026-stdout.log",
+          "sha256": "5587ecc51c78b4b74d5d88a5ff7a640361b2a45554caaeed767956601ae5af48"
+        },
+        "time": {
+          "path": "0026-time.log",
+          "sha256": "fd035a669368197b90c7286c5897d3851744bd623b6f70e456df399ddfa1a9bd"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp3futpo76",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 10.133349624986295,
+      "files": {
+        "stderr": {
+          "path": "0027-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0027-stdout.log",
+          "sha256": "f75f0065e4857183b05b210bf3f2c1033363b3b9276319fc37a631eb3ac62405"
+        },
+        "time": {
+          "path": "0027-time.log",
+          "sha256": "13e6f218775bcbf2b97f4805a02db92806b3ee9f6d84cfceccb787b84750cd56"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpwk4i9wee",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 12.538549875025637,
+      "files": {
+        "stderr": {
+          "path": "0028-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0028-stdout.log",
+          "sha256": "ec7c1c08ae1ddb05f85f57c1e07f83da183f3f998351bf1d65bf15eece793931"
+        },
+        "time": {
+          "path": "0028-time.log",
+          "sha256": "1d706eed639c6b0394e3b46ff709a734c34f69a8d2415a0082ec00d3fc810788"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpwq6c9uif",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 10.513947042054497,
+      "files": {
+        "stderr": {
+          "path": "0029-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0029-stdout.log",
+          "sha256": "2d37234bea3f9a2970530ca4b0793ded7ba2078e4213444e9435667fdfe1fb09"
+        },
+        "time": {
+          "path": "0029-time.log",
+          "sha256": "d548c8fa1a7c786821178dc157d84df5c9f5a278366c6b8629a6c9fe51c0b21a"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpz349c2qb",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 2.6065962919965386,
+      "files": {
+        "stderr": {
+          "path": "0030-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0030-stdout.log",
+          "sha256": "1c834aec5ff24a7e1ac12035d31fc7bb3b89ce554f9975f063715168451c022b"
+        },
+        "time": {
+          "path": "0030-time.log",
+          "sha256": "acdc7eaa1cbd8cae685dc0b50aa426d3aa7551d10297deab533098774aab6b63"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmprdeigdf3",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 2.6277358750230633,
+      "files": {
+        "stderr": {
+          "path": "0031-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0031-stdout.log",
+          "sha256": "d44565ef2bb1c0175ebdcdc5212e0a43e7681671d76cd35ba91dfe93c76b7969"
+        },
+        "time": {
+          "path": "0031-time.log",
+          "sha256": "d0eba7215b1b206556900050ecb5ae3e817542c79f13f7d0a7c43391bdedefcc"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpvxrgxfha",
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "elapsedSeconds": 2.7079126249882393,
+      "files": {
+        "stderr": {
+          "path": "0032-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0032-stdout.log",
+          "sha256": "35f77722c0dff3712e874066c34704d73556a658d1c93b7732730336739455ea"
+        },
+        "time": {
+          "path": "0032-time.log",
+          "sha256": "f6e94855872426982dc7c8935cc56560d6bb1c3ee4f791ce8f3e9022bda3d7af"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--show-bin-path",
+        "--scratch-path",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release"
+      ],
+      "cwd": "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package",
+      "files": {
+        "stderr": {
+          "path": "0033-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0033-stdout.log",
+          "sha256": "e3f016a87ce9062e3cdcb2f6687d237996df381404ea30ad32f6ff5231dde2f5"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0034-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0034-stdout.log",
+          "sha256": "36a6428f7228fa2134e23727fa42a72621f076d570127c962f1cdb4671fa209c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner",
+        "--perturb-fallback"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0035-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0035-stdout.log",
+          "sha256": "36a6428f7228fa2134e23727fa42a72621f076d570127c962f1cdb4671fa209c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmppc828xn6",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0036-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0036-stdout.log",
+          "sha256": "b8c666de7d8155c2258602c498bed62b518855590821501d5618046f3b2f7b08"
+        },
+        "time": {
+          "path": "0036-time.log",
+          "sha256": "3cf83eda0d723239e9bd556579b8846dc1eb611e5cba975c84589abf391ea4ed"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpka1y8wd1",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0037-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0037-stdout.log",
+          "sha256": "b024f05dfa510064f68c2c695dc6c5d5908d60252944760bfdd0a7b8386e0660"
+        },
+        "time": {
+          "path": "0037-time.log",
+          "sha256": "330ca213088efb4ebf68f6f6c58d355686cc652435175feba6a26775e77fcc25"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmpq4w4g4qb",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0038-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0038-stdout.log",
+          "sha256": "ed6cadeed9444a9514b774b7364c2777501ae42f43ef9b0c70d6884aa75476a9"
+        },
+        "time": {
+          "path": "0038-time.log",
+          "sha256": "522a56d782f95addf83152dc0203c1c63a8ee4b1bf39ab5bdb8ae753f085fbfe"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmp_rq1jtag",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0039-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0039-stdout.log",
+          "sha256": "fa489f1d99c49af8eefb432bb19bfdace8fbb2f2e8e39dd595d6e206557aa297"
+        },
+        "time": {
+          "path": "0039-time.log",
+          "sha256": "93ab4783464b0bfd9f3474595aca0b725e2815f1ba019dc66a33369056962ee9"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "-o",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/tmprcnbtiup",
+        "/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package/.build/sun-pilot-release/out/Products/Release/AstronomySunPilotRunner",
+        "--performance"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0040-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0040-stdout.log",
+          "sha256": "40b1ad50ad99111411bba7f4dd8b0b8c7958b7b358367d5ccb53bad90846bfc7"
+        },
+        "time": {
+          "path": "0040-time.log",
+          "sha256": "b8e1fc5e8e2ca0b4ec310d663478f6bd6a7559f2af5d798e18d9ad303629a2f7"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "strip",
+        "-S",
+        "-x",
+        "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn/.context/issue83/macos-isolated/sun-pilot-release-stripped"
+      ],
+      "cwd": "/Users/sessions/conductor/workspaces/AstronomyKit/tallinn",
+      "files": {
+        "stderr": {
+          "path": "0041-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0041-stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "returncode": 0
+    }
+  ]
+}

@@ -1,0 +1,439 @@
+{
+  "cLanguageStandard" : null,
+  "cxxLanguageStandard" : null,
+  "defaultLocalization" : null,
+  "dependencies" : [
+
+  ],
+  "name" : "AstronomySunPilot",
+  "packageKind" : {
+    "root" : [
+      "/private/var/folders/76/c_vq2hmx2dl51b09zfy5r1k00000gn/T/sun-pilot-package-l7lv1rc_/package"
+    ]
+  },
+  "pkgConfig" : null,
+  "platforms" : [
+    {
+      "options" : [
+
+      ],
+      "platformName" : "macos",
+      "version" : "15.0"
+    }
+  ],
+  "products" : [
+    {
+      "name" : "AstronomySunPilotRunner",
+      "settings" : [
+
+      ],
+      "targets" : [
+        "AstronomySunPilotRunner"
+      ],
+      "type" : {
+        "executable" : null
+      }
+    }
+  ],
+  "providers" : null,
+  "swiftLanguageVersions" : null,
+  "targets" : [
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "CLibAstronomy",
+      "packageAccess" : true,
+      "path" : "Sources/CLibAstronomy",
+      "publicHeadersPath" : "include",
+      "resources" : [
+
+      ],
+      "settings" : [
+        {
+          "kind" : {
+            "headerSearchPath" : {
+              "_0" : "include"
+            }
+          },
+          "tool" : "c"
+        }
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialMercuryPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialVenusPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialEarthPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialMarsPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialJupiterPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialSaturnPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialUranusPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyPolynomialNeptunePrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyVSOPPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyNutationPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyModelPrototypeGenerated",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "AstronomyModelPrototypeGenerated",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialMercuryPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialVenusPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialEarthPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialMarsPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialJupiterPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialSaturnPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialUranusPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyPolynomialNeptunePrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyVSOPPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "AstronomyNutationPrototype",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyModelPrototype",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "AstronomyModelPrototype",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyModelPrototypeRunner",
+      "packageAccess" : true,
+      "path" : "Tools/Migration/ModelPrototypeRunner",
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "executable"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "AstronomyModelPrototype",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomyModelPrototypeTests",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "test"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "AstronomyModelPrototype",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomySunPilotRunner",
+      "packageAccess" : true,
+      "path" : "Tools/Migration/SunPilotRunner",
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "executable"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "AstronomyModelPrototype",
+            null
+          ]
+        },
+        {
+          "byName" : [
+            "CLibAstronomy",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "AstronomySunPilotTests",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "test"
+    }
+  ],
+  "toolsVersion" : {
+    "_version" : "6.0.0"
+  },
+  "traits" : [
+
+  ]
+}

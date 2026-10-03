@@ -1,0 +1,31 @@
+Building for production...
+[Computing dependencies]
+[Pre-planning 1 / 384]
+[Planning deferred tasks]
+[88 / 177]
+[99 / 188] AstronomyModelPrototypeGenerated
+[118 / 199] AstronomyModelPrototypeGenerated
+[120 / 201] AstronomyPolynomialMercuryPrototype
+[121 / 201] AstronomyModelPrototypeGenerated
+[135 / 201] AstronomyVSOPPrototype
+[147 / 201] AstronomyPolynomialJupiterPrototype
+[165 / 201] AstronomyPolynomialSaturnPrototype
+[177 / 201] AstronomyPolynomialEarthPrototype
+[190 / 202] AstronomyModelPrototype
+[199 / 235]
+[204 / 235]
+[206 / 235]
+[207 / 235]
+[208 / 235]
+[212 / 235]
+[214 / 235]
+[217 / 235]
+[220 / 235]
+[222 / 235]
+[223 / 235]
+[224 / 235] AstronomyModelPrototype
+[231 / 236] AstronomySunPilotRunner-product
+[233 / 237] AstronomySunPilotRunner-product
+[235 / 237] AstronomySunPilotRunner-product
+[236 / 237] AstronomySunPilotRunner-product
+Build complete! (11.47 sec)
