@@ -5,7 +5,8 @@ on:
     paths:
       - "Package.swift"
       - "Sources/**"
-      - "Tests/AstronomyModelPrototypeTests/**"
+      - "Tests/Astronomy*PrototypeTests/**"
+      - "Tests/AstronomySunPilotTests/**"
       - "Tools/Migration/**"
       - "Scripts/migration/sun_pilot.py"
       - "Scripts/migration/test_sun_pilot.py"
@@ -39,10 +40,7 @@ jobs:
       - name: Test pilot and comparator
         run: |
           python3 -m unittest discover -s Scripts/migration -p test_sun_pilot.py -v
-          touch .model-prototype
-          swift package purge-cache
-          swift test --filter 'SunPilotTests|ModelDataTests'
-          swift test -c release --filter 'SunPilotTests|ModelDataTests'
+          python3 Scripts/migration/sun_pilot.py --test
       - name: Retain complete Debug and Release numerical and performance evidence
         run: python3 Scripts/migration/sun_pilot.py --output .context/issue83/linux
       - name: Record hosted revision

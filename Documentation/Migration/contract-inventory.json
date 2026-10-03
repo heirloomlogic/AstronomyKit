@@ -3814,7 +3814,7 @@
     "Tests/AstronomyKitTests/TransitTests.swift": "30b58e28857f43079a02b0ce078a6502e08effe5b8da64c14c045695b08eb0b5",
     "Tests/AstronomyKitTests/VsopCacheTests.swift": "8bd6fbd8643eccb65271eaddcd2ac518ea7281766f4f749b3d2b44146ad13827",
     "Tests/AstronomyModelPrototypeTests/ModelDataTests.swift": "f54955cd587247c60435f30a9ed16618300146e8bb58766dda017de582c05aef",
-    "Tests/AstronomyModelPrototypeTests/SunPilotTests.swift": "85c1a0988782f58f3e7285c9cdc08f92b383edfb515338d5200bb9b49f52d7f1"
+    "Tests/AstronomySunPilotTests/SunPilotTests.swift": "85c1a0988782f58f3e7285c9cdc08f92b383edfb515338d5200bb9b49f52d7f1"
   },
   "localPatches": [
     {
@@ -13655,9 +13655,9 @@
     },
     {
       "classification": "invariant",
-      "id": "Tests/AstronomyModelPrototypeTests/SunPilotTests.swift",
+      "id": "Tests/AstronomySunPilotTests/SunPilotTests.swift",
       "migrationIssue": 83,
-      "path": "Tests/AstronomyModelPrototypeTests/SunPilotTests.swift",
+      "path": "Tests/AstronomySunPilotTests/SunPilotTests.swift",
       "testCount": 6
     }
   ]

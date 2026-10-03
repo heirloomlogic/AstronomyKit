@@ -81,8 +81,7 @@ if FileManager.default.fileExists(atPath: modelPrototypeSentinel) {
             ]
         ),
         .executableTarget(name: "AstronomyModelPrototypeRunner", dependencies: ["AstronomyModelPrototype"], path: "Tools/Migration/ModelPrototypeRunner"),
-        .executableTarget(name: "AstronomySunPilotRunner", dependencies: ["AstronomyModelPrototype"], path: "Tools/Migration/SunPilotRunner"),
-        .testTarget(name: "AstronomyModelPrototypeTests", dependencies: ["AstronomyModelPrototype", "CLibAstronomy"]),
+        .testTarget(name: "AstronomyModelPrototypeTests", dependencies: ["AstronomyModelPrototype"]),
     ]
 }
 

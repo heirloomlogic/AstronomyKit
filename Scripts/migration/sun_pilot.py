@@ -120,6 +120,13 @@ def source_hashes():
     return dict(sorted(hashes.items()))
 
 
+def prepare_package(destination):
+    MEASURE.copy_workspace(destination)
+    shutil.copy2(ROOT / "Tools/Migration/SunPilotPackage/Package.swift", destination / "Package.swift")
+    (destination / ".model-prototype").unlink()
+    return json.loads(MEASURE.logged_output(["swift", "package", "dump-package"], destination))
+
+
 def build_oracle(output):
     lock_path = ROOT / "Tools/Migration/Oracle/oracle-lock.json"
     lock = json.loads(lock_path.read_text())
@@ -258,9 +265,19 @@ def inspect_compensation(output):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--test", action="store_true", help="Run focused Debug and Release tests in the isolated development package")
     parser.add_argument("--quick", action="store_true", help="Diagnostic corpus/build trials; never qualifies the pilot")
     arguments = parser.parse_args()
+    if arguments.test:
+        with tempfile.TemporaryDirectory(prefix="sun-pilot-tests-") as temporary:
+            package = Path(temporary) / "package"
+            prepare_package(package)
+            for configuration in ("debug", "release"):
+                subprocess.run(["swift", "test", "-c", configuration, "--filter", "SunPilotTests|ModelDataTests"], cwd=package, check=True)
+        return
+    if arguments.output is None:
+        parser.error("--output is required for measurement")
     output = arguments.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     MEASURE.ACTIVE_LOG = MEASURE.CommandLog(output / "logs")
@@ -285,7 +302,11 @@ def main():
     record["configurations"] = {}
     with tempfile.TemporaryDirectory(prefix="sun-pilot-package-") as temporary:
         package = Path(temporary) / "package"
-        MEASURE.copy_workspace(package)
+        evaluated_manifest = prepare_package(package)
+        record["effectivePackage"] = {"manifestSHA256": MEASURE.sha256(package / "Package.swift"),
+                                      "evaluatedManifest": evaluated_manifest,
+                                      "evaluatedManifestSHA256": hashlib.sha256(json.dumps(evaluated_manifest, sort_keys=True).encode()).hexdigest(),
+                                      "developmentManifest": "Tools/Migration/SunPilotPackage/Package.swift"}
         for configuration in ("debug", "release"):
             print(f"Measuring {configuration}", flush=True)
             build_record, binary = builds(package, configuration, 1 if arguments.quick else 3)
