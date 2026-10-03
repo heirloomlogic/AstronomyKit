@@ -1,0 +1,68 @@
+name: Native Sun pilot
+
+on:
+  pull_request:
+    paths:
+      - "Package.swift"
+      - "Sources/**"
+      - "Tests/AstronomyModelPrototypeTests/**"
+      - "Tools/Migration/**"
+      - "Scripts/migration/sun_pilot.py"
+      - "Scripts/migration/test_sun_pilot.py"
+      - "Scripts/model-prototype/**"
+      - "Documentation/Migration/SunPilotProtocol.md"
+      - ".github/workflows/sun-pilot.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  qualification-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48ee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+      - name: Test pilot and comparator
+        run: |
+          python3 -m unittest discover -s Scripts/migration -p test_sun_pilot.py -v
+          touch .model-prototype
+          swift package purge-cache
+          swift test --filter 'SunPilotTests|ModelDataTests'
+          swift test -c release --filter 'SunPilotTests|ModelDataTests'
+      - name: Retain complete Debug and Release numerical and performance evidence
+        run: python3 Scripts/migration/sun_pilot.py --output .context/issue83/linux
+      - name: Record hosted revision
+        if: always()
+        env:
+          CI_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CI_TESTED_SHA: ${{ github.sha }}
+          CI_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          mkdir -p .context/issue83/linux
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          keys = ("CI_RUN_URL", "CI_TESTED_SHA", "CI_HEAD_SHA")
+          Path(".context/issue83/linux/hosted-execution.json").write_text(json.dumps({key: os.environ[key] for key in keys}, indent=2, sort_keys=True) + "\n")
+          PY
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: native-sun-pilot-linux-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .context/issue83/linux/
+          include-hidden-files: true
+          if-no-files-found: error

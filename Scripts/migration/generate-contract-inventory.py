@@ -51,6 +51,7 @@ SOURCE_ISSUES = {
 TEST_ISSUES = {
     "DistanceAccuracyTests.swift": 81,
     "ModelDataTests.swift": 82,
+    "SunPilotTests.swift": 83,
     "AcceptedTimeRangeTests.swift": 97,
     "AltitudeSearchTests.swift": 92,
     "ApsisTests.swift": 92,
@@ -110,6 +111,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/migration/test_comparison.py": 80,
     "Scripts/migration/test_foundation.py": 80,
     "Scripts/migration/test_performance.py": 80,
+    "Scripts/migration/test_sun_pilot.py": 83,
     "Scripts/migration/test_performance_candidate.py": 80,
     "Scripts/numerics/solar-altitude/test_bounds.py": 94,
     "Scripts/performance/polynomial/test_polynomial.py": 85,
