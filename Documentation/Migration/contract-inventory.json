@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 114,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 69,
-    "tests": 861
+    "testOwners": 71,
+    "tests": 872
   },
   "crossCuttingContracts": [
     {
@@ -3715,6 +3715,7 @@
     "Scripts/migration/test_foundation.py": "fe3b6efc4e85c7b817eb616333f46cb4ff0105ecb7523e4b0efd8aabc2f6272a",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "aac319f96b5b30e24e3803ec7d882f5e5834543d5033c799a8d87fe8fc6088b1",
+    "Scripts/migration/test_sun_pilot.py": "4b441006bd0bf4ae2fbf637a7abe0fff991464b64d57d1247f0d2186cb01897f",
     "Scripts/model-prototype/test_generate_swift_models.py": "4cd335d674af4a12fe405c265744682c45af78bbd7f9e95476e1c3f964a3106c",
     "Scripts/model-prototype/test_measure.py": "fc52c547a19698cd8f6a8adc6a6b037664b0fadb9ea61f531da7b289c6f5ecbd",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
@@ -3812,7 +3813,8 @@
     "Tests/AstronomyKitTests/StateVectorExtensionTests.swift": "bf125387607cdd5f9eb4ea779ef3c3d158ded46450ec4712422b467c4e1308ec",
     "Tests/AstronomyKitTests/TransitTests.swift": "30b58e28857f43079a02b0ce078a6502e08effe5b8da64c14c045695b08eb0b5",
     "Tests/AstronomyKitTests/VsopCacheTests.swift": "8bd6fbd8643eccb65271eaddcd2ac518ea7281766f4f749b3d2b44146ad13827",
-    "Tests/AstronomyModelPrototypeTests/ModelDataTests.swift": "f54955cd587247c60435f30a9ed16618300146e8bb58766dda017de582c05aef"
+    "Tests/AstronomyModelPrototypeTests/ModelDataTests.swift": "f54955cd587247c60435f30a9ed16618300146e8bb58766dda017de582c05aef",
+    "Tests/AstronomySunPilotTests/SunPilotTests.swift": "85c1a0988782f58f3e7285c9cdc08f92b383edfb515338d5200bb9b49f52d7f1"
   },
   "localPatches": [
     {
@@ -13191,6 +13193,13 @@
     },
     {
       "classification": "invariant",
+      "id": "Scripts/migration/test_sun_pilot.py",
+      "migrationIssue": 83,
+      "path": "Scripts/migration/test_sun_pilot.py",
+      "testCount": 5
+    },
+    {
+      "classification": "invariant",
       "id": "Scripts/model-prototype/test_generate_swift_models.py",
       "migrationIssue": 82,
       "path": "Scripts/model-prototype/test_generate_swift_models.py",
@@ -13643,6 +13652,13 @@
       "migrationIssue": 82,
       "path": "Tests/AstronomyModelPrototypeTests/ModelDataTests.swift",
       "testCount": 5
+    },
+    {
+      "classification": "invariant",
+      "id": "Tests/AstronomySunPilotTests/SunPilotTests.swift",
+      "migrationIssue": 83,
+      "path": "Tests/AstronomySunPilotTests/SunPilotTests.swift",
+      "testCount": 6
     }
   ]
 }

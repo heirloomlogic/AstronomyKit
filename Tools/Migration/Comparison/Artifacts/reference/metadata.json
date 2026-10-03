@@ -1,23 +1,23 @@
 {
   "candidateBaseRevision": "ca12f26a64b020714611bccc9668b347038df6bf",
   "environment": {
-    "cc": "Apple clang version 21.0.0 (clang-2100.3.30.1)",
+    "cc": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
     "machine": "arm64",
     "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
     "python": "3.14.7",
-    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.30.4 clang-2100.3.30.1)\nTarget: arm64-apple-macosx27.0.0"
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
   },
   "executables": {
     "frozenC": {
       "build": {
         "actualEnvironment": {
           "architecture": "arm64",
-          "compiler": "Apple clang version 21.0.0 (clang-2100.3.30.1)",
+          "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
           "os": "Darwin",
           "osVersion": "27.0.1"
         },
         "baselineRevision": "cdb533dbe85c76b39a958ca92f9155d8bd55b392",
-        "binarySha256": "07bd24cd8b647d70d0ace18df3551966a72cf96c7ec26fd4138aa72410111f11",
+        "binarySha256": "04adfb037e1085d381f100937d7d89c90c516cca0c4ab0e80dde62939cf46833",
         "buildFlags": [
           "-std=c11",
           "-O3",
@@ -26,7 +26,7 @@
           "-ffp-contract=off",
           "-fno-ident"
         ],
-        "environmentMatchesRecorded": true,
+        "environmentMatchesRecorded": false,
         "recordedEnvironment": {
           "architecture": "arm64",
           "compiler": "Apple clang version 21.0.0 (clang-2100.3.30.1)",
@@ -38,10 +38,10 @@
         "schemaVersion": 1,
         "sourceLockSha256": "2ec3c24f3ff88a230efae8e6a06ad884311bb4dfc12de5061103d0ef6a21b216"
       },
-      "sha256": "07bd24cd8b647d70d0ace18df3551966a72cf96c7ec26fd4138aa72410111f11"
+      "sha256": "04adfb037e1085d381f100937d7d89c90c516cca0c4ab0e80dde62939cf46833"
     },
     "swiftCandidate": {
-      "fingerprintSHA256": "c1d0a7bbc8ca126abae53f3c1c07ca59b098de8c2e5a3b88e24c786752098176",
+      "fingerprintSHA256": "5bf9c8169da6df68e4c4e048eac32ce507ab21085ee75e54910b921c5cb5524b",
       "normalization": "strip debug and symbols; remove the code signature and UUID from the host-built thin Mach-O on Darwin"
     }
   },

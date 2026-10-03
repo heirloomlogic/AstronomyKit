@@ -1,0 +1,44 @@
+Building for debugging...
+[Computing dependencies]
+[Pre-planning 1 / 384]
+[Planning deferred tasks]
+[89 / 192]
+[100 / 204] AstronomyNutationPrototype
+[102 / 272] AstronomyPolynomialEarthPrototype
+[113 / 294] AstronomyPolynomialVenusPrototype
+[114 / 294] AstronomyPolynomialSaturnPrototype
+[130 / 294] AstronomyPolynomialNeptunePrototype
+[154 / 294] AstronomyNutationPrototype
+[176 / 294] AstronomyPolynomialVenusPrototype
+[193 / 294] AstronomyPolynomialVenusPrototype
+[198 / 294] AstronomyPolynomialUranusPrototype
+[202 / 294] AstronomyPolynomialSaturnPrototype
+[207 / 294] AstronomyPolynomialSaturnPrototype
+[211 / 294] AstronomyPolynomialSaturnPrototype
+[217 / 294] AstronomyPolynomialNeptunePrototype
+[226 / 294] AstronomyPolynomialMercuryPrototype
+[233 / 294] AstronomyPolynomialMercuryPrototype
+[238 / 294] AstronomyPolynomialMarsPrototype
+[244 / 294] AstronomyPolynomialJupiterPrototype
+[252 / 294] AstronomyPolynomialEarthPrototype
+[258 / 294] AstronomyPolynomialEarthPrototype
+[266 / 294] AstronomyPolynomialUranusPrototype
+[274 / 295] AstronomyPolynomialEarthPrototype
+[276 / 295] AstronomyPolynomialMercuryPrototype
+[278 / 295] AstronomyPolynomialEarthPrototype
+[287 / 333]
+[290 / 333]
+[295 / 333]
+[297 / 333]
+[301 / 333]
+[303 / 333]
+[306 / 333]
+[309 / 333]
+[311 / 333]
+[312 / 333]
+[318 / 333] AstronomyModelPrototype
+[327 / 334] AstronomySunPilotRunner-product
+[329 / 336] AstronomySunPilotRunner-product
+[330 / 336] AstronomyModelPrototype
+[334 / 336] AstronomySunPilotRunner-product
+Build complete! (9.26 sec)
