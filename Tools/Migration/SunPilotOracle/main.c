@@ -34,29 +34,84 @@ static double observation(double ut)
     return hor.altitude + equ.dist;
 }
 
+static void workload(const char *mode, int *operations, unsigned long long *elapsed, double *checksum)
+{
+    const int count = strcmp(mode, "firstAccess") == 0 ? 1 : 200;
+    const double epoch = strstr(mode, "Fallback") ? 40000.0 : 9000.0;
+    if (strncmp(mode, "repeated", 8) == 0) observation(epoch);
+    unsigned long long start = nanos();
+    double sum = 0.0;
+    for (int i = 0; i < count; ++i)
+        sum += observation(epoch + (strncmp(mode, "fresh", 5) == 0 ? i * 0.125 : 0.0));
+    *operations = count;
+    *elapsed = nanos() - start;
+    *checksum = sum;
+}
+
 static int performance(void)
 {
     const char *modes[] = {"firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback"};
     printf("{");
     for (int mode = 0; mode < 5; ++mode)
     {
-        const int count = mode == 0 ? 1 : 200;
-        const double epoch = mode >= 3 ? 40000.0 : 9000.0;
-        if (mode == 2 || mode == 4) observation(epoch);
-        unsigned long long start = nanos();
-        double checksum = 0.0;
-        for (int i = 0; i < count; ++i)
-            checksum += observation(epoch + ((mode == 1 || mode == 3) ? i * 0.125 : 0.0));
-        unsigned long long elapsed = nanos() - start;
-        printf("%s\"%s\":{\"operations\":%d,\"elapsedNanoseconds\":%llu,\"checksum\":%.17g}", mode ? "," : "", modes[mode], count, elapsed, checksum);
+        int operations;
+        unsigned long long elapsed;
+        double checksum;
+        workload(modes[mode], &operations, &elapsed, &checksum);
+        printf("%s\"%s\":{\"operations\":%d,\"elapsedNanoseconds\":%llu,\"checksum\":%.17g}", mode ? "," : "", modes[mode], operations, elapsed, checksum);
     }
     printf("}\n");
     return 0;
 }
 
+static int rss_stage(const char *stage)
+{
+    if (strcmp(stage, "startup") == 0)
+    {
+        printf("0\n");
+        return 0;
+    }
+    if (strcmp(stage, "serialization") == 0)
+    {
+        printf("{\"operations\":0,\"elapsedNanoseconds\":0,\"checksum\":0}\n");
+        return 0;
+    }
+    if (strcmp(stage, "polynomialEarth") == 0 || strcmp(stage, "fallbackEarth") == 0)
+    {
+        const double epoch = strcmp(stage, "fallbackEarth") == 0 ? 40000.0 : 9000.0;
+        astro_time_t time = Astronomy_TimeFromDaysWithDeltaT(epoch, Astronomy_DeltaT_EspenakMeeus);
+        astro_vector_t earth = CalcEarth(time);
+        if (earth.status != ASTRO_SUCCESS) return 1;
+        printf("%.17g\n", earth.x + earth.y + earth.z);
+        return 0;
+    }
+    if (strcmp(stage, "polynomialCache") == 0 || strcmp(stage, "fallbackCache") == 0)
+    {
+        const double epoch = strcmp(stage, "fallbackCache") == 0 ? 40000.0 : 9000.0;
+        printf("%.17g\n", observation(epoch) + observation(epoch));
+        return 0;
+    }
+    if (strcmp(stage, "aggregate") == 0) return performance();
+    const char *modes[] = {"firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback"};
+    for (int mode = 0; mode < 5; ++mode)
+    {
+        if (strcmp(stage, modes[mode]) == 0)
+        {
+            int operations;
+            unsigned long long elapsed;
+            double checksum;
+            workload(stage, &operations, &elapsed, &checksum);
+            printf("%.17g\n", checksum);
+            return 0;
+        }
+    }
+    return 2;
+}
+
 int main(int argc, char **argv)
 {
     if (argc == 2 && strcmp(argv[1], "--performance") == 0) return performance();
+    if (argc == 3 && strcmp(argv[1], "--rss-stage") == 0) return rss_stage(argv[2]);
     char model[32], scale[16], value_text[64], lat_text[64], lon_text[64], height_text[64], ut_text[64];
     while (scanf("%31s %15s %63s %63s %63s %63s %63s", model, scale, value_text, lat_text, lon_text, height_text, ut_text) == 7)
     {

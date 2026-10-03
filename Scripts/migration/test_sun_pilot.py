@@ -1,6 +1,7 @@
 import importlib.util
 import unittest
 from pathlib import Path
+from unittest import mock
 
 SPEC = importlib.util.spec_from_file_location("sun_pilot", Path(__file__).with_name("sun_pilot.py"))
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -40,6 +41,48 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(len(seams), (9177 + 1) * 3 * 2)
         self.assertTrue(any(item["category"] == "delta-t" for item in cases))
         self.assertTrue(any(item["category"] == "invalid" for item in cases))
+
+    def test_rss_stages_cover_controls_initialization_caches_and_workloads(self):
+        self.assertEqual(MODULE.RSS_STAGES, (
+            "startup", "serialization", "polynomialEarth", "fallbackEarth",
+            "polynomialCache", "fallbackCache", "firstAccess", "freshPolynomial",
+            "repeatedPolynomial", "freshFallback", "repeatedFallback", "aggregate",
+        ))
+
+    @mock.patch.object(MODULE, "measured_process")
+    def test_rss_attribution_uses_a_fresh_process_for_every_stage_and_trial(self, measured_process):
+        measured_process.side_effect = lambda binary, arguments: {
+            "peakResidentBytes": 1024, "stdout": arguments[-1] + "\n",
+        }
+        receipt = MODULE.rss_attribution(Path("runner"), 2)
+        self.assertEqual(list(receipt), list(MODULE.RSS_STAGES))
+        self.assertTrue(all(len(samples) == 2 for samples in receipt.values()))
+        expected = [mock.call(Path("runner"), ["--rss-stage", stage]) for stage in MODULE.RSS_STAGES for _ in range(2)]
+        self.assertEqual(measured_process.call_args_list, expected)
+
+    def test_rss_attribution_rejects_incomplete_or_empty_receipts(self):
+        valid = {stage: [{"peakResidentBytes": 1024, "stdout": "0\n"}] for stage in MODULE.RSS_STAGES}
+        self.assertIs(MODULE.validate_rss_attribution(valid, 1), valid)
+        for receipt in (
+            {**valid, "startup": []},
+            {**valid, "startup": [{"peakResidentBytes": 0, "stdout": "0\n"}]},
+            {**valid, "startup": [{"peakResidentBytes": 1024, "stdout": ""}]},
+        ):
+            with self.assertRaises(ValueError):
+                MODULE.validate_rss_attribution(receipt, 1)
+
+    def test_matched_earth_stages_require_equal_checksums(self):
+        candidate = {
+            "polynomialEarth": [{"stdout": "0.19756834584757474\n"}],
+            "fallbackEarth": [{"stdout": "-1.0334993594907775\n"}],
+        }
+        oracle = {
+            "polynomialEarth": [{"stdout": "0.19759227388022271\n"}],
+            "fallbackEarth": [{"stdout": "-1.0334418720675367\n"}],
+        }
+        with self.assertRaisesRegex(ValueError, "polynomialEarth"):
+            MODULE.validate_matched_earth_stages(candidate, oracle, 1)
+        self.assertIs(MODULE.validate_matched_earth_stages(oracle, oracle, 1), oracle)
 
 
 if __name__ == "__main__":
