@@ -36,7 +36,23 @@ The lowest Release startup control is 6,410,240 bytes above the 11,182,080-byte 
 
 The original report's SHA-256 is `5420357ecb798ee85cb0d130e3cbea310a4283c53ab877152ffa73cdb843affd`. Its raw stdout reveals two measurement defects: the Swift polynomial and fallback Earth checksums were `0.19756834584757474` and `-1.0334993594907775`, while C produced `0.19759227388022271` and `-1.0334418720675367`; the aggregate Swift probe also created a new evaluator per mode instead of preserving the pre-attribution shared evaluator. The Earth-only and aggregate rows above describe the pre-fix binaries and are not matched fixed-head evidence. The startup, serialization, cache, and isolated workload rows remain measurements of their named pre-fix processes; the startup conclusion is independent of the two defects.
 
-The raw `report.json`, stdout checksums, `/usr/bin/time` logs, binaries, source hashes, evaluated manifest, and compressed numerical rows are retained in the workflow artifact `native-sun-pilot-linux-37125664455-1`. The successful workflow establishes completed evidence collection at the tested merge revision. It does not pass the RSS gate. Corrected workload attribution requires a new hosted artifact tied to the fixed source head.
+The raw `report.json`, stdout checksums, `/usr/bin/time` logs, binaries, source hashes, evaluated manifest, and compressed numerical rows are retained in the workflow artifact `native-sun-pilot-linux-37125664455-1`. The successful workflow establishes completed evidence collection at the tested merge revision. It does not pass the RSS gate. The corrected result is recorded below.
+
+## Corrected hosted attribution result
+
+[Workflow 37126885561](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37126885561) tested clean merge revision `3e48483ea4b1585c4be37b6ef0b843244978c649` for source head `32995d23156fb0ce76806d044ae5e4a34481ef59` with Swift 6.2.1 on x86_64 Linux. All 11 checks on that source head passed. Debug and Release each passed 67,240 numerical comparisons with zero failures and detected all eight perturbed fallback cases. Their largest coordinate difference was `1.1368683772161603e-13°` in altitude; every other recorded maximum was zero.
+
+| Fresh process stage | Swift Release RSS, five-trial range (median) | C RSS, five-trial range (median) |
+| --- | ---: | ---: |
+| Startup control | 17,670,144–17,772,544 (17,694,720) | 1,904,640–2,088,960 (2,068,480) |
+| Fixed JSON serialization | 19,181,568–19,329,024 (19,243,008) | 1,949,696–2,121,728 (2,064,384) |
+| Polynomial Earth | 18,604,032–18,702,336 (18,681,856) | 2,392,064–2,543,616 (2,449,408) |
+| Full-series Earth | 19,058,688–19,206,144 (19,156,992) | 2,584,576–2,777,088 (2,670,592) |
+| Aggregate | 21,229,568–21,413,888 (21,315,584) | 2,805,760–3,043,328 (2,928,640) |
+
+Every candidate polynomial Earth trial emitted `0.1975922738802227`, numerically equal as binary64 to the C output `0.19759227388022271`; both fallback Earth probes emitted `-1.0334418720675367`. The campaign's checksum validator passed. The aggregate measurement used the restored shared-evaluator lifecycle. The fixed-budget peak observation was 21,336,064 bytes, so `peakResidentBytes` remains the only exceeded fixed build, size, and memory observation.
+
+The corrected report remains `complete-evidence` and `qualified: false`. Its SHA-256 is `820dee5e88fbf702a4ae8882218854935773f5eb9b22c02bdc67c6d202e97c3e`, and the raw artifact is `native-sun-pilot-linux-37126885561-1`. This later documentation update does not change the measured source revision or campaign inputs. The repaired receipt confirms the original startup-floor diagnosis and does not pass the memory or mixed-runtime gate.
 
 ## Attribution method
 
