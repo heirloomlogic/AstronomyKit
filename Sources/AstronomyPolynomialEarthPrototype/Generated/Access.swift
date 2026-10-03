@@ -7,13 +7,29 @@ public let polynomialEarthValidity: [UInt8] = [
 
 public func polynomialEarthBitPattern(at index: Int) -> UInt64? {
     guard index >= 0 && index < 357903 else { return nil }
-    switch index / 65536 {
+    switch index / 16384 {
     case 0: return polynomialEarthBits0[index - 0]
-    case 1: return polynomialEarthBits1[index - 65536]
-    case 2: return polynomialEarthBits2[index - 131072]
-    case 3: return polynomialEarthBits3[index - 196608]
-    case 4: return polynomialEarthBits4[index - 262144]
-    case 5: return polynomialEarthBits5[index - 327680]
+    case 1: return polynomialEarthBits1[index - 16384]
+    case 2: return polynomialEarthBits2[index - 32768]
+    case 3: return polynomialEarthBits3[index - 49152]
+    case 4: return polynomialEarthBits4[index - 65536]
+    case 5: return polynomialEarthBits5[index - 81920]
+    case 6: return polynomialEarthBits6[index - 98304]
+    case 7: return polynomialEarthBits7[index - 114688]
+    case 8: return polynomialEarthBits8[index - 131072]
+    case 9: return polynomialEarthBits9[index - 147456]
+    case 10: return polynomialEarthBits10[index - 163840]
+    case 11: return polynomialEarthBits11[index - 180224]
+    case 12: return polynomialEarthBits12[index - 196608]
+    case 13: return polynomialEarthBits13[index - 212992]
+    case 14: return polynomialEarthBits14[index - 229376]
+    case 15: return polynomialEarthBits15[index - 245760]
+    case 16: return polynomialEarthBits16[index - 262144]
+    case 17: return polynomialEarthBits17[index - 278528]
+    case 18: return polynomialEarthBits18[index - 294912]
+    case 19: return polynomialEarthBits19[index - 311296]
+    case 20: return polynomialEarthBits20[index - 327680]
+    case 21: return polynomialEarthBits21[index - 344064]
     default: return nil
     }
 }

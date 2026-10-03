@@ -7,13 +7,29 @@ public let polynomialMercuryValidity: [UInt8] = [
 
 public func polynomialMercuryBitPattern(at index: Int) -> UInt64? {
     guard index >= 0 && index < 357903 else { return nil }
-    switch index / 65536 {
+    switch index / 16384 {
     case 0: return polynomialMercuryBits0[index - 0]
-    case 1: return polynomialMercuryBits1[index - 65536]
-    case 2: return polynomialMercuryBits2[index - 131072]
-    case 3: return polynomialMercuryBits3[index - 196608]
-    case 4: return polynomialMercuryBits4[index - 262144]
-    case 5: return polynomialMercuryBits5[index - 327680]
+    case 1: return polynomialMercuryBits1[index - 16384]
+    case 2: return polynomialMercuryBits2[index - 32768]
+    case 3: return polynomialMercuryBits3[index - 49152]
+    case 4: return polynomialMercuryBits4[index - 65536]
+    case 5: return polynomialMercuryBits5[index - 81920]
+    case 6: return polynomialMercuryBits6[index - 98304]
+    case 7: return polynomialMercuryBits7[index - 114688]
+    case 8: return polynomialMercuryBits8[index - 131072]
+    case 9: return polynomialMercuryBits9[index - 147456]
+    case 10: return polynomialMercuryBits10[index - 163840]
+    case 11: return polynomialMercuryBits11[index - 180224]
+    case 12: return polynomialMercuryBits12[index - 196608]
+    case 13: return polynomialMercuryBits13[index - 212992]
+    case 14: return polynomialMercuryBits14[index - 229376]
+    case 15: return polynomialMercuryBits15[index - 245760]
+    case 16: return polynomialMercuryBits16[index - 262144]
+    case 17: return polynomialMercuryBits17[index - 278528]
+    case 18: return polynomialMercuryBits18[index - 294912]
+    case 19: return polynomialMercuryBits19[index - 311296]
+    case 20: return polynomialMercuryBits20[index - 327680]
+    case 21: return polynomialMercuryBits21[index - 344064]
     default: return nil
     }
 }

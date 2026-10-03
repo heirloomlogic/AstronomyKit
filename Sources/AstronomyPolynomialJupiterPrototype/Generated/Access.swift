@@ -7,9 +7,13 @@ public let polynomialJupiterValidity: [UInt8] = [
 
 public func polynomialJupiterBitPattern(at index: Int) -> UInt64? {
     guard index >= 0 && index < 89505 else { return nil }
-    switch index / 65536 {
+    switch index / 16384 {
     case 0: return polynomialJupiterBits0[index - 0]
-    case 1: return polynomialJupiterBits1[index - 65536]
+    case 1: return polynomialJupiterBits1[index - 16384]
+    case 2: return polynomialJupiterBits2[index - 32768]
+    case 3: return polynomialJupiterBits3[index - 49152]
+    case 4: return polynomialJupiterBits4[index - 65536]
+    case 5: return polynomialJupiterBits5[index - 81920]
     default: return nil
     }
 }

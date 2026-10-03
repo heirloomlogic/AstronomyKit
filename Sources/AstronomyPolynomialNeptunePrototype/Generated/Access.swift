@@ -7,10 +7,18 @@ public let polynomialNeptuneValidity: [UInt8] = [
 
 public func polynomialNeptuneBitPattern(at index: Int) -> UInt64? {
     guard index >= 0 && index < 178971 else { return nil }
-    switch index / 65536 {
+    switch index / 16384 {
     case 0: return polynomialNeptuneBits0[index - 0]
-    case 1: return polynomialNeptuneBits1[index - 65536]
-    case 2: return polynomialNeptuneBits2[index - 131072]
+    case 1: return polynomialNeptuneBits1[index - 16384]
+    case 2: return polynomialNeptuneBits2[index - 32768]
+    case 3: return polynomialNeptuneBits3[index - 49152]
+    case 4: return polynomialNeptuneBits4[index - 65536]
+    case 5: return polynomialNeptuneBits5[index - 81920]
+    case 6: return polynomialNeptuneBits6[index - 98304]
+    case 7: return polynomialNeptuneBits7[index - 114688]
+    case 8: return polynomialNeptuneBits8[index - 131072]
+    case 9: return polynomialNeptuneBits9[index - 147456]
+    case 10: return polynomialNeptuneBits10[index - 163840]
     default: return nil
     }
 }

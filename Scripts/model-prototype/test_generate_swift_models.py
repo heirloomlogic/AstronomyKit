@@ -46,6 +46,23 @@ class SwiftModelGenerationTests(unittest.TestCase):
         self.assertIn("startTT: Double(bitPattern: 0xc0e1d59000000000)", metadata)
         self.assertIn("stopTT: Double(bitPattern: 0x40e2033000000000)", metadata)
 
+    def test_polynomial_array_expressions_are_bounded(self):
+        outputs = GENERATOR.render_swift_model()
+        polynomial_sources = {
+            name: content
+            for name, content in outputs.items()
+            if "/Generated/Polynomial" in name
+        }
+        self.assertTrue(polynomial_sources)
+        self.assertLessEqual(GENERATOR.SWIFT_CHUNK_SIZE, 16_384)
+        for name, content in polynomial_sources.items():
+            self.assertLessEqual(content.count("0x"), 16_384, name)
+        for body in GENERATOR.load_swift_model().polynomials:
+            access = outputs[
+                f"AstronomyPolynomial{body.name}Prototype/Generated/Access.swift"
+            ]
+            self.assertIn(f"switch index / {GENERATOR.SWIFT_CHUNK_SIZE}", access)
+
     def test_input_manifest_covers_every_archive_file(self):
         manifest = GENERATOR.swift_input_manifest()
         expected = {

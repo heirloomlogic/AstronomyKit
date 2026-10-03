@@ -2851,11 +2851,11 @@
   "counts": {
     "cDependencies": 334,
     "crossCuttingContracts": 5,
-    "generatedArtifacts": 43,
+    "generatedArtifacts": 107,
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 64,
-    "tests": 793
+    "tests": 794
   },
   "crossCuttingContracts": [
     {
@@ -2950,238 +2950,686 @@
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/Access.swift",
-      "sha256": "1054432ebd5867a1baaf498788880bb363f23fb2d1cb52489421b42971a3a4fc"
+      "sha256": "8ae55036fdc6237ebe477bea977c50372a4760b25f965a68ff3be4a6aaf8cad5"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth0.swift",
-      "sha256": "07e617462b355aef387ca545fda426869127eeaed2257ec052d03c0918fecb91"
+      "sha256": "4865e69cdbc97301452c4eb496c5174cc579e2e24ca308339f6e86ee813a7921"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth1.swift",
-      "sha256": "1723e52640c13c81835595d260bbedf53b11307aa410257e9e31fb02f11b5536"
+      "sha256": "a230e7a9cecdc0cc621f58f470140990e0afd570d388e2b978d37ad93a20e56e"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth10.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth10.swift",
+      "sha256": "4442eb76f5b34005eef8f5ebbbf2475558c4843d0c2efde5ba556125b23083b9"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth11.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth11.swift",
+      "sha256": "74cb332ee99132a4cbba5acaba0b85269a05f9e148dcd361b274d5cce7764e50"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth12.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth12.swift",
+      "sha256": "7b50c08dd1891019857be76d17b32fc482f1145083681e135925e9f2097ba241"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth13.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth13.swift",
+      "sha256": "cd891eb01218f09a385f06d2a8e8b8bd70b9e5f0be6734c69a2b267d87ce9b90"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth14.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth14.swift",
+      "sha256": "c9cd375f6184ecf565384a1cf34328b822e04b92971fc672ceeae13f3c9554e9"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth15.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth15.swift",
+      "sha256": "854ce5e4ca123b719c4811da92c233ebe57c5ee15ef967e3c47cc297c659fc3d"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth16.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth16.swift",
+      "sha256": "6fc454205afb17c05d454d1bc6ca61c7d8d5b8fe0b7975d7e5514b21db700872"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth17.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth17.swift",
+      "sha256": "dcb006b928a49d048e23eb61aa48ba29752450cb2d507ac4489a931f2fd34c1e"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth18.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth18.swift",
+      "sha256": "1cf4e82535312f73482a6caa3e8ae28e19470db5f33c0b36c822a66c2a2ca47f"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth19.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth19.swift",
+      "sha256": "330f04f3997558b7aecd28a2c56d0e9679f0de936e3fe8e166a0f3479741abcb"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth2.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth2.swift",
-      "sha256": "f7c945d3fa14cb86e30e5905f0635ef7ed29f8e2c342dab5a29759759d93e227"
+      "sha256": "7e880c6a367b3e53c0bbb00d242679a27ebb5320aeb302dcd4857d7b9edc4d4a"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth20.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth20.swift",
+      "sha256": "f7e9f3aad3f63cab0f369ee36e1579feabfee5f838b5f9aeb05f51fe9a12cd1f"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth21.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth21.swift",
+      "sha256": "5fdedbf6704f33ee5f50db978eaf6bedb47474706cabf5f5dadc2efa12710787"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth3.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth3.swift",
-      "sha256": "4cfd51a610f4ac642369b1b67d1d6364dbf99465576821f9610d9ef425b8853a"
+      "sha256": "8a114c93690748842c515cb2c117ccc99211fb088cf229af6d512c5576807874"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth4.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth4.swift",
-      "sha256": "5b8be3a00847b25a59835a5713280bc7cf5576bc8731e12ffbdbf126233678cf"
+      "sha256": "3f91f43f18c63bccb2d7441f7d94fafbafa42a3ed889257abb8a69c13a8011f6"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth5.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth5.swift",
-      "sha256": "0fd093d52ce698dfb71e1ee543217c664a0bfebe3a2606786c728905b804e2d7"
+      "sha256": "567fe0397e439d1e3e736bc4dc3fc8a9e4dc364721756fa9360b48dfbe0b360f"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth6.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth6.swift",
+      "sha256": "4f30e0f7b72bbd55f5d11fa2c3326a3063aec43665f912aed95a9ccb63e8bd5a"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth7.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth7.swift",
+      "sha256": "ba2ffc341a5fdf994c935d9dd83955dec0a7e4f2c08297ed0795803d1a58b2cd"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth8.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth8.swift",
+      "sha256": "8e7c9c417251043244e9b658238b0094bf422606fd1bd39112c5b2283b3b519b"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth9.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialEarthPrototype/Generated/PolynomialEarth9.swift",
+      "sha256": "774403512e4b8c7d6a0edebfbfcf65eb87f4de107ca3aa79829d23b9e2d70e3e"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/Access.swift",
-      "sha256": "4cb879a36e750ec4eaab3c6b1425d60c5240f76be41952fcaff7ff5d0c45ce18"
+      "sha256": "611a0fbc332cf4126110e321e3e0df5e05466348a628d172426d7608e1798981"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter0.swift",
-      "sha256": "f92e4464bfb6e7a22db33de2cec9439b4ce2d5cc286719ae98a7a37fa58b03d4"
+      "sha256": "306167d8e8c5475e9cef38b446f858f379d3f50b2815eae28539010499127f64"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter1.swift",
-      "sha256": "46b88b219b1ad158abfd712860e334136583b3bc61035fbca1cd683bf2b5eaad"
+      "sha256": "19708d4597c5cf2fbe82afde322bfab4ce63ec2ed4edbf8a15a3ae940d95638b"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter2.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter2.swift",
+      "sha256": "3d260827e53820d8d2112c495e626546f81968f8a4091772dd15126f61cfd9cc"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter3.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter3.swift",
+      "sha256": "8fa64a24dc40a132c87963af10e2b2ec2c386e055d65209c286342fd019007fd"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter4.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter4.swift",
+      "sha256": "2dda5dcabfe5f65b35122930e9b2bd21775914d7515095d65320e2381b4dd1c1"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter5.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialJupiterPrototype/Generated/PolynomialJupiter5.swift",
+      "sha256": "9d4ed5d7b340794ffe1d3f4fbc49caea73abee110185ed3ab3627d457c4fa723"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/Access.swift",
-      "sha256": "d4c7f363f944eb9d1bb7d63c98ce4153febb08886e688fe4007cb4dada9ceb3a"
+      "sha256": "fd0417c1824cc29a89fa3cea1da709972135e8753c149010cdc1a3726895df60"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars0.swift",
-      "sha256": "629525470ce979bda24438b6df9fce9b6101f64200425b762d617392aec63427"
+      "sha256": "a8d5719567f3b83c10735db7c550de03d0bd8264acb53bb6ea1c6f24b6fb5598"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars1.swift",
-      "sha256": "19df80b35495396cca3deec0ff733328ea3982f082a74c6d3e6993028e9e80e1"
+      "sha256": "8e33cf95eec84a4d5310e6c9bb6fd67b17e0c160a18f862dba014fc6eb29de3c"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars2.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars2.swift",
+      "sha256": "b19675c09d3382385c6474d952dad41a55ae21ab5c42bb8f1e6efa24e412acfa"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars3.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars3.swift",
+      "sha256": "ef3aea9bcd0ad8250d611ac9a6258cd37e5e2298e74b194c0e8d6f8e107c3546"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars4.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars4.swift",
+      "sha256": "0a151f4203e114bfae5228bd3cde2be0661e80890ac068a556917df0129656ac"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars5.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMarsPrototype/Generated/PolynomialMars5.swift",
+      "sha256": "1e31b6b3c0ce1d02bc64b270d356231ed48a8464210aca133734c4cb8c39fa1a"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/Access.swift",
-      "sha256": "67cf152b3a7f462654e74eb423b151516f64644ef45f755dade997a4f1dc17fb"
+      "sha256": "edc01431d78e7cf2b9e654a6dbc920910fc037c3d25674ea0ec469f8e00a8ec8"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury0.swift",
-      "sha256": "bb10a1e647f798c9acbf162e3df613ee23f0618a527c48696fc2d2ed722cb944"
+      "sha256": "29e8caa8be96a0c458d436c0b8c83e3bc59f56f92eb3ee4c56e95a6b94207962"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury1.swift",
-      "sha256": "ba9be218133078c1b1a1f9691da28fe50a15a256c3f43b7decb92b8e66665fa6"
+      "sha256": "e2d5b93f424f667fedb309d9da8ffeabc703ec9b6171683af14144c2438ba645"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury10.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury10.swift",
+      "sha256": "339092a6017a2a4e857787f36f15df75cc755c326d805107e77b73e8be5167e0"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury11.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury11.swift",
+      "sha256": "29e99a564f1f5b34351e3b44f2b492071d6cbea9826c624d8ceb96b7aea061b5"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury12.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury12.swift",
+      "sha256": "00d9cefc416eff786e2ef01b95c78c1a21c6ee459d7ac5311b206d205c2243a6"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury13.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury13.swift",
+      "sha256": "ba036e52b7e19012621324eed86a14a7f46ed21263ddadf600fd98e7bb455572"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury14.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury14.swift",
+      "sha256": "51910011684b351d5615587ab5d4d680861bfff6d04aebf6c579caa3e9017423"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury15.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury15.swift",
+      "sha256": "679308a53699e081b2e91d9d67b1354a8e51aae35d6e8aedb1b04d7c552a1511"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury16.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury16.swift",
+      "sha256": "d26464f8802044346cf4546040102dd48889f454cbfb070041976be19d45e33e"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury17.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury17.swift",
+      "sha256": "248bd5af9a419dc28261aa10d3bb505265f1e1bf181b2f37a3a2b6b2d9031ae6"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury18.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury18.swift",
+      "sha256": "e96a80983cec9cc8d9709c0b9b8626e5b7f31dbb00612f85410d85399a5063b4"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury19.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury19.swift",
+      "sha256": "a7102fe6eb096bd3b0dded68a98dc4a594730e07c28ce6b225044fb1e439ebbc"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury2.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury2.swift",
-      "sha256": "7dc4d5b8ac4f16d8c1d4d4faaba60343245cff84930ddc1a7ceda1e6b244d900"
+      "sha256": "d9f4df4ec85977d125aa0cccb4a8e64715eb370444a6cfd68b5141c19f10db40"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury20.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury20.swift",
+      "sha256": "40537f8b98d5ca47813e4dd86484c383722db3e9ab1b7bdea0317a1223a1bc35"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury21.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury21.swift",
+      "sha256": "2c515114306b21a44de49324e6f5e8fc59ba23594e8396606db8e27bed444e7a"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury3.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury3.swift",
-      "sha256": "cf953f80a7aab99310cd9bb29167a63057a3c76be13c251854a832f80b0090bf"
+      "sha256": "922c50c46a1f078294da089a54a20e82b08f43ec7341e00f36c406c87be47745"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury4.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury4.swift",
-      "sha256": "fba046c8bd049c854568a2209c52d85c773f237b063406e36b3a0270dbf6a86b"
+      "sha256": "8345a75a1f9d299bd070555c3af3c5ba48cf035ab0141c55c099bbd30d8f1caf"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury5.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury5.swift",
-      "sha256": "6bff2db458cc487f31e68aaaa8ea0f4c1cee61a417ef8844eae02a6ea11d14d6"
+      "sha256": "9645f2bc4da3ca846fb47b3e7dcb0a51a59c93f81e65b33bdec7be3992c27aa7"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury6.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury6.swift",
+      "sha256": "c8594cbdeeedc1cf450f92a1f30df4f795a58d236f0b05d7b483dd88e72971dd"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury7.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury7.swift",
+      "sha256": "e0ed60dbf0a5c0f8499d7bfed8caa380b8a90b3b246599eaecdd553257535835"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury8.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury8.swift",
+      "sha256": "99188298af79e13a6ffc662836e140a1cec098665fcc159f2f1ff8588bb6836b"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury9.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialMercuryPrototype/Generated/PolynomialMercury9.swift",
+      "sha256": "83d02daa14ee99ee283cd4b81e65ba510d9bf896dd9e41241a4c001baef9cd90"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/Access.swift",
-      "sha256": "d02c39c2d8b8ed1bf65898f8339c17fe56789be7c3bd568395bd6d9b3fa4b818"
+      "sha256": "44074b5aa097ebe7720493898ac7f77793c56373ab54de8eb5d55474a400becf"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune0.swift",
-      "sha256": "e0107924d61c6d866284f4958135970d22080bd549773e6f58ce6a9a233135db"
+      "sha256": "a562661c53270775517ef076dc52080ab30bd1b633150476c179c10139b1a5fb"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune1.swift",
-      "sha256": "855d096f1a1aa306b59113f3afc78f4ae0bd60d205a13d196b83b8ab7071c1dd"
+      "sha256": "929667fcd594e613674a449c5f7ef89eaac1dd7b5f8c129186388cafc2e1b589"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune10.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune10.swift",
+      "sha256": "18fec6b13990ac68cf99e15137a70d6b9d24e67680cc84917241e4ff0cf2cea7"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune2.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune2.swift",
-      "sha256": "5654d98a2c1c873437b8fc806234180a1456f86720b50ba6289e931dce7e89b9"
+      "sha256": "ea114a713434dd0af499dbbc67bcba643820fba229a785abeb58d93ebe9d3b7f"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune3.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune3.swift",
+      "sha256": "f514490800ef4a8ab4f4b6daf180b1dd5894ab922557f862b03830dba7b33448"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune4.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune4.swift",
+      "sha256": "332ac7128b3526db9b7a25fbade4b52c6c0e31f790414ed8cbcaa18de23356a2"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune5.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune5.swift",
+      "sha256": "d8b875430e1ea327043eaa08b6bdcb8ba64ea639e80a29bafcf49d8afdafbbe1"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune6.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune6.swift",
+      "sha256": "05f85e03361a7a0da9933ea2f5e790d76976faf8432053938ba4d1348cd84150"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune7.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune7.swift",
+      "sha256": "3c52fbdb313f04cc55ad537cec15fad2e0ab1cdf40677eeb5446a33ac577aed3"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune8.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune8.swift",
+      "sha256": "d4916a18508a522035efdfee45ea7dbc886750de209bbad85f475e81dfa42b46"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune9.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialNeptunePrototype/Generated/PolynomialNeptune9.swift",
+      "sha256": "9b79a54ddd42442dff418c15ed7986a3f1dbd5a8975a380b77dc37776fae77d4"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/Access.swift",
-      "sha256": "aaa2e03f9d60910986d64a75041152f8bb244c5a7636e1e020ba58b7ec71ada4"
+      "sha256": "fb4a6da751454af5bd85f5d267b176326343f06086f6433aaced8b6f49224933"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn0.swift",
-      "sha256": "f9cb9a20bed2c720804982ffa24d69b4f7bdd525a4ae0883a8e75135ddaa82f1"
+      "sha256": "c10a98ddbc8810c127bee35d7cf3f8c0e05ba87bb5cf819f7ab31a181843198a"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn1.swift",
-      "sha256": "fd9605e9154454a3aecaf1443fb62a919aba2dec316936ae838774f6150e4e45"
+      "sha256": "6014214e4a372a4b3d8747fc559290a65e6387c74e1291e9dfe0bd8111d8fd78"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn10.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn10.swift",
+      "sha256": "98b5932ce09c69bf007e662d5c7f050e745e1bbbb2d1e753ed9734837ccecb4f"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn2.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn2.swift",
-      "sha256": "00a5a2c9e1e1f2e20ba5f6141e360ea289ab15af2ac3efdb31ddef5e24baa7de"
+      "sha256": "acea200daede953d8a3bdd8764163064a4b15792f27d6e6a00bd1571c8cfb4c9"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn3.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn3.swift",
+      "sha256": "6d1f8480938396d56bd14daf2c1fe1020850e571254f3814e6953efa5252e118"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn4.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn4.swift",
+      "sha256": "60a22477ab1a33d74eeee94a420f2b19a7bed69401dd205f2ba3722e46872079"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn5.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn5.swift",
+      "sha256": "e65b692ae2dcf65d7a20adf03f897447e6823dd3eb066308c17acfb9315c7beb"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn6.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn6.swift",
+      "sha256": "5bf7f5bb3d53c1390e8698dbb7e810f0a89dfa82b95691504c10e451dc738931"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn7.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn7.swift",
+      "sha256": "54b0a36917fa6fcb5e63f3da29dea2287137305d13e30f12c6d9c1b75826a28b"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn8.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn8.swift",
+      "sha256": "310921347654ce6e92bfed33abe8953e10bc0b1dd8278278e068ce2335e5e21b"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn9.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialSaturnPrototype/Generated/PolynomialSaturn9.swift",
+      "sha256": "1df1380398c02a3aba47a26ad00296478d98758561da8b831c3937d5ba0e0852"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/Access.swift",
-      "sha256": "4ec2ae2dbd3a5e8b95397c81bc4a544f981145c8fc5194b1c3c6ba0b614727bf"
+      "sha256": "e4e7def7d95d2a7d92ab94d55b6e9b48e8e032d02ca4d90f0a0a67c61e0b3e76"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus0.swift",
-      "sha256": "93d702c2af492a9ec999f6c0b6424382fe75c33c98cf972906ca861c7b55207f"
+      "sha256": "b6ef792c6b73fb4221a7b531220477754d72175d5d9251dd69ea57fafdb5aace"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus1.swift",
-      "sha256": "a18534e24e1ef83f3ccebad5c48ecd843aaf838572d37d040dd42832e5622f94"
+      "sha256": "4fc679a6b3bc0c2f1136cbd2cd15d020687149a37a145e17134616612c9a83aa"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus2.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus2.swift",
+      "sha256": "57c0e758f188a6996cf73e1a3e5392d49eab13c39723a4fafb9b44679607cb36"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus3.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus3.swift",
+      "sha256": "5574190374ead907cb078c3230c391af245dbbf9065fe3c23e9075a5daa12f95"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus4.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus4.swift",
+      "sha256": "e8282dc37a6949496a3eac40762315803e46a5b9990befed6228cba3f08a8784"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus5.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialUranusPrototype/Generated/PolynomialUranus5.swift",
+      "sha256": "acc490647e925a6b11be8e842817cfe472bbcb73f4067515d37a6229ea2114a1"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/Access.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/Access.swift",
-      "sha256": "b7990a03d19d7d07c3a81aa4b1bbf3ab266e353374a2341795dffb1c7e7d2e86"
+      "sha256": "53148119ae0abb82e1d6b5020729575b32f367c5ecf3cc352174903ce2bfa308"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus0.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus0.swift",
-      "sha256": "1d799b79b325cc87734fe39e18befb1568c176b4abbad23cb6de48981728e09f"
+      "sha256": "62eafd4a37c0c171ae7d7c47a825c5409ffa665e2e45972b94b729fa2037e0cb"
     },
     {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus1.swift",
       "migrationIssue": 82,
       "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus1.swift",
-      "sha256": "7bfd419556067919f0e6bb4e88d6a7d20db68cc524500dcd1f8dc18f5fc5f7fa"
+      "sha256": "807e16be0cee1d3fb32582dff3e58583b74d8cb84a0867b27a620859b85acb8b"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus2.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus2.swift",
+      "sha256": "bb2bc6dd3e2e1314fd61ee541f9cb5e18c5102cfe3dddd56ff7874e519f84e3f"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus3.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus3.swift",
+      "sha256": "0d8783825da56cba0a9b7c1d99441badaa500be2ba461566734586d784932f5f"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus4.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus4.swift",
+      "sha256": "bd6d19187f836865cb10fc7c358074453dfbc6e0785bb7af2f839ca200caa622"
+    },
+    {
+      "generator": "Scripts/generate-models.py",
+      "id": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus5.swift",
+      "migrationIssue": 82,
+      "path": "Sources/AstronomyPolynomialVenusPrototype/Generated/PolynomialVenus5.swift",
+      "sha256": "5230fa5e3748296febee8b3655f105da1725a9e03605c460f8116fd5e29eb9dd"
     },
     {
       "generator": "Scripts/generate-models.py",
@@ -3218,7 +3666,7 @@
     "Scripts/migration/test_foundation.py": "fe3b6efc4e85c7b817eb616333f46cb4ff0105ecb7523e4b0efd8aabc2f6272a",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "aac319f96b5b30e24e3803ec7d882f5e5834543d5033c799a8d87fe8fc6088b1",
-    "Scripts/model-prototype/test_generate_swift_models.py": "433c6691889b8e9368b3eacd413e09fe5d0c20a220ebc983d6af193e9afbcba1",
+    "Scripts/model-prototype/test_generate_swift_models.py": "1e3ff8b0711128425e23442f2d534e0154da42b7170e2b9e7033f561d85896bd",
     "Scripts/model-prototype/test_measure.py": "be283cc83b114218026bda0d3c27f9fe8e7ba7d136a7b05315628633901feb12",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
     "Scripts/performance/polynomial/test_polynomial.py": "aa7b84265a0e51932906ebfbf3d000041898b352ecff90eb6b6b97a046111adc",
@@ -12692,7 +13140,7 @@
       "id": "Scripts/model-prototype/test_generate_swift_models.py",
       "migrationIssue": 82,
       "path": "Scripts/model-prototype/test_generate_swift_models.py",
-      "testCount": 6
+      "testCount": 7
     },
     {
       "classification": "invariant",
