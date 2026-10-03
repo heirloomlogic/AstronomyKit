@@ -1,4 +1,5 @@
 import Foundation
+import Testing
 
 @testable import AstronomyKit
 
@@ -266,5 +267,84 @@ enum IndependentReferenceMath {
         let deltaLongitude = (longitude1 - longitude2) * .pi / 180
         let cosine = sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(deltaLongitude)
         return acos(min(1, max(-1, cosine))) * 180 / .pi
+    }
+}
+
+// Rate residuals are sampled diagnostics; this archive supplies no rate accuracy allowance.
+struct IndependentRangeRateArchive: Decodable {
+    let status: String
+    let results: [Record]
+
+    struct Record: Decodable {
+        let body: String
+        let mode: String
+        let julianDateTT: Double
+        let classification: String
+        let reference: Reference
+        let production: Production
+        let referenceRateKmPerSecond: Double
+
+        struct Reference: Decodable {
+            let positionAU: [Double]
+            let velocityAUPerDay: [Double]
+            let rangeRateAUPerDay: Double
+        }
+
+        struct Production: Decodable {
+            let rateAUPerTTDay: Double
+            let correctedRateAUPerTTDay: Double
+        }
+    }
+
+    static func load() throws -> Self {
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Documentation/Migration/range-rate-investigation.json")
+        return try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
+    }
+}
+
+@Suite("Independent radial-rate diagnostic replay")
+struct IndependentRangeRateTests {
+    @Test("Reference radial projections preserve units and signed motion")
+    func referenceProjection() throws {
+        let archive = try IndependentRangeRateArchive.load()
+        #expect(archive.status == "sampled-diagnostic-without-accuracy-allowance")
+        #expect(archive.results.count == 5_035)
+        #expect(archive.results.filter { $0.classification == "geometric-state-matched" }.count == 2_650)
+        #expect(
+            archive.results.filter { $0.classification == "received-light-unmatched-derivative-and-origin" }.count
+                == 2_385)
+        for row in archive.results {
+            let p = row.reference.positionAU
+            let v = row.reference.velocityAUPerDay
+            let radius = hypot(hypot(p[0], p[1]), p[2])
+            let projection = (p[0] * v[0] + p[1] * v[1] + p[2] * v[2]) / radius
+            // Integrity at the raw table's rounding scale, not independent model accuracy.
+            #expect(abs(projection - row.reference.rangeRateAUPerDay) <= 1e-14)
+            #expect(
+                abs(row.referenceRateKmPerSecond - row.reference.rangeRateAUPerDay * 149_597_870.7 / 86_400) <= 1e-12)
+        }
+    }
+
+    @Test("Public state rates reproduce the recorded production diagnostics")
+    func publicStateReplay() throws {
+        for row in try IndependentRangeRateArchive.load().results {
+            let body = try #require(CelestialBody.allCases.first { $0.name == row.body })
+            let time = AstroTime(tt: row.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
+            let rate: Double
+            if row.mode == "heliocentric" {
+                let state = try body.heliocentricState(at: time)
+                let p = state.position
+                let v = state.velocity
+                rate = (p.x * v.x + p.y * v.y + p.z * v.z) / hypot(hypot(p.x, p.y), p.z)
+            } else {
+                rate = try body.geocentricEclipticState(at: time, aberration: .none).distanceRate
+                let corrected = try body.geocentricEclipticState(at: time, aberration: .corrected).distanceRate
+                #expect(abs(corrected - row.production.correctedRateAUPerTTDay) <= 1e-12)
+            }
+            // Production replay tolerance is separate from the unbounded independent residual.
+            #expect(abs(rate - row.production.rateAUPerTTDay) <= 1e-12)
+        }
     }
 }

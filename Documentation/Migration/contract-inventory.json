@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 114,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 71,
-    "tests": 872
+    "testOwners": 72,
+    "tests": 883
   },
   "crossCuttingContracts": [
     {
@@ -3728,6 +3728,7 @@
     "Scripts/reference-data/test_investigate_apparent_range.py": "36e48f6baa35e3641ca17a5cf8b078fa1f25364b2f97c6c289eee2704c3034a8",
     "Scripts/reference-data/test_outer_planet_diagnostic.py": "0488c3677b3a641bbdbbd5c42ae5a88f7a711d90227b5e589f3beb38714f6d9c",
     "Scripts/reference-data/test_pluto_model_diagnostic.py": "23c80690af6439c9ac61fdf05e8949b07b36f9cd2f91e9159ec8604fdfe54de9",
+    "Scripts/reference-data/test_range_rate_investigation.py": "55ae0d261f180376a93926e91c3b7cbfec16ed59c3b95c0def7caba057855d9a",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
@@ -3785,7 +3786,7 @@
     "Tests/AstronomyKitTests/GravitySimulationTests.swift": "39adf1ad7ebee11844cd5f63f65074d0915b87ef6b3684f31505bcf24bf38576",
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a20a69781d4552b49b51d1b6552ffb2ff4604cc5d3f1ad534eb8c374f7550c3c",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "bacd9f420c49b7f5d29ffbb86d441bfd0cdebc511488c2c856b404148a9e3eaf",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -13284,6 +13285,13 @@
     },
     {
       "classification": "invariant",
+      "id": "Scripts/reference-data/test_range_rate_investigation.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_range_rate_investigation.py",
+      "testCount": 9
+    },
+    {
+      "classification": "invariant",
       "id": "Tests/AstronomyKitTests/AcceptedTimeRangeTests.swift",
       "migrationIssue": 97,
       "path": "Tests/AstronomyKitTests/AcceptedTimeRangeTests.swift",
@@ -13455,7 +13463,7 @@
       "id": "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift",
       "migrationIssue": 81,
       "path": "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift",
-      "testCount": 0
+      "testCount": 2
     },
     {
       "classification": "independent-reference",
