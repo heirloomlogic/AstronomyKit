@@ -1,0 +1,15 @@
+{
+  "frozenUTC": "2026-10-02T18:34:55.722979+00:00",
+  "reason": "All-eight-planet relative-force residual still decreases strongly at finest initial step; refine predetermined ladder before interpreting numerical remainder",
+  "epochs": "unchanged plan.json epochs",
+  "stepsDays": [
+    9.125,
+    4.5625,
+    2.28125
+  ],
+  "seedModel": "modern barycenter heliocentric states",
+  "forceVariants": [
+    "relative-eight-planets"
+  ],
+  "scope": "convergence diagnosis; no production repair or selection"
+}

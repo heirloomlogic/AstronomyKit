@@ -22,3 +22,33 @@ public func polynomialSaturnBitPattern(at index: Int) -> UInt64? {
     default: return nil
     }
 }
+
+internal func decodeModelBits(_ payload: StaticString, count: Int) -> [UInt64] {
+    payload.withUTF8Buffer { bytes in
+        precondition(bytes.count == (count * 64 + 6) / 7)
+        return Array(unsafeUninitializedCapacity: count) { storage, initializedCount in
+            var cursor = 0
+            var pending: UInt64 = 0
+            var available = 0
+            for index in 0..<count {
+                var value: UInt64 = 0
+                var offset = 0
+                while offset < 64 {
+                    if available == 0 {
+                        pending = UInt64(bytes[cursor])
+                        precondition(pending < 128)
+                        cursor += 1
+                        available = 7
+                    }
+                    let take = min(64 - offset, available)
+                    value |= (pending & ((UInt64(1) << take) - 1)) << offset
+                    pending >>= take
+                    available -= take
+                    offset += take
+                }
+                storage.initializeElement(at: index, to: value)
+            }
+            initializedCount = count
+        }
+    }
+}

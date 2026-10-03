@@ -1,0 +1,45 @@
+{
+  "frozenUTC": "2026-10-02T18:39:46.962418+00:00",
+  "reason": "Original ladder epochs alias all steps <=73 days; independently measure cached interpolation in interval interiors",
+  "seedTTDays": [
+    -58400,
+    -29200,
+    0,
+    29200,
+    58400
+  ],
+  "epochsTTDays": [
+    -58400,
+    -51099.625,
+    -43799.625,
+    -36499.625,
+    -29200,
+    -21899.625,
+    -14599.625,
+    -7299.625,
+    0,
+    7300.375,
+    14600.375,
+    21900.375,
+    29200,
+    36500.375,
+    43800.375,
+    51100.375,
+    58400
+  ],
+  "offsetsDays": [
+    7300.375,
+    14600.375,
+    21900.375
+  ],
+  "timeCanonicalization": "(2451545 + seed + offset) - 2451545 in binary64",
+  "stepsDays": [
+    146,
+    73,
+    36.5,
+    18.25
+  ],
+  "additionalModernEightPlanetStepDays": 2.28125,
+  "scope": "new diagnostic sampling; no product acceptance",
+  "transportAdjustment": "Initial 1/3-day plan could not round-trip through Horizons nine-decimal JD output under strict epoch equality. Replaced before successfully parsing any reference rows with binary-exact 0.375 day, still off-grid for every replay step."
+}

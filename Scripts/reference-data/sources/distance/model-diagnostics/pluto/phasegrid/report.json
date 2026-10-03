@@ -1,0 +1,5910 @@
+{
+  "planSHA256": "714f31b1c95d0bd7df91906329e1a54be28755c33817e22f140a0174c8752e18",
+  "variants": [
+    {
+      "forceModel": "production-barycentric",
+      "rows": [
+        {
+          "backward": [
+            42.93806743760356,
+            20.348720488004485,
+            -6.587041424499014
+          ],
+          "cached": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "directBlend": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "forward": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 700240.8586375329,
+                "vectorKm": 1093318.6641930987
+              },
+              "bodyCenter": {
+                "radialKm": 702133.0398745224,
+                "vectorKm": 1094535.8251691211
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            }
+          },
+          "ttDays": -58400
+        },
+        {
+          "backward": [
+            36.30774191675539,
+            33.265985031212814,
+            -0.5586954252774992
+          ],
+          "cached": [
+            36.30712398886745,
+            33.263691578070485,
+            -0.559509262001194
+          ],
+          "directBlend": [
+            36.307123988180976,
+            33.26369157861702,
+            -0.5595092616364505
+          ],
+          "forward": [
+            36.30691662236711,
+            33.26292193681084,
+            -0.5597823706104003
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.021108196196171033,
+            "vectorKm": 0.14215645620372613
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 513962.5483846712,
+                "vectorKm": 722134.3411931373
+              },
+              "bodyCenter": {
+                "radialKm": 514202.6815077365,
+                "vectorKm": 723156.4876175332
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 215431.2861933857,
+                "vectorKm": 353893.81505581207
+              },
+              "bodyCenter": {
+                "radialKm": 215671.41931645098,
+                "vectorKm": 354907.5022298326
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 215431.2650851895,
+                "vectorKm": 353893.9136778291
+              },
+              "bodyCenter": {
+                "radialKm": 215671.39820825477,
+                "vectorKm": 354907.60096299235
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 115251.0689658896,
+                "vectorKm": 235592.10586521478
+              },
+              "bodyCenter": {
+                "radialKm": 115491.20208895492,
+                "vectorKm": 236574.52334450244
+              }
+            }
+          },
+          "ttDays": -51063.125
+        },
+        {
+          "backward": [
+            24.83694831607331,
+            41.74718670009636,
+            5.544808840199477
+          ],
+          "cached": [
+            24.836790544982314,
+            41.74599502168584,
+            5.544298496654057
+          ],
+          "directBlend": [
+            24.836790516746802,
+            41.74599504292077,
+            5.544298511759516
+          ],
+          "forward": [
+            24.836631008632796,
+            41.744790481451275,
+            5.543782657042106
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.8229167089617838,
+            "vectorKm": 5.748026481136702
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 343671.22124200285,
+                "vectorKm": 440467.55129506707
+              },
+              "bodyCenter": {
+                "radialKm": 343838.1917594282,
+                "vectorKm": 439763.0164106753
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 170803.48555387964,
+                "vectorKm": 252709.30124749092
+              },
+              "bodyCenter": {
+                "radialKm": 170970.45607130494,
+                "vectorKm": 251939.38330905203
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 170804.30847058858,
+                "vectorKm": 252714.04590097
+              },
+              "bodyCenter": {
+                "radialKm": 170971.2789880139,
+                "vectorKm": 251944.11751602334
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -3933.405718952243,
+                "vectorKm": 99415.34566636548
+              },
+              "bodyCenter": {
+                "radialKm": -3766.4352015269424,
+                "vectorKm": 98635.54530603114
+              }
+            }
+          },
+          "ttDays": -43721.375
+        },
+        {
+          "backward": [
+            9.981163056111903,
+            44.52155069658135,
+            10.882233157776305
+          ],
+          "cached": [
+            9.981101868201579,
+            44.52100484946225,
+            10.88200329067537
+          ],
+          "directBlend": [
+            9.981101821190013,
+            44.52100487364915,
+            10.882003312422903
+          ],
+          "forward": [
+            9.980913975024762,
+            44.51933049011839,
+            10.881298231614352
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -2.6925992630092237,
+            "vectorKm": 8.552038737532014
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 193623.74150958407,
+                "vectorKm": 233003.97914935055
+              },
+              "bodyCenter": {
+                "radialKm": 194856.42753360365,
+                "vectorKm": 234328.7755672691
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 106192.30996759658,
+                "vectorKm": 156800.8343081268
+              },
+              "bodyCenter": {
+                "radialKm": 107424.99599161616,
+                "vectorKm": 157941.47588544627
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 106195.00256685959,
+                "vectorKm": 156808.61914337974
+              },
+              "bodyCenter": {
+                "radialKm": 107427.68859087917,
+                "vectorKm": 157949.24085357846
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -162003.8790212308,
+                "vectorKm": 180192.8293708811
+              },
+              "bodyCenter": {
+                "radialKm": -160771.1929972112,
+                "vectorKm": 178970.89452490312
+              }
+            }
+          },
+          "ttDays": -36378.625
+        },
+        {
+          "backward": [
+            -5.975947854251789,
+            40.6130107386225,
+            14.470645600010592
+          ],
+          "cached": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "directBlend": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "forward": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 265180.1741944647,
+                "vectorKm": 269084.1740939761
+              },
+              "bodyCenter": {
+                "radialKm": 265812.7133023012,
+                "vectorKm": 269976.6930462652
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            }
+          },
+          "ttDays": -29200
+        },
+        {
+          "backward": [
+            -20.955656015780598,
+            28.898215297987814,
+            15.33187071199755
+          ],
+          "cached": [
+            -20.95576833240449,
+            28.897593661347976,
+            15.331474775639897
+          ],
+          "directBlend": [
+            -20.955768337148857,
+            28.897593658322773,
+            15.33147477610098
+          ],
+          "forward": [
+            -20.955806030197714,
+            28.897385047133046,
+            15.331341907072371
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.07343224482929216,
+            "vectorKm": 0.844578816510857
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 82130.97751921398,
+                "vectorKm": 93327.35774421641
+              },
+              "bodyCenter": {
+                "radialKm": 81309.30652865917,
+                "vectorKm": 91680.06502545183
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -1354.7026239202423,
+                "vectorKm": 30681.666121171354
+              },
+              "bodyCenter": {
+                "radialKm": -2176.373614475059,
+                "vectorKm": 32576.384957734383
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -1354.629191675413,
+                "vectorKm": 30682.47734301509
+              },
+              "bodyCenter": {
+                "radialKm": -2176.30018223023,
+                "vectorKm": 32577.188950299944
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -29370.699635004177,
+                "vectorKm": 62526.093575896775
+              },
+              "bodyCenter": {
+                "radialKm": -30192.370625558993,
+                "vectorKm": 64589.98508161824
+              }
+            }
+          },
+          "ttDays": -21863.125
+        },
+        {
+          "backward": [
+            -30.0521627471711,
+            9.608626846253014,
+            12.050739896062906
+          ],
+          "cached": [
+            -30.052153537621795,
+            9.60829087862073,
+            12.050426453319115
+          ],
+          "directBlend": [
+            -30.05215365675649,
+            9.608290736357745,
+            12.050426444917562
+          ],
+          "forward": [
+            -30.05214446790302,
+            9.607950986774016,
+            12.050109599452286
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -9.355405963044864,
+            "vectorKm": 27.787545387009683
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -35454.584611519334,
+                "vectorKm": 45568.3534373898
+              },
+              "bodyCenter": {
+                "radialKm": -35184.81137700045,
+                "vectorKm": 46686.17841721621
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -67709.7867268504,
+                "vectorKm": 78694.96227067332
+              },
+              "bodyCenter": {
+                "radialKm": -67440.01349233152,
+                "vectorKm": 77701.36014408381
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -67700.43132088736,
+                "vectorKm": 78700.2098756606
+              },
+              "bodyCenter": {
+                "radialKm": -67430.65808636848,
+                "vectorKm": 77706.22947827808
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -100294.72186702497,
+                "vectorKm": 141306.4292793567
+              },
+              "bodyCenter": {
+                "radialKm": -100024.94863250609,
+                "vectorKm": 139823.64763137006
+              }
+            }
+          },
+          "ttDays": -14521.375
+        },
+        {
+          "backward": [
+            -26.92469758116199,
+            -12.946349063199664,
+            4.069758617438967
+          ],
+          "cached": [
+            -26.924537856577505,
+            -12.946441916356557,
+            4.069596639902406
+          ],
+          "directBlend": [
+            -26.92453778328923,
+            -12.946442208897007,
+            4.069596526770843
+          ],
+          "forward": [
+            -26.924047582327326,
+            -12.946727945556997,
+            4.069099292358019
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -6.716500899987971,
+            "vectorKm": 48.185805507211505
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -60460.693799479115,
+                "vectorKm": 70836.1133599726
+              },
+              "bodyCenter": {
+                "radialKm": -58711.6354250681,
+                "vectorKm": 69686.27483677502
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -79104.27261239511,
+                "vectorKm": 101092.3206880811
+              },
+              "bodyCenter": {
+                "radialKm": -77355.2142379841,
+                "vectorKm": 100340.25982075362
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -79097.55611149511,
+                "vectorKm": 101116.72056250751
+              },
+              "bodyCenter": {
+                "radialKm": -77348.49773708411,
+                "vectorKm": 100365.43775033511
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -136267.18703389567,
+                "vectorKm": 207575.85825686654
+              },
+              "bodyCenter": {
+                "radialKm": -134518.12865948465,
+                "vectorKm": 207286.47120803193
+              }
+            }
+          },
+          "ttDays": -7178.625
+        },
+        {
+          "backward": [
+            -9.872654440241499,
+            -27.978038528492977,
+            -5.753960528404492
+          ],
+          "cached": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "directBlend": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "forward": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -239081.08240444242,
+                "vectorKm": 424149.0957700385
+              },
+              "bodyCenter": {
+                "radialKm": -237618.92672414405,
+                "vectorKm": 423332.7315117487
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            }
+          },
+          "ttDays": 0
+        },
+        {
+          "backward": [
+            13.075244358028876,
+            -28.595238463071073,
+            -12.862458650231249
+          ],
+          "cached": [
+            13.073289491254684,
+            -28.59665501958708,
+            -12.862707249473782
+          ],
+          "directBlend": [
+            13.073289487856444,
+            -28.59665501506204,
+            -12.862707247068062
+          ],
+          "forward": [
+            13.072633468275695,
+            -28.59713038465759,
+            -12.862790671734807
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.9017105079059661,
+            "vectorKm": 0.9198930298603285
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 19050.17106010532,
+                "vectorKm": 333912.17982092
+              },
+              "bodyCenter": {
+                "radialKm": 18590.741729776288,
+                "vectorKm": 335874.5846863698
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 98960.95667422752,
+                "vectorKm": 101175.96703014738
+              },
+              "bodyCenter": {
+                "radialKm": 98501.52734389849,
+                "vectorKm": 100316.00288298471
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 98960.05496371961,
+                "vectorKm": 101175.1229224453
+              },
+              "bodyCenter": {
+                "radialKm": 98500.62563339059,
+                "vectorKm": 100315.1519383309
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 125781.91816738065,
+                "vectorKm": 187972.73284936222
+              },
+              "bodyCenter": {
+                "radialKm": 125322.48883705161,
+                "vectorKm": 186175.28687950707
+              }
+            }
+          },
+          "ttDays": 7336.875
+        },
+        {
+          "backward": [
+            31.42073264390992,
+            -17.681644483024122,
+            -14.986246410297017
+          ],
+          "cached": [
+            31.42013554761481,
+            -17.68315283816397,
+            -14.986814785447777
+          ],
+          "directBlend": [
+            31.420135553976642,
+            -17.683152741930574,
+            -14.986814757292425
+          ],
+          "forward": [
+            31.419531998237474,
+            -17.68467733356812,
+            -14.987389258840347
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 7.370782701006662,
+            "vectorKm": 15.029980767203204
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 127697.47004778494,
+                "vectorKm": 200159.20160845565
+              },
+              "bodyCenter": {
+                "radialKm": 127315.06937989946,
+                "vectorKm": 198317.5298394749
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 190641.26081798328,
+                "vectorKm": 215487.08688672906
+              },
+              "bodyCenter": {
+                "radialKm": 190258.8601500978,
+                "vectorKm": 216097.46007324633
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 190633.89003528227,
+                "vectorKm": 215474.49067409962
+              },
+              "bodyCenter": {
+                "radialKm": 190251.4893673968,
+                "vectorKm": 216084.78745262028
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 254262.65463913846,
+                "vectorKm": 432729.29181318695
+              },
+              "bodyCenter": {
+                "radialKm": 253880.253971253,
+                "vectorKm": 434195.8783994531
+              }
+            }
+          },
+          "ttDays": 14678.625
+        },
+        {
+          "backward": [
+            41.63955523097397,
+            -1.7975524568588541,
+            -13.105036770906787
+          ],
+          "cached": [
+            41.63983042645075,
+            -1.7984593693553503,
+            -13.105510370928226
+          ],
+          "directBlend": [
+            41.63983040336021,
+            -1.7984592998751479,
+            -13.105510342264417
+          ],
+          "forward": [
+            41.64067453079505,
+            -1.80124115992884,
+            -13.106963084600952
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 5.006269307104748,
+            "vectorKm": 11.762508386064857
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 141186.67244032936,
+                "vectorKm": 149551.13162305267
+              },
+              "bodyCenter": {
+                "radialKm": 142812.75491226927,
+                "vectorKm": 150643.75329237513
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 207258.3259199484,
+                "vectorKm": 276965.7001322508
+              },
+              "bodyCenter": {
+                "radialKm": 208884.40839188828,
+                "vectorKm": 277389.9684793113
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 207253.3196506413,
+                "vectorKm": 276954.91485565645
+              },
+              "bodyCenter": {
+                "radialKm": 208879.4021225812,
+                "vectorKm": 277379.2145279107
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 409941.24615226354,
+                "vectorKm": 746199.3847916902
+              },
+              "bodyCenter": {
+                "radialKm": 411567.32862420345,
+                "vectorKm": 746166.243419485
+              }
+            }
+          },
+          "ttDays": 22021.375
+        },
+        {
+          "backward": [
+            43.96163374282665,
+            14.216045729270085,
+            -8.80811745520387
+          ],
+          "cached": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "directBlend": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "forward": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 579451.6143397131,
+                "vectorKm": 583145.973239157
+              },
+              "bodyCenter": {
+                "radialKm": 581233.1356349232,
+                "vectorKm": 584934.3747517598
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            }
+          },
+          "ttDays": 29200
+        },
+        {
+          "backward": [
+            39.66647363572078,
+            28.49684295210592,
+            -3.059852936741938
+          ],
+          "cached": [
+            39.66489034389206,
+            28.495832755481338,
+            -3.060125456239415
+          ],
+          "directBlend": [
+            39.66489034320488,
+            28.49583275593402,
+            -3.0601254558883038
+          ],
+          "forward": [
+            39.66435901846162,
+            28.495493752107322,
+            -3.0602169084556743
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.04717508587885319,
+            "vectorKm": 0.1338393225976417
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 418860.15416999906,
+                "vectorKm": 499920.72225830605
+              },
+              "bodyCenter": {
+                "radialKm": 417512.3415534178,
+                "vectorKm": 498605.3231134432
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 141422.35532998014,
+                "vectorKm": 309649.78084188665
+              },
+              "bodyCenter": {
+                "radialKm": 140074.54271339887,
+                "vectorKm": 308425.1582471847
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 141422.30815489427,
+                "vectorKm": 309649.64787379093
+              },
+              "bodyCenter": {
+                "radialKm": 140074.495538313,
+                "vectorKm": 308425.02523503423
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 48319.223984994605,
+                "vectorKm": 283400.77350222284
+              },
+              "bodyCenter": {
+                "radialKm": 46971.411368413326,
+                "vectorKm": 282393.09328904253
+              }
+            }
+          },
+          "ttDays": 36536.875
+        },
+        {
+          "backward": [
+            29.98884369309491,
+            38.93950600332811,
+            3.118034544752224
+          ],
+          "cached": [
+            29.987863956906587,
+            38.93891100667341,
+            3.117825358550287
+          ],
+          "directBlend": [
+            29.987863930763552,
+            38.93891102821492,
+            3.1178253731658057
+          ],
+          "forward": [
+            29.98687355871882,
+            38.93830961019693,
+            3.1176139364886533
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.3049803770780947,
+            "vectorKm": 5.519144313212426
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 304438.39574386703,
+                "vectorKm": 516905.47794712824
+              },
+              "bodyCenter": {
+                "radialKm": 306071.1366622581,
+                "vectorKm": 518502.7435798533
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 142828.20232031794,
+                "vectorKm": 393792.2657891696
+              },
+              "bodyCenter": {
+                "radialKm": 144460.94323870906,
+                "vectorKm": 395224.0786978447
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 142828.50730069503,
+                "vectorKm": 393787.2410045091
+              },
+              "bodyCenter": {
+                "radialKm": 144461.24821908615,
+                "vectorKm": 395219.0608737769
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -20530.84412076553,
+                "vectorKm": 321699.48359654215
+              },
+              "bodyCenter": {
+                "radialKm": -18898.103202374412,
+                "vectorKm": 322630.57836148667
+              }
+            }
+          },
+          "ttDays": 43878.625
+        },
+        {
+          "backward": [
+            16.315311152514255,
+            44.16331029844002,
+            8.868276184503872
+          ],
+          "cached": [
+            16.314796163350128,
+            44.16292289164636,
+            8.868158982045873
+          ],
+          "directBlend": [
+            16.31479612292126,
+            44.16292291668273,
+            8.868159002034899
+          ],
+          "forward": [
+            16.313216202002778,
+            44.16173457226506,
+            8.867799529421038
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -1.946496064467427,
+            "vectorKm": 7.7168064328030175
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 235522.86843667369,
+                "vectorKm": 550595.3826560143
+              },
+              "bodyCenter": {
+                "radialKm": 235361.60293171366,
+                "vectorKm": 549498.906534183
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 152616.49917298625,
+                "vectorKm": 474455.2113960722
+              },
+              "bodyCenter": {
+                "radialKm": 152455.23366802622,
+                "vectorKm": 473257.85222941136
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 152618.4456690507,
+                "vectorKm": 474448.76732701156
+              },
+              "bodyCenter": {
+                "radialKm": 152457.1801640907,
+                "vectorKm": 473251.410458961
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -101699.3839113851,
+                "vectorKm": 324769.48563647957
+              },
+              "bodyCenter": {
+                "radialKm": -101860.64941634511,
+                "vectorKm": 323357.06885643874
+              }
+            }
+          },
+          "ttDays": 51221.375
+        },
+        {
+          "backward": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "cached": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "directBlend": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "forward": [
+            0.675902220790643,
+            43.091855107418304,
+            13.242592795730593
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -190013.03837453536,
+                "vectorKm": 300228.0279528096
+              },
+              "bodyCenter": {
+                "radialKm": -190699.61268099252,
+                "vectorKm": 299155.62355597987
+              }
+            }
+          },
+          "ttDays": 58400
+        }
+      ],
+      "seedModel": "original",
+      "sourceSHA256": "dd2094db93155731d90a98ac849a74147f3c6a693a2ada6b4b425171ce8b1382",
+      "stepDays": 146
+    },
+    {
+      "forceModel": "production-barycentric",
+      "rows": [
+        {
+          "backward": [
+            42.937994730268855,
+            20.34850719271472,
+            -6.587085999180227
+          ],
+          "cached": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "directBlend": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "forward": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 677885.2458843689,
+                "vectorKm": 1058993.7744696003
+              },
+              "bodyCenter": {
+                "radialKm": 679777.4271213583,
+                "vectorKm": 1060208.88533488
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            }
+          },
+          "ttDays": -58400
+        },
+        {
+          "backward": [
+            36.30774303258488,
+            33.265847948566886,
+            -0.5587384904041226
+          ],
+          "cached": [
+            36.307099394876836,
+            33.263679787849924,
+            -0.5595055293551552
+          ],
+          "directBlend": [
+            36.30709937334113,
+            33.263679808714514,
+            -0.5595055163627887
+          ],
+          "forward": [
+            36.30688337277333,
+            33.262952219631096,
+            -0.5597629166008831
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.2890094511113574,
+            "vectorKm": 4.888713955259863
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 500305.9948713256,
+                "vectorKm": 700804.065844497
+              },
+              "bodyCenter": {
+                "radialKm": 500546.1279943909,
+                "vectorKm": 701827.7718767982
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 211520.89580752957,
+                "vectorKm": 352559.2490872866
+              },
+              "bodyCenter": {
+                "radialKm": 211761.02893059488,
+                "vectorKm": 353577.94488561
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 211520.60679807846,
+                "vectorKm": 352562.97913860704
+              },
+              "bodyCenter": {
+                "radialKm": 211760.73992114377,
+                "vectorKm": 353581.6784887852
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 114610.72459494772,
+                "vectorKm": 241678.95218023643
+              },
+              "bodyCenter": {
+                "radialKm": 114850.85771801302,
+                "vectorKm": 242667.69281958253
+              }
+            }
+          },
+          "ttDays": -51063.125
+        },
+        {
+          "backward": [
+            24.836990331589103,
+            41.74710767860316,
+            5.544771520004343
+          ],
+          "cached": [
+            24.836777652857275,
+            41.74597718877572,
+            5.544296794151295
+          ],
+          "directBlend": [
+            24.836777664686903,
+            41.7459771797439,
+            5.54429678778134
+          ],
+          "forward": [
+            24.836562694843668,
+            41.74483443886586,
+            5.5438169147474925
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.3627393238455205,
+            "vectorKm": 2.4218693715380373
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 336137.1453013721,
+                "vectorKm": 426924.8099231124
+              },
+              "bodyCenter": {
+                "radialKm": 336304.11581879744,
+                "vectorKm": 426227.8085499233
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 167516.9589985556,
+                "vectorKm": 250734.77048901026
+              },
+              "bodyCenter": {
+                "radialKm": 167683.9295159809,
+                "vectorKm": 249955.1659817791
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 167516.59625923174,
+                "vectorKm": 250732.7482363865
+              },
+              "bodyCenter": {
+                "radialKm": 167683.56677665704,
+                "vectorKm": 249953.1479938922
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -2929.056885537078,
+                "vectorKm": 112343.47413971458
+              },
+              "bodyCenter": {
+                "radialKm": -2762.086368111777,
+                "vectorKm": 111522.40815869495
+              }
+            }
+          },
+          "ttDays": -43721.375
+        },
+        {
+          "backward": [
+            9.981210703231262,
+            44.52151885080348,
+            10.882208848763478
+          ],
+          "cached": [
+            9.981110211055196,
+            44.5209934600097,
+            10.881997202325582
+          ],
+          "directBlend": [
+            9.981110222012036,
+            44.5209934542609,
+            10.881997197224349
+          ],
+          "forward": [
+            9.980801982675247,
+            44.51938173136304,
+            10.881347928330584
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.6445376760045753,
+            "vectorKm": 2.0021739200961584
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 189774.96617589734,
+                "vectorKm": 225187.57252616377
+              },
+              "bodyCenter": {
+                "radialKm": 191007.65219991692,
+                "vectorKm": 226525.98719895948
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 104629.37554731639,
+                "vectorKm": 154503.0030427855
+              },
+              "bodyCenter": {
+                "radialKm": 105862.06157133597,
+                "vectorKm": 155644.84951545
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 104628.73100964038,
+                "vectorKm": 154501.1744412129
+              },
+              "bodyCenter": {
+                "radialKm": 105861.41703365996,
+                "vectorKm": 155643.0255928455
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -156568.3891813921,
+                "vectorKm": 184263.15654579428
+              },
+              "bodyCenter": {
+                "radialKm": -155335.7031573725,
+                "vectorKm": 183135.979652241
+              }
+            }
+          },
+          "ttDays": -36378.625
+        },
+        {
+          "backward": [
+            -5.9740318210356875,
+            40.61225963748187,
+            14.469833958589113
+          ],
+          "cached": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "directBlend": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "forward": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 80622.52977888999,
+                "vectorKm": 246585.45167070336
+              },
+              "bodyCenter": {
+                "radialKm": 81255.06888672647,
+                "vectorKm": 246048.80816372542
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            }
+          },
+          "ttDays": -29200
+        },
+        {
+          "backward": [
+            -20.954355146995233,
+            28.898505853632024,
+            15.331569411164681
+          ],
+          "cached": [
+            -20.955543789967614,
+            28.897656673496854,
+            15.331426764411438
+          ],
+          "directBlend": [
+            -20.955543880371238,
+            28.897656654389458,
+            15.33142678565292
+          ],
+          "forward": [
+            -20.955942798100892,
+            28.897371678262175,
+            15.331378923073734
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -6.422865460869477,
+            "vectorKm": 14.183510050655688
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -8293.331820130308,
+                "vectorKm": 221704.5145940883
+              },
+              "bodyCenter": {
+                "radialKm": -9115.002810685124,
+                "vectorKm": 220011.01425564458
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -15296.695096279378,
+                "vectorKm": 17404.916561584258
+              },
+              "bodyCenter": {
+                "radialKm": -16118.366086834196,
+                "vectorKm": 18436.0026693145
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -15290.27223081851,
+                "vectorKm": 17397.019049332663
+              },
+              "bodyCenter": {
+                "radialKm": -16111.943221373325,
+                "vectorKm": 18429.368575503326
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -17636.463313939257,
+                "vectorKm": 74301.23906247698
+              },
+              "bodyCenter": {
+                "radialKm": -18458.134304494073,
+                "vectorKm": 76296.14542191027
+              }
+            }
+          },
+          "ttDays": -21863.125
+        },
+        {
+          "backward": [
+            -30.05167885134702,
+            9.609321682152897,
+            12.050810907466877
+          ],
+          "cached": [
+            -30.05210632604374,
+            9.608561131567216,
+            12.050496539664568
+          ],
+          "directBlend": [
+            -30.052106274276504,
+            9.60856118740099,
+            12.050496541474182
+          ],
+          "forward": [
+            -30.052538325710906,
+            9.607792457354577,
+            12.050178771254798
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 4.418005627213653,
+            "vectorKm": 11.393556914890114
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -66502.90526008929,
+                "vectorKm": 154365.5643448771
+              },
+              "bodyCenter": {
+                "radialKm": -66233.1320255704,
+                "vectorKm": 155772.72315695946
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -58751.433040121745,
+                "vectorKm": 58853.142089170746
+              },
+              "bodyCenter": {
+                "radialKm": -58481.65980560286,
+                "vectorKm": 58572.17095830447
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -58755.85104574896,
+                "vectorKm": 58857.807315585975
+              },
+              "bodyCenter": {
+                "radialKm": -58486.077811230076,
+                "vectorKm": 58577.09272826797
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -50921.04631077251,
+                "vectorKm": 148302.1923600738
+              },
+              "bodyCenter": {
+                "radialKm": -50651.27307625362,
+                "vectorKm": 146581.4183602293
+              }
+            }
+          },
+          "ttDays": -14521.375
+        },
+        {
+          "backward": [
+            -26.92482816385891,
+            -12.945978614753885,
+            4.0699136082737075
+          ],
+          "cached": [
+            -26.924818850797603,
+            -12.946298547947986,
+            4.069726087810867
+          ],
+          "directBlend": [
+            -26.924818865501443,
+            -12.946298478530858,
+            4.069726113855304
+          ],
+          "forward": [
+            -26.924790341568716,
+            -12.94727970267638,
+            4.069150950102069
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 1.9687511910541544,
+            "vectorKm": 11.307514420343622
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -63681.685972029685,
+                "vectorKm": 72040.81832494162
+              },
+              "bodyCenter": {
+                "radialKm": -61932.62759761868,
+                "vectorKm": 69928.93897112168
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -48162.11826528597,
+                "vectorKm": 53218.58077385876
+              },
+              "bodyCenter": {
+                "radialKm": -46413.05989087497,
+                "vectorKm": 52032.08725990085
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -48164.08701647703,
+                "vectorKm": 53215.70689925525
+              },
+              "bodyCenter": {
+                "radialKm": -46415.02864206602,
+                "vectorKm": 52028.86639659081
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -557.8893384664636,
+                "vectorKm": 184419.4889506572
+              },
+              "bodyCenter": {
+                "radialKm": 1191.1690359445447,
+                "vectorKm": 185532.24116960296
+              }
+            }
+          },
+          "ttDays": -7178.625
+        },
+        {
+          "backward": [
+            -9.872949596101545,
+            -27.979112286657536,
+            -5.754206669747433
+          ],
+          "cached": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "directBlend": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "forward": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -68939.31556986034,
+                "vectorKm": 369411.2626767856
+              },
+              "bodyCenter": {
+                "radialKm": -67477.15988956197,
+                "vectorKm": 369154.283749555
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            }
+          },
+          "ttDays": 0
+        },
+        {
+          "backward": [
+            13.075228543722513,
+            -28.595765569364804,
+            -12.86261839344325
+          ],
+          "cached": [
+            13.073415018180793,
+            -28.59658685927481,
+            -12.86272381403417
+          ],
+          "directBlend": [
+            13.073415120497952,
+            -28.596586741911246,
+            -12.862723808331262
+          ],
+          "forward": [
+            13.072806567991359,
+            -28.59686231277894,
+            -12.862759183688466
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 9.211765421370114,
+            "vectorKm": 23.308256025336295
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 93561.5700877995,
+                "vectorKm": 312957.4910720646
+              },
+              "bodyCenter": {
+                "radialKm": 93102.14075747046,
+                "vectorKm": 314710.79409485625
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 98542.48447156236,
+                "vectorKm": 98543.5250468076
+              },
+              "bodyCenter": {
+                "radialKm": 98083.05514123333,
+                "vectorKm": 98115.64003172891
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 98533.272706141,
+                "vectorKm": 98534.414015324
+              },
+              "bodyCenter": {
+                "radialKm": 98073.84337581196,
+                "vectorKm": 98106.98267924791
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 100205.60794697124,
+                "vectorKm": 141279.4742270276
+              },
+              "bodyCenter": {
+                "radialKm": 99746.17861664221,
+                "vectorKm": 139564.77885085036
+              }
+            }
+          },
+          "ttDays": 7336.875
+        },
+        {
+          "backward": [
+            31.420774523979595,
+            -17.681871335955837,
+            -14.986329845735847
+          ],
+          "cached": [
+            31.420059054133255,
+            -17.682912689684603,
+            -14.986716809826312
+          ],
+          "directBlend": [
+            31.42005904976983,
+            -17.682912732030594,
+            -14.986716821726583
+          ],
+          "forward": [
+            31.419335827786902,
+            -17.683965405242173,
+            -14.987107988227828
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -3.0270097250950427,
+            "vectorKm": 6.612562528603521
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 152898.5774739526,
+                "vectorKm": 200083.62085595776
+              },
+              "bodyCenter": {
+                "radialKm": 152516.17680606715,
+                "vectorKm": 198470.03972578372
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 159536.57037325503,
+                "vectorKm": 176184.74705769357
+              },
+              "bodyCenter": {
+                "radialKm": 159154.16970536954,
+                "vectorKm": 176696.33949088043
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 159539.5973829801,
+                "vectorKm": 176189.96035328245
+              },
+              "bodyCenter": {
+                "radialKm": 159157.19671509464,
+                "vectorKm": 176701.5997625884
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 166259.32366169177,
+                "vectorKm": 318410.9408683788
+              },
+              "bodyCenter": {
+                "radialKm": 165876.9229938063,
+                "vectorKm": 319997.8931245313
+              }
+            }
+          },
+          "ttDays": 14678.625
+        },
+        {
+          "backward": [
+            41.63958476906854,
+            -1.7976262581405067,
+            -13.105068711082772
+          ],
+          "cached": [
+            41.639590491120494,
+            -1.798258400353509,
+            -13.105375361210562
+          ],
+          "directBlend": [
+            41.639590496507545,
+            -1.798258417027956,
+            -13.10537536804377
+          ],
+          "forward": [
+            41.639608066178894,
+            -1.8001976474404808,
+            -13.106316078546751
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -1.1773660326998445,
+            "vectorKm": 2.8136740116739047
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 147285.60305379555,
+                "vectorKm": 158588.99186247948
+              },
+              "bodyCenter": {
+                "radialKm": 148911.68552573543,
+                "vectorKm": 159600.58655979132
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 165753.39294856865,
+                "vectorKm": 226392.95767914585
+              },
+              "bodyCenter": {
+                "radialKm": 167379.47542050853,
+                "vectorKm": 226764.64687139733
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 165754.57031460135,
+                "vectorKm": 226395.55282440656
+              },
+              "bodyCenter": {
+                "radialKm": 167380.65278654124,
+                "vectorKm": 226767.23323243574
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 222420.77399814705,
+                "vectorKm": 518844.16881900857
+              },
+              "bodyCenter": {
+                "radialKm": 224046.85647008693,
+                "vectorKm": 518552.7783428095
+              }
+            }
+          },
+          "ttDays": 22021.375
+        },
+        {
+          "backward": [
+            43.961608120526506,
+            14.215874314244182,
+            -8.808163265917159
+          ],
+          "cached": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "directBlend": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "forward": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 569401.9425147838,
+                "vectorKm": 574154.5105698059
+              },
+              "bodyCenter": {
+                "radialKm": 571183.4638099939,
+                "vectorKm": 575891.3784443297
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            }
+          },
+          "ttDays": 29200
+        },
+        {
+          "backward": [
+            39.66649243557195,
+            28.49673021778189,
+            -3.059893828506
+          ],
+          "cached": [
+            39.66487012727358,
+            28.495828573534425,
+            -3.060120682391795
+          ],
+          "directBlend": [
+            39.664870106239434,
+            28.495828596156464,
+            -3.0601206689995784
+          ],
+          "forward": [
+            39.66432568143642,
+            28.49552602801202,
+            -3.060196792625379
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.7051527877019594,
+            "vectorKm": 5.036681643927516
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 411701.68676804024,
+                "vectorKm": 503146.0009665688
+              },
+              "bodyCenter": {
+                "radialKm": 410353.87415145896,
+                "vectorKm": 501835.6704667947
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 138561.9818946769,
+                "vectorKm": 307134.04344379617
+              },
+              "bodyCenter": {
+                "radialKm": 137214.16927809562,
+                "vectorKm": 305914.9777030353
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 138561.2767418892,
+                "vectorKm": 307129.27475382
+              },
+              "bodyCenter": {
+                "radialKm": 137213.46412530792,
+                "vectorKm": 305910.20418807515
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 46900.33580830108,
+                "vectorKm": 275859.51708565623
+              },
+              "bodyCenter": {
+                "radialKm": 45552.523191719796,
+                "vectorKm": 274849.51420395065
+              }
+            }
+          },
+          "ttDays": 36536.875
+        },
+        {
+          "backward": [
+            29.988886170016897,
+            38.939437650312925,
+            3.118000384808556
+          ],
+          "cached": [
+            29.987851742684793,
+            38.938896616439834,
+            3.1178245403653446
+          ],
+          "directBlend": [
+            29.987851753624646,
+            38.938896607247315,
+            3.1178245341909707
+          ],
+          "forward": [
+            29.986806135677607,
+            38.93834970529975,
+            3.1176467793109026
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.14925720542238635,
+            "vectorKm": 2.3286660762419067
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 299899.1967651042,
+                "vectorKm": 524204.64456570556
+              },
+              "bodyCenter": {
+                "radialKm": 301531.9376834953,
+                "vectorKm": 525786.5575916654
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 140005.63894198256,
+                "vectorKm": 392641.29633973166
+              },
+              "bodyCenter": {
+                "radialKm": 141638.37986037368,
+                "vectorKm": 394065.2676874957
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 140005.48968477713,
+                "vectorKm": 392643.41421782604
+              },
+              "bodyCenter": {
+                "radialKm": 141638.23060316825,
+                "vectorKm": 394067.38258321333
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -21618.908862827095,
+                "vectorKm": 309252.5870872564
+              },
+              "bodyCenter": {
+                "radialKm": -19986.16794443598,
+                "vectorKm": 310178.68204846873
+              }
+            }
+          },
+          "ttDays": 43878.625
+        },
+        {
+          "backward": [
+            16.315352163115673,
+            44.16327980720112,
+            8.868254299218343
+          ],
+          "cached": [
+            16.314800777234993,
+            44.16290854709683,
+            8.868153112495328
+          ],
+          "directBlend": [
+            16.314800786677026,
+            44.162908541176705,
+            8.868153107803037
+          ],
+          "forward": [
+            16.313109367035846,
+            44.1617696338862,
+            8.867842689846501
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.4653210330865157,
+            "vectorKm": 1.808943866375484
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 232801.3105918466,
+                "vectorKm": 556557.3354181485
+              },
+              "bodyCenter": {
+                "radialKm": 232640.04508688656,
+                "vectorKm": 555456.1356197024
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 150710.8526405062,
+                "vectorKm": 475258.68685593916
+              },
+              "bodyCenter": {
+                "radialKm": 150549.5871355462,
+                "vectorKm": 474060.1654218147
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 150710.3873194731,
+                "vectorKm": 475260.19709810906
+              },
+              "bodyCenter": {
+                "radialKm": 150549.1218145131,
+                "vectorKm": 474061.675137513
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -101111.35994632337,
+                "vectorKm": 307888.98447267624
+              },
+              "bodyCenter": {
+                "radialKm": -101272.62545128338,
+                "vectorKm": 306470.2423361858
+              }
+            }
+          },
+          "ttDays": 51221.375
+        },
+        {
+          "backward": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "cached": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "directBlend": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "forward": [
+            0.6757404745440484,
+            43.09187853077594,
+            13.24264887226524
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -184562.6309277037,
+                "vectorKm": 278455.5442275312
+              },
+              "bodyCenter": {
+                "radialKm": -185249.20523416085,
+                "vectorKm": 277441.1476657793
+              }
+            }
+          },
+          "ttDays": 58400
+        }
+      ],
+      "seedModel": "original",
+      "sourceSHA256": "33a5d62bf85bba0f44c59741689cc109b25dfe2748d688f30948b6fda9b39133",
+      "stepDays": 73
+    },
+    {
+      "forceModel": "production-barycentric",
+      "rows": [
+        {
+          "backward": [
+            42.937976150444854,
+            20.348453582980955,
+            -6.587097110595099
+          ],
+          "cached": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "directBlend": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "forward": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 672223.5890290533,
+                "vectorKm": 1050355.7585353053
+              },
+              "bodyCenter": {
+                "radialKm": 674115.7702660427,
+                "vectorKm": 1051570.269784177
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            }
+          },
+          "ttDays": -58400
+        },
+        {
+          "backward": [
+            36.307743118319216,
+            33.26581348351428,
+            -0.5587492590840374
+          ],
+          "cached": [
+            36.307093171873156,
+            33.2636768053641,
+            -0.5595045846334765
+          ],
+          "directBlend": [
+            36.3070931719771,
+            33.26367680526337,
+            -0.5595045846962032
+          ],
+          "forward": [
+            36.30687506157116,
+            33.26295977413255,
+            -0.5597580585065921
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.0013935363688780454,
+            "vectorKm": 0.023599082225193017
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 496850.911104886,
+                "vectorKm": 695442.3820543166
+              },
+              "bodyCenter": {
+                "radialKm": 497091.0442279513,
+                "vectorKm": 696466.5184740868
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 210531.5310594888,
+                "vectorKm": 352228.5193964104
+              },
+              "bodyCenter": {
+                "radialKm": 210771.6641825541,
+                "vectorKm": 353248.4687723951
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 210531.53245302517,
+                "vectorKm": 352228.501346417
+              },
+              "bodyCenter": {
+                "radialKm": 210771.66557609045,
+                "vectorKm": 353248.4507054215
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 114449.14339819492,
+                "vectorKm": 243208.8451067912
+              },
+              "bodyCenter": {
+                "radialKm": 114689.27652126022,
+                "vectorKm": 244199.07367100217
+              }
+            }
+          },
+          "ttDays": -51063.125
+        },
+        {
+          "backward": [
+            24.837000813425487,
+            41.74708777820531,
+            5.544762151438091
+          ],
+          "cached": [
+            24.83677440152522,
+            41.74597264853544,
+            5.5442963514889145
+          ],
+          "directBlend": [
+            24.83677440374493,
+            41.74597264684067,
+            5.544296350293644
+          ],
+          "forward": [
+            24.836545542304655,
+            41.74484543986974,
+            5.5438255050517915
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0680706907144021,
+            "vectorKm": 0.4544437673758865
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 334232.7761729784,
+                "vectorKm": 423527.19221805234
+              },
+              "bodyCenter": {
+                "radialKm": 334399.7466904037,
+                "vectorKm": 422832.1455895312
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 166682.411666049,
+                "vectorKm": 250234.78210952436
+              },
+              "bodyCenter": {
+                "radialKm": 166849.3821834743,
+                "vectorKm": 249452.71626244744
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 166682.3435953583,
+                "vectorKm": 250234.40197903768
+              },
+              "bodyCenter": {
+                "radialKm": 166849.3141127836,
+                "vectorKm": 249452.33692795286
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -2681.6696254614694,
+                "vectorKm": 115595.94342303062
+              },
+              "bodyCenter": {
+                "radialKm": -2514.6991080361686,
+                "vectorKm": 114766.04316634813
+              }
+            }
+          },
+          "ttDays": -43721.375
+        },
+        {
+          "backward": [
+            9.98122258874974,
+            44.52151086280067,
+            10.882202771131674
+          ],
+          "cached": [
+            9.981112304409343,
+            44.52099055759003,
+            10.881995660749203
+          ],
+          "directBlend": [
+            9.981112310743253,
+            44.52099055428993,
+            10.881995657807051
+          ],
+          "forward": [
+            9.980774018474872,
+            44.51939443959795,
+            10.881360310482318
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.3690713575216506,
+            "vectorKm": 1.1555438948719619
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 188808.15376141726,
+                "vectorKm": 223249.16155421847
+              },
+              "bodyCenter": {
+                "radialKm": 190040.83978543684,
+                "vectorKm": 224591.0138251339
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 104230.39127260355,
+                "vectorKm": 153920.69655004598
+              },
+              "bodyCenter": {
+                "radialKm": 105463.07729662313,
+                "vectorKm": 155062.83609689385
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 104230.02220124603,
+                "vectorKm": 153919.64242267862
+              },
+              "bodyCenter": {
+                "radialKm": 105462.70822526561,
+                "vectorKm": 155061.78469355803
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -155224.3824433779,
+                "vectorKm": 185607.14751381133
+              },
+              "bodyCenter": {
+                "radialKm": -153991.69641935834,
+                "vectorKm": 184504.83793817827
+              }
+            }
+          },
+          "ttDays": -36378.625
+        },
+        {
+          "backward": [
+            -5.9735454297962605,
+            40.61206537947079,
+            14.469626800887792
+          ],
+          "cached": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "directBlend": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "forward": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 33217.206259593666,
+                "vectorKm": 304360.7056821057
+              },
+              "bodyCenter": {
+                "radialKm": 33849.74536743014,
+                "vectorKm": 303613.68585539726
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            }
+          },
+          "ttDays": -29200
+        },
+        {
+          "backward": [
+            -20.954025876574168,
+            28.898575958786747,
+            15.331492073982595
+          ],
+          "cached": [
+            -20.955486729225015,
+            28.897671810066733,
+            15.33141429043762
+          ],
+          "directBlend": [
+            -20.955486728789737,
+            28.89767181015756,
+            15.331414290334957
+          ],
+          "forward": [
+            -20.955976964750935,
+            28.897368393995702,
+            15.331388187529447
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.03107873100934881,
+            "vectorKm": 0.0682692382651565
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -31626.294992706436,
+                "vectorKm": 269281.43814020633
+              },
+              "bodyCenter": {
+                "radialKm": -32447.965983261252,
+                "vectorKm": 267682.5636951306
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -18953.232134649483,
+                "vectorKm": 23400.729182987958
+              },
+              "bodyCenter": {
+                "radialKm": -19774.9031252043,
+                "vectorKm": 23746.954378651742
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -18953.26321338049,
+                "vectorKm": 23400.783860073283
+              },
+              "bodyCenter": {
+                "radialKm": -19774.93420393531,
+                "vectorKm": 23747.005201239666
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -14697.87359687843,
+                "vectorKm": 77870.12110705649
+              },
+              "bodyCenter": {
+                "radialKm": -15519.544587433247,
+                "vectorKm": 79835.25089835514
+              }
+            }
+          },
+          "ttDays": -21863.125
+        },
+        {
+          "backward": [
+            -30.051556111218023,
+            9.60949475884875,
+            12.050827930673943
+          ],
+          "cached": [
+            -30.052093722203395,
+            9.608628431635738,
+            12.050513737711018
+          ],
+          "directBlend": [
+            -30.052093712488762,
+            9.608628442111238,
+            12.050513738049897
+          ],
+          "forward": [
+            -30.052637135370734,
+            9.607752744147295,
+            12.05019614307655
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.8292126021066081,
+            "vectorKm": 2.1378630622803074
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -74565.47242473053,
+                "vectorKm": 185358.11207310107
+              },
+              "bodyCenter": {
+                "radialKm": -74295.69919021164,
+                "vectorKm": 186754.31851941155
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -56646.877922409156,
+                "vectorKm": 57942.9366459158
+              },
+              "bodyCenter": {
+                "radialKm": -56377.10468789027,
+                "vectorKm": 57921.632816780184
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -56647.70713501126,
+                "vectorKm": 57944.14769176343
+              },
+              "bodyCenter": {
+                "radialKm": -56377.933900492375,
+                "vectorKm": 57922.888739195536
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -38530.853487490116,
+                "vectorKm": 154268.08283103208
+              },
+              "bodyCenter": {
+                "radialKm": -38261.08025297123,
+                "vectorKm": 152540.21246168614
+              }
+            }
+          },
+          "ttDays": -14521.375
+        },
+        {
+          "backward": [
+            -26.924860493373565,
+            -12.945886286403027,
+            4.069952172149983
+          ],
+          "cached": [
+            -26.924888932985926,
+            -12.94626258517463,
+            4.06975843721089
+          ],
+          "directBlend": [
+            -26.924888941980498,
+            -12.94626254531343,
+            4.0697584523306904
+          ],
+          "forward": [
+            -26.9249762118186,
+            -12.947416768937465,
+            4.069164191342609
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 1.053539005835077,
+            "vectorKm": 6.518118222774593
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -64514.51737283752,
+                "vectorKm": 80484.25964950903
+              },
+              "bodyCenter": {
+                "radialKm": -62765.45899842651,
+                "vectorKm": 78379.60556263014
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -40456.752448245876,
+                "vectorKm": 42435.810860573605
+              },
+              "bodyCenter": {
+                "radialKm": -38707.69407383487,
+                "vectorKm": 41017.724944834175
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -40457.80598725171,
+                "vectorKm": 42434.97979080819
+              },
+              "bodyCenter": {
+                "radialKm": -38708.74761284071,
+                "vectorKm": 41016.66247470388
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 33344.08416806741,
+                "vectorKm": 194146.55709177017
+              },
+              "bodyCenter": {
+                "radialKm": 35093.142542478425,
+                "vectorKm": 195543.11624126398
+              }
+            }
+          },
+          "ttDays": -7178.625
+        },
+        {
+          "backward": [
+            -9.873022343046848,
+            -27.979380663800068,
+            -5.75426849958816
+          ],
+          "cached": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "directBlend": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "forward": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -26455.04470708216,
+                "vectorKm": 367173.4506747759
+              },
+              "bodyCenter": {
+                "radialKm": -24992.889026783792,
+                "vectorKm": 367085.77536275116
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            }
+          },
+          "ttDays": 0
+        },
+        {
+          "backward": [
+            13.075224901295487,
+            -28.5958972861703,
+            -12.86265840425286
+          ],
+          "cached": [
+            13.073446365275272,
+            -28.596569506502647,
+            -12.862727847221075
+          ],
+          "directBlend": [
+            13.073446364777917,
+            -28.596569507068693,
+            -12.862727847247436
+          ],
+          "forward": [
+            13.072849519628273,
+            -28.596795092418635,
+            -12.86275115107847
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.04414034420597232,
+            "vectorKm": 0.11279182348992534
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 112204.09532928947,
+                "vectorKm": 310977.0543414334
+              },
+              "bodyCenter": {
+                "radialKm": 111744.66599896044,
+                "vectorKm": 312656.2397268855
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 98390.39600947678,
+                "vectorKm": 98563.80838215307
+              },
+              "bodyCenter": {
+                "radialKm": 97930.96667914776,
+                "vectorKm": 98250.00707438488
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 98390.44014982099,
+                "vectorKm": 98563.8462906463
+              },
+              "bodyCenter": {
+                "radialKm": 97931.01081949196,
+                "vectorKm": 98250.04271785934
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 93758.38749791711,
+                "vectorKm": 129734.62865432083
+              },
+              "bodyCenter": {
+                "radialKm": 93298.95816758808,
+                "vectorKm": 128051.42261079355
+              }
+            }
+          },
+          "ttDays": 7336.875
+        },
+        {
+          "backward": [
+            31.420785077668533,
+            -17.681928218564124,
+            -14.986350782667698
+          ],
+          "cached": [
+            31.42003936739987,
+            -17.682852260666387,
+            -14.986692023851194
+          ],
+          "directBlend": [
+            31.420039366580834,
+            -17.68285226861284,
+            -14.986692026084262
+          ],
+          "forward": [
+            31.419285580288925,
+            -17.68378632507418,
+            -14.987036964779493
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.5680026602670032,
+            "vectorKm": 1.2408829243351012
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 159224.90380123834,
+                "vectorKm": 201125.36014927295
+              },
+              "bodyCenter": {
+                "radialKm": 158842.50313335288,
+                "vectorKm": 199577.17625998374
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 151649.27371687753,
+                "vectorKm": 166339.99770812248
+              },
+              "bodyCenter": {
+                "radialKm": 151266.87304899204,
+                "vectorKm": 166819.80257141424
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 151649.8417195378,
+                "vectorKm": 166340.9639984146
+              },
+              "bodyCenter": {
+                "radialKm": 151267.4410516523,
+                "vectorKm": 166820.77842038422
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 143998.68398253876,
+                "vectorKm": 290142.7097468188
+              },
+              "bodyCenter": {
+                "radialKm": 143616.28331465326,
+                "vectorKm": 291772.70899192255
+              }
+            }
+          },
+          "ttDays": 14678.625
+        },
+        {
+          "backward": [
+            41.63959216885689,
+            -1.7976446838608104,
+            -13.10507669304913
+          ],
+          "cached": [
+            41.63952977605923,
+            -1.79820776543417,
+            -13.105341265894356
+          ],
+          "directBlend": [
+            41.639529779173785,
+            -1.7982077749725969,
+            -13.105341269812982
+          ],
+          "forward": [
+            41.63933839062684,
+            -1.7999351309121836,
+            -13.106152893784579
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.6786330784211522,
+            "vectorKm": 1.611480054291738
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 148812.22561326655,
+                "vectorKm": 160929.07246810384
+              },
+              "bodyCenter": {
+                "radialKm": 150438.30808520643,
+                "vectorKm": 161921.37071944532
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 155255.1205966498,
+                "vectorKm": 213653.81214859855
+              },
+              "bodyCenter": {
+                "radialKm": 156881.20306858968,
+                "vectorKm": 214008.00699580405
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 155255.7992297282,
+                "vectorKm": 213655.30461664603
+              },
+              "bodyCenter": {
+                "radialKm": 156881.8817016681,
+                "vectorKm": 214009.4942877696
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 175030.619982158,
+                "vectorKm": 464126.2383108839
+              },
+              "bodyCenter": {
+                "radialKm": 176656.7024540979,
+                "vectorKm": 463731.1170225279
+              }
+            }
+          },
+          "ttDays": 22021.375
+        },
+        {
+          "backward": [
+            43.96160137396944,
+            14.21583132278788,
+            -8.808174658804136
+          ],
+          "cached": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "directBlend": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "forward": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 566833.9602479392,
+                "vectorKm": 572026.2633943596
+              },
+              "bodyCenter": {
+                "radialKm": 568615.4815431493,
+                "vectorKm": 573749.4546036153
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            }
+          },
+          "ttDays": 29200
+        },
+        {
+          "backward": [
+            39.666496969572805,
+            28.49670192087186,
+            -3.0599040367857007
+          ],
+          "cached": [
+            39.664865002391494,
+            28.49582751328284,
+            -3.060119472228574
+          ],
+          "directBlend": [
+            39.66486500249301,
+            28.495827513173552,
+            -3.060119472293243
+          ],
+          "forward": [
+            39.664317343433815,
+            28.49553407753791,
+            -3.060191768609044
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.003394021072332265,
+            "vectorKm": 0.024321245070972056
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 409881.94217546075,
+                "vectorKm": 504026.3743409158
+              },
+              "bodyCenter": {
+                "radialKm": 408534.1295588795,
+                "vectorKm": 502717.57551965705
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 137836.86990436848,
+                "vectorKm": 306498.2441461895
+              },
+              "bodyCenter": {
+                "radialKm": 136489.0572877872,
+                "vectorKm": 305280.6093638241
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 137836.87329838955,
+                "vectorKm": 306498.2671822889
+              },
+              "bodyCenter": {
+                "radialKm": 136489.06068180827,
+                "vectorKm": 305280.6324232429
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 46543.512526797924,
+                "vectorKm": 273976.2327095996
+              },
+              "bodyCenter": {
+                "radialKm": 45195.69991021664,
+                "vectorKm": 272965.6414872214
+              }
+            }
+          },
+          "ttDays": 36536.875
+        },
+        {
+          "backward": [
+            29.988896772603876,
+            38.93942045438216,
+            3.117991816189955
+          ],
+          "cached": [
+            29.987848656387385,
+            38.93889294939633,
+            3.117824324000284
+          ],
+          "directBlend": [
+            29.98784865844013,
+            38.938892947671384,
+            3.1178243228417077
+          ],
+          "forward": [
+            29.986789194390283,
+            38.938359728662,
+            3.117655015730713
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.028016352459587068,
+            "vectorKm": 0.4369565423187549
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 298749.87630554644,
+                "vectorKm": 526063.1706459734
+              },
+              "bodyCenter": {
+                "radialKm": 300382.6172239376,
+                "vectorKm": 527641.1805144333
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 139288.68443189398,
+                "vectorKm": 392354.69411707355
+              },
+              "bodyCenter": {
+                "radialKm": 140921.4253502851,
+                "vectorKm": 393776.6529529515
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 139288.65641554154,
+                "vectorKm": 392355.09182118205
+              },
+              "bodyCenter": {
+                "radialKm": 140921.39733393266,
+                "vectorKm": 393777.05009793723
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -21898.517988483865,
+                "vectorKm": 306134.0947155667
+              },
+              "bodyCenter": {
+                "radialKm": -20265.777070092747,
+                "vectorKm": 307058.8242525718
+              }
+            }
+          },
+          "ttDays": 43878.625
+        },
+        {
+          "backward": [
+            16.315362392229606,
+            44.163272168550435,
+            8.868248830054403
+          ],
+          "cached": [
+            16.31480192841903,
+            44.16290490560593,
+            8.868151628532777
+          ],
+          "directBlend": [
+            16.314801933873138,
+            44.16290490220123,
+            8.868151625827242
+          ],
+          "forward": [
+            16.313082654256274,
+            44.16177826443969,
+            8.867853439093999
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.26658318847932916,
+            "vectorKm": 1.0435371469399302
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 232117.59862290954,
+                "vectorKm": 558053.438957516
+              },
+              "bodyCenter": {
+                "radialKm": 231956.3331179495,
+                "vectorKm": 556951.091947106
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 150226.23211300874,
+                "vectorKm": 475461.26236589684
+              },
+              "bodyCenter": {
+                "radialKm": 150064.9666080487,
+                "vectorKm": 474262.4510644025
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 150225.96552982024,
+                "vectorKm": 475462.1353376696
+              },
+              "bodyCenter": {
+                "radialKm": 150064.70002486024,
+                "vectorKm": 474263.3237357759
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -100984.2807212718,
+                "vectorKm": 303702.2405462528
+              },
+              "bodyCenter": {
+                "radialKm": -101145.54622623183,
+                "vectorKm": 302281.94636460155
+              }
+            }
+          },
+          "ttDays": 51221.375
+        },
+        {
+          "backward": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "cached": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "directBlend": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "forward": [
+            0.6757000773389986,
+            43.091884146750864,
+            13.24266280469144
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -183238.0322013605,
+                "vectorKm": 273153.66399282607
+              },
+              "bodyCenter": {
+                "radialKm": -183924.60650781766,
+                "vectorKm": 272155.7902975417
+              }
+            }
+          },
+          "ttDays": 58400
+        }
+      ],
+      "seedModel": "original",
+      "sourceSHA256": "419c8ea01a9202eeb73c2428bef37ad1393fa3ba33c986b1ab148f6eb2066b92",
+      "stepDays": 36.5
+    },
+    {
+      "forceModel": "production-barycentric",
+      "rows": [
+        {
+          "backward": [
+            42.93797145497757,
+            20.348440144381147,
+            -6.587099884507612
+          ],
+          "cached": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "directBlend": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "forward": [
+            42.936048423883,
+            20.344685584452,
+            -6.588027007912
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 670799.036012221,
+                "vectorKm": 1048189.0652522793
+              },
+              "bodyCenter": {
+                "radialKm": 672691.2172492103,
+                "vectorKm": 1049403.4167861291
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 194096.47309377446,
+                "vectorKm": 417991.8847799262
+              },
+              "bodyCenter": {
+                "radialKm": 195988.6543307639,
+                "vectorKm": 418922.191773458
+              }
+            }
+          },
+          "ttDays": -58400
+        },
+        {
+          "backward": [
+            36.30774312310217,
+            33.26580483540086,
+            -0.5587519561675316
+          ],
+          "cached": [
+            36.30709160971696,
+            33.26367605248072,
+            -0.5595043487869714
+          ],
+          "directBlend": [
+            36.30709160974159,
+            33.26367605245686,
+            -0.5595043488018285
+          ],
+          "forward": [
+            36.306872973472196,
+            33.26296167085029,
+            -0.5597568383571303
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.0003305795657674082,
+            "vectorKm": 0.005590526794159337
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 495982.0938175744,
+                "vectorKm": 694097.06250019
+              },
+              "bodyCenter": {
+                "radialKm": 496222.22694063967,
+                "vectorKm": 695121.3100169133
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 210282.75013867836,
+                "vectorKm": 352145.27616696793
+              },
+              "bodyCenter": {
+                "radialKm": 210522.88326174367,
+                "vectorKm": 353165.5394481444
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 210282.7504692579,
+                "vectorKm": 352145.2718888017
+              },
+              "bodyCenter": {
+                "radialKm": 210522.88359232323,
+                "vectorKm": 353165.53516596736
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 114408.42045054433,
+                "vectorKm": 243593.67185877936
+              },
+              "bodyCenter": {
+                "radialKm": 114648.55357360965,
+                "vectorKm": 244584.268688814
+              }
+            }
+          },
+          "ttDays": -51063.125
+        },
+        {
+          "backward": [
+            24.837003421907166,
+            41.74708279191226,
+            5.544759809415308
+          ],
+          "cached": [
+            24.836773583178253,
+            41.7459715046407,
+            5.5442962397295785
+          ],
+          "directBlend": [
+            24.836773583431405,
+            41.745971504447404,
+            5.544296239593258
+          ],
+          "forward": [
+            24.836541256065967,
+            41.74484818300134,
+            5.54382764983649
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.007764899446723205,
+            "vectorKm": 0.051829261573946926
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 333754.34606567404,
+                "vectorKm": 422677.0362214167
+              },
+              "bodyCenter": {
+                "radialKm": 333921.3165830993,
+                "vectorKm": 421982.4790486355
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 166472.2087396007,
+                "vectorKm": 250109.05202048522
+              },
+              "bodyCenter": {
+                "radialKm": 166639.179257026,
+                "vectorKm": 249326.36577749177
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 166472.20097470126,
+                "vectorKm": 250109.0086466933
+              },
+              "bodyCenter": {
+                "radialKm": 166639.17149212654,
+                "vectorKm": 249326.32249435532
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -2620.635226201271,
+                "vectorKm": 116408.7260723533
+              },
+              "bodyCenter": {
+                "radialKm": -2453.66470877597,
+                "vectorKm": 115576.69959185972
+              }
+            }
+          },
+          "ttDays": -43721.375
+        },
+        {
+          "backward": [
+            9.981225560828458,
+            44.52150886038054,
+            10.882201249819698
+          ],
+          "cached": [
+            9.98111283239127,
+            44.52098982313838,
+            10.881995271192565
+          ],
+          "directBlend": [
+            9.981112832588932,
+            44.52098982303525,
+            10.881995271100712
+          ],
+          "forward": [
+            9.9807670239089,
+            44.51939760781022,
+            10.88136340432778
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.011539459054569079,
+            "vectorKm": 0.036072295887170536
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 188565.63741798128,
+                "vectorKm": 222764.8776922053
+              },
+              "bodyCenter": {
+                "radialKm": 189798.32344200087,
+                "vectorKm": 224107.59186575067
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 104129.39239107893,
+                "vectorKm": 153773.51890093056
+              },
+              "bodyCenter": {
+                "radialKm": 105362.07841509851,
+                "vectorKm": 154915.7319216722
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 104129.38085161988,
+                "vectorKm": 153773.48598678503
+              },
+              "bodyCenter": {
+                "radialKm": 105362.06687563946,
+                "vectorKm": 154915.69909259398
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -154889.80703697016,
+                "vectorKm": 185963.56831714255
+              },
+              "bodyCenter": {
+                "radialKm": -153657.12101295058,
+                "vectorKm": 184867.53052115827
+              }
+            }
+          },
+          "ttDays": -36378.625
+        },
+        {
+          "backward": [
+            -5.973422890353986,
+            40.61201600372204,
+            14.469574474606198
+          ],
+          "cached": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "directBlend": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "forward": [
+            -5.975910552974,
+            40.61180995846,
+            14.470131723673
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 21206.719775503036,
+                "vectorKm": 320756.815837568
+              },
+              "bodyCenter": {
+                "radialKm": 21839.25888333951,
+                "vectorKm": 319973.25089765765
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 71245.0008105372,
+                "vectorKm": 92713.2309736302
+              },
+              "bodyCenter": {
+                "radialKm": 71877.53991837367,
+                "vectorKm": 93806.40170695054
+              }
+            }
+          },
+          "ttDays": -29200
+        },
+        {
+          "backward": [
+            -20.95394300878497,
+            28.898593177974078,
+            15.33147247808546
+          ],
+          "cached": [
+            -20.95547233310472,
+            28.897675520474323,
+            15.331411109481474
+          ],
+          "directBlend": [
+            -20.95547233300162,
+            28.89767552049583,
+            15.331411109457155
+          ],
+          "forward": [
+            -20.95598554694574,
+            28.89736757100505,
+            15.331390515239505
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.007362038818344274,
+            "vectorKm": 0.016170096872671104
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -37553.49094186674,
+                "vectorKm": 281453.29679553164
+              },
+              "bodyCenter": {
+                "radialKm": -38375.16193242156,
+                "vectorKm": 279874.6565217249
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -19889.82283023159,
+                "vectorKm": 25206.474153665527
+              },
+              "bodyCenter": {
+                "radialKm": -20711.493820786407,
+                "vectorKm": 25427.12704823773
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -19889.83019227041,
+                "vectorKm": 25206.487634291716
+              },
+              "bodyCenter": {
+                "radialKm": -20711.501182825225,
+                "vectorKm": 25427.139735629513
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -13959.484349200826,
+                "vectorKm": 78797.38160336719
+              },
+              "bodyCenter": {
+                "radialKm": -14781.155339755644,
+                "vectorKm": 80754.69093310394
+              }
+            }
+          },
+          "ttDays": -21863.125
+        },
+        {
+          "backward": [
+            -30.051525240840427,
+            9.609537908353813,
+            12.050832093276304
+          ],
+          "cached": [
+            -30.05209047698286,
+            9.608645215624271,
+            12.05051799601193
+          ],
+          "directBlend": [
+            -30.052090475874543,
+            9.6086452168185,
+            12.05051799605031
+          ],
+          "forward": [
+            -30.05266183176217,
+            9.607742858447649,
+            12.050200497508063
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.09465630331700224,
+            "vectorKm": 0.24380404583362011
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -76615.8248600967,
+                "vectorKm": 193155.33495240813
+              },
+              "bodyCenter": {
+                "radialKm": -76346.05162557782,
+                "vectorKm": 194548.88468584954
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -56137.229005521986,
+                "vectorKm": 58029.89337481637
+              },
+              "bodyCenter": {
+                "radialKm": -55867.4557710031,
+                "vectorKm": 58074.24526413315
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -56137.3236618253,
+                "vectorKm": 58030.040535537526
+              },
+              "bodyCenter": {
+                "radialKm": -55867.550427306414,
+                "vectorKm": 58074.397364840544
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -35431.67826019535,
+                "vectorKm": 155978.53511214786
+              },
+              "bodyCenter": {
+                "radialKm": -35161.90502567647,
+                "vectorKm": 154251.49415159778
+              }
+            }
+          },
+          "ttDays": -14521.375
+        },
+        {
+          "backward": [
+            -26.924868540859727,
+            -12.94586321397789,
+            4.069961799569628
+          ],
+          "cached": [
+            -26.924906437108636,
+            -12.946253555741356,
+            4.069766531670509
+          ],
+          "directBlend": [
+            -26.924906437387293,
+            -12.94625355449581,
+            4.069766532142264
+          ],
+          "forward": [
+            -26.925022689962784,
+            -12.94745097530032,
+            4.069167523663166
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.03325407210691473,
+            "vectorKm": 0.20356236890653642
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -64727.03090004218,
+                "vectorKm": 82928.76930387747
+              },
+              "bodyCenter": {
+                "radialKm": -62977.972525631165,
+                "vectorKm": 80834.32029902069
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -38534.946365457006,
+                "vectorKm": 39923.925962567286
+              },
+              "bodyCenter": {
+                "radialKm": -36785.887991045995,
+                "vectorKm": 38434.15683944076
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -38534.97961952911,
+                "vectorKm": 39923.90991292955
+              },
+              "bodyCenter": {
+                "radialKm": -36785.9212451181,
+                "vectorKm": 38434.133398461345
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 41817.56987839553,
+                "vectorKm": 197443.43616760138
+              },
+              "bodyCenter": {
+                "radialKm": 43566.62825280654,
+                "vectorKm": 198900.09806448812
+              }
+            }
+          },
+          "ttDays": -7178.625
+        },
+        {
+          "backward": [
+            -9.873040400788664,
+            -27.979447749700338,
+            -5.75428399330008
+          ],
+          "cached": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "directBlend": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "forward": [
+            -9.875369580774,
+            -27.978926224737,
+            -5.753711824704
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -15840.409260561582,
+                "vectorKm": 367404.16407561296
+              },
+              "bodyCenter": {
+                "radialKm": -14378.253580263216,
+                "vectorKm": 367359.205875383
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 9476.151827318723,
+                "vectorKm": 9571.44639218407
+              },
+              "bodyCenter": {
+                "radialKm": 10938.30750761709,
+                "vectorKm": 11284.939685696436
+              }
+            }
+          },
+          "ttDays": 0
+        },
+        {
+          "backward": [
+            13.075223993254014,
+            -28.59593024878286,
+            -12.862668418111133
+          ],
+          "cached": [
+            13.073454183753725,
+            -28.596565144490114,
+            -12.862728842567678
+          ],
+          "directBlend": [
+            13.073454183635922,
+            -28.596565144624186,
+            -12.862728842573922
+          ],
+          "forward": [
+            13.07286026707817,
+            -28.59677820435036,
+            -12.86274911994646
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.010455243115396229,
+            "vectorKm": 0.026715614846741412
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 116869.7157754341,
+                "vectorKm": 310693.76360589097
+              },
+              "bodyCenter": {
+                "radialKm": 116410.28644510507,
+                "vectorKm": 312353.124961184
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 98347.58857270956,
+                "vectorKm": 98610.1394982258
+              },
+              "bodyCenter": {
+                "radialKm": 97888.15924238053,
+                "vectorKm": 98324.95182450525
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 98347.59902795267,
+                "vectorKm": 98610.14813252822
+              },
+              "bodyCenter": {
+                "radialKm": 97888.16969762364,
+                "vectorKm": 98324.95991911663
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 92135.38403980095,
+                "vectorKm": 126848.92143015543
+              },
+              "bodyCenter": {
+                "radialKm": 91675.95470947192,
+                "vectorKm": 125174.64935470305
+              }
+            }
+          },
+          "ttDays": 7336.875
+        },
+        {
+          "backward": [
+            31.42078772984176,
+            -17.681942427297756,
+            -14.986356017324844
+          ],
+          "cached": [
+            31.420034375639013,
+            -17.68283709604785,
+            -14.986685788336437
+          ],
+          "directBlend": [
+            31.420034375545406,
+            -17.68283709695443,
+            -14.98668578859114
+          ],
+          "forward": [
+            31.41927286327757,
+            -17.683741454867455,
+            -14.987019130905745
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.06477765053836534,
+            "vectorKm": 0.1415672848114316
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 160807.3589278698,
+                "vectorKm": 201452.7933307007
+              },
+              "bodyCenter": {
+                "radialKm": 160424.95825998433,
+                "vectorKm": 199921.33399365676
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 149662.88742724498,
+                "vectorKm": 163871.45176267452
+              },
+              "bodyCenter": {
+                "radialKm": 149280.4867593595,
+                "vectorKm": 164342.73920475424
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 149662.95220489553,
+                "vectorKm": 163871.5616160076
+              },
+              "bodyCenter": {
+                "radialKm": 149280.55153701003,
+                "vectorKm": 164342.85017206654
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 138403.59282735898,
+                "vectorKm": 283108.124129156
+              },
+              "bodyCenter": {
+                "radialKm": 138021.1921594735,
+                "vectorKm": 284750.06043668947
+              }
+            }
+          },
+          "ttDays": 14678.625
+        },
+        {
+          "backward": [
+            41.639594022643294,
+            -1.797649293181086,
+            -13.105078690601568
+          ],
+          "cached": [
+            41.639514507190384,
+            -1.7981950618691396,
+            -13.105332700923961
+          ],
+          "directBlend": [
+            41.639514507287615,
+            -1.7981950621672524,
+            -13.10533270104639
+          ],
+          "forward": [
+            41.639270583490834,
+            -1.79986928021148,
+            -13.106111911446611
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.021191106826813664,
+            "vectorKm": 0.05035780109391301
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 149194.53910381277,
+                "vectorKm": 161519.46099622996
+              },
+              "bodyCenter": {
+                "radialKm": 150820.62157575268,
+                "vectorKm": 162506.99257183212
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 152615.5850067505,
+                "vectorKm": 210456.48815954474
+              },
+              "bodyCenter": {
+                "radialKm": 154241.66747869042,
+                "vectorKm": 210805.91891866023
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 152615.60619785736,
+                "vectorKm": 210456.53482866916
+              },
+              "bodyCenter": {
+                "radialKm": 154241.68866979724,
+                "vectorKm": 210805.96542442383
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 163118.04422965454,
+                "vectorKm": 450661.2259895037
+              },
+              "bodyCenter": {
+                "radialKm": 164744.12670159445,
+                "vectorKm": 450236.2756787918
+              }
+            }
+          },
+          "ttDays": 22021.375
+        },
+        {
+          "backward": [
+            43.961599644561446,
+            14.215820557435471,
+            -8.808177499595356
+          ],
+          "cached": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "directBlend": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "forward": [
+            43.958831986165,
+            14.214147973292,
+            -8.808306227163
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 566184.9866193448,
+                "vectorKm": 571498.4728660051
+              },
+              "bodyCenter": {
+                "radialKm": 567966.5079145549,
+                "vectorKm": 573218.1933958876
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 107187.12909776987,
+                "vectorKm": 213674.70281596587
+              },
+              "bodyCenter": {
+                "radialKm": 108968.65039297994,
+                "vectorKm": 213616.74769578475
+              }
+            }
+          },
+          "ttDays": 29200
+        },
+        {
+          "backward": [
+            39.66649808962931,
+            28.49669482440131,
+            -3.0599065917424815
+          ],
+          "cached": [
+            39.66486371515959,
+            28.495827243261903,
+            -3.06011916942354
+          ],
+          "directBlend": [
+            39.66486371518363,
+            28.495827243236022,
+            -3.060119169438857
+          ],
+          "forward": [
+            39.66431524825536,
+            28.495536098463166,
+            -3.060190506724177
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.0008035953431516418,
+            "vectorKm": 0.005759566857312266
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 409423.46560201416,
+                "vectorKm": 504250.7225563709
+              },
+              "bodyCenter": {
+                "radialKm": 408075.6529854329,
+                "vectorKm": 502942.3241289807
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 137654.42860341145,
+                "vectorKm": 306338.9702271534
+              },
+              "bodyCenter": {
+                "radialKm": 136306.61598683015,
+                "vectorKm": 305121.6977727512
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 137654.42940700677,
+                "vectorKm": 306338.97568302834
+              },
+              "bodyCenter": {
+                "radialKm": 136306.6167904255,
+                "vectorKm": 305121.70323414664
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 46453.70128050744,
+                "vectorKm": 273503.2176949182
+              },
+              "bodyCenter": {
+                "radialKm": 45105.888663926155,
+                "vectorKm": 272492.4783143554
+              }
+            }
+          },
+          "ttDays": 36536.875
+        },
+        {
+          "backward": [
+            29.988899412620295,
+            38.939416149048164,
+            3.117989675256847
+          ],
+          "cached": [
+            29.98784787887161,
+            38.938892025413594,
+            3.1178242694464227
+          ],
+          "directBlend": [
+            29.987847879105715,
+            38.938892025216845,
+            3.117824269314284
+          ],
+          "forward": [
+            29.986784958677347,
+            38.93836222571965,
+            3.1176570722132064
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0031984370205599077,
+            "vectorKm": 0.04983575925913015
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 298460.83831617085,
+                "vectorKm": 526528.4003056743
+              },
+              "bodyCenter": {
+                "radialKm": 300093.57923456194,
+                "vectorKm": 528105.4303493963
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 139108.04594500444,
+                "vectorKm": 392282.6737536013
+              },
+              "bodyCenter": {
+                "radialKm": 140740.78686339554,
+                "vectorKm": 393704.12441962835
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 139108.0427465674,
+                "vectorKm": 392282.7191199959
+              },
+              "bodyCenter": {
+                "radialKm": 140740.78366495852,
+                "vectorKm": 393704.16972226056
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -21969.51942117753,
+                "vectorKm": 305355.5991211186
+              },
+              "bodyCenter": {
+                "radialKm": -20336.778502786416,
+                "vectorKm": 306279.976097037
+              }
+            }
+          },
+          "ttDays": 43878.625
+        },
+        {
+          "backward": [
+            16.315364949986623,
+            44.163270254758345,
+            8.868247461331405
+          ],
+          "cached": [
+            16.314802219087,
+            44.162903986296996,
+            8.868151253889106
+          ],
+          "directBlend": [
+            16.31480221925723,
+            44.162903986190614,
+            8.868151253804632
+          ],
+          "forward": [
+            16.313075968837968,
+            44.16178040925484,
+            8.867856124580735
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.008337833163599838,
+            "vectorKm": 0.03258077781293548
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 231946.08597945407,
+                "vectorKm": 558428.0772584523
+              },
+              "bodyCenter": {
+                "radialKm": 231784.82047449407,
+                "vectorKm": 557325.4451284126
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 150103.88980401037,
+                "vectorKm": 475512.5218468814
+              },
+              "bodyCenter": {
+                "radialKm": 149942.62429905037,
+                "vectorKm": 474313.63768868824
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 150103.8814661772,
+                "vectorKm": 475512.5490997643
+              },
+              "bodyCenter": {
+                "radialKm": 149942.6159612172,
+                "vectorKm": 474313.6649322083
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -100954.69736639674,
+                "vectorKm": 302657.3304009442
+              },
+              "bodyCenter": {
+                "radialKm": -101115.96287135675,
+                "vectorKm": 301236.6525280743
+              }
+            }
+          },
+          "ttDays": 51221.375
+        },
+        {
+          "backward": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "cached": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "directBlend": [
+            0.67813676352,
+            43.094461639362,
+            13.243238780721
+          ],
+          "forward": [
+            0.6756899827675891,
+            43.09188552055994,
+            13.242666276953653
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 216077.3738910708,
+                "vectorKm": 584517.2745160736
+              },
+              "bodyCenter": {
+                "radialKm": 215390.79958461365,
+                "vectorKm": 582674.8958744195
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -182911.6633476364,
+                "vectorKm": 271839.7113345361
+              },
+              "bodyCenter": {
+                "radialKm": -183598.23765409357,
+                "vectorKm": 270846.1185364166
+              }
+            }
+          },
+          "ttDays": 58400
+        }
+      ],
+      "seedModel": "original",
+      "sourceSHA256": "1d6e8c2e44fad82fb7f2fd49dc54184b8e01df274dc367e15f491c72744f9aea",
+      "stepDays": 18.25
+    },
+    {
+      "forceModel": "relative-eight-planets",
+      "rows": [
+        {
+          "backward": [
+            42.9357504938679,
+            20.342026291866386,
+            -6.588798929015295
+          ],
+          "cached": [
+            42.93574576734537,
+            20.34201632422148,
+            -6.588795422752936
+          ],
+          "directBlend": [
+            42.93574576734537,
+            20.34201632422148,
+            -6.588795422752936
+          ],
+          "forward": [
+            42.93574576734537,
+            20.34201632422148,
+            -6.588795422752936
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 1337.3718031044887,
+                "vectorKm": 1731.641950841413
+              },
+              "bodyCenter": {
+                "radialKm": 3229.553040093909,
+                "vectorKm": 3755.4148167587773
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1892.1812369894208,
+                "vectorKm": 2131.3227775303317
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1892.1812369894208,
+                "vectorKm": 2131.3227775303317
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1892.1812369894208,
+                "vectorKm": 2131.3227775303317
+              }
+            }
+          },
+          "ttDays": -58400
+        },
+        {
+          "backward": [
+            36.30721032028406,
+            33.26146020411221,
+            -0.560276189886914
+          ],
+          "cached": [
+            36.30720925469217,
+            33.261455985007544,
+            -0.5602746244440499
+          ],
+          "directBlend": [
+            36.3072092546963,
+            33.26145598500792,
+            -0.5602746244442564
+          ],
+          "forward": [
+            36.307208897104054,
+            33.26145456915174,
+            -0.5602740991096073
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.000495337870249557,
+            "vectorKm": 0.00062196837926345
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 779.7017079823211,
+                "vectorKm": 965.5244964474099
+              },
+              "bodyCenter": {
+                "radialKm": 1019.8348310476259,
+                "vectorKm": 2141.0309103148074
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 233.1738322019184,
+                "vectorKm": 278.63441793476386
+              },
+              "bodyCenter": {
+                "radialKm": 473.30695526722326,
+                "vectorKm": 2064.075699712442
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 233.17432753978866,
+                "vectorKm": 278.63471930493284
+              },
+              "bodyCenter": {
+                "radialKm": 473.30745060509355,
+                "vectorKm": 2064.0757297859764
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 49.769487066477446,
+                "vectorKm": 73.27463904770472
+              },
+              "bodyCenter": {
+                "radialKm": 289.90261013178235,
+                "vectorKm": 2089.5772564057174
+              }
+            }
+          },
+          "ttDays": -51063.125
+        },
+        {
+          "backward": [
+            24.83721054997363,
+            41.74449777688126,
+            5.5436428497314205
+          ],
+          "cached": [
+            24.837210837712984,
+            41.74449687855846,
+            5.543643074393126
+          ],
+          "directBlend": [
+            24.837210837711986,
+            41.74449687855759,
+            5.5436430743928
+          ],
+          "forward": [
+            24.83721112856622,
+            41.744495970506094,
+            5.543643301487006
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.00019239518136302534,
+            "vectorKm": 0.00020371301771997442
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 350.82157866090364,
+                "vectorKm": 450.56631835659675
+              },
+              "bodyCenter": {
+                "radialKm": 517.7920960862047,
+                "vectorKm": 2411.921952808452
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 261.7543670550221,
+                "vectorKm": 334.12934019992764
+              },
+              "bodyCenter": {
+                "radialKm": 428.7248844803231,
+                "vectorKm": 2363.571989346426
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 261.7541746598407,
+                "vectorKm": 334.12921132335265
+              },
+              "bodyCenter": {
+                "radialKm": 428.7246920851417,
+                "vectorKm": 2363.5719723682396
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 171.72227448138253,
+                "vectorKm": 249.11055277048314
+              },
+              "bodyCenter": {
+                "radialKm": 338.6927919066835,
+                "vectorKm": 2322.896451170636
+              }
+            }
+          },
+          "ttDays": -43721.375
+        },
+        {
+          "backward": [
+            9.981659244024112,
+            44.52024440018512,
+            10.881546047261658
+          ],
+          "cached": [
+            9.981659782699781,
+            44.520244862170244,
+            10.881545734245146
+          ],
+          "directBlend": [
+            9.98165978269614,
+            44.520244862169626,
+            10.88154573424329
+          ],
+          "forward": [
+            9.981661435143328,
+            44.52024627936776,
+            10.88154477401833
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.00026786511438388057,
+            "vectorKm": 0.0006184150882863666
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 89.43815483033346,
+                "vectorKm": 128.76877517951948
+              },
+              "bodyCenter": {
+                "radialKm": 1322.1241788499096,
+                "vectorKm": 2111.358049194718
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 161.32164183470292,
+                "vectorKm": 231.0139366182683
+              },
+              "bodyCenter": {
+                "radialKm": 1394.0076658542791,
+                "vectorKm": 2117.7020299985134
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 161.32137396958854,
+                "vectorKm": 231.0137861295043
+              },
+              "bodyCenter": {
+                "radialKm": 1394.0073979891647,
+                "vectorKm": 2117.701608398681
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 381.83259613302386,
+                "vectorKm": 578.1043817582197
+              },
+              "bodyCenter": {
+                "radialKm": 1614.5186201526,
+                "vectorKm": 2175.9935295200926
+              }
+            }
+          },
+          "ttDays": -36378.625
+        },
+        {
+          "backward": [
+            -5.975466299652485,
+            40.61145005029977,
+            14.469890270184136
+          ],
+          "cached": [
+            -5.97546725971451,
+            40.61145127258802,
+            14.46988897857091
+          ],
+          "directBlend": [
+            -5.97546725971451,
+            40.61145127258802,
+            14.46988897857091
+          ],
+          "forward": [
+            -5.97546725971451,
+            40.61145127258802,
+            14.46988897857091
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -126.09431159988885,
+                "vectorKm": 302.3199520255485
+              },
+              "bodyCenter": {
+                "radialKm": 506.4447962365883,
+                "vectorKm": 2312.6969550003164
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 632.5391078364771,
+                "vectorKm": 2131.5732687805566
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 632.5391078364771,
+                "vectorKm": 2131.5732687805566
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 632.5391078364771,
+                "vectorKm": 2131.5732687805566
+              }
+            }
+          },
+          "ttDays": -29200
+        },
+        {
+          "backward": [
+            -20.955600896703906,
+            28.897705148811543,
+            15.331516472876094
+          ],
+          "cached": [
+            -20.95560101906201,
+            28.897705144484675,
+            15.331515231108721
+          ],
+          "directBlend": [
+            -20.955601019058765,
+            28.897705144482792,
+            15.3315152311074
+          ],
+          "forward": [
+            -20.955601060118877,
+            28.897705143030144,
+            15.331514814391964
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0005495486672081995,
+            "vectorKm": 0.0005948886442334238
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 1.8172373283387642,
+                "vectorKm": 175.25399668142936
+              },
+              "bodyCenter": {
+                "radialKm": -819.853753226478,
+                "vectorKm": 2038.9578076974012
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -62.10134640314781,
+                "vectorKm": 62.10989726253308
+              },
+              "bodyCenter": {
+                "radialKm": -883.7723369579645,
+                "vectorKm": 2155.7356847028186
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -62.10189595181502,
+                "vectorKm": 62.11045008534561
+              },
+              "bodyCenter": {
+                "radialKm": -883.7728865066317,
+                "vectorKm": 2155.735723402179
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -83.55201558875625,
+                "vectorKm": 102.28598768484987
+              },
+              "bodyCenter": {
+                "radialKm": -905.223006143573,
+                "vectorKm": 2197.088485911532
+              }
+            }
+          },
+          "ttDays": -21863.125
+        },
+        {
+          "backward": [
+            -30.052453225977587,
+            9.60865807929216,
+            12.050654872780111
+          ],
+          "cached": [
+            -30.05245270471501,
+            9.608657320626445,
+            12.050653984099624
+          ],
+          "directBlend": [
+            -30.05245270471614,
+            9.60865732062704,
+            12.050653984099778
+          ],
+          "forward": [
+            -30.05245217781002,
+            9.608656553746439,
+            12.050653085796048
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.00018389152693814025,
+            "vectorKm": 0.00019241610168204226
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 2.8821255239606534,
+                "vectorKm": 86.681584355575
+              },
+              "bodyCenter": {
+                "radialKm": 272.655360042846,
+                "vectorKm": 2205.9456940752852
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -146.22847477022708,
+                "vectorKm": 168.35382840357374
+              },
+              "bodyCenter": {
+                "radialKm": 123.54475974865824,
+                "vectorKm": 2076.733699369505
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -146.22829087870014,
+                "vectorKm": 168.35365176391062
+              },
+              "bodyCenter": {
+                "radialKm": 123.54494364018518,
+                "vectorKm": 2076.733687008705
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -296.95339925382376,
+                "vectorKm": 351.943954936186
+              },
+              "bodyCenter": {
+                "radialKm": -27.180164734938447,
+                "vectorKm": 1956.5080077896755
+              }
+            }
+          },
+          "ttDays": -14521.375
+        },
+        {
+          "backward": [
+            -26.9251667618514,
+            -12.946301371557002,
+            4.069799788775679
+          ],
+          "cached": [
+            -26.92516578626001,
+            -12.946302055974845,
+            4.069799303808401
+          ],
+          "directBlend": [
+            -26.925165786268934,
+            -12.946302055960757,
+            4.069799303813491
+          ],
+          "forward": [
+            -26.925162793541595,
+            -12.946304155459167,
+            4.069797816128285
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.00039010514674160386,
+            "vectorKm": 0.00260847665516915
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -15.634376304085245,
+                "vectorKm": 28.36861086255654
+              },
+              "bodyCenter": {
+                "radialKm": 1733.4239981069231,
+                "vectorKm": 2110.511235871985
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -111.79283848271861,
+                "vectorKm": 200.83700127566976
+              },
+              "bodyCenter": {
+                "radialKm": 1637.2655359282899,
+                "vectorKm": 2118.650869831904
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -111.79244837757187,
+                "vectorKm": 200.8346446623061
+              },
+              "bodyCenter": {
+                "radialKm": 1637.2659260334365,
+                "vectorKm": 2118.6498392022063
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -406.7699236078341,
+                "vectorKm": 789.8471971654786
+              },
+              "bodyCenter": {
+                "radialKm": 1342.2884508031743,
+                "vectorKm": 2248.6717486403054
+              }
+            }
+          },
+          "ttDays": -7178.625
+        },
+        {
+          "backward": [
+            -9.875351735357691,
+            -27.978865754755677,
+            -5.753693679733148
+          ],
+          "cached": [
+            -9.875352229926131,
+            -27.97886811916256,
+            -5.753691421761426
+          ],
+          "directBlend": [
+            -9.875352229926131,
+            -27.97886811916256,
+            -5.753691421761426
+          ],
+          "forward": [
+            -9.875352229926131,
+            -27.97886811916256,
+            -5.753691421761426
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -287.3128354636436,
+                "vectorKm": 494.65693928632953
+              },
+              "bodyCenter": {
+                "radialKm": 1174.842844834723,
+                "vectorKm": 2277.6648158589883
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1462.1556802983666,
+                "vectorKm": 2131.7842735712225
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1462.1556802983666,
+                "vectorKm": 2131.7842735712225
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1462.1556802983666,
+                "vectorKm": 2131.7842735712225
+              }
+            }
+          },
+          "ttDays": 0
+        },
+        {
+          "backward": [
+            13.073159372042175,
+            -28.596032242742705,
+            -12.862476295614597
+          ],
+          "cached": [
+            13.073158932103887,
+            -28.596033438814565,
+            -12.862474627507321
+          ],
+          "directBlend": [
+            13.073158932103954,
+            -28.5960334388169,
+            -12.862474627508233
+          ],
+          "forward": [
+            13.07315878446853,
+            -28.59603384019808,
+            -12.862474067721475
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.00034971278822339965,
+            "vectorKm": 0.0003749851314051001
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": -34.63950343016906,
+                "vectorKm": 397.8555971500092
+              },
+              "bodyCenter": {
+                "radialKm": -494.06883375920006,
+                "vectorKm": 2406.7595027071106
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -3.834032040979913,
+                "vectorKm": 84.00546032766239
+              },
+              "bodyCenter": {
+                "radialKm": -463.2633623700109,
+                "vectorKm": 2183.1106423541164
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -3.83368232819169,
+                "vectorKm": 84.005396766881
+              },
+              "bodyCenter": {
+                "radialKm": -463.2630126572227,
+                "vectorKm": 2183.110442331312
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 6.504206104313911,
+                "vectorKm": 22.526447076635236
+              },
+              "bodyCenter": {
+                "radialKm": -452.9251242247171,
+                "vectorKm": 2113.218093615022
+              }
+            }
+          },
+          "ttDays": 7336.875
+        },
+        {
+          "backward": [
+            31.41944292743444,
+            -17.681991622317845,
+            -14.986317632365402
+          ],
+          "cached": [
+            31.419442712082617,
+            -17.68199196061664,
+            -14.986317068959437
+          ],
+          "directBlend": [
+            31.41944271208137,
+            -17.68199196061631,
+            -14.98631706895911
+          ],
+          "forward": [
+            31.419442494396268,
+            -17.681992302578156,
+            -14.98631649945177
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0001913322245599147,
+            "vectorKm": 0.00019908389222196237
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 41.4037300276599,
+                "vectorKm": 197.89434799715283
+              },
+              "bodyCenter": {
+                "radialKm": -340.9969378578232,
+                "vectorKm": 2052.894682616962
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 6.047042201734467,
+                "vectorKm": 96.87042872331334
+              },
+              "bodyCenter": {
+                "radialKm": -376.3536256837486,
+                "vectorKm": 2087.55695722558
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 6.046850869509907,
+                "vectorKm": 96.87040105049547
+              },
+              "bodyCenter": {
+                "radialKm": -376.35381701597316,
+                "vectorKm": 2087.5570453035043
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -29.692901077293318,
+                "vectorKm": 32.21892017487463
+              },
+              "bodyCenter": {
+                "radialKm": -412.0935689627764,
+                "vectorKm": 2127.1392385476533
+              }
+            }
+          },
+          "ttDays": 14678.625
+        },
+        {
+          "backward": [
+            41.63863508098234,
+            -1.7972027201387784,
+            -13.104862241871903
+          ],
+          "cached": [
+            41.63863498053284,
+            -1.7972025808667094,
+            -13.104862284247611
+          ],
+          "directBlend": [
+            41.63863498053098,
+            -1.7972025808631933,
+            -13.104862284246044
+          ],
+          "forward": [
+            41.63863467238325,
+            -1.7972021536170444,
+            -13.104862414234285
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0003571534858451741,
+            "vectorKm": 0.0006396620986990005
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 10.804627449967466,
+                "vectorKm": 50.29294835207487
+              },
+              "bodyCenter": {
+                "radialKm": 1636.8870993898543,
+                "vectorKm": 2170.557542225154
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": -2.472658619050389,
+                "vectorKm": 72.03823419182072
+              },
+              "bodyCenter": {
+                "radialKm": 1623.6098133208366,
+                "vectorKm": 2175.4841284951913
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": -2.4730157725362343,
+                "vectorKm": 72.03862697978013
+              },
+              "bodyCenter": {
+                "radialKm": 1623.6094561673506,
+                "vectorKm": 2175.484159456552
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": -43.203929221401594,
+                "vectorKm": 148.61377808911652
+              },
+              "bodyCenter": {
+                "radialKm": 1582.8785427184853,
+                "vectorKm": 2192.521216442773
+              }
+            }
+          },
+          "ttDays": 22021.375
+        },
+        {
+          "backward": [
+            43.95788400250127,
+            14.21507207369513,
+            -8.807767905453911
+          ],
+          "cached": [
+            43.95787823733183,
+            14.21506264529639,
+            -8.807764141576557
+          ],
+          "directBlend": [
+            43.95787823733183,
+            14.21506264529639,
+            -8.807764141576557
+          ],
+          "forward": [
+            43.95787823733183,
+            14.21506264529639,
+            -8.807764141576557
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 1337.8559044583726,
+                "vectorKm": 1746.5104790454902
+              },
+              "bodyCenter": {
+                "radialKm": 3119.377199668438,
+                "vectorKm": 3728.144647815268
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1781.5212952100655,
+                "vectorKm": 2130.9918058006656
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1781.5212952100655,
+                "vectorKm": 2130.9918058006656
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": 1781.5212952100655,
+                "vectorKm": 2130.9918058006656
+              }
+            }
+          },
+          "ttDays": 29200
+        },
+        {
+          "backward": [
+            39.66317947470717,
+            28.49668509148925,
+            -3.0593328528709507
+          ],
+          "cached": [
+            39.663177799046196,
+            28.496680896781335,
+            -3.0593314177532767
+          ],
+          "directBlend": [
+            39.6631777990469,
+            28.49668089678012,
+            -3.059331417753888
+          ],
+          "forward": [
+            39.66317723672519,
+            28.496679489110512,
+            -3.059330936154186
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 1.488139524354892e-05,
+            "vectorKm": 0.00022908816292934969
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 806.9673737736313,
+                "vectorKm": 974.8030510114528
+              },
+              "bodyCenter": {
+                "radialKm": -540.8452428076514,
+                "vectorKm": 1542.603945715218
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 224.93235075773654,
+                "vectorKm": 270.89981613834533
+              },
+              "bodyCenter": {
+                "radialKm": -1122.880265823546,
+                "vectorKm": 1907.5323838547608
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 224.93233587634128,
+                "vectorKm": 270.8997673162736
+              },
+              "bodyCenter": {
+                "radialKm": -1122.8802807049412,
+                "vectorKm": 1907.532303778412
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 29.611759206771065,
+                "vectorKm": 66.66174681570854
+              },
+              "bodyCenter": {
+                "radialKm": -1318.2008573745115,
+                "vectorKm": 2070.388576774041
+              }
+            }
+          },
+          "ttDays": 36536.875
+        },
+        {
+          "backward": [
+            29.98546041307634,
+            38.93948529040651,
+            3.118730198105865
+          ],
+          "cached": [
+            29.985460327774977,
+            38.93948420722917,
+            3.1187301848483973
+          ],
+          "directBlend": [
+            29.98546032777444,
+            38.93948420722994,
+            3.118730184848854
+          ],
+          "forward": [
+            29.98546024154882,
+            38.9394831123238,
+            3.118730171448284
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -4.57071425337574e-05,
+            "vectorKm": 0.00015583219539875068
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 386.0617494138993,
+                "vectorKm": 451.79604297166856
+              },
+              "bodyCenter": {
+                "radialKm": 2018.8026678050155,
+                "vectorKm": 2533.1512735858423
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 250.0372347708131,
+                "vectorKm": 316.78883696778894
+              },
+              "bodyCenter": {
+                "radialKm": 1882.7781531619291,
+                "vectorKm": 2434.2214732111743
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 250.03728047795562,
+                "vectorKm": 316.7888501450576
+              },
+              "bodyCenter": {
+                "radialKm": 1882.7781988690717,
+                "vectorKm": 2434.221447972174
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 112.5398234039286,
+                "vectorKm": 221.758031365919
+              },
+              "bodyCenter": {
+                "radialKm": 1745.2807417950448,
+                "vectorKm": 2341.4527110024956
+              }
+            }
+          },
+          "ttDays": 43878.625
+        },
+        {
+          "backward": [
+            16.311746516569183,
+            44.16277159356882,
+            8.869015119502265
+          ],
+          "cached": [
+            16.31174686565193,
+            44.16277183656416,
+            8.869014631221985
+          ],
+          "directBlend": [
+            16.311746865647592,
+            44.16277183657043,
+            8.869014631224713
+          ],
+          "forward": [
+            16.311747936491464,
+            44.16277258200977,
+            8.869013133369197
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": -0.0007185587989027908,
+            "vectorKm": 0.0012110666917831362
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 110.80773529325981,
+                "vectorKm": 129.87122083988737
+              },
+              "bodyCenter": {
+                "radialKm": -50.45776966675724,
+                "vectorKm": 2060.6362370782876
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 148.57622852421434,
+                "vectorKm": 213.5156718376745
+              },
+              "bodyCenter": {
+                "radialKm": -12.689276435802704,
+                "vectorKm": 1972.1397805946274
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 148.57694708301324,
+                "vectorKm": 213.5158212492764
+              },
+              "bodyCenter": {
+                "radialKm": -12.6885578770038,
+                "vectorKm": 1972.1402751092924
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 264.43897181991514,
+                "vectorKm": 500.7942203106545
+              },
+              "bodyCenter": {
+                "radialKm": 103.17346685989808,
+                "vectorKm": 1706.3537949594456
+              }
+            }
+          },
+          "ttDays": 51221.375
+        },
+        {
+          "backward": [
+            0.6746282249001044,
+            43.09283454508881,
+            13.24379499603575
+          ],
+          "cached": [
+            0.6746282249001044,
+            43.09283454508881,
+            13.24379499603575
+          ],
+          "directBlend": [
+            0.6746282249001044,
+            43.09283454508881,
+            13.24379499603575
+          ],
+          "forward": [
+            0.6746310856602213,
+            43.09283888691475,
+            13.243791475527772
+          ],
+          "interpolationVersusDirectBlend": {
+            "radialKm": 0.0,
+            "vectorKm": 0.0
+          },
+          "residuals": {
+            "backward": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": -686.5743064571593,
+                "vectorKm": 2131.700301480917
+              }
+            },
+            "cached": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": -686.5743064571593,
+                "vectorKm": 2131.700301480917
+              }
+            },
+            "directBlend": {
+              "barycenter": {
+                "radialKm": 0.0,
+                "vectorKm": 0.0
+              },
+              "bodyCenter": {
+                "radialKm": -686.5743064571593,
+                "vectorKm": 2131.700301480917
+              }
+            },
+            "forward": {
+              "barycenter": {
+                "radialKm": 472.5018675327201,
+                "vectorKm": 939.3671557711499
+              },
+              "bodyCenter": {
+                "radialKm": -214.07243892443927,
+                "vectorKm": 1247.6250856047427
+              }
+            }
+          },
+          "ttDays": 58400
+        }
+      ],
+      "seedModel": "relative-eight-planets",
+      "sourceSHA256": "2282d01eb16bb132713167b48bdd4be4d7cb00f65dcb7c7fab7e48c9b0c77b4a",
+      "stepDays": 2.28125
+    }
+  ]
+}

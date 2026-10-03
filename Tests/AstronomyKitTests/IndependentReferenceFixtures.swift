@@ -41,6 +41,7 @@ struct IndependentReferenceArchive: Decodable {
         let declinationDegrees: Double
         let rightAscensionRateArcsecondsPerHour: Double
         let declinationRateArcsecondsPerHour: Double
+        let apparentRangeAU: Double
         let rangeRateKmPerSecond: Double
         let eclipticLongitudeDegrees: Double
         let eclipticLatitudeDegrees: Double

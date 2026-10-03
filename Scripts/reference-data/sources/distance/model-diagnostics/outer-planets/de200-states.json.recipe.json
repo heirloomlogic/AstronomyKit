@@ -1,0 +1,38 @@
+{
+  "centerCode": 10,
+  "correction": "NONE",
+  "cspiceVersion": "CSPICE_N0067",
+  "de200ToJ2000Rotation": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "epochsSHA256": "aa87d839bbbfc60f758ee82c4f3444adb92099f4c2dc4985f60acf731c85fe98",
+  "inputTimeScale": "TT",
+  "kernelSHA256": "4b1021ceb01033f7d512b15dbe63b7b2421f118104e127374a85537ad0d336f9",
+  "kernelTimeScale": "TDB",
+  "kernelURL": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de200.bsp",
+  "nativeFrame": "DE-200 (14)",
+  "outputFrame": "SPICE J2000 (1); DE-200 built-in identity alias, not independently aligned ICRF",
+  "physicalFrameCaveat": "SPICE DE-200-to-J2000 is identity; this does not measure or remove the physical DE200-to-ICRF orientation bias.",
+  "sha256": "e2e4769977ef31ae7b097370957f8f3feda4a7e9ae74bdb50d15c4172c5d60cf",
+  "spiceypyVersion": "8.2.0",
+  "targetCodes": [
+    7,
+    8
+  ],
+  "timeConversion": "unitim((jdTT-2451545)*86400, 'TDT', 'TDB'), using naif0012.tls",
+  "timeKernelSHA256": "678e32bdb5a744117a467cd9601cd6b373f0e9bc9bbde1371d5eee39600a039b"
+}

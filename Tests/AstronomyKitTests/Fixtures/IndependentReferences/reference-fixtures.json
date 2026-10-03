@@ -300,6 +300,7 @@
   "observations": [
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.00246250044096,
       "body": "moon",
       "declinationDegrees": -22.28938,
       "declinationRateArcsecondsPerHour": 231.9354,
@@ -313,6 +314,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.00267983322801,
       "body": "moon",
       "declinationDegrees": -8.99703,
       "declinationRateArcsecondsPerHour": -588.284,
@@ -326,6 +328,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.00248451957208,
       "body": "moon",
       "declinationDegrees": 10.31813,
       "declinationRateArcsecondsPerHour": -951.607,
@@ -339,6 +342,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 2.40096343685815,
       "body": "mars",
       "declinationDegrees": -23.49726,
       "declinationRateArcsecondsPerHour": 11.18336,
@@ -352,6 +356,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 1.84697688138615,
       "body": "mars",
       "declinationDegrees": -13.3204,
       "declinationRateArcsecondsPerHour": 41.88939,
@@ -365,6 +370,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.86996040716707,
       "body": "mars",
       "declinationDegrees": 11.68973,
       "declinationRateArcsecondsPerHour": 24.31319,
@@ -378,6 +384,7 @@
     },
     {
       "angularToleranceArcminutes": 1.5,
+      "apparentRangeAU": 46.0790174268648,
       "body": "pluto",
       "declinationDegrees": 13.05072,
       "declinationRateArcsecondsPerHour": 0.070076,
@@ -391,6 +398,7 @@
     },
     {
       "angularToleranceArcminutes": 1.5,
+      "apparentRangeAU": 31.0683074782482,
       "body": "pluto",
       "declinationDegrees": -11.39491,
       "declinationRateArcsecondsPerHour": -0.45678,
@@ -404,6 +412,7 @@
     },
     {
       "angularToleranceArcminutes": 1.5,
+      "apparentRangeAU": 48.5747723264654,
       "body": "pluto",
       "declinationDegrees": -4.07962,
       "declinationRateArcsecondsPerHour": 0.547049,
@@ -417,6 +426,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.6933196442773,
       "body": "mercury",
       "declinationDegrees": 15.86641,
       "declinationRateArcsecondsPerHour": 42.17613,
@@ -430,6 +440,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.71133588509289,
       "body": "mercury",
       "declinationDegrees": 16.14066,
       "declinationRateArcsecondsPerHour": 40.03201,
@@ -443,6 +454,7 @@
     },
     {
       "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 0.73063420010368,
       "body": "mercury",
       "declinationDegrees": 16.39902,
       "declinationRateArcsecondsPerHour": 37.34103,

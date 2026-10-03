@@ -1,0 +1,14 @@
+{
+  "frozenUTC": "2026-10-02T18:35:31.324598+00:00",
+  "reason": "Refine four-giant relative-force control to match all-eight-planet convergence replay",
+  "epochs": "unchanged plan.json epochs",
+  "stepsDays": [
+    9.125,
+    4.5625
+  ],
+  "seedModel": "modern barycenter heliocentric states",
+  "forceVariants": [
+    "relative-four-giants"
+  ],
+  "scope": "convergence diagnosis; no production repair or selection"
+}

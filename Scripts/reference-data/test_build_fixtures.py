@@ -79,6 +79,24 @@ class RefreshSourcesTests(unittest.TestCase):
                     self.builder.verify_sources()
 
 
+class ApparentRangeFixtureTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_horizons_apparent_range_is_preserved_in_au(self):
+        observations = self.builder.parse_horizons()["observations"]
+
+        self.assertEqual(12, len(observations))
+        self.assertTrue(all(observation["apparentRangeAU"] > 0 for observation in observations))
+        moon_1900 = next(
+            observation
+            for observation in observations
+            if observation["body"] == "moon" and observation["utc"].startswith("1900-")
+        )
+        self.assertEqual(0.00246250044096, moon_1900["apparentRangeAU"])
+
+
 class JupiterMoonToleranceDomainTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

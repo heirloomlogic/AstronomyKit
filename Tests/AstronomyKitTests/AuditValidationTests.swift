@@ -61,6 +61,22 @@ struct AuditValidationTests {
                 <= reference.angularToleranceArcminutes)
     }
 
+    @Test(
+        "JPL apparent range diagnostics",
+        arguments: IndependentReferenceArchive.shared.observations)
+    func jplApparentRangeDiagnostic(reference: IndependentReferenceArchive.Observation) throws {
+        let time = IndependentReferenceDate.universal(
+            reference.utc, deltaTModel: .jplHorizons)
+        let equatorial = try body(named: reference.body).equatorial(
+            at: time, from: .geocentric, equatorDate: .j2000, aberration: .none)
+        let absoluteDifferenceAU = abs(equatorial.distance - reference.apparentRangeAU)
+
+        #expect(reference.apparentRangeAU > 0)
+        #expect(
+            absoluteDifferenceAU.isFinite,
+            "unbounded apparent-range diagnostic difference: \(absoluteDifferenceAU) AU")
+    }
+
     @Test("Mercury station bracket preserves sampled motion and reversal")
     func mercuryStation() throws {
         let references = archive.observations.filter { $0.series == "mercury-station" }.sorted {

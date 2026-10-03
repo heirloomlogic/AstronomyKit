@@ -88,7 +88,7 @@ public enum PrototypeModelData {
     }
 
     /// The number of terms in the flattened VSOP table.
-    public static var vsopTermCount: Int { vsopTermBits.count / 3 }
+    public static var vsopTermCount: Int { generatedVSOPTermCount }
 
     /// The number of rows in the IAU 2000B nutation table.
     public static var nutationRowCount: Int { nutationIntegerBits.count / 5 }
@@ -127,9 +127,13 @@ public enum PrototypeModelData {
     ) -> (
         amplitude: UInt64, phase: UInt64, frequency: UInt64
     )? {
-        guard index >= 0, index < vsopTermBits.count / 3 else { return nil }
+        guard index >= 0, index < generatedVSOPTermCount else { return nil }
         let offset = index * 3
-        return (vsopTermBits[offset], vsopTermBits[offset + 1], vsopTermBits[offset + 2])
+        guard let amplitude = vsopTermBitPattern(at: offset),
+            let phase = vsopTermBitPattern(at: offset + 1),
+            let frequency = vsopTermBitPattern(at: offset + 2)
+        else { return nil }
+        return (amplitude, phase, frequency)
     }
 
     /// Returns one nutation row, or `nil` when `index` is outside the table.
@@ -158,7 +162,12 @@ public enum PrototypeModelData {
             }
             for value in generatedPolynomialValidity(body: body) { include(UInt64(value)) }
         }
-        for value in vsopTermBits { include(value) }
+        for index in 0..<generatedVSOPTermCount * 3 {
+            guard let value = vsopTermBitPattern(at: index) else {
+                preconditionFailure("Generated VSOP metadata exceeds its coefficient table")
+            }
+            include(value)
+        }
         for series in generatedVSOPSeries {
             include(UInt64(series.body))
             include(UInt64(series.coordinate))

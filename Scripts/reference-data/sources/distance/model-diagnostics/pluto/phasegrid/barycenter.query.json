@@ -1,0 +1,21 @@
+{
+  "endpoint": "https://ssd.jpl.nasa.gov/api/horizons.api",
+  "parameters": {
+    "CAL_TYPE": "'GREGORIAN'",
+    "CENTER": "'500@10'",
+    "COMMAND": "'9'",
+    "CSV_FORMAT": "'YES'",
+    "EPHEM_TYPE": "'VECTORS'",
+    "MAKE_EPHEM": "'YES'",
+    "OBJ_DATA": "'NO'",
+    "OUT_UNITS": "'AU-D'",
+    "REF_PLANE": "'FRAME'",
+    "REF_SYSTEM": "'ICRF'",
+    "TIME_TYPE": "'TT'",
+    "TLIST": "'2393145,2400481.875,2407823.625,2415166.375,2422345,2429681.875,2437023.625,2444366.375,2451545,2458881.875,2466223.625,2473566.375,2480745,2488081.875,2495423.625,2502766.375,2509945'",
+    "TLIST_TYPE": "'JD'",
+    "VEC_CORR": "'NONE'",
+    "VEC_TABLE": "'2'"
+  },
+  "responseSHA256": "a1895ffd303b33764b52b84f0cda5731e4339ef342a28ce55b0ce046df767d9e"
+}

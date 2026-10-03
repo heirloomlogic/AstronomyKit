@@ -1,0 +1,51 @@
+{
+  "compileFlags": [
+    "-O2",
+    "-std=c11",
+    "-pthread",
+    "-lm"
+  ],
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "files": {
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/barycenter.json": "b4ffc0cc477757a8c283467b950d73baa4b9206f127e2f0f9c7836d6345261fb",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/barycenter.query.json": "3ed361226c5642d6f4296ca6d5914fe2a84c464516f6b72ebdf28c23b3317da5",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/body-center.json": "32784becb53d8eff738a3eb27bbebd6cefca735037f97a3005c824d164f709ff",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/body-center.query.json": "29b4f6d5132da825e67ab5e9cf52ced7abd40a5fbbfc460a02ae09ea8c946016",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/convergence-plan.json": "935b52c3a1ef8e140056f7837abea3db24720bd546b871ee32c78815c767fb84",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/convergence-report.json": "eec210ab7513f0db9f5ae7d95ef0ec0b5dfa50685d6ecf4783860a2d13cd1b8d",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/force-plan.json": "07d474775fe9393e1809a25bc0ef556e86ef621bac33790a1142283ee9509c6d",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/force-report.json": "333403894ea74963367576390b57c199d166ad413d01aa1519a2c346bcdbf260",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/integration-report.json": "7c6165fdc8d1cfe2b199b28ef9654791821c473cb7ad2bffbe56e4d4ea92798e",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/barycenter.json": "5062682bce429680addc8cf40b650652ff541cf09681c8e89d1973d238656fb0",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/barycenter.query.json": "b5f5578621dca5d1c3bb837a96370daad7e90c443166b0b34c086e1642b84f68",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/body-center.json": "c0a418c26dd78c4b43ac0bb4e3283852ab68200b9de4cccd97a4a1eb73b134e0",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/body-center.query.json": "59eeccb2fe2adc1393dcc459e5c7c9eda1529cd38979d246726a9e48e639fa52",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/plan-before-transport-adjustment.json": "4a680eb0f8faa34529e030cb7e05afdd7209d6df4429979cebcd549b89434a12",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/plan.json": "e29a19ef92c9c7197e59c48f3063cfce1d3e4a75cab6c24b79646e158c525f7e",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/offgrid/report.json": "e15b4a26c4298d4df8b389d9f5de941fb7db07d6aa11e17f60d3378cf2818b3f",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/omission-plan.json": "8122f20973fcc97f9204d679db2cf33028c11c7050ed55ee0989f34110479ebc",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/omission-report.json": "0ba775fcc31375bc127662a7acfb185b89d1a257b219f8536c07997d2803930f",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/phasegrid/barycenter.json": "a1895ffd303b33764b52b84f0cda5731e4339ef342a28ce55b0ce046df767d9e",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/phasegrid/barycenter.query.json": "ec7681e2f8b3d9e8acd5577d3b8e0af0ef3cf44622c19b1f7982f231e1179e9b",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/phasegrid/body-center.json": "fe75baaf045b00dd0fbb3131b84c381fbfef7a58cc79b16e551dcfc0bcfc353d",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/phasegrid/body-center.query.json": "253e322157a3de36512611d00cbec63d1ea6c16830f1d5a703ab7be74bae2b6a",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/phasegrid/plan.json": "714f31b1c95d0bd7df91906329e1a54be28755c33817e22f140a0174c8752e18",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/phasegrid/report.json": "e90260a79c9f2adae58dcbc15f9311652281cff75c06732a3d433e2304703ca3",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/plan.json": "174c391f03156b779d87f6e2b9ba7efe6e0f73b32be8408bd3c1d579e4f767a2",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/top2013-report.json": "b516fb4b1af0eecb6a8be806b2476dcac9b0f5da1d8c8632b9c5029bab0135f5",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/top2013-sources.json": "a1780dd1b7ca3778cd54e500795ab0f49afc343753efa0895a00a71edef346cf",
+    "Scripts/reference-data/sources/distance/model-diagnostics/pluto/upstream-provenance.json": "4c43bc75603d6116d5c19207d10cdd10e503635798e4d821fa84b8dec37aa644"
+  },
+  "purpose": "offline integrity and arithmetic reproduction; not product acceptance or portable output bit identity",
+  "sourceFiles": {
+    "Scripts/reference-data/pluto-diagnostic-probe.c": "b575f1d136a88f04f342c68082d87d69b9d0653b41f41d9bb05bf312e8688cd2",
+    "Scripts/reference-data/pluto-model-diagnostic.py": "e1ed47ad358c41d02048b5839489f1007f6d48d0416abf035a42c4312838000b",
+    "Scripts/reference-data/test_pluto_model_diagnostic.py": "23c80690af6439c9ac61fdf05e8949b07b36f9cd2f91e9159ec8604fdfe54de9",
+    "Sources/CLibAstronomy/astronomy.c": "40c9c17447a2725fd6002f7e450612e9ca149becf9617e71fa57fefca0f491ed",
+    "Sources/CLibAstronomy/generated/iau2000b_full.h": "969e564ac5173310bb7f730cf683de7a4975b3fcf20566f2a4b45755dcee41c1",
+    "Sources/CLibAstronomy/generated/polynomial-data.h": "689747697bf1b5f1f0f41dbdbab90a1dccfca5eb9ecbb4ba4d0a2162acfd54da",
+    "Sources/CLibAstronomy/generated/vsop87b_full.h": "a30509bde52487ccb13815b415c8d563511545cce3ba8259f86e007137b86d99",
+    "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
+    "Sources/CLibAstronomy/polynomial.h": "bbb51a7fea1738f4f6dd029842da31a678891518930735d386b797f79e638783"
+  }
+}

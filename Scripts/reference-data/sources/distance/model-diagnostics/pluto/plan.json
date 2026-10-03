@@ -1,0 +1,65 @@
+{
+  "frozenUTC": "2026-10-02T18:26:15.738175+00:00",
+  "purpose": "diagnosis only, no product acceptance limits",
+  "seedTTDays": [
+    -58400,
+    -29200,
+    0,
+    29200,
+    58400
+  ],
+  "interiorOffsetsDays": [
+    73,
+    7300,
+    14600,
+    21900,
+    29127
+  ],
+  "epochsTTDays": [
+    -58400,
+    -58327,
+    -51100,
+    -43800,
+    -36500,
+    -29273,
+    -29200,
+    -29127,
+    -21900,
+    -14600,
+    -7300,
+    -73,
+    0,
+    73,
+    7300,
+    14600,
+    21900,
+    29127,
+    29200,
+    29273,
+    36500,
+    43800,
+    51100,
+    58327,
+    58400
+  ],
+  "integrationStepsDays": [
+    146,
+    73,
+    36.5,
+    18.25
+  ],
+  "targets": {
+    "barycenter": "9",
+    "bodyCenter": "999"
+  },
+  "center": "500@10",
+  "frame": "ICRF",
+  "time": "TT",
+  "units": "AU-D",
+  "correction": "NONE",
+  "variants": [
+    "original seeds",
+    "modern target-9 seeds"
+  ],
+  "decomposition": "cached production; forward; backward; direct linear blend at requested epoch"
+}

@@ -1,0 +1,650 @@
+{
+  "conclusion": "No cited primary source supplies a tolerance applicable to AstronomyKit for these apparent-range samples; residuals are diagnostic observations, not accuracy assertions.",
+  "environment": {
+    "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "machine": "arm64",
+    "operatingSystem": "macOS-27.0.1-arm64-arm-64bit-Mach-O"
+  },
+  "inputSHA256": {
+    "Scripts/reference-data/apparent-range-probe.c": "88a432ecaba6b3fee23eca75701d538adde489c209d71a092cf61b85d03aa4fc",
+    "Scripts/reference-data/investigate-apparent-range.py": "df18a5c5e4fbc4ca954b075bd3512089dafb35bdeaa98aaff3c91fb0617a065d",
+    "Scripts/reference-data/sources/horizons/mars-observer.json": "bf7e3f1b312565705475d46e4bc001de5f660324af95b11f5cb6fc600dc48e26",
+    "Scripts/reference-data/sources/horizons/mars-observer.query.json": "b15522b72df9ce43ac2a3d30c0a8d1b529a9fe415297dafa131ea57623ed5730",
+    "Scripts/reference-data/sources/horizons/mercury-station.json": "53a3e45c16ae9893616f8a7e34eb9f3b0d75b991833f9d98a01f15672c777e77",
+    "Scripts/reference-data/sources/horizons/mercury-station.query.json": "5709a771eeeb27ff4810948aca367a26ff250144dabf42300b73c3da258749da",
+    "Scripts/reference-data/sources/horizons/moon-observer.json": "6b4461550efef94244e96e3734c561148766097fc7dcb35c452e0c89e9bdf754",
+    "Scripts/reference-data/sources/horizons/moon-observer.query.json": "d4c0955486186df9f5d54a39117bfd4ff05485ba695351afa2c93709aaec2ba8",
+    "Scripts/reference-data/sources/horizons/pluto-observer.json": "77b610db8bd803d1d41e9dc0ec5f7b70db9346028956a94f07e3364af05ae5d7",
+    "Scripts/reference-data/sources/horizons/pluto-observer.query.json": "21cc88e9d9f135171ad20012fd566465330ccddcbb6f8c84b64afd42d7b75f20",
+    "Sources/CLibAstronomy/astronomy.c": "40c9c17447a2725fd6002f7e450612e9ca149becf9617e71fa57fefca0f491ed",
+    "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/manifest.json": "e11c7ed2ca58ecb201245286bdb0d6715fedf018e7821cce34116fbd5d2a481e",
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "8fdcf4da68f200aeb7c12e665dc610ce3bd3a2c8e338e96bd53fc9a9279cc41e"
+  },
+  "primarySources": [
+    {
+      "claim": "Horizons quantity 20 is observer-relative apparent range with light-time aberration, in AU.",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html#obsquan"
+    },
+    {
+      "claim": "Major-planet ephemeris uncertainty depends on body and time and spans meters to more than 1000 km; printed digits are not an accuracy guarantee.",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
+    },
+    {
+      "claim": "DE440 observational residuals describe the JPL ephemeris fit and do not define an error allowance for AstronomyKit's model.",
+      "url": "https://ssd.jpl.nasa.gov/doc/Park.2021.AJ.DE440.pdf"
+    }
+  ],
+  "rangeSemantics": "For Mercury, Mars, and Pluto, the selected production C-core probe applies down-leg light time with Astronomy_GeoVector and disables its separate stellar-aberration correction to match Horizons quantity 20. Astronomy_GeoVector routes the Moon directly to Astronomy_GeoMoon without light-time backdating or aberration, so the three lunar residuals are unmatched diagnostic observations. Public Swift wrapper behavior is exercised separately by AuditValidationTests.",
+  "repositoryRevisionAtMeasurement": "8bf9bfff0ab2f8bf5d7bcb4befe3a21b72114a94",
+  "results": [
+    {
+      "body": "moon",
+      "comparisonClassification": "unmatched-no-light-time-backdating",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 2.092688558899547e-08,
+          "absoluteDifferenceKM": 3.1306175244962375,
+          "astronomyRangeAU": 0.002462479514074411,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -2.092688558899547e-08,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 2.092688558899547e-08,
+          "absoluteDifferenceKM": 3.1306175244962375,
+          "astronomyRangeAU": 0.002462479514074411,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -2.092688558899547e-08,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 2.092688558899547e-08,
+          "absoluteDifferenceKM": 3.1306175244962375,
+          "astronomyRangeAU": 0.002462479514074411,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -2.092688558899547e-08,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 2.092688558899547e-08,
+          "absoluteDifferenceKM": 3.1306175244962375,
+          "astronomyRangeAU": 0.002462479514074411,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -2.092688558899547e-08,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": false,
+      "referenceRangeAU": 0.00246250044096,
+      "series": "moon-observer",
+      "utc": "1900-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "comparisonClassification": "unmatched-no-light-time-backdating",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.6949255398929913e-07,
+          "absoluteDifferenceKM": 25.355725176303938,
+          "astronomyRangeAU": 0.0026800027205639895,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.6949255398929913e-07,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.6949255398929913e-07,
+          "absoluteDifferenceKM": 25.355725176303938,
+          "astronomyRangeAU": 0.0026800027205639895,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.6949255398929913e-07,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.6949255398929913e-07,
+          "absoluteDifferenceKM": 25.355725176303938,
+          "astronomyRangeAU": 0.0026800027205639895,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.6949255398929913e-07,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.6949255398929913e-07,
+          "absoluteDifferenceKM": 25.355725176303938,
+          "astronomyRangeAU": 0.0026800027205639895,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.6949255398929913e-07,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": false,
+      "referenceRangeAU": 0.00267983322801,
+      "series": "moon-observer",
+      "utc": "2000-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "comparisonClassification": "unmatched-no-light-time-backdating",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.586824819759837e-07,
+          "absoluteDifferenceKM": 23.738561420998288,
+          "astronomyRangeAU": 0.002484678254561976,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.586824819759837e-07,
+          "terrestrialTimeDaysSinceJ2000": 36524.50081009822,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.586824819759837e-07,
+          "absoluteDifferenceKM": 23.738561420998288,
+          "astronomyRangeAU": 0.002484678254561976,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.586824819759837e-07,
+          "terrestrialTimeDaysSinceJ2000": 36524.50081009822,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.465118486757705e-07,
+          "absoluteDifferenceKM": 21.917860594215878,
+          "astronomyRangeAU": 0.0024846660839286756,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.465118486757705e-07,
+          "terrestrialTimeDaysSinceJ2000": 36524.50234550426,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.465118486757705e-07,
+          "absoluteDifferenceKM": 21.917860594215878,
+          "astronomyRangeAU": 0.0024846660839286756,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.465118486757705e-07,
+          "terrestrialTimeDaysSinceJ2000": 36524.50234550426,
+          "universalTimeDaysSinceJ2000": 36524.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": false,
+      "referenceRangeAU": 0.00248451957208,
+      "series": "moon-observer",
+      "utc": "2100-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.5708682687076703e-05,
+          "absoluteDifferenceKM": 2349.985481488629,
+          "astronomyRangeAU": 2.400947728175463,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -1.5708682687076703e-05,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 3.5531772191177424e-08,
+          "absoluteDifferenceKM": 5.315477461997616,
+          "astronomyRangeAU": 2.400963401326378,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -3.5531772191177424e-08,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.5708682687076703e-05,
+          "absoluteDifferenceKM": 2349.985481488629,
+          "astronomyRangeAU": 2.400947728175463,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -1.5708682687076703e-05,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 3.5531772191177424e-08,
+          "absoluteDifferenceKM": 5.315477461997616,
+          "astronomyRangeAU": 2.400963401326378,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -3.5531772191177424e-08,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 2.40096343685815,
+      "series": "mars-observer",
+      "utc": "1900-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.00013793507919146464,
+          "absoluteDifferenceKM": 20634.794141878985,
+          "astronomyRangeAU": 1.8468389463069586,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -0.00013793507919146464,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 3.449508967356962e-08,
+          "absoluteDifferenceKM": 5.1603919647715735,
+          "astronomyRangeAU": 1.8469769158812397,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 3.449508967356962e-08,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.00013793507919146464,
+          "absoluteDifferenceKM": 20634.794141878985,
+          "astronomyRangeAU": 1.8468389463069586,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -0.00013793507919146464,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 3.449508967356962e-08,
+          "absoluteDifferenceKM": 5.1603919647715735,
+          "astronomyRangeAU": 1.8469769158812397,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 3.449508967356962e-08,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 1.84697688138615,
+      "series": "mars-observer",
+      "utc": "2000-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 8.264874170960113e-05,
+          "absoluteDifferenceKM": 12364.075775790605,
+          "astronomyRangeAU": 0.8698777584253604,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -8.264874170960113e-05,
+          "terrestrialTimeDaysSinceJ2000": 36524.50081009822,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 4.738396869319317e-07,
+          "absoluteDifferenceKM": 70.88540821817159,
+          "astronomyRangeAU": 0.869960881006757,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 4.738396869319317e-07,
+          "terrestrialTimeDaysSinceJ2000": 36524.50081009822,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 6.890264933179235e-05,
+          "absoluteDifferenceKM": 10307.689625624913,
+          "astronomyRangeAU": 0.8698915045177382,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -6.890264933179235e-05,
+          "terrestrialTimeDaysSinceJ2000": 36524.50234550426,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.4221715049944628e-05,
+          "absoluteDifferenceKM": 2127.5382891738604,
+          "astronomyRangeAU": 0.86997462888212,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.4221715049944628e-05,
+          "terrestrialTimeDaysSinceJ2000": 36524.50234550426,
+          "universalTimeDaysSinceJ2000": 36524.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 0.86996040716707,
+      "series": "mars-observer",
+      "utc": "2100-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "pluto",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.0012077344288172753,
+          "absoluteDifferenceKM": 180674.49892214508,
+          "astronomyRangeAU": 46.077809692435984,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -0.0012077344288172753,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 0.0007166492603971619,
+          "absoluteDifferenceKM": 107209.20339414525,
+          "astronomyRangeAU": 46.0797340761252,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 0.0007166492603971619,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.0012077344288172753,
+          "absoluteDifferenceKM": 180674.49892214508,
+          "astronomyRangeAU": 46.077809692435984,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -0.0012077344288172753,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 0.0007166492603971619,
+          "absoluteDifferenceKM": 107209.20339414525,
+          "astronomyRangeAU": 46.0797340761252,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 0.0007166492603971619,
+          "terrestrialTimeDaysSinceJ2000": -36524.50003193245,
+          "universalTimeDaysSinceJ2000": -36524.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 46.0790174268648,
+      "series": "pluto-observer",
+      "utc": "1900-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "pluto",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.0015318504240653397,
+          "absoluteDifferenceKM": 229161.56167106683,
+          "astronomyRangeAU": 31.069839328672266,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 0.0015318504240653397,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 6.705042167354236e-05,
+          "absoluteDifferenceKM": 10030.600311899067,
+          "astronomyRangeAU": 31.068374528669874,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 6.705042167354236e-05,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.0015318504240653397,
+          "absoluteDifferenceKM": 229161.56167106683,
+          "astronomyRangeAU": 31.069839328672266,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 0.0015318504240653397,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 6.705042167354236e-05,
+          "absoluteDifferenceKM": 10030.600311899067,
+          "astronomyRangeAU": 31.068374528669874,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 6.705042167354236e-05,
+          "terrestrialTimeDaysSinceJ2000": -0.49926103443061676,
+          "universalTimeDaysSinceJ2000": -0.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 31.0683074782482,
+      "series": "pluto-observer",
+      "utc": "2000-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "pluto",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.003382780476549385,
+          "absoluteDifferenceKM": 506056.75633731927,
+          "astronomyRangeAU": 48.57138954598885,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": -0.003382780476549385,
+          "terrestrialTimeDaysSinceJ2000": 36524.50081009822,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 0.0009720994620749934,
+          "absoluteDifferenceKM": 145424.0096350344,
+          "astronomyRangeAU": 48.575744425927475,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 0.0009720994620749934,
+          "terrestrialTimeDaysSinceJ2000": 36524.50081009822,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 0.0033588034853053728,
+          "absoluteDifferenceKM": 502469.8495014225,
+          "astronomyRangeAU": 48.571413522980095,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": -0.0033588034853053728,
+          "terrestrialTimeDaysSinceJ2000": 36524.50234550426,
+          "universalTimeDaysSinceJ2000": 36524.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 0.0009961268828462266,
+          "absoluteDifferenceKM": 149018.46062082384,
+          "astronomyRangeAU": 48.575768453348246,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 0.0009961268828462266,
+          "terrestrialTimeDaysSinceJ2000": 36524.50234550426,
+          "universalTimeDaysSinceJ2000": 36524.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 48.5747723264654,
+      "series": "pluto-observer",
+      "utc": "2100-Jan-01 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.639464496483445e-05,
+          "absoluteDifferenceKM": 2452.60397762171,
+          "astronomyRangeAU": 0.6933360389222648,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.639464496483445e-05,
+          "terrestrialTimeDaysSinceJ2000": 9352.500810098221,
+          "universalTimeDaysSinceJ2000": 9352.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.834471321515707e-07,
+          "absoluteDifferenceKM": 27.443300355896486,
+          "astronomyRangeAU": 0.6933198277244321,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.834471321515707e-07,
+          "terrestrialTimeDaysSinceJ2000": 9352.500810098221,
+          "universalTimeDaysSinceJ2000": 9352.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.7362681737576047e-05,
+          "absoluteDifferenceKM": 2597.4202175831524,
+          "astronomyRangeAU": 0.6933370069590375,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.7362681737576047e-05,
+          "terrestrialTimeDaysSinceJ2000": 9352.500865866652,
+          "universalTimeDaysSinceJ2000": 9352.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.1513892652637026e-06,
+          "absoluteDifferenceKM": 172.24538243028735,
+          "astronomyRangeAU": 0.6933207956665652,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.1513892652637026e-06,
+          "terrestrialTimeDaysSinceJ2000": 9352.500865866652,
+          "universalTimeDaysSinceJ2000": 9352.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 0.6933196442773,
+      "series": "mercury-station",
+      "utc": "2025-Aug-10 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.808220201848787e-05,
+          "absoluteDifferenceKM": 2705.058919533027,
+          "astronomyRangeAU": 0.7113539672949085,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.808220201848787e-05,
+          "terrestrialTimeDaysSinceJ2000": 9353.500810098221,
+          "universalTimeDaysSinceJ2000": 9353.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.97638053700544e-07,
+          "absoluteDifferenceKM": 29.566232002893635,
+          "astronomyRangeAU": 0.7113360827309437,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.97638053700544e-07,
+          "terrestrialTimeDaysSinceJ2000": 9353.500810098221,
+          "universalTimeDaysSinceJ2000": 9353.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.9123686744060286e-05,
+          "absoluteDifferenceKM": 2860.8628168452346,
+          "astronomyRangeAU": 0.7113550087796341,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.9123686744060286e-05,
+          "terrestrialTimeDaysSinceJ2000": 9353.500865885917,
+          "universalTimeDaysSinceJ2000": 9353.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.2390301820097704e-06,
+          "absoluteDifferenceKM": 185.3562769616951,
+          "astronomyRangeAU": 0.711337124123072,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.2390301820097704e-06,
+          "terrestrialTimeDaysSinceJ2000": 9353.500865885917,
+          "universalTimeDaysSinceJ2000": 9353.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 0.71133588509289,
+      "series": "mercury-station",
+      "utc": "2025-Aug-11 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "comparisonClassification": "light-time-convention-aligned",
+      "configurations": [
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 1.9726976520084705e-05,
+          "absoluteDifferenceKM": 2951.1136827535674,
+          "astronomyRangeAU": 0.7306539270802,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 1.9726976520084705e-05,
+          "terrestrialTimeDaysSinceJ2000": 9354.500810098221,
+          "universalTimeDaysSinceJ2000": 9354.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 2.1033350627863712e-07,
+          "absoluteDifferenceKM": 31.46544467614919,
+          "astronomyRangeAU": 0.7306344104371862,
+          "deltaTModel": "jpl-horizons",
+          "signedDifferenceAU": 2.1033350627863712e-07,
+          "terrestrialTimeDaysSinceJ2000": 9354.500810098221,
+          "universalTimeDaysSinceJ2000": 9354.5
+        },
+        {
+          "aberration": "corrected",
+          "absoluteDifferenceAU": 2.083869009095185e-05,
+          "absoluteDifferenceKM": 3117.423665783586,
+          "astronomyRangeAU": 0.7306550387937709,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 2.083869009095185e-05,
+          "terrestrialTimeDaysSinceJ2000": 9354.500865905185,
+          "universalTimeDaysSinceJ2000": 9354.5
+        },
+        {
+          "aberration": "uncorrected",
+          "absoluteDifferenceAU": 1.3219569716671487e-06,
+          "absoluteDifferenceKM": 197.76194811842566,
+          "astronomyRangeAU": 0.7306355220606516,
+          "deltaTModel": "espenak-meeus",
+          "signedDifferenceAU": 1.3219569716671487e-06,
+          "terrestrialTimeDaysSinceJ2000": 9354.500865905185,
+          "universalTimeDaysSinceJ2000": 9354.5
+        }
+      ],
+      "productionAppliesLightTimeBackdating": true,
+      "referenceRangeAU": 0.73063420010368,
+      "series": "mercury-station",
+      "utc": "2025-Aug-12 00:00:00.000"
+    }
+  ],
+  "schemaVersion": 1,
+  "selectedConfiguration": {
+    "aberration": "uncorrected",
+    "deltaTModel": "jpl-horizons"
+  },
+  "selectedMaximumAbsoluteDifferenceAU": 0.0009720994620749934,
+  "selectedMaximumAbsoluteDifferenceKM": 145424.0096350344,
+  "status": "diagnostic-without-applicable-tolerance"
+}

@@ -1,0 +1,25 @@
+{
+  "frozenBeforeReferenceAcquisitionUTC": "2026-10-02T18:25:07.292789+00:00",
+  "julianDatesTT": [
+    2415020.5,
+    2419586.125,
+    2424151.75,
+    2428717.375,
+    2433283.0,
+    2437848.625,
+    2442414.25,
+    2446979.875,
+    2451545.0,
+    2451545.5,
+    2456111.125,
+    2460676.75,
+    2465242.375,
+    2469808.0,
+    2474373.625,
+    2478939.25,
+    2483504.875,
+    2488070.5
+  ],
+  "purpose": "Diagnostic epochs selected independently of characterization and heldout residuals; not an acceptance set.",
+  "selection": "17 uniformly spaced TT Julian dates from JD 2415020.5 to 2488070.5, plus exact J2000 JD 2451545.0; no residual-based selection."
+}
