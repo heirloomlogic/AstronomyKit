@@ -10,11 +10,21 @@ struct AuditValidationTests {
         case unknownRiseSetDirection(String)
     }
 
+    private struct RiseSetEvent {
+        let time: AstroTime
+        let direction: RiseSetDirection
+    }
+
+    private struct RiseSetComparison {
+        let directionMatches: Bool
+        let timeErrorSeconds: Double
+    }
+
     let archive = IndependentReferenceArchive.shared
 
     @Test("Archived references declare reproducible provenance")
     func provenanceIsComplete() {
-        #expect(archive.schemaVersion == 2)
+        #expect(archive.schemaVersion == 3)
         #expect(
             Set(archive.provenance.keys) == [
                 "astronomyEngineApsides", "eclipseWiseLocalSolar", "espenakMoonNodes",
@@ -32,6 +42,14 @@ struct AuditValidationTests {
         #expect(archive.observations.count == 12)
         #expect(archive.vectors.count == 15)
         #expect(archive.localSolarEclipses.count == 3)
+        #expect(archive.riseSet.count == 5_909)
+        #expect(archive.riseSet.map(\.sourceLine) == Array(1...5_909))
+        let riseSetYearGroups = Set(
+            archive.riseSet.map {
+                "\($0.body):\($0.longitudeDegrees):\($0.latitudeDegrees):\($0.utc.prefix(4))"
+            })
+        #expect(riseSetYearGroups.count == 17)
+        #expect(archive.riseSetStreams.count == 16)
     }
 
     @Test(
@@ -261,16 +279,21 @@ struct AuditValidationTests {
         #expect(abs(actual.distanceAU - reference.distanceAU!) <= reference.distanceToleranceAU!)
     }
 
-    @Test("USNO rise and set events", arguments: IndependentReferenceArchive.shared.riseSet)
-    func riseSet(reference: IndependentReferenceArchive.RiseSet) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
-        let observer = Observer(
-            latitude: reference.latitudeDegrees, longitude: reference.longitudeDegrees)
-        let direction = try riseSetDirection(named: reference.direction)
-        let result = try body(named: reference.body).searchRiseSet(
-            direction: direction, after: expected.addingDays(-0.5), from: observer, limitDays: 370)
-        let actual = try #require(result)
-        #expect(IndependentReferenceDate.seconds(actual, expected) <= reference.timeToleranceSeconds)
+    @Test("Complete USNO rise and set sequences", arguments: IndependentReferenceArchive.shared.riseSetStreams)
+    func riseSet(stream: IndependentReferenceArchive.RiseSetStream) throws {
+        let actual = try riseSetEvents(in: stream)
+        #expect(actual.count == stream.events.count)
+        for (event, reference) in zip(actual, stream.events) {
+            let comparison = try riseSetComparison(event, reference: reference)
+            #expect(comparison.directionMatches)
+            if reference.sourceLine == 2_923 {
+                withKnownIssue("#124: source line 2,923 exceeds the pinned allowance") {
+                    #expect(comparison.timeErrorSeconds <= reference.timeToleranceSeconds)
+                }
+            } else {
+                #expect(comparison.timeErrorSeconds <= reference.timeToleranceSeconds)
+            }
+        }
     }
 
     @Test("Published lunar eclipses", arguments: IndependentReferenceArchive.shared.lunarEclipses)
@@ -427,6 +450,38 @@ struct AuditValidationTests {
         #expect(wrong.phase != correct.phase)
     }
 
+    @Test("Rise/set time, event, and direction mutations are detected")
+    func riseSetMutationsFail() throws {
+        let stream = try #require(
+            archive.riseSetStreams.first {
+                $0.body == "sun" && $0.latitudeDegrees == -90
+            })
+        let references = stream.events
+        let actual = try riseSetEvents(in: stream)
+        let first = try #require(actual.first)
+        let firstReference = try #require(references.first)
+        let baseline = try riseSetComparison(first, reference: firstReference)
+        #expect(baseline.directionMatches)
+        #expect(baseline.timeErrorSeconds <= firstReference.timeToleranceSeconds)
+        let shiftedTime = try riseSetComparison(
+            RiseSetEvent(time: first.time.addingDays(120 / 86_400), direction: first.direction),
+            reference: firstReference)
+        #expect(shiftedTime.directionMatches)
+        #expect(shiftedTime.timeErrorSeconds > firstReference.timeToleranceSeconds)
+        let wrongDirection = try riseSetComparison(
+            RiseSetEvent(
+                time: first.time,
+                direction: first.direction == .rise ? .set : .rise),
+            reference: firstReference)
+        #expect(!wrongDirection.directionMatches)
+        #expect(wrongDirection.timeErrorSeconds <= firstReference.timeToleranceSeconds)
+        let laterEvent = try #require(actual.last)
+        let wrongEvent = try riseSetComparison(
+            RiseSetEvent(time: laterEvent.time, direction: first.direction), reference: firstReference)
+        #expect(wrongEvent.directionMatches)
+        #expect(wrongEvent.timeErrorSeconds > firstReference.timeToleranceSeconds)
+    }
+
     private func body(named name: String) -> CelestialBody {
         switch name {
         case "sun": .sun
@@ -453,6 +508,55 @@ struct AuditValidationTests {
         case "set": .set
         default: throw FixtureLabelError.unknownRiseSetDirection(name)
         }
+    }
+
+    private func riseSetEvents(
+        in stream: IndependentReferenceArchive.RiseSetStream
+    ) throws -> [RiseSetEvent] {
+        let firstYear = try #require(Int(stream.events[0].utc.prefix(4)))
+        let observer = Observer(
+            latitude: stream.latitudeDegrees, longitude: stream.longitudeDegrees)
+        let object = body(named: stream.body)
+        let start = IndependentReferenceDate.universal(
+            String(format: "%04d-01-01T00:00Z", firstYear), deltaTModel: .espenakMeeus)
+        var riseSearch = start
+        var setSearch = start
+        var deferred: RiseSetEvent?
+        var result: [RiseSetEvent] = []
+        while result.count < stream.events.count {
+            if let deferredEvent = deferred {
+                result.append(deferredEvent)
+                deferred = nil
+                continue
+            }
+            let riseResult = try object.searchRiseSet(
+                direction: .rise, after: riseSearch, from: observer, limitDays: 366)
+            let setResult = try object.searchRiseSet(
+                direction: .set, after: setSearch, from: observer, limitDays: 366)
+            let rise = try #require(riseResult)
+            let set = try #require(setResult)
+            riseSearch = rise.addingDays(1.0e-5)
+            setSearch = set.addingDays(1.0e-5)
+            if rise.terrestrialTime < set.terrestrialTime {
+                result.append(RiseSetEvent(time: rise, direction: .rise))
+                deferred = RiseSetEvent(time: set, direction: .set)
+            } else {
+                result.append(RiseSetEvent(time: set, direction: .set))
+                deferred = RiseSetEvent(time: rise, direction: .rise)
+            }
+        }
+        return result
+    }
+
+    private func riseSetComparison(
+        _ actual: RiseSetEvent, reference: IndependentReferenceArchive.RiseSet
+    ) throws -> RiseSetComparison {
+        let expectedDirection = try riseSetDirection(named: reference.direction)
+        let expected = IndependentReferenceDate.universal(
+            reference.utc, deltaTModel: .espenakMeeus)
+        return RiseSetComparison(
+            directionMatches: actual.direction == expectedDirection,
+            timeErrorSeconds: IndependentReferenceDate.terrestrialSeconds(actual.time, expected))
     }
 
     private func eclipseKind(named name: String) -> EclipseKind {

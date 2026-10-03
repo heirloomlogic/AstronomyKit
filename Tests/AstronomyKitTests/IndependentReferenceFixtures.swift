@@ -92,12 +92,45 @@ struct IndependentReferenceArchive: Decodable {
     }
 
     struct RiseSet: Decodable {
+        let sourceLine: Int
         let body: String
         let longitudeDegrees: Double
         let latitudeDegrees: Double
         let utc: String
         let direction: String
         let timeToleranceSeconds: Double
+    }
+
+    struct RiseSetStream: CustomTestStringConvertible {
+        let body: String
+        let longitudeDegrees: Double
+        let latitudeDegrees: Double
+        var events: [RiseSet]
+
+        var testDescription: String {
+            "\(body) \(longitudeDegrees)/\(latitudeDegrees), \(events.count) events"
+        }
+    }
+
+    var riseSetStreams: [RiseSetStream] {
+        var streams: [RiseSetStream] = []
+        for event in riseSet {
+            if let last = streams.indices.last,
+                streams[last].body == event.body,
+                streams[last].longitudeDegrees == event.longitudeDegrees,
+                streams[last].latitudeDegrees == event.latitudeDegrees
+            {
+                streams[last].events.append(event)
+            } else {
+                streams.append(
+                    RiseSetStream(
+                        body: event.body,
+                        longitudeDegrees: event.longitudeDegrees,
+                        latitudeDegrees: event.latitudeDegrees,
+                        events: [event]))
+            }
+        }
+        return streams
     }
 
     struct LunarEclipse: Decodable {

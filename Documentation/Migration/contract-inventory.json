@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 72,
-    "tests": 887
+    "tests": 892
   },
   "crossCuttingContracts": [
     {
@@ -3723,7 +3723,7 @@
     "Scripts/performance/test-moon-cache.sh": "58d7a71ed74515e7e7c3616d124ccaf3117acebed648e724af865706d96203f2",
     "Scripts/performance/test-nutation-cache.sh": "b71c61dc0c21ea8ca8e41d607aa79f90ede8d1e23520402345accddcbbf139ca",
     "Scripts/performance/test-vsop-cache.sh": "7e6a7365556b0c3c83dd5c14ee360b89d8953fd9e6b58683ae6781bb4380a213",
-    "Scripts/reference-data/test_build_fixtures.py": "be1979cfd3d156bb2b9d98875cb67ba958b953d9cc122b257ff20f9180995e12",
+    "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_investigate_apparent_range.py": "36e48f6baa35e3641ca17a5cf8b078fa1f25364b2f97c6c289eee2704c3034a8",
     "Scripts/reference-data/test_outer_planet_diagnostic.py": "0488c3677b3a641bbdbbd5c42ae5a88f7a711d90227b5e589f3beb38714f6d9c",
@@ -3768,7 +3768,7 @@
     "Tests/AstronomyKitTests/AstroTimeTests.swift": "1183d53c4435fb63f7860b043652779d72312525be1ccf4ad0479a7e49a96ff6",
     "Tests/AstronomyKitTests/AstronomyErrorTests.swift": "dd60689aec9808a2d18d6769c5642c157776f29eb6ec733d4b61922892e4a88e",
     "Tests/AstronomyKitTests/AtmosphereTests.swift": "cf83e324ce348cf62a24f74e0c8db2b10cf6aa0faf20b93607711a1ede24fd04",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "a6892c0bae2f3d8899957f12078fa0b28041fdf7627b37d62f302434ebe81191",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "4dfd387c30df121c63a187547f0ec339ecad757e017d44337174fcf52057d110",
     "Tests/AstronomyKitTests/CelestialBodyTests.swift": "3a884eb7c6c0ca0639b0cf205863c9d5199ebd8ecb0df22bd7a77640f8ef3d9c",
     "Tests/AstronomyKitTests/ChironTests.swift": "5fe54f03da286bfa3639229342d7c803026c9cdf070878764a616f1869932449",
     "Tests/AstronomyKitTests/CivilTimeTests.swift": "68c207ac72f13ffad89f475bee72b57bc159e0dba54f51b517a42f60a4cf289c",
@@ -3786,7 +3786,7 @@
     "Tests/AstronomyKitTests/GravitySimulationTests.swift": "39adf1ad7ebee11844cd5f63f65074d0915b87ef6b3684f31505bcf24bf38576",
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "bacd9f420c49b7f5d29ffbb86d441bfd0cdebc511488c2c856b404148a9e3eaf",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "c01c458da8a1cf81166cabe6f969f165b05952d9f2b2f7383a1dc83808011d00",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -13253,7 +13253,7 @@
       "id": "Scripts/reference-data/test_build_fixtures.py",
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_build_fixtures.py",
-      "testCount": 5
+      "testCount": 9
     },
     {
       "classification": "invariant",
@@ -13337,7 +13337,7 @@
       "id": "Tests/AstronomyKitTests/AuditValidationTests.swift",
       "migrationIssue": 81,
       "path": "Tests/AstronomyKitTests/AuditValidationTests.swift",
-      "testCount": 23
+      "testCount": 24
     },
     {
       "classification": "invariant",
