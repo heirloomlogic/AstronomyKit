@@ -71,6 +71,19 @@ class ComparisonTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 MODULE.validate_rss_attribution(receipt, 1)
 
+    def test_matched_earth_stages_require_equal_checksums(self):
+        candidate = {
+            "polynomialEarth": [{"stdout": "0.19756834584757474\n"}],
+            "fallbackEarth": [{"stdout": "-1.0334993594907775\n"}],
+        }
+        oracle = {
+            "polynomialEarth": [{"stdout": "0.19759227388022271\n"}],
+            "fallbackEarth": [{"stdout": "-1.0334418720675367\n"}],
+        }
+        with self.assertRaisesRegex(ValueError, "polynomialEarth"):
+            MODULE.validate_matched_earth_stages(candidate, oracle, 1)
+        self.assertIs(MODULE.validate_matched_earth_stages(oracle, oracle, 1), oracle)
+
 
 if __name__ == "__main__":
     unittest.main()

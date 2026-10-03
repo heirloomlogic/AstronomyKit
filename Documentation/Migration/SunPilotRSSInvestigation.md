@@ -13,32 +13,34 @@ Issue #83 remains open. The final merged pilot evidence repeats the Linux RSS fa
 
 The fixed ceiling is 11,182,080 bytes from `performance-baseline.json` with SHA-256 `fb0be646199060b40860f858a210fa5f6b461ecf6aac06741ac0aa1ad027844a`. The two isolated-manifest runs use the same manifest bytes and source hashes; their peak difference is 12,288 bytes. This repeat establishes that the first result was not removed by the final documentation commit. It does not identify which runtime stage makes pages resident.
 
-## Hosted attribution result
+## Original hosted attribution result and correction
 
-[Workflow 37125291926](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37125291926) tested clean merge revision `a73deaa064fac0b6f25e5070846ced69b40a0457` for source head `fe55f8e84d24c897332f3c46ec86cffe66728e77` with Swift 6.2.1 on x86_64 Linux. Debug and Release each passed 67,240 numerical comparisons and the perturbation control. The report remains `qualified: false`; peak RSS is the only exceeded fixed build, size, and memory observation. The stripped Release artifact is 14,260,208 bytes, 128,937 bytes below its unchanged ceiling.
+[Workflow 37125664455](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37125664455) tested clean merge revision `d38738b28af45e7af50904a7942d676ce1c0166e` for source head `5e5e5c7fb3b1b9e404dc2c59b32092d8792d2e0f` with Swift 6.2.1 on x86_64 Linux. Debug and Release each passed 67,240 numerical comparisons and the perturbation control. All 11 checks on that source head passed. The report remains `qualified: false`; peak RSS is the only exceeded fixed build, size, and memory observation.
 
 | Fresh process stage | Swift Release RSS, five-trial range (median) | C RSS, five-trial range (median) |
 | --- | ---: | ---: |
-| Startup control | 17,764,352–17,915,904 (17,842,176) | 2,023,424–2,199,552 (2,105,344) |
-| Fixed JSON serialization | 19,341,312–19,460,096 (19,390,464) | 2,043,904–2,125,824 (2,125,824) |
-| Polynomial Earth | 18,677,760–18,898,944 (18,743,296) | 2,576,384–2,605,056 (2,580,480) |
-| Full-series Earth | 19,283,968–19,456,000 (19,300,352) | 2,826,240–2,891,776 (2,838,528) |
-| Polynomial cache | 18,976,768–19,197,952 (19,148,800) | 2,797,568–2,981,888 (2,981,888) |
-| Fallback cache | 19,292,160–19,529,728 (19,365,888) | 2,904,064–3,035,136 (2,912,256) |
-| First access | 19,222,528–19,451,904 (19,337,216) | 2,932,736–3,063,808 (3,026,944) |
-| Fresh polynomial | 19,345,408–19,460,096 (19,431,424) | 2,912,256–3,035,136 (2,936,832) |
-| Repeated polynomial | 19,304,448–19,488,768 (19,402,752) | 2,940,928–3,031,040 (2,945,024) |
-| Fresh fallback | 19,705,856–19,881,984 (19,824,640) | 2,883,584–3,055,616 (3,031,040) |
-| Repeated fallback | 19,673,088–19,861,504 (19,742,720) | 2,854,912–2,932,736 (2,863,104) |
-| Aggregate | 21,372,928–21,499,904 (21,434,368) | 3,051,520–3,096,576 (3,063,808) |
+| Startup control | 17,592,320–17,776,640 (17,653,760) | 1,982,464–2,097,152 (2,035,712) |
+| Fixed JSON serialization | 19,161,088–19,316,736 (19,243,008) | 2,039,808–2,088,960 (2,072,576) |
+| Polynomial Earth | 18,599,936–18,722,816 (18,690,048) | 2,371,584–2,555,904 (2,486,272) |
+| Full-series Earth | 19,050,496–19,255,296 (19,193,856) | 2,584,576–2,670,592 (2,625,536) |
+| Polynomial cache | 18,833,408–19,046,400 (19,005,440) | 2,830,336–2,916,352 (2,850,816) |
+| Fallback cache | 19,300,352–19,378,176 (19,337,216) | 2,764,800–2,846,720 (2,809,856) |
+| First access | 19,169,280–19,357,696 (19,206,144) | 2,801,664–2,932,736 (2,809,856) |
+| Fresh polynomial | 19,120,128–19,353,600 (19,283,968) | 2,801,664–2,904,064 (2,871,296) |
+| Repeated polynomial | 19,099,648–19,419,136 (19,181,568) | 2,752,512–2,854,912 (2,768,896) |
+| Fresh fallback | 19,505,152–19,697,664 (19,537,920) | 2,711,552–2,850,816 (2,781,184) |
+| Repeated fallback | 19,525,632–19,656,704 (19,570,688) | 2,781,184–2,932,736 (2,867,200) |
+| Aggregate | 21,139,456–21,278,720 (21,250,048) | 2,863,104–3,039,232 (2,895,872) |
 
-The lowest Release startup control is 6,582,272 bytes above the 11,182,080-byte ceiling before the runner accesses model coefficients, evaluator caches, or astronomical workloads. The current Linux executable and runtime therefore fail the absolute gate before model-level optimization can decide the result. Complete-series evaluation and the larger workloads make additional pages resident, but they are not the primary cause of the absolute failure. The separate aggregate measurement used by the fixed-budget report peaked at 21,581,824 bytes and reaches the same conclusion.
+The lowest Release startup control is 6,410,240 bytes above the 11,182,080-byte ceiling before the runner accesses model coefficients, evaluator caches, or astronomical workloads. The current Linux executable and runtime therefore fail the absolute gate before model-level optimization can decide the result. Complete-series evaluation and the larger workloads make additional pages resident, but they are not the primary cause of the absolute failure.
 
-The raw `report.json`, stdout checksums, `/usr/bin/time` logs, binaries, source hashes, evaluated manifest, and compressed numerical rows are retained in the workflow artifact `native-sun-pilot-linux-37125291926-1`. The successful workflow establishes completed evidence collection at the tested merge revision. It does not pass the RSS gate.
+The original report's SHA-256 is `5420357ecb798ee85cb0d130e3cbea310a4283c53ab877152ffa73cdb843affd`. Its raw stdout reveals two measurement defects: the Swift polynomial and fallback Earth checksums were `0.19756834584757474` and `-1.0334993594907775`, while C produced `0.19759227388022271` and `-1.0334418720675367`; the aggregate Swift probe also created a new evaluator per mode instead of preserving the pre-attribution shared evaluator. The Earth-only and aggregate rows above describe the pre-fix binaries and are not matched fixed-head evidence. The startup, serialization, cache, and isolated workload rows remain measurements of their named pre-fix processes; the startup conclusion is independent of the two defects.
+
+The raw `report.json`, stdout checksums, `/usr/bin/time` logs, binaries, source hashes, evaluated manifest, and compressed numerical rows are retained in the workflow artifact `native-sun-pilot-linux-37125664455-1`. The successful workflow establishes completed evidence collection at the tested merge revision. It does not pass the RSS gate. Corrected workload attribution requires a new hosted artifact tied to the fixed source head.
 
 ## Attribution method
 
-The coordinator now runs each stage in a fresh process for the Swift Debug and Release candidates and the matched C oracle. Startup and fixed JSON output are minimal-runtime controls. Polynomial and fallback Earth probes separate generated polynomial access from lazy materialization of complete Earth VSOP triplets. Two same-epoch observations record the cumulative process peak after caller-owned caches are populated. The five existing first-access, fresh/repeated polynomial, and fresh/repeated fallback workloads each run alone, followed by the unchanged aggregate workload.
+The coordinator runs each stage in a fresh process for the Swift Debug and Release candidates and the matched C oracle. Startup and fixed JSON output are minimal-runtime controls. Polynomial and fallback Earth probes interpret their epochs as UT, derive TT with the same captured Delta T model, and must produce numerically equal checksums. Two same-epoch observations record the cumulative process peak after caller-owned caches are populated. The five existing first-access, fresh/repeated polynomial, and fresh/repeated fallback workloads each run alone with a fresh evaluator. The aggregate candidate probe reuses one evaluator across the five modes, matching the pre-attribution runner lifecycle.
 
 Every sample retains the external `/usr/bin/time` peak, scalar or JSON checksum output, command, configuration, platform, toolchain, source hashes, and tested revision. Five trials are required for a full campaign; quick mode records one diagnostic trial and cannot qualify the pilot. The matched C probes use the same epochs and operation counts. Numerical equivalence remains established by the separate 67,240-case comparison rather than by the RSS checksums.
 

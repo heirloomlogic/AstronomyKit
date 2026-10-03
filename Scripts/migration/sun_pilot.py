@@ -276,6 +276,23 @@ def validate_rss_attribution(receipt, count):
     return receipt
 
 
+def validate_matched_earth_stages(candidate, oracle, count):
+    for stage in ("polynomialEarth", "fallbackEarth"):
+        candidate_samples = candidate.get(stage, [])
+        oracle_samples = oracle.get(stage, [])
+        if len(candidate_samples) != count or len(oracle_samples) != count:
+            raise ValueError(f"matched Earth stage {stage} requires {count} trials")
+        for candidate_sample, oracle_sample in zip(candidate_samples, oracle_samples):
+            try:
+                candidate_checksum = float(candidate_sample["stdout"])
+                oracle_checksum = float(oracle_sample["stdout"])
+            except (KeyError, TypeError, ValueError) as error:
+                raise ValueError(f"matched Earth stage {stage} has an invalid checksum") from error
+            if not math.isfinite(candidate_checksum) or candidate_checksum != oracle_checksum:
+                raise ValueError(f"matched Earth stage {stage} checksum differs from the oracle")
+    return candidate
+
+
 def rss_attribution(binary, count):
     receipt = {
         stage: [measured_process(binary, ["--rss-stage", stage]) for _ in range(count)]
@@ -373,6 +390,7 @@ def main():
                 raise RuntimeError("intentional fallback perturbation was not detected")
             values = runtime(binary, runtime_trials)
             stage_values = rss_attribution(binary, runtime_trials)
+            validate_matched_earth_stages(stage_values, record["rssAttribution"]["oracle"], runtime_trials)
             build_record.update({"comparison": result, "perturbationDetected": True, "perturbationFailures": control["failures"], "runtime": values,
                                  "binarySHA256": MEASURE.sha256(binary)})
             record["rssAttribution"][configuration] = stage_values

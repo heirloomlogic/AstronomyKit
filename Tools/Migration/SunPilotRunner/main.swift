@@ -81,9 +81,8 @@ struct Runner {
         let checksum: Double
     }
 
-    static func workload(_ mode: String) throws -> Workload {
+    static func workload(_ mode: String, evaluator: inout PilotEvaluator) throws -> Workload {
         let site = PilotObserver(latitude: 35, longitude: -80, height: 100)
-        var evaluator = PilotEvaluator()
         let count = mode == "firstAccess" ? 1 : 200
         let epoch = mode.contains("Fallback") ? 40_000.0 : 9_000.0
         if mode.hasPrefix("repeated") {
@@ -114,10 +113,10 @@ struct Runner {
             FileHandle.standardOutput.write(try JSONEncoder().encode(Workload(operations: 0, elapsedNanoseconds: 0, checksum: 0)))
             FileHandle.standardOutput.write(Data([10]))
         case "polynomialEarth":
-            let value = try SunPilot.earth(tt: 9_000)
+            let value = try SunPilot.earth(tt: PilotTime(ut: 9_000).tt)
             write(value.vector.x + value.vector.y + value.vector.z)
         case "fallbackEarth":
-            let value = try SunPilot.earth(tt: 40_000)
+            let value = try SunPilot.earth(tt: PilotTime(ut: 40_000).tt)
             write(value.vector.x + value.vector.y + value.vector.z)
         case "polynomialCache", "fallbackCache":
             let epoch = stage == "fallbackCache" ? 40_000.0 : 9_000.0
@@ -126,7 +125,8 @@ struct Runner {
             let second = try evaluator.observe(time: PilotTime(ut: epoch), observer: site)
             write(first.altitude + first.distance + second.altitude + second.distance)
         case "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback":
-            write(try workload(stage).checksum)
+            var evaluator = PilotEvaluator()
+            write(try workload(stage, evaluator: &evaluator).checksum)
         case "aggregate":
             try performance()
         default:
@@ -136,10 +136,11 @@ struct Runner {
 
     static func performance() throws {
         var report: [String: Workload] = [:]
+        var evaluator = PilotEvaluator()
         for mode in [
             "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback",
         ] {
-            report[mode] = try workload(mode)
+            report[mode] = try workload(mode, evaluator: &evaluator)
         }
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]

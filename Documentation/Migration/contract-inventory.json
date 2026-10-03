@@ -2855,7 +2855,7 @@
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 72,
-    "tests": 886
+    "tests": 887
   },
   "crossCuttingContracts": [
     {
@@ -3715,7 +3715,7 @@
     "Scripts/migration/test_foundation.py": "fe3b6efc4e85c7b817eb616333f46cb4ff0105ecb7523e4b0efd8aabc2f6272a",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "aac319f96b5b30e24e3803ec7d882f5e5834543d5033c799a8d87fe8fc6088b1",
-    "Scripts/migration/test_sun_pilot.py": "981b9f2eae292fa8f29e13fbca1944a927880c76dec5632cccca2ff2321a6f9c",
+    "Scripts/migration/test_sun_pilot.py": "99b4204ee8502e9f6ded27e93e1d5880aac67358d39d02ba0946299214b2b93e",
     "Scripts/model-prototype/test_generate_swift_models.py": "4cd335d674af4a12fe405c265744682c45af78bbd7f9e95476e1c3f964a3106c",
     "Scripts/model-prototype/test_measure.py": "fc52c547a19698cd8f6a8adc6a6b037664b0fadb9ea61f531da7b289c6f5ecbd",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
@@ -13197,7 +13197,7 @@
       "id": "Scripts/migration/test_sun_pilot.py",
       "migrationIssue": 83,
       "path": "Scripts/migration/test_sun_pilot.py",
-      "testCount": 8
+      "testCount": 9
     },
     {
       "classification": "invariant",
