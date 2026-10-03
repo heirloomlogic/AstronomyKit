@@ -121,7 +121,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/reference-data/test_outer_planet_diagnostic.py": 81,
     "Scripts/reference-data/test_pluto_model_diagnostic.py": 81,
     "Scripts/reference-data/test_investigate_apparent_range.py": 81,
-    "Scripts/reference-data/test_diagnose_polar_sunrise.py": 124,
+    "Scripts/reference-data/test_diagnose_polar_sunrise.py": 81,
     "Scripts/performance/test-moon-cache.sh": 95,
     "Scripts/performance/test-nutation-cache.sh": 95,
     "Scripts/performance/test-vsop-cache.sh": 95,
@@ -155,7 +155,6 @@ GENERATED_ISSUES = {
     "Sources/CLibAstronomy/generated/iau2000b_full.h": 86,
     "Sources/CLibAstronomy/generated/polynomial-data.h": 85,
     "Sources/CLibAstronomy/generated/vsop87b_full.h": 85,
-    "Documentation/Migration/polar-sunrise-diagnosis.json": 124,
 }
 
 PROTOTYPE_GENERATED_PREFIXES = (
@@ -179,7 +178,6 @@ GENERATORS = {
     "Sources/CLibAstronomy/generated/iau2000b_full.h": "Scripts/generate-models.py",
     "Sources/CLibAstronomy/generated/polynomial-data.h": "Scripts/performance/polynomial/embed.py",
     "Sources/CLibAstronomy/generated/vsop87b_full.h": "Scripts/generate-models.py",
-    "Documentation/Migration/polar-sunrise-diagnosis.json": "Scripts/reference-data/diagnose-polar-sunrise.py",
 }
 
 CROSS_CUTTING_CONTRACTS = [

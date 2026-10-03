@@ -2851,7 +2851,7 @@
   "counts": {
     "cDependencies": 334,
     "crossCuttingContracts": 5,
-    "generatedArtifacts": 115,
+    "generatedArtifacts": 114,
     "localPatches": 18,
     "publicSwiftAPI": 577,
     "testOwners": 73,
@@ -2910,13 +2910,6 @@
     }
   ],
   "generatedArtifacts": [
-    {
-      "generator": "Scripts/reference-data/diagnose-polar-sunrise.py",
-      "id": "Documentation/Migration/polar-sunrise-diagnosis.json",
-      "migrationIssue": 124,
-      "path": "Documentation/Migration/polar-sunrise-diagnosis.json",
-      "sha256": "ca9c643f5ac6a30cab3bb409cbfb2ee6bb53b3151f3c68a1816894ffaa431e6d"
-    },
     {
       "generator": "Scripts/numerics/solar-altitude/bounds.py",
       "id": "Scripts/numerics/solar-altitude/bounds.json",
@@ -13266,7 +13259,7 @@
     {
       "classification": "invariant",
       "id": "Scripts/reference-data/test_diagnose_polar_sunrise.py",
-      "migrationIssue": 124,
+      "migrationIssue": 81,
       "path": "Scripts/reference-data/test_diagnose_polar_sunrise.py",
       "testCount": 5
     },
