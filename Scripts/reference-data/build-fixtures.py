@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime
 import hashlib
 import json
 import re
@@ -60,6 +61,7 @@ HORIZONS_VECTOR_QUERIES = {
 
 JUPITER_MOON_RELATIVE_TOLERANCE = 9e-4
 JUPITER_MOON_TOLERANCE_JD_TDB_RANGE = (2_426_545.0, 2_476_545.0)
+RISE_SET_ROW_COUNT = 5_909
 
 
 def sha256(data: bytes) -> str:
@@ -238,6 +240,95 @@ def lunar_reference_conventions() -> dict[str, object]:
     }
 
 
+def rise_set_conventions() -> dict[str, object]:
+    harness = source_text("astronomy-engine-ctest.c")
+    engine = source_text("astronomy-engine.c")
+    rise_set = re.search(
+        r"static int RiseSet\(void\)\s*\{(?P<body>.*?)/\*-+\*/",
+        harness,
+        re.DOTALL,
+    )
+    if rise_set is None:
+        raise RuntimeError("pinned rise/set validation function is missing")
+    body = rise_set["body"]
+    limit = re.search(r"error_minutes > ([0-9.]+)", body)
+    if limit is None:
+        raise RuntimeError("pinned rise/set tolerance is missing")
+    required = {
+        "correct_date = Astronomy_MakeTime": "UT calendar construction",
+        "a_evt.time.tt - correct_date.tt": "TT comparison",
+        "r_evt.time.tt < s_evt.time.tt": "chronological event selection",
+    }
+    for expression, meaning in required.items():
+        if expression not in body:
+            raise RuntimeError(f"pinned rise/set harness no longer preserves {meaning}")
+    delta_t_model = "Astronomy_DeltaT_EspenakMeeus"
+    if f"DeltaTFunc = {delta_t_model};" not in engine:
+        raise RuntimeError("pinned default Delta T model changed")
+    return {
+        "timeToleranceSeconds": 60 * float(limit.group(1)),
+        "comparisonScale": "terrestrialTimeDerivedFromUT",
+        "deltaTModel": delta_t_model,
+        "eventSelection": "earlierOfRiseAndSetByTerrestrialTime",
+    }
+
+
+def parse_rise_set() -> list[dict[str, object]]:
+    conventions = rise_set_conventions()
+    pattern = re.compile(
+        r"^(Sun|Moon)\s+([+-]?\d+(?:\.\d+)?)\s+([+-]?\d+(?:\.\d+)?)\s+"
+        r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z)\s+([rs])$"
+    )
+    rows: list[dict[str, object]] = []
+    seen_groups: set[tuple[str, float, float, int]] = set()
+    current_group: tuple[str, float, float, int] | None = None
+    previous_time: datetime.datetime | None = None
+    previous_direction: str | None = None
+    for line_number, line in enumerate(source_text("riseset.txt").splitlines(), 1):
+        match = pattern.fullmatch(line)
+        if match is None:
+            raise RuntimeError(f"invalid rise/set record at line {line_number}: {line!r}")
+        body, longitude_text, latitude_text, timestamp, direction = match.groups()
+        try:
+            event_time = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%MZ")
+        except ValueError as error:
+            raise RuntimeError(f"invalid rise/set timestamp at line {line_number}: {timestamp}") from error
+        longitude = float(longitude_text)
+        latitude = float(latitude_text)
+        if not -180 <= longitude <= 180 or not -90 <= latitude <= 90:
+            raise RuntimeError(f"invalid rise/set coordinates at line {line_number}")
+        group = (body, longitude, latitude, event_time.year)
+        if group != current_group:
+            if group in seen_groups:
+                raise RuntimeError(f"noncontiguous rise/set group at line {line_number}")
+            seen_groups.add(group)
+            current_group = group
+            previous_time = None
+            previous_direction = None
+        if previous_time is not None and event_time <= previous_time:
+            raise RuntimeError(f"rise/set group is not chronological at line {line_number}")
+        if previous_direction == direction:
+            raise RuntimeError(f"rise/set directions do not alternate at line {line_number}")
+        rows.append(
+            {
+                "sourceLine": line_number,
+                "body": body.lower(),
+                "longitudeDegrees": longitude,
+                "latitudeDegrees": latitude,
+                "utc": timestamp,
+                "direction": "rise" if direction == "r" else "set",
+                "timeToleranceSeconds": conventions["timeToleranceSeconds"],
+            }
+        )
+        previous_time = event_time
+        previous_direction = direction
+    if len(rows) != RISE_SET_ROW_COUNT:
+        raise RuntimeError(
+            f"rise/set table has {len(rows)} records; expected {RISE_SET_ROW_COUNT}"
+        )
+    return rows
+
+
 def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
     lunar_conventions = lunar_reference_conventions()
     seasons = []
@@ -285,33 +376,13 @@ def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
                 result.append(item)
         return result
 
-    rises = []
-    rise_pattern = re.compile(r"^(Sun|Moon)\s+(-?\d+)\s+(-?\d+)\s+(\S+)\s+([rs])$")
-    wanted_rises = {
-        ("Moon", 103, -61, "1944-01-01T02:49Z", "r"),
-        ("Moon", 103, -61, "1944-01-01T16:55Z", "s"),
-        ("Sun", -150, -60, "2019-01-01T07:24Z", "s"),
-        ("Sun", -150, -60, "2019-01-01T12:43Z", "r"),
-        ("Sun", 0, 90, "2022-03-18T13:02Z", "r"),
-        ("Sun", 0, 90, "2022-09-25T04:13Z", "s"),
-        ("Moon", 135, 85, "2026-01-08T03:58Z", "s"),
-        ("Moon", 135, 85, "2026-01-08T12:27Z", "r"),
-    }
-    for line in source_text("riseset.txt").splitlines():
-        match = rise_pattern.match(line)
-        if not match:
-            continue
-        values = (match.group(1), int(match.group(2)), int(match.group(3)), match.group(4), match.group(5))
-        if values in wanted_rises:
-            rises.append({"body": values[0].lower(), "longitudeDegrees": values[1], "latitudeDegrees": values[2], "utc": values[3], "direction": "rise" if values[4] == "r" else "set", "timeToleranceSeconds": 70.8})
-
     return {
         "seasons": seasons,
         "lunarPhases": phases,
         "lunarNodes": nodes,
         "lunarApsides": parse_apsides("moon_apsides.txt", {2001, 2050, 2100}, True),
         "earthApsides": parse_apsides("earth_apsides.txt", {2001, 2050, 2100}, False),
-        "riseSet": rises,
+        "riseSet": parse_rise_set(),
     }
 
 
@@ -437,7 +508,7 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
 
 def build_archive() -> dict[str, object]:
     archive: dict[str, object] = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "provenance": source_catalog(),
     }
     archive.update(parse_upstream_events())
@@ -457,7 +528,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "calendar timestamps", "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parser, C validation harness, engine source, and table under {upstream}/moonphase, {upstream}/ctest.c, and the matching source/c tree"},
         "espenakMoonNodes": {"version": UPSTREAM_REVISION, "frame": "geocentric equator and equinox of date as consumed by the pinned harness", "origin": "Earth center", "units": "UTC calendar timestamps, right ascension hours, and declination degrees", "timeScale": "UTC as serialized by the pinned transformation", "aberration": "not documented by the source table", "refraction": "not applicable to geocentric node events", "domain": "published table 2001 through 2100; sampled at 2001, 2050, and 2100", "license": f"Fred Espenak table with attribution; {mit_license}", "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html", "recipe": f"Pinned README, parser, and table under {upstream}/moon_nodes"},
         "astronomyEngineApsides": {"version": UPSTREAM_REVISION, "frame": "scalar Earth-Moon and Sun-Earth distances; no orientation frame", "origin": "Earth center for lunar distance and Sun center for Earth distance", "units": "UTC-like calendar timestamps, km, and AU", "timeScale": "calendar strings are interpreted as UT/UTC by the pinned harness; original acquisition metadata is absent", "aberration": "not documented in the pinned tables", "refraction": "not applicable to scalar apsis distances", "domain": "pinned lunar and Earth tables beginning in 2001; sampled at 2001, 2050, and 2100", "license": mit_license, "url": f"{upstream}/apsides", "recipe": "Pinned moon.txt and earth.txt are parsed directly; evidence is classified as third-party parity because upstream does not retain the original acquisition recipe"},
-        "usnoRiseSet": {"version": UPSTREAM_REVISION, "frame": "topocentric apparent horizon", "origin": "named terrestrial longitude and latitude", "units": "UTC calendar timestamps and degrees", "timeScale": "UTC", "aberration": "included in the USNO apparent-position service", "refraction": "USNO standard apparent-horizon refraction", "domain": "USNO service years 1700 through 2100; sampled from 1944 through 2026", "license": government_license, "url": "https://aa.usno.navy.mil/data/RS_OneYear", "recipe": f"Pinned acquisition instructions and parsed table under {upstream}/riseset"},
+        "usnoRiseSet": {"version": UPSTREAM_REVISION, "frame": "topocentric apparent horizon", "origin": "named terrestrial longitude and latitude", "units": "calendar timestamps treated as UT coordinates and geographic degrees", "timeScale": "the pinned C harness passes every timestamp to Astronomy_MakeTime as a UT coordinate, derives TT with the default Espenak-Meeus model, and compares event TT", "aberration": "included in the USNO apparent-position service", "refraction": "USNO standard apparent-horizon refraction", "domain": "all 5,909 pinned rows in 17 body/location/year groups from 1750 through 2050; the USNO service documents years 1700 through 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/RS_OneYear", "recipe": f"Pinned acquisition instructions, full table, C validation harness, and engine source under {upstream}/riseset, {upstream}/ctest.c, and the matching source/c tree"},
         "nasaLunarEclipses": {"version": UPSTREAM_REVISION, "frame": "geocentric Earth-shadow geometry", "origin": "Earth center", "units": "UT calendar timestamps and minutes", "timeScale": "UT; the pinned C harness compares eclipse.peak.ut with the parsed catalog coordinate under its default Espenak-Meeus Delta T model", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to geocentric eclipse geometry", "domain": "NASA catalog centuries represented by archived pages; sampled at 1800, 2000, and 2099", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/lunar.html", "recipe": f"Pinned catalog pages, source key, normalizer, C validation harness, and engine source under {upstream}/eclipse, {upstream}/ctest.c, and the matching source/c tree"},
         "nasaGlobalSolarEclipses": {"version": UPSTREAM_REVISION, "frame": "geocentric shadow-axis geometry with terrestrial greatest-eclipse location", "origin": "Earth center and catalog surface coordinates", "units": "TD calendar timestamps and geographic degrees", "timeScale": "Terrestrial Dynamical Time (TD)", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to global shadow geometry", "domain": "NASA catalog centuries represented by archived pages; sampled at 1800, 2024, and 2099", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/solar.html", "recipe": f"Pinned catalog pages and source key under {upstream}/eclipse"},
         "nasaPlanetaryTransits": {"version": UPSTREAM_REVISION, "frame": "geocentric Sun-planet contact geometry", "origin": "Earth center", "units": "UT calendar timestamps and arcseconds converted to arcminutes", "timeScale": "UT", "aberration": "not separately configurable in the published catalog", "refraction": "not applicable to geocentric transit contacts", "domain": "Mercury 1601 through 2300 and Venus 2000 BCE through 4000 CE; sampled from 2003 through 2125", "license": nasa_license, "url": "https://eclipse.gsfc.nasa.gov/transit/catalog/", "recipe": f"Pinned Mercury and Venus catalog pages under {upstream}/eclipse"},
