@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 114,
     "localPatches": 18,
     "publicSwiftAPI": 577,
-    "testOwners": 72,
-    "tests": 892
+    "testOwners": 73,
+    "tests": 897
   },
   "crossCuttingContracts": [
     {
@@ -3724,6 +3724,7 @@
     "Scripts/performance/test-nutation-cache.sh": "b71c61dc0c21ea8ca8e41d607aa79f90ede8d1e23520402345accddcbbf139ca",
     "Scripts/performance/test-vsop-cache.sh": "7e6a7365556b0c3c83dd5c14ee360b89d8953fd9e6b58683ae6781bb4380a213",
     "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
+    "Scripts/reference-data/test_diagnose_polar_sunrise.py": "96688a62ad6a72a8a53fc1b2e53b854ea124711ac0600086ee1b6d0ec554bac1",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_investigate_apparent_range.py": "36e48f6baa35e3641ca17a5cf8b078fa1f25364b2f97c6c289eee2704c3034a8",
     "Scripts/reference-data/test_outer_planet_diagnostic.py": "0488c3677b3a641bbdbbd5c42ae5a88f7a711d90227b5e589f3beb38714f6d9c",
@@ -13254,6 +13255,13 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_build_fixtures.py",
       "testCount": 9
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_diagnose_polar_sunrise.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_diagnose_polar_sunrise.py",
+      "testCount": 5
     },
     {
       "classification": "invariant",

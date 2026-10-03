@@ -121,6 +121,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/reference-data/test_outer_planet_diagnostic.py": 81,
     "Scripts/reference-data/test_pluto_model_diagnostic.py": 81,
     "Scripts/reference-data/test_investigate_apparent_range.py": 81,
+    "Scripts/reference-data/test_diagnose_polar_sunrise.py": 81,
     "Scripts/performance/test-moon-cache.sh": 95,
     "Scripts/performance/test-nutation-cache.sh": 95,
     "Scripts/performance/test-vsop-cache.sh": 95,
