@@ -19,6 +19,25 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
+RSS_STAGES = (
+    "startup", "serialization", "polynomialEarth", "fallbackEarth",
+    "polynomialCache", "fallbackCache", "firstAccess", "freshPolynomial",
+    "repeatedPolynomial", "freshFallback", "repeatedFallback", "aggregate",
+)
+RSS_STAGE_DESCRIPTIONS = {
+    "startup": "Enter the executable and emit a scalar without model access.",
+    "serialization": "Encode and emit a fixed empty workload without model access.",
+    "polynomialEarth": "Evaluate one Earth polynomial position without observer or orientation work.",
+    "fallbackEarth": "Evaluate one complete Earth VSOP position, including lazy triplet materialization.",
+    "polynomialCache": "Evaluate the same polynomial Sun observation twice with one caller-owned evaluator.",
+    "fallbackCache": "Evaluate the same fallback Sun observation twice with one caller-owned evaluator.",
+    "firstAccess": "Run the existing one-operation first-access workload.",
+    "freshPolynomial": "Run the existing 200-epoch fresh polynomial workload.",
+    "repeatedPolynomial": "Run the existing warm-up plus 200 repeated polynomial observations.",
+    "freshFallback": "Run the existing 200-epoch fresh fallback workload.",
+    "repeatedFallback": "Run the existing warm-up plus 200 repeated fallback observations.",
+    "aggregate": "Run all five existing workloads and encode their timing report.",
+}
 
 
 def load_module(name, relative):
@@ -225,17 +244,44 @@ def builds(package, configuration, trials):
             "cleanPeakResidentBytes": clean_rss, "incrementalPeakResidentBytes": incremental_rss}, Path(binary_directory) / "AstronomySunPilotRunner"
 
 
+def measured_process(binary, arguments):
+    with tempfile.NamedTemporaryFile() as stream:
+        path = Path(stream.name)
+        command = [*MEASURE.time_arguments(path), str(binary), *arguments]
+        process = subprocess.run(command, capture_output=True, text=True, cwd=ROOT)
+        MEASURE.ACTIVE_LOG.save(command, ROOT, process.stdout, process.stderr, process.returncode, path.read_text())
+        process.check_returncode()
+        return {"peakResidentBytes": MEASURE.parse_rss(path), "stdout": process.stdout}
+
+
 def runtime(binary, count):
     samples = []
     for _ in range(count):
-        with tempfile.NamedTemporaryFile() as stream:
-            path = Path(stream.name)
-            command = [*MEASURE.time_arguments(path), str(binary), "--performance"]
-            process = subprocess.run(command, capture_output=True, text=True, cwd=ROOT)
-            MEASURE.ACTIVE_LOG.save(command, ROOT, process.stdout, process.stderr, process.returncode, path.read_text())
-            process.check_returncode()
-            samples.append({"workloads": json.loads(process.stdout), "peakResidentBytes": MEASURE.parse_rss(path)})
+        measured = measured_process(binary, ["--performance"])
+        samples.append({"workloads": json.loads(measured["stdout"]), "peakResidentBytes": measured["peakResidentBytes"]})
     return samples
+
+
+def validate_rss_attribution(receipt, count):
+    if tuple(receipt) != RSS_STAGES:
+        raise ValueError("RSS stage inventory differs")
+    for stage, samples in receipt.items():
+        if len(samples) != count:
+            raise ValueError(f"RSS stage {stage} requires {count} trials")
+        for sample in samples:
+            if type(sample.get("peakResidentBytes")) is not int or sample["peakResidentBytes"] <= 0:
+                raise ValueError(f"RSS stage {stage} has invalid peak memory")
+            if not sample.get("stdout"):
+                raise ValueError(f"RSS stage {stage} has no checksum output")
+    return receipt
+
+
+def rss_attribution(binary, count):
+    receipt = {
+        stage: [measured_process(binary, ["--rss-stage", stage]) for _ in range(count)]
+        for stage in RSS_STAGES
+    }
+    return validate_rss_attribution(receipt, count)
 
 
 def inspect_compensation(output):
@@ -298,7 +344,13 @@ def main():
     record["compensationCodeGeneration"] = inspect_compensation(output)
     record["oracle"] = build_oracle(output / "sun-pilot-oracle")
     expected = batch([str(output / "sun-pilot-oracle")], text, output / "oracle.jsonl.gz")
-    record["oracleRuntime"] = runtime(output / "sun-pilot-oracle", 1 if arguments.quick else 5)
+    runtime_trials = 1 if arguments.quick else 5
+    record["oracleRuntime"] = runtime(output / "sun-pilot-oracle", runtime_trials)
+    record["rssAttribution"] = {
+        "schemaVersion": 1, "freshProcessPerStage": True,
+        "stageSemantics": RSS_STAGE_DESCRIPTIONS,
+        "oracle": rss_attribution(output / "sun-pilot-oracle", runtime_trials),
+    }
     record["configurations"] = {}
     with tempfile.TemporaryDirectory(prefix="sun-pilot-package-") as temporary:
         package = Path(temporary) / "package"
@@ -319,9 +371,11 @@ def main():
             control = compare(fallback_cases, fallback_expected, perturbed)
             if not fallback_cases or control["passed"]:
                 raise RuntimeError("intentional fallback perturbation was not detected")
-            values = runtime(binary, 1 if arguments.quick else 5)
+            values = runtime(binary, runtime_trials)
+            stage_values = rss_attribution(binary, runtime_trials)
             build_record.update({"comparison": result, "perturbationDetected": True, "perturbationFailures": control["failures"], "runtime": values,
                                  "binarySHA256": MEASURE.sha256(binary)})
+            record["rssAttribution"][configuration] = stage_values
             stripped = output / f"sun-pilot-{configuration}-stripped"
             shutil.copy2(binary, stripped)
             strip = ["strip", "-S", "-x", str(stripped)] if platform.system() == "Darwin" else ["strip", "--strip-all", str(stripped)]
