@@ -30,10 +30,21 @@ public struct PilotEarth: Sendable {
 /// A development evaluator using the frozen Earth tables and expression order.
 public enum SunPilot {
     static let earthMetadata = PrototypeModelData.polynomialMetadata[PrototypeBody.earth.rawValue]
+    struct Term: Sendable {
+        let amplitude, phase, frequency: Double
+    }
     static let earthSeries = (0..<3).map { coordinate in
-        PrototypeModelData.vsopSeries.filter {
-            $0.body == PrototypeBody.earth.rawValue && $0.coordinate == coordinate
-        }
+        PrototypeModelData.vsopSeries.filter { $0.body == PrototypeBody.earth.rawValue && $0.coordinate == coordinate }
+            .map { series in
+                (series.offset..<series.offset + series.count).map { index in
+                    guard let bits = PrototypeModelData.vsopTermBitPatterns(at: index) else {
+                        preconditionFailure("Generated Earth VSOP metadata exceeds its term table")
+                    }
+                    return Term(
+                        amplitude: Double(bitPattern: bits.amplitude), phase: Double(bitPattern: bits.phase),
+                        frequency: Double(bitPattern: bits.frequency))
+                }
+            }
     }
 
     /// Evaluates Earth at explicit TT; the amplitude scale is a development negative control.
@@ -101,14 +112,9 @@ public enum SunPilot {
             for series in earthSeries[axis] {
                 var sum = 0.0
                 var compensation = 0.0
-                for index in series.offset..<series.offset + series.count {
-                    guard let bits = PrototypeModelData.vsopTermBitPatterns(at: index) else {
-                        preconditionFailure("Generated Earth VSOP metadata exceeds its term table")
-                    }
-                    let amplitude = Double(bitPattern: bits.amplitude) * amplitudeScale
-                    let phase = Double(bitPattern: bits.phase)
-                    let frequency = Double(bitPattern: bits.frequency)
-                    compensatedAdd(&sum, &compensation, amplitude * cos(phase + t * frequency))
+                for term in series {
+                    let amplitude = term.amplitude * amplitudeScale
+                    compensatedAdd(&sum, &compensation, amplitude * cos(term.phase + t * term.frequency))
                 }
                 sum += compensation
                 var increment = power * sum
