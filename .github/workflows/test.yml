@@ -52,6 +52,8 @@ jobs:
           python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
           python3 -m unittest Scripts/reference-data/test_distance_accuracy.py -v
           python3 Scripts/reference-data/distance-accuracy.py check
+          python3 -m unittest Scripts/reference-data/test_range_rate_investigation.py -v
+          python3 Scripts/reference-data/investigate-range-rate.py --check
           python3 -m unittest Scripts/reference-data/test_outer_planet_diagnostic.py -v
           python3 -m unittest Scripts/reference-data/test_pluto_model_diagnostic.py -v
           python3 Scripts/reference-data/outer-planet-diagnostic.py check

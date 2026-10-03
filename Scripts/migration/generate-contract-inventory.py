@@ -117,6 +117,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/performance/polynomial/test_polynomial.py": 85,
     "Scripts/reference-data/test_build_fixtures.py": 81,
     "Scripts/reference-data/test_distance_accuracy.py": 81,
+    "Scripts/reference-data/test_range_rate_investigation.py": 81,
     "Scripts/reference-data/test_outer_planet_diagnostic.py": 81,
     "Scripts/reference-data/test_pluto_model_diagnostic.py": 81,
     "Scripts/reference-data/test_investigate_apparent_range.py": 81,
