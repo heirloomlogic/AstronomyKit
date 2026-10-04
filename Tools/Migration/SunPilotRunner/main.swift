@@ -1,5 +1,4 @@
 import AstronomyModelPrototype
-import Foundation
 
 struct Sample: Encodable {
     let status: String
@@ -23,13 +22,12 @@ struct Runner {
         }
         let scale = CommandLine.arguments.contains("--perturb-fallback") ? 1.000001 : 1.0
         var evaluator = PilotEvaluator(fullSeriesAmplitudeScale: scale)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
         while let line = readLine() {
             let fields = line.split(separator: " ")
             guard fields.count == 7, let model = PilotDeltaT(rawValue: String(fields[0])),
                 let value = Double(fields[2]), let latitude = Double(fields[3]),
-                let longitude = Double(fields[4]), let height = Double(fields[5]), let pairUT = Double(fields[6])
+                let longitude = Double(fields[4]), let height = Double(fields[5]),
+                let pairUT = Double(fields[6])
             else {
                 throw PilotError.invalidParameter
             }
@@ -70,8 +68,7 @@ struct Runner {
                 }
                 sample = Sample(status: status)
             }
-            FileHandle.standardOutput.write(try encoder.encode(sample))
-            FileHandle.standardOutput.write(Data([10]))
+            print(try sample.json())
         }
     }
 
@@ -88,7 +85,7 @@ struct Runner {
         if mode.hasPrefix("repeated") {
             _ = try evaluator.observe(time: PilotTime(ut: epoch), observer: site)
         }
-        let start = DispatchTime.now().uptimeNanoseconds
+        let start = try PilotClock.now()
         var checksum = 0.0
         for index in 0..<count {
             let ut = epoch + (mode.hasPrefix("fresh") ? Double(index) * 0.125 : 0)
@@ -96,12 +93,12 @@ struct Runner {
             checksum += value.altitude + value.distance
         }
         return Workload(
-            operations: count, elapsedNanoseconds: DispatchTime.now().uptimeNanoseconds - start,
+            operations: count, elapsedNanoseconds: try PilotClock.now() - start,
             checksum: checksum)
     }
 
     static func write(_ value: Double) {
-        FileHandle.standardOutput.write(Data("\(value)\n".utf8))
+        print(value)
     }
 
     static func rssStage(_ stage: String) throws {
@@ -110,8 +107,7 @@ struct Runner {
         case "startup":
             write(0)
         case "serialization":
-            FileHandle.standardOutput.write(try JSONEncoder().encode(Workload(operations: 0, elapsedNanoseconds: 0, checksum: 0)))
-            FileHandle.standardOutput.write(Data([10]))
+            print(try Workload(operations: 0, elapsedNanoseconds: 0, checksum: 0).json())
         case "polynomialEarth":
             let value = try SunPilot.earth(tt: PilotTime(ut: 9_000).tt)
             write(value.vector.x + value.vector.y + value.vector.z)
@@ -124,7 +120,8 @@ struct Runner {
             let first = try evaluator.observe(time: PilotTime(ut: epoch), observer: site)
             let second = try evaluator.observe(time: PilotTime(ut: epoch), observer: site)
             write(first.altitude + first.distance + second.altitude + second.distance)
-        case "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback":
+        case "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback",
+            "repeatedFallback":
             var evaluator = PilotEvaluator()
             write(try workload(stage, evaluator: &evaluator).checksum)
         case "aggregate":
@@ -142,9 +139,6 @@ struct Runner {
         ] {
             report[mode] = try workload(mode, evaluator: &evaluator)
         }
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        FileHandle.standardOutput.write(try encoder.encode(report))
-        FileHandle.standardOutput.write(Data([10]))
+        print(PilotJSON.object(try report.mapValues { try $0.json() }))
     }
 }

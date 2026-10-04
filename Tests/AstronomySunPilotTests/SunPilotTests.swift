@@ -3,6 +3,7 @@ import Foundation
 import Testing
 
 @testable import AstronomyModelPrototype
+@testable import AstronomySunPilotRunner
 
 @Suite("Native Sun pilot")
 struct SunPilotTests {
@@ -93,7 +94,8 @@ struct SunPilotTests {
                 group.addTask {
                     var evaluator = PilotEvaluator()
                     return try evaluator.observe(
-                        time: PilotTime(ut: 40_000), observer: PilotObserver(latitude: 90, longitude: 180, height: 0)
+                        time: PilotTime(ut: 40_000),
+                        observer: PilotObserver(latitude: 90, longitude: 180, height: 0)
                     ).altitude.bitPattern
                 }
             }
@@ -119,5 +121,82 @@ struct SunPilotTests {
             let pair = PilotTime(ut: value, tt: 0, model: .espenakMeeus)
             #expect(pair.ut.isNaN && pair.tt.isNaN)
         }
+    }
+
+    @Test("Foundation-free JSON preserves decoded scalar bits and omitted fields")
+    func serialization() throws {
+        struct Scalars: Decodable { let x: Double }
+        for value in [
+            0.0, -0.0, Double.leastNonzeroMagnitude, .leastNormalMagnitude, .greatestFiniteMagnitude, 1.0,
+            -1.0, 1.0.nextUp,
+        ] {
+            var sample = Sample(status: "success")
+            sample.x = value
+            let actual = try sample.json()
+            let expected = try JSONEncoder().encode(sample)
+            let decoded = try JSONDecoder().decode(Scalars.self, from: Data(actual.utf8))
+            let reference = try JSONDecoder().decode(Scalars.self, from: expected)
+            #expect(decoded.x.bitPattern == reference.x.bitPattern)
+            let object = try #require(
+                JSONSerialization.jsonObject(with: Data(actual.utf8)) as? [String: Any])
+            #expect(Set(object.keys) == ["status", "x"])
+        }
+        for status in ["bad-time", "invalid-parameter", "no-converge", "bad-vector"] {
+            #expect(try Sample(status: status).json() == "{\"status\":\"\(status)\"}")
+        }
+        var sample = Sample(status: "success")
+        sample.fallback = false
+        sample.iterations = Int.max
+        sample.fallbackEvaluations = 0
+        let actual = try JSONSerialization.jsonObject(with: Data(sample.json().utf8)) as? NSDictionary
+        let expected =
+            try JSONSerialization.jsonObject(with: JSONEncoder().encode(sample)) as? NSDictionary
+        #expect(actual == expected)
+        let workload = Runner.Workload(
+            operations: Int.max, elapsedNanoseconds: UInt64.max, checksum: -0.0)
+        struct DecodedWorkload: Decodable {
+            let operations: Int
+            let elapsedNanoseconds: UInt64
+            let checksum: Double
+        }
+        let decoded = try JSONDecoder().decode(DecodedWorkload.self, from: Data(workload.json().utf8))
+        #expect(decoded.operations == Int.max && decoded.elapsedNanoseconds == UInt64.max)
+        #expect(decoded.checksum.bitPattern == (-0.0).bitPattern)
+    }
+
+    @Test("JSON escaping and nonfinite errors preserve the output contract")
+    func serializationErrors() throws {
+        let status = "quote\" slash\\ newline\n tab\t nul\0 café 🌞"
+        struct Status: Decodable { let status: String }
+        let sample = Sample(status: status)
+        let decoded = try JSONDecoder().decode(Status.self, from: Data(sample.json().utf8))
+        #expect(decoded.status == status)
+        #expect(try sample.json() == sample.json())
+        for value in [Double.nan, .infinity, -.infinity] {
+            var invalid = Sample(status: "success")
+            invalid.x = value
+            #expect(throws: PilotOutputError.nonfiniteNumber) { try invalid.json() }
+            #expect(throws: EncodingError.self) { try JSONEncoder().encode(invalid) }
+            #expect(throws: PilotOutputError.nonfiniteNumber) {
+                try Runner.Workload(operations: 1, elapsedNanoseconds: 0, checksum: value).json()
+            }
+        }
+    }
+
+    @Test("Monotonic clock validates conversion and advances without wall time")
+    func monotonicClock() throws {
+        #expect(try PilotClock.nanoseconds(seconds: 12, nanoseconds: 345) == 12_000_000_345)
+        #expect(
+            try PilotClock.nanoseconds(seconds: 18_446_744_073, nanoseconds: 709_551_615) == UInt64.max)
+        for (seconds, nanoseconds) in [
+            (-1, 0), (0, -1), (0, 1_000_000_000), (Int64.max, 0), (18_446_744_073, 709_551_616),
+        ] {
+            #expect(throws: PilotOutputError.invalidClock) {
+                try PilotClock.nanoseconds(seconds: Int64(seconds), nanoseconds: Int64(nanoseconds))
+            }
+        }
+        let first = try PilotClock.now()
+        let second = try PilotClock.now()
+        #expect(second >= first)
     }
 }

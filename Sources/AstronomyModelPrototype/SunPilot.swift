@@ -1,5 +1,9 @@
 // Adapted from Astronomy Engine; its MIT notice is retained in THIRD_PARTY_NOTICES.
-import Foundation
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 
 /// Geographic observer coordinates used by the pilot.
 public struct PilotObserver: Sendable {

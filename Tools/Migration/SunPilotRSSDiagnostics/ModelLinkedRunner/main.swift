@@ -1,5 +1,4 @@
 import AstronomyModelPrototype
-import Foundation
 
 @main
 struct ModelLinkedRunner {
@@ -9,9 +8,9 @@ struct ModelLinkedRunner {
         }
         if CommandLine.arguments.contains("--exercise-model") {
             let earth = try SunPilot.earth(tt: PilotTime(ut: 9_000).tt)
-            FileHandle.standardOutput.write(Data("\(earth.vector.x)\n".utf8))
+            print(earth.vector.x)
             return
         }
-        FileHandle.standardOutput.write(Data("0.0\n".utf8))
+        print(0.0)
     }
 }

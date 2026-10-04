@@ -59,6 +59,8 @@ let package = Package(
         .executableTarget(
             name: "AstronomyRSSModelLinked", dependencies: ["AstronomyModelPrototype"],
             path: "Tools/Migration/SunPilotRSSDiagnostics/ModelLinkedRunner"),
-        .testTarget(name: "AstronomySunPilotTests", dependencies: ["AstronomyModelPrototype", "CLibAstronomy"]),
+        .testTarget(
+            name: "AstronomySunPilotTests",
+            dependencies: ["AstronomyModelPrototype", "CLibAstronomy", "AstronomySunPilotRunner"]),
     ]
 )

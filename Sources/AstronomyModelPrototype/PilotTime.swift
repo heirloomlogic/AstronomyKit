@@ -1,5 +1,4 @@
 // Adapted from Astronomy Engine; its MIT notice is retained in THIRD_PARTY_NOTICES.
-import Foundation
 
 /// The Delta T model captured by a pilot time.
 public enum PilotDeltaT: String, CaseIterable, Sendable {

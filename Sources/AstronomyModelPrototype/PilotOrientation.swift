@@ -1,5 +1,9 @@
 // Adapted from Astronomy Engine; its MIT notice is retained in THIRD_PARTY_NOTICES.
-import Foundation
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 
 struct PilotMatrix {
     let xx, yx, zx, xy, yy, zy, xz, yz, zz: Double
