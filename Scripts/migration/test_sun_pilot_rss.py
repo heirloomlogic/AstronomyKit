@@ -29,15 +29,16 @@ class SunPilotRSSControlTests(unittest.TestCase):
 
     def test_conclusion_rejects_candidate_remediation_when_foundation_floor_fails(self):
         measurements = {
-            "minimalSwift": self.samples(120, 121, 122, 123, 124),
+            "minimalSwift": self.samples(70, 71, 72, 73, 74),
             "foundationOnly": self.samples(130, 131, 132, 133, 134),
             "modelLinked": self.samples(140, 141, 142, 143, 144),
             "unchangedRunner": self.samples(150, 151, 152, 153, 154),
         }
         result = MODULE.summarize_measurements(measurements, ceiling=100)
         self.assertFalse(result["candidateRemovalCanMeetCeiling"])
+        self.assertTrue(result["candidateLinkageCostDetected"])
         self.assertTrue(result["modelLinkageRangeSeparatedFromFoundation"])
-        self.assertEqual(result["decision"], "runtime-floor-exceeds-ceiling")
+        self.assertEqual(result["decision"], "candidate-cost-detected-but-foundation-floor-exceeds-ceiling")
 
     def test_conclusion_detects_bounded_candidate_linkage_cost(self):
         measurements = {

@@ -63,7 +63,6 @@ def source_hashes():
         "Tools/Migration/SunPilotRSSDiagnostics/FoundationOnlyRunner/main.swift",
         "Tools/Migration/SunPilotRSSDiagnostics/ModelLinkedRunner/main.swift",
         ".github/workflows/sun-pilot-rss.yml",
-        "Documentation/Migration/SunPilotRSSInvestigation.md",
     ):
         path = ROOT / relative
         if path.exists():
@@ -105,10 +104,15 @@ def summarize_measurements(measurements, ceiling):
     runner = summaries["unchangedRunner"]
     linkage_separated = model["minimumBytes"] > foundation["maximumBytes"]
     runner_separated = runner["minimumBytes"] > foundation["maximumBytes"]
+    candidate_cost_detected = linkage_separated and runner_separated
     candidate_can_meet = foundation["maximumBytes"] <= ceiling
-    if summaries["minimalSwift"]["minimumBytes"] > ceiling or foundation["minimumBytes"] > ceiling:
-        decision = "runtime-floor-exceeds-ceiling"
-    elif linkage_separated and runner_separated and candidate_can_meet:
+    if summaries["minimalSwift"]["minimumBytes"] > ceiling:
+        decision = "swift-runtime-floor-exceeds-ceiling"
+    elif foundation["minimumBytes"] > ceiling and candidate_cost_detected:
+        decision = "candidate-cost-detected-but-foundation-floor-exceeds-ceiling"
+    elif foundation["minimumBytes"] > ceiling:
+        decision = "foundation-floor-exceeds-ceiling"
+    elif candidate_cost_detected and candidate_can_meet:
         decision = "candidate-linkage-cost-detected"
     elif not linkage_separated:
         decision = "no-separated-candidate-linkage-cost"
@@ -119,6 +123,7 @@ def summarize_measurements(measurements, ceiling):
         "controls": summaries,
         "modelLinkageRangeSeparatedFromFoundation": linkage_separated,
         "unchangedRunnerRangeSeparatedFromFoundation": runner_separated,
+        "candidateLinkageCostDetected": candidate_cost_detected,
         "modelLinkedMedianDeltaFromFoundationBytes": model["medianBytes"] - foundation["medianBytes"],
         "unchangedRunnerMedianDeltaFromFoundationBytes": runner["medianBytes"] - foundation["medianBytes"],
         "candidateRemovalCanMeetCeiling": candidate_can_meet,
