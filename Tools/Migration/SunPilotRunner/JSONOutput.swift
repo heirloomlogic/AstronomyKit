@@ -8,6 +8,8 @@ enum PilotOutputError: Error, Equatable {
     case nonfiniteNumber
     case invalidClock
     case systemClock
+    case outputWriteFailed(Int32)
+    case outputNoProgress
 }
 
 enum PilotJSON {
@@ -79,5 +81,33 @@ enum PilotClock {
         var time = timespec()
         guard clock_gettime(CLOCK_MONOTONIC, &time) == 0 else { throw PilotOutputError.systemClock }
         return try nanoseconds(seconds: Int64(time.tv_sec), nanoseconds: Int64(time.tv_nsec))
+    }
+}
+
+enum PilotOutput {
+    static func line(_ text: String) throws {
+        let bytes = Array((text + "\n").utf8)
+        try bytes.withUnsafeBytes { buffer in
+            try writeAll(buffer) { address, count in
+                write(STDOUT_FILENO, address, count)
+            }
+        }
+    }
+
+    static func writeAll(
+        _ bytes: UnsafeRawBufferPointer, using writer: (UnsafeRawPointer, Int) -> Int
+    ) throws {
+        guard let start = bytes.baseAddress else { return }
+        var offset = 0
+        while offset < bytes.count {
+            let count = writer(start.advanced(by: offset), bytes.count - offset)
+            if count < 0 {
+                let failure = errno
+                if failure == EINTR { continue }
+                throw PilotOutputError.outputWriteFailed(failure)
+            }
+            guard count > 0 else { throw PilotOutputError.outputNoProgress }
+            offset += count
+        }
     }
 }

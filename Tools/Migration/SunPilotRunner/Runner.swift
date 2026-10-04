@@ -68,7 +68,7 @@ struct Runner {
                 }
                 sample = Sample(status: status)
             }
-            print(try sample.json())
+            try PilotOutput.line(sample.json())
         }
     }
 
@@ -97,33 +97,33 @@ struct Runner {
             checksum: checksum)
     }
 
-    static func write(_ value: Double) {
-        print(value)
+    static func write(_ value: Double) throws {
+        try PilotOutput.line(String(value))
     }
 
     static func rssStage(_ stage: String) throws {
         let site = PilotObserver(latitude: 35, longitude: -80, height: 100)
         switch stage {
         case "startup":
-            write(0)
+            try write(0)
         case "serialization":
-            print(try Workload(operations: 0, elapsedNanoseconds: 0, checksum: 0).json())
+            try PilotOutput.line(Workload(operations: 0, elapsedNanoseconds: 0, checksum: 0).json())
         case "polynomialEarth":
             let value = try SunPilot.earth(tt: PilotTime(ut: 9_000).tt)
-            write(value.vector.x + value.vector.y + value.vector.z)
+            try write(value.vector.x + value.vector.y + value.vector.z)
         case "fallbackEarth":
             let value = try SunPilot.earth(tt: PilotTime(ut: 40_000).tt)
-            write(value.vector.x + value.vector.y + value.vector.z)
+            try write(value.vector.x + value.vector.y + value.vector.z)
         case "polynomialCache", "fallbackCache":
             let epoch = stage == "fallbackCache" ? 40_000.0 : 9_000.0
             var evaluator = PilotEvaluator()
             let first = try evaluator.observe(time: PilotTime(ut: epoch), observer: site)
             let second = try evaluator.observe(time: PilotTime(ut: epoch), observer: site)
-            write(first.altitude + first.distance + second.altitude + second.distance)
+            try write(first.altitude + first.distance + second.altitude + second.distance)
         case "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback",
             "repeatedFallback":
             var evaluator = PilotEvaluator()
-            write(try workload(stage, evaluator: &evaluator).checksum)
+            try write(try workload(stage, evaluator: &evaluator).checksum)
         case "aggregate":
             try performance()
         default:
@@ -139,6 +139,6 @@ struct Runner {
         ] {
             report[mode] = try workload(mode, evaluator: &evaluator)
         }
-        print(PilotJSON.object(try report.mapValues { try $0.json() }))
+        try PilotOutput.line(PilotJSON.object(try report.mapValues { try $0.json() }))
     }
 }

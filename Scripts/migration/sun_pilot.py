@@ -14,6 +14,7 @@ import platform
 import shutil
 import statistics
 import subprocess
+import sys
 import tarfile
 import tempfile
 import time
@@ -326,6 +327,17 @@ def inspect_compensation(output):
             "scope": "Extracted unchanged compensated-add expression under -O; the whole engine is not certified."}
 
 
+def verify_output_delivery(binary):
+    command = [sys.executable, "-m", "unittest", "Scripts.migration.test_sun_pilot.RunnerOutputTests", "-v"]
+    environment = dict(os.environ, SUN_PILOT_RUNNER=str(binary))
+    result = subprocess.run(command, cwd=ROOT, env=environment, capture_output=True, text=True)
+    if MEASURE.ACTIVE_LOG:
+        MEASURE.ACTIVE_LOG.save(command, ROOT, result.stdout, result.stderr, result.returncode)
+    if result.returncode:
+        raise RuntimeError("runner output delivery regressions failed:\n" + result.stderr)
+    return {"passed": True, "regressionTests": 3, "binarySHA256": MEASURE.sha256(binary)}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path)
@@ -338,6 +350,8 @@ def main():
             prepare_package(package)
             for configuration in ("debug", "release"):
                 subprocess.run(["swift", "test", "-c", configuration, "--filter", "SunPilotTests|ModelDataTests"], cwd=package, check=True)
+                binary_directory = Path(MEASURE.logged_output(["swift", "build", "-c", configuration, "--show-bin-path"], package))
+                verify_output_delivery(binary_directory / "AstronomySunPilotRunner")
         return
     if arguments.output is None:
         parser.error("--output is required for measurement")
@@ -379,6 +393,7 @@ def main():
         for configuration in ("debug", "release"):
             print(f"Measuring {configuration}", flush=True)
             build_record, binary = builds(package, configuration, 1 if arguments.quick else 3)
+            delivery = verify_output_delivery(binary)
             actual = batch([str(binary)], text, output / f"{configuration}.jsonl.gz")
             result = compare(cases, expected, actual)
             # Perturb the full-series evaluator, then require its fallback outputs to fail the unchanged numerical budget.
@@ -391,7 +406,7 @@ def main():
             values = runtime(binary, runtime_trials)
             stage_values = rss_attribution(binary, runtime_trials)
             validate_matched_earth_stages(stage_values, record["rssAttribution"]["oracle"], runtime_trials)
-            build_record.update({"comparison": result, "perturbationDetected": True, "perturbationFailures": control["failures"], "runtime": values,
+            build_record.update({"outputDelivery": delivery, "comparison": result, "perturbationDetected": True, "perturbationFailures": control["failures"], "runtime": values,
                                  "binarySHA256": MEASURE.sha256(binary)})
             record["rssAttribution"][configuration] = stage_values
             stripped = output / f"sun-pilot-{configuration}-stripped"

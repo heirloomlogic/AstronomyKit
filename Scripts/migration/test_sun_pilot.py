@@ -1,4 +1,7 @@
 import importlib.util
+import json
+import os
+import subprocess
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -83,6 +86,45 @@ class ComparisonTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "polynomialEarth"):
             MODULE.validate_matched_earth_stages(candidate, oracle, 1)
         self.assertIs(MODULE.validate_matched_earth_stages(oracle, oracle, 1), oracle)
+
+
+@unittest.skipUnless(os.environ.get("SUN_PILOT_RUNNER"), "requires an actual built Sun runner")
+class RunnerOutputTests(unittest.TestCase):
+    def run_runner(self, arguments=(), text="", closed_stdout=False):
+        return subprocess.run(
+            [os.environ["SUN_PILOT_RUNNER"], *arguments], input=text, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            preexec_fn=(lambda: os.close(1)) if closed_stdout else None,
+        )
+
+    def test_completed_records_survive_later_malformed_input(self):
+        row = "espenak-meeus ut 9000 35 -80 100 0\n"
+        clean = self.run_runner(text=row)
+        self.assertEqual(clean.returncode, 0)
+        self.assertEqual(json.loads(clean.stdout)["status"], "success")
+        for count in (1, 10):
+            with self.subTest(count=count):
+                failed = self.run_runner(text=row * count + "bad\n")
+                self.assertNotEqual(failed.returncode, 0)
+                self.assertTrue(failed.stderr)
+                self.assertEqual(failed.stdout, clean.stdout * count)
+
+    def test_closed_stdout_fails_in_every_measured_output_mode(self):
+        modes = [((), "espenak-meeus ut 9000 35 -80 100 0\n"), (("--performance",), "")]
+        modes += [(("--rss-stage", stage), "") for stage in MODULE.RSS_STAGES]
+        for arguments, text in modes:
+            with self.subTest(arguments=arguments):
+                result = self.run_runner(arguments, text, closed_stdout=True)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertTrue(result.stderr)
+
+    def test_large_stream_delivers_every_complete_record(self):
+        row = "espenak-meeus ut 9000 35 -80 100 0\n"
+        clean = self.run_runner(text=row)
+        count = 1000
+        streamed = self.run_runner(text=row * count)
+        self.assertEqual(streamed.returncode, 0)
+        self.assertEqual(streamed.stdout, clean.stdout * count)
 
 
 if __name__ == "__main__":

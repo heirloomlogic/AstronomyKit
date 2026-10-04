@@ -5,6 +5,12 @@ import Testing
 @testable import AstronomyModelPrototype
 @testable import AstronomySunPilotRunner
 
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
+
 @Suite("Native Sun pilot")
 struct SunPilotTests {
     @Test("Explicit time captures both supported models and backdating")
@@ -198,5 +204,43 @@ struct SunPilotTests {
         let first = try PilotClock.now()
         let second = try PilotClock.now()
         #expect(second >= first)
+    }
+
+    @Test("Checked delivery retains bytes across short writes and interruptions")
+    func outputDelivery() throws {
+        let expected = Array("café 🌞\n".utf8)
+        var delivered: [UInt8] = []
+        var interrupted = false
+        try expected.withUnsafeBytes { buffer in
+            try PilotOutput.writeAll(buffer) { address, count in
+                if !interrupted {
+                    interrupted = true
+                    errno = EINTR
+                    return -1
+                }
+                let partial = min(count, 2)
+                delivered += UnsafeRawBufferPointer(start: address, count: partial)
+                return partial
+            }
+        }
+        #expect(delivered == expected)
+        try expected.withUnsafeBytes { buffer in
+            #expect(throws: PilotOutputError.outputWriteFailed(EIO)) {
+                try PilotOutput.writeAll(buffer) { _, _ in
+                    errno = EIO
+                    return -1
+                }
+            }
+            #expect(throws: PilotOutputError.outputNoProgress) {
+                try PilotOutput.writeAll(buffer) { _, _ in 0 }
+            }
+        }
+        let empty: [UInt8] = []
+        try empty.withUnsafeBytes { buffer in
+            try PilotOutput.writeAll(buffer) { _, _ in
+                Issue.record("Empty output must not call the writer")
+                return 0
+            }
+        }
     }
 }
