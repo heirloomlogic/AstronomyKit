@@ -104,29 +104,21 @@ def summarize_measurements(measurements, ceiling):
     runner = summaries["unchangedRunner"]
     linkage_separated = model["minimumBytes"] > foundation["maximumBytes"]
     runner_separated = runner["minimumBytes"] > foundation["maximumBytes"]
-    candidate_cost_detected = linkage_separated and runner_separated
-    candidate_can_meet = foundation["maximumBytes"] <= ceiling
     if summaries["minimalSwift"]["minimumBytes"] > ceiling:
-        decision = "swift-runtime-floor-exceeds-ceiling"
-    elif foundation["minimumBytes"] > ceiling and candidate_cost_detected:
-        decision = "candidate-cost-detected-but-foundation-floor-exceeds-ceiling"
+        decision = "minimal-swift-control-exceeds-ceiling"
     elif foundation["minimumBytes"] > ceiling:
-        decision = "foundation-floor-exceeds-ceiling"
-    elif candidate_cost_detected and candidate_can_meet:
-        decision = "candidate-linkage-cost-detected"
-    elif not linkage_separated:
-        decision = "no-separated-candidate-linkage-cost"
+        decision = "foundation-control-exceeds-ceiling"
     else:
-        decision = "foundation-range-not-bounded-below-ceiling"
+        decision = "all-controls-within-ceiling-or-attribution-unresolved"
     return {
         "ceilingBytes": ceiling,
         "controls": summaries,
-        "modelLinkageRangeSeparatedFromFoundation": linkage_separated,
-        "unchangedRunnerRangeSeparatedFromFoundation": runner_separated,
-        "candidateLinkageCostDetected": candidate_cost_detected,
-        "modelLinkedMedianDeltaFromFoundationBytes": model["medianBytes"] - foundation["medianBytes"],
-        "unchangedRunnerMedianDeltaFromFoundationBytes": runner["medianBytes"] - foundation["medianBytes"],
-        "candidateRemovalCanMeetCeiling": candidate_can_meet,
+        "foundationControlExceedsCeiling": foundation["minimumBytes"] > ceiling,
+        "modelLinkedRangeDisjointAboveFoundation": linkage_separated,
+        "unchangedRunnerRangeDisjointAboveFoundation": runner_separated,
+        "modelLinkedMedianDifferenceFromFoundationBytes": model["medianBytes"] - foundation["medianBytes"],
+        "unchangedRunnerMedianDifferenceFromFoundationBytes": runner["medianBytes"] - foundation["medianBytes"],
+        "causalAttribution": "not-established-by-independent-process-peak-rss",
         "decision": decision,
     }
 
@@ -164,31 +156,55 @@ def retain_command_output(output, name, command, binary):
 def validate_mapping_snapshot(name, contents):
     count = len(contents.splitlines())
     if count < 20:
-        raise ValueError(f"{name} mapping snapshot was captured before the runtime finished loading")
+        raise ValueError(f"{name} mapping snapshot has too few mappings")
     if name != "minimalSwift" and "libFoundation.so" not in contents:
         raise ValueError(f"{name} mapping snapshot has no Foundation mapping")
     return count
 
 
+def is_blocked_stdin_read(contents, machine):
+    read_syscall = {"x86_64": 0, "aarch64": 63, "arm64": 63}.get(machine)
+    fields = contents.split()
+    if read_syscall is None or len(fields) < 2 or fields[0] == "running":
+        return False
+    try:
+        return int(fields[0], 0) == read_syscall and int(fields[1], 0) == 0
+    except ValueError:
+        return False
+
+
+def observe_blocked_stdin_read(process, name):
+    syscall_path = Path(f"/proc/{process.pid}/syscall")
+    machine = platform.machine()
+    deadline = time.monotonic() + 5
+    last_observation = "unavailable"
+    while time.monotonic() < deadline and process.poll() is None:
+        try:
+            last_observation = syscall_path.read_text().strip()
+        except OSError as error:
+            last_observation = f"{type(error).__name__}: {error}"
+        if is_blocked_stdin_read(last_observation, machine):
+            return {
+                "mechanism": "proc-syscall-read-stdin",
+                "machine": machine,
+                "observedSyscall": last_observation,
+            }
+        time.sleep(0.01)
+    raise RuntimeError(f"{name} did not reach an observed blocked read syscall on stdin: {last_observation}")
+
+
 def retain_mapping(output, name, binary, arguments, package):
     process = subprocess.Popen([str(binary), *arguments], cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     maps_path = Path(f"/proc/{process.pid}/maps")
-    deadline = time.monotonic() + 5
-    while time.monotonic() < deadline and process.poll() is None:
-        if maps_path.exists() and str(binary) in maps_path.read_text():
-            break
-        time.sleep(0.01)
-    if process.poll() is not None or not maps_path.exists():
-        stdout, stderr = process.communicate(timeout=1)
-        raise RuntimeError(f"{name} did not remain alive for a mapping snapshot: {stdout}{stderr}")
-    time.sleep(0.1)
-    if process.poll() is not None:
-        stdout, stderr = process.communicate(timeout=1)
-        raise RuntimeError(f"{name} exited before the mapping snapshot: {stdout}{stderr}")
-    contents = maps_path.read_text().replace(str(package), "$PACKAGE")
-    mapping_count = validate_mapping_snapshot(name, contents)
-    path = output / "linkage" / f"{name}.proc-maps.txt"
-    path.write_text(contents)
+    try:
+        readiness = observe_blocked_stdin_read(process, name)
+        contents = maps_path.read_text().replace(str(package), "$PACKAGE")
+        mapping_count = validate_mapping_snapshot(name, contents)
+        path = output / "linkage" / f"{name}.proc-maps.txt"
+        path.write_text(contents)
+    except Exception:
+        process.communicate(input="", timeout=5)
+        raise
     stdout, stderr = process.communicate(input="", timeout=5)
     if process.returncode:
         raise subprocess.CalledProcessError(process.returncode, [str(binary), *arguments], stdout, stderr)
@@ -196,7 +212,8 @@ def retain_mapping(output, name, binary, arguments, package):
         "path": path.relative_to(output).as_posix(),
         "sha256": MEASURE.sha256(path),
         "mappingCount": mapping_count,
-        "snapshotPoint": "ready for stdin before scalar output" if arguments else "unchanged runner ready for numerical stdin",
+        "readiness": readiness,
+        "snapshotPoint": "observed blocked read syscall on stdin",
     }
 
 
@@ -214,7 +231,7 @@ def main():
     baseline = ROOT / "Documentation/Migration/performance-baseline.json"
     budget = json.loads(baseline.read_text())["budgets"]["peakResidentBytes"]
     report = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "status": "running",
         "qualified": False,
         "candidateRevision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
@@ -229,6 +246,10 @@ def main():
         "sourceSHA256": inputs,
         "trialCount": TRIALS,
         "freshProcessPerTrial": True,
+        "mappingProtocol": {
+            "readiness": "Observe the child blocked in the architecture-specific Linux read syscall with file descriptor zero via /proc/<pid>/syscall.",
+            "snapshot": "Read /proc/<pid>/maps while the child remains blocked on stdin.",
+        },
     }
     write_json(output / "report.json", report)
     measurements = {}
@@ -271,6 +292,7 @@ def main():
         "binaries": binaries,
         "commandLogs": MEASURE.ACTIVE_LOG.receipt(),
         "unmetGates": [
+            "Independent-process peak RSS differences do not establish causal ownership, additive component cost, or removability.",
             "This startup attribution campaign does not execute the frozen mixed astronomical workload.",
             "The full issue still requires comparable-runtime latency and throughput evidence and independent review.",
         ],
