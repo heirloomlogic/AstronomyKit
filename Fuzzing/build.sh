@@ -12,7 +12,7 @@ script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 repo_root=$(CDPATH='' cd -- "$script_dir/.." && pwd)
 source_root="$repo_root/Sources/CLibAstronomy"
 sanitizers=address,undefined
-set -- "${1:-}" "$source_root/astronomy.c" "$script_dir/fuzz_bridge.c"
+set -- "${1:-}" "$source_root/astronomy.c" "$source_root/ephemeris.c" "$source_root"/EphemerisTime/*.c "$script_dir/fuzz_bridge.c"
 
 case "$1" in
     replay)

@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT / "Scripts/performance/polynomial"))
 import embed  # noqa: E402
 
 ENGINE = ROOT / "Sources/CLibAstronomy"
-SOURCES = ["astronomy.c", "polynomial.h", "include/astronomy.h", "generated/polynomial-data.h", "generated/vsop87b_full.h", "generated/iau2000b_full.h"]
+SOURCE_SUFFIXES = {".c", ".h", ".inc"}
 START, STOP = embed.START, embed.STOP
 OBSERVERS = [(40.0, 0.0, 0.0), (0.0, 0.0, 0.0), (66.5, 120.0, 0.0), (-35.0, -70.0, 1000.0), (89.9, 0.0, 0.0), (-89.9, 180.0, 0.0)]
 COLUMNS = ["altitude_deg", "azimuth_deg", "ra_hours", "dec_deg", "dist_au", "ra_j2000_hours", "dec_j2000_deg", "geo_x_au", "geo_y_au", "geo_z_au", "earth_x_au", "earth_y_au", "earth_z_au", "sidereal_hours", "deltat_s"]
@@ -49,7 +49,10 @@ def find_quad_compiler():
 
 
 def compile_probe(cc, tree, binary, flags):
-    command = [cc, *flags, "-pthread", "-I", str(tree / "include"), "-I", str(tree), str(tree / "astronomy.c"), str(HERE / "probe.c"), "-o", str(binary), "-lm"]
+    # The shipping engine now spans several translation units. Both builds must
+    # link the same source set, including ephemeris time/frame support.
+    sources = sorted(str(path) for path in tree.rglob("*.c"))
+    command = [cc, *flags, "-pthread", "-I", str(tree / "include"), "-I", str(tree), *sources, str(HERE / "probe.c"), "-o", str(binary), "-lm"]
     if "-DQUAD" in flags:
         command.append("-lquadmath")
     subprocess.run(command, check=True)
@@ -58,7 +61,10 @@ def compile_probe(cc, tree, binary, flags):
 
 def build_quad(directory, cc):
     tree = directory / "quad"
-    for name in SOURCES:
+    # Transform coefficient includes as well as declarations and implementation,
+    # so the reference has one consistent binary128 ABI and literal precision.
+    for source in sorted(path for path in ENGINE.rglob("*") if path.is_file() and path.suffix in SOURCE_SUFFIXES):
+        name = source.relative_to(ENGINE)
         (tree / name).parent.mkdir(parents=True, exist_ok=True)
         subprocess.run([sys.executable, str(HERE / "quad_transform.py"), str(ENGINE / name), str(tree / name)], check=True)
     return compile_probe(cc, tree, tree / "probe", ["-std=gnu11", "-O2", "-DQUAD"])

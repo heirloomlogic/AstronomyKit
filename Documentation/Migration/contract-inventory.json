@@ -2851,11 +2851,11 @@
   "counts": {
     "cDependencies": 334,
     "crossCuttingContracts": 5,
-    "generatedArtifacts": 114,
-    "localPatches": 18,
+    "generatedArtifacts": 118,
+    "localPatches": 19,
     "publicSwiftAPI": 577,
-    "testOwners": 82,
-    "tests": 934
+    "testOwners": 87,
+    "tests": 955
   },
   "crossCuttingContracts": [
     {
@@ -3688,6 +3688,34 @@
       "sha256": "7586b5501956ffaf485e16ead649c13be72dce3cea3f6c4777ac71c258e90f47"
     },
     {
+      "generator": "Scripts/ephemeris/generate-lunar-bundle.py",
+      "id": "Sources/CLibAstronomy/EphemerisData/moon_data.inc",
+      "migrationIssue": 81,
+      "path": "Sources/CLibAstronomy/EphemerisData/moon_data.inc",
+      "sha256": "4301ff85cde083cc7ab74b208e684a424f1ae0f1991ae1265c71dc1420282200"
+    },
+    {
+      "generator": "Scripts/ephemeris/generate-pluto.py",
+      "id": "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc",
+      "migrationIssue": 81,
+      "path": "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc",
+      "sha256": "7f70b0ee6c6ce9fb357088cda1f2986341854e2a2b28b862b836bf2be280d950"
+    },
+    {
+      "generator": "Scripts/ephemeris/generate-pluto.py",
+      "id": "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc",
+      "migrationIssue": 81,
+      "path": "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc",
+      "sha256": "5cbf68be2ed3818c41937d5073e1b9efe600510ff092ad97db94aa8c333cd1ae"
+    },
+    {
+      "generator": "Scripts/ephemeris/generate-pluto.py",
+      "id": "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc",
+      "migrationIssue": 81,
+      "path": "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc",
+      "sha256": "205531e2c68914db58548a6782095137df7199beed7f77dca122edbe2bae125a"
+    },
+    {
       "generator": "Scripts/generate-models.py",
       "id": "Sources/CLibAstronomy/generated/iau2000b_full.h",
       "migrationIssue": 86,
@@ -3710,21 +3738,24 @@
     }
   ],
   "inputHashes": {
-    "MAINTAINING.md": "8ceacac11321eca239c10913a03ae84065e045d64e7b8952de4a1b0a5315e9c4",
+    "MAINTAINING.md": "b862ad5eaf3b679d43f991ff1f021934a413a2881d38df0d33030d24bc4679d1",
+    "Scripts/ephemeris/test_lunar_bundle.py": "a1eb8f4eca38531eab3d952f159a607675bee57bfec3aa9905b4640d9ea556df",
+    "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
     "Scripts/migration/test_comparison.py": "f2e27ae70cff635795aed1c9b40de5012df51f6ff9a0c708cd388d34cd007362",
-    "Scripts/migration/test_foundation.py": "fe3b6efc4e85c7b817eb616333f46cb4ff0105ecb7523e4b0efd8aabc2f6272a",
+    "Scripts/migration/test_foundation.py": "bb9225d194aa3037e9d24a86144a7da708edb9f933d96752b852b9c5a8c26a0f",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
-    "Scripts/migration/test_performance_candidate.py": "aac319f96b5b30e24e3803ec7d882f5e5834543d5033c799a8d87fe8fc6088b1",
+    "Scripts/migration/test_performance_candidate.py": "89841bef8defc3124450ad379d32f21810cedc8ee954ff8ffd83b0e133ae0a91",
     "Scripts/migration/test_sun_pilot.py": "99b4204ee8502e9f6ded27e93e1d5880aac67358d39d02ba0946299214b2b93e",
     "Scripts/model-prototype/test_generate_swift_models.py": "4cd335d674af4a12fe405c265744682c45af78bbd7f9e95476e1c3f964a3106c",
     "Scripts/model-prototype/test_measure.py": "fc52c547a19698cd8f6a8adc6a6b037664b0fadb9ea61f531da7b289c6f5ecbd",
     "Scripts/numerics/solar-altitude/test_bounds.py": "896c98d1df874489f8077a316f58e1c20dd529f2666f600ced0eba10c98620d6",
     "Scripts/performance/polynomial/test_polynomial.py": "aa7b84265a0e51932906ebfbf3d000041898b352ecff90eb6b6b97a046111adc",
-    "Scripts/performance/test-moon-cache.sh": "58d7a71ed74515e7e7c3616d124ccaf3117acebed648e724af865706d96203f2",
-    "Scripts/performance/test-nutation-cache.sh": "b71c61dc0c21ea8ca8e41d607aa79f90ede8d1e23520402345accddcbbf139ca",
-    "Scripts/performance/test-vsop-cache.sh": "7e6a7365556b0c3c83dd5c14ee360b89d8953fd9e6b58683ae6781bb4380a213",
+    "Scripts/performance/test-moon-cache.sh": "79bad1c4f2ce52793453d7083a65351782b281d05e86de6901219a3deee58e74",
+    "Scripts/performance/test-nutation-cache.sh": "5f0aba5a95a3eb4db2f61f7792dde621d0f6e5a30871b82ba5bb4481d16b3823",
+    "Scripts/performance/test-vsop-cache.sh": "952189c854e2be7a1cb51068d645964a213f1f7df858147e35525a1446bfc5ca",
     "Scripts/reference-data/test_approved_distance.py": "0cfe3e0563b080192d355f48460ca80d320e96d6c03493afc440be74cb85c81f",
     "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
+    "Scripts/reference-data/test_bundled_public_api.py": "67e531ef056af56caf187fbf05f143612d527919429b1f97b2962474ee1b0e3a",
     "Scripts/reference-data/test_diagnose_polar_sunrise.py": "96688a62ad6a72a8a53fc1b2e53b854ea124711ac0600086ee1b6d0ec554bac1",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_geometric_events.py": "480595a0f3df2c26ec1f35f0c7be8d83de8d752479fd64df7793c02d31c48f20",
@@ -3735,10 +3766,11 @@
     "Scripts/reference-data/test_lunar_event_diagnosis.py": "49ef16159afcfcea610bf24e27580e23e64a16d954a41df413c6d521a6c4eb94",
     "Scripts/reference-data/test_native_lunar_probe.py": "5539b49fdc608d66eee30a017c1bbd964326468a356c8f1def4c46e826a263f1",
     "Scripts/reference-data/test_outer_planet_diagnostic.py": "0488c3677b3a641bbdbbd5c42ae5a88f7a711d90227b5e589f3beb38714f6d9c",
-    "Scripts/reference-data/test_pluto_model_diagnostic.py": "23c80690af6439c9ac61fdf05e8949b07b36f9cd2f91e9159ec8604fdfe54de9",
+    "Scripts/reference-data/test_pluto_model_diagnostic.py": "a5edf1d0a928aae6c405f168b082391eaa4273015d5752be45e19ed545ee4b29",
     "Scripts/reference-data/test_polar_reference.py": "44fb87a0b3ec8a6928ba2ffd202da77f71735289cb11f32dae2f6518c5124544",
     "Scripts/reference-data/test_position_events.py": "b13f31912b23a3fae745af0a7767d8a659fe55c79c90b3052b88c246a205240f",
     "Scripts/reference-data/test_range_rate_investigation.py": "55ae0d261f180376a93926e91c3b7cbfec16ed59c3b95c0def7caba057855d9a",
+    "Scripts/reference-data/test_source_archive.py": "9598e38ef75d0716e2ee2b02cd0601e2920d240db8979fd0686b17e8dec7abe0",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
@@ -3779,6 +3811,7 @@
     "Tests/AstronomyKitTests/AstronomyErrorTests.swift": "dd60689aec9808a2d18d6769c5642c157776f29eb6ec733d4b61922892e4a88e",
     "Tests/AstronomyKitTests/AtmosphereTests.swift": "cf83e324ce348cf62a24f74e0c8db2b10cf6aa0faf20b93607711a1ede24fd04",
     "Tests/AstronomyKitTests/AuditValidationTests.swift": "4dfd387c30df121c63a187547f0ec339ecad757e017d44337174fcf52057d110",
+    "Tests/AstronomyKitTests/BundledEphemerisTests.swift": "8cf342ac07bfcbabc902278da948c82e1a4473739d94d56d054562beff5cf908",
     "Tests/AstronomyKitTests/CelestialBodyTests.swift": "3a884eb7c6c0ca0639b0cf205863c9d5199ebd8ecb0df22bd7a77640f8ef3d9c",
     "Tests/AstronomyKitTests/ChironTests.swift": "5fe54f03da286bfa3639229342d7c803026c9cdf070878764a616f1869932449",
     "Tests/AstronomyKitTests/CivilTimeTests.swift": "68c207ac72f13ffad89f475bee72b57bc159e0dba54f51b517a42f60a4cf289c",
@@ -3796,7 +3829,7 @@
     "Tests/AstronomyKitTests/GravitySimulationTests.swift": "39adf1ad7ebee11844cd5f63f65074d0915b87ef6b3684f31505bcf24bf38576",
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "c01c458da8a1cf81166cabe6f969f165b05952d9f2b2f7383a1dc83808011d00",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "f4e67f5e779d930be05e81025dcc247fd5b7bad1a66ef95aaf0b84fa46aab439",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -3814,7 +3847,7 @@
     "Tests/AstronomyKitTests/PolynomialTests.swift": "928e181376575167c6110efd211f57dd3b50ab87a35d9ff87f311e73335d8d94",
     "Tests/AstronomyKitTests/PositionTests.swift": "ce79db73ceb8d30078e013ecfb805af439eb7d04a9f5d769d9b3b330dd799350",
     "Tests/AstronomyKitTests/RelativeLongitudeTests.swift": "9aaa66e4ae2810aa806e078bd8b3a59b21e0449565e5d95dd38e0ea4f3cc009e",
-    "Tests/AstronomyKitTests/ReproducibilityTests.swift": "073ede407211d16e7b295e12a76388f647b9e901baccd4809a358337ab957ec2",
+    "Tests/AstronomyKitTests/ReproducibilityTests.swift": "738f36493a612da5719e813f07101e8a385cc17c62efd95850e794742b06de18",
     "Tests/AstronomyKitTests/RiseSetTests.swift": "487c09fca1ab25bb8f8730f19f2aa2f9f40086bbc0cdfc826de94881c61dc702",
     "Tests/AstronomyKitTests/RotationAxisTests.swift": "84cc314524057f277df2b99fc435de6ccee4a2cd2fca52c2a440f04fd74e6874",
     "Tests/AstronomyKitTests/RotationTests.swift": "149dadf52e2b1c0fed31f397c7285264d7dfb4eb156cbe031f9c92fbe37d8bdc",
@@ -3935,6 +3968,12 @@
       "migrationIssue": 84,
       "patch": 18,
       "title": "Captured Delta T function"
+    },
+    {
+      "id": "patch-19",
+      "migrationIssue": 81,
+      "patch": 19,
+      "title": "Bundled Moon and Pluto ephemerides"
     }
   ],
   "publicSwiftAPI": [
@@ -13175,6 +13214,20 @@
   "scope": "AstronomyKit public API and patched C engine migration ownership",
   "testOwners": [
     {
+      "classification": "invariant",
+      "id": "Scripts/ephemeris/test_lunar_bundle.py",
+      "migrationIssue": 81,
+      "path": "Scripts/ephemeris/test_lunar_bundle.py",
+      "testCount": 5
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/ephemeris/test_pluto_artifacts.py",
+      "migrationIssue": 81,
+      "path": "Scripts/ephemeris/test_pluto_artifacts.py",
+      "testCount": 3
+    },
+    {
       "classification": "independent-reference",
       "id": "Scripts/migration/test_comparison.py",
       "migrationIssue": 80,
@@ -13200,7 +13253,7 @@
       "id": "Scripts/migration/test_performance_candidate.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_performance_candidate.py",
-      "testCount": 6
+      "testCount": 7
     },
     {
       "classification": "invariant",
@@ -13271,6 +13324,13 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_build_fixtures.py",
       "testCount": 9
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_bundled_public_api.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_bundled_public_api.py",
+      "testCount": 3
     },
     {
       "classification": "invariant",
@@ -13372,6 +13432,13 @@
     },
     {
       "classification": "invariant",
+      "id": "Scripts/reference-data/test_source_archive.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_source_archive.py",
+      "testCount": 2
+    },
+    {
+      "classification": "invariant",
       "id": "Tests/AstronomyKitTests/AcceptedTimeRangeTests.swift",
       "migrationIssue": 97,
       "path": "Tests/AstronomyKitTests/AcceptedTimeRangeTests.swift",
@@ -13418,6 +13485,13 @@
       "migrationIssue": 81,
       "path": "Tests/AstronomyKitTests/AuditValidationTests.swift",
       "testCount": 24
+    },
+    {
+      "classification": "invariant",
+      "id": "Tests/AstronomyKitTests/BundledEphemerisTests.swift",
+      "migrationIssue": 81,
+      "path": "Tests/AstronomyKitTests/BundledEphemerisTests.swift",
+      "testCount": 7
     },
     {
       "classification": "invariant",

@@ -101,7 +101,8 @@ int main(void)
     Astronomy_GeoMoon(raw_time(-0.0));
     Astronomy_GeoMoon(raw_time(0.0));
     Astronomy_GeoMoon(raw_time(-0.0));
-    if (require_count("signed-zero keys were not cached separately", 2))
+    /* Bundled data bypasses the legacy series/cache for both signed zeros. */
+    if (require_count("bundled signed-zero calls unexpectedly evaluated legacy Moon", 0))
         return 1;
 
     /* Astronomy_GeoMoon rejects a non-finite time before CalcMoon, but

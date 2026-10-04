@@ -87,10 +87,14 @@ class ContractInventoryTests(unittest.TestCase):
 
     def test_all_documented_patch_groups_are_present(self):
         patches = self.inventory["localPatches"]
-        self.assertEqual(list(range(1, 19)), [entry["patch"] for entry in patches])
+        self.assertEqual(list(range(1, 20)), [entry["patch"] for entry in patches])
 
     def test_all_generated_sources_are_present(self):
         expected = {
+            "Sources/CLibAstronomy/EphemerisData/moon_data.inc",
+            "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc",
+            "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc",
+            "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc",
             "Scripts/numerics/solar-altitude/bounds.json",
             "Sources/AstronomyKit/SolarAltitudeBounds.swift",
             "Sources/AstronomyKit/UTCOffsetTable.swift",
@@ -161,15 +165,16 @@ class OracleLockTests(unittest.TestCase):
 
     def test_lock_covers_all_frozen_inputs(self):
         lock = json.loads(LOCK_PATH.read_text())
+        # The oracle is frozen at its named revision, independently of new
+        # production models. Derive its complete population from that tree.
+        names = subprocess.check_output(
+            ["git", "ls-tree", "-r", "--name-only", lock["baselineRevision"]],
+            cwd=ROOT, text=True,
+        ).splitlines()
         expected = {
-            path.relative_to(ROOT).as_posix()
-            for pattern in (
-                "Sources/CLibAstronomy/**/*",
-                "Scripts/model-data/**/*",
-                "Scripts/performance/polynomial/data/**/*",
-            )
-            for path in ROOT.glob(pattern)
-            if path.is_file() and path.name not in {".gitattributes", "swift-prototype-manifest.json"}
+            name for name in names
+            if name.startswith(("Sources/CLibAstronomy/", "Scripts/model-data/", "Scripts/performance/polynomial/data/"))
+            and Path(name).name not in {".gitattributes", "swift-prototype-manifest.json"}
         }
         self.assertEqual(expected, set(lock["files"]))
         self.assertTrue(all(len(digest) == 64 for digest in lock["files"].values()))

@@ -49,6 +49,7 @@ SOURCE_ISSUES = {
 }
 
 TEST_ISSUES = {
+    "BundledEphemerisTests.swift": 81,
     "DistanceAccuracyTests.swift": 81,
     "ModelDataTests.swift": 82,
     "SunPilotTests.swift": 83,
@@ -106,6 +107,10 @@ TEST_ISSUES = {
 }
 
 SCRIPT_TEST_ISSUES = {
+    "Scripts/reference-data/test_source_archive.py": 81,
+    "Scripts/ephemeris/test_pluto_artifacts.py": 81,
+    "Scripts/ephemeris/test_lunar_bundle.py": 81,
+    "Scripts/reference-data/test_bundled_public_api.py": 81,
     "Scripts/model-prototype/test_generate_swift_models.py": 82,
     "Scripts/model-prototype/test_measure.py": 82,
     "Scripts/migration/test_comparison.py": 80,
@@ -155,9 +160,15 @@ PATCH_ISSUES = {
     16: 97,
     17: 97,
     18: 84,
+    19: 81,
 }
 
 GENERATED_ISSUES = {
+    "Sources/CLibAstronomy/EphemerisData/moon_data.inc": 81,
+    "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc": 81,
+    "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc": 81,
+    "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc": 81,
+
     "Scripts/numerics/solar-altitude/bounds.json": 94,
     "Sources/AstronomyKit/SolarAltitudeBounds.swift": 94,
     "Sources/AstronomyKit/UTCOffsetTable.swift": 84,
@@ -181,6 +192,11 @@ PROTOTYPE_GENERATED_PREFIXES = (
 )
 
 GENERATORS = {
+    "Sources/CLibAstronomy/EphemerisData/moon_data.inc": "Scripts/ephemeris/generate-lunar-bundle.py",
+    "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc": "Scripts/ephemeris/generate-pluto.py",
+    "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc": "Scripts/ephemeris/generate-pluto.py",
+    "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc": "Scripts/ephemeris/generate-pluto.py",
+
     "Scripts/numerics/solar-altitude/bounds.json": "Scripts/numerics/solar-altitude/bounds.py",
     "Sources/AstronomyKit/SolarAltitudeBounds.swift": "Scripts/numerics/solar-altitude/bounds.py",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "Scripts/generate-time-table.py",
@@ -461,10 +477,10 @@ def local_patches(root):
         number = int(number_text)
         if number in PATCH_ISSUES and number not in {entry["patch"] for entry in entries}:
             entries.append({"id": f"patch-{number:02d}", "patch": number, "title": title, "migrationIssue": PATCH_ISSUES[number]})
-        if number == 18:
+        if number == 19:
             break
-    if [entry["patch"] for entry in entries] != list(range(1, 19)):
-        raise RuntimeError("MAINTAINING.md must contain exactly the 18 mapped local patch groups")
+    if [entry["patch"] for entry in entries] != list(range(1, 20)):
+        raise RuntimeError("MAINTAINING.md must contain exactly the 19 mapped local patch groups")
     return entries
 
 

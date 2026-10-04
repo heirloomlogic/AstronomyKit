@@ -3,6 +3,9 @@
 // native-libm rounding differences within tight budgets.
 // These tight regression budgets are not absolute astronomical accuracy claims.
 // Independent JPL/Audit and event references remain unchanged.
+// Moon/Pluto expectations explicitly use bundled-de440-pluto-center-v1.
+// The original source and exact old/new mapping are preserved in
+// Documentation/Migration/BundledRegressionSnapshots/; all tolerances are unchanged.
 
 import Testing
 
@@ -99,8 +102,8 @@ struct ReproducibilityTests {
     /// Geocentric ecliptic (longitude/latitude/distance) for every principal
     /// body at each fixed instant. Sun and planets use the equatorial-to-ecliptic
     /// conversion of the geocentric vector; the Moon uses the unified
-    /// `Moon.ecliptic(_:)` API. Pluto exercises the cached state-table path
-    /// (all four instants lie well inside the tabulated range).
+    /// `Moon.ecliptic(_:)` API. Moon and Pluto exercise the immutable bundled
+    /// coefficients (all four instants lie inside the approved interval).
 
     @Test("Geocentric ecliptic positions at 1980-03-20T12:00Z")
     func eclipticPositions1980() throws {
@@ -147,12 +150,12 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.pluto.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4069_1ecd_b20a_686b, lat: 0x4031_acb6_1b57_6d3a, dist: 0x403d_4685_050d_75e2,
+            lon: 0x4069_1ec6_8910_ba54, lat: 0x4031_acb2_9558_62a2, dist: 0x403d_46a8_3bc5_bd8a,
             "Pluto 1980"
         )
         expectEcliptic(
             try Moon.ecliptic(at: t),
-            lon: 0x4049_ebaf_f82c_f0bd, lat: 0xc014_b8bc_ba13_51f7, dist: 0x3f64_2f33_ff34_649c,
+            lon: 0x4049_ebb3_ceb1_3992, lat: 0xc014_b8a7_0793_4042, dist: 0x3f64_2f58_c024_1d7d,
             "Moon 1980"
         )
     }
@@ -202,12 +205,12 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.pluto.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x406f_6dfd_54e8_3564, lat: 0x4025_b580_4abb_32fa, dist: 0x403f_11e0_fcfd_fdea,
+            lon: 0x406f_6dfd_402a_5b74, lat: 0x4025_b585_e5ef_f268, dist: 0x403f_11dc_a92a_35ed,
             "Pluto 2000"
         )
         expectEcliptic(
             try Moon.ecliptic(at: t),
-            lon: 0x406b_2964_0deb_8e71, lat: 0x4014_eceb_4be9_f652, dist: 0x3f65_f45f_8d09_b34e,
+            lon: 0x406b_2964_8a08_5bfa, lat: 0x4014_ecd9_275b_31db, dist: 0x3f65_f485_37ce_cff7,
             "Moon 2000"
         )
     }
@@ -257,12 +260,12 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.pluto.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4073_05cb_6a2e_93d9, lat: 0xc011_1225_05c8_ef3c, dist: 0x4041_46a0_753a_d328,
+            lon: 0x4073_05cd_11f5_8b4f, lat: 0xc011_124d_aad2_6edc, dist: 0x4041_4683_9402_4401,
             "Pluto 2026"
         )
         expectEcliptic(
             try Moon.ecliptic(at: t),
-            lon: 0x406d_ee3e_9b8c_53ac, lat: 0xc014_d5ad_5b88_3111, dist: 0x3f66_2012_8e5d_6597,
+            lon: 0x406d_ee42_894e_31eb, lat: 0xc014_d5b2_2bed_b59e, dist: 0x3f66_2035_de08_fb4b,
             "Moon 2026"
         )
     }
@@ -312,12 +315,12 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.pluto.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4075_2a6b_ff2c_a79d, lat: 0xc029_fa23_c6c6_359d, dist: 0x4044_fe55_caf2_ec61,
+            lon: 0x4075_2a71_4eed_560f, lat: 0xc029_fa57_2eaf_1a84, dist: 0x4044_fe26_5293_a852,
             "Pluto 2050"
         )
         expectEcliptic(
             try Moon.ecliptic(at: t),
-            lon: 0x3fe0_09eb_91d0_faa4, lat: 0x400a_8967_f90b_4bbc, dist: 0x3f64_47ba_2615_afec,
+            lon: 0x3fe0_0ca9_7fff_d649, lat: 0x400a_898d_775c_cfab, dist: 0x3f64_47de_fb71_6053,
             "Moon 2050"
         )
     }
@@ -334,7 +337,7 @@ struct ReproducibilityTests {
         )
         expectEquatorial(
             try CelestialBody.moon.equatorial(at: t, from: .geocentric, equatorDate: .j2000),
-            ra: 0x402f_6a02_93e2_3bd7, dec: 0xc039_0707_f55d_10b9, dist: 0x3f66_2012_8e80_7239,
+            ra: 0x402f_6a07_0658_e339, dec: 0xc039_0710_3139_a096, dist: 0x3f66_2035_de2c_0818,
             "Moon (geo) 2026"
         )
         expectEquatorial(
@@ -353,7 +356,7 @@ struct ReproducibilityTests {
     func equatorialTopocentric2026() throws {
         expectEquatorial(
             try CelestialBody.moon.equatorial(at: Self.t2026, from: Self.asheville, equatorDate: .j2000),
-            ra: 0x402f_7217_4477_5a07, dec: 0xc039_ce7b_4cc1_0222, dist: 0x3f65_f783_2f9f_49ab,
+            ra: 0x402f_721b_ba0a_56f8, dec: 0xc039_ce82_4916_26c5, dist: 0x3f65_f7a6_9493_fc77,
             "Moon (topo Asheville) 2026"
         )
     }
@@ -387,7 +390,7 @@ struct ReproducibilityTests {
             try Moon.searchPhase(.full, after: Self.t2026)
         )
         #expect(
-            close(fullMoon.universalTime, Self.exact(0x40c2_f50d_e615_4cc1), tolerance: 0.01 / 86_400),
+            close(fullMoon.universalTime, Self.exact(0x40c2_f50d_e4fd_148e), tolerance: 0.01 / 86_400),
             "Full-moon search UT drifted"
         )
 
@@ -432,8 +435,8 @@ struct ReproducibilityTests {
     // MARK: - 7. Geocentric Ecliptic Rates
 
     /// Compares ecliptic rates in degrees per day and AU per day. The Moon's rates
-    /// come from a central difference of the lunar series inside the engine and
-    /// carry that stencil's platform noise, so they get a wider budget.
+    /// are now analytic in the bundled interval. Preserve the historical Moon
+    /// regression budgets so model replacement does not silently redefine them.
     private func expectEclipticRates(
         _ state: EclipticState,
         lonRate: UInt64,
@@ -472,7 +475,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.moon.geocentricEclipticState(at: t),
-            lonRate: 0x402c_abd6_e5ce_c5ee, latRate: 0xbfc4_6b93_5c96_43a2, distRate: 0x3f03_9b80_3865_64a1,
+            lonRate: 0x402c_abd1_a50b_7a61, latRate: 0xbfc4_6bfe_88b9_7c16, distRate: 0x3f03_9b8d_a4fd_684b,
             "Moon 1980",
             moon: true
         )
@@ -513,7 +516,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.pluto.geocentricEclipticState(at: t),
-            lonRate: 0xbf9a_55b8_e7d9_af59, latRate: 0x3f6f_4046_383d_f5d3, distRate: 0xbf7a_3a08_10bf_e6d6,
+            lonRate: 0xbf9a_5905_bd01_6b9c, latRate: 0x3f6f_71c4_70b3_05c9, distRate: 0xbf7a_36fc_4d03_5662,
             "Pluto 1980"
         )
         expectEclipticRates(
@@ -523,7 +526,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try Moon.eclipticState(at: t),
-            lonRate: 0x402c_abd6_e5ce_c5ee, latRate: 0xbfc4_6b93_5c96_43be, distRate: 0x3f03_9b80_358b_ec00,
+            lonRate: 0x402c_abd1_a50b_7a61, latRate: 0xbfc4_6bfe_88b9_7c0e, distRate: 0x3f03_9b8d_a4fd_6850,
             "Moon.eclipticState 1980",
             moon: true
         )
@@ -539,7 +542,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.moon.geocentricEclipticState(at: t),
-            lonRate: 0x4028_34d9_c073_528b, latRate: 0xbfb0_4c15_f8dd_a24f, distRate: 0x3ef7_18ec_11b5_771c,
+            lonRate: 0x4028_34d0_fb2a_ac23, latRate: 0xbfb0_4a18_fd92_1405, distRate: 0x3ef7_1965_6e61_764e,
             "Moon 2000",
             moon: true
         )
@@ -580,7 +583,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.pluto.geocentricEclipticState(at: t),
-            lonRate: 0x3fa2_0fac_7cf9_2933, latRate: 0x3f57_35a3_4531_a28b, distRate: 0xbf7f_e768_edbd_3f78,
+            lonRate: 0x3fa2_1157_0535_0726, latRate: 0x3f57_30f1_3e91_8f92, distRate: 0xbf7f_f45c_ed6b_3860,
             "Pluto 2000"
         )
         expectEclipticRates(
@@ -590,7 +593,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try Moon.eclipticState(at: t),
-            lonRate: 0x4028_34d9_c073_5289, latRate: 0xbfb0_4c15_f8dd_a247, distRate: 0x3ef7_18ec_1009_c000,
+            lonRate: 0x4028_34d0_fb2a_ac21, latRate: 0xbfb0_4a18_fd92_13f4, distRate: 0x3ef7_1965_6e61_76b6,
             "Moon.eclipticState 2000",
             moon: true
         )
@@ -606,7 +609,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.moon.geocentricEclipticState(at: t),
-            lonRate: 0x4027_d8bc_7c3d_b0c7, latRate: 0xbf8d_6eef_5a6b_b91f, distRate: 0x3ee9_621d_e550_637b,
+            lonRate: 0x4027_d8ab_1e67_cb4c, latRate: 0xbf8d_7bfd_7722_df32, distRate: 0x3ee9_629a_6aa5_cb7f,
             "Moon 2026",
             moon: true
         )
@@ -647,7 +650,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.pluto.geocentricEclipticState(at: t),
-            lonRate: 0xbf97_eea6_51e2_d452, latRate: 0xbf58_b942_8a14_5396, distRate: 0xbf2b_9337_758b_ff50,
+            lonRate: 0xbf97_ebd4_bbb5_6d04, latRate: 0xbf58_7332_7b0b_4c5e, distRate: 0xbf2c_8384_d4dd_669c,
             "Pluto 2026"
         )
         expectEclipticRates(
@@ -657,7 +660,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try Moon.eclipticState(at: t),
-            lonRate: 0x4027_d8bc_7c3d_b0c8, latRate: 0xbf8d_6eef_5a6b_ba53, distRate: 0x3ee9_621d_e3e5_2000,
+            lonRate: 0x4027_d8ab_1e67_cb4a, latRate: 0xbf8d_7bfd_7722_e147, distRate: 0x3ee9_629a_6aa5_cbae,
             "Moon.eclipticState 2026",
             moon: true
         )
@@ -673,7 +676,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.moon.geocentricEclipticState(at: t),
-            lonRate: 0x402c_3d4e_99d9_a43d, latRate: 0xbfef_04d1_3f09_a25b, distRate: 0x3ebc_2f6d_9e7b_399e,
+            lonRate: 0x402c_3d49_3ec9_7112, latRate: 0xbfef_041b_0812_b695, distRate: 0x3ebc_0f54_4aa3_72ca,
             "Moon 2050",
             moon: true
         )
@@ -714,7 +717,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.pluto.geocentricEclipticState(at: t),
-            lonRate: 0x3f89_0952_68dc_6602, latRate: 0x3f71_b6a1_1ae6_e856, distRate: 0x3f90_e199_108e_7e6f,
+            lonRate: 0x3f89_0d0b_69dc_1076, latRate: 0x3f71_c735_6daf_15de, distRate: 0x3f90_dfec_dfec_4986,
             "Pluto 2050"
         )
         expectEclipticRates(
@@ -724,7 +727,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try Moon.eclipticState(at: t),
-            lonRate: 0x402c_3d4e_99d9_a43d, latRate: 0xbfef_04d1_3f09_a25b, distRate: 0x3ebc_2f6d_9b31_c000,
+            lonRate: 0x402c_3d49_3ec9_7112, latRate: 0xbfef_041b_0812_b695, distRate: 0x3ebc_0f54_4aa3_72a1,
             "Moon.eclipticState 2050",
             moon: true
         )

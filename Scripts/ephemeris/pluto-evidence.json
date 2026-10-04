@@ -1,0 +1,2973 @@
+{
+  "classification": "finite-source-parity-and-candidate-evidence-not-continuous-public-API-qualification",
+  "eventSummary": {
+    "candidateMaximumErrorSeconds": 5.7220458984375e-05,
+    "count": 18,
+    "oldAPIMaximumErrorSeconds": 290.9499406814575
+  },
+  "events": [
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/1900/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": 82.84461200237274,
+      "referenceJulianDateTT": 2415177.92660034
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/1900/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": 76.76268965005875,
+      "referenceJulianDateTT": 2415362.691967087
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/1930/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": 31.79689049720764,
+      "referenceJulianDateTT": 2425986.0096989255
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/1930/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": 35.27822345495224,
+      "referenceJulianDateTT": 2426169.753546728
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/1960/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": 41.964004933834076,
+      "referenceJulianDateTT": 2436988.9982859604
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/1960/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": 42.932336032390594,
+      "referenceJulianDateTT": 2437175.7427412216
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/1990/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": 60.706450045108795,
+      "referenceJulianDateTT": 2448018.7101592803
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/1990/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": 55.35379350185394,
+      "referenceJulianDateTT": 2448205.880635145
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/2020/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": -17.28198230266571,
+      "referenceJulianDateTT": 2458862.0576508045
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/2020/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": -20.943640172481537,
+      "referenceJulianDateTT": 2459046.290618561
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/2050/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": -115.77853113412857,
+      "referenceJulianDateTT": 2469864.8205628134
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/2050/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": -120.01021206378937,
+      "referenceJulianDateTT": 2470051.301882364
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/2080/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": -138.17720264196396,
+      "referenceJulianDateTT": 2480857.0095828064
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/2080/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": -138.12630772590637,
+      "referenceJulianDateTT": 2481044.063788428
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/2101/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": -202.28528380393982,
+      "referenceJulianDateTT": 2488548.6177983293
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/2101/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": -199.5026797056198,
+      "referenceJulianDateTT": 2488735.364747447
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": 5.7220458984375e-05,
+      "case": "alignment/2130/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-180",
+      "oldAPIErrorSeconds": -290.9499406814575,
+      "referenceJulianDateTT": 2499169.021467573
+    },
+    {
+      "candidatePlutoWithArchivedEarthErrorSeconds": -5.7220458984375e-05,
+      "case": "alignment/2130/Pluto",
+      "classification": "retrospective",
+      "finalBracketWidthSeconds": 0.00011444091796875,
+      "kind": "relative-0",
+      "oldAPIErrorSeconds": -277.88833379745483,
+      "referenceJulianDateTT": 2499354.7587672947
+    }
+  ],
+  "freshReference": {
+    "center": "Sun (10)",
+    "centerEphemeris": "plu060_merged",
+    "correction": "NONE",
+    "frame": "ICRF",
+    "service": {
+      "source": "NASA/JPL Horizons API",
+      "version": "1.0"
+    },
+    "target": "Pluto (999)",
+    "targetEphemeris": "plu060_merged",
+    "timeScale": "TT",
+    "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
+  },
+  "generatorSHA256": "64e3eef1052c37567e837cdd20c2faf8a38fc5141dbc13e362b2c3a642ac3f55",
+  "inputSHA256": {
+    "Documentation/Migration/geometric-event-assessment.json": "c151917dc87bdac9baf49c340b98526fe2106a3d00312ad3741643186bb57088",
+    "Documentation/Migration/position-event-assessment.json": "00c5c7b3048bd79640fcd58548280c8af573143f92ed537105a212616498055c",
+    "Scripts/ephemeris/pluto-reference/pluto-heliocentric.json": "ed042beaffba3fa255e92de83e14659744d41e509b4d474373b42b584ab57f50",
+    "Scripts/ephemeris/pluto-reference/pluto-heliocentric.query.json": "033aed9e42aa36ebf1c4950f638026a3e00792608d343b44f048102c00e73056",
+    "Scripts/reference-data/qualify-geometric-events.py": "8551da126801756524cbd7a5104df5b7b0a6b44ac5278180378664d4a6747553",
+    "Scripts/reference-data/qualify-position-events.py": "85022cd715dcd811c0d49af802ddab699e01ff1370b4686b3848b60f87e0b67c",
+    "Scripts/reference-data/sources/geometric-events/alignment-1900-pluto-earth-fine.json": "f21683732864fdc241c8c1092252d5cb5961bc37e0c52a6d3fc6963dbb025fe5",
+    "Scripts/reference-data/sources/geometric-events/alignment-1900-pluto-earth-fine.query.json": "5f37f8d0d955377e91a01ad360816a80831083c2b3a3cde27a5145ac31f68a4e",
+    "Scripts/reference-data/sources/geometric-events/alignment-1930-pluto-earth-fine.json": "db94604a6e638f50eb207ffba15f80afe1ffed84e51a346942962b6dd1ed928c",
+    "Scripts/reference-data/sources/geometric-events/alignment-1930-pluto-earth-fine.query.json": "64a5757688f89cb5a3388e46050e5258ef57c5d1670a891fdb76a5ec47fe323f",
+    "Scripts/reference-data/sources/geometric-events/alignment-1960-pluto-earth-fine.json": "da72aed325e127c6067443eeeed208e9f3449b99f4f8f8539741828cd48b6392",
+    "Scripts/reference-data/sources/geometric-events/alignment-1960-pluto-earth-fine.query.json": "e56f1e735cbb64ecbb97ff1b4b6abc89bc536d779dad4fa5aee0471d22d805a5",
+    "Scripts/reference-data/sources/geometric-events/alignment-1990-pluto-earth-fine.json": "df15246ed64f5c86cc8efdfa8f5f005e1e3bca5f3f4508cc117fbef2c5e887d8",
+    "Scripts/reference-data/sources/geometric-events/alignment-1990-pluto-earth-fine.query.json": "b9532df77a9520e91114c159bc3e9f3368e14a51b00795cc6c136c0bdc895e0a",
+    "Scripts/reference-data/sources/geometric-events/alignment-2020-pluto-earth-fine.json": "37e344999e85db452ba9367a9853a1df19f0accbf16eff52e7ffe5ee753c0c53",
+    "Scripts/reference-data/sources/geometric-events/alignment-2020-pluto-earth-fine.query.json": "dd29157765390e4e5a51c8d76b11b647912cae73998ef24430651ff882768dfd",
+    "Scripts/reference-data/sources/geometric-events/alignment-2050-pluto-earth-fine.json": "bedff0acafa6c315ff86ae2465ea2588043440c0fbcc48dbd7162f1e2739881b",
+    "Scripts/reference-data/sources/geometric-events/alignment-2050-pluto-earth-fine.query.json": "5097fba45a57773d7fa1410b7f7349bb73fd0790e5f5878b0fe9979866006927",
+    "Scripts/reference-data/sources/geometric-events/alignment-2080-pluto-earth-fine.json": "a30326136b056c1a539f4a9d6fcebbc732bd697328558f14f6230dc5f4ffedf4",
+    "Scripts/reference-data/sources/geometric-events/alignment-2080-pluto-earth-fine.query.json": "a5b9758dc52b4e3c6fbd0ef268d46bf0ad7cc925a54e6cfb831dacc998d541ac",
+    "Scripts/reference-data/sources/geometric-events/alignment-2101-pluto-earth-fine.json": "bd73ee7cb4877f230e6bbc68ca5aa86af09ca4fe69bbe3d38e1f854b70042a0f",
+    "Scripts/reference-data/sources/geometric-events/alignment-2101-pluto-earth-fine.query.json": "5edfac67e21602b7ff1e9b1da1c227adf8efb743e939d4e98f28daed03f86b1f",
+    "Scripts/reference-data/sources/geometric-events/alignment-2130-pluto-earth-fine.json": "2930ee515bf4de2d5389a43796fcd0fc873e92d8badfca39dbfe87778ce91e13",
+    "Scripts/reference-data/sources/geometric-events/alignment-2130-pluto-earth-fine.query.json": "c7759bf2d9b508236993f9e41801d86fa9596d3f47f0603b60f65a6d03e548c2"
+  },
+  "limitations": [
+    "finite sampled accuracy only",
+    "original Chebyshev seams preserved; no C2 continuity claim",
+    "fresh vector comparison shares JPL observational solution lineage",
+    "no runtime network or CSPICE",
+    "full bundled API timing and RSS qualification are separate"
+  ],
+  "manifestSHA256": "8e9d96120131e45c1592625f1aadf2a0f36a500ab64686644f00c5d78ee69bfd",
+  "parity": [
+    {
+      "component": "pluto-barycenter.bin",
+      "maximumPositionComponentDifferenceKm": 9.5367431640625e-07,
+      "maximumVelocityComponentDifferenceKmPerDay": 1.7462298274040222e-10,
+      "productionAUScaledPositionDifferenceKm": 1.9073486328125e-06,
+      "productionAUScaledVelocityDifferenceKmPerDay": 1.7462298274040222e-10,
+      "stateCount": 5283
+    },
+    {
+      "component": "pluto-negative-sun.bin",
+      "maximumPositionComponentDifferenceKm": 2.3283064365386963e-10,
+      "maximumVelocityComponentDifferenceKmPerDay": 4.547473508864641e-13,
+      "productionAUScaledPositionDifferenceKm": 4.656612873077393e-10,
+      "productionAUScaledVelocityDifferenceKmPerDay": 4.547473508864641e-13,
+      "stateCount": 10561
+    },
+    {
+      "component": "pluto-center-offset.bin",
+      "maximumPositionComponentDifferenceKm": 9.094947017729282e-13,
+      "maximumVelocityComponentDifferenceKmPerDay": 1.3642420526593924e-12,
+      "productionAUScaledPositionDifferenceKm": 1.0231815394945443e-12,
+      "productionAUScaledVelocityDifferenceKmPerDay": 1.3642420526593924e-12,
+      "stateCount": 56304
+    }
+  ],
+  "planSHA256": "adbae2741cc22ddbe04245b50f7ebc6ac41fb93861dbfe7e5715df89912115f0",
+  "positionSummary": {
+    "fresh-predetermined": {
+      "count": 128,
+      "maximumAbsoluteRangeErrorPPM": 6.6954453160257734e-09,
+      "maximumAngleErrorArcminutes": 1.6348357049020382e-10,
+      "maximumVelocityComponentErrorKmPerDay": 1.0568182915449142e-06
+    },
+    "retrospective": {
+      "count": 259,
+      "maximumAbsoluteRangeErrorPPM": 7.233335612187545e-09,
+      "maximumAngleErrorArcminutes": 1.5930725398533196e-10,
+      "maximumVelocityComponentErrorKmPerDay": 9.226641850546002e-07
+    }
+  },
+  "positions": [
+    {
+      "angleErrorArcminutes": 1.167297152473134e-10,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2415614.955718259,
+      "maximumVelocityComponentErrorKmPerDay": 1.0568182915449142e-06,
+      "signedRangeErrorPPM": 5.625401426613103e-09
+    },
+    {
+      "angleErrorArcminutes": 3.7435560959203115e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2415735.52597563,
+      "maximumVelocityComponentErrorKmPerDay": 2.928536559920758e-07,
+      "signedRangeErrorPPM": 1.9784598849612623e-09
+    },
+    {
+      "angleErrorArcminutes": 3.528004474601531e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2416893.34308278,
+      "maximumVelocityComponentErrorKmPerDay": 4.0179293137043715e-07,
+      "signedRangeErrorPPM": 1.8445883078486542e-09
+    },
+    {
+      "angleErrorArcminutes": 1.015929607941337e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2417372.37241731,
+      "maximumVelocityComponentErrorKmPerDay": 1.1405791155993938e-07,
+      "signedRangeErrorPPM": -4.631923154219143e-10
+    },
+    {
+      "angleErrorArcminutes": 6.8370471459275885e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2417730.28641881,
+      "maximumVelocityComponentErrorKmPerDay": 8.11705831438303e-08,
+      "signedRangeErrorPPM": 4.64788295874241e-10
+    },
+    {
+      "angleErrorArcminutes": 1.94077599123061e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2418414.5515457,
+      "maximumVelocityComponentErrorKmPerDay": 1.8172431737184525e-07,
+      "signedRangeErrorPPM": 1.0919928440008115e-09
+    },
+    {
+      "angleErrorArcminutes": 3.343499954800627e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2419607.89996647,
+      "maximumVelocityComponentErrorKmPerDay": 3.609893610700965e-07,
+      "signedRangeErrorPPM": 1.4220536625863732e-09
+    },
+    {
+      "angleErrorArcminutes": 3.9697373769595586e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2420122.93016417,
+      "maximumVelocityComponentErrorKmPerDay": 4.006724338978529e-07,
+      "signedRangeErrorPPM": 2.224862705516656e-09
+    },
+    {
+      "angleErrorArcminutes": 4.3188152865361584e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2420899.56301905,
+      "maximumVelocityComponentErrorKmPerDay": 3.1114905141294e-07,
+      "signedRangeErrorPPM": 2.725932454516986e-09
+    },
+    {
+      "angleErrorArcminutes": 5.169898340826873e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2421058.65762363,
+      "maximumVelocityComponentErrorKmPerDay": 5.168112693354487e-07,
+      "signedRangeErrorPPM": -3.534333455822485e-09
+    },
+    {
+      "angleErrorArcminutes": 3.085492963948554e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2421624.92864129,
+      "maximumVelocityComponentErrorKmPerDay": 2.448214218020439e-07,
+      "signedRangeErrorPPM": 1.6176066615642188e-09
+    },
+    {
+      "angleErrorArcminutes": 3.2300188797328956e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2422805.21404558,
+      "maximumVelocityComponentErrorKmPerDay": 3.375826054252684e-07,
+      "signedRangeErrorPPM": 1.971019257270323e-09
+    },
+    {
+      "angleErrorArcminutes": 5.715514506091504e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2423085.22495468,
+      "maximumVelocityComponentErrorKmPerDay": 3.781096893362701e-07,
+      "signedRangeErrorPPM": -4.4516681505413815e-09
+    },
+    {
+      "angleErrorArcminutes": 2.957242474206146e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2424173.16936834,
+      "maximumVelocityComponentErrorKmPerDay": 1.9901199266314507e-07,
+      "signedRangeErrorPPM": -2.1762968736278553e-09
+    },
+    {
+      "angleErrorArcminutes": 5.1845665686857505e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2424644.03585343,
+      "maximumVelocityComponentErrorKmPerDay": 4.3777981773018837e-07,
+      "signedRangeErrorPPM": -4.045115035516952e-09
+    },
+    {
+      "angleErrorArcminutes": 5.261810310191087e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2425404.73276235,
+      "maximumVelocityComponentErrorKmPerDay": 5.185320333112031e-07,
+      "signedRangeErrorPPM": -4.090630987056473e-09
+    },
+    {
+      "angleErrorArcminutes": 1.457791720515059e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2425987.34235745,
+      "maximumVelocityComponentErrorKmPerDay": 1.0209623724222183e-07,
+      "signedRangeErrorPPM": 1.0317292628757336e-09
+    },
+    {
+      "angleErrorArcminutes": 1.8257270415839812e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2426482.36390279,
+      "maximumVelocityComponentErrorKmPerDay": 1.1926749721169472e-07,
+      "signedRangeErrorPPM": 1.0397340325989434e-09
+    },
+    {
+      "angleErrorArcminutes": 7.946550789978022e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2427378.35995049,
+      "maximumVelocityComponentErrorKmPerDay": 7.378821464953944e-08,
+      "signedRangeErrorPPM": -5.274704201326087e-10
+    },
+    {
+      "angleErrorArcminutes": 2.935732948243448e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2427584.46800765,
+      "maximumVelocityComponentErrorKmPerDay": 2.05356627702713e-07,
+      "signedRangeErrorPPM": 2.117121280012828e-09
+    },
+    {
+      "angleErrorArcminutes": 6.801406290258613e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2428726.09998736,
+      "maximumVelocityComponentErrorKmPerDay": 5.470246833283454e-08,
+      "signedRangeErrorPPM": 1.7988158779569338e-10
+    },
+    {
+      "angleErrorArcminutes": 2.5113253733296413e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2428984.50603023,
+      "maximumVelocityComponentErrorKmPerDay": 2.1429150365293026e-07,
+      "signedRangeErrorPPM": -1.8068615006321905e-09
+    },
+    {
+      "angleErrorArcminutes": 8.524295380207171e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2429605.32496529,
+      "maximumVelocityComponentErrorKmPerDay": 4.724133759737015e-07,
+      "signedRangeErrorPPM": 6.3927961561059e-09
+    },
+    {
+      "angleErrorArcminutes": 9.00900857902079e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2430619.42947276,
+      "maximumVelocityComponentErrorKmPerDay": 6.895752449054271e-07,
+      "signedRangeErrorPPM": -6.6954453160257734e-09
+    },
+    {
+      "angleErrorArcminutes": 4.392856117893561e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2431480.19255359,
+      "maximumVelocityComponentErrorKmPerDay": 2.3847678676247597e-07,
+      "signedRangeErrorPPM": -3.40140073588595e-09
+    },
+    {
+      "angleErrorArcminutes": 6.045109187979389e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2431976.29042406,
+      "maximumVelocityComponentErrorKmPerDay": 3.1790841603651643e-07,
+      "signedRangeErrorPPM": 4.577967205751862e-09
+    },
+    {
+      "angleErrorArcminutes": 7.968563501599803e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2432799.18576678,
+      "maximumVelocityComponentErrorKmPerDay": 4.227040335536003e-07,
+      "signedRangeErrorPPM": 5.813596532280541e-09
+    },
+    {
+      "angleErrorArcminutes": 2.677316800009287e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2433051.68552185,
+      "maximumVelocityComponentErrorKmPerDay": 1.490407157689333e-07,
+      "signedRangeErrorPPM": -1.752609676142434e-09
+    },
+    {
+      "angleErrorArcminutes": 4.084333786368026e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2433683.10008784,
+      "maximumVelocityComponentErrorKmPerDay": 2.586602931842208e-07,
+      "signedRangeErrorPPM": 2.956906201856377e-09
+    },
+    {
+      "angleErrorArcminutes": 4.372050438522485e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2434453.31990117,
+      "maximumVelocityComponentErrorKmPerDay": 2.0704464986920357e-07,
+      "signedRangeErrorPPM": 2.8011861795795427e-09
+    },
+    {
+      "angleErrorArcminutes": 2.725727939472783e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2434950.52218228,
+      "maximumVelocityComponentErrorKmPerDay": 1.9244907889515162e-07,
+      "signedRangeErrorPPM": -1.6161910329973283e-09
+    },
+    {
+      "angleErrorArcminutes": 4.6353242870051325e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2435550.01434789,
+      "maximumVelocityComponentErrorKmPerDay": 2.5014742277562618e-08,
+      "signedRangeErrorPPM": -2.0440037993433716e-10
+    },
+    {
+      "angleErrorArcminutes": 4.7004003593850465e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2436572.55823777,
+      "maximumVelocityComponentErrorKmPerDay": 3.135210135951638e-07,
+      "signedRangeErrorPPM": -3.128069477417579e-09
+    },
+    {
+      "angleErrorArcminutes": 7.712493758016581e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2437390.27405513,
+      "maximumVelocityComponentErrorKmPerDay": 4.967732820659876e-07,
+      "signedRangeErrorPPM": -4.873154218565718e-09
+    },
+    {
+      "angleErrorArcminutes": 6.121193153519833e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2437435.4231798,
+      "maximumVelocityComponentErrorKmPerDay": 3.6688288673758507e-07,
+      "signedRangeErrorPPM": -3.817081223644755e-09
+    },
+    {
+      "angleErrorArcminutes": 4.2797587551196124e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2438264.19706192,
+      "maximumVelocityComponentErrorKmPerDay": 1.9107392290607095e-07,
+      "signedRangeErrorPPM": -2.584794112329573e-09
+    },
+    {
+      "angleErrorArcminutes": 7.44808209116196e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2438987.41540835,
+      "maximumVelocityComponentErrorKmPerDay": 4.336470738053322e-07,
+      "signedRangeErrorPPM": -4.146647571107082e-09
+    },
+    {
+      "angleErrorArcminutes": 6.743952475502005e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2439790.74263064,
+      "maximumVelocityComponentErrorKmPerDay": 2.8524300432763994e-07,
+      "signedRangeErrorPPM": -3.5412580544000934e-09
+    },
+    {
+      "angleErrorArcminutes": 5.0685650361231174e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2440612.36086904,
+      "maximumVelocityComponentErrorKmPerDay": 2.732849679887295e-07,
+      "signedRangeErrorPPM": -2.1317393271199735e-09
+    },
+    {
+      "angleErrorArcminutes": 8.169298049141073e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2440852.51315431,
+      "maximumVelocityComponentErrorKmPerDay": 4.4147600419819355e-07,
+      "signedRangeErrorPPM": 3.6042769928535654e-09
+    },
+    {
+      "angleErrorArcminutes": 4.726100919377157e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2441913.00835392,
+      "maximumVelocityComponentErrorKmPerDay": 2.2488529793918133e-07,
+      "signedRangeErrorPPM": 1.946059195382577e-09
+    },
+    {
+      "angleErrorArcminutes": 3.988783638099878e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2442117.57490065,
+      "maximumVelocityComponentErrorKmPerDay": 1.6792910173535347e-08,
+      "signedRangeErrorPPM": 2.296148108298914e-10
+    },
+    {
+      "angleErrorArcminutes": 2.3375725945347068e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2443107.02256854,
+      "maximumVelocityComponentErrorKmPerDay": 1.261651050299406e-07,
+      "signedRangeErrorPPM": -8.140157554087411e-10
+    },
+    {
+      "angleErrorArcminutes": 5.5034028897197925e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2443954.46721995,
+      "maximumVelocityComponentErrorKmPerDay": 1.99128407984972e-07,
+      "signedRangeErrorPPM": 1.0562987866970547e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2319913481270483e-10,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2444573.36432802,
+      "maximumVelocityComponentErrorKmPerDay": 5.155452527105808e-07,
+      "signedRangeErrorPPM": -2.360862883615428e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2580343910354166e-10,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2444817.35856318,
+      "maximumVelocityComponentErrorKmPerDay": 4.837929736822844e-07,
+      "signedRangeErrorPPM": 2.483958472509203e-09
+    },
+    {
+      "angleErrorArcminutes": 5.4974612258315443e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2445834.00517463,
+      "maximumVelocityComponentErrorKmPerDay": 2.7049100026488304e-07,
+      "signedRangeErrorPPM": -8.338226839764692e-10
+    },
+    {
+      "angleErrorArcminutes": 5.913246140269707e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2446477.2572935,
+      "maximumVelocityComponentErrorKmPerDay": 1.7462298274040222e-08,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 9.611865561130172e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2446813.64377607,
+      "maximumVelocityComponentErrorKmPerDay": 3.107707016170025e-07,
+      "signedRangeErrorPPM": 4.785143480422613e-10
+    },
+    {
+      "angleErrorArcminutes": 4.733489263763313e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2447543.74176305,
+      "maximumVelocityComponentErrorKmPerDay": 1.4889519661664963e-07,
+      "signedRangeErrorPPM": -1.197894581723803e-10
+    },
+    {
+      "angleErrorArcminutes": 1.638490843496645e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2448460.19197042,
+      "maximumVelocityComponentErrorKmPerDay": 5.832407623529434e-08,
+      "signedRangeErrorPPM": 1.1971571617369264e-10
+    },
+    {
+      "angleErrorArcminutes": 6.679437444482659e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2449121.89911423,
+      "maximumVelocityComponentErrorKmPerDay": 2.455199137330055e-07,
+      "signedRangeErrorPPM": -8.364017285107529e-10
+    },
+    {
+      "angleErrorArcminutes": 4.6918416371666584e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2449830.54729268,
+      "maximumVelocityComponentErrorKmPerDay": 1.590524334460497e-07,
+      "signedRangeErrorPPM": 3.572760679772832e-10
+    },
+    {
+      "angleErrorArcminutes": 8.939210202429667e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2450311.31644247,
+      "maximumVelocityComponentErrorKmPerDay": 4.3094041757285595e-07,
+      "signedRangeErrorPPM": -1.4249179356785889e-09
+    },
+    {
+      "angleErrorArcminutes": 1.6348357049020382e-10,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2451185.73739931,
+      "maximumVelocityComponentErrorKmPerDay": 5.508773028850555e-07,
+      "signedRangeErrorPPM": -3.4203230191196857e-09
+    },
+    {
+      "angleErrorArcminutes": 8.14162054129254e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2451920.61919999,
+      "maximumVelocityComponentErrorKmPerDay": 3.4848926588892937e-07,
+      "signedRangeErrorPPM": -2.4590453261877667e-09
+    },
+    {
+      "angleErrorArcminutes": 8.453230460514114e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2452408.79619436,
+      "maximumVelocityComponentErrorKmPerDay": 3.007007762789726e-07,
+      "signedRangeErrorPPM": -2.5619195855708707e-09
+    },
+    {
+      "angleErrorArcminutes": 2.3885162300118694e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2452872.01362665,
+      "maximumVelocityComponentErrorKmPerDay": 8.114147931337357e-08,
+      "signedRangeErrorPPM": 8.104664450996954e-10
+    },
+    {
+      "angleErrorArcminutes": 4.7715624999257533e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2453690.10418262,
+      "maximumVelocityComponentErrorKmPerDay": 2.3984466679394245e-07,
+      "signedRangeErrorPPM": 2.060772783969859e-09
+    },
+    {
+      "angleErrorArcminutes": 2.5837568996875074e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2454205.26384673,
+      "maximumVelocityComponentErrorKmPerDay": 1.2139207683503628e-07,
+      "signedRangeErrorPPM": 1.0225460784771285e-09
+    },
+    {
+      "angleErrorArcminutes": 6.067359871275831e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2454676.74799522,
+      "maximumVelocityComponentErrorKmPerDay": 2.9045622795820236e-07,
+      "signedRangeErrorPPM": -2.1430104225383673e-09
+    },
+    {
+      "angleErrorArcminutes": 7.18649004781063e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2455571.69483629,
+      "maximumVelocityComponentErrorKmPerDay": 4.1685416363179684e-07,
+      "signedRangeErrorPPM": -3.557111910138089e-09
+    },
+    {
+      "angleErrorArcminutes": 3.2749815914452025e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2456444.05398269,
+      "maximumVelocityComponentErrorKmPerDay": 1.552689354866743e-07,
+      "signedRangeErrorPPM": -1.532917758131294e-09
+    },
+    {
+      "angleErrorArcminutes": 6.109742890282038e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2456631.6625712,
+      "maximumVelocityComponentErrorKmPerDay": 3.691966412588954e-07,
+      "signedRangeErrorPPM": 3.492033826916465e-09
+    },
+    {
+      "angleErrorArcminutes": 3.806708426241602e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2457291.15189885,
+      "maximumVelocityComponentErrorKmPerDay": 1.675216481089592e-07,
+      "signedRangeErrorPPM": 2.156202313193805e-09
+    },
+    {
+      "angleErrorArcminutes": 7.226870456877195e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2458014.84226412,
+      "maximumVelocityComponentErrorKmPerDay": 4.471221473067999e-07,
+      "signedRangeErrorPPM": -3.8282879473338236e-09
+    },
+    {
+      "angleErrorArcminutes": 1.0250345491829957e-10,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2459110.22646337,
+      "maximumVelocityComponentErrorKmPerDay": 6.787449819967151e-07,
+      "signedRangeErrorPPM": -6.247034997037118e-09
+    },
+    {
+      "angleErrorArcminutes": 7.613416852483204e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2459711.84669775,
+      "maximumVelocityComponentErrorKmPerDay": 3.6522396840155125e-07,
+      "signedRangeErrorPPM": 4.939846190918939e-09
+    },
+    {
+      "angleErrorArcminutes": 2.4929138087307416e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2460425.38617368,
+      "maximumVelocityComponentErrorKmPerDay": 1.5925616025924683e-07,
+      "signedRangeErrorPPM": -1.6240714682302306e-09
+    },
+    {
+      "angleErrorArcminutes": 6.594311603492083e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2460691.70591403,
+      "maximumVelocityComponentErrorKmPerDay": 3.186578396707773e-07,
+      "signedRangeErrorPPM": -4.645183714802857e-09
+    },
+    {
+      "angleErrorArcminutes": 7.552611339782562e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2461324.06394932,
+      "maximumVelocityComponentErrorKmPerDay": 3.698442014865577e-07,
+      "signedRangeErrorPPM": 5.1868969521606245e-09
+    },
+    {
+      "angleErrorArcminutes": 9.794042905902845e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2462472.66869658,
+      "maximumVelocityComponentErrorKmPerDay": 6.998016033321619e-08,
+      "signedRangeErrorPPM": 5.852321559482461e-10
+    },
+    {
+      "angleErrorArcminutes": 5.947174610207625e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2463086.04236986,
+      "maximumVelocityComponentErrorKmPerDay": 4.510584403760731e-07,
+      "signedRangeErrorPPM": -4.626699408268118e-09
+    },
+    {
+      "angleErrorArcminutes": 9.818645844115508e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2463275.65523194,
+      "maximumVelocityComponentErrorKmPerDay": 5.227047950029373e-08,
+      "signedRangeErrorPPM": 7.683231084891668e-10
+    },
+    {
+      "angleErrorArcminutes": 1.440759675442491e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2463846.28195813,
+      "maximumVelocityComponentErrorKmPerDay": 7.898051990196109e-09,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 3.3177012140613666e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2464842.40662189,
+      "maximumVelocityComponentErrorKmPerDay": 2.1658706828020513e-08,
+      "signedRangeErrorPPM": 3.7311949166230707e-10
+    },
+    {
+      "angleErrorArcminutes": 1.744533517952442e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2465608.26346859,
+      "maximumVelocityComponentErrorKmPerDay": 1.0352005119784735e-07,
+      "signedRangeErrorPPM": -1.287974543018963e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2348623870600003e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2466036.22173768,
+      "maximumVelocityComponentErrorKmPerDay": 7.599373930133879e-08,
+      "signedRangeErrorPPM": 1.0955600698044681e-09
+    },
+    {
+      "angleErrorArcminutes": 4.0502649929034185e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2466857.57117462,
+      "maximumVelocityComponentErrorKmPerDay": 3.553886926965788e-07,
+      "signedRangeErrorPPM": 3.059393678952429e-09
+    },
+    {
+      "angleErrorArcminutes": 6.700612769625736e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2467119.58630055,
+      "maximumVelocityComponentErrorKmPerDay": 6.001864676363766e-07,
+      "signedRangeErrorPPM": -5.374383289407572e-09
+    },
+    {
+      "angleErrorArcminutes": 4.611576159937116e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2467844.98203841,
+      "maximumVelocityComponentErrorKmPerDay": 3.897366696037352e-07,
+      "signedRangeErrorPPM": -3.538867416662979e-09
+    },
+    {
+      "angleErrorArcminutes": 4.720568929235875e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2468682.25807872,
+      "maximumVelocityComponentErrorKmPerDay": 2.637389115989208e-07,
+      "signedRangeErrorPPM": -3.66512668131709e-09
+    },
+    {
+      "angleErrorArcminutes": 1.0885027296734285e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2469626.41221277,
+      "maximumVelocityComponentErrorKmPerDay": 1.0531948646530509e-07,
+      "signedRangeErrorPPM": 5.158925352255527e-10
+    },
+    {
+      "angleErrorArcminutes": 3.8828476770311185e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2469769.25660301,
+      "maximumVelocityComponentErrorKmPerDay": 2.6228372007608414e-07,
+      "signedRangeErrorPPM": 2.916989339888645e-09
+    },
+    {
+      "angleErrorArcminutes": 7.622738602362242e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2470983.89984348,
+      "maximumVelocityComponentErrorKmPerDay": 7.790367817506194e-08,
+      "signedRangeErrorPPM": 5.054684040012295e-10
+    },
+    {
+      "angleErrorArcminutes": 1.5985936188277378e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2471630.69464435,
+      "maximumVelocityComponentErrorKmPerDay": 1.222651917487383e-07,
+      "signedRangeErrorPPM": -6.676740314325609e-10
+    },
+    {
+      "angleErrorArcminutes": 1.0680725162608666e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2471778.48344446,
+      "maximumVelocityComponentErrorKmPerDay": 8.739152690395713e-08,
+      "signedRangeErrorPPM": 4.997050298712057e-10
+    },
+    {
+      "angleErrorArcminutes": 6.956710714880345e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2472710.38897831,
+      "maximumVelocityComponentErrorKmPerDay": 5.209003575146198e-07,
+      "signedRangeErrorPPM": -4.768958750773231e-09
+    },
+    {
+      "angleErrorArcminutes": 5.020258037990107e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2473554.11324004,
+      "maximumVelocityComponentErrorKmPerDay": 4.3322506826370955e-07,
+      "signedRangeErrorPPM": -3.4158817938766935e-09
+    },
+    {
+      "angleErrorArcminutes": 5.953307303471622e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2473908.13566517,
+      "maximumVelocityComponentErrorKmPerDay": 4.5982596930116415e-07,
+      "signedRangeErrorPPM": -3.886682578991704e-09
+    },
+    {
+      "angleErrorArcminutes": 5.578947386725879e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2474894.66599149,
+      "maximumVelocityComponentErrorKmPerDay": 4.5595515985041857e-07,
+      "signedRangeErrorPPM": 3.6806890575862415e-09
+    },
+    {
+      "angleErrorArcminutes": 5.1823535132102444e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2475092.43624424,
+      "maximumVelocityComponentErrorKmPerDay": 4.2229657992720604e-07,
+      "signedRangeErrorPPM": -3.352826582354675e-09
+    },
+    {
+      "angleErrorArcminutes": 2.5786159511881857e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2476113.29142881,
+      "maximumVelocityComponentErrorKmPerDay": 2.7018541004508734e-07,
+      "signedRangeErrorPPM": 1.578072595303314e-09
+    },
+    {
+      "angleErrorArcminutes": 1.046091956370001e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2476778.36718138,
+      "maximumVelocityComponentErrorKmPerDay": 8.14325176179409e-08,
+      "signedRangeErrorPPM": -6.266848021355347e-10
+    },
+    {
+      "angleErrorArcminutes": 2.571708582565403e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2477056.302638,
+      "maximumVelocityComponentErrorKmPerDay": 2.1464802557602525e-07,
+      "signedRangeErrorPPM": -1.87458882183598e-09
+    },
+    {
+      "angleErrorArcminutes": 5.197144353757702e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2478134.99715923,
+      "maximumVelocityComponentErrorKmPerDay": 5.159236025065184e-07,
+      "signedRangeErrorPPM": 2.7820711672900005e-09
+    },
+    {
+      "angleErrorArcminutes": 3.284398217166547e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2478745.17651122,
+      "maximumVelocityComponentErrorKmPerDay": 2.8440263122320175e-07,
+      "signedRangeErrorPPM": -1.5368867162482619e-09
+    },
+    {
+      "angleErrorArcminutes": 1.86437010316991e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2479037.53097689,
+      "maximumVelocityComponentErrorKmPerDay": 1.824519131332636e-07,
+      "signedRangeErrorPPM": -1.0729915339169587e-09
+    },
+    {
+      "angleErrorArcminutes": 1.7855982117076185e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2480041.56530873,
+      "maximumVelocityComponentErrorKmPerDay": 1.885928213596344e-07,
+      "signedRangeErrorPPM": 9.11725757123853e-10
+    },
+    {
+      "angleErrorArcminutes": 2.223683730802709e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2480842.82060338,
+      "maximumVelocityComponentErrorKmPerDay": 2.730084815993905e-07,
+      "signedRangeErrorPPM": 1.2076911813490868e-09
+    },
+    {
+      "angleErrorArcminutes": 4.229659420405741e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2481589.25065263,
+      "maximumVelocityComponentErrorKmPerDay": 4.646426532417536e-08,
+      "signedRangeErrorPPM": -4.5031926759619143e-10
+    },
+    {
+      "angleErrorArcminutes": 4.263688734663573e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2481655.99248887,
+      "maximumVelocityComponentErrorKmPerDay": 3.512323019094765e-07,
+      "signedRangeErrorPPM": 2.1004711523134573e-09
+    },
+    {
+      "angleErrorArcminutes": 3.968211053277527e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2482649.17835797,
+      "maximumVelocityComponentErrorKmPerDay": 3.26341250911355e-07,
+      "signedRangeErrorPPM": -1.3412022727680314e-09
+    },
+    {
+      "angleErrorArcminutes": 3.771143546418191e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2483469.28311026,
+      "maximumVelocityComponentErrorKmPerDay": 3.666064003482461e-07,
+      "signedRangeErrorPPM": -1.4826933395200572e-09
+    },
+    {
+      "angleErrorArcminutes": 6.155112928068375e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2483991.44709676,
+      "maximumVelocityComponentErrorKmPerDay": 7.495691534131765e-08,
+      "signedRangeErrorPPM": -1.4781933040017233e-10
+    },
+    {
+      "angleErrorArcminutes": 1.4403883792180858e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2484860.72175993,
+      "maximumVelocityComponentErrorKmPerDay": 1.6263220459222794e-07,
+      "signedRangeErrorPPM": 5.884697027791804e-10
+    },
+    {
+      "angleErrorArcminutes": 3.267671680733976e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2485359.7279021,
+      "maximumVelocityComponentErrorKmPerDay": 2.9278453439474106e-08,
+      "signedRangeErrorPPM": 1.467448055299738e-10
+    },
+    {
+      "angleErrorArcminutes": 3.4533220313963555e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2485857.47134663,
+      "maximumVelocityComponentErrorKmPerDay": 2.885499270632863e-07,
+      "signedRangeErrorPPM": -1.024803066124875e-09
+    },
+    {
+      "angleErrorArcminutes": 2.3200436435881332e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2486642.20699637,
+      "maximumVelocityComponentErrorKmPerDay": 3.087916411459446e-07,
+      "signedRangeErrorPPM": -5.836781109040069e-10
+    },
+    {
+      "angleErrorArcminutes": 2.262762928626867e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2487525.88611845,
+      "maximumVelocityComponentErrorKmPerDay": 1.9391882233321667e-07,
+      "signedRangeErrorPPM": -2.9091820090097785e-10
+    },
+    {
+      "angleErrorArcminutes": 3.892163506372387e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2488019.49376939,
+      "maximumVelocityComponentErrorKmPerDay": 3.490131348371506e-07,
+      "signedRangeErrorPPM": 7.261522975591428e-10
+    },
+    {
+      "angleErrorArcminutes": 8.885154317242743e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2488524.63651482,
+      "maximumVelocityComponentErrorKmPerDay": 8.131610229611397e-08,
+      "signedRangeErrorPPM": 1.4501354272958166e-10
+    },
+    {
+      "angleErrorArcminutes": 1.4824132247112703e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2488900.32541088,
+      "maximumVelocityComponentErrorKmPerDay": 1.9923027139157057e-07,
+      "signedRangeErrorPPM": 5.794515316289685e-10
+    },
+    {
+      "angleErrorArcminutes": 3.8589066210568567e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2489893.16301561,
+      "maximumVelocityComponentErrorKmPerDay": 5.324400262907147e-07,
+      "signedRangeErrorPPM": -8.670941865734212e-10
+    },
+    {
+      "angleErrorArcminutes": 5.946651221910942e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2490179.41793112,
+      "maximumVelocityComponentErrorKmPerDay": 5.4016709327697754e-08,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 1.5843976646631567e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2491157.4092459,
+      "maximumVelocityComponentErrorKmPerDay": 1.2951204553246498e-08,
+      "signedRangeErrorPPM": 1.4422119999200358e-10
+    },
+    {
+      "angleErrorArcminutes": 1.4186924878502332e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2492109.02282668,
+      "maximumVelocityComponentErrorKmPerDay": 1.6279227565973997e-07,
+      "signedRangeErrorPPM": 1.441113967669885e-10
+    },
+    {
+      "angleErrorArcminutes": 1.834703030892411e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2492188.1082632,
+      "maximumVelocityComponentErrorKmPerDay": 1.9354047253727913e-07,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 6.933727745892693e-12,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2493313.3564772,
+      "maximumVelocityComponentErrorKmPerDay": 9.70612745732069e-08,
+      "signedRangeErrorPPM": -1.4407012160697742e-10
+    },
+    {
+      "angleErrorArcminutes": 2.1158992987139572e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2494069.37318028,
+      "maximumVelocityComponentErrorKmPerDay": 2.0459992811083794e-07,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 4.001039047546682e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2494322.80195385,
+      "maximumVelocityComponentErrorKmPerDay": 5.393230821937323e-07,
+      "signedRangeErrorPPM": 1.4411533744073936e-10
+    },
+    {
+      "angleErrorArcminutes": 4.116955071492972e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2495018.65772499,
+      "maximumVelocityComponentErrorKmPerDay": 5.312758730724454e-07,
+      "signedRangeErrorPPM": 2.884117207798272e-10
+    },
+    {
+      "angleErrorArcminutes": 3.032737275843173e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2495790.69275268,
+      "maximumVelocityComponentErrorKmPerDay": 2.9854709282517433e-07,
+      "signedRangeErrorPPM": 2.8874710683640464e-10
+    },
+    {
+      "angleErrorArcminutes": 5.113737764478263e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2496230.41156974,
+      "maximumVelocityComponentErrorKmPerDay": 4.472094587981701e-07,
+      "signedRangeErrorPPM": 8.669854048551981e-10
+    },
+    {
+      "angleErrorArcminutes": 2.5178255270314186e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2497247.6761339,
+      "maximumVelocityComponentErrorKmPerDay": 3.12298652715981e-07,
+      "signedRangeErrorPPM": -5.793828011036564e-10
+    },
+    {
+      "angleErrorArcminutes": 1.0124173180760223e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2497551.13724124,
+      "maximumVelocityComponentErrorKmPerDay": 1.2195960152894258e-07,
+      "signedRangeErrorPPM": -2.899268453298252e-10
+    },
+    {
+      "angleErrorArcminutes": 1.6839482729562403e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2498730.57497907,
+      "maximumVelocityComponentErrorKmPerDay": 1.8852006178349257e-07,
+      "signedRangeErrorPPM": 2.9096678077199604e-10
+    },
+    {
+      "angleErrorArcminutes": 4.8054405363921776e-11,
+      "classification": "fresh-predetermined",
+      "julianDateTT": 2499369.75235477,
+      "maximumVelocityComponentErrorKmPerDay": 3.9559381548315287e-07,
+      "signedRangeErrorPPM": -1.3123857634810155e-09
+    },
+    {
+      "angleErrorArcminutes": 2.3075050252194743e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2415020.5,
+      "maximumVelocityComponentErrorKmPerDay": 2.0791776478290558e-07,
+      "signedRangeErrorPPM": -7.56543442524531e-10
+    },
+    {
+      "angleErrorArcminutes": 1.7830294574332857e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2415401.75769192,
+      "maximumVelocityComponentErrorKmPerDay": 1.9045546650886536e-07,
+      "signedRangeErrorPPM": -9.106384361060501e-10
+    },
+    {
+      "angleErrorArcminutes": 5.695842484878171e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2415709.93027611,
+      "maximumVelocityComponentErrorKmPerDay": 4.366702341940254e-07,
+      "signedRangeErrorPPM": 2.7388258552238e-09
+    },
+    {
+      "angleErrorArcminutes": 4.537540944691735e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2416857.72521654,
+      "maximumVelocityComponentErrorKmPerDay": 3.6363780964165926e-07,
+      "signedRangeErrorPPM": 2.3049947922891338e-09
+    },
+    {
+      "angleErrorArcminutes": 1.0466323663680977e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2417172.22647515,
+      "maximumVelocityComponentErrorKmPerDay": 9.806535672396421e-08,
+      "signedRangeErrorPPM": 7.705423380252252e-10
+    },
+    {
+      "angleErrorArcminutes": 1.7968818053139268e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2418117.79564919,
+      "maximumVelocityComponentErrorKmPerDay": 1.2881355360150337e-07,
+      "signedRangeErrorPPM": 1.244216483840151e-09
+    },
+    {
+      "angleErrorArcminutes": 1.657181397768571e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2418545.15822181,
+      "maximumVelocityComponentErrorKmPerDay": 1.8157879821956158e-07,
+      "signedRangeErrorPPM": 7.810525180169281e-10
+    },
+    {
+      "angleErrorArcminutes": 2.2066055471823374e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2419055.70383937,
+      "maximumVelocityComponentErrorKmPerDay": 2.555316314101219e-07,
+      "signedRangeErrorPPM": -1.413515507318351e-09
+    },
+    {
+      "angleErrorArcminutes": 5.1497949639771046e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2420073.92471489,
+      "maximumVelocityComponentErrorKmPerDay": 4.831235855817795e-07,
+      "signedRangeErrorPPM": 3.0177839924402425e-09
+    },
+    {
+      "angleErrorArcminutes": 3.803513524711967e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2420619.77469849,
+      "maximumVelocityComponentErrorKmPerDay": 2.758242771960795e-07,
+      "signedRangeErrorPPM": -2.3973816615035734e-09
+    },
+    {
+      "angleErrorArcminutes": 1.8571792660104027e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2421603.34345337,
+      "maximumVelocityComponentErrorKmPerDay": 1.2939563021063805e-07,
+      "signedRangeErrorPPM": 1.455456142261782e-09
+    },
+    {
+      "angleErrorArcminutes": 7.490700054878778e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2421983.66049635,
+      "maximumVelocityComponentErrorKmPerDay": 6.495247362181544e-08,
+      "signedRangeErrorPPM": 6.499674962049301e-10
+    },
+    {
+      "angleErrorArcminutes": 3.447882645936847e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2422808.01791374,
+      "maximumVelocityComponentErrorKmPerDay": 3.587410901673138e-07,
+      "signedRangeErrorPPM": 2.4638664498245726e-09
+    },
+    {
+      "angleErrorArcminutes": 3.071541539238824e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2423551.51328361,
+      "maximumVelocityComponentErrorKmPerDay": 2.0569132175296545e-08,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 6.691863618865842e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2424078.97764794,
+      "maximumVelocityComponentErrorKmPerDay": 6.516711437143385e-07,
+      "signedRangeErrorPPM": 4.848293702247168e-09
+    },
+    {
+      "angleErrorArcminutes": 5.054524851197162e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2424789.88849886,
+      "maximumVelocityComponentErrorKmPerDay": 3.736349754035473e-07,
+      "signedRangeErrorPPM": 3.5469907566675044e-09
+    },
+    {
+      "angleErrorArcminutes": 5.293381638639448e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2425390.20386882,
+      "maximumVelocityComponentErrorKmPerDay": 3.7712743505835533e-07,
+      "signedRangeErrorPPM": -3.5785245540980744e-09
+    },
+    {
+      "angleErrorArcminutes": 5.0570909450888333e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2425868.9791749,
+      "maximumVelocityComponentErrorKmPerDay": 3.301247488707304e-07,
+      "signedRangeErrorPPM": -3.94778395372582e-09
+    },
+    {
+      "angleErrorArcminutes": 4.3841947576471e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2426283.20989004,
+      "maximumVelocityComponentErrorKmPerDay": 4.059802449773997e-07,
+      "signedRangeErrorPPM": -3.800422826802773e-09
+    },
+    {
+      "angleErrorArcminutes": 1.896680256832495e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2426982.34341745,
+      "maximumVelocityComponentErrorKmPerDay": 1.746502675814554e-07,
+      "signedRangeErrorPPM": -1.3974790802140932e-09
+    },
+    {
+      "angleErrorArcminutes": 7.77362244956337e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2428043.77851471,
+      "maximumVelocityComponentErrorKmPerDay": 4.5885099098086357e-07,
+      "signedRangeErrorPPM": 6.0450401913711415e-09
+    },
+    {
+      "angleErrorArcminutes": 3.3509585125825114e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2428749.20460769,
+      "maximumVelocityComponentErrorKmPerDay": 2.150027285097167e-07,
+      "signedRangeErrorPPM": 2.5193441919239245e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2756244915533738e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2429110.19361965,
+      "maximumVelocityComponentErrorKmPerDay": 6.585833034478128e-08,
+      "signedRangeErrorPPM": -9.05401790859769e-10
+    },
+    {
+      "angleErrorArcminutes": 3.497003600635026e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2429556.46050654,
+      "maximumVelocityComponentErrorKmPerDay": 2.920241968240589e-07,
+      "signedRangeErrorPPM": 2.7374241687087214e-09
+    },
+    {
+      "angleErrorArcminutes": 5.724720121335173e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2430800.89849661,
+      "maximumVelocityComponentErrorKmPerDay": 3.0169030651450157e-07,
+      "signedRangeErrorPPM": 4.10522514709232e-09
+    },
+    {
+      "angleErrorArcminutes": 7.256515489681493e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2431041.45908814,
+      "maximumVelocityComponentErrorKmPerDay": 5.994661478325725e-07,
+      "signedRangeErrorPPM": -5.0605686262476274e-09
+    },
+    {
+      "angleErrorArcminutes": 5.077313011220428e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2431846.39828253,
+      "maximumVelocityComponentErrorKmPerDay": 4.0069426177069545e-07,
+      "signedRangeErrorPPM": -3.6152809125511173e-09
+    },
+    {
+      "angleErrorArcminutes": 4.202667061615397e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2432166.58955316,
+      "maximumVelocityComponentErrorKmPerDay": 2.0797597244381905e-07,
+      "signedRangeErrorPPM": -3.254529033278894e-09
+    },
+    {
+      "angleErrorArcminutes": 4.0787572619732306e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2433042.12334963,
+      "maximumVelocityComponentErrorKmPerDay": 2.2165477275848389e-07,
+      "signedRangeErrorPPM": -2.9204763010829026e-09
+    },
+    {
+      "angleErrorArcminutes": 6.905429564651873e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2433611.87935223,
+      "maximumVelocityComponentErrorKmPerDay": 4.717876436188817e-07,
+      "signedRangeErrorPPM": 5.118251669972976e-09
+    },
+    {
+      "angleErrorArcminutes": 1.1629875529197402e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2434535.12216176,
+      "maximumVelocityComponentErrorKmPerDay": 7.869675755500793e-08,
+      "signedRangeErrorPPM": -8.016076253573492e-10
+    },
+    {
+      "angleErrorArcminutes": 5.911921410889562e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2435389.77116474,
+      "maximumVelocityComponentErrorKmPerDay": 3.0407682061195374e-07,
+      "signedRangeErrorPPM": -4.075220349045648e-09
+    },
+    {
+      "angleErrorArcminutes": 2.8213653461427677e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2435948.60519939,
+      "maximumVelocityComponentErrorKmPerDay": 1.3597309589385986e-07,
+      "signedRangeErrorPPM": 2.060029452907935e-09
+    },
+    {
+      "angleErrorArcminutes": 7.994234823276914e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2436615.42378725,
+      "maximumVelocityComponentErrorKmPerDay": 3.43556166626513e-07,
+      "signedRangeErrorPPM": -5.0091101622784e-09
+    },
+    {
+      "angleErrorArcminutes": 2.4338211471981297e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2437113.92478947,
+      "maximumVelocityComponentErrorKmPerDay": 1.153675839304924e-07,
+      "signedRangeErrorPPM": 1.4752452113925294e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2722240989717355e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2437604.05062551,
+      "maximumVelocityComponentErrorKmPerDay": 7.8001176007092e-07,
+      "signedRangeErrorPPM": 7.233335612187545e-09
+    },
+    {
+      "angleErrorArcminutes": 4.0770074511285826e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2438471.67650272,
+      "maximumVelocityComponentErrorKmPerDay": 1.7395723261870444e-07,
+      "signedRangeErrorPPM": 2.162227964906934e-09
+    },
+    {
+      "angleErrorArcminutes": 4.558412035548913e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2439055.18560933,
+      "maximumVelocityComponentErrorKmPerDay": 1.6862759366631508e-07,
+      "signedRangeErrorPPM": -2.4035857842173954e-09
+    },
+    {
+      "angleErrorArcminutes": 5.597739037718145e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2439755.96187037,
+      "maximumVelocityComponentErrorKmPerDay": 2.2587482817471027e-07,
+      "signedRangeErrorPPM": -3.0967565456614837e-09
+    },
+    {
+      "angleErrorArcminutes": 5.3575323442400696e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2440583.18686381,
+      "maximumVelocityComponentErrorKmPerDay": 2.3192842490971088e-07,
+      "signedRangeErrorPPM": -2.6914387644190584e-09
+    },
+    {
+      "angleErrorArcminutes": 1.5150307420043514e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2441311.29264981,
+      "maximumVelocityComponentErrorKmPerDay": 6.28642737865448e-08,
+      "signedRangeErrorPPM": 4.537995124631652e-10
+    },
+    {
+      "angleErrorArcminutes": 7.24764012913364e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2441530.44890857,
+      "maximumVelocityComponentErrorKmPerDay": 2.6618363335728645e-07,
+      "signedRangeErrorPPM": 2.959575257198522e-09
+    },
+    {
+      "angleErrorArcminutes": 1.1385836506576541e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2442424.13354341,
+      "maximumVelocityComponentErrorKmPerDay": 4.827161319553852e-07,
+      "signedRangeErrorPPM": 4.035168603853422e-09
+    },
+    {
+      "angleErrorArcminutes": 7.008967647668443e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2443252.97510906,
+      "maximumVelocityComponentErrorKmPerDay": 2.638844307512045e-07,
+      "signedRangeErrorPPM": 2.2132392523521946e-09
+    },
+    {
+      "angleErrorArcminutes": 4.0059111465543355e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2443670.39415621,
+      "maximumVelocityComponentErrorKmPerDay": 1.4255056157708168e-07,
+      "signedRangeErrorPPM": 1.287271695972041e-09
+    },
+    {
+      "angleErrorArcminutes": 4.444736122301689e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2444333.81374966,
+      "maximumVelocityComponentErrorKmPerDay": 1.910084392875433e-07,
+      "signedRangeErrorPPM": 8.245472403909592e-10
+    },
+    {
+      "angleErrorArcminutes": 1.213983018729796e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2445183.35838234,
+      "maximumVelocityComponentErrorKmPerDay": 5.05795469507575e-07,
+      "signedRangeErrorPPM": 2.0164752064535124e-09
+    },
+    {
+      "angleErrorArcminutes": 1.0629897669819939e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2445780.87573697,
+      "maximumVelocityComponentErrorKmPerDay": 3.327149897813797e-07,
+      "signedRangeErrorPPM": -1.7862160905959371e-09
+    },
+    {
+      "angleErrorArcminutes": 3.2924980471818736e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2446636.10695703,
+      "maximumVelocityComponentErrorKmPerDay": 1.6103149391710758e-07,
+      "signedRangeErrorPPM": -2.391197456397552e-10
+    },
+    {
+      "angleErrorArcminutes": 8.73033255170806e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2447203.21028241,
+      "maximumVelocityComponentErrorKmPerDay": 2.8853537514805794e-07,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 8.601776564165945e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2447755.19435774,
+      "maximumVelocityComponentErrorKmPerDay": 3.216555342078209e-07,
+      "signedRangeErrorPPM": -2.395982080982479e-10
+    },
+    {
+      "angleErrorArcminutes": 4.618686715761996e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2448325.96140182,
+      "maximumVelocityComponentErrorKmPerDay": 1.734006218612194e-07,
+      "signedRangeErrorPPM": 1.1974490944465947e-10
+    },
+    {
+      "angleErrorArcminutes": 7.321945366418151e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2449138.82512381,
+      "maximumVelocityComponentErrorKmPerDay": 2.6394263841211796e-07,
+      "signedRangeErrorPPM": -5.973918885765704e-10
+    },
+    {
+      "angleErrorArcminutes": 7.297004343683313e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2449795.08248385,
+      "maximumVelocityComponentErrorKmPerDay": 2.634769771248102e-07,
+      "signedRangeErrorPPM": 9.529223039065546e-10
+    },
+    {
+      "angleErrorArcminutes": 9.4278412875571e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2450057.50760697,
+      "maximumVelocityComponentErrorKmPerDay": 3.241584636271e-07,
+      "signedRangeErrorPPM": -1.4272258163797773e-09
+    },
+    {
+      "angleErrorArcminutes": 1.5426413600379986e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2451178.63707957,
+      "maximumVelocityComponentErrorKmPerDay": 5.863257683813572e-07,
+      "signedRangeErrorPPM": -3.1846376654900596e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2163137764002618e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2451545.0,
+      "maximumVelocityComponentErrorKmPerDay": 5.194160621613264e-07,
+      "signedRangeErrorPPM": -3.056276121390688e-09
+    },
+    {
+      "angleErrorArcminutes": 4.870709333978187e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2451697.12245549,
+      "maximumVelocityComponentErrorKmPerDay": 2.1600862964987755e-07,
+      "signedRangeErrorPPM": 1.1737107085541269e-09
+    },
+    {
+      "angleErrorArcminutes": 9.735443861939922e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2452116.38833777,
+      "maximumVelocityComponentErrorKmPerDay": 4.895555321127176e-07,
+      "signedRangeErrorPPM": 2.921147800755669e-09
+    },
+    {
+      "angleErrorArcminutes": 6.266020658149896e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2452678.42258373,
+      "maximumVelocityComponentErrorKmPerDay": 3.3032847568392754e-08,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 7.630927550429062e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2453304.3276592,
+      "maximumVelocityComponentErrorKmPerDay": 4.050089046359062e-07,
+      "signedRangeErrorPPM": 2.877823459925445e-09
+    },
+    {
+      "angleErrorArcminutes": 1.1820193671289475e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2454449.62157157,
+      "maximumVelocityComponentErrorKmPerDay": 4.2549800127744675e-08,
+      "signedRangeErrorPPM": -2.2638226548110174e-10
+    },
+    {
+      "angleErrorArcminutes": 4.326060421620929e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2454600.15970485,
+      "maximumVelocityComponentErrorKmPerDay": 2.13884050026536e-07,
+      "signedRangeErrorPPM": 1.693888319962511e-09
+    },
+    {
+      "angleErrorArcminutes": 6.828500723050772e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2455794.8590132,
+      "maximumVelocityComponentErrorKmPerDay": 3.935128916054964e-07,
+      "signedRangeErrorPPM": 3.322230463332828e-09
+    },
+    {
+      "angleErrorArcminutes": 8.55824801567679e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2456543.51569548,
+      "maximumVelocityComponentErrorKmPerDay": 3.4546974347904325e-07,
+      "signedRangeErrorPPM": 4.371973636884833e-09
+    },
+    {
+      "angleErrorArcminutes": 5.667627965531408e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2457131.70473066,
+      "maximumVelocityComponentErrorKmPerDay": 2.5652116164565086e-07,
+      "signedRangeErrorPPM": -3.243928817776469e-09
+    },
+    {
+      "angleErrorArcminutes": 7.71196105441802e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2457765.36549505,
+      "maximumVelocityComponentErrorKmPerDay": 4.7343201003968716e-07,
+      "signedRangeErrorPPM": 4.4876684994929544e-09
+    },
+    {
+      "angleErrorArcminutes": 9.990541459192613e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2458326.92831236,
+      "maximumVelocityComponentErrorKmPerDay": 4.87547367811203e-07,
+      "signedRangeErrorPPM": -6.130914548895649e-09
+    },
+    {
+      "angleErrorArcminutes": 1.7449509703436654e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2459040.41111774,
+      "maximumVelocityComponentErrorKmPerDay": 9.885116014629602e-08,
+      "signedRangeErrorPPM": -1.0425795901464515e-09
+    },
+    {
+      "angleErrorArcminutes": 5.782886061209833e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2459800.2756908,
+      "maximumVelocityComponentErrorKmPerDay": 3.6953133530914783e-07,
+      "signedRangeErrorPPM": 3.287611508181339e-09
+    },
+    {
+      "angleErrorArcminutes": 5.340102057763269e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2460482.49524207,
+      "maximumVelocityComponentErrorKmPerDay": 2.615124685689807e-07,
+      "signedRangeErrorPPM": 3.650124568581168e-09
+    },
+    {
+      "angleErrorArcminutes": 2.5966653045067826e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2460612.72536626,
+      "maximumVelocityComponentErrorKmPerDay": 1.253793016076088e-07,
+      "signedRangeErrorPPM": 1.6181910561787297e-09
+    },
+    {
+      "angleErrorArcminutes": 3.886398360809783e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2461768.69308735,
+      "maximumVelocityComponentErrorKmPerDay": 2.0640436559915543e-07,
+      "signedRangeErrorPPM": 2.768815573279616e-09
+    },
+    {
+      "angleErrorArcminutes": 5.131251076614324e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2462467.72317568,
+      "maximumVelocityComponentErrorKmPerDay": 2.6542693376541138e-08,
+      "signedRangeErrorPPM": 1.950961060402501e-10
+    },
+    {
+      "angleErrorArcminutes": 4.1219105174887367e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2462824.79781411,
+      "maximumVelocityComponentErrorKmPerDay": 2.609740477055311e-07,
+      "signedRangeErrorPPM": -2.5187648775346386e-09
+    },
+    {
+      "angleErrorArcminutes": 8.235185759678446e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2463147.71608887,
+      "maximumVelocityComponentErrorKmPerDay": 3.938621375709772e-07,
+      "signedRangeErrorPPM": -5.776538292249129e-09
+    },
+    {
+      "angleErrorArcminutes": 1.4967948503812633e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2464238.50165453,
+      "maximumVelocityComponentErrorKmPerDay": 1.0364965419285e-07,
+      "signedRangeErrorPPM": 1.1318196074228047e-09
+    },
+    {
+      "angleErrorArcminutes": 2.0838435047039865e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2465042.48082055,
+      "maximumVelocityComponentErrorKmPerDay": 1.2526288628578186e-07,
+      "signedRangeErrorPPM": 1.6729488937506252e-09
+    },
+    {
+      "angleErrorArcminutes": 6.243085336838821e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2465178.10806869,
+      "maximumVelocityComponentErrorKmPerDay": 5.199763108976185e-07,
+      "signedRangeErrorPPM": -4.821114245966733e-09
+    },
+    {
+      "angleErrorArcminutes": 7.492539668710588e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2466336.18854174,
+      "maximumVelocityComponentErrorKmPerDay": 4.252651706337929e-07,
+      "signedRangeErrorPPM": -5.811932286992668e-09
+    },
+    {
+      "angleErrorArcminutes": 3.350306384812868e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2466459.69788885,
+      "maximumVelocityComponentErrorKmPerDay": 1.891166903078556e-07,
+      "signedRangeErrorPPM": 2.71839848188307e-09
+    },
+    {
+      "angleErrorArcminutes": 3.972358732064137e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2467725.4018323,
+      "maximumVelocityComponentErrorKmPerDay": 2.4613109417259693e-07,
+      "signedRangeErrorPPM": 3.1913936407866134e-09
+    },
+    {
+      "angleErrorArcminutes": 5.595874812166199e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2467952.88576171,
+      "maximumVelocityComponentErrorKmPerDay": 4.93735569762066e-07,
+      "signedRangeErrorPPM": -3.885735956526056e-09
+    },
+    {
+      "angleErrorArcminutes": 8.50774597111072e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2468604.95263038,
+      "maximumVelocityComponentErrorKmPerDay": 7.090420695021749e-08,
+      "signedRangeErrorPPM": 8.737339734627636e-10
+    },
+    {
+      "angleErrorArcminutes": 8.379841165874727e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2469610.95394145,
+      "maximumVelocityComponentErrorKmPerDay": 8.344068191945553e-08,
+      "signedRangeErrorPPM": -6.880201702641785e-10
+    },
+    {
+      "angleErrorArcminutes": 3.7003946075380565e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2469833.09767748,
+      "maximumVelocityComponentErrorKmPerDay": 2.9191141948103905e-08,
+      "signedRangeErrorPPM": -3.428403961467358e-10
+    },
+    {
+      "angleErrorArcminutes": 1.7660135481255878e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2470858.75726096,
+      "maximumVelocityComponentErrorKmPerDay": 1.4819670468568802e-07,
+      "signedRangeErrorPPM": 1.5192015919100017e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2295888241084725e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2471658.93731359,
+      "maximumVelocityComponentErrorKmPerDay": 8.119968697428703e-09,
+      "signedRangeErrorPPM": -1.6685127023906638e-10
+    },
+    {
+      "angleErrorArcminutes": 1.9629988239618194e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2472165.91311868,
+      "maximumVelocityComponentErrorKmPerDay": 1.933731255121529e-07,
+      "signedRangeErrorPPM": 1.1596723566068373e-09
+    },
+    {
+      "angleErrorArcminutes": 3.164242425105619e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2472809.19415268,
+      "maximumVelocityComponentErrorKmPerDay": 2.5148619897663593e-07,
+      "signedRangeErrorPPM": -2.299236158948134e-09
+    },
+    {
+      "angleErrorArcminutes": 8.084176269350115e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2473214.72018837,
+      "maximumVelocityComponentErrorKmPerDay": 6.204936653375626e-08,
+      "signedRangeErrorPPM": -4.900942879884462e-10
+    },
+    {
+      "angleErrorArcminutes": 3.814695696878066e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2474165.77643597,
+      "maximumVelocityComponentErrorKmPerDay": 2.6245834305882454e-07,
+      "signedRangeErrorPPM": 2.260082359597815e-09
+    },
+    {
+      "angleErrorArcminutes": 4.8230316438339485e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2474661.19501694,
+      "maximumVelocityComponentErrorKmPerDay": 3.9278529584407806e-07,
+      "signedRangeErrorPPM": -3.0489997613465263e-09
+    },
+    {
+      "angleErrorArcminutes": 5.181044500936736e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2475491.47809654,
+      "maximumVelocityComponentErrorKmPerDay": 4.2229657992720604e-07,
+      "signedRangeErrorPPM": -3.1784196418082908e-09
+    },
+    {
+      "angleErrorArcminutes": 1.9663877785842535e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2476029.16018144,
+      "maximumVelocityComponentErrorKmPerDay": 1.840235199779272e-07,
+      "signedRangeErrorPPM": 1.263641729577664e-09
+    },
+    {
+      "angleErrorArcminutes": 3.9221754383668016e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2476700.22027288,
+      "maximumVelocityComponentErrorKmPerDay": 4.465109668672085e-07,
+      "signedRangeErrorPPM": -2.665622492042817e-09
+    },
+    {
+      "angleErrorArcminutes": 3.244671759545398e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2477248.93579974,
+      "maximumVelocityComponentErrorKmPerDay": 2.626911737024784e-07,
+      "signedRangeErrorPPM": 1.7149795116434318e-09
+    },
+    {
+      "angleErrorArcminutes": 1.5513642478723586e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2478201.32122438,
+      "maximumVelocityComponentErrorKmPerDay": 1.877633621916175e-07,
+      "signedRangeErrorPPM": 6.178514380266765e-10
+    },
+    {
+      "angleErrorArcminutes": 1.7470627923674975e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2478787.6001268,
+      "maximumVelocityComponentErrorKmPerDay": 1.4713805285282433e-08,
+      "signedRangeErrorPPM": -4.608884008846793e-10
+    },
+    {
+      "angleErrorArcminutes": 3.338240349364758e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2479338.38827779,
+      "maximumVelocityComponentErrorKmPerDay": 4.0863233152776957e-07,
+      "signedRangeErrorPPM": 1.5287666312832e-09
+    },
+    {
+      "angleErrorArcminutes": 3.915694350451562e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2479681.42120353,
+      "maximumVelocityComponentErrorKmPerDay": 3.350171482452424e-07,
+      "signedRangeErrorPPM": 2.438739253168969e-09
+    },
+    {
+      "angleErrorArcminutes": 1.8689989427458182e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2480831.73821499,
+      "maximumVelocityComponentErrorKmPerDay": 1.7051570466719568e-07,
+      "signedRangeErrorPPM": 6.038984018485845e-10
+    },
+    {
+      "angleErrorArcminutes": 2.0925428884608812e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2481231.58957658,
+      "maximumVelocityComponentErrorKmPerDay": 2.1074083633720875e-07,
+      "signedRangeErrorPPM": 7.525335305345672e-10
+    },
+    {
+      "angleErrorArcminutes": 5.247720592544697e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2481872.53772984,
+      "maximumVelocityComponentErrorKmPerDay": 4.999674274586141e-07,
+      "signedRangeErrorPPM": -2.396833499837027e-09
+    },
+    {
+      "angleErrorArcminutes": 4.101619998178443e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2482657.69676142,
+      "maximumVelocityComponentErrorKmPerDay": 3.484310582280159e-07,
+      "signedRangeErrorPPM": -1.937185213054657e-09
+    },
+    {
+      "angleErrorArcminutes": 2.735964018186643e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2483521.12733372,
+      "maximumVelocityComponentErrorKmPerDay": 2.2644235286861658e-07,
+      "signedRangeErrorPPM": -8.893421413782094e-10
+    },
+    {
+      "angleErrorArcminutes": 1.4862960373985658e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2484082.73655773,
+      "maximumVelocityComponentErrorKmPerDay": 1.4663964975625277e-07,
+      "signedRangeErrorPPM": 4.432283061205874e-10
+    },
+    {
+      "angleErrorArcminutes": 2.6369541347103317e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2484317.96812607,
+      "maximumVelocityComponentErrorKmPerDay": 2.5964982341974974e-07,
+      "signedRangeErrorPPM": -7.377426998951903e-10
+    },
+    {
+      "angleErrorArcminutes": 4.0577216500352996e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2485122.09109035,
+      "maximumVelocityComponentErrorKmPerDay": 5.400361260399222e-07,
+      "signedRangeErrorPPM": -1.3222723481167246e-09
+    },
+    {
+      "angleErrorArcminutes": 2.492257488156363e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2485685.53012269,
+      "maximumVelocityComponentErrorKmPerDay": 2.417218638584018e-07,
+      "signedRangeErrorPPM": 4.395481781610637e-10
+    },
+    {
+      "angleErrorArcminutes": 4.191696563385107e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2486285.2215523,
+      "maximumVelocityComponentErrorKmPerDay": 4.2338797356933355e-07,
+      "signedRangeErrorPPM": -1.3151599255828298e-09
+    },
+    {
+      "angleErrorArcminutes": 4.4865965636441946e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2487100.67170274,
+      "maximumVelocityComponentErrorKmPerDay": 4.4319313019514084e-07,
+      "signedRangeErrorPPM": -1.0197003817323265e-09
+    },
+    {
+      "angleErrorArcminutes": 4.2698773355792665e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2487870.75301776,
+      "maximumVelocityComponentErrorKmPerDay": 3.769237082451582e-07,
+      "signedRangeErrorPPM": -7.264874462624227e-10
+    },
+    {
+      "angleErrorArcminutes": 2.668155787104472e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2488712.93038928,
+      "maximumVelocityComponentErrorKmPerDay": 2.4840119294822216e-07,
+      "signedRangeErrorPPM": -4.3481036924075233e-10
+    },
+    {
+      "angleErrorArcminutes": 4.1162743111081506e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2489057.62382018,
+      "maximumVelocityComponentErrorKmPerDay": 3.658060450106859e-07,
+      "signedRangeErrorPPM": -1.0136180939078624e-09
+    },
+    {
+      "angleErrorArcminutes": 1.7734802029905858e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2489599.11743,
+      "maximumVelocityComponentErrorKmPerDay": 2.309534465894103e-07,
+      "signedRangeErrorPPM": 2.8921934760937576e-10
+    },
+    {
+      "angleErrorArcminutes": 1.3736651678965792e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2490599.14136358,
+      "maximumVelocityComponentErrorKmPerDay": 1.8844730220735073e-07,
+      "signedRangeErrorPPM": -2.8865655174890523e-10
+    },
+    {
+      "angleErrorArcminutes": 3.2464053856295946e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2491024.89436254,
+      "maximumVelocityComponentErrorKmPerDay": 2.834131009876728e-07,
+      "signedRangeErrorPPM": -5.769734500001169e-10
+    },
+    {
+      "angleErrorArcminutes": 1.0056582088457575e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2491731.20747473,
+      "maximumVelocityComponentErrorKmPerDay": 1.0395888239145279e-07,
+      "signedRangeErrorPPM": 1.441454384883988e-10
+    },
+    {
+      "angleErrorArcminutes": 2.974137917865836e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2492220.75649386,
+      "maximumVelocityComponentErrorKmPerDay": 3.3102696761488914e-07,
+      "signedRangeErrorPPM": 1.4410341212649556e-10
+    },
+    {
+      "angleErrorArcminutes": 2.5875220175288996e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2492994.8529785,
+      "maximumVelocityComponentErrorKmPerDay": 2.9060174711048603e-07,
+      "signedRangeErrorPPM": -1.4407179862269664e-10
+    },
+    {
+      "angleErrorArcminutes": 4.763399538084406e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2493900.51935796,
+      "maximumVelocityComponentErrorKmPerDay": 4.854955477640033e-07,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 3.8113911356111284e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2494324.98414872,
+      "maximumVelocityComponentErrorKmPerDay": 3.5192351788282394e-07,
+      "signedRangeErrorPPM": 2.8823113446742187e-10
+    },
+    {
+      "angleErrorArcminutes": 4.613013425857609e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2494891.745502,
+      "maximumVelocityComponentErrorKmPerDay": 5.582405719906092e-07,
+      "signedRangeErrorPPM": -7.20925507892252e-10
+    },
+    {
+      "angleErrorArcminutes": 6.06746165665685e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2495650.61843758,
+      "maximumVelocityComponentErrorKmPerDay": 6.263871910050511e-07,
+      "signedRangeErrorPPM": -7.216905751147172e-10
+    },
+    {
+      "angleErrorArcminutes": 4.5759597680200924e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2496631.76675584,
+      "maximumVelocityComponentErrorKmPerDay": 6.291957106441259e-07,
+      "signedRangeErrorPPM": 2.8925145816266063e-10
+    },
+    {
+      "angleErrorArcminutes": 4.237479214215015e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2496801.83039661,
+      "maximumVelocityComponentErrorKmPerDay": 4.247704055160284e-07,
+      "signedRangeErrorPPM": -5.787353322906101e-10
+    },
+    {
+      "angleErrorArcminutes": 1.5601131343734777e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2497988.57680651,
+      "maximumVelocityComponentErrorKmPerDay": 1.8953869584947824e-07,
+      "signedRangeErrorPPM": -4.354312958988225e-10
+    },
+    {
+      "angleErrorArcminutes": 1.319245046130496e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2498563.89942455,
+      "maximumVelocityComponentErrorKmPerDay": 1.816952135413885e-07,
+      "signedRangeErrorPPM": 5.816111574893073e-10
+    },
+    {
+      "angleErrorArcminutes": 2.7029195031116922e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2499018.26068934,
+      "maximumVelocityComponentErrorKmPerDay": 2.4656765162944794e-07,
+      "signedRangeErrorPPM": 4.3688801371052446e-10
+    },
+    {
+      "angleErrorArcminutes": 7.426271670215233e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2499391.499988431,
+      "maximumVelocityComponentErrorKmPerDay": 9.226641850546002e-07,
+      "signedRangeErrorPPM": -1.895827870616626e-09
+    },
+    {
+      "angleErrorArcminutes": 6.896570615142262e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2415526.37733691,
+      "maximumVelocityComponentErrorKmPerDay": 7.73230567574501e-07,
+      "signedRangeErrorPPM": -3.342402860999982e-09
+    },
+    {
+      "angleErrorArcminutes": 2.032783168827338e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2415795.08999342,
+      "maximumVelocityComponentErrorKmPerDay": 2.5379995349794626e-07,
+      "signedRangeErrorPPM": -7.613220066814415e-10
+    },
+    {
+      "angleErrorArcminutes": 4.350446880224983e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2416811.49759344,
+      "maximumVelocityComponentErrorKmPerDay": 3.709428710862994e-07,
+      "signedRangeErrorPPM": 2.4576402214788603e-09
+    },
+    {
+      "angleErrorArcminutes": 2.407603346111269e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2417610.38522225,
+      "maximumVelocityComponentErrorKmPerDay": 1.9958679331466556e-07,
+      "signedRangeErrorPPM": 1.2379920043461984e-09
+    },
+    {
+      "angleErrorArcminutes": 8.163840173006824e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2417931.21307402,
+      "maximumVelocityComponentErrorKmPerDay": 8.914503268897533e-08,
+      "signedRangeErrorPPM": -3.104730736652286e-10
+    },
+    {
+      "angleErrorArcminutes": 2.9063957649311876e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2418916.8248528,
+      "maximumVelocityComponentErrorKmPerDay": 2.4761538952589035e-07,
+      "signedRangeErrorPPM": 1.5682390246371004e-09
+    },
+    {
+      "angleErrorArcminutes": 2.603752943656832e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2419044.80457453,
+      "maximumVelocityComponentErrorKmPerDay": 2.2444874048233032e-07,
+      "signedRangeErrorPPM": -1.727427871387255e-09
+    },
+    {
+      "angleErrorArcminutes": 1.6284815112594515e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2420196.31910431,
+      "maximumVelocityComponentErrorKmPerDay": 1.7321144696325064e-07,
+      "signedRangeErrorPPM": -1.1133566306680638e-09
+    },
+    {
+      "angleErrorArcminutes": 4.720574353566847e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2420651.97442234,
+      "maximumVelocityComponentErrorKmPerDay": 4.3103500502184033e-07,
+      "signedRangeErrorPPM": -3.357589069794125e-09
+    },
+    {
+      "angleErrorArcminutes": 4.6860246832347764e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2421071.22491387,
+      "maximumVelocityComponentErrorKmPerDay": 5.095353117212653e-07,
+      "signedRangeErrorPPM": -2.8921604074948236e-09
+    },
+    {
+      "angleErrorArcminutes": 4.0814746781892615e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2422063.60527836,
+      "maximumVelocityComponentErrorKmPerDay": 3.7299469113349915e-07,
+      "signedRangeErrorPPM": 2.277211540447143e-09
+    },
+    {
+      "angleErrorArcminutes": 4.976598128740939e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2422627.55104308,
+      "maximumVelocityComponentErrorKmPerDay": 3.643217496573925e-07,
+      "signedRangeErrorPPM": -3.6049510142043037e-09
+    },
+    {
+      "angleErrorArcminutes": 5.470463673690418e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2423460.97187259,
+      "maximumVelocityComponentErrorKmPerDay": 3.8743019104003906e-07,
+      "signedRangeErrorPPM": -3.977599814634849e-09
+    },
+    {
+      "angleErrorArcminutes": 3.277978239318894e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2423789.74477192,
+      "maximumVelocityComponentErrorKmPerDay": 2.100132405757904e-07,
+      "signedRangeErrorPPM": -2.663976599474192e-09
+    },
+    {
+      "angleErrorArcminutes": 2.8357369642490756e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2424758.45495771,
+      "maximumVelocityComponentErrorKmPerDay": 1.9668368622660637e-07,
+      "signedRangeErrorPPM": 2.025923917107275e-09
+    },
+    {
+      "angleErrorArcminutes": 5.411057404972021e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2425319.67250015,
+      "maximumVelocityComponentErrorKmPerDay": 3.897002898156643e-08,
+      "signedRangeErrorPPM": 1.702268864909971e-10
+    },
+    {
+      "angleErrorArcminutes": 3.266832234913276e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2426039.19603405,
+      "maximumVelocityComponentErrorKmPerDay": 2.1012965589761734e-07,
+      "signedRangeErrorPPM": 2.5813858322097065e-09
+    },
+    {
+      "angleErrorArcminutes": 1.5148124182084503e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2426325.4815548,
+      "maximumVelocityComponentErrorKmPerDay": 8.981442078948021e-08,
+      "signedRangeErrorPPM": -1.555749352272915e-09
+    },
+    {
+      "angleErrorArcminutes": 4.422311670893177e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2427458.52880293,
+      "maximumVelocityComponentErrorKmPerDay": 3.8536791180376895e-07,
+      "signedRangeErrorPPM": -3.6972014895824266e-09
+    },
+    {
+      "angleErrorArcminutes": 4.007771508344605e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2427845.18927754,
+      "maximumVelocityComponentErrorKmPerDay": 3.110499164904468e-07,
+      "signedRangeErrorPPM": -3.0123948731694725e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2723013839677904e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2428733.14822602,
+      "maximumVelocityComponentErrorKmPerDay": 9.104132914217189e-08,
+      "signedRangeErrorPPM": 8.995171630517086e-10
+    },
+    {
+      "angleErrorArcminutes": 7.659008795621032e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2428886.20353408,
+      "maximumVelocityComponentErrorKmPerDay": 5.972688086330891e-07,
+      "signedRangeErrorPPM": 5.772134825747838e-09
+    },
+    {
+      "angleErrorArcminutes": 1.0452369266497357e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2430131.95416326,
+      "maximumVelocityComponentErrorKmPerDay": 4.46016201749444e-09,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 5.1998129673616025e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2430468.99457981,
+      "maximumVelocityComponentErrorKmPerDay": 3.1424860935658216e-07,
+      "signedRangeErrorPPM": 3.7095696563195978e-09
+    },
+    {
+      "angleErrorArcminutes": 5.24458325848623e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2431212.37650392,
+      "maximumVelocityComponentErrorKmPerDay": 3.159802872687578e-07,
+      "signedRangeErrorPPM": 3.948489848214584e-09
+    },
+    {
+      "angleErrorArcminutes": 1.4967948503812633e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2432126.76068621,
+      "maximumVelocityComponentErrorKmPerDay": 1.0580697562545538e-07,
+      "signedRangeErrorPPM": -1.1477826737348535e-09
+    },
+    {
+      "angleErrorArcminutes": 7.429011192515081e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2432401.80497267,
+      "maximumVelocityComponentErrorKmPerDay": 5.774127203039825e-07,
+      "signedRangeErrorPPM": 5.384634556905464e-09
+    },
+    {
+      "angleErrorArcminutes": 8.281136509249081e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2433201.26514189,
+      "maximumVelocityComponentErrorKmPerDay": 3.852182999253273e-07,
+      "signedRangeErrorPPM": 5.6636586597558706e-09
+    },
+    {
+      "angleErrorArcminutes": 4.518962714903529e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2433858.35023182,
+      "maximumVelocityComponentErrorKmPerDay": 3.293826011940837e-07,
+      "signedRangeErrorPPM": -3.3625323503859764e-09
+    },
+    {
+      "angleErrorArcminutes": 1.8114340937386413e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2434370.6564407,
+      "maximumVelocityComponentErrorKmPerDay": 9.569339454174042e-08,
+      "signedRangeErrorPPM": 1.1985895063156221e-09
+    },
+    {
+      "angleErrorArcminutes": 7.607818320091135e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2435401.58468043,
+      "maximumVelocityComponentErrorKmPerDay": 3.3035757951438427e-07,
+      "signedRangeErrorPPM": -4.891394283334001e-09
+    },
+    {
+      "angleErrorArcminutes": 3.477043125490532e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2435957.06809926,
+      "maximumVelocityComponentErrorKmPerDay": 1.8430000636726618e-07,
+      "signedRangeErrorPPM": 2.2664082084136544e-09
+    },
+    {
+      "angleErrorArcminutes": 6.319652704504106e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2436483.5512867,
+      "maximumVelocityComponentErrorKmPerDay": 4.1701423469930887e-07,
+      "signedRangeErrorPPM": 3.955324217531917e-09
+    },
+    {
+      "angleErrorArcminutes": 2.6798490082781962e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2437308.73273143,
+      "maximumVelocityComponentErrorKmPerDay": 1.2060627341270447e-07,
+      "signedRangeErrorPPM": 1.9038977366051754e-09
+    },
+    {
+      "angleErrorArcminutes": 9.858644734271015e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2437969.25387397,
+      "maximumVelocityComponentErrorKmPerDay": 3.870227374136448e-07,
+      "signedRangeErrorPPM": 5.5697144882292004e-09
+    },
+    {
+      "angleErrorArcminutes": 2.166551383616122e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2438716.22714432,
+      "maximumVelocityComponentErrorKmPerDay": 1.1140946298837662e-07,
+      "signedRangeErrorPPM": 1.0859286798462022e-09
+    },
+    {
+      "angleErrorArcminutes": 7.44326858759218e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2438838.94845569,
+      "maximumVelocityComponentErrorKmPerDay": 3.332552296342328e-07,
+      "signedRangeErrorPPM": 3.4826557904281442e-09
+    },
+    {
+      "angleErrorArcminutes": 2.3898193198933154e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2439874.56385959,
+      "maximumVelocityComponentErrorKmPerDay": 1.3120006769895554e-07,
+      "signedRangeErrorPPM": -1.3298749412797394e-09
+    },
+    {
+      "angleErrorArcminutes": 2.0672200987245494e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2440498.38059286,
+      "maximumVelocityComponentErrorKmPerDay": 9.173527359962463e-08,
+      "signedRangeErrorPPM": 7.839122419306571e-10
+    },
+    {
+      "angleErrorArcminutes": 5.608694019586791e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2441283.02594445,
+      "maximumVelocityComponentErrorKmPerDay": 2.978486008942127e-07,
+      "signedRangeErrorPPM": 2.6082101579504424e-09
+    },
+    {
+      "angleErrorArcminutes": 7.351008456179205e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2441531.56916099,
+      "maximumVelocityComponentErrorKmPerDay": 2.6851193979382515e-07,
+      "signedRangeErrorPPM": 2.5042984825620157e-09
+    },
+    {
+      "angleErrorArcminutes": 9.675554334947749e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2442633.73059517,
+      "maximumVelocityComponentErrorKmPerDay": 4.6589411795139313e-07,
+      "signedRangeErrorPPM": -3.5838655398524686e-09
+    },
+    {
+      "angleErrorArcminutes": 4.744915647541079e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2442927.72178535,
+      "maximumVelocityComponentErrorKmPerDay": 2.445594873279333e-07,
+      "signedRangeErrorPPM": -1.5084812121529484e-09
+    },
+    {
+      "angleErrorArcminutes": 1.0792753518381009e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2443458.29687049,
+      "maximumVelocityComponentErrorKmPerDay": 5.698530003428459e-07,
+      "signedRangeErrorPPM": -3.502694671754376e-09
+    },
+    {
+      "angleErrorArcminutes": 8.949369098740608e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2444253.17308001,
+      "maximumVelocityComponentErrorKmPerDay": 4.467729013413191e-07,
+      "signedRangeErrorPPM": -2.0009833403000203e-09
+    },
+    {
+      "angleErrorArcminutes": 1.2458587546111104e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2444773.03932802,
+      "maximumVelocityComponentErrorKmPerDay": 4.0873419493436813e-07,
+      "signedRangeErrorPPM": 2.3648230031261958e-09
+    },
+    {
+      "angleErrorArcminutes": 2.8038299937648455e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2445871.25435,
+      "maximumVelocityComponentErrorKmPerDay": 1.0151416063308716e-07,
+      "signedRangeErrorPPM": 3.574275760381126e-10
+    },
+    {
+      "angleErrorArcminutes": 7.484145321778058e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2446204.4697709,
+      "maximumVelocityComponentErrorKmPerDay": 3.694149199873209e-07,
+      "signedRangeErrorPPM": -9.547811366723262e-10
+    },
+    {
+      "angleErrorArcminutes": 9.827655735256694e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2446738.34779137,
+      "maximumVelocityComponentErrorKmPerDay": 4.716566763818264e-07,
+      "signedRangeErrorPPM": 7.176047905609044e-10
+    },
+    {
+      "angleErrorArcminutes": 9.070326696652811e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2447805.69421829,
+      "maximumVelocityComponentErrorKmPerDay": 2.894666977226734e-07,
+      "signedRangeErrorPPM": 2.3959801722066166e-10
+    },
+    {
+      "angleErrorArcminutes": 6.665718848918245e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2448409.0828772,
+      "maximumVelocityComponentErrorKmPerDay": 2.3210304789245129e-07,
+      "signedRangeErrorPPM": -1.1972753600200447e-10
+    },
+    {
+      "angleErrorArcminutes": 8.055032435852854e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2448992.58485513,
+      "maximumVelocityComponentErrorKmPerDay": 3.983441274613142e-07,
+      "signedRangeErrorPPM": 5.977089954803016e-10
+    },
+    {
+      "angleErrorArcminutes": 6.32649023786547e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2449406.34311914,
+      "maximumVelocityComponentErrorKmPerDay": 2.2945459932088852e-07,
+      "signedRangeErrorPPM": 8.354195542600537e-10
+    },
+    {
+      "angleErrorArcminutes": 1.4518958740400744e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2450419.16826357,
+      "maximumVelocityComponentErrorKmPerDay": 5.1083043217659e-07,
+      "signedRangeErrorPPM": -2.6104321643900297e-09
+    },
+    {
+      "angleErrorArcminutes": 1.5930725398533196e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2451192.44236538,
+      "maximumVelocityComponentErrorKmPerDay": 6.562622729688883e-07,
+      "signedRangeErrorPPM": -3.4201207181948312e-09
+    },
+    {
+      "angleErrorArcminutes": 1.1120466873892125e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2451795.80561377,
+      "maximumVelocityComponentErrorKmPerDay": 3.7878635339438915e-07,
+      "signedRangeErrorPPM": 2.9313012090911322e-09
+    },
+    {
+      "angleErrorArcminutes": 1.1750039416681208e-10,
+      "classification": "retrospective",
+      "julianDateTT": 2452577.94842499,
+      "maximumVelocityComponentErrorKmPerDay": 4.4424086809158325e-07,
+      "signedRangeErrorPPM": 3.6025777566963e-09
+    },
+    {
+      "angleErrorArcminutes": 1.8114340937386413e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2452844.6282542,
+      "maximumVelocityComponentErrorKmPerDay": 8.908682502806187e-08,
+      "signedRangeErrorPPM": -8.107533572570058e-10
+    },
+    {
+      "angleErrorArcminutes": 1.9579053015714032e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2453853.49761008,
+      "maximumVelocityComponentErrorKmPerDay": 1.076841726899147e-07,
+      "signedRangeErrorPPM": -9.137207395861838e-10
+    },
+    {
+      "angleErrorArcminutes": 4.7793061781925994e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2454280.85023441,
+      "maximumVelocityComponentErrorKmPerDay": 2.399901859462261e-07,
+      "signedRangeErrorPPM": -2.383195347994115e-09
+    },
+    {
+      "angleErrorArcminutes": 5.7017960422471853e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2454672.72743283,
+      "maximumVelocityComponentErrorKmPerDay": 2.3667234927415848e-07,
+      "signedRangeErrorPPM": -2.5943341920780575e-09
+    },
+    {
+      "angleErrorArcminutes": 3.2019323249120835e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2455433.36847207,
+      "maximumVelocityComponentErrorKmPerDay": 1.238367985934019e-07,
+      "signedRangeErrorPPM": 1.4484182041901552e-09
+    },
+    {
+      "angleErrorArcminutes": 3.2612336063450746e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2456435.01856489,
+      "maximumVelocityComponentErrorKmPerDay": 1.3515091268345714e-07,
+      "signedRangeErrorPPM": -1.9712107468944018e-09
+    },
+    {
+      "angleErrorArcminutes": 1.866224846153785e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2456700.33360452,
+      "maximumVelocityComponentErrorKmPerDay": 8.218921720981598e-08,
+      "signedRangeErrorPPM": -8.719247908260523e-10
+    },
+    {
+      "angleErrorArcminutes": 6.923351806701275e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2457319.04831117,
+      "maximumVelocityComponentErrorKmPerDay": 3.494933480396867e-07,
+      "signedRangeErrorPPM": 3.6636326526889976e-09
+    },
+    {
+      "angleErrorArcminutes": 7.403396746598615e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2458425.45563079,
+      "maximumVelocityComponentErrorKmPerDay": 3.39350663125515e-07,
+      "signedRangeErrorPPM": -4.4312030212502686e-09
+    },
+    {
+      "angleErrorArcminutes": 6.528785572934573e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2458956.94343899,
+      "maximumVelocityComponentErrorKmPerDay": 4.2733154259622097e-07,
+      "signedRangeErrorPPM": 3.968206197204695e-09
+    },
+    {
+      "angleErrorArcminutes": 2.930828934608361e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2459820.13079691,
+      "maximumVelocityComponentErrorKmPerDay": 1.3105454854667187e-07,
+      "signedRangeErrorPPM": 1.6431757250831308e-09
+    },
+    {
+      "angleErrorArcminutes": 5.4666074463063015e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2459877.04726638,
+      "maximumVelocityComponentErrorKmPerDay": 3.2961543183773756e-07,
+      "signedRangeErrorPPM": -3.282741469869636e-09
+    },
+    {
+      "angleErrorArcminutes": 7.866296216385002e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2460765.00812253,
+      "maximumVelocityComponentErrorKmPerDay": 4.494795575737953e-07,
+      "signedRangeErrorPPM": -5.041936053501162e-09
+    },
+    {
+      "angleErrorArcminutes": 1.5775807714319158e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2461445.04170746,
+      "maximumVelocityComponentErrorKmPerDay": 1.0388612281531096e-07,
+      "signedRangeErrorPPM": -1.1941556145765474e-09
+    },
+    {
+      "angleErrorArcminutes": 7.32564325185718e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2461934.30617446,
+      "maximumVelocityComponentErrorKmPerDay": 3.557652235031128e-07,
+      "signedRangeErrorPPM": -5.12548768641181e-09
+    },
+    {
+      "angleErrorArcminutes": 2.8321870611691422e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2462505.30357558,
+      "maximumVelocityComponentErrorKmPerDay": 1.8596620066091418e-07,
+      "signedRangeErrorPPM": 2.14449153994121e-09
+    },
+    {
+      "angleErrorArcminutes": 3.455610820803723e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2463224.66152449,
+      "maximumVelocityComponentErrorKmPerDay": 1.8329592421650887e-07,
+      "signedRangeErrorPPM": -2.6917517897812598e-09
+    },
+    {
+      "angleErrorArcminutes": 7.961819711774438e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2463942.68035387,
+      "maximumVelocityComponentErrorKmPerDay": 4.918110789731145e-07,
+      "signedRangeErrorPPM": -6.069644442477171e-09
+    },
+    {
+      "angleErrorArcminutes": 2.8672025702156533e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2464678.75898516,
+      "maximumVelocityComponentErrorKmPerDay": 1.519802026450634e-07,
+      "signedRangeErrorPPM": -1.6840531773927076e-09
+    },
+    {
+      "angleErrorArcminutes": 9.418313601220375e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2465349.5273146,
+      "maximumVelocityComponentErrorKmPerDay": 5.423516995506361e-07,
+      "signedRangeErrorPPM": 7.20932899650328e-09
+    },
+    {
+      "angleErrorArcminutes": 3.73932201830091e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2466198.08935131,
+      "maximumVelocityComponentErrorKmPerDay": 2.3387838155031204e-07,
+      "signedRangeErrorPPM": 2.913092157685412e-09
+    },
+    {
+      "angleErrorArcminutes": 1.563465054809118e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2466839.74355601,
+      "maximumVelocityComponentErrorKmPerDay": 9.493669494986534e-08,
+      "signedRangeErrorPPM": 1.2601430482968832e-09
+    },
+    {
+      "angleErrorArcminutes": 4.401107408896707e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2467352.01703824,
+      "maximumVelocityComponentErrorKmPerDay": 2.884935383917764e-07,
+      "signedRangeErrorPPM": 2.8548785952307755e-09
+    },
+    {
+      "angleErrorArcminutes": 2.7648154989545895e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2468238.99483947,
+      "maximumVelocityComponentErrorKmPerDay": 1.8830178305506706e-07,
+      "signedRangeErrorPPM": -2.2852679172381715e-09
+    },
+    {
+      "angleErrorArcminutes": 4.742360615728649e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2468820.11773124,
+      "maximumVelocityComponentErrorKmPerDay": 3.536115400493145e-08,
+      "signedRangeErrorPPM": 1.7414585730990228e-10
+    },
+    {
+      "angleErrorArcminutes": 2.4682359508703088e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2469377.10943665,
+      "maximumVelocityComponentErrorKmPerDay": 2.2308813640847802e-07,
+      "signedRangeErrorPPM": 1.5536521035535077e-09
+    },
+    {
+      "angleErrorArcminutes": 3.9204745753033e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2470158.60592306,
+      "maximumVelocityComponentErrorKmPerDay": 2.847227733582258e-07,
+      "signedRangeErrorPPM": 2.899768571247114e-09
+    },
+    {
+      "angleErrorArcminutes": 6.461792139070637e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2470818.91075634,
+      "maximumVelocityComponentErrorKmPerDay": 4.260800778865814e-08,
+      "signedRangeErrorPPM": -6.755979455872917e-10
+    },
+    {
+      "angleErrorArcminutes": 2.710950521762165e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2471195.91108464,
+      "maximumVelocityComponentErrorKmPerDay": 1.8597347661852837e-07,
+      "signedRangeErrorPPM": -2.0156157650777824e-09
+    },
+    {
+      "angleErrorArcminutes": 6.637751707577585e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2472348.81956191,
+      "maximumVelocityComponentErrorKmPerDay": 4.709872882813215e-07,
+      "signedRangeErrorPPM": -4.627037060159244e-09
+    },
+    {
+      "angleErrorArcminutes": 5.359008420079061e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2472782.25824717,
+      "maximumVelocityComponentErrorKmPerDay": 5.310939741320908e-07,
+      "signedRangeErrorPPM": -3.778665409855191e-09
+    },
+    {
+      "angleErrorArcminutes": 5.6971278485257686e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2473501.37705836,
+      "maximumVelocityComponentErrorKmPerDay": 3.901368472725153e-07,
+      "signedRangeErrorPPM": -3.5809218114952697e-09
+    },
+    {
+      "angleErrorArcminutes": 3.1661624109367083e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2474015.65793258,
+      "maximumVelocityComponentErrorKmPerDay": 1.9615981727838516e-08,
+      "signedRangeErrorPPM": 6.469240160146082e-10
+    },
+    {
+      "angleErrorArcminutes": 3.815082202374838e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2474946.32706313,
+      "maximumVelocityComponentErrorKmPerDay": 2.846063580363989e-07,
+      "signedRangeErrorPPM": 3.038717972577974e-09
+    },
+    {
+      "angleErrorArcminutes": 5.084412386213852e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2475468.2953057,
+      "maximumVelocityComponentErrorKmPerDay": 4.966859705746174e-07,
+      "signedRangeErrorPPM": -3.3382313860087693e-09
+    },
+    {
+      "angleErrorArcminutes": 3.276769837165888e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2476238.4124669,
+      "maximumVelocityComponentErrorKmPerDay": 2.3527536541223526e-07,
+      "signedRangeErrorPPM": -2.206243419278711e-09
+    },
+    {
+      "angleErrorArcminutes": 1.615939771170452e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2476544.12425798,
+      "maximumVelocityComponentErrorKmPerDay": 1.853477442637086e-07,
+      "signedRangeErrorPPM": 6.282565100944878e-10
+    },
+    {
+      "angleErrorArcminutes": 3.69628350802301e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2477145.97644342,
+      "maximumVelocityComponentErrorKmPerDay": 3.228269633837044e-07,
+      "signedRangeErrorPPM": -1.8728569242784126e-09
+    },
+    {
+      "angleErrorArcminutes": 3.047012988238453e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2477948.25568268,
+      "maximumVelocityComponentErrorKmPerDay": 2.2706808522343636e-07,
+      "signedRangeErrorPPM": -1.5483459352378648e-09
+    },
+    {
+      "angleErrorArcminutes": 4.140535272298294e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2478617.63971733,
+      "maximumVelocityComponentErrorKmPerDay": 3.0675437301397324e-08,
+      "signedRangeErrorPPM": -4.616024722879489e-10
+    },
+    {
+      "angleErrorArcminutes": 3.272270002692539e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2479334.99428442,
+      "maximumVelocityComponentErrorKmPerDay": 3.954482963308692e-07,
+      "signedRangeErrorPPM": 1.528812515769253e-09
+    },
+    {
+      "angleErrorArcminutes": 3.827558134640033e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2479705.85011955,
+      "maximumVelocityComponentErrorKmPerDay": 4.6339118853211403e-07,
+      "signedRangeErrorPPM": 1.6762812014011053e-09
+    },
+    {
+      "angleErrorArcminutes": 2.348811234279483e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2480778.05171395,
+      "maximumVelocityComponentErrorKmPerDay": 2.385058905929327e-07,
+      "signedRangeErrorPPM": -1.2083123719784687e-09
+    },
+    {
+      "angleErrorArcminutes": 3.2389873942270873e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2481558.61917104,
+      "maximumVelocityComponentErrorKmPerDay": 3.3242395147681236e-07,
+      "signedRangeErrorPPM": -1.6515394130707423e-09
+    },
+    {
+      "angleErrorArcminutes": 3.4844461718297636e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2482233.35102318,
+      "maximumVelocityComponentErrorKmPerDay": 3.2044044928625226e-07,
+      "signedRangeErrorPPM": -1.4943057427775108e-09
+    },
+    {
+      "angleErrorArcminutes": 3.746136168763802e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2482714.13660949,
+      "maximumVelocityComponentErrorKmPerDay": 4.824396455660462e-07,
+      "signedRangeErrorPPM": -1.7875253744370146e-09
+    },
+    {
+      "angleErrorArcminutes": 1.92695700779015e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2483383.85600476,
+      "maximumVelocityComponentErrorKmPerDay": 1.6654666978865862e-07,
+      "signedRangeErrorPPM": -7.417253649050647e-10
+    },
+    {
+      "angleErrorArcminutes": 1.893918163779401e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2483943.35103077,
+      "maximumVelocityComponentErrorKmPerDay": 2.4406472221016884e-07,
+      "signedRangeErrorPPM": -7.392994297615639e-10
+    },
+    {
+      "angleErrorArcminutes": 1.3729721841316379e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2484833.76356742,
+      "maximumVelocityComponentErrorKmPerDay": 1.223961589857936e-07,
+      "signedRangeErrorPPM": 4.414148817696698e-10
+    },
+    {
+      "angleErrorArcminutes": 3.850437562557435e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2485068.26440198,
+      "maximumVelocityComponentErrorKmPerDay": 4.43993485532701e-07,
+      "signedRangeErrorPPM": -1.1756756690830885e-09
+    },
+    {
+      "angleErrorArcminutes": 2.0306056080942172e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2485742.03847394,
+      "maximumVelocityComponentErrorKmPerDay": 2.416782081127167e-07,
+      "signedRangeErrorPPM": 5.85910721462225e-10
+    },
+    {
+      "angleErrorArcminutes": 1.3541517375443088e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2486219.95490977,
+      "maximumVelocityComponentErrorKmPerDay": 1.423177309334278e-07,
+      "signedRangeErrorPPM": -5.846755244892944e-10
+    },
+    {
+      "angleErrorArcminutes": 4.399027927934256e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2487486.16110118,
+      "maximumVelocityComponentErrorKmPerDay": 3.9317819755524397e-07,
+      "signedRangeErrorPPM": -1.0183481137161175e-09
+    },
+    {
+      "angleErrorArcminutes": 9.180350299837665e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2487792.78684596,
+      "maximumVelocityComponentErrorKmPerDay": 8.111237548291683e-08,
+      "signedRangeErrorPPM": -2.906665591621874e-10
+    },
+    {
+      "angleErrorArcminutes": 2.4443240422049225e-13,
+      "classification": "retrospective",
+      "julianDateTT": 2488349.19444403,
+      "maximumVelocityComponentErrorKmPerDay": 4.773028194904327e-09,
+      "signedRangeErrorPPM": -4.352607839755531e-10
+    },
+    {
+      "angleErrorArcminutes": 5.1726826292016405e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2489349.89432359,
+      "maximumVelocityComponentErrorKmPerDay": 6.085610948503017e-08,
+      "signedRangeErrorPPM": 2.8939108420377253e-10
+    },
+    {
+      "angleErrorArcminutes": 1.332944448296124e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2489588.0282826,
+      "maximumVelocityComponentErrorKmPerDay": 1.3163662515580654e-07,
+      "signedRangeErrorPPM": 1.4461332269677672e-10
+    },
+    {
+      "angleErrorArcminutes": 3.657648687181632e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2490755.06830972,
+      "maximumVelocityComponentErrorKmPerDay": 3.827153705060482e-08,
+      "signedRangeErrorPPM": -2.8858954364456703e-10
+    },
+    {
+      "angleErrorArcminutes": 3.742495281695624e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2491078.12558752,
+      "maximumVelocityComponentErrorKmPerDay": 5.149631761014462e-07,
+      "signedRangeErrorPPM": -4.3270275600996704e-10
+    },
+    {
+      "angleErrorArcminutes": 3.607763151163709e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2491848.4354043,
+      "maximumVelocityComponentErrorKmPerDay": 3.9274164009839296e-07,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 9.790971364406175e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2492164.16974386,
+      "maximumVelocityComponentErrorKmPerDay": 1.3278622645884752e-07,
+      "signedRangeErrorPPM": -1.4410735197424891e-10
+    },
+    {
+      "angleErrorArcminutes": 3.155749641645112e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2492930.14011886,
+      "maximumVelocityComponentErrorKmPerDay": 4.5736669562757015e-08,
+      "signedRangeErrorPPM": 0.0
+    },
+    {
+      "angleErrorArcminutes": 3.193987639624035e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2493931.92163025,
+      "maximumVelocityComponentErrorKmPerDay": 3.202003426849842e-07,
+      "signedRangeErrorPPM": -1.440874735842894e-10
+    },
+    {
+      "angleErrorArcminutes": 3.056598813648627e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2494455.25270824,
+      "maximumVelocityComponentErrorKmPerDay": 3.1417584978044033e-07,
+      "signedRangeErrorPPM": -1.4412824697462665e-10
+    },
+    {
+      "angleErrorArcminutes": 2.4936133132889936e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2495394.66052853,
+      "maximumVelocityComponentErrorKmPerDay": 2.469751052558422e-07,
+      "signedRangeErrorPPM": 1.4427891122777203e-10
+    },
+    {
+      "angleErrorArcminutes": 3.9642671695119175e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2495883.69113525,
+      "maximumVelocityComponentErrorKmPerDay": 3.789755282923579e-07,
+      "signedRangeErrorPPM": 2.8879657205966354e-10
+    },
+    {
+      "angleErrorArcminutes": 2.6625111222640616e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2496165.32448817,
+      "maximumVelocityComponentErrorKmPerDay": 3.6013079807162285e-07,
+      "signedRangeErrorPPM": 1.4447809930183595e-10
+    },
+    {
+      "angleErrorArcminutes": 4.007345547537819e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2496810.81603086,
+      "maximumVelocityComponentErrorKmPerDay": 5.448382580652833e-07,
+      "signedRangeErrorPPM": -4.34060749666882e-10
+    },
+    {
+      "angleErrorArcminutes": 1.1004319897717912e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2497723.55861843,
+      "maximumVelocityComponentErrorKmPerDay": 1.3250974006950855e-07,
+      "signedRangeErrorPPM": 1.4503298904374498e-10
+    },
+    {
+      "angleErrorArcminutes": 5.646990642523149e-12,
+      "classification": "retrospective",
+      "julianDateTT": 2498113.05661445,
+      "maximumVelocityComponentErrorKmPerDay": 6.417394615709782e-08,
+      "signedRangeErrorPPM": 1.451975866853853e-10
+    },
+    {
+      "angleErrorArcminutes": 3.4897462265313676e-11,
+      "classification": "retrospective",
+      "julianDateTT": 2499196.87673889,
+      "maximumVelocityComponentErrorKmPerDay": 3.8479629438370466e-07,
+      "signedRangeErrorPPM": -1.1657976723489717e-09
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import platform
 import subprocess
 import tempfile
 from pathlib import Path
+import source_archive
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,6 +37,7 @@ def sha256(path):
 
 def input_paths():
     paths = [Path(__file__), PROBE, ENGINE, HEADER, ARCHIVE, MANIFEST]
+    paths += [p for p in sorted(ENGINE.parent.rglob("*")) if p.suffix in {".c", ".h", ".inc"} and p not in paths]
     for name in ("moon-observer", "mars-observer", "pluto-observer", "mercury-station"):
         paths.append(ROOT / f"Scripts/reference-data/sources/horizons/{name}.json")
         paths.append(ROOT / f"Scripts/reference-data/sources/horizons/{name}.query.json")
@@ -47,7 +49,7 @@ def compile_probe(output):
         [
             "cc", "-O2", "-std=c11", "-pthread",
             "-I", str(HEADER.parent),
-            str(ENGINE), str(PROBE), "-lm", "-o", str(output),
+            *map(str, sorted(ENGINE.parent.rglob("*.c"))), str(PROBE), "-lm", "-o", str(output),
         ],
         cwd=ROOT,
         check=True,
@@ -195,6 +197,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
+    if __name__ == "__main__" and args.check:
+        source_archive.replay(ROOT, Path(__file__), ["--check"])
+        return
     repository_revision = None
     if args.check and EVIDENCE.exists():
         repository_revision = json.loads(EVIDENCE.read_text()).get("repositoryRevisionAtMeasurement")

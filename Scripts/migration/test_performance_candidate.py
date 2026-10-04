@@ -1,5 +1,8 @@
 import copy
 import importlib.util
+import json
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -83,6 +86,15 @@ class PerformanceCandidateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "candidate artifact provenance"):
             self.candidate_module.check_evidence(
                 self.baseline_module, self.baseline, artifact, self.candidate["inputSHA256"])
+
+    def test_archive_cli_verifies_frozen_evidence_without_qualifying_shipping_model(self):
+        result = subprocess.run([sys.executable, str(CANDIDATE_MODULE_PATH), '--check-archive'], text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr + result.stdout)
+        evidence = json.loads(result.stdout)
+        self.assertEqual(evidence['source'], 'archived-measured-candidate')
+        self.assertFalse(evidence['shippingModelQualified'])
+        self.assertTrue(evidence['evaluation']['passed'])
+        self.assertEqual(evidence['archiveRevision'], 'ec134360afc24f91cbc2724bd81b2a925e110194')
 
 
 if __name__ == "__main__":

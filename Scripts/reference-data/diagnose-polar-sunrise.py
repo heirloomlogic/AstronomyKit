@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+import source_archive
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -48,7 +49,7 @@ def sha256(data: bytes) -> str:
 
 
 def read_verified_source(path: Path, expected_hash: str) -> str:
-    data = path.read_bytes()
+    data = source_archive.read_bytes(ROOT, path) if path.is_relative_to(ROOT) else path.read_bytes()
     actual_hash = sha256(data)
     if actual_hash != expected_hash:
         raise RuntimeError(f"source hash changed for {path}: expected {expected_hash}, got {actual_hash}")

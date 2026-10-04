@@ -10,6 +10,7 @@ import re
 import subprocess
 import urllib.parse
 import urllib.request
+import source_archive
 
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / 'Scripts/reference-data/sources/distance/model-diagnostics/pluto'
@@ -18,7 +19,7 @@ AU = 149597870.7
 
 
 def sha(path):
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return source_archive.sha256(ROOT, path)
 
 
 def write(path, value):
@@ -143,7 +144,7 @@ def run_variant(plan, step, name, modern, force=None):
     directory = WORK/epoch_key/(name+'-'+str(step)); directory.mkdir(parents=True,exist_ok=True)
     original = ROOT/'Sources/CLibAstronomy/astronomy.c'
     source = directory/'astronomy.c'
-    contents=variant_source(original.read_text(),step,modern)
+    contents=variant_source(source_archive.read_bytes(ROOT, original).decode(),step,modern)
     if force: contents=relative_force_source(contents,inner=force=='relative-eight-planets')
     source.write_text(contents)
     # Source includes generated coefficient files beside the production source.
@@ -289,7 +290,7 @@ def check():
         raise ValueError('initial frozen plan changed')
     bary=references(plan,'barycenter');center=references(plan,'body-center')
     seeds=[r for r in bary if r['ttDays'] in plan['seedTTDays']]
-    original=(ROOT/'Sources/CLibAstronomy/astronomy.c').read_text()
+    original=source_archive.read_bytes(ROOT, ROOT/'Sources/CLibAstronomy/astronomy.c').decode()
     for stem in ['integration','force','convergence','omission','offgrid','phasegrid']:
         grid=stem in ['offgrid','phasegrid']
         dp=json.loads((EVIDENCE/stem/'plan.json').read_text()) if grid else plan

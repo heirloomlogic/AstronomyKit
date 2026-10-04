@@ -1,5 +1,7 @@
 # Outer-planet and Pluto model-fitness diagnosis
 
+This diagnosis records the pre-bundle production model. The archived failures remain intact; [bundled integration evidence](BundledEphemerisIntegration.md) records the authorized Moon/Pluto repair and its remaining limits.
+
 This investigation follows [DistanceModelFollowup.md](DistanceModelFollowup.md) and is tracked in [issue #119](https://github.com/heirloomlogic/AstronomyKit/issues/119). The owner requested completion of the diagnosis while leaving product limits undecided. Production numerical models, the original distance characterization, allowances, holdout, and acceptance fixtures remain unchanged. New experiment dates were selected before acquiring their reference values; these are diagnostic samples rather than a new acceptance set.
 
 The scientific investigations and their source-bound results are recorded in [OuterPlanetModelDiagnosis.md](OuterPlanetModelDiagnosis.md) and [PlutoModelDiagnosis.md](PlutoModelDiagnosis.md). Raw responses, request recipes, extracted reference states, experiment plans, evaluator provenance, and reports live under `Scripts/reference-data/sources/distance/model-diagnostics/`. Large downloaded kernels, the official TOP2013 evaluator/control/coefficient downloads, and disposable compiled model variants live under `.context/` and are not committed package data; their exact source URLs and hashes remain archived.

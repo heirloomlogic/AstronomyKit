@@ -8,6 +8,7 @@ astronomy_source=${1:-"$source_root/astronomy.c"}
 compiler=${CC:-cc}
 build_dir=$(mktemp -d "${TMPDIR:-/tmp}/astronomykit-moon-cache.XXXXXX")
 trap 'rm -rf "$build_dir"' EXIT HUP INT TERM
+CC="$compiler" sh "$repo_root/Scripts/ephemeris/compile-support.sh" "$source_root" "$build_dir"
 
 compile()
 {
@@ -49,23 +50,23 @@ HEADER
 python3 "$build_dir/rewrite.py" "$astronomy_source" "$build_dir/instrumented.c" instrument
 compile -include "$build_dir/count.h" -c "$build_dir/instrumented.c" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/moon_cache_probe.c" -o "$build_dir/probe.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" -lm -o "$build_dir/moon-cache-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/moon-cache-probe"
 "$build_dir/moon-cache-probe"
 
 python3 "$build_dir/rewrite.py" "$astronomy_source" "$build_dir/uncached.c" bypass
 compile -c "$astronomy_source" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/moon_output_probe.c" -o "$build_dir/output-probe.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" -lm -o "$build_dir/cached-output-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/cached-output-probe"
 "$build_dir/cached-output-probe" > "$build_dir/cached.out"
 compile -c "$build_dir/uncached.c" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" -lm -o "$build_dir/uncached-output-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/uncached-output-probe"
 "$build_dir/uncached-output-probe" > "$build_dir/uncached.out"
 cmp "$build_dir/cached.out" "$build_dir/uncached.out"
 echo "Cached and bypassed Moon positions, rates, clients, and metadata are bit-identical."
 
 python3 "$build_dir/rewrite.py" "$build_dir/uncached.c" "$build_dir/uncached-instrumented.c" instrument
 compile -include "$build_dir/count.h" -c "$build_dir/uncached-instrumented.c" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" -lm -o "$build_dir/moon-cache-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/moon-cache-probe"
 negative_status=0
 "$build_dir/moon-cache-probe" > "$build_dir/negative.log" 2>&1 || negative_status=$?
 if [ "$negative_status" -ne 1 ]; then
