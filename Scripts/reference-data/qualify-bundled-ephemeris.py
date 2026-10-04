@@ -19,7 +19,9 @@ B = module('bundled_builder', 'build-bundled-runner.py')
 G = H.G
 Q = G.Q
 ROOT = Q.ROOT
-REPORT = ROOT / 'Documentation/Migration/bundled-public-api-assessment.json'
+SCHEMA_VERSION = 2
+PREVIOUS_REPORT = ROOT / 'Documentation/Migration/bundled-public-api-assessment.json'
+REPORT = ROOT / 'Documentation/Migration/bundled-public-api-assessment-v2.json'
 
 
 def match_events(case, reference, actual, allowance):
@@ -37,7 +39,7 @@ def match_events(case, reference, actual, allowance):
 def lunar_holdout(binary):
     # This population was frozen before production integration. Its original
     # candidate report and input locks remain intact; this is a public API replay.
-    plan = json.loads(H.PLAN.read_bytes())
+    plan = H.load_plan()
     if plan['policySHA256'] != Q.digest(Q.POLICY.read_bytes()):
         raise ValueError('holdout owner policy drift')
     rows, metadata = H.pair('positions', Q.parameters('301', '399', 'NONE', plan['positionJulianDatesTT']))
@@ -83,7 +85,7 @@ def assess(binary):
     inputs.update({str(p.relative_to(ROOT)): Q.digest(p.read_bytes()) for p in paths if p.is_file()})
     compact_positions = [{key: value for key, value in row.items() if key != 'reference'} | {'julianDateTT': row['reference']['julianDateTT']} for row in positions['positions']]
     B.validate(binary)
-    return {'schemaVersion': 1, 'classification': 'finite-production-public-api-replay-not-continuous-or-physical-uncertainty-qualification',
+    return {'schemaVersion': SCHEMA_VERSION, 'previousAssessmentSHA256': Q.digest(PREVIOUS_REPORT.read_bytes()), 'classification': 'finite-production-public-api-replay-not-continuous-or-physical-uncertainty-qualification',
             'baselineEvidenceCommit': 'ec134360', 'inputSHA256': inputs, 'executableProvenance': positions['executableProvenance'], 'boundBuild': build,
             'referenceEnvironment': geometric['referenceEnvironment'], 'positionSummary': positions['positionSummary'],
             'positions': compact_positions, 'lunarApsides': positions['lunarApsides'], 'positionTotals': positions['totals'],

@@ -134,7 +134,11 @@ class ComparisonProtocolTests(unittest.TestCase):
 
     def test_archive_names_the_exact_candidate_sources(self):
         metadata = json.loads((ARTIFACTS / "metadata.json").read_text())
-        self.assertEqual(self.comparison.source_hashes(), metadata["sourceHashes"])
+        spec = importlib.util.spec_from_file_location('migration_source_archive', ROOT / 'Scripts/reference-data/source_archive.py')
+        archive = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(archive)
+        historical = archive.migration_source_hashes(ROOT, self.comparison.source_hashes())
+        self.assertEqual(historical, metadata["sourceHashes"])
 
     def test_executable_fingerprint_ignores_build_paths_but_detects_code_changes(self):
         with tempfile.TemporaryDirectory() as temporary:

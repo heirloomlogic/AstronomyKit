@@ -33,19 +33,29 @@ The harness limits are third-party parity thresholds, not scientific accuracy gu
 
 [PositionEventValidationEvidence.md](../../Documentation/Migration/PositionEventValidationEvidence.md) reports the frozen 1900–2130 TT public-API pilot and its retained timing failures. `qualify-position-events.py` archives 29 independent vector series plus lunar apsis reference roots; `qualify-geometric-events.py` adds geometric lunar nodes and simultaneous heliocentric alignments using a pinned independent IAU2006 date-plane transform. The public Swift runner streams explicit-TT requests through `accuracy-batch`. These tools preserve historical fixture budgets and production models.
 
-The exact local replay requires CPython 3.14.7, the recorded Swift toolchain/executable, and the pinned reference environment. Install dependencies only under `.context`; they are not shipping AstronomyKit dependencies. ERFA/NumPy wheel and loaded-binary hashes are recorded. Platform-specific wheels and compiler differences are provenance changes, not automatic evidence failures or permission to rewrite a frozen numerical report.
+Historical pilot replay requires checkout `ec134360afc24f91cbc2724bd81b2a925e110194`, CPython 3.14.7, and the exact Swift toolchain, executable bytes, source hashes and reference environment recorded in `position-event-assessment.json` and `geometric-event-assessment.json`. The executable must occupy its recorded relative path, `.context/accuracy-qualification/build-runner/out/Products/Debug/AccuracyQualificationRunner`; the position pilot pins SHA-256 `e064aae8209f6b9fc7ad291ced6d09f607bc401d91754ba739bc4fbc90959cfa`. Restore that executable from the original evidence environment. A rebuild is usable only if its hash matches; rebuilding the current bundled model cannot reproduce the historical pilot or its lunar search diagnosis. Install dependencies only under `.context`; they are not shipping AstronomyKit dependencies. ERFA/NumPy wheel and loaded-binary hashes are recorded. Platform-specific wheels and compiler differences are provenance changes, not automatic evidence failures or permission to rewrite a frozen numerical report.
 
 ```sh
 mkdir -p .context/accuracy-qualification
 python3 -m pip install --target .context/accuracy-qualification/python-reference pyerfa==2.0.1.5 numpy==2.5.3
 python3 -m pip install --target .context/accuracy-qualification/python-reference --no-deps jplephem==2.24
 python3 -m pip download --only-binary=:all: --dest .context/accuracy-qualification/reference-wheels pyerfa==2.0.1.5 numpy==2.5.3
-python3 Scripts/reference-data/build-accuracy-runner.py
-python3 Scripts/reference-data/qualify-position-events.py check
-python3 Scripts/reference-data/qualify-geometric-events.py check
-python3 Scripts/reference-data/diagnose-lunar-event-search.py check
+# Run these historical checks from the pinned checkout with its restored executable.
+python3 Scripts/reference-data/qualify-position-events.py check --binary .context/accuracy-qualification/build-runner/out/Products/Debug/AccuracyQualificationRunner
+python3 Scripts/reference-data/qualify-geometric-events.py check --binary .context/accuracy-qualification/build-runner/out/Products/Debug/AccuracyQualificationRunner
+python3 Scripts/reference-data/diagnose-lunar-event-search.py check --binary .context/accuracy-qualification/build-runner/out/Products/Debug/AccuracyQualificationRunner
 python3 -m unittest discover -s Scripts/reference-data -p 'test_*.py' -v
 ```
+
+Current production replay uses the bundled runner and the separate [v2 public API assessment](../../Documentation/Migration/bundled-public-api-assessment-v2.json). The builder binds the live sources, Swift compiler version, package manifest and executable. The original [v1 assessment](../../Documentation/Migration/bundled-public-api-assessment.json) remains frozen. Run these commands from the current checkout after installing the reference environment above; they require the holdout plan's hash-pinned kernel and folded payload in `.context/accuracy-qualification`.
+
+```sh
+python3 Scripts/reference-data/build-bundled-runner.py
+python3 Scripts/reference-data/qualify-bundled-ephemeris.py check
+python3 -B -m unittest discover -s Scripts/reference-data -p 'test_*.py' -v
+```
+
+Exact `check` replay requires the compiler, executable and reference binary hashes recorded in v2. A different environment requires a separately named assessment; it does not authorize replacing either frozen report. The historical pilot checks above intentionally reject the current bundled executable.
 
 The `acquire-positions`, `acquire-events` and geometric `acquire` commands resume complete response/query pairs and reject detached or incomplete pairs. They do not silently overwrite an archive. The `report` commands refuse an existing report; preserve original bytes before a separate source/provenance revalidation or candidate experiment. `check` replays every raw response/hash/recipe, public position/event result, frozen metric and source binding offline. Astronomical exceedances are retained results, not parser/test failures.
 

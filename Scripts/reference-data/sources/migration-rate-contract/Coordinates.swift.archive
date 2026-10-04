@@ -327,7 +327,14 @@ extension Ecliptic: CustomStringConvertible {
 
 /// Geocentric ecliptic position and velocity in the true ecliptic and equinox of date.
 ///
-/// The position fields are bit-identical to the position function each state function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``, ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields are the time derivative of that position with respect to Terrestrial Time days, holding Delta T fixed. For the Sun and planets they are analytic and include the light-time derivative, the observer's motion under the engine's aberration approximation, and the rotation of the true ecliptic and equinox of date. Throughout 1900–2130 TT, Moon and Pluto states use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, Moon rates use a central difference of the legacy lunar series, and Pluto rates use the derivative of its legacy interpolant. These conventions do not establish independent rate accuracy.
+/// The position fields are bit-identical to the position function each state
+/// function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``,
+/// ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields
+/// are the time derivative of that position with respect to Terrestrial Time days,
+/// holding Delta T fixed. For the Sun and planets they are analytic and include
+/// the light-time derivative, the observer's motion under the engine's aberration
+/// approximation, and the rotation of the true ecliptic and equinox of date. For
+/// the Moon they are a central difference of the lunar series inside the engine.
 public struct EclipticState: Sendable, Equatable, Hashable {
     /// Ecliptic longitude in degrees (0 to 360).
     public let longitude: Double

@@ -11,7 +11,9 @@ import platform
 import subprocess
 import tempfile
 from pathlib import Path
-import source_archive
+ARCHIVE_SPEC = importlib.util.spec_from_file_location('source_archive', Path(__file__).with_name('source_archive.py'))
+source_archive = importlib.util.module_from_spec(ARCHIVE_SPEC)
+ARCHIVE_SPEC.loader.exec_module(source_archive)
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location("distance_archive", Path(__file__).with_name("distance-accuracy.py"))

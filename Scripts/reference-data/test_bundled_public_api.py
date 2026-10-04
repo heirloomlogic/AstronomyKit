@@ -12,6 +12,21 @@ spec.loader.exec_module(M)
 
 
 class BundledPublicAPIControls(unittest.TestCase):
+    def test_current_report_has_a_separate_version_from_frozen_v1(self):
+        self.assertEqual('bundled-public-api-assessment-v2.json', M.REPORT.name)
+        self.assertEqual(2, M.SCHEMA_VERSION)
+        self.assertNotEqual(M.REPORT, M.PREVIOUS_REPORT)
+
+    def test_bound_build_rejects_a_different_compiler(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            binary = directory / 'binary'; binary.write_bytes(b'first')
+            manifest = directory / 'build.json'
+            manifest.write_text(json.dumps({'sourceSHA256': {}, 'toolchain': {'swiftVersion': 'original'}}))
+            with patch.object(M.B, 'MANIFEST', manifest), patch.object(M.B, 'sources', return_value={}), patch.object(M.B, 'toolchain', return_value={'swiftVersion': 'changed'}):
+                with self.assertRaisesRegex(ValueError, 'toolchain changed'):
+                    M.B.validate(binary)
+
     def test_missing_extra_and_reversed_events_fail_identity(self):
         reference = [{'julianDateTT': 0., 'kind': 'ascending'}, {'julianDateTT': 1., 'kind': 'descending'}]
         for actual in [reference[:1], reference + reference[:1], list(reversed(reference))]:
@@ -32,7 +47,7 @@ class BundledPublicAPIControls(unittest.TestCase):
             binary = directory / 'binary'
             binary.write_bytes(b'first')
             manifest = directory / 'build.json'
-            record = {'sourceSHA256': {'coefficients.inc': 'locked'}, 'executableSHA256': M.B.digest(binary), 'buildManifestSHA256': 'unused'}
+            record = {'sourceSHA256': {'coefficients.inc': 'locked'}, 'executableSHA256': M.B.digest(binary), 'buildManifestSHA256': 'unused', 'toolchain': M.B.toolchain()}
             manifest.write_text(json.dumps(record))
             with patch.object(M.B, 'MANIFEST', manifest), patch.object(M.B, 'sources', return_value={'coefficients.inc': 'changed'}):
                 with self.assertRaisesRegex(ValueError, 'source inputs changed'):

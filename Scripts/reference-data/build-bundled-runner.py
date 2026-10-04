@@ -3,6 +3,7 @@
 import hashlib
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -24,10 +25,16 @@ def sources():
     return {str(p.relative_to(ROOT)): digest(p) for p in sorted(set(paths))}
 
 
+def toolchain():
+    return {'swiftVersion': subprocess.check_output(['swift', '--version'], text=True, stderr=subprocess.STDOUT).strip()}
+
+
 def validate(binary):
     report = json.loads(MANIFEST.read_bytes())
     if report['sourceSHA256'] != sources():
         raise ValueError('production runner source inputs changed after build')
+    if report['toolchain'] != toolchain():
+        raise ValueError('production runner toolchain changed after build')
     if report['executableSHA256'] != digest(binary):
         raise ValueError('production qualification executable differs from bound build')
     if report['buildManifestSHA256'] != digest(builder.PACKAGE / 'Package.swift'):
@@ -37,11 +44,12 @@ def validate(binary):
 
 def main():
     before = sources()
+    compiler = toolchain()
     builder.main()
-    if before != sources():
+    if before != sources() or compiler != toolchain():
         raise ValueError('production runner source inputs changed during build')
     binary = builder.BUILD / 'debug/AccuracyQualificationRunner'
-    report = {'sourceSHA256': before, 'executableSHA256': digest(binary), 'buildManifestSHA256': digest(builder.PACKAGE / 'Package.swift'),
+    report = {'schemaVersion': 2, 'toolchain': compiler, 'sourceSHA256': before, 'executableSHA256': digest(binary), 'buildManifestSHA256': digest(builder.PACKAGE / 'Package.swift'),
               'command': 'python3 Scripts/reference-data/build-bundled-runner.py'}
     MANIFEST.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
 

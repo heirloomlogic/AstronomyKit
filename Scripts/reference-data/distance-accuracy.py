@@ -5,6 +5,7 @@ import argparse
 import sys
 import csv
 import hashlib
+import importlib.util
 import json
 import math
 import random
@@ -14,7 +15,9 @@ import tempfile
 import time
 import urllib.request
 from pathlib import Path
-import source_archive
+ARCHIVE_SPEC = importlib.util.spec_from_file_location('source_archive', Path(__file__).with_name('source_archive.py'))
+source_archive = importlib.util.module_from_spec(ARCHIVE_SPEC)
+ARCHIVE_SPEC.loader.exec_module(source_archive)
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / "Scripts/reference-data/sources/distance"

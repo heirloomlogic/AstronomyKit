@@ -30,7 +30,16 @@ extension CelestialBody {
 
     /// Calculates the apparent geocentric ecliptic position and velocity of this body.
     ///
-    /// The position fields are bit-identical to `geocentricPosition(at: time, aberration: aberration).toEcliptic()`. Rates are in degrees (or AU) per Terrestrial Time day with Delta T held fixed and include the light-time derivative, the observer's motion under the aberration approximation, and the rotation of the true ecliptic and equinox of date. Throughout 1900–2130 TT, Moon and Pluto states use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, the Moon uses a central difference of the legacy lunar series over about 43 seconds, and Pluto uses the derivative of its legacy interpolant, with small kinks at the 146-day table steps. These derivative conventions do not establish independent rate accuracy.
+    /// The position fields are bit-identical to
+    /// `geocentricPosition(at: time, aberration: aberration).toEcliptic()`. The rates
+    /// are the analytic time derivative of that position in degrees (or AU) per
+    /// Terrestrial Time day with Delta T held fixed, including the light-time
+    /// derivative, the observer's motion under the aberration approximation, and the
+    /// rotation of the true ecliptic and equinox of date. The Moon's rates are a
+    /// central difference of the lunar series over about 43 seconds; every other
+    /// supported body's rates are analytic. Pluto's velocity is the exact derivative
+    /// of its interpolated position, which has small kinks at the interpolation
+    /// table's 146-day steps.
     ///
     /// Supported bodies are the Sun, the Moon, Mercury through Neptune except
     /// Earth, and Pluto. Other bodies throw ``AstronomyError/invalidBody``.

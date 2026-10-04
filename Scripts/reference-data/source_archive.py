@@ -77,8 +77,18 @@ def baseline_tree(root):
             target = baseline / name
             target.parent.mkdir(parents=True, exist_ok=True)
             target.symlink_to(root / name)
+        migration_source_hashes(root, {})
         for child in (root / 'Sources').iterdir():
-            if child.name != 'CLibAstronomy':
+            if child.name == 'AstronomyKit':
+                destination = baseline / 'Sources/AstronomyKit'
+                destination.mkdir()
+                for source in child.iterdir():
+                    target = destination / source.name
+                    if source.name in MIGRATION_RATE_SOURCES:
+                        target.write_bytes((root / 'Scripts/reference-data/sources/migration-rate-contract' / (source.name + '.archive')).read_bytes())
+                    else:
+                        target.symlink_to(source, target_is_directory=source.is_dir())
+            elif child.name != 'CLibAstronomy':
                 (baseline / 'Sources' / child.name).symlink_to(child, target_is_directory=child.is_dir())
         yield baseline
 
@@ -95,3 +105,27 @@ def replay(root, script, arguments):
             environment['GIT_DIR'] = subprocess.check_output(['git', 'rev-parse', '--absolute-git-dir'], cwd=root, text=True).strip()
             environment['GIT_WORK_TREE'] = str(root)
         subprocess.run([sys.executable, str(baseline / relative), *arguments], cwd=baseline, env=environment, check=True)
+
+
+MIGRATION_RATE_SOURCES = {
+    'Position.swift': 'b540d9fe19a55cb6c2a201d6832879a070076a133947181b1da0c5f614edee7e',
+    'MoonPhase.swift': '59bee7833b966dd9039e4168a8b498c41c1c9b9e7716fa69d8e6b15caf77db2d',
+    'Coordinates.swift': 'b5fe4378043d41a8ac25da5d30c9225d861c3e81d3270d5072c140eeed5d0e38',
+}
+
+
+def migration_source_hashes(root, current):
+    """Validate frozen Swift inputs and permit only API-comment changes in live sources."""
+    root = Path(root)
+    result = dict(current)
+    def without_api_comments(data):
+        return b'\n'.join(line for line in data.splitlines() if not line.lstrip().startswith(b'///'))
+    for name, expected in MIGRATION_RATE_SOURCES.items():
+        historical = (root / 'Scripts/reference-data/sources/migration-rate-contract' / (name + '.archive')).read_bytes()
+        if hashlib.sha256(historical).hexdigest() != expected:
+            raise ValueError('historical migration Swift source hash mismatch: ' + name)
+        path = 'Sources/AstronomyKit/' + name
+        if without_api_comments((root / path).read_bytes()) != without_api_comments(historical):
+            raise ValueError('live migration Swift code differs from historical input: ' + name)
+        result[path] = expected
+    return result
