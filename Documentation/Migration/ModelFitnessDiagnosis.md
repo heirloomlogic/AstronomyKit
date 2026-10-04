@@ -75,6 +75,8 @@ The approval concerns sampled diagnosis and evidence integrity. Product acceptan
 
 ## Next decision
 
+The subsequent [owner decision record](AccuracyAcceptanceDecisions.md) sets 1900–2130 TT, inclusive, as the distance/model-fitness accuracy target. Existing finite distance acceptance covers only 1900–2100. Numerical product limits and replacement selection remain open; the approved date target does not expand the historical evidence's validated coverage.
+
 The diagnosis supports specific repair experiments and identifies reference/model differences that arithmetic changes cannot remove. Model selection remains open by the owner's instruction. Before selecting a production change, define maximum useful radial and 3D vector errors independently of these measurements, intended geometric or received-light observables, center semantics, and the required date range. Then compare candidate fitness and cost, freeze a new model and acceptance policy, and acquire a newly independent holdout. Retain the historical evidence and keep finite sampled claims separate from continuous accuracy guarantees.
 
 Issue #119 remains open for those model-fitness decisions and acceptance gates. The behavior-preserving port contracts in #85 and #88 remain distinct; neither completed diagnosis nor an improved experimental replay establishes completion of #81, downstream validation, hosted CI, or release readiness.

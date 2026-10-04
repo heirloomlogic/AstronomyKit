@@ -1,0 +1,9 @@
+{
+  "classification": "public-api-model-versus-search-diagnostic-not-independent-accuracy-qualification",
+  "cases": "all 35 matched lunar apsides in the frozen initial assessment, including all seven timing exceedances",
+  "residual": "difference of public geometric lunar vector norms at centerTT plus/minus half the fixed stencil width",
+  "stencilWidthsTTDays": [0.001, 0.0002, 0.00004],
+  "bracketHalfWidthSeconds": 10,
+  "bisectionIterations": 14,
+  "hypothesis": "if public search and independently bisected roots of the same lunar model differ by much less than the independent Horizons residual, the model is the dominant timing limitation rather than the search tolerance"
+}
