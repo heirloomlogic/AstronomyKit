@@ -1,0 +1,2913 @@
+{
+  "baselineReplay": {
+    "allScientificFieldsMatch": true,
+    "archivedExecutable": {
+      "buildManifestSHA256": "8eb9c85c3b9bc0fac8d7cce25a54e6b9a4f65e2c8588e0f55db28186fb3e1474",
+      "expectedBuildCommand": "python3 Scripts/reference-data/build-accuracy-runner.py",
+      "path": ".context/accuracy-qualification/build-runner/out/Products/Debug/AccuracyQualificationRunner",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+      "sha256": "21709d96c27f77c646a7269b58263a13420a24ec9742bf98772a6393e74cd881",
+      "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+    },
+    "executableDifferences": [
+      "sha256"
+    ],
+    "originalStrictCheckMatches": false,
+    "replayedExecutable": {
+      "buildManifestSHA256": "8eb9c85c3b9bc0fac8d7cce25a54e6b9a4f65e2c8588e0f55db28186fb3e1474",
+      "expectedBuildCommand": "python3 Scripts/reference-data/build-accuracy-runner.py",
+      "path": ".context/accuracy-qualification/build-runner/out/Products/Debug/AccuracyQualificationRunner",
+      "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+      "sha256": "43c73c4f0966d60ace33d38643992c77293500c9010cc272555440cc8628f310",
+      "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+    },
+    "totals": {
+      "additionalLocalExtrema": 0,
+      "ambiguousClusters": 3,
+      "bodies": 9,
+      "distanceExceedances": 0,
+      "inconclusiveRoots": 163,
+      "inconclusiveTimingEnvelopes": 0,
+      "nominalTimingExceedances": 6,
+      "numericalEnvelopeExceedances": 6,
+      "orbitScaleCandidates": 3380,
+      "pairedEvents": 3380,
+      "pairingFailures": 62,
+      "publicEvents": 3442,
+      "rawRoots": 3546
+    }
+  },
+  "candidateDirty": true,
+  "candidateRevision": "52bc707ef8c640a191965452942f6b5708a153d2",
+  "cases": [
+    {
+      "archivedSignedTimingErrorSeconds": -356596.96187675,
+      "centerControls": {
+        "6": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2425927.386573584,
+              "kind": "apocenter",
+              "quadraticDifferenceSeconds": 8.046627044677734e-05,
+              "quadraticJulianDateTT": 2425927.3865735848,
+              "rangeAU": 10.046675754073084,
+              "samples": [
+                {
+                  "julianDateTT": 2425927.03419115,
+                  "lightTimeDays": 0.05802475993280327,
+                  "positionAU": [
+                    0.4526527769787975,
+                    -9.270074069746139,
+                    -3.846625237993612
+                  ],
+                  "rangeAU": 10.0466757445762,
+                  "rangeRateAUPerDay": 5.390010192586427e-08,
+                  "velocityAUPerDay": [
+                    0.005265813565604506,
+                    0.0002995712601019045,
+                    -0.0001024285261125407
+                  ]
+                },
+                {
+                  "julianDateTT": 2425927.15919115,
+                  "lightTimeDays": 0.05802475996481444,
+                  "positionAU": [
+                    0.4533110026221052,
+                    -9.270036602268972,
+                    -3.846638032817715
+                  ],
+                  "rangeAU": 10.04667575011876,
+                  "rangeRateAUPerDay": 3.478082191272946e-08,
+                  "velocityAUPerDay": [
+                    0.005265796721498467,
+                    0.0002999083743204995,
+                    -0.0001022886593785402
+                  ]
+                },
+                {
+                  "julianDateTT": 2425927.28419115,
+                  "lightTimeDays": 0.05802475998302243,
+                  "positionAU": [
+                    0.4539692261584429,
+                    -9.269999092652577,
+                    -3.846650810158431
+                  ],
+                  "rangeAU": 10.04667575327138,
+                  "rangeRateAUPerDay": 1.566087256726255e-08,
+                  "velocityAUPerDay": [
+                    0.00526577985361468,
+                    0.0003002454877134653,
+                    -0.0001021487919001393
+                  ]
+                },
+                {
+                  "julianDateTT": 2425927.40919115,
+                  "lightTimeDays": 0.05802475998742672,
+                  "positionAU": [
+                    0.4546274475847797,
+                    -9.269961540897064,
+                    -3.846663570015664
+                  ],
+                  "rangeAU": 10.04667575403396,
+                  "rangeRateAUPerDay": -3.459743769604554e-09,
+                  "velocityAUPerDay": [
+                    0.005265762961951093,
+                    0.0003005826002773807,
+                    -0.0001020089236788692
+                  ]
+                },
+                {
+                  "julianDateTT": 2425927.53419115,
+                  "lightTimeDays": 0.05802475997802681,
+                  "positionAU": [
+                    0.4552856668982013,
+                    -9.269923947002528,
+                    -3.846676312389325
+                  ],
+                  "rangeAU": 10.04667575240642,
+                  "rangeRateAUPerDay": -2.25810247832084e-08,
+                  "velocityAUPerDay": [
+                    0.005265746046505681,
+                    0.0003009197120089057,
+                    -0.0001018690547162263
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        },
+        "699": {
+          "directedCrossingCount": 3,
+          "roots": [
+            {
+              "julianDateTT": 2425922.926909756,
+              "kind": "apocenter",
+              "quadraticDifferenceSeconds": 2.984413504600525,
+              "quadraticJulianDateTT": 2425922.9269442977,
+              "rangeAU": 10.04667414281895,
+              "samples": [
+                {
+                  "julianDateTT": 2425922.65919115,
+                  "lightTimeDays": 0.05802475064756731,
+                  "positionAU": [
+                    0.429615580471441,
+                    -9.271358819374944,
+                    -3.846166573124135
+                  ],
+                  "rangeAU": 10.04667413688743,
+                  "rangeRateAUPerDay": 4.598658798762741e-08,
+                  "velocityAUPerDay": [
+                    0.00526635468692772,
+                    0.0002885239942926929,
+                    -0.0001073701457559697
+                  ]
+                },
+                {
+                  "julianDateTT": 2425922.78419115,
+                  "lightTimeDays": 0.05802475067246367,
+                  "positionAU": [
+                    0.4302738715240328,
+                    -9.271322732724327,
+                    -3.846179985462391
+                  ],
+                  "rangeAU": 10.0466741411981,
+                  "rangeRateAUPerDay": 2.327601108856414e-08,
+                  "velocityAUPerDay": [
+                    0.005266301888003555,
+                    0.000288862065537984,
+                    -0.0001072272178982637
+                  ]
+                },
+                {
+                  "julianDateTT": 2425922.90919115,
+                  "lightTimeDays": 0.05802475068168963,
+                  "positionAU": [
+                    0.4309321558862494,
+                    -9.271286603963174,
+                    -3.846193379916369
+                  ],
+                  "rangeAU": 10.04667414279553,
+                  "rangeRateAUPerDay": 2.698897815102008e-09,
+                  "velocityAUPerDay": [
+                    0.005266247725865204,
+                    0.0002891976323872934,
+                    -0.0001070839979626501
+                  ]
+                },
+                {
+                  "julianDateTT": 2425923.03419115,
+                  "lightTimeDays": 0.05802475067702728,
+                  "positionAU": [
+                    0.4315904334282417,
+                    -9.271250433447465,
+                    -3.846206756450971
+                  ],
+                  "rangeAU": 10.04667414198827,
+                  "rangeRateAUPerDay": -1.512142887003807e-08,
+                  "velocityAUPerDay": [
+                    0.005266192912748869,
+                    0.0002895300653642313,
+                    -0.0001069405178273098
+                  ]
+                },
+                {
+                  "julianDateTT": 2425923.15919115,
+                  "lightTimeDays": 0.05802475066057803,
+                  "positionAU": [
+                    0.4322487041280591,
+                    -9.27121422158509,
+                    -3.846220115038371
+                  ],
+                  "rangeAU": 10.04667413914017,
+                  "rangeRateAUPerDay": -2.996047341269665e-08,
+                  "velocityAUPerDay": [
+                    0.005266138416639365,
+                    0.0002898592001401881,
+                    -0.0001067968594740987
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": false
+            },
+            {
+              "julianDateTT": 2425926.183794978,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 10.62001883983612,
+              "quadraticJulianDateTT": 2425926.183672061,
+              "rangeAU": 10.046673946971783,
+              "samples": [
+                {
+                  "julianDateTT": 2425925.90919115,
+                  "lightTimeDays": 0.05802474956910698,
+                  "positionAU": [
+                    0.4467292097238746,
+                    -9.270407511814813,
+                    -3.846509461686868
+                  ],
+                  "rangeAU": 10.04667395015782,
+                  "rangeRateAUPerDay": -2.292529700657537e-08,
+                  "velocityAUPerDay": [
+                    0.005265226973418583,
+                    0.0002967516343274294,
+                    -0.0001036387863195717
+                  ]
+                },
+                {
+                  "julianDateTT": 2425926.03419115,
+                  "lightTimeDays": 0.05802474955622457,
+                  "positionAU": [
+                    0.4473873613472382,
+                    -9.270370398896477,
+                    -3.846522407595169
+                  ],
+                  "rangeAU": 10.04667394792729,
+                  "rangeRateAUPerDay": -1.269507601779413e-08,
+                  "velocityAUPerDay": [
+                    0.005265199184523115,
+                    0.0002970549975602383,
+                    -0.0001034957555478449
+                  ]
+                },
+                {
+                  "julianDateTT": 2425926.15919115,
+                  "lightTimeDays": 0.05802474955085952,
+                  "positionAU": [
+                    0.4480455095620669,
+                    -9.270333248078295,
+                    -3.846535335627518
+                  ],
+                  "rangeAU": 10.04667394699836,
+                  "rangeRateAUPerDay": -2.115918992240786e-09,
+                  "velocityAUPerDay": [
+                    0.005265172390696737,
+                    0.0002973580449635947,
+                    -0.0001033527659182827
+                  ]
+                },
+                {
+                  "julianDateTT": 2425926.28419115,
+                  "lightTimeDays": 0.05802474955325706,
+                  "positionAU": [
+                    0.4487036544717304,
+                    -9.270296059400545,
+                    -3.846548245786511
+                  ],
+                  "rangeAU": 10.04667394741348,
+                  "rangeRateAUPerDay": 8.839148953124148e-09,
+                  "velocityAUPerDay": [
+                    0.005265146235128331,
+                    0.0002976607115919951,
+                    -0.0001032097723359789
+                  ]
+                },
+                {
+                  "julianDateTT": 2425926.40919115,
+                  "lightTimeDays": 0.05802474956379225,
+                  "positionAU": [
+                    0.4493617961339557,
+                    -9.270258832932852,
+                    -3.846561138068011
+                  ],
+                  "rangeAU": 10.0466739492376,
+                  "rangeRateAUPerDay": 2.050818424076967e-08,
+                  "velocityAUPerDay": [
+                    0.005265120400229576,
+                    0.0002979625919574202,
+                    -0.0001030667172256698
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": false
+            },
+            {
+              "julianDateTT": 2425931.536470915,
+              "kind": "apocenter",
+              "quadraticDifferenceSeconds": 0.0650167465209961,
+              "quadraticJulianDateTT": 2425931.5364701627,
+              "rangeAU": 10.046674998119842,
+              "samples": [
+                {
+                  "julianDateTT": 2425931.28419115,
+                  "lightTimeDays": 0.05802475557828796,
+                  "positionAU": [
+                    0.4750294817667194,
+                    -9.268777144080591,
+                    -3.847050248160999
+                  ],
+                  "rangeAU": 10.04667499061525,
+                  "rangeRateAUPerDay": 5.824419450081632e-08,
+                  "velocityAUPerDay": [
+                    0.005265470069442615,
+                    0.0003103225215157998,
+                    -9.764414619887357e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2425931.40919115,
+                  "lightTimeDays": 0.05802475561036787,
+                  "positionAU": [
+                    0.4756876665707554,
+                    -9.268738331913333,
+                    -3.847062445172239
+                  ],
+                  "rangeAU": 10.04667499616971,
+                  "rangeRateAUPerDay": 3.032227881721927e-08,
+                  "velocityAUPerDay": [
+                    0.005265486707246229,
+                    0.0003106724891913498,
+                    -9.750805128226373e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2425931.53419115,
+                  "lightTimeDays": 0.05802475562162714,
+                  "positionAU": [
+                    0.4763458534175153,
+                    -9.268699475874634,
+                    -3.847074625177751
+                  ],
+                  "rangeAU": 10.04667499811919,
+                  "rangeRateAUPerDay": 5.601813830063359e-10,
+                  "velocityAUPerDay": [
+                    0.00526550271537782,
+                    0.000311024465643481,
+                    -9.737205058974275e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2425931.65919115,
+                  "lightTimeDays": 0.05802475561072183,
+                  "positionAU": [
+                    0.4770040422141452,
+                    -9.268660575711886,
+                    -3.847086788187745
+                  ],
+                  "rangeAU": 10.046674996231,
+                  "rangeRateAUPerDay": -3.109325426903326e-08,
+                  "velocityAUPerDay": [
+                    0.005265517861406339,
+                    0.0003113784833369681,
+                    -9.72361179157887e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2425931.78419115,
+                  "lightTimeDays": 0.05802475557626119,
+                  "positionAU": [
+                    0.4776622328332489,
+                    -9.268621631167157,
+                    -3.847098934208431
+                  ],
+                  "rangeAU": 10.04667499026432,
+                  "rangeRateAUPerDay": -6.469893920906709e-08,
+                  "velocityAUPerDay": [
+                    0.005265531804082593,
+                    0.0003117345738164436,
+                    -9.710021307980748e-05
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        }
+      },
+      "centerShiftDominatesResidual": true,
+      "diagnosticBarycenterWithinStrictTimingTarget": false,
+      "freshBodyCenterRoot": {
+        "julianDateTT": 2425931.5364711313,
+        "kind": "apocenter",
+        "quadraticDifferenceSeconds": 0.0,
+        "quadraticJulianDateTT": 2425931.5364711313,
+        "rangeAU": 10.046674998119828,
+        "samples": [
+          {
+            "julianDateTT": 2425931.5264708,
+            "lightTimeDays": 0.05802475562155997,
+            "positionAU": [
+              0.4763052018949748,
+              -9.268701877008363,
+              -3.847073873398981
+            ],
+            "rangeAU": 10.04667499810756,
+            "rangeRateAUPerDay": 2.452374967088864e-09,
+            "velocityAUPerDay": [
+              0.005265501749004298,
+              0.000311002668046256,
+              -9.738044809635515e-05
+            ]
+          },
+          {
+            "julianDateTT": 2425931.5314708,
+            "lightTimeDays": 0.05802475562161311,
+            "positionAU": [
+              0.4763315294055765,
+              -9.268700321959717,
+              -3.84707436028763
+            ],
+            "rangeAU": 10.04667499811676,
+            "rangeRateAUPerDay": 1.227737528744967e-09,
+            "velocityAUPerDay": [
+              0.005265502375233015,
+              0.0003110167841336049,
+              -9.737500951307522e-05
+            ]
+          },
+          {
+            "julianDateTT": 2425931.5364708,
+            "lightTimeDays": 0.05802475562163084,
+            "positionAU": [
+              0.4763578569208752,
+              -9.268698766840387,
+              -3.847074847149115
+            ],
+            "rangeAU": 10.04667499811983,
+            "rangeRateAUPerDay": 8.148453522703298e-14,
+            "velocityAUPerDay": [
+              0.005265503000108281,
+              0.0003110309034821092,
+              -9.73695710412537e-05
+            ]
+          },
+          {
+            "julianDateTT": 2425931.5414708,
+            "lightTimeDays": 0.05802475562161307,
+            "positionAU": [
+              0.4763841844368248,
+              -9.2686972116506,
+              -3.847075333983365
+            ],
+            "rangeAU": 10.04667499811676,
+            "rangeRateAUPerDay": -1.230598389576146e-09,
+            "velocityAUPerDay": [
+              0.005265503623613895,
+              0.0003110450260938533,
+              -9.736413267985717e-05
+            ]
+          },
+          {
+            "julianDateTT": 2425931.5464708,
+            "lightTimeDays": 0.05802475562155972,
+            "positionAU": [
+              0.4764105119559466,
+              -9.26869565639019,
+              -3.847075820790422
+            ],
+            "rangeAU": 10.04667499810752,
+            "rangeRateAUPerDay": -2.464307724405479e-09,
+            "velocityAUPerDay": [
+              0.005265504245733464,
+              0.0003110591519745187,
+              -9.735869442645685e-05
+            ]
+          }
+        ],
+        "status": "resolved"
+      },
+      "freshRootMinusArchivedSeconds": 0.028404593467712402,
+      "kind": "apocenter",
+      "modelControls": {
+        "polynomialCovered": true,
+        "publicJulianDateTT": 2425927.4091788833,
+        "publicKind": "apocenter",
+        "roots": [
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2425927.4091835716,
+            "kind": "apocenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.6548697128891945,
+            "rateAtArchivedPublicAUPerDay": -1.1582092803208142e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.31402292734129e-07,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2425927.4091819967,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.7909582927823067,
+            "rateAtArchivedPublicAUPerDay": -1.7763568394002505e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.314024858511402e-07,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 8
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2425927.4091832354,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.6839381530880928,
+            "rateAtArchivedPublicAUPerDay": -1.0658141036401503e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.314021305797723e-07,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 7
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2425927.4091832684,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.6810715422034264,
+            "rateAtArchivedPublicAUPerDay": -1.1723955140041653e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.314023259790247e-07,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 5
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2425927.4091835716,
+            "kind": "apocenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.6548697128891945,
+            "rateAtArchivedPublicAUPerDay": -1.1582084433510773e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.314022927272619e-07,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2425927.4091738653,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -1.4934791252017021,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -6.314042622079796e-07,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2425927.409184076,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.6113173440098763,
+            "rateAtArchivedPublicAUPerDay": -1.2434497875801753e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.314023082154563e-07,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2425927.409183338,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.6750868633389473,
+            "rateAtArchivedPublicAUPerDay": -1.2079226507921703e-12,
+            "rateAtArchivedReferenceAUPerDay": -6.314023259790247e-07,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 5
+          }
+        ]
+      },
+      "originalPairIdentityLimitedByExtraCrossings": true,
+      "productionMinusFullAnalyticRootSeconds": 0.0,
+      "publicIndex": 2,
+      "publicJulianDateTT": 2425927.409191151,
+      "publicMinusFreshBodyCenterSeconds": -356596.99028134346,
+      "publicMinusSystemBarycenterSeconds": 1954.157817363739,
+      "rawRootIndex": 2,
+      "referenceJulianDateTT": 2425931.5364708025,
+      "systemBarycenterMinusBodyCenterSeconds": -358551.1480987072,
+      "withinStrictBodyCenterTimingTarget": false
+    },
+    {
+      "archivedSignedTimingErrorSeconds": 63309.35477614403,
+      "centerControls": {
+        "6": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2431341.598502729,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 8.046627044677734e-05,
+              "quadraticJulianDateTT": 2431341.59850273,
+              "rangeAU": 9.028850225455749,
+              "samples": [
+                {
+                  "julianDateTT": 2431341.23230079,
+                  "lightTimeDays": 0.05214629006679071,
+                  "positionAU": [
+                    -0.611347149177158,
+                    8.31696950790643,
+                    3.460405974005663
+                  ],
+                  "rangeAU": 9.028850238938867,
+                  "rangeRateAUPerDay": -7.363772187665435e-08,
+                  "velocityAUPerDay": [
+                    -0.005868724800094143,
+                    -0.0004576786412648014,
+                    6.30001987198743e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431341.35730079,
+                  "lightTimeDays": 0.05214629002270194,
+                  "positionAU": [
+                    -0.6120807378015692,
+                    8.316912271904805,
+                    3.460413838139928
+                  ],
+                  "rangeAU": 9.028850231305134,
+                  "rangeRateAUPerDay": -4.850203610021225e-08,
+                  "velocityAUPerDay": [
+                    -0.005868693186241693,
+                    -0.0004580973843896825,
+                    6.282594947926341e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431341.48230079,
+                  "lightTimeDays": 0.05214628999675961,
+                  "positionAU": [
+                    -0.6128143224719939,
+                    8.316854983560473,
+                    3.460421680493016
+                  ],
+                  "rangeAU": 9.028850226813356,
+                  "rangeRateAUPerDay": -2.336640937567646e-08,
+                  "velocityAUPerDay": [
+                    -0.00586866153605193,
+                    -0.0004585161245473881,
+                    6.265169989635068e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431341.60730079,
+                  "lightTimeDays": 0.05214628998896366,
+                  "positionAU": [
+                    -0.6135479031838575,
+                    8.316797642873809,
+                    3.460429501064885
+                  ],
+                  "rangeAU": 9.028850225463529,
+                  "rangeRateAUPerDay": 1.769151204722331e-09,
+                  "velocityAUPerDay": [
+                    -0.005868629849524242,
+                    -0.0004589348617410844,
+                    6.247744996908461e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431341.73230079,
+                  "lightTimeDays": 0.05214628999931403,
+                  "positionAU": [
+                    -0.6142814799326504,
+                    8.316740249845177,
+                    3.460437299855492
+                  ],
+                  "rangeAU": 9.02885022725564,
+                  "rangeRateAUPerDay": 2.690463850153143e-08,
+                  "velocityAUPerDay": [
+                    -0.00586859812665791,
+                    -0.0004593535959740083,
+                    6.230319969536967e-05
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        },
+        "699": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2431340.874556289,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 0.3888934850692749,
+              "quadraticJulianDateTT": 2431340.87456079,
+              "rangeAU": 9.02884858500774,
+              "samples": [
+                {
+                  "julianDateTT": 2431340.60730079,
+                  "lightTimeDays": 0.05214628060736076,
+                  "positionAU": [
+                    -0.6076786948181544,
+                    8.317253022258361,
+                    3.460366429872893
+                  ],
+                  "rangeAU": 9.028848601089344,
+                  "rangeRateAUPerDay": -1.20884510106819e-07,
+                  "velocityAUPerDay": [
+                    -0.005868169496991663,
+                    -0.0004554170564713109,
+                    6.379840544475408e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431340.73230079,
+                  "lightTimeDays": 0.05214628054067549,
+                  "positionAU": [
+                    -0.6084122146155899,
+                    8.317196071123616,
+                    3.460374393687442
+                  ],
+                  "rangeAU": 9.028848589543149,
+                  "rangeRateAUPerDay": -6.39466794622296e-08,
+                  "velocityAUPerDay": [
+                    -0.005868147578867665,
+                    -0.0004558012401327409,
+                    6.362266898352662e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431340.85730079,
+                  "lightTimeDays": 0.05214628051486363,
+                  "positionAU": [
+                    -0.6091457317861955,
+                    8.31713907190752,
+                    3.460382335550229
+                  ],
+                  "rangeAU": 9.028848585073963,
+                  "rangeRateAUPerDay": -7.695945509063233e-09,
+                  "velocityAUPerDay": [
+                    -0.005868127421168964,
+                    -0.0004561864007445011,
+                    6.34471739553349e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431340.98230079,
+                  "lightTimeDays": 0.05214628052934452,
+                  "positionAU": [
+                    -0.6098792465301233,
+                    8.317082024474178,
+                    3.460390255489728
+                  ],
+                  "rangeAU": 9.02884858758125,
+                  "rangeRateAUPerDay": 4.764918604759907e-08,
+                  "velocityAUPerDay": [
+                    -0.005868108687274731,
+                    -0.0004565727386055371,
+                    6.32718894372899e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2431341.10730079,
+                  "lightTimeDays": 0.05214628058342239,
+                  "positionAU": [
+                    -0.6106127589993763,
+                    8.317024928671664,
+                    3.460398153529256
+                  ],
+                  "rangeAU": 9.028848596944542,
+                  "rangeRateAUPerDay": 1.019998837574447e-07,
+                  "velocityAUPerDay": [
+                    -0.005868090949694179,
+                    -0.0004569602980908458,
+                    6.309676447706837e-05
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        }
+      },
+      "centerShiftDominatesResidual": true,
+      "diagnosticBarycenterWithinStrictTimingTarget": false,
+      "freshBodyCenterRoot": {
+        "julianDateTT": 2431340.874552544,
+        "kind": "pericenter",
+        "quadraticDifferenceSeconds": 0.0,
+        "quadraticJulianDateTT": 2431340.874552544,
+        "rangeAU": 9.0288485850076,
+        "samples": [
+          {
+            "julianDateTT": 2431340.86455362,
+            "lightTimeDays": 0.05214628051460908,
+            "positionAU": [
+              -0.6091882923131927,
+              8.317135763183904,
+              3.460382795684898
+            ],
+            "rangeAU": 9.028848585029888,
+            "rangeRateAUPerDay": -4.458332519509032e-09,
+            "velocityAUPerDay": [
+              -0.005868126299048134,
+              -0.0004562087836253278,
+              6.343699813733027e-05
+            ]
+          },
+          {
+            "julianDateTT": 2431340.86955362,
+            "lightTimeDays": 0.05214628051451255,
+            "positionAU": [
+              -0.6092176329420961,
+              8.317133482101458,
+              3.460383112852345
+            ],
+            "rangeAU": 9.028848585013172,
+            "rangeRateAUPerDay": -2.22818072672511e-09,
+            "velocityAUPerDay": [
+              -0.005868125528239486,
+              -0.0004562242164181785,
+              6.342998348199123e-05
+            ]
+          },
+          {
+            "julianDateTT": 2431340.87455362,
+            "lightTimeDays": 0.05214628051448038,
+            "positionAU": [
+              -0.609246973567151,
+              8.317131200941839,
+              3.46038342998472
+            ],
+            "rangeAU": 9.028848585007601,
+            "rangeRateAUPerDay": 4.79209996261333e-13,
+            "velocityAUPerDay": [
+              -0.005868124759658708,
+              -0.0004562396511359338,
+              6.342296915941632e-05
+            ]
+          },
+          {
+            "julianDateTT": 2431340.87955362,
+            "lightTimeDays": 0.05214628051451255,
+            "positionAU": [
+              -0.6092763141883847,
+              8.317128919705043,
+              3.460383747082023
+            ],
+            "rangeAU": 9.028848585013174,
+            "rangeRateAUPerDay": 2.22763738290037e-09,
+            "velocityAUPerDay": [
+              -0.005868123993279992,
+              -0.0004562550877863214,
+              6.341595516676347e-05
+            ]
+          },
+          {
+            "julianDateTT": 2431340.88455362,
+            "lightTimeDays": 0.05214628051460902,
+            "positionAU": [
+              -0.6093056548084962,
+              8.31712663839085,
+              3.460384064144287
+            ],
+            "rangeAU": 9.028848585029877,
+            "rangeRateAUPerDay": 4.453284439395611e-09,
+            "velocityAUPerDay": [
+              -0.005868123229077238,
+              -0.0004562705263780553,
+              6.34089415005018e-05
+            ]
+          }
+        ],
+        "status": "resolved"
+      },
+      "freshRootMinusArchivedSeconds": -0.09326040744781494,
+      "kind": "pericenter",
+      "modelControls": {
+        "polynomialCovered": true,
+        "publicJulianDateTT": 2431341.607297151,
+        "publicKind": "pericenter",
+        "roots": [
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2431341.6072995923,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.10307226330041885,
+            "rateAtArchivedPublicAUPerDay": 2.3999446021974747e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.4740462211197584e-07,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2431341.6073006745,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.009580515325069427,
+            "rateAtArchivedPublicAUPerDay": 1.7763568394002505e-12,
+            "rateAtArchivedReferenceAUPerDay": -1.4740564324711158e-07,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2431341.6073002303,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.04795286804437637,
+            "rateAtArchivedPublicAUPerDay": 1.7763568394002505e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.4740493270437582e-07,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 4
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2431341.6072996254,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.10020565241575241,
+            "rateAtArchivedPublicAUPerDay": 2.4868995751603507e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.4740461296014473e-07,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2431341.6072995923,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.10307226330041885,
+            "rateAtArchivedPublicAUPerDay": 2.399978859978697e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.474046221125901e-07,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2431341.6073055137,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.40854234248399734,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -1.4740386689027218e-07,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 13
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2431341.607300157,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.05428958684206009,
+            "rateAtArchivedPublicAUPerDay": 1.7763568394002505e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.4740457743300794e-07,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2431341.6072996086,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.10166410356760025,
+            "rateAtArchivedPublicAUPerDay": 2.4868995751603507e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.4740459519657634e-07,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 4
+          }
+        ]
+      },
+      "originalPairIdentityLimitedByExtraCrossings": false,
+      "productionMinusFullAnalyticRootSeconds": 0.0,
+      "publicIndex": 3,
+      "publicJulianDateTT": 2431341.6073007854,
+      "publicMinusFreshBodyCenterSeconds": 63309.448036551476,
+      "publicMinusSystemBarycenterSeconds": 760.1520627737045,
+      "rawRootIndex": 3,
+      "referenceJulianDateTT": 2431340.8745536236,
+      "systemBarycenterMinusBodyCenterSeconds": 62549.29597377777,
+      "withinStrictBodyCenterTimingTarget": false
+    },
+    {
+      "archivedSignedTimingErrorSeconds": 9035.78852713108,
+      "centerControls": {
+        "6": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2442055.775005742,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 0.0,
+              "quadraticJulianDateTT": 2442055.775005742,
+              "rangeAU": 9.01531266860003,
+              "samples": [
+                {
+                  "julianDateTT": 2442055.50327908,
+                  "lightTimeDays": 0.05206810362382251,
+                  "positionAU": [
+                    -0.3470284981752903,
+                    8.321395452758619,
+                    3.451059487483078
+                  ],
+                  "rangeAU": 9.015312675991032,
+                  "rangeRateAUPerDay": -5.440012898101975e-08,
+                  "velocityAUPerDay": [
+                    -0.005873700874423383,
+                    -0.0002986521759591379,
+                    0.0001293431287543436
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.62827908,
+                  "lightTimeDays": 0.05206810359358219,
+                  "positionAU": [
+                    -0.3477627097491232,
+                    8.321358094996699,
+                    3.451075644493758
+                  ],
+                  "rangeAU": 9.015312670755083,
+                  "rangeRateAUPerDay": -2.937502088497817e-08,
+                  "velocityAUPerDay": [
+                    -0.005873684296747653,
+                    -0.0002990720142572619,
+                    0.000129169041916553
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.75327908,
+                  "lightTimeDays": 0.05206810358140856,
+                  "positionAU": [
+                    -0.3484969192483973,
+                    8.321320684755106,
+                    3.451091779743532
+                  ],
+                  "rangeAU": 9.015312668647283,
+                  "rangeRateAUPerDay": -4.3497433209708e-09,
+                  "velocityAUPerDay": [
+                    -0.005873667681484175,
+                    -0.0002994918507027506,
+                    0.0001289949542342483
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.87827908,
+                  "lightTimeDays": 0.05206810358730173,
+                  "positionAU": [
+                    -0.3492311266684224,
+                    8.321283222034076,
+                    3.451107893232293
+                  ],
+                  "rangeAU": 9.015312669667654,
+                  "rangeRateAUPerDay": 2.067570532551656e-08,
+                  "velocityAUPerDay": [
+                    -0.005873651028634188,
+                    -0.0002999116852907653,
+                    0.0001288208657095162
+                  ]
+                },
+                {
+                  "julianDateTT": 2442056.00327908,
+                  "lightTimeDays": 0.05206810361126182,
+                  "positionAU": [
+                    -0.3499653320044842,
+                    8.321245706833837,
+                    3.451123984959936
+                  ],
+                  "rangeAU": 9.015312673816217,
+                  "rangeRateAUPerDay": 4.57013266579815e-08,
+                  "velocityAUPerDay": [
+                    -0.005873634338198943,
+                    -0.0003003315180164641,
+                    0.0001286467763444447
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        },
+        "699": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2442055.64869795,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 0.37988126277923584,
+              "quadraticJulianDateTT": 2442055.6487023467,
+              "rangeAU": 9.015310923263245,
+              "samples": [
+                {
+                  "julianDateTT": 2442055.37827908,
+                  "lightTimeDays": 0.0520680935949461,
+                  "positionAU": [
+                    -0.3462942345319744,
+                    8.32143081301064,
+                    3.451043445696552
+                  ],
+                  "rangeAU": 9.01531093954491,
+                  "rangeRateAUPerDay": -1.204578805060877e-07,
+                  "velocityAUPerDay": [
+                    -0.005872989103295506,
+                    -0.000298219459645087,
+                    0.0001294519690555835
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.50327908,
+                  "lightTimeDays": 0.05206809352808504,
+                  "positionAU": [
+                    -0.347028357205203,
+                    8.321393511478844,
+                    3.451059616169719
+                  ],
+                  "rangeAU": 9.015310927968276,
+                  "rangeRateAUPerDay": -6.474959831689916e-08,
+                  "velocityAUPerDay": [
+                    -0.005872973980299096,
+                    -0.0002986050538829489,
+                    0.0001292756305143572
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.62827908,
+                  "lightTimeDays": 0.05206809350144545,
+                  "positionAU": [
+                    -0.3477624781022223,
+                    8.321356161739061,
+                    3.451075764611593
+                  ],
+                  "rangeAU": 9.015310923355774,
+                  "rangeRateAUPerDay": -9.076026659473571e-09,
+                  "velocityAUPerDay": [
+                    -0.005872960647800233,
+                    -0.0002989908342333888,
+                    0.0001290994690531025
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.75327908,
+                  "lightTimeDays": 0.05206809351492827,
+                  "positionAU": [
+                    -0.3484965974333441,
+                    8.321318763754649,
+                    3.45109189104437
+                  ],
+                  "rangeAU": 9.015310925690251,
+                  "rangeRateAUPerDay": 4.638434054663238e-08,
+                  "velocityAUPerDay": [
+                    -0.005872948894772708,
+                    -0.0002993769858935224,
+                    0.0001289234847181478
+                  ]
+                },
+                {
+                  "julianDateTT": 2442055.87827908,
+                  "lightTimeDays": 0.05206809356834944,
+                  "positionAU": [
+                    -0.349230715385221,
+                    8.32128131747399,
+                    3.451107995490104
+                  ],
+                  "rangeAU": 9.01531093493984,
+                  "rangeRateAUPerDay": 1.015577882979202e-07,
+                  "velocityAUPerDay": [
+                    -0.005872938551265416,
+                    -0.0002997635813789698,
+                    0.0001287476756265116
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        }
+      },
+      "centerShiftDominatesResidual": true,
+      "diagnosticBarycenterWithinStrictTimingTarget": false,
+      "freshBodyCenterRoot": {
+        "julianDateTT": 2442055.6486963537,
+        "kind": "pericenter",
+        "quadraticDifferenceSeconds": 0.0,
+        "quadraticJulianDateTT": 2442055.6486963537,
+        "rangeAU": 9.015310923263133,
+        "samples": [
+          {
+            "julianDateTT": 2442055.63869819,
+            "lightTimeDays": 0.05206809350103869,
+            "positionAU": [
+              -0.3478236691188858,
+              8.321353046353122,
+              3.451077109636688
+            ],
+            "rangeAU": 9.015310923285343,
+            "rangeRateAUPerDay": -4.443689876414375e-09,
+            "velocityAUPerDay": [
+              -0.005872959610360319,
+              -0.0002990230054784598,
+              0.0001290847935027205
+            ]
+          },
+          {
+            "julianDateTT": 2442055.64369819,
+            "lightTimeDays": 0.05206809350094246,
+            "positionAU": [
+              -0.3478530339150614,
+              8.32135155119953,
+              3.451077755043036
+            ],
+            "rangeAU": 9.015310923268682,
+            "rangeRateAUPerDay": -2.22125111823621e-09,
+            "velocityAUPerDay": [
+              -0.005872959116354983,
+              -0.0002990384450069184,
+              0.0001290777513265249
+            ]
+          },
+          {
+            "julianDateTT": 2442055.64869819,
+            "lightTimeDays": 0.05206809350091039,
+            "positionAU": [
+              -0.3478823987114959,
+              8.3213500559686,
+              3.451078400414234
+            ],
+            "rangeAU": 9.015310923263133,
+            "rangeRateAUPerDay": 8.159403329905785e-13,
+            "velocityAUPerDay": [
+              -0.00587295862483053,
+              -0.0002990538851621486,
+              0.0001290707094323763
+            ]
+          },
+          {
+            "julianDateTT": 2442055.65369819,
+            "lightTimeDays": 0.05206809350094248,
+            "positionAU": [
+              -0.3479117635027481,
+              8.321348560660603,
+              3.451079045750162
+            ],
+            "rangeAU": 9.01531092326869,
+            "rangeRateAUPerDay": 2.222505420899078e-09,
+            "velocityAUPerDay": [
+              -0.005872958135776054,
+              -0.0002990693259467628,
+              0.0001290636678215383
+            ]
+          },
+          {
+            "julianDateTT": 2442055.65869819,
+            "lightTimeDays": 0.05206809350103875,
+            "positionAU": [
+              -0.3479411282915613,
+              8.321347065275402,
+              3.451079691050884
+            ],
+            "rangeAU": 9.015310923285353,
+            "rangeRateAUPerDay": 4.443812241547187e-09,
+            "velocityAUPerDay": [
+              -0.00587295764918073,
+              -0.0002990847673674984,
+              0.0001290566264933248
+            ]
+          }
+        ],
+        "status": "resolved"
+      },
+      "freshRootMinusArchivedSeconds": -0.15859901905059814,
+      "kind": "pericenter",
+      "modelControls": {
+        "polynomialCovered": true,
+        "publicJulianDateTT": 2442055.753280739,
+        "publicKind": "pericenter",
+        "roots": [
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2442055.7532866937,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": 0.6582392379641533,
+            "rateAtArchivedPublicAUPerDay": -1.5246852674132575e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.0931569761138827e-08,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2442055.753294666,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 1.3470305129885674,
+            "rateAtArchivedPublicAUPerDay": -1.7763568394002505e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.093081263865315e-08,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 5
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2442055.7532873345,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.713610090315342,
+            "rateAtArchivedPublicAUPerDay": -1.4210854715202004e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.093170081707285e-08,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 7
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2442055.7532868427,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.6711138412356377,
+            "rateAtArchivedPublicAUPerDay": -1.545430450278218e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.0931594235662487e-08,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 2
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2442055.7532866937,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": 0.6582392379641533,
+            "rateAtArchivedPublicAUPerDay": -1.5246794888994477e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.0931569755576153e-08,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2442055.753298149,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 1.6479743644595146,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -2.093258899549255e-08,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 3
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2442055.7532873084,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.7113469764590263,
+            "rateAtArchivedPublicAUPerDay": -1.4210854715202004e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.093152318138891e-08,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 4
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2442055.753286786,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.6662355735898018,
+            "rateAtArchivedPublicAUPerDay": -1.545430450278218e-12,
+            "rateAtArchivedReferenceAUPerDay": -2.0931576472094093e-08,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 5
+          }
+        ]
+      },
+      "originalPairIdentityLimitedByExtraCrossings": false,
+      "productionMinusFullAnalyticRootSeconds": 0.0,
+      "publicIndex": 5,
+      "publicJulianDateTT": 2442055.753279075,
+      "publicMinusFreshBodyCenterSeconds": 9035.947126150131,
+      "publicMinusSystemBarycenterSeconds": -1877.1840244531631,
+      "rawRootIndex": 5,
+      "referenceJulianDateTT": 2442055.6486981893,
+      "systemBarycenterMinusBodyCenterSeconds": 10913.131150603294,
+      "withinStrictBodyCenterTimingTarget": false
+    },
+    {
+      "archivedSignedTimingErrorSeconds": -33230.07073402405,
+      "centerControls": {
+        "6": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2463565.1485971333,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 0.0,
+              "quadraticJulianDateTT": 2463565.1485971333,
+              "rangeAU": 9.014919091130427,
+              "samples": [
+                {
+                  "julianDateTT": 2463564.78895011,
+                  "lightTimeDays": 0.05206583054222901,
+                  "positionAU": [
+                    -0.3507139649744817,
+                    8.320461587425614,
+                    3.45191036104025
+                  ],
+                  "rangeAU": 9.014919104113487,
+                  "rangeRateAUPerDay": -7.21989457770408e-08,
+                  "velocityAUPerDay": [
+                    -0.005871926683535859,
+                    -0.0003010056650929822,
+                    0.0001287659500497012
+                  ]
+                },
+                {
+                  "julianDateTT": 2463564.91395011,
+                  "lightTimeDays": 0.05206583049916379,
+                  "positionAU": [
+                    -0.3514479547624192,
+                    8.32042393549769,
+                    3.451926445908295
+                  ],
+                  "rangeAU": 9.014919096656975,
+                  "rangeRateAUPerDay": -4.71052387224986e-08,
+                  "velocityAUPerDay": [
+                    -0.005871909914134713,
+                    -0.0003014251812522777,
+                    0.0001285919384497349
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.03895011,
+                  "lightTimeDays": 0.05206583047421472,
+                  "positionAU": [
+                    -0.3521819424518579,
+                    8.32038623113035,
+                    3.451942509024835
+                  ],
+                  "rangeAU": 9.014919092337175,
+                  "rangeRateAUPerDay": -2.20115575395746e-08,
+                  "velocityAUPerDay": [
+                    -0.005871893107426796,
+                    -0.0003018446957445098,
+                    0.0001284179259648263
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.16395011,
+                  "lightTimeDays": 0.05206583046738174,
+                  "positionAU": [
+                    -0.3529159280381187,
+                    8.320348474323803,
+                    3.451958550389758
+                  ],
+                  "rangeAU": 9.014919091154086,
+                  "rangeRateAUPerDay": 3.082096818220503e-09,
+                  "velocityAUPerDay": [
+                    -0.005871876263419409,
+                    -0.0003022642085677103,
+                    0.0001282439125964713
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.28895011,
+                  "lightTimeDays": 0.05206583047866489,
+                  "positionAU": [
+                    -0.3536499115165559,
+                    8.320310665078257,
+                    3.451974570002955
+                  ],
+                  "rangeAU": 9.0149190931077,
+                  "rangeRateAUPerDay": 2.817572325099845e-08,
+                  "velocityAUPerDay": [
+                    -0.005871859382119733,
+                    -0.0003026837197200548,
+                    0.0001280698983460781
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        },
+        "699": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2463565.54855299,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 0.24920403957366943,
+              "quadraticJulianDateTT": 2463565.5485501057,
+              "rangeAU": 9.014917317213083,
+              "samples": [
+                {
+                  "julianDateTT": 2463565.28895011,
+                  "lightTimeDays": 0.052065820315665,
+                  "positionAU": [
+                    -0.3536501761283624,
+                    8.320308686298121,
+                    3.451974716936971
+                  ],
+                  "rangeAU": 9.014917333438818,
+                  "rangeRateAUPerDay": -1.256228449735236e-07,
+                  "velocityAUPerDay": [
+                    -0.005871090132902482,
+                    -0.0003027917906193527,
+                    0.0001280069127774407
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.41395011,
+                  "lightTimeDays": 0.05206582024701498,
+                  "positionAU": [
+                    -0.3543840612652868,
+                    8.320270813626728,
+                    3.451990706745671
+                  ],
+                  "rangeAU": 9.014917321552435,
+                  "rangeRateAUPerDay": -6.467025788910522e-08,
+                  "velocityAUPerDay": [
+                    -0.005871072520715854,
+                    -0.0003031711150229559,
+                    0.0001278300831156727
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.53895011,
+                  "lightTimeDays": 0.05206582022208014,
+                  "positionAU": [
+                    -0.3551179443618485,
+                    8.320232893470084,
+                    3.452006674471526
+                  ],
+                  "rangeAU": 9.014917317235101,
+                  "rangeRateAUPerDay": -4.57326546234525e-09,
+                  "velocityAUPerDay": [
+                    -0.005871057376844786,
+                    -0.0003035516079298518,
+                    0.0001276535824559346
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.66395011,
+                  "lightTimeDays": 0.05206582024016408,
+                  "positionAU": [
+                    -0.3558518256856348,
+                    8.320194925670084,
+                    3.452022620153171
+                  ],
+                  "rangeAU": 9.014917320366237,
+                  "rangeRateAUPerDay": 5.450359035725952e-08,
+                  "velocityAUPerDay": [
+                    -0.005871044054965612,
+                    -0.000303933402413933,
+                    0.0001274773663583212
+                  ]
+                },
+                {
+                  "julianDateTT": 2463565.78895011,
+                  "lightTimeDays": 0.05206582030055572,
+                  "positionAU": [
+                    -0.3565857054298404,
+                    8.320156910071773,
+                    3.452038543822473
+                  ],
+                  "rangeAU": 9.014917330822728,
+                  "rangeRateAUPerDay": 1.126681772850756e-07,
+                  "velocityAUPerDay": [
+                    -0.005871032033952821,
+                    -0.0003043163350155532,
+                    0.0001273013748034656
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        }
+      },
+      "centerShiftDominatesResidual": true,
+      "diagnosticBarycenterWithinStrictTimingTarget": false,
+      "freshBodyCenterRoot": {
+        "julianDateTT": 2463565.5485500274,
+        "kind": "pericenter",
+        "quadraticDifferenceSeconds": 0.0,
+        "quadraticJulianDateTT": 2463565.5485500274,
+        "rangeAU": 9.014917317213154,
+        "samples": [
+          {
+            "julianDateTT": 2463565.53855741,
+            "lightTimeDays": 0.05206582022209073,
+            "positionAU": [
+              -0.3551156387971352,
+              8.32023301267459,
+              3.452006624341845
+            ],
+            "rangeAU": 9.014917317236934,
+            "rangeRateAUPerDay": -4.760473161374209e-09,
+            "velocityAUPerDay": [
+              -0.005871057421248362,
+              -0.000303550410514069,
+              0.0001276541364751533
+            ]
+          },
+          {
+            "julianDateTT": 2463565.54355741,
+            "lightTimeDays": 0.05206582022198767,
+            "positionAU": [
+              -0.3551449940849201,
+              8.320231494884315,
+              3.452007262594938
+            ],
+            "rangeAU": 9.01491731721909,
+            "rangeRateAUPerDay": -2.377645195943224e-09,
+            "velocityAUPerDay": [
+              -0.005871056857215678,
+              -0.0003035656574247074,
+              0.0001276470827109832
+            ]
+          },
+          {
+            "julianDateTT": 2463565.54855741,
+            "lightTimeDays": 0.05206582022195338,
+            "positionAU": [
+              -0.355174349367154,
+              8.320229977017938,
+              3.452007900812704
+            ],
+            "rangeAU": 9.014917317213154,
+            "rangeRateAUPerDay": 3.5145443472243e-12,
+            "velocityAUPerDay": [
+              -0.005871056296044259,
+              -0.0003035809064523558,
+              0.0001276400294012392
+            ]
+          },
+          {
+            "julianDateTT": 2463565.55355741,
+            "lightTimeDays": 0.05206582022198785,
+            "positionAU": [
+              -0.3552037046465892,
+              8.320228459075311,
+              3.452008538995205
+            ],
+            "rangeAU": 9.01491731721912,
+            "rangeRateAUPerDay": 2.383007104125773e-09,
+            "velocityAUPerDay": [
+              -0.005871055737695165,
+              -0.0003035961575943664,
+              0.0001276329765415004
+            ]
+          },
+          {
+            "julianDateTT": 2463565.55855741,
+            "lightTimeDays": 0.05206582022209102,
+            "positionAU": [
+              -0.3552330599232395,
+              8.320226941056426,
+              3.452009177142442
+            ],
+            "rangeAU": 9.014917317236984,
+            "rangeRateAUPerDay": 4.760833969878104e-09,
+            "velocityAUPerDay": [
+              -0.00587105518212988,
+              -0.0003036114108459514,
+              0.0001276259241279725
+            ]
+          }
+        ],
+        "status": "resolved"
+      },
+      "freshRootMinusArchivedSeconds": -0.6374537944793701,
+      "kind": "pericenter",
+      "modelControls": {
+        "polynomialCovered": true,
+        "publicJulianDateTT": 2463565.1639444423,
+        "publicKind": "pericenter",
+        "roots": [
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2463565.1639483063,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.15542563050985336,
+            "rateAtArchivedPublicAUPerDay": 3.6154212701993735e-13,
+            "rateAtArchivedReferenceAUPerDay": 7.72965417383534e-08,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2463565.163949937,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.01450907438993454,
+            "rateAtArchivedPublicAUPerDay": 1.7763568394002505e-12,
+            "rateAtArchivedReferenceAUPerDay": 7.72963915096625e-08,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 10
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2463565.1639477205,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.20601879805326462,
+            "rateAtArchivedPublicAUPerDay": 3.552713678800501e-13,
+            "rateAtArchivedReferenceAUPerDay": 7.729674678103038e-08,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 2
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2463565.1639482887,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.15693437308073044,
+            "rateAtArchivedPublicAUPerDay": 3.552713678800501e-13,
+            "rateAtArchivedReferenceAUPerDay": 7.729655138177804e-08,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 3
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2463565.1639483063,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.15542563050985336,
+            "rateAtArchivedPublicAUPerDay": 3.6154226105563606e-13,
+            "rateAtArchivedReferenceAUPerDay": 7.72965417375749e-08,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2463565.16395219,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.18011871725320816,
+            "rateAtArchivedPublicAUPerDay": -1.7763568394002505e-12,
+            "rateAtArchivedReferenceAUPerDay": 7.72981678665019e-08,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 9
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2463565.163948924,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.10206643491983414,
+            "rateAtArchivedPublicAUPerDay": 1.7763568394002505e-13,
+            "rateAtArchivedReferenceAUPerDay": 7.729656914534644e-08,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 3
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2463565.16394836,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.15079881995916367,
+            "rateAtArchivedPublicAUPerDay": 3.552713678800501e-13,
+            "rateAtArchivedReferenceAUPerDay": 7.729653361820965e-08,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 4
+          }
+        ]
+      },
+      "originalPairIdentityLimitedByExtraCrossings": false,
+      "productionMinusFullAnalyticRootSeconds": 0.0,
+      "publicIndex": 9,
+      "publicJulianDateTT": 2463565.163950105,
+      "publicMinusFreshBodyCenterSeconds": -33229.43328022957,
+      "publicMinusSystemBarycenterSeconds": 1326.4967679977417,
+      "rawRootIndex": 9,
+      "referenceJulianDateTT": 2463565.5485574054,
+      "systemBarycenterMinusBodyCenterSeconds": -34555.93004822731,
+      "withinStrictBodyCenterTimingTarget": false
+    },
+    {
+      "archivedSignedTimingErrorSeconds": -42372.95202165842,
+      "centerControls": {
+        "6": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2468906.79013908,
+              "kind": "apocenter",
+              "quadraticDifferenceSeconds": 0.0,
+              "quadraticJulianDateTT": 2468906.79013908,
+              "rangeAU": 10.04615458098677,
+              "samples": [
+                {
+                  "julianDateTT": 2468906.41716373,
+                  "lightTimeDays": 0.05802174988035654,
+                  "positionAU": [
+                    0.2298068630200928,
+                    -9.279111351618377,
+                    -3.843241207280812
+                  ],
+                  "rangeAU": 10.04615457015098,
+                  "rangeRateAUPerDay": 5.810551585921977e-08,
+                  "velocityAUPerDay": [
+                    0.00527314203140116,
+                    0.0001918353367729135,
+                    -0.0001480107359671927
+                  ]
+                },
+                {
+                  "julianDateTT": 2468906.54216373,
+                  "lightTimeDays": 0.05802174991527557,
+                  "positionAU": [
+                    0.2304660051761273,
+                    -9.279087351064447,
+                    -3.843259699866554
+                  ],
+                  "rangeAU": 10.04615457619702,
+                  "rangeRateAUPerDay": 3.863123982242074e-08,
+                  "velocityAUPerDay": [
+                    0.005273132464263085,
+                    0.0001921735259960333,
+                    -0.0001478706359350227
+                  ]
+                },
+                {
+                  "julianDateTT": 2468906.66716373,
+                  "lightTimeDays": 0.05802174993613556,
+                  "positionAU": [
+                    0.2311251461347,
+                    -9.279063308236967,
+                    -3.84327817493977
+                  ],
+                  "rangeAU": 10.04615457980882,
+                  "rangeRateAUPerDay": 1.915759742722333e-08,
+                  "velocityAUPerDay": [
+                    0.005273122872245239,
+                    0.0001925117135267017,
+                    -0.0001477305355737263
+                  ]
+                },
+                {
+                  "julianDateTT": 2468906.79216373,
+                  "lightTimeDays": 0.05802174994293698,
+                  "positionAU": [
+                    0.2317842858927302,
+                    -9.27903922313615,
+                    -3.843296632500421
+                  ],
+                  "rangeAU": 10.04615458098645,
+                  "rangeRateAUPerDay": -3.154029753460587e-10,
+                  "velocityAUPerDay": [
+                    0.005273113255352601,
+                    0.0001928498993562972,
+                    -0.0001475904348880467
+                  ]
+                },
+                {
+                  "julianDateTT": 2468906.91716373,
+                  "lightTimeDays": 0.05802174993568032,
+                  "positionAU": [
+                    0.2324434244470799,
+                    -9.279015095762214,
+                    -3.843315072548467
+                  ],
+                  "rangeAU": 10.04615457973,
+                  "rangeRateAUPerDay": -1.978775302999655e-08,
+                  "velocityAUPerDay": [
+                    0.00527310361359031,
+                    0.0001931880834761761,
+                    -0.000147450333882751
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        },
+        "699": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2468907.282587379,
+              "kind": "apocenter",
+              "quadraticDifferenceSeconds": 2.6662498712539673,
+              "quadraticJulianDateTT": 2468907.28255652,
+              "rangeAU": 10.046156298020346,
+              "samples": [
+                {
+                  "julianDateTT": 2468906.91716373,
+                  "lightTimeDays": 0.05802175971381336,
+                  "positionAU": [
+                    0.2324432048998908,
+                    -9.279016989113929,
+                    -3.843314940122811
+                  ],
+                  "rangeAU": 10.04615627276125,
+                  "rangeRateAUPerDay": 1.376619469593161e-07,
+                  "velocityAUPerDay": [
+                    0.00527382896391313,
+                    0.0001930585272191928,
+                    -0.0001475056376483723
+                  ]
+                },
+                {
+                  "julianDateTT": 2468907.04216373,
+                  "lightTimeDays": 0.05802175979628513,
+                  "positionAU": [
+                    0.2331024331222166,
+                    -9.278992833739354,
+                    -3.84333336971118
+                  ],
+                  "rangeAU": 10.04615628704079,
+                  "rangeRateAUPerDay": 9.085921980997991e-08,
+                  "velocityAUPerDay": [
+                    0.005273822647898917,
+                    0.0001934274144374289,
+                    -0.0001473677749942984
+                  ]
+                },
+                {
+                  "julianDateTT": 2468907.16716373,
+                  "lightTimeDays": 0.05802175984498457,
+                  "positionAU": [
+                    0.2337616605751513,
+                    -9.278968632255987,
+                    -3.843351782067731
+                  ],
+                  "rangeAU": 10.04615629547284,
+                  "rangeRateAUPerDay": 4.397874172951775e-08,
+                  "velocityAUPerDay": [
+                    0.005273816646660274,
+                    0.0001937964057944205,
+                    -0.0001472299396249541
+                  ]
+                },
+                {
+                  "julianDateTT": 2468907.29216373,
+                  "lightTimeDays": 0.05802175985959352,
+                  "positionAU": [
+                    0.2344208872864923,
+                    -9.278944384600585,
+                    -3.843370177199231
+                  ],
+                  "rangeAU": 10.0461562980023,
+                  "rangeRateAUPerDay": -3.691884654535685e-09,
+                  "velocityAUPerDay": [
+                    0.005273810703903725,
+                    0.0001941662855724672,
+                    -0.0001470921782931106
+                  ]
+                },
+                {
+                  "julianDateTT": 2468907.41716373,
+                  "lightTimeDays": 0.05802175983933446,
+                  "positionAU": [
+                    0.2350801132253909,
+                    -9.278920090624085,
+                    -3.843388555115292
+                  ],
+                  "rangeAU": 10.04615629449455,
+                  "rangeRateAUPerDay": -5.267526906616355e-08,
+                  "velocityAUPerDay": [
+                    0.005273804142838437,
+                    0.0001945376007008217,
+                    -0.0001469544867536375
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": false
+            }
+          ],
+          "sampleCount": 161
+        }
+      },
+      "centerShiftDominatesResidual": true,
+      "diagnosticBarycenterWithinStrictTimingTarget": false,
+      "freshBodyCenterRoot": {
+        "julianDateTT": 2468907.282592565,
+        "kind": "apocenter",
+        "quadraticDifferenceSeconds": 0.0,
+        "quadraticJulianDateTT": 2468907.282592565,
+        "rangeAU": 10.046156298019968,
+        "samples": [
+          {
+            "julianDateTT": 2468907.27259141,
+            "lightTimeDays": 0.05802175985958432,
+            "positionAU": [
+              0.2343176665668666,
+              -9.278948184317585,
+              -3.843367298053022
+            ],
+            "rangeAU": 10.04615629800071,
+            "rangeRateAUPerDay": 3.849481517097484e-09,
+            "velocityAUPerDay": [
+              0.005273811653283301,
+              0.0001941082849509316,
+              -0.0001471137433248623
+            ]
+          },
+          {
+            "julianDateTT": 2468907.27759141,
+            "lightTimeDays": 0.05802175985966771,
+            "positionAU": [
+              0.2343440356239334,
+              -9.278947213739148,
+              -3.84336803360795
+            ],
+            "rangeAU": 10.04615629801515,
+            "rangeRateAUPerDay": 1.926005921930279e-09,
+            "velocityAUPerDay": [
+              0.005273811411942519,
+              0.0001941230985891072,
+              -0.0001471082340785889
+            ]
+          },
+          {
+            "julianDateTT": 2468907.28259141,
+            "lightTimeDays": 0.05802175985969554,
+            "positionAU": [
+              0.2343704046797915,
+              -9.278946243086638,
+              -3.84336876913533
+            ],
+            "rangeAU": 10.04615629801997,
+            "rangeRateAUPerDay": 4.451012363232244e-13,
+            "velocityAUPerDay": [
+              0.005273811169819972,
+              0.0001941379145188527,
+              -0.0001471027249588187
+            ]
+          },
+          {
+            "julianDateTT": 2468907.28759141,
+            "lightTimeDays": 0.05802175985966771,
+            "positionAU": [
+              0.2343967737344368,
+              -9.278945272360042,
+              -3.843369504635166
+            ],
+            "rangeAU": 10.04615629801515,
+            "rangeRateAUPerDay": -1.927227380354487e-09,
+            "velocityAUPerDay": [
+              0.005273810926860854,
+              0.0001941527327666456,
+              -0.000147097215963737
+            ]
+          },
+          {
+            "julianDateTT": 2468907.29259141,
+            "lightTimeDays": 0.05802175985958419,
+            "positionAU": [
+              0.2344231427903247,
+              -9.278944301559259,
+              -3.843370240107526
+            ],
+            "rangeAU": 10.04615629800069,
+            "rangeRateAUPerDay": -3.857037071362508e-09,
+            "velocityAUPerDay": [
+              0.005273810683009326,
+              0.000194167553359091,
+              -0.000147091707090838
+            ]
+          }
+        ],
+        "status": "resolved"
+      },
+      "freshRootMinusArchivedSeconds": 0.09953677654266357,
+      "kind": "apocenter",
+      "modelControls": {
+        "polynomialCovered": true,
+        "publicJulianDateTT": 2468906.7921728888,
+        "publicKind": "apocenter",
+        "roots": [
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2468906.7921687085,
+            "kind": "apocenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": 0.4303688183426857,
+            "rateAtArchivedPublicAUPerDay": 7.746247908849316e-13,
+            "rateAtArchivedReferenceAUPerDay": -7.626676999480839e-08,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2468906.7921584276,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.4578782245516777,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -7.626610454281035e-08,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 7
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2468906.792168069,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.37514884024858475,
+            "rateAtArchivedPublicAUPerDay": 7.105427357601002e-13,
+            "rateAtArchivedReferenceAUPerDay": -7.626663744986217e-08,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 7
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2468906.792168705,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.4300670698285103,
+            "rateAtArchivedPublicAUPerDay": 7.815970093361102e-13,
+            "rateAtArchivedReferenceAUPerDay": -7.626676179484093e-08,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 4
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2468906.7921687085,
+            "kind": "apocenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": 0.4303688183426857,
+            "rateAtArchivedPublicAUPerDay": 7.746280293235601e-13,
+            "rateAtArchivedReferenceAUPerDay": -7.626676999154586e-08,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2468906.792161928,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.1554759219288826,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -7.626788089964975e-08,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 7
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2468906.79216822,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.38817431777715683,
+            "rateAtArchivedPublicAUPerDay": 8.881784197001252e-13,
+            "rateAtArchivedReferenceAUPerDay": -7.626663744986217e-08,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 7
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2468906.7921687593,
+            "kind": "apocenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.4347441717982292,
+            "rateAtArchivedPublicAUPerDay": 7.815970093361102e-13,
+            "rateAtArchivedReferenceAUPerDay": -7.626676179484093e-08,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 3
+          }
+        ]
+      },
+      "originalPairIdentityLimitedByExtraCrossings": false,
+      "productionMinusFullAnalyticRootSeconds": 0.0,
+      "publicIndex": 10,
+      "publicJulianDateTT": 2468906.7921637273,
+      "publicMinusFreshBodyCenterSeconds": -42373.05155843496,
+      "publicMinusSystemBarycenterSeconds": 174.92952793836594,
+      "rawRootIndex": 10,
+      "referenceJulianDateTT": 2468907.282591413,
+      "systemBarycenterMinusBodyCenterSeconds": -42547.98108637333,
+      "withinStrictBodyCenterTimingTarget": false
+    },
+    {
+      "archivedSignedTimingErrorSeconds": 57012.11864501238,
+      "centerControls": {
+        "6": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2474346.1413644133,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 0.0,
+              "quadraticJulianDateTT": 2474346.1413644133,
+              "rangeAU": 9.030955989887136,
+              "samples": [
+                {
+                  "julianDateTT": 2474345.89040231,
+                  "lightTimeDays": 0.05215845190580368,
+                  "positionAU": [
+                    -0.5481557820081531,
+                    8.322852479027965,
+                    3.462342856254451
+                  ],
+                  "rangeAU": 9.030955996087409,
+                  "rangeRateAUPerDay": -4.941227368544341e-08,
+                  "velocityAUPerDay": [
+                    -0.005872461350134096,
+                    -0.0004199783991675443,
+                    7.969989927097604e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474346.01540231,
+                  "lightTimeDays": 0.05215845187901505,
+                  "positionAU": [
+                    -0.5488898379418338,
+                    8.322799955506484,
+                    3.462352807833985
+                  ],
+                  "rangeAU": 9.030955991449103,
+                  "rangeRateAUPerDay": -2.480068286358799e-08,
+                  "velocityAUPerDay": [
+                    -0.005872433586029671,
+                    -0.0004203979443425885,
+                    7.952537321182453e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474346.14040231,
+                  "lightTimeDays": 0.0521584518699944,
+                  "positionAU": [
+                    -0.5496238904027303,
+                    8.322747379542006,
+                    3.462362737597723
+                  ],
+                  "rangeAU": 9.030955989887227,
+                  "rangeRateAUPerDay": -1.894272944570106e-10,
+                  "velocityAUPerDay": [
+                    -0.00587240578532522,
+                    -0.0004208174871767314,
+                    7.935084652415929e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474346.26540231,
+                  "lightTimeDays": 0.05215845187874147,
+                  "positionAU": [
+                    -0.5503579393862351,
+                    8.322694751134819,
+                    3.462372645545584
+                  ],
+                  "rangeAU": 9.030955991401735,
+                  "rangeRateAUPerDay": 2.442149057734396e-08,
+                  "velocityAUPerDay": [
+                    -0.005872377948020059,
+                    -0.0004212370276689798,
+                    7.917631920818677e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474346.39040231,
+                  "lightTimeDays": 0.05215845190525601,
+                  "positionAU": [
+                    -0.5510919848877889,
+                    8.322642070285216,
+                    3.462382531677493
+                  ],
+                  "rangeAU": 9.030955995992583,
+                  "rangeRateAUPerDay": 4.903206829022887e-08,
+                  "velocityAUPerDay": [
+                    -0.005872350074113498,
+                    -0.0004216565658183839,
+                    7.900179126409327e-05
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": true
+            }
+          ],
+          "sampleCount": 161
+        },
+        "699": {
+          "directedCrossingCount": 1,
+          "roots": [
+            {
+              "julianDateTT": 2474345.480551703,
+              "kind": "pericenter",
+              "quadraticDifferenceSeconds": 4.95084822177887,
+              "quadraticJulianDateTT": 2474345.4804944014,
+              "rangeAU": 9.030954330075158,
+              "samples": [
+                {
+                  "julianDateTT": 2474345.14040231,
+                  "lightTimeDays": 0.05215844242737679,
+                  "positionAU": [
+                    -0.5437510991739105,
+                    8.323164611932087,
+                    3.462282794052914
+                  ],
+                  "rangeAU": 9.030954354948669,
+                  "rangeRateAUPerDay": -1.492767357891182e-07,
+                  "velocityAUPerDay": [
+                    -0.00587188256646419,
+                    -0.0004173280534542179,
+                    8.066913986177041e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474345.26540231,
+                  "lightTimeDays": 0.052158442340325,
+                  "positionAU": [
+                    -0.5444850837621763,
+                    8.323112421893224,
+                    3.462292866730733
+                  ],
+                  "rangeAU": 9.03095433987612,
+                  "rangeRateAUPerDay": -9.229600656779619e-08,
+                  "velocityAUPerDay": [
+                    -0.00587187105731386,
+                    -0.0004177130536578371,
+                    8.049376263376242e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474345.39040231,
+                  "lightTimeDays": 0.05215844229351286,
+                  "positionAU": [
+                    -0.5452190669748969,
+                    8.323060183548,
+                    3.462302917506724
+                  ],
+                  "rangeAU": 9.030954331770845,
+                  "rangeRateAUPerDay": -3.780179105372987e-08,
+                  "velocityAUPerDay": [
+                    -0.005871860432743903,
+                    -0.0004181009444265475,
+                    8.031870032462647e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474345.51540231,
+                  "lightTimeDays": 0.05215844228516901,
+                  "positionAU": [
+                    -0.5459530488741349,
+                    8.323007896544569,
+                    3.462312946415801
+                  ],
+                  "rangeAU": 9.030954330326152,
+                  "rangeRateAUPerDay": 1.431507588834495e-08,
+                  "velocityAUPerDay": [
+                    -0.005871849911797716,
+                    -0.0004184915248522618,
+                    8.014387699670649e-05
+                  ]
+                },
+                {
+                  "julianDateTT": 2474345.64040231,
+                  "lightTimeDays": 0.05215844231370659,
+                  "positionAU": [
+                    -0.5466870294277201,
+                    8.32295556057651,
+                    3.462322953481809
+                  ],
+                  "rangeAU": 9.030954335267284,
+                  "rangeRateAUPerDay": 6.446461465220588e-08,
+                  "velocityAUPerDay": [
+                    -0.005871838808462523,
+                    -0.0004188842639432913,
+                    7.996919382138001e-05
+                  ]
+                }
+              ],
+              "status": "resolved",
+              "withinOriginalNumericalAllowance": false
+            }
+          ],
+          "sampleCount": 161
+        }
+      },
+      "centerShiftDominatesResidual": true,
+      "diagnosticBarycenterWithinStrictTimingTarget": false,
+      "freshBodyCenterRoot": {
+        "julianDateTT": 2474345.4805378746,
+        "kind": "pericenter",
+        "quadraticDifferenceSeconds": 0.0,
+        "quadraticJulianDateTT": 2474345.4805378746,
+        "rangeAU": 9.030954330076147,
+        "samples": [
+          {
+            "julianDateTT": 2474345.47053983,
+            "lightTimeDays": 0.05215844228384442,
+            "positionAU": [
+              -0.5456896230397811,
+              8.323026667960338,
+              3.462309349555864
+            ],
+            "rangeAU": 9.030954330096806,
+            "rangeRateAUPerDay": -4.135308651872232e-09,
+            "velocityAUPerDay": [
+              -0.00587185372386525,
+              -0.0004183510625566316,
+              8.020659949396857e-05
+            ]
+          },
+          {
+            "julianDateTT": 2474345.47553982,
+            "lightTimeDays": 0.05215844228375487,
+            "positionAU": [
+              -0.5457189822465353,
+              8.32302457617026,
+              3.462309750570552
+            ],
+            "rangeAU": 9.030954330081304,
+            "rangeRateAUPerDay": -2.065529664785743e-09,
+            "velocityAUPerDay": [
+              -0.005871853302006632,
+              -0.000418366702422279,
+              8.01996079322751e-05
+            ]
+          },
+          {
+            "julianDateTT": 2474345.48053982,
+            "lightTimeDays": 0.05215844228372508,
+            "positionAU": [
+              -0.545748341514047,
+              8.323022484297494,
+              3.462310151551141
+            ],
+            "rangeAU": 9.030954330076145,
+            "rangeRateAUPerDay": 8.033357806810229e-13,
+            "velocityAUPerDay": [
+              -0.005871852879489982,
+              -0.0004183823461442793,
+              8.019261663381993e-05
+            ]
+          },
+          {
+            "julianDateTT": 2474345.48553982,
+            "lightTimeDays": 0.05215844228375488,
+            "positionAU": [
+              -0.5457777007767387,
+              8.323020392346692,
+              3.462310552496739
+            ],
+            "rangeAU": 9.030954330081306,
+            "rangeRateAUPerDay": 2.063716727201969e-09,
+            "velocityAUPerDay": [
+              -0.005871852456273873,
+              -0.0004183979936484968,
+              8.01856256075271e-05
+            ]
+          },
+          {
+            "julianDateTT": 2474345.490539819,
+            "lightTimeDays": 0.05215844228384423,
+            "positionAU": [
+              -0.5458070600344119,
+              8.32301830031785,
+              3.462310953407341
+            ],
+            "rangeAU": 9.030954330096774,
+            "rangeRateAUPerDay": 4.123242279366538e-09,
+            "velocityAUPerDay": [
+              -0.005871852032316645,
+              -0.0004184136448948092,
+              8.017863484672791e-05
+            ]
+          }
+        ],
+        "status": "resolved"
+      },
+      "freshRootMinusArchivedSeconds": -0.16849637031555176,
+      "kind": "pericenter",
+      "modelControls": {
+        "polynomialCovered": true,
+        "publicJulianDateTT": 2474346.1403940315,
+        "publicKind": "pericenter",
+        "roots": [
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2474346.1403969647,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.46175066381692886,
+            "rateAtArchivedPublicAUPerDay": 1.0522858062552536e-12,
+            "rateAtArchivedReferenceAUPerDay": -1.2992956715272172e-07,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2474346.1404118463,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.8239997550845146,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -1.2992806830425252e-07,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 3
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2474346.1403980684,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.3663981333374977,
+            "rateAtArchivedPublicAUPerDay": 1.0658141036401503e-12,
+            "rateAtArchivedReferenceAUPerDay": -1.2992948938972404e-07,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "production",
+            "julianDateTT": 2474346.1403970807,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.45174267143011093,
+            "rateAtArchivedPublicAUPerDay": 1.0480505352461478e-12,
+            "rateAtArchivedReferenceAUPerDay": -1.299295959711344e-07,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2474346.1403969647,
+            "kind": "pericenter",
+            "method": "analytic",
+            "offsetFromArchivedPublicSeconds": -0.46175066381692886,
+            "rateAtArchivedPublicAUPerDay": 1.0522878346600372e-12,
+            "rateAtArchivedReferenceAUPerDay": -1.299295671486385e-07,
+            "stepDays": 0,
+            "zeroSlopeEvaluations": 0
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2474346.140402952,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": 0.055546872317790985,
+            "rateAtArchivedPublicAUPerDay": 0,
+            "rateAtArchivedReferenceAUPerDay": -1.2992984466109192e-07,
+            "stepDays": 0.001,
+            "zeroSlopeEvaluations": 5
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2474346.140397319,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.43112318962812424,
+            "rateAtArchivedPublicAUPerDay": 8.881784197001252e-13,
+            "rateAtArchivedReferenceAUPerDay": -1.2992948938972404e-07,
+            "stepDays": 0.01,
+            "zeroSlopeEvaluations": 6
+          },
+          {
+            "bracketWidthSeconds": 5.029141902923584e-05,
+            "evaluator": "full-series",
+            "julianDateTT": 2474346.140397101,
+            "kind": "pericenter",
+            "method": "finite-difference",
+            "offsetFromArchivedPublicSeconds": -0.4499824717640877,
+            "rateAtArchivedPublicAUPerDay": 1.0480505352461478e-12,
+            "rateAtArchivedReferenceAUPerDay": -1.299295959711344e-07,
+            "stepDays": 0.1,
+            "zeroSlopeEvaluations": 3
+          }
+        ]
+      },
+      "originalPairIdentityLimitedByExtraCrossings": false,
+      "productionMinusFullAnalyticRootSeconds": 0.0,
+      "publicIndex": 11,
+      "publicJulianDateTT": 2474346.140402309,
+      "publicMinusFreshBodyCenterSeconds": 57012.287141382694,
+      "publicMinusSystemBarycenterSeconds": -83.125801384449,
+      "rawRootIndex": 11,
+      "referenceJulianDateTT": 2474345.480539825,
+      "systemBarycenterMinusBodyCenterSeconds": 57095.41294276714,
+      "withinStrictBodyCenterTimingTarget": false
+    }
+  ],
+  "classification": "failure-selected-saturn-model-and-center-attribution-not-qualification",
+  "inputSHA256": {
+    "Documentation/Migration/approved-accuracy-targets.json": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553",
+    "Documentation/Migration/planetary-apsis-assessment.json": "50841d57389bd0b383aeac560a074d4f6441beef981d55e654bc4758ec910b81",
+    "Documentation/Migration/planetary-apsis-sampling-plan.json": "b309d23cf9c1a35a08ffda205cc5b1155d5350a0be647e975df9a9542450a92b",
+    "Documentation/Migration/saturn-apsis-diagnostic-plan.json": "8392c4cf36ae2f0977630c927aad182477f1458c0e84fecc2eece14f93dc7714",
+    "Package.swift": "440352454599bbb6d699de05f8b949eb45edcec057a4fc1ff603c5cd7baae492",
+    "Scripts/reference-data/build-accuracy-runner.py": "8f19655069c3ead9b7f8b315ce68cb85c946ee4ab25df0570376e8984228a114",
+    "Scripts/reference-data/diagnose-saturn-apsides.py": "6d6f63d8d9bb8c7662e3d67e9a430a55b440f61a7a51502989a2cec72a0ca655",
+    "Scripts/reference-data/qualify-planetary-apsides.py": "cfe18f2c9429d8b3b39d78aae95965ffedf7625fcad80db6c1edd472117f31ca",
+    "Scripts/reference-data/qualify-position-events.py": "85022cd715dcd811c0d49af802ddab699e01ff1370b4686b3848b60f87e0b67c",
+    "Scripts/reference-data/saturn-apsis-probe.c": "2e84aab08df9a99191bd26b0480784d8c31763ea68d50672a2cbad0d4aaef6bf",
+    "Scripts/reference-data/sources/planetary-apsides/earth-coarse.json": "de09618fb730bbf2a3ba458a5f4ce4a0a681f7969fd9ef09779c36429aabfc6c",
+    "Scripts/reference-data/sources/planetary-apsides/earth-coarse.query.json": "1568a59669369d1ddcc5cb000d698b5d7881e7fdceca50ef0603adf7311d5bfc",
+    "Scripts/reference-data/sources/planetary-apsides/earth-fine.json": "c0fc9ed38b56776886c8d54c32fa6e33aa75aa0d8fadae032412b152b25eb1dd",
+    "Scripts/reference-data/sources/planetary-apsides/earth-fine.query.json": "44afdbcbd82222327a43dfee1e22b4d335e6a0d5dbd3b348bfaf3e50a69e301e",
+    "Scripts/reference-data/sources/planetary-apsides/earth-medium.json": "da0fcf2bf8e1c033c39503cfc6830b02c16c807d58ad409bdd7f0b11bdf92895",
+    "Scripts/reference-data/sources/planetary-apsides/earth-medium.query.json": "c971faec62a17c0173dc6964a081b2a6d619f32bf0b906e8ed824e7be3c7350a",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-coarse.json": "8edcddcb0e9167055729748810607cdf957a1cec67ef31e0e1a7f5d56b64bc8b",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-coarse.query.json": "44e0e78c2caf92192afd1d5138086dc3cb2205e6966d17de9e07e7cebc39bb57",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-fine.json": "2f7cc5c482ae86c4e78fc801469e61415511817e543b669651ffa40090c55191",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-fine.query.json": "a8696d5cbf4f95ee97059c9e3f616b514edded987cc1564840fcd53fdc4d306d",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-medium.json": "88ba3f275310cb1a407d48120470fcb725be1920aaa30c7abe3b76e28cbe7532",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-medium.query.json": "31456a9b2aced04809a1e63088fa0b11abab8f618032c9ffa45e553931138d6e",
+    "Scripts/reference-data/sources/planetary-apsides/mars-coarse.json": "07a3d2bae62a9fa714ad7d02fc74eb5bd84bf0aa26121653e41c2aa118bd5d9d",
+    "Scripts/reference-data/sources/planetary-apsides/mars-coarse.query.json": "0fe2a53f5df9794c33e12c6818f947b43131c5fd0de601ac89021655759ff6a0",
+    "Scripts/reference-data/sources/planetary-apsides/mars-fine.json": "f5ef3fd5c0eedd8af1bb99c93c860fa69cb51aee8631465ecf8264890e8479c2",
+    "Scripts/reference-data/sources/planetary-apsides/mars-fine.query.json": "98d5b5c373964aacb6fde09433085d5cf7cbb471a500507415343be19f17ca04",
+    "Scripts/reference-data/sources/planetary-apsides/mars-medium.json": "d90c6403b343ac86421f08f239244f73e4301363d6eb46a8db70194efaad3237",
+    "Scripts/reference-data/sources/planetary-apsides/mars-medium.query.json": "5c8e31e1dec25132a5a261ab9809205c022bd0431759ca1e165844ac56b788dd",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-coarse.json": "efd739017378f9ba32fa91cb13221493e22b242d43af2a0344823a4528f3d869",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-coarse.query.json": "988e101123725b4794ce888d06059f3ce03a5b7828226d970898d216a076018b",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-fine.json": "bfda09de1fadd30269d22269fd687bb525dcb9cccd3c0272638991812f602e23",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-fine.query.json": "8a50299bb73b4149d276cc9e3f4b39270fdc161b3ebd2f63579922b496b9c410",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-medium.json": "17659eb8bd11dd4e2e9450f53c3115576bcbd67208039e184c30f96afc855a30",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-medium.query.json": "d30cc838b4e9a5f07c300d0075c55964f4208de874f28ad32ee8f7b8571cc2e1",
+    "Scripts/reference-data/sources/planetary-apsides/neptune-coarse.json": "c9ab5c6e04a1b9d3a3e4def5c3598e07b02e92110b408913e1f3a2a56ea180a5",
+    "Scripts/reference-data/sources/planetary-apsides/neptune-coarse.query.json": "c8e755ad7b9640c83e9396b5d5a8f5fa16d25a78080c7951578cae79f8efeba1",
+    "Scripts/reference-data/sources/planetary-apsides/neptune-medium.json": "7c06ac9e368b3c169a4c31a47f3948d594c474c500f6f2e10f739757a4d196d3",
+    "Scripts/reference-data/sources/planetary-apsides/neptune-medium.query.json": "2be487e1ae1257d81559a4d22e89711017d610d871dfc6a55a45bc7bce42d1e2",
+    "Scripts/reference-data/sources/planetary-apsides/pluto-coarse.json": "f1b8a703f9e8c1bcfffd273e8f81064b606575d43b6d7aecda521ee73ca76d7d",
+    "Scripts/reference-data/sources/planetary-apsides/pluto-coarse.query.json": "3e1c6c1ff50a3a49cbf839fcc7fd3a6717f8ee9b2c2631e906f42a9c35428147",
+    "Scripts/reference-data/sources/planetary-apsides/saturn-coarse.json": "c8ceb04ee9838a9c90a9c538899e591acbf2aa41c29ae99a1c0d3ea1e129bc99",
+    "Scripts/reference-data/sources/planetary-apsides/saturn-coarse.query.json": "9733e1735fdd0e149853fd179e37cec770546dd6301500d47d6c38a644d6a945",
+    "Scripts/reference-data/sources/planetary-apsides/saturn-fine.json": "d1f8d2a7230e5aa0dab7c790eb7ac8e14950940f3d15b9355d6a38390b069d02",
+    "Scripts/reference-data/sources/planetary-apsides/saturn-fine.query.json": "cf8136726efcb48b2bf460e6079a790696fc12cde4cddf2b3dc6a982c679cf16",
+    "Scripts/reference-data/sources/planetary-apsides/saturn-medium.json": "fba48adcfe5189cea1263b8ffd3410baa123bc629d05b5a06b3ede580b277982",
+    "Scripts/reference-data/sources/planetary-apsides/saturn-medium.query.json": "48650bd5437eb06b6c7e1f0e3395edac54bc20bc325fad7e47aadaa2eab7d247",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-coarse.json": "a9985dd3c98bbe403704cf468156586ffb93e43842c5f92dd38bcf0c57267b2c",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-coarse.query.json": "131f21c9e1c11134b706273fa087e0bf69a087b015bbc6bb5c491b86f6d87044",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-fine.json": "a00aae0ce63a308c0eb537c1b3599ba21afb74cef84c3827c72149d0950d6a8e",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-fine.query.json": "539cd0bf7387a58b02aa782b181ee5ccf89e784ff7472752afcb6fbc99035ddc",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-medium.json": "a3200540211992b5c54e16c1b23a3049ae8844ce31ddefd3bf5f4b2b7aae7d58",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-medium.query.json": "12a07c8aae4e89f9d665788bb03afc7c8b6336690e7479afcd41190d59ad4b6b",
+    "Scripts/reference-data/sources/planetary-apsides/venus-coarse.json": "7e9811c915f571e953c4376c79d60a441d8798efa41af3618437cc10c2e7ba77",
+    "Scripts/reference-data/sources/planetary-apsides/venus-coarse.query.json": "ca1efa0a98504f06232f3cbea7c107be980d1ebcbc446bd16832b7470389059e",
+    "Scripts/reference-data/sources/planetary-apsides/venus-fine.json": "b3b420bfb76cd4157ae42fdafc30bf4517229f044c993686ff6adc61b09b3b83",
+    "Scripts/reference-data/sources/planetary-apsides/venus-fine.query.json": "31234d87b1e721c12f246a67c0721b1385c9bef5cd424fe52f881153e366958f",
+    "Scripts/reference-data/sources/planetary-apsides/venus-medium.json": "24e89f1f7da3e2582fb711d12d7e7b08c98f43cf2c187ab3fc796fe9b1cb9b98",
+    "Scripts/reference-data/sources/planetary-apsides/venus-medium.query.json": "e4550fa00cceb1d45a41fc2d80275ffdc6e60e3a67dd4d76e8dabf23328e854f",
+    "Scripts/reference-data/sources/saturn-apsis-diagnosis/saturn-6-centers.json": "ee7c6aa48210223af757a36a2e4a5f18d78dd7b3881dbfd929451c652f7f56fd",
+    "Scripts/reference-data/sources/saturn-apsis-diagnosis/saturn-6-centers.query.json": "7713b56dc88d85b35e35875319cf47848d95053357447cfbc4fedbe62be7bbbb",
+    "Scripts/reference-data/sources/saturn-apsis-diagnosis/saturn-699-centers.json": "f51ba0a1d34c1ce79ecbe2adc1b1db416038cd079b9e5e232c21ea6da96d5245",
+    "Scripts/reference-data/sources/saturn-apsis-diagnosis/saturn-699-centers.query.json": "e09e300a091cee9bfa960ab21916642d8d2f6dc18a05720295c9b59599cb8e9c",
+    "Scripts/reference-data/sources/saturn-apsis-diagnosis/saturn-699-precision.json": "afa8afd2bcf166946ceee8fc5192cfe416c073506e27fa2cf418c8bb0ad8f4dc",
+    "Scripts/reference-data/sources/saturn-apsis-diagnosis/saturn-699-precision.query.json": "d620e5be84f68fc7b5b8fe085fcdf992505aa60c80c9d5c309f5f53df96ce144",
+    "Scripts/reference-data/test_planetary_apsides.py": "a78d5a200ce48f1a6fb4a5c1301d33904618ef58449603daab37cbd78477162f",
+    "Scripts/reference-data/test_saturn_apsis.py": "6d3a30301b5383862a818d459bed069869e3db3d657cd3001d20974d93818581",
+    "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
+    "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
+    "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
+    "Sources/AstronomyKit/Atmosphere.swift": "8edd5396d88889b10ffb073f25d5186d55e7bf70a75aeca3cf733a6e64f0367a",
+    "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
+    "Sources/AstronomyKit/Chiron.swift": "cd6aeb4e31cdf531cb43d827760f4e20c085172e2386c1346abdd53a7a4991f0",
+    "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
+    "Sources/AstronomyKit/Constellation.swift": "c29061f321ee0e9fab25b25733f3f5b9c30775e9fa02cce38e2311abfa978950",
+    "Sources/AstronomyKit/Coordinates.swift": "5e6bb49e7617f78c968ba3bd5fb8cef36ef80aef3855e08acc932f036d00c70a",
+    "Sources/AstronomyKit/Eclipse.swift": "45202ecff7e18e00897ac31f5b1d3f87eb8acbfce3ecddb5a665b48255412268",
+    "Sources/AstronomyKit/Elongation.swift": "4e89c4adad4fed563282c7b5c1c86bd2d3e2044d2aa0fd513b9057bbdda62675",
+    "Sources/AstronomyKit/FixedStar.swift": "099605bcc2f805c04b246c46b984920999ed4420ff49282c5deb2e5189f79bb6",
+    "Sources/AstronomyKit/GravitySimulation.swift": "a6b5011698cd92626b866d3baee401d95b7e995c0c6fe04645e5b5e3ae72d4a0",
+    "Sources/AstronomyKit/Illumination.swift": "31f7d137968f3c65a612fa59f825b6998d56a844636772f210a696edf78af89f",
+    "Sources/AstronomyKit/JupiterMoons.swift": "08ce6285c62d8ca072092235d8b43bb38cbc23466786fd30e45be9308291ef35",
+    "Sources/AstronomyKit/LagrangePoint.swift": "7c604164729d844ccdc5e299715a4f357f13bfe8c4a5084ee182f8a977ceda87",
+    "Sources/AstronomyKit/Libration.swift": "9282c6133c57e50c638edc48cc1c1eda1a0a8f91ea3e41997d2fff4feaeb628d",
+    "Sources/AstronomyKit/LunarNode.swift": "df22af54f583c35c4bc0ed9b764338572030243e742ea2d53d6e53d08947ee76",
+    "Sources/AstronomyKit/MoonPhase.swift": "b99b8c651309c0f76f4d27e9a31edb30b9da99689cf1f7db864119292fc86b8d",
+    "Sources/AstronomyKit/Observer.swift": "f27f4bdce5d10ea39ff90a7dbc46f930108521eab9e57838714501f029dc9cca",
+    "Sources/AstronomyKit/Position.swift": "106eadb735978f91d26afbcd69095b07e0ee1182ef21278e5806af5806e0e8fe",
+    "Sources/AstronomyKit/RelativeLongitude.swift": "1c9104d62dd920984b3db2a1153536e2144285d388f20681b74ffde2bc098e4a",
+    "Sources/AstronomyKit/RiseSet.swift": "5ceda1a3b5da765ad5dbeda7c9e5ec9e1f04d53ee861832a2554504b6509d732",
+    "Sources/AstronomyKit/Rotation.swift": "bc9a556b3f1713408a51f31b13417c39299a5af622a32a92a1cbdfce16396503",
+    "Sources/AstronomyKit/RotationAxis.swift": "6cada73120cac597f7e2a3dff1ad431c4197c38fdcae4362b53e90f6ae03e145",
+    "Sources/AstronomyKit/Search.swift": "e5b10408b85b2325c87f86d8895305bdc38dc8c71265718e0c324226ae1c69e9",
+    "Sources/AstronomyKit/Seasons.swift": "848f04fb8540d464407facd304c5f5e4863185d0b10666cce1d87853735e329d",
+    "Sources/AstronomyKit/SolarAltitudeBounds.swift": "88486639304a28ca0f6369d76c7426176401228340b5840bf698035cc4441c09",
+    "Sources/AstronomyKit/SolarAltitudeObservation.swift": "c4284801480b23e69f1679f2b246a8e74cb02eb867ea1533fca5ffe439e72b1f",
+    "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
+    "Sources/AstronomyKit/Transit.swift": "506eec46785f547500396747963463e774e0113d8bfdc0c383744da01cfbc2e9",
+    "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
+    "Sources/CLibAstronomy/EphemerisTime/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
+    "Sources/CLibAstronomy/EphemerisTime/ephemeris_time.c": "5c5a8d642686eb256ed01985b7283008c83ac4fc3c6d62c1a7b3cbe000900e0a",
+    "Sources/CLibAstronomy/EphemerisTime/erfa.h": "9549553b95ca2fbbcdcabcc69d82fb3cdd376c28b03c2793200138ff55727088",
+    "Sources/CLibAstronomy/EphemerisTime/erfam.h": "0da6313033aacf9c64533a7e74be49ecda97b4aaa87e134f98287e4ff279886f",
+    "Sources/CLibAstronomy/EphemerisTime/fw2m.c": "480d1ae7780566980b8f80f4c6daa2be330a80e99861d892dc5a9f7b11da47c0",
+    "Sources/CLibAstronomy/EphemerisTime/ir.c": "55e3325cd77770315f20dfdee5e7028f56b7bfb97be966db922abcc8885091f1",
+    "Sources/CLibAstronomy/EphemerisTime/obl06.c": "550260874d5e5fa3be77296b85b92c54c726fee6fbb1bb44748d04c17ffb37c2",
+    "Sources/CLibAstronomy/EphemerisTime/pfw06.c": "085f49861026fab98633d8479795090b3278a0d246a938ebdf10fde326ef1987",
+    "Sources/CLibAstronomy/EphemerisTime/pmat06.c": "f8c33e0f8003fc5482bf091456beaed55d10ffc608d7df04b877615a09238a09",
+    "Sources/CLibAstronomy/EphemerisTime/rx.c": "b740bba3cce0502620662f6e667369734f6adf56064919394ae1ae3ae3e70c64",
+    "Sources/CLibAstronomy/EphemerisTime/rz.c": "d4ef2eb4a9744617b510c2370ba5ff5f3c0acaafb07a0eb6138c6f2128005bcc",
+    "Sources/CLibAstronomy/astronomy.c": "ad59caf513ce813fd1cbdb8b1bbc5e57bf19958b8c9768f0fd8be1ad69330843",
+    "Sources/CLibAstronomy/ephemeris.c": "0f651a5ad5ca2c24132ed0a13f7d79816921020bf10af807c3f7d08c53d98027",
+    "Sources/CLibAstronomy/generated/iau2000b_full.h": "969e564ac5173310bb7f730cf683de7a4975b3fcf20566f2a4b45755dcee41c1",
+    "Sources/CLibAstronomy/generated/polynomial-data.h": "689747697bf1b5f1f0f41dbdbab90a1dccfca5eb9ecbb4ba4d0a2162acfd54da",
+    "Sources/CLibAstronomy/generated/vsop87b_full.h": "a30509bde52487ccb13815b415c8d563511545cce3ba8259f86e007137b86d99",
+    "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
+    "Sources/CLibAstronomy/include/ephemeris.h": "1d598218b137e81b7c9e11585395ac371afccf2c68870fd85e7fc1df0f3a9803",
+    "Sources/CLibAstronomy/include/ephemeris_time.h": "85878abd0e3eafe49d55f9f4f1a27466f92d348a1038c67a115acab97c7a582d",
+    "Sources/CLibAstronomy/polynomial.h": "bbb51a7fea1738f4f6dd029842da31a678891518930735d386b797f79e638783",
+    "Tools/Migration/AccuracyQualificationRunner/main.swift": "b33b1007696b59a49fa8939240dd753881329091b3c20d5bf9bacb59a1d9a1de"
+  },
+  "limitations": [
+    "Cases selected from known failures; no new accuracy holdout.",
+    "Saturn barycenter is diagnostic only; it does not replace public body-center acceptance.",
+    "Numerical root convergence is not physical source uncertainty.",
+    "The 1929 body-center grid exposes two additional raw crossings; its original orbit-scale pairing is limited.",
+    "A finite grid does not prove continuous event completeness.",
+    "Center differences dominate these six measurements; barycenter model residuals still exceed the strict target in every case.",
+    "Finite-difference zero plateaus limit the interpretation of their final brackets.",
+    "No production repair or new model/API policy is selected."
+  ],
+  "planSHA256": "8392c4cf36ae2f0977630c927aad182477f1458c0e84fecc2eece14f93dc7714",
+  "probeExecutable": {
+    "clangVersion": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Applications/Xcode-27.0.0.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "sha256": "c72f7e1c6f5e0a05b2022ee2f5af49ca6abaa6fd1360580e3f770badecd723b9"
+  },
+  "qualified": false,
+  "schemaVersion": 1,
+  "sources": {
+    "6-centers": {
+      "metadata": {
+        "center": "Sun (10)",
+        "centerEphemeris": "DE441",
+        "correction": "NONE",
+        "frame": "ICRF",
+        "service": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.0"
+        },
+        "target": "Saturn Barycenter (6)",
+        "targetEphemeris": "DE441",
+        "timeScale": "TT",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
+      },
+      "parameters": {
+        "CAL_TYPE": "'GREGORIAN'",
+        "CENTER": "'500@10'",
+        "COMMAND": "'6'",
+        "CSV_FORMAT": "'YES'",
+        "EPHEM_TYPE": "'VECTORS'",
+        "MAKE_EPHEM": "'YES'",
+        "OBJ_DATA": "'NO'",
+        "OUT_UNITS": "'AU-D'",
+        "REF_PLANE": "'FRAME'",
+        "REF_SYSTEM": "'ICRF'",
+        "TIME_TYPE": "'TT'",
+        "TLIST": "'2425917.40919115,2425917.53419115,2425917.65919115,2425917.78419115,2425917.90919115,2425918.03419115,2425918.15919115,2425918.28419115,2425918.40919115,2425918.53419115,2425918.65919115,2425918.78419115,2425918.90919115,2425919.03419115,2425919.15919115,2425919.28419115,2425919.40919115,2425919.53419115,2425919.65919115,2425919.78419115,2425919.90919115,2425920.03419115,2425920.15919115,2425920.28419115,2425920.40919115,2425920.53419115,2425920.65919115,2425920.78419115,2425920.90919115,2425921.03419115,2425921.15919115,2425921.28419115,2425921.40919115,2425921.53419115,2425921.65919115,2425921.78419115,2425921.90919115,2425922.03419115,2425922.15919115,2425922.28419115,2425922.40919115,2425922.53419115,2425922.65919115,2425922.78419115,2425922.90919115,2425923.03419115,2425923.15919115,2425923.28419115,2425923.40919115,2425923.53419115,2425923.65919115,2425923.78419115,2425923.90919115,2425924.03419115,2425924.15919115,2425924.28419115,2425924.40919115,2425924.53419115,2425924.65919115,2425924.78419115,2425924.90919115,2425925.03419115,2425925.15919115,2425925.28419115,2425925.40919115,2425925.53419115,2425925.65919115,2425925.78419115,2425925.90919115,2425926.03419115,2425926.15919115,2425926.28419115,2425926.40919115,2425926.53419115,2425926.65919115,2425926.78419115,2425926.90919115,2425927.03419115,2425927.15919115,2425927.28419115,2425927.40919115,2425927.53419115,2425927.65919115,2425927.78419115,2425927.90919115,2425928.03419115,2425928.15919115,2425928.28419115,2425928.40919115,2425928.53419115,2425928.65919115,2425928.78419115,2425928.90919115,2425929.03419115,2425929.15919115,2425929.28419115,2425929.40919115,2425929.53419115,2425929.65919115,2425929.78419115,2425929.90919115,2425930.03419115,2425930.15919115,2425930.28419115,2425930.40919115,2425930.53419115,2425930.65919115,2425930.78419115,2425930.90919115,2425931.03419115,2425931.15919115,2425931.28419115,2425931.40919115,2425931.53419115,2425931.65919115,2425931.78419115,2425931.90919115,2425932.03419115,2425932.15919115,2425932.28419115,2425932.40919115,2425932.53419115,2425932.65919115,2425932.78419115,2425932.90919115,2425933.03419115,2425933.15919115,2425933.28419115,2425933.40919115,2425933.53419115,2425933.65919115,2425933.78419115,2425933.90919115,2425934.03419115,2425934.15919115,2425934.28419115,2425934.40919115,2425934.53419115,2425934.65919115,2425934.78419115,2425934.90919115,2425935.03419115,2425935.15919115,2425935.28419115,2425935.40919115,2425935.53419115,2425935.65919115,2425935.78419115,2425935.90919115,2425936.03419115,2425936.15919115,2425936.28419115,2425936.40919115,2425936.53419115,2425936.65919115,2425936.78419115,2425936.90919115,2425937.03419115,2425937.15919115,2425937.28419115,2425937.40919115,2431331.60730079,2431331.73230079,2431331.85730079,2431331.98230079,2431332.10730079,2431332.23230079,2431332.35730079,2431332.48230079,2431332.60730079,2431332.73230079,2431332.85730079,2431332.98230079,2431333.10730079,2431333.23230079,2431333.35730079,2431333.48230079,2431333.60730079,2431333.73230079,2431333.85730079,2431333.98230079,2431334.10730079,2431334.23230079,2431334.35730079,2431334.48230079,2431334.60730079,2431334.73230079,2431334.85730079,2431334.98230079,2431335.10730079,2431335.23230079,2431335.35730079,2431335.48230079,2431335.60730079,2431335.73230079,2431335.85730079,2431335.98230079,2431336.10730079,2431336.23230079,2431336.35730079,2431336.48230079,2431336.60730079,2431336.73230079,2431336.85730079,2431336.98230079,2431337.10730079,2431337.23230079,2431337.35730079,2431337.48230079,2431337.60730079,2431337.73230079,2431337.85730079,2431337.98230079,2431338.10730079,2431338.23230079,2431338.35730079,2431338.48230079,2431338.60730079,2431338.73230079,2431338.85730079,2431338.98230079,2431339.10730079,2431339.23230079,2431339.35730079,2431339.48230079,2431339.60730079,2431339.73230079,2431339.85730079,2431339.98230079,2431340.10730079,2431340.23230079,2431340.35730079,2431340.48230079,2431340.60730079,2431340.73230079,2431340.85730079,2431340.98230079,2431341.10730079,2431341.23230079,2431341.35730079,2431341.48230079,2431341.60730079,2431341.73230079,2431341.85730079,2431341.98230079,2431342.10730079,2431342.23230079,2431342.35730079,2431342.48230079,2431342.60730079,2431342.73230079,2431342.85730079,2431342.98230079,2431343.10730079,2431343.23230079,2431343.35730079,2431343.48230079,2431343.60730079,2431343.73230079,2431343.85730079,2431343.98230079,2431344.10730079,2431344.23230079,2431344.35730079,2431344.48230079,2431344.60730079,2431344.73230079,2431344.85730079,2431344.98230079,2431345.10730079,2431345.23230079,2431345.35730079,2431345.48230079,2431345.60730079,2431345.73230079,2431345.85730079,2431345.98230079,2431346.10730079,2431346.23230079,2431346.35730079,2431346.48230079,2431346.60730079,2431346.73230079,2431346.85730079,2431346.98230079,2431347.10730079,2431347.23230079,2431347.35730079,2431347.48230079,2431347.60730079,2431347.73230079,2431347.85730079,2431347.98230079,2431348.10730079,2431348.23230079,2431348.35730079,2431348.48230079,2431348.60730079,2431348.73230079,2431348.85730079,2431348.98230079,2431349.10730079,2431349.23230079,2431349.35730079,2431349.48230079,2431349.60730079,2431349.73230079,2431349.85730079,2431349.98230079,2431350.10730079,2431350.23230079,2431350.35730079,2431350.48230079,2431350.60730079,2431350.73230079,2431350.85730079,2431350.98230079,2431351.10730079,2431351.23230079,2431351.35730079,2431351.48230079,2431351.60730079,2442045.75327908,2442045.87827908,2442046.00327908,2442046.12827908,2442046.25327908,2442046.37827908,2442046.50327908,2442046.62827908,2442046.75327908,2442046.87827908,2442047.00327908,2442047.12827908,2442047.25327908,2442047.37827908,2442047.50327908,2442047.62827908,2442047.75327908,2442047.87827908,2442048.00327908,2442048.12827908,2442048.25327908,2442048.37827908,2442048.50327908,2442048.62827908,2442048.75327908,2442048.87827908,2442049.00327908,2442049.12827908,2442049.25327908,2442049.37827908,2442049.50327908,2442049.62827908,2442049.75327908,2442049.87827908,2442050.00327908,2442050.12827908,2442050.25327908,2442050.37827908,2442050.50327908,2442050.62827908,2442050.75327908,2442050.87827908,2442051.00327908,2442051.12827908,2442051.25327908,2442051.37827908,2442051.50327908,2442051.62827908,2442051.75327908,2442051.87827908,2442052.00327908,2442052.12827908,2442052.25327908,2442052.37827908,2442052.50327908,2442052.62827908,2442052.75327908,2442052.87827908,2442053.00327908,2442053.12827908,2442053.25327908,2442053.37827908,2442053.50327908,2442053.62827908,2442053.75327908,2442053.87827908,2442054.00327908,2442054.12827908,2442054.25327908,2442054.37827908,2442054.50327908,2442054.62827908,2442054.75327908,2442054.87827908,2442055.00327908,2442055.12827908,2442055.25327908,2442055.37827908,2442055.50327908,2442055.62827908,2442055.75327908,2442055.87827908,2442056.00327908,2442056.12827908,2442056.25327908,2442056.37827908,2442056.50327908,2442056.62827908,2442056.75327908,2442056.87827908,2442057.00327908,2442057.12827908,2442057.25327908,2442057.37827908,2442057.50327908,2442057.62827908,2442057.75327908,2442057.87827908,2442058.00327908,2442058.12827908,2442058.25327908,2442058.37827908,2442058.50327908,2442058.62827908,2442058.75327908,2442058.87827908,2442059.00327908,2442059.12827908,2442059.25327908,2442059.37827908,2442059.50327908,2442059.62827908,2442059.75327908,2442059.87827908,2442060.00327908,2442060.12827908,2442060.25327908,2442060.37827908,2442060.50327908,2442060.62827908,2442060.75327908,2442060.87827908,2442061.00327908,2442061.12827908,2442061.25327908,2442061.37827908,2442061.50327908,2442061.62827908,2442061.75327908,2442061.87827908,2442062.00327908,2442062.12827908,2442062.25327908,2442062.37827908,2442062.50327908,2442062.62827908,2442062.75327908,2442062.87827908,2442063.00327908,2442063.12827908,2442063.25327908,2442063.37827908,2442063.50327908,2442063.62827908,2442063.75327908,2442063.87827908,2442064.00327908,2442064.12827908,2442064.25327908,2442064.37827908,2442064.50327908,2442064.62827908,2442064.75327908,2442064.87827908,2442065.00327908,2442065.12827908,2442065.25327908,2442065.37827908,2442065.50327908,2442065.62827908,2442065.75327908,2463555.16395011,2463555.28895011,2463555.41395011,2463555.53895011,2463555.66395011,2463555.78895011,2463555.91395011,2463556.03895011,2463556.16395011,2463556.28895011,2463556.41395011,2463556.53895011,2463556.66395011,2463556.78895011,2463556.91395011,2463557.03895011,2463557.16395011,2463557.28895011,2463557.41395011,2463557.53895011,2463557.66395011,2463557.78895011,2463557.91395011,2463558.03895011,2463558.16395011,2463558.28895011,2463558.41395011,2463558.53895011,2463558.66395011,2463558.78895011,2463558.91395011,2463559.03895011,2463559.16395011,2463559.28895011,2463559.41395011,2463559.53895011,2463559.66395011,2463559.78895011,2463559.91395011,2463560.03895011,2463560.16395011,2463560.28895011,2463560.41395011,2463560.53895011,2463560.66395011,2463560.78895011,2463560.91395011,2463561.03895011,2463561.16395011,2463561.28895011,2463561.41395011,2463561.53895011,2463561.66395011,2463561.78895011,2463561.91395011,2463562.03895011,2463562.16395011,2463562.28895011,2463562.41395011,2463562.53895011,2463562.66395011,2463562.78895011,2463562.91395011,2463563.03895011,2463563.16395011,2463563.28895011,2463563.41395011,2463563.53895011,2463563.66395011,2463563.78895011,2463563.91395011,2463564.03895011,2463564.16395011,2463564.28895011,2463564.41395011,2463564.53895011,2463564.66395011,2463564.78895011,2463564.91395011,2463565.03895011,2463565.16395011,2463565.28895011,2463565.41395011,2463565.53895011,2463565.66395011,2463565.78895011,2463565.91395011,2463566.03895011,2463566.16395011,2463566.28895011,2463566.41395011,2463566.53895011,2463566.66395011,2463566.78895011,2463566.91395011,2463567.03895011,2463567.16395011,2463567.28895011,2463567.41395011,2463567.53895011,2463567.66395011,2463567.78895011,2463567.91395011,2463568.03895011,2463568.16395011,2463568.28895011,2463568.41395011,2463568.53895011,2463568.66395011,2463568.78895011,2463568.91395011,2463569.03895011,2463569.16395011,2463569.28895011,2463569.41395011,2463569.53895011,2463569.66395011,2463569.78895011,2463569.91395011,2463570.03895011,2463570.16395011,2463570.28895011,2463570.41395011,2463570.53895011,2463570.66395011,2463570.78895011,2463570.91395011,2463571.03895011,2463571.16395011,2463571.28895011,2463571.41395011,2463571.53895011,2463571.66395011,2463571.78895011,2463571.91395011,2463572.03895011,2463572.16395011,2463572.28895011,2463572.41395011,2463572.53895011,2463572.66395011,2463572.78895011,2463572.91395011,2463573.03895011,2463573.16395011,2463573.28895011,2463573.41395011,2463573.53895011,2463573.66395011,2463573.78895011,2463573.91395011,2463574.03895011,2463574.16395011,2463574.28895011,2463574.41395011,2463574.53895011,2463574.66395011,2463574.78895011,2463574.91395011,2463575.03895011,2463575.16395011,2468896.79216373,2468896.91716373,2468897.04216373,2468897.16716373,2468897.29216373,2468897.41716373,2468897.54216373,2468897.66716373,2468897.79216373,2468897.91716373,2468898.04216373,2468898.16716373,2468898.29216373,2468898.41716373,2468898.54216373,2468898.66716373,2468898.79216373,2468898.91716373,2468899.04216373,2468899.16716373,2468899.29216373,2468899.41716373,2468899.54216373,2468899.66716373,2468899.79216373,2468899.91716373,2468900.04216373,2468900.16716373,2468900.29216373,2468900.41716373,2468900.54216373,2468900.66716373,2468900.79216373,2468900.91716373,2468901.04216373,2468901.16716373,2468901.29216373,2468901.41716373,2468901.54216373,2468901.66716373,2468901.79216373,2468901.91716373,2468902.04216373,2468902.16716373,2468902.29216373,2468902.41716373,2468902.54216373,2468902.66716373,2468902.79216373,2468902.91716373,2468903.04216373,2468903.16716373,2468903.29216373,2468903.41716373,2468903.54216373,2468903.66716373,2468903.79216373,2468903.91716373,2468904.04216373,2468904.16716373,2468904.29216373,2468904.41716373,2468904.54216373,2468904.66716373,2468904.79216373,2468904.91716373,2468905.04216373,2468905.16716373,2468905.29216373,2468905.41716373,2468905.54216373,2468905.66716373,2468905.79216373,2468905.91716373,2468906.04216373,2468906.16716373,2468906.29216373,2468906.41716373,2468906.54216373,2468906.66716373,2468906.79216373,2468906.91716373,2468907.04216373,2468907.16716373,2468907.29216373,2468907.41716373,2468907.54216373,2468907.66716373,2468907.79216373,2468907.91716373,2468908.04216373,2468908.16716373,2468908.29216373,2468908.41716373,2468908.54216373,2468908.66716373,2468908.79216373,2468908.91716373,2468909.04216373,2468909.16716373,2468909.29216373,2468909.41716373,2468909.54216373,2468909.66716373,2468909.79216373,2468909.91716373,2468910.04216373,2468910.16716373,2468910.29216373,2468910.41716373,2468910.54216373,2468910.66716373,2468910.79216373,2468910.91716373,2468911.04216373,2468911.16716373,2468911.29216373,2468911.41716373,2468911.54216373,2468911.66716373,2468911.79216373,2468911.91716373,2468912.04216373,2468912.16716373,2468912.29216373,2468912.41716373,2468912.54216373,2468912.66716373,2468912.79216373,2468912.91716373,2468913.04216373,2468913.16716373,2468913.29216373,2468913.41716373,2468913.54216373,2468913.66716373,2468913.79216373,2468913.91716373,2468914.04216373,2468914.16716373,2468914.29216373,2468914.41716373,2468914.54216373,2468914.66716373,2468914.79216373,2468914.91716373,2468915.04216373,2468915.16716373,2468915.29216373,2468915.41716373,2468915.54216373,2468915.66716373,2468915.79216373,2468915.91716373,2468916.04216373,2468916.16716373,2468916.29216373,2468916.41716373,2468916.54216373,2468916.66716373,2468916.79216373,2474336.14040231,2474336.26540231,2474336.39040231,2474336.51540231,2474336.64040231,2474336.76540231,2474336.89040231,2474337.01540231,2474337.14040231,2474337.26540231,2474337.39040231,2474337.51540231,2474337.64040231,2474337.76540231,2474337.89040231,2474338.01540231,2474338.14040231,2474338.26540231,2474338.39040231,2474338.51540231,2474338.64040231,2474338.76540231,2474338.89040231,2474339.01540231,2474339.14040231,2474339.26540231,2474339.39040231,2474339.51540231,2474339.64040231,2474339.76540231,2474339.89040231,2474340.01540231,2474340.14040231,2474340.26540231,2474340.39040231,2474340.51540231,2474340.64040231,2474340.76540231,2474340.89040231,2474341.01540231,2474341.14040231,2474341.26540231,2474341.39040231,2474341.51540231,2474341.64040231,2474341.76540231,2474341.89040231,2474342.01540231,2474342.14040231,2474342.26540231,2474342.39040231,2474342.51540231,2474342.64040231,2474342.76540231,2474342.89040231,2474343.01540231,2474343.14040231,2474343.26540231,2474343.39040231,2474343.51540231,2474343.64040231,2474343.76540231,2474343.89040231,2474344.01540231,2474344.14040231,2474344.26540231,2474344.39040231,2474344.51540231,2474344.64040231,2474344.76540231,2474344.89040231,2474345.01540231,2474345.14040231,2474345.26540231,2474345.39040231,2474345.51540231,2474345.64040231,2474345.76540231,2474345.89040231,2474346.01540231,2474346.14040231,2474346.26540231,2474346.39040231,2474346.51540231,2474346.64040231,2474346.76540231,2474346.89040231,2474347.01540231,2474347.14040231,2474347.26540231,2474347.39040231,2474347.51540231,2474347.64040231,2474347.76540231,2474347.89040231,2474348.01540231,2474348.14040231,2474348.26540231,2474348.39040231,2474348.51540231,2474348.64040231,2474348.76540231,2474348.89040231,2474349.01540231,2474349.14040231,2474349.26540231,2474349.39040231,2474349.51540231,2474349.64040231,2474349.76540231,2474349.89040231,2474350.01540231,2474350.14040231,2474350.26540231,2474350.39040231,2474350.51540231,2474350.64040231,2474350.76540231,2474350.89040231,2474351.01540231,2474351.14040231,2474351.26540231,2474351.39040231,2474351.51540231,2474351.64040231,2474351.76540231,2474351.89040231,2474352.01540231,2474352.14040231,2474352.26540231,2474352.39040231,2474352.51540231,2474352.64040231,2474352.76540231,2474352.89040231,2474353.01540231,2474353.14040231,2474353.26540231,2474353.39040231,2474353.51540231,2474353.64040231,2474353.76540231,2474353.89040231,2474354.01540231,2474354.14040231,2474354.26540231,2474354.39040231,2474354.51540231,2474354.64040231,2474354.76540231,2474354.89040231,2474355.01540231,2474355.14040231,2474355.26540231,2474355.39040231,2474355.51540231,2474355.64040231,2474355.76540231,2474355.89040231,2474356.01540231,2474356.14040231'",
+        "TLIST_TYPE": "'JD'",
+        "VEC_CORR": "'NONE'",
+        "VEC_TABLE": "'3'"
+      },
+      "responseSHA256": "ee7c6aa48210223af757a36a2e4a5f18d78dd7b3881dbfd929451c652f7f56fd"
+    },
+    "699-centers": {
+      "metadata": {
+        "center": "Sun (10)",
+        "centerEphemeris": "DE441",
+        "correction": "NONE",
+        "frame": "ICRF",
+        "service": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.0"
+        },
+        "target": "Saturn (699)",
+        "targetEphemeris": "sat441l",
+        "timeScale": "TT",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
+      },
+      "parameters": {
+        "CAL_TYPE": "'GREGORIAN'",
+        "CENTER": "'500@10'",
+        "COMMAND": "'699'",
+        "CSV_FORMAT": "'YES'",
+        "EPHEM_TYPE": "'VECTORS'",
+        "MAKE_EPHEM": "'YES'",
+        "OBJ_DATA": "'NO'",
+        "OUT_UNITS": "'AU-D'",
+        "REF_PLANE": "'FRAME'",
+        "REF_SYSTEM": "'ICRF'",
+        "TIME_TYPE": "'TT'",
+        "TLIST": "'2425917.40919115,2425917.53419115,2425917.65919115,2425917.78419115,2425917.90919115,2425918.03419115,2425918.15919115,2425918.28419115,2425918.40919115,2425918.53419115,2425918.65919115,2425918.78419115,2425918.90919115,2425919.03419115,2425919.15919115,2425919.28419115,2425919.40919115,2425919.53419115,2425919.65919115,2425919.78419115,2425919.90919115,2425920.03419115,2425920.15919115,2425920.28419115,2425920.40919115,2425920.53419115,2425920.65919115,2425920.78419115,2425920.90919115,2425921.03419115,2425921.15919115,2425921.28419115,2425921.40919115,2425921.53419115,2425921.65919115,2425921.78419115,2425921.90919115,2425922.03419115,2425922.15919115,2425922.28419115,2425922.40919115,2425922.53419115,2425922.65919115,2425922.78419115,2425922.90919115,2425923.03419115,2425923.15919115,2425923.28419115,2425923.40919115,2425923.53419115,2425923.65919115,2425923.78419115,2425923.90919115,2425924.03419115,2425924.15919115,2425924.28419115,2425924.40919115,2425924.53419115,2425924.65919115,2425924.78419115,2425924.90919115,2425925.03419115,2425925.15919115,2425925.28419115,2425925.40919115,2425925.53419115,2425925.65919115,2425925.78419115,2425925.90919115,2425926.03419115,2425926.15919115,2425926.28419115,2425926.40919115,2425926.53419115,2425926.65919115,2425926.78419115,2425926.90919115,2425927.03419115,2425927.15919115,2425927.28419115,2425927.40919115,2425927.53419115,2425927.65919115,2425927.78419115,2425927.90919115,2425928.03419115,2425928.15919115,2425928.28419115,2425928.40919115,2425928.53419115,2425928.65919115,2425928.78419115,2425928.90919115,2425929.03419115,2425929.15919115,2425929.28419115,2425929.40919115,2425929.53419115,2425929.65919115,2425929.78419115,2425929.90919115,2425930.03419115,2425930.15919115,2425930.28419115,2425930.40919115,2425930.53419115,2425930.65919115,2425930.78419115,2425930.90919115,2425931.03419115,2425931.15919115,2425931.28419115,2425931.40919115,2425931.53419115,2425931.65919115,2425931.78419115,2425931.90919115,2425932.03419115,2425932.15919115,2425932.28419115,2425932.40919115,2425932.53419115,2425932.65919115,2425932.78419115,2425932.90919115,2425933.03419115,2425933.15919115,2425933.28419115,2425933.40919115,2425933.53419115,2425933.65919115,2425933.78419115,2425933.90919115,2425934.03419115,2425934.15919115,2425934.28419115,2425934.40919115,2425934.53419115,2425934.65919115,2425934.78419115,2425934.90919115,2425935.03419115,2425935.15919115,2425935.28419115,2425935.40919115,2425935.53419115,2425935.65919115,2425935.78419115,2425935.90919115,2425936.03419115,2425936.15919115,2425936.28419115,2425936.40919115,2425936.53419115,2425936.65919115,2425936.78419115,2425936.90919115,2425937.03419115,2425937.15919115,2425937.28419115,2425937.40919115,2431331.60730079,2431331.73230079,2431331.85730079,2431331.98230079,2431332.10730079,2431332.23230079,2431332.35730079,2431332.48230079,2431332.60730079,2431332.73230079,2431332.85730079,2431332.98230079,2431333.10730079,2431333.23230079,2431333.35730079,2431333.48230079,2431333.60730079,2431333.73230079,2431333.85730079,2431333.98230079,2431334.10730079,2431334.23230079,2431334.35730079,2431334.48230079,2431334.60730079,2431334.73230079,2431334.85730079,2431334.98230079,2431335.10730079,2431335.23230079,2431335.35730079,2431335.48230079,2431335.60730079,2431335.73230079,2431335.85730079,2431335.98230079,2431336.10730079,2431336.23230079,2431336.35730079,2431336.48230079,2431336.60730079,2431336.73230079,2431336.85730079,2431336.98230079,2431337.10730079,2431337.23230079,2431337.35730079,2431337.48230079,2431337.60730079,2431337.73230079,2431337.85730079,2431337.98230079,2431338.10730079,2431338.23230079,2431338.35730079,2431338.48230079,2431338.60730079,2431338.73230079,2431338.85730079,2431338.98230079,2431339.10730079,2431339.23230079,2431339.35730079,2431339.48230079,2431339.60730079,2431339.73230079,2431339.85730079,2431339.98230079,2431340.10730079,2431340.23230079,2431340.35730079,2431340.48230079,2431340.60730079,2431340.73230079,2431340.85730079,2431340.98230079,2431341.10730079,2431341.23230079,2431341.35730079,2431341.48230079,2431341.60730079,2431341.73230079,2431341.85730079,2431341.98230079,2431342.10730079,2431342.23230079,2431342.35730079,2431342.48230079,2431342.60730079,2431342.73230079,2431342.85730079,2431342.98230079,2431343.10730079,2431343.23230079,2431343.35730079,2431343.48230079,2431343.60730079,2431343.73230079,2431343.85730079,2431343.98230079,2431344.10730079,2431344.23230079,2431344.35730079,2431344.48230079,2431344.60730079,2431344.73230079,2431344.85730079,2431344.98230079,2431345.10730079,2431345.23230079,2431345.35730079,2431345.48230079,2431345.60730079,2431345.73230079,2431345.85730079,2431345.98230079,2431346.10730079,2431346.23230079,2431346.35730079,2431346.48230079,2431346.60730079,2431346.73230079,2431346.85730079,2431346.98230079,2431347.10730079,2431347.23230079,2431347.35730079,2431347.48230079,2431347.60730079,2431347.73230079,2431347.85730079,2431347.98230079,2431348.10730079,2431348.23230079,2431348.35730079,2431348.48230079,2431348.60730079,2431348.73230079,2431348.85730079,2431348.98230079,2431349.10730079,2431349.23230079,2431349.35730079,2431349.48230079,2431349.60730079,2431349.73230079,2431349.85730079,2431349.98230079,2431350.10730079,2431350.23230079,2431350.35730079,2431350.48230079,2431350.60730079,2431350.73230079,2431350.85730079,2431350.98230079,2431351.10730079,2431351.23230079,2431351.35730079,2431351.48230079,2431351.60730079,2442045.75327908,2442045.87827908,2442046.00327908,2442046.12827908,2442046.25327908,2442046.37827908,2442046.50327908,2442046.62827908,2442046.75327908,2442046.87827908,2442047.00327908,2442047.12827908,2442047.25327908,2442047.37827908,2442047.50327908,2442047.62827908,2442047.75327908,2442047.87827908,2442048.00327908,2442048.12827908,2442048.25327908,2442048.37827908,2442048.50327908,2442048.62827908,2442048.75327908,2442048.87827908,2442049.00327908,2442049.12827908,2442049.25327908,2442049.37827908,2442049.50327908,2442049.62827908,2442049.75327908,2442049.87827908,2442050.00327908,2442050.12827908,2442050.25327908,2442050.37827908,2442050.50327908,2442050.62827908,2442050.75327908,2442050.87827908,2442051.00327908,2442051.12827908,2442051.25327908,2442051.37827908,2442051.50327908,2442051.62827908,2442051.75327908,2442051.87827908,2442052.00327908,2442052.12827908,2442052.25327908,2442052.37827908,2442052.50327908,2442052.62827908,2442052.75327908,2442052.87827908,2442053.00327908,2442053.12827908,2442053.25327908,2442053.37827908,2442053.50327908,2442053.62827908,2442053.75327908,2442053.87827908,2442054.00327908,2442054.12827908,2442054.25327908,2442054.37827908,2442054.50327908,2442054.62827908,2442054.75327908,2442054.87827908,2442055.00327908,2442055.12827908,2442055.25327908,2442055.37827908,2442055.50327908,2442055.62827908,2442055.75327908,2442055.87827908,2442056.00327908,2442056.12827908,2442056.25327908,2442056.37827908,2442056.50327908,2442056.62827908,2442056.75327908,2442056.87827908,2442057.00327908,2442057.12827908,2442057.25327908,2442057.37827908,2442057.50327908,2442057.62827908,2442057.75327908,2442057.87827908,2442058.00327908,2442058.12827908,2442058.25327908,2442058.37827908,2442058.50327908,2442058.62827908,2442058.75327908,2442058.87827908,2442059.00327908,2442059.12827908,2442059.25327908,2442059.37827908,2442059.50327908,2442059.62827908,2442059.75327908,2442059.87827908,2442060.00327908,2442060.12827908,2442060.25327908,2442060.37827908,2442060.50327908,2442060.62827908,2442060.75327908,2442060.87827908,2442061.00327908,2442061.12827908,2442061.25327908,2442061.37827908,2442061.50327908,2442061.62827908,2442061.75327908,2442061.87827908,2442062.00327908,2442062.12827908,2442062.25327908,2442062.37827908,2442062.50327908,2442062.62827908,2442062.75327908,2442062.87827908,2442063.00327908,2442063.12827908,2442063.25327908,2442063.37827908,2442063.50327908,2442063.62827908,2442063.75327908,2442063.87827908,2442064.00327908,2442064.12827908,2442064.25327908,2442064.37827908,2442064.50327908,2442064.62827908,2442064.75327908,2442064.87827908,2442065.00327908,2442065.12827908,2442065.25327908,2442065.37827908,2442065.50327908,2442065.62827908,2442065.75327908,2463555.16395011,2463555.28895011,2463555.41395011,2463555.53895011,2463555.66395011,2463555.78895011,2463555.91395011,2463556.03895011,2463556.16395011,2463556.28895011,2463556.41395011,2463556.53895011,2463556.66395011,2463556.78895011,2463556.91395011,2463557.03895011,2463557.16395011,2463557.28895011,2463557.41395011,2463557.53895011,2463557.66395011,2463557.78895011,2463557.91395011,2463558.03895011,2463558.16395011,2463558.28895011,2463558.41395011,2463558.53895011,2463558.66395011,2463558.78895011,2463558.91395011,2463559.03895011,2463559.16395011,2463559.28895011,2463559.41395011,2463559.53895011,2463559.66395011,2463559.78895011,2463559.91395011,2463560.03895011,2463560.16395011,2463560.28895011,2463560.41395011,2463560.53895011,2463560.66395011,2463560.78895011,2463560.91395011,2463561.03895011,2463561.16395011,2463561.28895011,2463561.41395011,2463561.53895011,2463561.66395011,2463561.78895011,2463561.91395011,2463562.03895011,2463562.16395011,2463562.28895011,2463562.41395011,2463562.53895011,2463562.66395011,2463562.78895011,2463562.91395011,2463563.03895011,2463563.16395011,2463563.28895011,2463563.41395011,2463563.53895011,2463563.66395011,2463563.78895011,2463563.91395011,2463564.03895011,2463564.16395011,2463564.28895011,2463564.41395011,2463564.53895011,2463564.66395011,2463564.78895011,2463564.91395011,2463565.03895011,2463565.16395011,2463565.28895011,2463565.41395011,2463565.53895011,2463565.66395011,2463565.78895011,2463565.91395011,2463566.03895011,2463566.16395011,2463566.28895011,2463566.41395011,2463566.53895011,2463566.66395011,2463566.78895011,2463566.91395011,2463567.03895011,2463567.16395011,2463567.28895011,2463567.41395011,2463567.53895011,2463567.66395011,2463567.78895011,2463567.91395011,2463568.03895011,2463568.16395011,2463568.28895011,2463568.41395011,2463568.53895011,2463568.66395011,2463568.78895011,2463568.91395011,2463569.03895011,2463569.16395011,2463569.28895011,2463569.41395011,2463569.53895011,2463569.66395011,2463569.78895011,2463569.91395011,2463570.03895011,2463570.16395011,2463570.28895011,2463570.41395011,2463570.53895011,2463570.66395011,2463570.78895011,2463570.91395011,2463571.03895011,2463571.16395011,2463571.28895011,2463571.41395011,2463571.53895011,2463571.66395011,2463571.78895011,2463571.91395011,2463572.03895011,2463572.16395011,2463572.28895011,2463572.41395011,2463572.53895011,2463572.66395011,2463572.78895011,2463572.91395011,2463573.03895011,2463573.16395011,2463573.28895011,2463573.41395011,2463573.53895011,2463573.66395011,2463573.78895011,2463573.91395011,2463574.03895011,2463574.16395011,2463574.28895011,2463574.41395011,2463574.53895011,2463574.66395011,2463574.78895011,2463574.91395011,2463575.03895011,2463575.16395011,2468896.79216373,2468896.91716373,2468897.04216373,2468897.16716373,2468897.29216373,2468897.41716373,2468897.54216373,2468897.66716373,2468897.79216373,2468897.91716373,2468898.04216373,2468898.16716373,2468898.29216373,2468898.41716373,2468898.54216373,2468898.66716373,2468898.79216373,2468898.91716373,2468899.04216373,2468899.16716373,2468899.29216373,2468899.41716373,2468899.54216373,2468899.66716373,2468899.79216373,2468899.91716373,2468900.04216373,2468900.16716373,2468900.29216373,2468900.41716373,2468900.54216373,2468900.66716373,2468900.79216373,2468900.91716373,2468901.04216373,2468901.16716373,2468901.29216373,2468901.41716373,2468901.54216373,2468901.66716373,2468901.79216373,2468901.91716373,2468902.04216373,2468902.16716373,2468902.29216373,2468902.41716373,2468902.54216373,2468902.66716373,2468902.79216373,2468902.91716373,2468903.04216373,2468903.16716373,2468903.29216373,2468903.41716373,2468903.54216373,2468903.66716373,2468903.79216373,2468903.91716373,2468904.04216373,2468904.16716373,2468904.29216373,2468904.41716373,2468904.54216373,2468904.66716373,2468904.79216373,2468904.91716373,2468905.04216373,2468905.16716373,2468905.29216373,2468905.41716373,2468905.54216373,2468905.66716373,2468905.79216373,2468905.91716373,2468906.04216373,2468906.16716373,2468906.29216373,2468906.41716373,2468906.54216373,2468906.66716373,2468906.79216373,2468906.91716373,2468907.04216373,2468907.16716373,2468907.29216373,2468907.41716373,2468907.54216373,2468907.66716373,2468907.79216373,2468907.91716373,2468908.04216373,2468908.16716373,2468908.29216373,2468908.41716373,2468908.54216373,2468908.66716373,2468908.79216373,2468908.91716373,2468909.04216373,2468909.16716373,2468909.29216373,2468909.41716373,2468909.54216373,2468909.66716373,2468909.79216373,2468909.91716373,2468910.04216373,2468910.16716373,2468910.29216373,2468910.41716373,2468910.54216373,2468910.66716373,2468910.79216373,2468910.91716373,2468911.04216373,2468911.16716373,2468911.29216373,2468911.41716373,2468911.54216373,2468911.66716373,2468911.79216373,2468911.91716373,2468912.04216373,2468912.16716373,2468912.29216373,2468912.41716373,2468912.54216373,2468912.66716373,2468912.79216373,2468912.91716373,2468913.04216373,2468913.16716373,2468913.29216373,2468913.41716373,2468913.54216373,2468913.66716373,2468913.79216373,2468913.91716373,2468914.04216373,2468914.16716373,2468914.29216373,2468914.41716373,2468914.54216373,2468914.66716373,2468914.79216373,2468914.91716373,2468915.04216373,2468915.16716373,2468915.29216373,2468915.41716373,2468915.54216373,2468915.66716373,2468915.79216373,2468915.91716373,2468916.04216373,2468916.16716373,2468916.29216373,2468916.41716373,2468916.54216373,2468916.66716373,2468916.79216373,2474336.14040231,2474336.26540231,2474336.39040231,2474336.51540231,2474336.64040231,2474336.76540231,2474336.89040231,2474337.01540231,2474337.14040231,2474337.26540231,2474337.39040231,2474337.51540231,2474337.64040231,2474337.76540231,2474337.89040231,2474338.01540231,2474338.14040231,2474338.26540231,2474338.39040231,2474338.51540231,2474338.64040231,2474338.76540231,2474338.89040231,2474339.01540231,2474339.14040231,2474339.26540231,2474339.39040231,2474339.51540231,2474339.64040231,2474339.76540231,2474339.89040231,2474340.01540231,2474340.14040231,2474340.26540231,2474340.39040231,2474340.51540231,2474340.64040231,2474340.76540231,2474340.89040231,2474341.01540231,2474341.14040231,2474341.26540231,2474341.39040231,2474341.51540231,2474341.64040231,2474341.76540231,2474341.89040231,2474342.01540231,2474342.14040231,2474342.26540231,2474342.39040231,2474342.51540231,2474342.64040231,2474342.76540231,2474342.89040231,2474343.01540231,2474343.14040231,2474343.26540231,2474343.39040231,2474343.51540231,2474343.64040231,2474343.76540231,2474343.89040231,2474344.01540231,2474344.14040231,2474344.26540231,2474344.39040231,2474344.51540231,2474344.64040231,2474344.76540231,2474344.89040231,2474345.01540231,2474345.14040231,2474345.26540231,2474345.39040231,2474345.51540231,2474345.64040231,2474345.76540231,2474345.89040231,2474346.01540231,2474346.14040231,2474346.26540231,2474346.39040231,2474346.51540231,2474346.64040231,2474346.76540231,2474346.89040231,2474347.01540231,2474347.14040231,2474347.26540231,2474347.39040231,2474347.51540231,2474347.64040231,2474347.76540231,2474347.89040231,2474348.01540231,2474348.14040231,2474348.26540231,2474348.39040231,2474348.51540231,2474348.64040231,2474348.76540231,2474348.89040231,2474349.01540231,2474349.14040231,2474349.26540231,2474349.39040231,2474349.51540231,2474349.64040231,2474349.76540231,2474349.89040231,2474350.01540231,2474350.14040231,2474350.26540231,2474350.39040231,2474350.51540231,2474350.64040231,2474350.76540231,2474350.89040231,2474351.01540231,2474351.14040231,2474351.26540231,2474351.39040231,2474351.51540231,2474351.64040231,2474351.76540231,2474351.89040231,2474352.01540231,2474352.14040231,2474352.26540231,2474352.39040231,2474352.51540231,2474352.64040231,2474352.76540231,2474352.89040231,2474353.01540231,2474353.14040231,2474353.26540231,2474353.39040231,2474353.51540231,2474353.64040231,2474353.76540231,2474353.89040231,2474354.01540231,2474354.14040231,2474354.26540231,2474354.39040231,2474354.51540231,2474354.64040231,2474354.76540231,2474354.89040231,2474355.01540231,2474355.14040231,2474355.26540231,2474355.39040231,2474355.51540231,2474355.64040231,2474355.76540231,2474355.89040231,2474356.01540231,2474356.14040231'",
+        "TLIST_TYPE": "'JD'",
+        "VEC_CORR": "'NONE'",
+        "VEC_TABLE": "'3'"
+      },
+      "responseSHA256": "f51ba0a1d34c1ce79ecbe2adc1b1db416038cd079b9e5e232c21ea6da96d5245"
+    },
+    "699-precision": {
+      "metadata": {
+        "center": "Sun (10)",
+        "centerEphemeris": "DE441",
+        "correction": "NONE",
+        "frame": "ICRF",
+        "service": {
+          "source": "NASA/JPL Horizons API",
+          "version": "1.0"
+        },
+        "target": "Saturn (699)",
+        "targetEphemeris": "sat441l",
+        "timeScale": "TT",
+        "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
+      },
+      "parameters": {
+        "CAL_TYPE": "'GREGORIAN'",
+        "CENTER": "'500@10'",
+        "COMMAND": "'699'",
+        "CSV_FORMAT": "'YES'",
+        "EPHEM_TYPE": "'VECTORS'",
+        "MAKE_EPHEM": "'YES'",
+        "OBJ_DATA": "'NO'",
+        "OUT_UNITS": "'AU-D'",
+        "REF_PLANE": "'FRAME'",
+        "REF_SYSTEM": "'ICRF'",
+        "TIME_TYPE": "'TT'",
+        "TLIST": "'2425931.52647080,2425931.53147080,2425931.53647080,2425931.54147080,2425931.54647080,2431340.86455362,2431340.86955362,2431340.87455362,2431340.87955362,2431340.88455362,2442055.63869819,2442055.64369819,2442055.64869819,2442055.65369819,2442055.65869819,2463565.53855741,2463565.54355741,2463565.54855741,2463565.55355741,2463565.55855741,2468907.27259141,2468907.27759141,2468907.28259141,2468907.28759141,2468907.29259141,2474345.47053983,2474345.47553982,2474345.48053982,2474345.48553982,2474345.49053982'",
+        "TLIST_TYPE": "'JD'",
+        "VEC_CORR": "'NONE'",
+        "VEC_TABLE": "'3'"
+      },
+      "responseSHA256": "afa8afd2bcf166946ceee8fc5192cfe416c073506e27fa2cf418c8bb0ad8f4dc"
+    }
+  },
+  "summary": {
+    "cases": 6,
+    "centerDominatedCases": 6,
+    "diagnosticBarycenterTimingFailures": 6,
+    "originalPairsWithExtraLocalCrossings": 1,
+    "strictBodyCenterTimingFailures": 6
+  }
+}
