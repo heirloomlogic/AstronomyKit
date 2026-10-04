@@ -34,7 +34,7 @@ The predetermined 2101–2130 slice includes all nine bodies. Mercury, Venus, Ea
 
 ## Provenance and reproduction
 
-The 24 complete query/response pairs under `Scripts/reference-data/sources/planetary-apsides/` retain request parameters, response hashes, and the sampling-plan hash. Empty refinement populations are recorded as `not-queried` with a reason; they are not sent as empty Horizons requests. Coordinator protocol version 1 and its source hash are recorded separately from the premeasurement plan. The assessment binds 107 scientific inputs, its clean candidate revision, Apple Swift 6.4, macOS 27.0.1 arm64, and runner SHA-256 `21709d96c27f77c646a7269b58263a13420a24ec9742bf98772a6393e74cd881`.
+The 24 complete query/response pairs under `Scripts/reference-data/sources/planetary-apsides/` retain request parameters, response hashes, and the sampling-plan hash. Empty refinement populations are recorded as `not-queried` with a reason; they are not sent as empty Horizons requests. Coordinator protocol version 1 and its source hash are recorded separately from the premeasurement plan. The assessment binds 108 scientific inputs, including the shared Horizons parser and root helper, its clean candidate revision, Apple Swift 6.4, macOS 27.0.1 arm64, and runner SHA-256 `21709d96c27f77c646a7269b58263a13420a24ec9742bf98772a6393e74cd881`.
 
 ```sh
 python3 Scripts/reference-data/build-accuracy-runner.py
