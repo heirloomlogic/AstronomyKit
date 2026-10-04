@@ -59,6 +59,14 @@ Exact `check` replay requires the compiler, executable and reference binary hash
 
 The `acquire-positions`, `acquire-events` and geometric `acquire` commands resume complete response/query pairs and reject detached or incomplete pairs. They do not silently overwrite an archive. The `report` commands refuse an existing report; preserve original bytes before a separate source/provenance revalidation or candidate experiment. `check` replays every raw response/hash/recipe, public position/event result, frozen metric and source binding offline. Astronomical exceedances are retained results, not parser/test failures.
 
+The separate [planetary apsis investigation](../../Documentation/Migration/PlanetaryApsisEvidence.md) uses geometric body-center range relative to the Sun body center across the complete 1900–2130 TT interval. Its sampling plan was frozen before acquisition. `acquire` fetches missing nonempty stages only, retains skipped refinements as inconclusive, and never overwrites a complete pair. The report preserves raw crossings, resolved orbit-scale candidates, additional-local classifications, every root failure, public pairings, and strict timing results. It does not qualify the family.
+
+```sh
+python3 Scripts/reference-data/build-accuracy-runner.py
+python3 Scripts/reference-data/qualify-planetary-apsides.py check
+python3 -B -m unittest Scripts/reference-data/test_planetary_apsides.py -v
+```
+
 The lunar candidate probe needs the exact official short kernel and development excerpt. Its [probe plan](../../Documentation/Migration/lunar-candidate-probe-plan.json) and JSON report pin inputs, segment identities and hashes. This downloads about 31 MiB into ignored scratch storage; no binary kernel is bundled in the shipping package.
 
 ```sh

@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 118,
     "localPatches": 19,
     "publicSwiftAPI": 577,
-    "testOwners": 88,
-    "tests": 966
+    "testOwners": 89,
+    "tests": 978
   },
   "crossCuttingContracts": [
     {
@@ -3767,6 +3767,7 @@
     "Scripts/reference-data/test_lunar_event_diagnosis.py": "49ef16159afcfcea610bf24e27580e23e64a16d954a41df413c6d521a6c4eb94",
     "Scripts/reference-data/test_native_lunar_probe.py": "5539b49fdc608d66eee30a017c1bbd964326468a356c8f1def4c46e826a263f1",
     "Scripts/reference-data/test_outer_planet_diagnostic.py": "0488c3677b3a641bbdbbd5c42ae5a88f7a711d90227b5e589f3beb38714f6d9c",
+    "Scripts/reference-data/test_planetary_apsides.py": "1c2e65590735753cd3f3611629818fa2511cabe26927d1c9e9c513e47f3b4359",
     "Scripts/reference-data/test_pluto_model_diagnostic.py": "a5edf1d0a928aae6c405f168b082391eaa4273015d5752be45e19ed545ee4b29",
     "Scripts/reference-data/test_polar_reference.py": "44fb87a0b3ec8a6928ba2ffd202da77f71735289cb11f32dae2f6518c5124544",
     "Scripts/reference-data/test_position_events.py": "b13f31912b23a3fae745af0a7767d8a659fe55c79c90b3052b88c246a205240f",
@@ -13409,6 +13410,13 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_outer_planet_diagnostic.py",
       "testCount": 13
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_planetary_apsides.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_planetary_apsides.py",
+      "testCount": 12
     },
     {
       "classification": "invariant",
