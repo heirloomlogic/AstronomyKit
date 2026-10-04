@@ -53,6 +53,29 @@ func runAccuracyBatch() throws {
                         ] as [String: Any]
                     },
                 ]
+            case "planetary-apsides":
+                guard let code = request["body"] as? Int32,
+                    let celestialBody = CelestialBody(rawValue: code),
+                    let start = request["startJulianDateTT"] as? Double,
+                    let stop = request["stopJulianDateTT"] as? Double,
+                    code >= 0, code <= 8,
+                    start.isFinite, stop.isFinite, stop > start, stop - start <= 85_000
+                else { throw RunnerError.usage }
+                let startTime = AstroTime(tt: start - 2_451_545, deltaTModel: .jplHorizons)
+                var event = try celestialBody.searchApsis(after: startTime)
+                var events: [[String: Any]] = []
+                for iteration in 0..<4_000 {
+                    let jd = event.time.terrestrialTime + 2_451_545
+                    if jd >= stop { break }
+                    guard jd >= start, iteration < 3_999 else { throw RunnerError.usage }
+                    events.append([
+                        "julianDateTT": jd,
+                        "kind": event.kind == .pericenter ? "pericenter" : "apocenter",
+                        "distanceAU": event.distanceAU,
+                    ])
+                    event = try celestialBody.nextApsis(after: event)
+                }
+                output = ["status": "success", "events": events]
             case "lunar-nodes":
                 guard let start = request["startJulianDateTT"] as? Double,
                     let stop = request["stopJulianDateTT"] as? Double,
