@@ -1,0 +1,2197 @@
+{
+  "classification": "retrospective-candidate-feasibility-not-new-holdout-or-production-qualification",
+  "currentAssessmentSHA256": "00c5c7b3048bd79640fcd58548280c8af573143f92ed537105a212616498055c",
+  "developmentExcerpt": {
+    "bytes": 13902896,
+    "guardsTDB": [
+      "1899/12/31",
+      "2131/1/2"
+    ],
+    "sha256": "1ad3c32dcbe8aedef3c7f5e79b9543afb849c58d3bd89c85a4b94dea51116539",
+    "shippingDisposition": "not selected or shipped",
+    "targets": [
+      301,
+      399
+    ]
+  },
+  "events": [
+    {
+      "candidateMinusReferenceSeconds": 0.00507354736328125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2415051.504676028
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00492095947265625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2415066.5406334074
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00179290771484375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2424694.9026378095
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00179290771484375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2424710.704907533
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00041961669921875,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2432192.0661226427
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00049591064453125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2432204.7059736103
+    },
+    {
+      "candidateMinusReferenceSeconds": 3.814697265625e-05,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2438499.9005698944
+    },
+    {
+      "candidateMinusReferenceSeconds": 3.814697265625e-05,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2438515.600702282
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00026702880859375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2446726.7344874693
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00019073486328125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2446738.604227868
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00064849853515625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2450887.5273456816
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00064849853515625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2450900.795107267
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00186920166015625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2459003.65254236
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00186920166015625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2459015.540107554
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00179290771484375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2459030.5929895006
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00331878662109375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2465090.7921297355
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00316619873046875,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2465105.4918307494
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00637054443359375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2476319.7810986387
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00568389892578125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2476334.189428442
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00896453857421875,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2484337.9937565
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00850677490234375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2484353.466389346
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00888824462890625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2484365.8275778284
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00972747802734375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2486364.983160435
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00965118408203125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2486377.0371414125
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01285552978515625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2495333.0484781554
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01316070556640625,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2495345.225644635
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00507354736328125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2415023.207045825
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00507354736328125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2415039.188310953
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00080108642578125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2451548.016246832
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00080108642578125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2451563.450442696
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00080108642578125,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2451575.5559110697
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01033782958984375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2488443.5958653027
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01018524169921875,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2488459.5590289757
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01430511474609375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "pericenter",
+      "referenceJulianDateTT": 2499371.1686593555
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01461029052734375,
+      "family": "apsis",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "apocenter",
+      "referenceJulianDateTT": 2499383.011145916
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00476837158203125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2415047.0148780076
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00484466552734375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2415059.5708509777
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00476837158203125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2415074.2054872904
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00171661376953125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2424693.275742341
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00171661376953125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2424706.4193001986
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00049591064453125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2432190.416319607
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00041961669921875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2432203.6002243115
+    },
+    {
+      "candidateMinusReferenceSeconds": -3.814697265625e-05,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2438502.909706233
+    },
+    {
+      "candidateMinusReferenceSeconds": 3.814697265625e-05,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2438517.0064818505
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00019073486328125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2446721.0521676196
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00026702880859375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2446735.4619834665
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00026702880859375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2446748.3143187715
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00064849853515625,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2450884.699326681
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00057220458984375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2450898.8611048413
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00064849853515625,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2450911.9100418827
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00179290771484375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2459007.2576659964
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00179290771484375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2459021.683906842
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00316619873046875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2465089.822264417
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00308990478515625,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2465103.1179883415
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00598907470703125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2476314.1101108612
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00606536865234375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2476328.5185179133
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00606536865234375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2476341.457759872
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00850677490234375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2484342.657274396
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00850677490234375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2484355.7557841027
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00911712646484375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2486356.317666472
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00926971435546875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2486369.01203439
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01224517822265625,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2495336.3942900533
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01232147216796875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2495349.1050686445
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00484466552734375,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2415032.466556526
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00476837158203125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2415047.0148780076
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00072479248046875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2451551.7577518774
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00072479248046875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2451564.91356821
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00980377197265625,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2488437.0896661095
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00988006591796875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2488451.5966272866
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.00988006591796875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2488464.4439599654
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01384735107421875,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2499363.6933726473
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01392364501953125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "ascending",
+      "referenceJulianDateTT": 2499376.5051751016
+    },
+    {
+      "candidateMinusReferenceSeconds": 0.01392364501953125,
+      "family": "node",
+      "finalBracketWidthSeconds": 7.62939453125e-05,
+      "kind": "descending",
+      "referenceJulianDateTT": 2499390.9490082087
+    }
+  ],
+  "geometricAssessmentSHA256": "c151917dc87bdac9baf49c340b98526fe2106a3d00312ad3741643186bb57088",
+  "helperSourceSHA256": {
+    "Scripts/reference-data/qualify-geometric-events.py": "8551da126801756524cbd7a5104df5b7b0a6b44ac5278180378664d4a6747553",
+    "Scripts/reference-data/qualify-position-events.py": "85022cd715dcd811c0d49af802ddab699e01ff1370b4686b3848b60f87e0b67c"
+  },
+  "jplephem": {
+    "sourceSHA256": {
+      "__init__.py": "1c56b1960e3254f847c8cd51e180624f478f25c1b184ff7ea06c89870dd70d58",
+      "__main__.py": "97492749d60940e4890000f8f89a0cf190a9f9970ff40d2cf0156ad79043dc0f",
+      "ascii.py": "9ae81b16bf24bb92a8d4ab0294439e22bcdcfb97597118b9df30ff45026989f6",
+      "calendar.py": "deb4cebc1fbade4e16741b3785377dc0bcab377b3447b1ec711a2014829179aa",
+      "commandline.py": "dda3b1a04467cefe1378b8c61107690a3d6953896f912e1be0e82328d6e1c45a",
+      "daf.py": "08df1560fa1199c57c41e6b058cf617cabe7a3c039af5db988e5432686a559da",
+      "descriptorlib.py": "41147668a55e011d92b78839e46bade16b40d1e9d8fdaaef655c6802ab619c23",
+      "ephem.py": "a131ccdd1e7a6a6570abde80f2f3d93ac876a05c065ff335249ec0db175f1121",
+      "exceptions.py": "d4f8b543d53a9b544bf33ecd085c583158fccaf1cbf56fadcbdfcf434a17f13f",
+      "excerpter.py": "17292560034f415b577326d4d1fccb70b13d35770333b99d64b3bbff265a8e16",
+      "names.py": "dd49b91db15ee33d107afa675c11ba7cd12cfb8da50b09ffd997c1f9ce093d84",
+      "pck.py": "aa383c08bd0089a2cec85ecaa48e91681ad45165de1ed931ce92552957dbddaf",
+      "spk.py": "224d31fa12817de2bd1f1e38b30bc289c0a72677844bc554bb7101b206783357",
+      "test.py": "35581ae7fab8d6a25d82601ba1f2d618a3eae28b6fef94b3d9eb17d7210dc864"
+    },
+    "version": "2.24"
+  },
+  "kernel": {
+    "bytes": 32726016,
+    "segments": [
+      {
+        "center": 3,
+        "dataBytes": 8987232,
+        "frame": 1,
+        "startJulianDateTDB": 2396752.5,
+        "stopJulianDateTDB": 2506352.5,
+        "target": 301,
+        "type": 2
+      },
+      {
+        "center": 3,
+        "dataBytes": 8987232,
+        "frame": 1,
+        "startJulianDateTDB": 2396752.5,
+        "stopJulianDateTDB": 2506352.5,
+        "target": 399,
+        "type": 2
+      }
+    ],
+    "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
+  },
+  "limitations": [
+    "retrospective DE440-vs-Horizons reference comparison uses previously observed cases, not a new candidate holdout",
+    "JPL solution families share observations; agreement is not independent observational proof or physical covariance",
+    "TT-to-TDB uses a geocentric periodic approximation, not future civil time",
+    "shipping Swift implementation, representation, frame/model integration, RSS/startup/runtime, API coverage and licensing/attribution validation remain unperformed",
+    "excerpt file bytes are development data size, not app download/install size or resident memory",
+    "this prototype does not repair Pluto or preserve its body-center semantics"
+  ],
+  "planSHA256": "52b377c9f5bd357022d369b4dac0d96715e713e2cc17d8bcdbdc7fbc947121d5",
+  "positions": [
+    {
+      "angleErrorArcminutes": 4.8955912651016475e-05,
+      "julianDateTT": 2415020.5,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0006131966309163337
+    },
+    {
+      "angleErrorArcminutes": 4.178085457904144e-05,
+      "julianDateTT": 2415401.75769192,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0006774729030584158
+    },
+    {
+      "angleErrorArcminutes": 4.5142211853811216e-05,
+      "julianDateTT": 2415709.93027611,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.000887491931362596
+    },
+    {
+      "angleErrorArcminutes": 3.417278808680292e-05,
+      "julianDateTT": 2416857.72521654,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 1.7200045945946935e-05
+    },
+    {
+      "angleErrorArcminutes": 4.0656206608354765e-05,
+      "julianDateTT": 2417172.22647515,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00059678630508032
+    },
+    {
+      "angleErrorArcminutes": 3.303680080162792e-05,
+      "julianDateTT": 2418117.79564919,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00040251874041137304
+    },
+    {
+      "angleErrorArcminutes": 3.2560765763617704e-05,
+      "julianDateTT": 2418545.15822181,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0006880874641810608
+    },
+    {
+      "angleErrorArcminutes": 3.0249462603360476e-05,
+      "julianDateTT": 2419055.70383937,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0006022122017622697
+    },
+    {
+      "angleErrorArcminutes": 2.8429154035148218e-05,
+      "julianDateTT": 2420073.92471489,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0005817180621940058
+    },
+    {
+      "angleErrorArcminutes": 2.9353168626211388e-05,
+      "julianDateTT": 2420619.77469849,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0003170046119154942
+    },
+    {
+      "angleErrorArcminutes": 2.3597661363260335e-05,
+      "julianDateTT": 2421603.34345337,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00045027468190568553
+    },
+    {
+      "angleErrorArcminutes": 2.0060777883554006e-05,
+      "julianDateTT": 2421983.66049635,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00010176509019054877
+    },
+    {
+      "angleErrorArcminutes": 1.8321244935211547e-05,
+      "julianDateTT": 2422808.01791374,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0001068220795414344
+    },
+    {
+      "angleErrorArcminutes": 1.6467672153610833e-05,
+      "julianDateTT": 2423551.51328361,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -7.596268116164005e-05
+    },
+    {
+      "angleErrorArcminutes": 1.575795145479609e-05,
+      "julianDateTT": 2424078.97764794,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0001420233196210835
+    },
+    {
+      "angleErrorArcminutes": 1.4345833262170505e-05,
+      "julianDateTT": 2424789.88849886,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00014419193025541543
+    },
+    {
+      "angleErrorArcminutes": 1.5032607235684317e-05,
+      "julianDateTT": 2425390.20386882,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00030118920900389014
+    },
+    {
+      "angleErrorArcminutes": 1.1996671730951705e-05,
+      "julianDateTT": 2425868.9791749,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 7.010689136480773e-05
+    },
+    {
+      "angleErrorArcminutes": 1.1442798812861022e-05,
+      "julianDateTT": 2426283.20989004,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00010157538091785061
+    },
+    {
+      "angleErrorArcminutes": 1.2891255595057257e-05,
+      "julianDateTT": 2426982.34341745,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -6.066007083959029e-06
+    },
+    {
+      "angleErrorArcminutes": 8.779305735032214e-06,
+      "julianDateTT": 2428043.77851471,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -2.6550398475166236e-05
+    },
+    {
+      "angleErrorArcminutes": 9.402866780620265e-06,
+      "julianDateTT": 2428749.20460769,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -8.237989658888186e-06
+    },
+    {
+      "angleErrorArcminutes": 8.37412910797828e-06,
+      "julianDateTT": 2429110.19361965,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00016251340416450423
+    },
+    {
+      "angleErrorArcminutes": 6.783775357493451e-06,
+      "julianDateTT": 2429556.46050654,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -9.305802676832988e-05
+    },
+    {
+      "angleErrorArcminutes": 5.225888679810122e-06,
+      "julianDateTT": 2430800.89849661,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 2.0770921409813116e-05
+    },
+    {
+      "angleErrorArcminutes": 5.149674055987165e-06,
+      "julianDateTT": 2431041.45908814,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -7.398261354778281e-05
+    },
+    {
+      "angleErrorArcminutes": 3.832187814982988e-06,
+      "julianDateTT": 2431846.39828253,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -1.2482584345254449e-05
+    },
+    {
+      "angleErrorArcminutes": 4.429286349217396e-06,
+      "julianDateTT": 2432166.58955316,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -7.018391319077697e-05
+    },
+    {
+      "angleErrorArcminutes": 3.2254029231339114e-06,
+      "julianDateTT": 2433042.12334963,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 4.7704821035828737e-05
+    },
+    {
+      "angleErrorArcminutes": 2.647888321022451e-06,
+      "julianDateTT": 2433611.87935223,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 3.386118914503545e-06
+    },
+    {
+      "angleErrorArcminutes": 2.1755147151586623e-06,
+      "julianDateTT": 2434535.12216176,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -1.435224619322862e-06
+    },
+    {
+      "angleErrorArcminutes": 1.4021823698713133e-06,
+      "julianDateTT": 2435389.77116474,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -9.162069818637327e-06
+    },
+    {
+      "angleErrorArcminutes": 1.158288367676137e-06,
+      "julianDateTT": 2435948.60519939,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -1.9698027272422693e-05
+    },
+    {
+      "angleErrorArcminutes": 5.538706508082744e-07,
+      "julianDateTT": 2436615.42378725,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 1.4763749609773608e-06
+    },
+    {
+      "angleErrorArcminutes": 5.978751986622785e-07,
+      "julianDateTT": 2437113.92478947,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 4.631844708188978e-06
+    },
+    {
+      "angleErrorArcminutes": 6.807709746241585e-07,
+      "julianDateTT": 2437604.05062551,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -6.130164008790988e-06
+    },
+    {
+      "angleErrorArcminutes": 3.229688069823188e-07,
+      "julianDateTT": 2438471.67650272,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 1.1494138182708654e-06
+    },
+    {
+      "angleErrorArcminutes": 3.0711344722701217e-09,
+      "julianDateTT": 2439055.18560933,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 5.470899764571958e-07
+    },
+    {
+      "angleErrorArcminutes": 8.768946509219104e-08,
+      "julianDateTT": 2439755.96187037,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -5.487774175086154e-07
+    },
+    {
+      "angleErrorArcminutes": 1.0279522348885947e-07,
+      "julianDateTT": 2440583.18686381,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -1.7945516528265538e-07
+    },
+    {
+      "angleErrorArcminutes": 8.481682354485957e-08,
+      "julianDateTT": 2441311.29264981,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 7.263486792240905e-08
+    },
+    {
+      "angleErrorArcminutes": 2.3726202751637676e-07,
+      "julianDateTT": 2441530.44890857,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 6.44446699781866e-07
+    },
+    {
+      "angleErrorArcminutes": 4.11778191640331e-07,
+      "julianDateTT": 2442424.13354341,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -2.55894170346566e-06
+    },
+    {
+      "angleErrorArcminutes": 5.140544254492551e-07,
+      "julianDateTT": 2443252.97510906,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -6.912351551490194e-07
+    },
+    {
+      "angleErrorArcminutes": 5.819836561917279e-07,
+      "julianDateTT": 2443670.39415621,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 6.371541354202688e-06
+    },
+    {
+      "angleErrorArcminutes": 8.503119242989174e-07,
+      "julianDateTT": 2444333.81374966,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 1.1045221844415176e-05
+    },
+    {
+      "angleErrorArcminutes": 1.303321630764472e-06,
+      "julianDateTT": 2445183.35838234,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 5.125436379540374e-06
+    },
+    {
+      "angleErrorArcminutes": 1.3742786662562806e-06,
+      "julianDateTT": 2445780.87573697,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -3.0480660642859116e-05
+    },
+    {
+      "angleErrorArcminutes": 2.0487843177395173e-06,
+      "julianDateTT": 2446636.10695703,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -4.10402966118911e-05
+    },
+    {
+      "angleErrorArcminutes": 2.702691812864957e-06,
+      "julianDateTT": 2447203.21028241,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 5.4360456466306e-05
+    },
+    {
+      "angleErrorArcminutes": 2.96578224481735e-06,
+      "julianDateTT": 2447755.19435774,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 3.401615242093253e-05
+    },
+    {
+      "angleErrorArcminutes": 3.0879943852002057e-06,
+      "julianDateTT": 2448325.96140182,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 2.3905725375394186e-05
+    },
+    {
+      "angleErrorArcminutes": 4.518800655710251e-06,
+      "julianDateTT": 2449138.82512381,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -5.068250714745979e-07
+    },
+    {
+      "angleErrorArcminutes": 4.882493730565412e-06,
+      "julianDateTT": 2449795.08248385,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 2.9122492963215082e-05
+    },
+    {
+      "angleErrorArcminutes": 4.568479429683524e-06,
+      "julianDateTT": 2450057.50760697,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -2.7136591947529987e-05
+    },
+    {
+      "angleErrorArcminutes": 7.0458272463646065e-06,
+      "julianDateTT": 2451178.63707957,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -1.4453536408968652e-05
+    },
+    {
+      "angleErrorArcminutes": 5.966380661043521e-06,
+      "julianDateTT": 2451545.0,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -5.397081634512272e-05
+    },
+    {
+      "angleErrorArcminutes": 7.336947218305301e-06,
+      "julianDateTT": 2451697.12245549,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 7.227192882534801e-05
+    },
+    {
+      "angleErrorArcminutes": 7.251696073303953e-06,
+      "julianDateTT": 2452116.38833777,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0001254512434201291
+    },
+    {
+      "angleErrorArcminutes": 6.903875506019703e-06,
+      "julianDateTT": 2452678.42258373,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 7.462792310300021e-06
+    },
+    {
+      "angleErrorArcminutes": 8.286707848492862e-06,
+      "julianDateTT": 2453304.3276592,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -8.729091541771056e-05
+    },
+    {
+      "angleErrorArcminutes": 9.901099999757333e-06,
+      "julianDateTT": 2454449.62157157,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00014139403735473658
+    },
+    {
+      "angleErrorArcminutes": 9.646203025595444e-06,
+      "julianDateTT": 2454600.15970485,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0001613118515754629
+    },
+    {
+      "angleErrorArcminutes": 1.0690416403507572e-05,
+      "julianDateTT": 2455794.8590132,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00012929257503202805
+    },
+    {
+      "angleErrorArcminutes": 1.2864727762254127e-05,
+      "julianDateTT": 2456543.51569548,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00013980840571650683
+    },
+    {
+      "angleErrorArcminutes": 1.561005752052958e-05,
+      "julianDateTT": 2457131.70473066,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00016945889154170886
+    },
+    {
+      "angleErrorArcminutes": 1.6324251830360803e-05,
+      "julianDateTT": 2457765.36549505,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0001254879608635632
+    },
+    {
+      "angleErrorArcminutes": 1.4306632924846795e-05,
+      "julianDateTT": 2458326.92831236,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 1.949441884043346e-05
+    },
+    {
+      "angleErrorArcminutes": 1.5658861418195518e-05,
+      "julianDateTT": 2459040.41111774,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00017524085702314577
+    },
+    {
+      "angleErrorArcminutes": 2.037480299333738e-05,
+      "julianDateTT": 2459800.2756908,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0001892165846975183
+    },
+    {
+      "angleErrorArcminutes": 1.9444435467866233e-05,
+      "julianDateTT": 2460482.49524207,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0002836626678615312
+    },
+    {
+      "angleErrorArcminutes": 1.7505899725530657e-05,
+      "julianDateTT": 2460612.72536626,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -2.5580931824883845e-05
+    },
+    {
+      "angleErrorArcminutes": 1.9872610907016877e-05,
+      "julianDateTT": 2461768.69308735,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00014307245460658225
+    },
+    {
+      "angleErrorArcminutes": 2.2790159947293495e-05,
+      "julianDateTT": 2462467.72317568,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0003589573567971672
+    },
+    {
+      "angleErrorArcminutes": 2.356070497298904e-05,
+      "julianDateTT": 2462824.79781411,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00048737318141048525
+    },
+    {
+      "angleErrorArcminutes": 2.2229612821535742e-05,
+      "julianDateTT": 2463147.71608887,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -9.824278016285677e-05
+    },
+    {
+      "angleErrorArcminutes": 2.9001583502645455e-05,
+      "julianDateTT": 2464238.50165453,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0003274318446218967
+    },
+    {
+      "angleErrorArcminutes": 2.8236939357030866e-05,
+      "julianDateTT": 2465042.48082055,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0002936240955635548
+    },
+    {
+      "angleErrorArcminutes": 3.1778509986678206e-05,
+      "julianDateTT": 2465178.10806869,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0003139662219068297
+    },
+    {
+      "angleErrorArcminutes": 3.2179424999748005e-05,
+      "julianDateTT": 2466336.18854174,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.000630930643423493
+    },
+    {
+      "angleErrorArcminutes": 2.9873558566316054e-05,
+      "julianDateTT": 2466459.69788885,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00046443656981580927
+    },
+    {
+      "angleErrorArcminutes": 3.088807880761241e-05,
+      "julianDateTT": 2467725.4018323,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00029223617146583597
+    },
+    {
+      "angleErrorArcminutes": 3.8607778051209626e-05,
+      "julianDateTT": 2467952.88576171,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0005793893506895953
+    },
+    {
+      "angleErrorArcminutes": 3.237172800303303e-05,
+      "julianDateTT": 2468604.95263038,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 2.3677955059089035e-05
+    },
+    {
+      "angleErrorArcminutes": 4.3841634738651e-05,
+      "julianDateTT": 2469610.95394145,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0003814002632011959
+    },
+    {
+      "angleErrorArcminutes": 4.350033351536861e-05,
+      "julianDateTT": 2469833.09767748,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0006778593774189535
+    },
+    {
+      "angleErrorArcminutes": 3.871102856674223e-05,
+      "julianDateTT": 2470858.75726096,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0004627625420392154
+    },
+    {
+      "angleErrorArcminutes": 4.056371052167772e-05,
+      "julianDateTT": 2471658.93731359,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0003731689613417665
+    },
+    {
+      "angleErrorArcminutes": 4.3515270625124204e-05,
+      "julianDateTT": 2472165.91311868,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0005289243935428762
+    },
+    {
+      "angleErrorArcminutes": 5.118395440942632e-05,
+      "julianDateTT": 2472809.19415268,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -9.995843712310538e-05
+    },
+    {
+      "angleErrorArcminutes": 4.8193336946804894e-05,
+      "julianDateTT": 2473214.72018837,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0005068008155833138
+    },
+    {
+      "angleErrorArcminutes": 4.5922893255351615e-05,
+      "julianDateTT": 2474165.77643597,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0005546132000809634
+    },
+    {
+      "angleErrorArcminutes": 5.042958890490997e-05,
+      "julianDateTT": 2474661.19501694,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0009071039688985983
+    },
+    {
+      "angleErrorArcminutes": 4.844699255358021e-05,
+      "julianDateTT": 2475491.47809654,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00035696412966867156
+    },
+    {
+      "angleErrorArcminutes": 6.310706067231775e-05,
+      "julianDateTT": 2476029.16018144,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0006297209485275783
+    },
+    {
+      "angleErrorArcminutes": 5.4845663902658246e-05,
+      "julianDateTT": 2476700.22027288,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.001063637233645354
+    },
+    {
+      "angleErrorArcminutes": 5.7538231085123236e-05,
+      "julianDateTT": 2477248.93579974,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0010818913052788274
+    },
+    {
+      "angleErrorArcminutes": 6.341937690960526e-05,
+      "julianDateTT": 2478201.32122438,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0008573601606197048
+    },
+    {
+      "angleErrorArcminutes": 6.826468031199333e-05,
+      "julianDateTT": 2478787.6001268,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 1.6165892816802885e-05
+    },
+    {
+      "angleErrorArcminutes": 7.437890588117882e-05,
+      "julianDateTT": 2479338.38827779,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0002788688285486195
+    },
+    {
+      "angleErrorArcminutes": 5.814805702112445e-05,
+      "julianDateTT": 2479681.42120353,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0001166705853974141
+    },
+    {
+      "angleErrorArcminutes": 7.047422399552906e-05,
+      "julianDateTT": 2480831.73821499,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0012568763463350978
+    },
+    {
+      "angleErrorArcminutes": 6.809589544034639e-05,
+      "julianDateTT": 2481231.58957658,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0007852886387028136
+    },
+    {
+      "angleErrorArcminutes": 7.773395366843407e-05,
+      "julianDateTT": 2481872.53772984,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00029430533730885345
+    },
+    {
+      "angleErrorArcminutes": 6.622652974265805e-05,
+      "julianDateTT": 2482657.69676142,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00014979984876787973
+    },
+    {
+      "angleErrorArcminutes": 7.933373671399884e-05,
+      "julianDateTT": 2483521.12733372,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0006948255791771969
+    },
+    {
+      "angleErrorArcminutes": 7.925607896991274e-05,
+      "julianDateTT": 2484082.73655773,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0017440503925866947
+    },
+    {
+      "angleErrorArcminutes": 7.760561215128696e-05,
+      "julianDateTT": 2484317.96812607,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00092261633598066
+    },
+    {
+      "angleErrorArcminutes": 9.020680835834444e-05,
+      "julianDateTT": 2485122.09109035,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0011730650054708762
+    },
+    {
+      "angleErrorArcminutes": 7.519078708561201e-05,
+      "julianDateTT": 2485685.53012269,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0005227585223706088
+    },
+    {
+      "angleErrorArcminutes": 8.70090072586659e-05,
+      "julianDateTT": 2486285.2215523,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0014630372621844431
+    },
+    {
+      "angleErrorArcminutes": 8.796473867188484e-05,
+      "julianDateTT": 2487100.67170274,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0018196177037259958
+    },
+    {
+      "angleErrorArcminutes": 8.838263648322403e-05,
+      "julianDateTT": 2487870.75301776,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0013945389036862262
+    },
+    {
+      "angleErrorArcminutes": 9.184929309911439e-05,
+      "julianDateTT": 2488712.93038928,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0010763247692114981
+    },
+    {
+      "angleErrorArcminutes": 9.285862364891105e-05,
+      "julianDateTT": 2489057.62382018,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0010890075184086991
+    },
+    {
+      "angleErrorArcminutes": 8.59807050663327e-05,
+      "julianDateTT": 2489599.11743,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.00042855009216708834
+    },
+    {
+      "angleErrorArcminutes": 9.648308602506276e-05,
+      "julianDateTT": 2490599.14136358,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0019755833603131144
+    },
+    {
+      "angleErrorArcminutes": 0.00010184465870446225,
+      "julianDateTT": 2491024.89436254,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0017814249083859405
+    },
+    {
+      "angleErrorArcminutes": 0.00010233116610339678,
+      "julianDateTT": 2491731.20747473,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.001211753632232447
+    },
+    {
+      "angleErrorArcminutes": 9.39643439098982e-05,
+      "julianDateTT": 2492220.75649386,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0006560449268089468
+    },
+    {
+      "angleErrorArcminutes": 0.00010198046292748108,
+      "julianDateTT": 2492994.8529785,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0013409972239074427
+    },
+    {
+      "angleErrorArcminutes": 9.819575383794636e-05,
+      "julianDateTT": 2493900.51935796,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.00012889804275444277
+    },
+    {
+      "angleErrorArcminutes": 0.00012884886662900433,
+      "julianDateTT": 2494324.98414872,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0008567222658147579
+    },
+    {
+      "angleErrorArcminutes": 0.00010115959791548683,
+      "julianDateTT": 2494891.745502,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -6.0931659042375696e-05
+    },
+    {
+      "angleErrorArcminutes": 0.0001290147424422281,
+      "julianDateTT": 2495650.61843758,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0003209394522469154
+    },
+    {
+      "angleErrorArcminutes": 0.00010991261382453225,
+      "julianDateTT": 2496631.76675584,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0010875095331935797
+    },
+    {
+      "angleErrorArcminutes": 0.00012669487311114236,
+      "julianDateTT": 2496801.83039661,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.002629175048149402
+    },
+    {
+      "angleErrorArcminutes": 0.00013789038478719098,
+      "julianDateTT": 2497988.57680651,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0007366259514294166
+    },
+    {
+      "angleErrorArcminutes": 0.0001284295069660724,
+      "julianDateTT": 2498563.89942455,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0014808475119491753
+    },
+    {
+      "angleErrorArcminutes": 0.00012540692609649533,
+      "julianDateTT": 2499018.26068934,
+      "phase": "characterization",
+      "signedRangeErrorPPM": -0.0013597490697161336
+    },
+    {
+      "angleErrorArcminutes": 0.00013361922841112549,
+      "julianDateTT": 2499391.499988431,
+      "phase": "characterization",
+      "signedRangeErrorPPM": 0.0013111579438558044
+    },
+    {
+      "angleErrorArcminutes": 4.469020785478974e-05,
+      "julianDateTT": 2415526.37733691,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0009010041751754872
+    },
+    {
+      "angleErrorArcminutes": 4.449532542415153e-05,
+      "julianDateTT": 2415795.08999342,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00014738486013024285
+    },
+    {
+      "angleErrorArcminutes": 3.946241774014025e-05,
+      "julianDateTT": 2416811.49759344,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00033825221921190133
+    },
+    {
+      "angleErrorArcminutes": 3.584334727541342e-05,
+      "julianDateTT": 2417610.38522225,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0004291505040579143
+    },
+    {
+      "angleErrorArcminutes": 3.078133568448266e-05,
+      "julianDateTT": 2417931.21307402,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00011411323184952311
+    },
+    {
+      "angleErrorArcminutes": 3.1204298247813986e-05,
+      "julianDateTT": 2418916.8248528,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0003574641138355188
+    },
+    {
+      "angleErrorArcminutes": 3.189055685253032e-05,
+      "julianDateTT": 2419044.80457453,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0004500366851143435
+    },
+    {
+      "angleErrorArcminutes": 2.5289695475117483e-05,
+      "julianDateTT": 2420196.31910431,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0004166006188423827
+    },
+    {
+      "angleErrorArcminutes": 2.6032593678385628e-05,
+      "julianDateTT": 2420651.97442234,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0005486098207021681
+    },
+    {
+      "angleErrorArcminutes": 2.1997492665942547e-05,
+      "julianDateTT": 2421071.22491387,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00011588531304916114
+    },
+    {
+      "angleErrorArcminutes": 2.0021672395139354e-05,
+      "julianDateTT": 2422063.60527836,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -9.318636662270225e-05
+    },
+    {
+      "angleErrorArcminutes": 2.2549791579560974e-05,
+      "julianDateTT": 2422627.55104308,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 4.296747899832007e-05
+    },
+    {
+      "angleErrorArcminutes": 1.87661750200759e-05,
+      "julianDateTT": 2423460.97187259,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00021284885155237217
+    },
+    {
+      "angleErrorArcminutes": 1.995067814948338e-05,
+      "julianDateTT": 2423789.74477192,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -6.125362739942105e-05
+    },
+    {
+      "angleErrorArcminutes": 1.5407904823932214e-05,
+      "julianDateTT": 2424758.45495771,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00028627751806504354
+    },
+    {
+      "angleErrorArcminutes": 1.3224556567646777e-05,
+      "julianDateTT": 2425319.67250015,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00014682977339577983
+    },
+    {
+      "angleErrorArcminutes": 1.2625306256215676e-05,
+      "julianDateTT": 2426039.19603405,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0001423843743960229
+    },
+    {
+      "angleErrorArcminutes": 1.3086978979722873e-05,
+      "julianDateTT": 2426325.4815548,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -9.729011296690438e-05
+    },
+    {
+      "angleErrorArcminutes": 1.039931855047068e-05,
+      "julianDateTT": 2427458.52880293,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00022313869316910786
+    },
+    {
+      "angleErrorArcminutes": 9.328414645840266e-06,
+      "julianDateTT": 2427845.18927754,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0001624517701958724
+    },
+    {
+      "angleErrorArcminutes": 7.6153373708877545e-06,
+      "julianDateTT": 2428733.14822602,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -8.263506130199972e-07
+    },
+    {
+      "angleErrorArcminutes": 9.851073031332014e-06,
+      "julianDateTT": 2428886.20353408,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -6.356876195689309e-05
+    },
+    {
+      "angleErrorArcminutes": 6.3652845267718036e-06,
+      "julianDateTT": 2430131.95416326,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0001298324594724382
+    },
+    {
+      "angleErrorArcminutes": 5.550524565872712e-06,
+      "julianDateTT": 2430468.99457981,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -1.9300307863178186e-05
+    },
+    {
+      "angleErrorArcminutes": 4.758433643251925e-06,
+      "julianDateTT": 2431212.37650392,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -1.790587081091537e-05
+    },
+    {
+      "angleErrorArcminutes": 3.7736252440578674e-06,
+      "julianDateTT": 2432126.76068621,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 5.715204713340704e-05
+    },
+    {
+      "angleErrorArcminutes": 3.733693941067801e-06,
+      "julianDateTT": 2432401.80497267,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 2.819672806790884e-05
+    },
+    {
+      "angleErrorArcminutes": 3.047375697107397e-06,
+      "julianDateTT": 2433201.26514189,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 2.9639500323904725e-05
+    },
+    {
+      "angleErrorArcminutes": 2.176858182462949e-06,
+      "julianDateTT": 2433858.35023182,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -2.439538541502006e-06
+    },
+    {
+      "angleErrorArcminutes": 2.3492978143946517e-06,
+      "julianDateTT": 2434370.6564407,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -2.222382548959201e-05
+    },
+    {
+      "angleErrorArcminutes": 1.1275701108601505e-06,
+      "julianDateTT": 2435401.58468043,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -3.799627960334573e-06
+    },
+    {
+      "angleErrorArcminutes": 1.1663106303648363e-06,
+      "julianDateTT": 2435957.06809926,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.2571032750376174e-05
+    },
+    {
+      "angleErrorArcminutes": 1.025239112248003e-06,
+      "julianDateTT": 2436483.5512867,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 2.1403058103790213e-05
+    },
+    {
+      "angleErrorArcminutes": 5.527171492735159e-07,
+      "julianDateTT": 2437308.73273143,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 8.999011994822905e-06
+    },
+    {
+      "angleErrorArcminutes": 5.190997911837837e-07,
+      "julianDateTT": 2437969.25387397,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 4.6232857169178895e-06
+    },
+    {
+      "angleErrorArcminutes": 2.142411401443471e-07,
+      "julianDateTT": 2438716.22714432,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 4.467800970951264e-06
+    },
+    {
+      "angleErrorArcminutes": 3.2318062925304343e-07,
+      "julianDateTT": 2438838.94845569,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -5.321561101445081e-06
+    },
+    {
+      "angleErrorArcminutes": 3.2749185440402804e-08,
+      "julianDateTT": 2439874.56385959,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -2.364940912014852e-07
+    },
+    {
+      "angleErrorArcminutes": 4.277853169261002e-08,
+      "julianDateTT": 2440498.38059286,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -2.5520862247963022e-08
+    },
+    {
+      "angleErrorArcminutes": 1.8094683019552732e-07,
+      "julianDateTT": 2441283.02594445,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.5756736648551382e-06
+    },
+    {
+      "angleErrorArcminutes": 2.401729927442792e-07,
+      "julianDateTT": 2441531.56916099,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.872482238508851e-07
+    },
+    {
+      "angleErrorArcminutes": 6.703350082757443e-08,
+      "julianDateTT": 2442633.73059517,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -1.5856076438547998e-06
+    },
+    {
+      "angleErrorArcminutes": 2.3147007021304108e-07,
+      "julianDateTT": 2442927.72178535,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 3.6230667896113496e-06
+    },
+    {
+      "angleErrorArcminutes": 3.1079336195158244e-07,
+      "julianDateTT": 2443458.29687049,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.3505899880658042e-06
+    },
+    {
+      "angleErrorArcminutes": 6.312485532654102e-07,
+      "julianDateTT": 2444253.17308001,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.228971791479641e-05
+    },
+    {
+      "angleErrorArcminutes": 1.1624925400479579e-06,
+      "julianDateTT": 2444773.03932802,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.2229252119674548e-05
+    },
+    {
+      "angleErrorArcminutes": 1.4768614319349564e-06,
+      "julianDateTT": 2445871.25435,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -3.985156691443698e-06
+    },
+    {
+      "angleErrorArcminutes": 1.495713441405564e-06,
+      "julianDateTT": 2446204.4697709,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.1639503277313126e-05
+    },
+    {
+      "angleErrorArcminutes": 2.6428269331063858e-06,
+      "julianDateTT": 2446738.34779137,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -1.0196003482072786e-06
+    },
+    {
+      "angleErrorArcminutes": 2.5481293769211196e-06,
+      "julianDateTT": 2447805.69421829,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 3.9779115528185515e-05
+    },
+    {
+      "angleErrorArcminutes": 3.1701197847228966e-06,
+      "julianDateTT": 2448409.0828772,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 2.0150470385106075e-05
+    },
+    {
+      "angleErrorArcminutes": 3.8046891868713717e-06,
+      "julianDateTT": 2448992.58485513,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 7.5803453293715e-05
+    },
+    {
+      "angleErrorArcminutes": 4.2688029695115314e-06,
+      "julianDateTT": 2449406.34311914,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 8.368918381756863e-05
+    },
+    {
+      "angleErrorArcminutes": 4.926160990889597e-06,
+      "julianDateTT": 2450419.16826357,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.1129180773037906e-05
+    },
+    {
+      "angleErrorArcminutes": 5.796162436784353e-06,
+      "julianDateTT": 2451192.44236538,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 5.889552126366526e-05
+    },
+    {
+      "angleErrorArcminutes": 5.7485869030677405e-06,
+      "julianDateTT": 2451795.80561377,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 1.1406765169521712e-06
+    },
+    {
+      "angleErrorArcminutes": 7.772634549723922e-06,
+      "julianDateTT": 2452577.94842499,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00013911921030314861
+    },
+    {
+      "angleErrorArcminutes": 7.161524003684393e-06,
+      "julianDateTT": 2452844.6282542,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 4.580556096722741e-05
+    },
+    {
+      "angleErrorArcminutes": 1.0050240220083693e-05,
+      "julianDateTT": 2453853.49761008,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00011625619088880721
+    },
+    {
+      "angleErrorArcminutes": 9.411895554614726e-06,
+      "julianDateTT": 2454280.85023441,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00012157982816180417
+    },
+    {
+      "angleErrorArcminutes": 1.0908058937245822e-05,
+      "julianDateTT": 2454672.72743283,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00012775717618630206
+    },
+    {
+      "angleErrorArcminutes": 1.0059594591482443e-05,
+      "julianDateTT": 2455433.36847207,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 2.447954980362571e-06
+    },
+    {
+      "angleErrorArcminutes": 1.4041985852593879e-05,
+      "julianDateTT": 2456435.01856489,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0002463696467543003
+    },
+    {
+      "angleErrorArcminutes": 1.1789500749184331e-05,
+      "julianDateTT": 2456700.33360452,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -3.135032918951323e-06
+    },
+    {
+      "angleErrorArcminutes": 1.5463708546484e-05,
+      "julianDateTT": 2457319.04831117,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00022000695637635397
+    },
+    {
+      "angleErrorArcminutes": 1.7157091254711946e-05,
+      "julianDateTT": 2458425.45563079,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -6.090144077537775e-05
+    },
+    {
+      "angleErrorArcminutes": 1.5068645805059959e-05,
+      "julianDateTT": 2458956.94343899,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0001643341378336452
+    },
+    {
+      "angleErrorArcminutes": 1.7452188098384116e-05,
+      "julianDateTT": 2459820.13079691,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00020013242910499627
+    },
+    {
+      "angleErrorArcminutes": 1.9119156565585042e-05,
+      "julianDateTT": 2459877.04726638,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0002786729587436166
+    },
+    {
+      "angleErrorArcminutes": 2.3411423155482646e-05,
+      "julianDateTT": 2460765.00812253,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -5.80236589061795e-05
+    },
+    {
+      "angleErrorArcminutes": 1.9890840414240892e-05,
+      "julianDateTT": 2461445.04170746,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00020426254949007893
+    },
+    {
+      "angleErrorArcminutes": 2.0456728219946382e-05,
+      "julianDateTT": 2461934.30617446,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.000183365723622555
+    },
+    {
+      "angleErrorArcminutes": 2.5473425754160983e-05,
+      "julianDateTT": 2462505.30357558,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0002435786557371582
+    },
+    {
+      "angleErrorArcminutes": 2.3801522853107182e-05,
+      "julianDateTT": 2463224.66152449,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00031047448029945644
+    },
+    {
+      "angleErrorArcminutes": 2.5380782067895576e-05,
+      "julianDateTT": 2463942.68035387,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00047902438346876785
+    },
+    {
+      "angleErrorArcminutes": 3.173170534604851e-05,
+      "julianDateTT": 2464678.75898516,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00028948697242025504
+    },
+    {
+      "angleErrorArcminutes": 2.6075304919928435e-05,
+      "julianDateTT": 2465349.5273146,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0002972386876579908
+    },
+    {
+      "angleErrorArcminutes": 3.365505283848493e-05,
+      "julianDateTT": 2466198.08935131,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0004653412870351417
+    },
+    {
+      "angleErrorArcminutes": 2.8857076229892832e-05,
+      "julianDateTT": 2466839.74355601,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00014682978106718178
+    },
+    {
+      "angleErrorArcminutes": 3.763924289836316e-05,
+      "julianDateTT": 2467352.01703824,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00040322187869301976
+    },
+    {
+      "angleErrorArcminutes": 3.600194827985415e-05,
+      "julianDateTT": 2468238.99483947,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0007607036865264013
+    },
+    {
+      "angleErrorArcminutes": 3.399114977500523e-05,
+      "julianDateTT": 2468820.11773124,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0004687923393103365
+    },
+    {
+      "angleErrorArcminutes": 3.3982461622719977e-05,
+      "julianDateTT": 2469377.10943665,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 9.574616712597299e-05
+    },
+    {
+      "angleErrorArcminutes": 4.2432860835046945e-05,
+      "julianDateTT": 2470158.60592306,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0001685478026964633
+    },
+    {
+      "angleErrorArcminutes": 4.600773838616774e-05,
+      "julianDateTT": 2470818.91075634,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00045663207026176884
+    },
+    {
+      "angleErrorArcminutes": 3.8276733859481664e-05,
+      "julianDateTT": 2471195.91108464,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00021579763847284558
+    },
+    {
+      "angleErrorArcminutes": 4.1121076660702175e-05,
+      "julianDateTT": 2472348.81956191,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00039833351819158823
+    },
+    {
+      "angleErrorArcminutes": 5.251489176399777e-05,
+      "julianDateTT": 2472782.25824717,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0004127168299136828
+    },
+    {
+      "angleErrorArcminutes": 4.793279339003983e-05,
+      "julianDateTT": 2473501.37705836,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.000585167719654929
+    },
+    {
+      "angleErrorArcminutes": 5.162567426204255e-05,
+      "julianDateTT": 2474015.65793258,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.000724390480652123
+    },
+    {
+      "angleErrorArcminutes": 4.808274893349957e-05,
+      "julianDateTT": 2474946.32706313,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0007426005941343977
+    },
+    {
+      "angleErrorArcminutes": 4.916704484260442e-05,
+      "julianDateTT": 2475468.2953057,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0004321075938915826
+    },
+    {
+      "angleErrorArcminutes": 4.97830768172958e-05,
+      "julianDateTT": 2476238.4124669,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0001609122015819711
+    },
+    {
+      "angleErrorArcminutes": 5.287992863042194e-05,
+      "julianDateTT": 2476544.12425798,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0007504913528083861
+    },
+    {
+      "angleErrorArcminutes": 5.205532181614955e-05,
+      "julianDateTT": 2477145.97644342,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00012682798087488938
+    },
+    {
+      "angleErrorArcminutes": 5.544467852634875e-05,
+      "julianDateTT": 2477948.25568268,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0005267935877051307
+    },
+    {
+      "angleErrorArcminutes": 6.777827450800808e-05,
+      "julianDateTT": 2478617.63971733,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00027948596558276923
+    },
+    {
+      "angleErrorArcminutes": 7.126301747998077e-05,
+      "julianDateTT": 2479334.99428442,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0010686582558667576
+    },
+    {
+      "angleErrorArcminutes": 5.930952590422338e-05,
+      "julianDateTT": 2479705.85011955,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00044370426037589967
+    },
+    {
+      "angleErrorArcminutes": 6.453210210213958e-05,
+      "julianDateTT": 2480778.05171395,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.001162256701179073
+    },
+    {
+      "angleErrorArcminutes": 6.404096757789898e-05,
+      "julianDateTT": 2481558.61917104,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0006442485867987868
+    },
+    {
+      "angleErrorArcminutes": 8.243982626752784e-05,
+      "julianDateTT": 2482233.35102318,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.000981981373455158
+    },
+    {
+      "angleErrorArcminutes": 6.706132349409921e-05,
+      "julianDateTT": 2482714.13660949,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0004661669738699963
+    },
+    {
+      "angleErrorArcminutes": 8.451417064708522e-05,
+      "julianDateTT": 2483383.85600476,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0009819267656807486
+    },
+    {
+      "angleErrorArcminutes": 8.286101404993909e-05,
+      "julianDateTT": 2483943.35103077,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0007563376816861018
+    },
+    {
+      "angleErrorArcminutes": 7.214940806345107e-05,
+      "julianDateTT": 2484833.76356742,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00021426767517975683
+    },
+    {
+      "angleErrorArcminutes": 9.450508244693185e-05,
+      "julianDateTT": 2485068.26440198,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.00026651385894270533
+    },
+    {
+      "angleErrorArcminutes": 7.425052586832744e-05,
+      "julianDateTT": 2485742.03847394,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0002867022918369003
+    },
+    {
+      "angleErrorArcminutes": 8.803536923970722e-05,
+      "julianDateTT": 2486219.95490977,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.000998038712392956
+    },
+    {
+      "angleErrorArcminutes": 8.98459823591276e-05,
+      "julianDateTT": 2487486.16110118,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.001673143580733966
+    },
+    {
+      "angleErrorArcminutes": 9.376813952481446e-05,
+      "julianDateTT": 2487792.78684596,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0015881773333966888
+    },
+    {
+      "angleErrorArcminutes": 0.00010096615220509573,
+      "julianDateTT": 2488349.19444403,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0013778273784531062
+    },
+    {
+      "angleErrorArcminutes": 8.781047213461342e-05,
+      "julianDateTT": 2489349.89432359,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0008316549139607746
+    },
+    {
+      "angleErrorArcminutes": 0.00010922780556470365,
+      "julianDateTT": 2489588.0282826,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.000917316750461242
+    },
+    {
+      "angleErrorArcminutes": 9.302556133239026e-05,
+      "julianDateTT": 2490755.06830972,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0011792848814507486
+    },
+    {
+      "angleErrorArcminutes": 0.00011442278200035752,
+      "julianDateTT": 2491078.12558752,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.001342926653786752
+    },
+    {
+      "angleErrorArcminutes": 0.00011501522631124188,
+      "julianDateTT": 2491848.4354043,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0014613450936615553
+    },
+    {
+      "angleErrorArcminutes": 9.324199380316183e-05,
+      "julianDateTT": 2492164.16974386,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.00023893159297196085
+    },
+    {
+      "angleErrorArcminutes": 9.978852838811507e-05,
+      "julianDateTT": 2492930.14011886,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0016823350778920971
+    },
+    {
+      "angleErrorArcminutes": 0.0001013615739542533,
+      "julianDateTT": 2493931.92163025,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0013287872974756547
+    },
+    {
+      "angleErrorArcminutes": 0.0001064951325863384,
+      "julianDateTT": 2494455.25270824,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0015792979642110763
+    },
+    {
+      "angleErrorArcminutes": 0.00011104105686764487,
+      "julianDateTT": 2495394.66052853,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0018385709961999655
+    },
+    {
+      "angleErrorArcminutes": 0.00010463575977318662,
+      "julianDateTT": 2495883.69113525,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 4.410584834199933e-05
+    },
+    {
+      "angleErrorArcminutes": 0.000114317815891453,
+      "julianDateTT": 2496165.32448817,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.0023090626777560476
+    },
+    {
+      "angleErrorArcminutes": 0.00012559271614442463,
+      "julianDateTT": 2496810.81603086,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.002494138034938386
+    },
+    {
+      "angleErrorArcminutes": 0.00012344630503967566,
+      "julianDateTT": 2497723.55861843,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.002168670057046903
+    },
+    {
+      "angleErrorArcminutes": 0.00011235648472335432,
+      "julianDateTT": 2498113.05661445,
+      "phase": "holdout",
+      "signedRangeErrorPPM": -0.0010588703104150356
+    },
+    {
+      "angleErrorArcminutes": 0.00012953246550595292,
+      "julianDateTT": 2499196.87673889,
+      "phase": "holdout",
+      "signedRangeErrorPPM": 0.001959880149890782
+    }
+  ],
+  "referenceEnvironment": {
+    "erfa": "2.0.1",
+    "erfaLinkageMode": "bundled ERFA in wheel",
+    "erfaLinkedLibraries": "<workspace>/.context/accuracy-qualification/python-reference/erfa/ufunc.abi3.so:\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1345.120.2)\n",
+    "frameDefinition": "ERFA ecm06: ICRS -> IAU2006 mean ecliptic/equinox date; two-part TT",
+    "installedBinaryMetadataSHA256": {
+      "erfa/ufunc.abi3.so": "7a6d8767e8d6caceb4fcf3ed56aa055a61d5216f57aa0c022d7dae273a1a2127",
+      "jplephem-2.24.dist-info/METADATA": "8773ab40ba1e9ccfa21c93a9bbdf492992e5a9c7269fb758b9cde6616cf92684",
+      "numpy-2.5.3.dist-info/METADATA": "451a9b8028000588e66b0b415587b6aef0bbc51a96d8e8a0cba0dc23acf64f99",
+      "numpy/_core/_multiarray_tests.cpython-314-darwin.so": "70b6054d270d9d39ca1320b6bef226afe119a09b413981f05d20d5d47900d08e",
+      "numpy/_core/_multiarray_umath.cpython-314-darwin.so": "1071c0ead3adf59ae83dfeb84bea53346c8aa9c26afdd033bd65a6388c906161",
+      "numpy/_core/_operand_flag_tests.cpython-314-darwin.so": "0a9210271a5215c1c9e715cf978f82ca92e4b3043e7ffb3a714beab868a72e3a",
+      "numpy/_core/_rational_tests.cpython-314-darwin.so": "64588bdb181dc04c8c3c48ea64d30cbbe3ecebdfa85021f8db0d8a050890d0c0",
+      "numpy/_core/_simd.cpython-314-darwin.so": "eab52b4376300248718d470f5b66d20c74d2a71e89348bd4e9abcd0b56822d81",
+      "numpy/_core/_struct_ufunc_tests.cpython-314-darwin.so": "35d4e72fa2e66448bc4cd332e36c7a43f669527d36e4df8c6f4e3cf5dcae63a2",
+      "numpy/_core/_umath_tests.cpython-314-darwin.so": "500cc7702c0bf53f5c5211f9e17a190ccd2fe1c150b211a190e6739b9c916cb1",
+      "numpy/fft/_pocketfft_umath.cpython-314-darwin.so": "aa6f9636ff694ac5e884e141463bc3c81be08f695a3e2570a44c265d90adbff4",
+      "numpy/linalg/_umath_linalg.cpython-314-darwin.so": "b2ee60582c2d764477125b59838b732659a2b373a0d22f2f743890ce1032ad65",
+      "numpy/linalg/lapack_lite.cpython-314-darwin.so": "20890ed9a57819ebaef466bc249e8b42481d50cc33ea4352aa42e1f283931781",
+      "numpy/random/_bounded_integers.cpython-314-darwin.so": "9ff3a06d4ea4d8e5117c6a54fde4918f2210b7c9ce636ce12687a30472afeab1",
+      "numpy/random/_common.cpython-314-darwin.so": "cca9ec19700964e014d930c0601abdbcef94a261bcad27bba2dfa9947e39a422",
+      "numpy/random/_generator.cpython-314-darwin.so": "7634464e838f873f9184bb45ee1a34cc4f16539c9150dbb71bd6d1af06999b1b",
+      "numpy/random/_mt19937.cpython-314-darwin.so": "1655e3aba8660179e51c25e29543bff907ce8e654d983a944f3816b0652f57ca",
+      "numpy/random/_pcg64.cpython-314-darwin.so": "03763f86aa80650ac35f4ccc661a979403990a37df1afb6e67c499f98d56602e",
+      "numpy/random/_philox.cpython-314-darwin.so": "b628cea2330e7e32192bee02685e3a5e5cb4affb8b1a092a0c0c2acf6359699b",
+      "numpy/random/_sfc64.cpython-314-darwin.so": "8b9b08752f4132260f338c5081d1dc471d5cb4e2c3513d422e3885f6eb796f21",
+      "numpy/random/bit_generator.cpython-314-darwin.so": "c354178fa79e27ba92284b273d7269310ec28bdc7523afbc575ab576433d5fc8",
+      "numpy/random/mtrand.cpython-314-darwin.so": "47cdd412f6a61caa42fab49a1242327550c48a09073c5930453fa2236dedc69c",
+      "pyerfa-2.0.1.5.dist-info/METADATA": "a58370cc0a2bc2ed944214fb4d4758dc72221dc507d7b6e0b456334602f9c354"
+    },
+    "loadedModulePaths": {
+      "erfa": ".context/accuracy-qualification/python-reference/erfa/__init__.py",
+      "erfaUfunc": ".context/accuracy-qualification/python-reference/erfa/ufunc.abi3.so",
+      "numpy": ".context/accuracy-qualification/python-reference/numpy/__init__.py"
+    },
+    "numpy": "2.5.3",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "pyerfa": "2.0.1.5",
+    "python": "3.14.7",
+    "wheelSHA256": {
+      "numpy-2.5.3-cp314-cp314-macosx_14_0_arm64.whl": "adc1ada2662f8a5f960b8a10d9986897e7499ef07e06d4cfe7197f8cce923c07",
+      "pyerfa-2.0.1.5-cp39-abi3-macosx_11_0_arm64.whl": "be1aeb70390dd03a34faf96749d5cabc58437410b4aab7213c512323932427df"
+    }
+  },
+  "scriptSHA256": "0861969ceb18f37d8612e8875b8fde9385aaed18283324c0bde9e9a6bce53f81",
+  "summary": {
+    "eventCount": 73,
+    "maximumAbsoluteEventDifferenceSeconds": 0.01461029052734375,
+    "maximumAbsoluteRangeErrorPPM": 0.002629175048149402,
+    "maximumAngleErrorArcminutes": 0.00013789038478719098,
+    "nominalEventExceedances": 0,
+    "positionCount": 259
+  }
+}

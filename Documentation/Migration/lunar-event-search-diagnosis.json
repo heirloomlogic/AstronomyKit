@@ -1,0 +1,1495 @@
+{
+  "assessmentSHA256": "00c5c7b3048bd79640fcd58548280c8af573143f92ed537105a212616498055c",
+  "classification": "same-model-public-api-diagnostic-not-independent-accuracy-qualification",
+  "executableSHA256": "e064aae8209f6b9fc7ad291ced6d09f607bc401d91754ba739bc4fbc90959cfa",
+  "limitations": [
+    "finite TT stencils and rounded public vector norms have cancellation/epoch rounding errors",
+    "same-model root agreement diagnoses the search but does not prove the lunar model or independent reference accuracy",
+    "all independent ephemeris uncertainty and finite sample limitations remain in the parent assessment"
+  ],
+  "maximumSameModelRootMinusSearchSeconds": 0.6207275390625,
+  "planSHA256": "302cdfc7303395f5c7d493742db888490b88dcb45a9263ec5c4523c6d91797ea",
+  "referenceExceedancesByStencilWidth": {
+    "0.0002": 7,
+    "0.001": 7,
+    "4e-05": 7
+  },
+  "results": [
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.3743407453747913e-12,
+        1.5340784198514257e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2415051.504794823,
+      "referenceJulianDateTT": 2415051.504676028,
+      "sameModelRootMinusPublicSearchSeconds": -0.5487060546875,
+      "sameModelRootMinusReferenceSeconds": 9.715169072151184,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-00"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.7489338930153373e-13,
+        3.0677804047085644e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2415051.504794823,
+      "referenceJulianDateTT": 2415051.504676028,
+      "sameModelRootMinusPublicSearchSeconds": -0.5462646484375,
+      "sameModelRootMinusReferenceSeconds": 9.717610478401184,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-00"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.5019790806687396e-14,
+        6.131293389666226e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2415051.504794823,
+      "referenceJulianDateTT": 2415051.504676028,
+      "sameModelRootMinusPublicSearchSeconds": -0.5413818359375,
+      "sameModelRootMinusReferenceSeconds": 9.722493290901184,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-00"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        5.397054331224282e-13,
+        -5.3837663493983e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2415066.5403508483,
+      "referenceJulianDateTT": 2415066.5406334074,
+      "sameModelRootMinusPublicSearchSeconds": 0.0128173828125,
+      "sameModelRootMinusReferenceSeconds": -24.400286972522736,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-00"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.0793275995180096e-13,
+        -1.0766994934519047e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2415066.5403508483,
+      "referenceJulianDateTT": 2415066.5406334074,
+      "sameModelRootMinusPublicSearchSeconds": 0.0128173828125,
+      "sameModelRootMinusReferenceSeconds": -24.400286972522736,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-00"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.1583863168972428e-14,
+        -2.153962772033502e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2415066.5403508483,
+      "referenceJulianDateTT": 2415066.5406334074,
+      "sameModelRootMinusPublicSearchSeconds": 0.0152587890625,
+      "sameModelRootMinusReferenceSeconds": -24.397845566272736,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-00"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.0169079120436741e-12,
+        1.018856006507196e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2424694.902793608,
+      "referenceJulianDateTT": 2424694.9026378095,
+      "sameModelRootMinusPublicSearchSeconds": -0.0091552734375,
+      "sameModelRootMinusReferenceSeconds": 13.451845943927765,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-01"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.0338548553655578e-13,
+        2.037797014464715e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2424694.902793608,
+      "referenceJulianDateTT": 2424694.9026378095,
+      "sameModelRootMinusPublicSearchSeconds": -0.0103759765625,
+      "sameModelRootMinusReferenceSeconds": 13.450625240802765,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-01"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -4.0691408575987964e-14,
+        4.0688372809905005e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2424694.902793608,
+      "referenceJulianDateTT": 2424694.9026378095,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 13.461611568927765,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-01"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        7.874334864710342e-13,
+        -7.874395580032001e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2424710.704695179,
+      "referenceJulianDateTT": 2424710.704907533,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -18.346745371818542,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-01"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.574894728517684e-13,
+        -1.5747125825527064e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2424710.704695179,
+      "referenceJulianDateTT": 2424710.704907533,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -18.346745371818542,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-01"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.150084360026284e-14,
+        -3.151819083502261e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2424710.704695179,
+      "referenceJulianDateTT": 2424710.704907533,
+      "sameModelRootMinusPublicSearchSeconds": -0.0018310546875,
+      "sameModelRootMinusReferenceSeconds": -18.349186778068542,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-01"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.5604791764323167e-12,
+        1.492013977644202e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2432192.0652134423,
+      "referenceJulianDateTT": 2432192.0661226427,
+      "sameModelRootMinusPublicSearchSeconds": 0.2239990234375,
+      "sameModelRootMinusReferenceSeconds": -78.33091586828232,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-02"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -3.1205810505086085e-13,
+        2.983806778045217e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2432192.0652134423,
+      "referenceJulianDateTT": 2432192.0661226427,
+      "sameModelRootMinusPublicSearchSeconds": 0.2252197265625,
+      "sameModelRootMinusReferenceSeconds": -78.32969516515732,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-02"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -6.24166517082525e-14,
+        5.968359487185104e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2432192.0652134423,
+      "referenceJulianDateTT": 2432192.0661226427,
+      "sameModelRootMinusPublicSearchSeconds": 0.2215576171875,
+      "sameModelRootMinusReferenceSeconds": -78.33335727453232,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-02"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        6.684895692554704e-13,
+        -6.684830640424355e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2432204.705500077,
+      "referenceJulianDateTT": 2432204.7059736103,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -40.91266602277756,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-02"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.3368516363354566e-13,
+        -1.3370814871960235e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2432204.705500077,
+      "referenceJulianDateTT": 2432204.7059736103,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -40.91388672590256,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-02"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.673859397783751e-14,
+        -2.6742497105658458e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2432204.705500077,
+      "referenceJulianDateTT": 2432204.7059736103,
+      "sameModelRootMinusPublicSearchSeconds": -0.0018310546875,
+      "sameModelRootMinusReferenceSeconds": -40.91510742902756,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-02"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.1871189795065185e-12,
+        1.1871202805491254e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2438499.9002995333,
+      "referenceJulianDateTT": 2438499.9005698944,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -23.35980772972107,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-03"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.3741208651784085e-13,
+        2.374376736891115e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2438499.9002995333,
+      "referenceJulianDateTT": 2438499.9005698944,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -23.35980772972107,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-03"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -4.7487187793127106e-14,
+        4.7462467983594436e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2438499.9002995333,
+      "referenceJulianDateTT": 2438499.9005698944,
+      "sameModelRootMinusPublicSearchSeconds": -0.0018310546875,
+      "sameModelRootMinusReferenceSeconds": -23.36102843284607,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-03"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        6.894129364609647e-13,
+        -6.894363552278904e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2438515.601359728,
+      "referenceJulianDateTT": 2438515.600702282,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 56.80270254611969,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-03"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.378857965306235e-13,
+        -1.378784239558506e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2438515.601359728,
+      "referenceJulianDateTT": 2438515.600702282,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 56.80392324924469,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-03"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.7579067501948273e-14,
+        -2.758297062976922e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2438515.601359728,
+      "referenceJulianDateTT": 2438515.600702282,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 56.80270254611969,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-03"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        9.022400881963932e-13,
+        -9.024998630369208e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2446726.734258013,
+      "referenceJulianDateTT": 2446726.7344874693,
+      "sameModelRootMinusPublicSearchSeconds": -0.0018310546875,
+      "sameModelRootMinusReferenceSeconds": -19.82686936855316,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-04"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.8045417590761836e-13,
+        -1.804893040580069e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2446726.734258013,
+      "referenceJulianDateTT": 2446726.7344874693,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -19.82564866542816,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-04"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.609309032204244e-14,
+        -3.610002921594635e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2446726.734258013,
+      "referenceJulianDateTT": 2446726.7344874693,
+      "sameModelRootMinusPublicSearchSeconds": -0.0018310546875,
+      "sameModelRootMinusReferenceSeconds": -19.82686936855316,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-04"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.1908455992137856e-12,
+        1.2189207976298633e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2446738.6042841314,
+      "referenceJulianDateTT": 2446738.604227868,
+      "sameModelRootMinusPublicSearchSeconds": -0.1165771484375,
+      "sameModelRootMinusReferenceSeconds": 4.744591414928436,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-04"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.381718954003187e-13,
+        2.4377852167467573e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2446738.6042841314,
+      "referenceJulianDateTT": 2446738.604227868,
+      "sameModelRootMinusPublicSearchSeconds": -0.1165771484375,
+      "sameModelRootMinusReferenceSeconds": 4.744591414928436,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-04"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -4.7642011863358036e-14,
+        4.876524531405302e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2446738.6042841314,
+      "referenceJulianDateTT": 2446738.604227868,
+      "sameModelRootMinusPublicSearchSeconds": -0.1202392578125,
+      "sameModelRootMinusReferenceSeconds": 4.740929305553436,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-04"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        5.597861583994668e-13,
+        -5.597458260786503e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2450887.527207112,
+      "referenceJulianDateTT": 2450887.5273456816,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -11.971805095672607,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-05"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.1196338994823307e-13,
+        -1.1194170590478336e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2450887.527207112,
+      "referenceJulianDateTT": 2450887.5273456816,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": -11.971805095672607,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-05"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.239441271312259e-14,
+        -2.2390943266170638e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2450887.527207112,
+      "referenceJulianDateTT": 2450887.5273456816,
+      "sameModelRootMinusPublicSearchSeconds": 0.0018310546875,
+      "sameModelRootMinusReferenceSeconds": -11.970584392547607,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-05"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.538168030446041e-12,
+        1.5503722437804068e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2450900.794707433,
+      "referenceJulianDateTT": 2450900.795107267,
+      "sameModelRootMinusPublicSearchSeconds": -0.0396728515625,
+      "sameModelRootMinusReferenceSeconds": -34.58533138036728,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-05"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -3.07633692825382e-13,
+        3.100731477134744e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2450900.794707433,
+      "referenceJulianDateTT": 2450900.795107267,
+      "sameModelRootMinusPublicSearchSeconds": -0.0396728515625,
+      "sameModelRootMinusReferenceSeconds": -34.58533138036728,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-05"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -6.15267385650764e-14,
+        6.201896635138482e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2450900.794707433,
+      "referenceJulianDateTT": 2450900.795107267,
+      "sameModelRootMinusPublicSearchSeconds": -0.0396728515625,
+      "sameModelRootMinusReferenceSeconds": -34.58533138036728,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-05"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -9.887034767286362e-13,
+        9.791815795689995e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2459003.652170242,
+      "referenceJulianDateTT": 2459003.65254236,
+      "sameModelRootMinusPublicSearchSeconds": 0.0482177734375,
+      "sameModelRootMinusReferenceSeconds": -32.10280478000641,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.9776151202743897e-13,
+        1.9581124915957204e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2459003.652170242,
+      "referenceJulianDateTT": 2459003.65254236,
+      "sameModelRootMinusPublicSearchSeconds": 0.0494384765625,
+      "sameModelRootMinusReferenceSeconds": -32.10158407688141,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -3.955386365661617e-14,
+        3.916224983191441e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2459003.652170242,
+      "referenceJulianDateTT": 2459003.65254236,
+      "sameModelRootMinusPublicSearchSeconds": 0.0482177734375,
+      "sameModelRootMinusReferenceSeconds": -32.10280478000641,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        9.480870949429843e-13,
+        -9.578674659005415e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2459015.540182149,
+      "referenceJulianDateTT": 2459015.540107554,
+      "sameModelRootMinusPublicSearchSeconds": -0.0518798828125,
+      "sameModelRootMinusReferenceSeconds": 6.393146514892578,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.8960874537121697e-13,
+        -1.9157678915471266e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2459015.540182149,
+      "referenceJulianDateTT": 2459015.540107554,
+      "sameModelRootMinusPublicSearchSeconds": -0.0518798828125,
+      "sameModelRootMinusReferenceSeconds": 6.393146514892578,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.792062150398401e-14,
+        -3.832004158432767e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2459015.540182149,
+      "referenceJulianDateTT": 2459015.540107554,
+      "sameModelRootMinusPublicSearchSeconds": -0.0518798828125,
+      "sameModelRootMinusReferenceSeconds": 6.393146514892578,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.128935470777307e-13,
+        5.12500198529553e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2459030.5942856343,
+      "referenceJulianDateTT": 2459030.5929895006,
+      "sameModelRootMinusPublicSearchSeconds": 0.0042724609375,
+      "sameModelRootMinusReferenceSeconds": 111.99022710323334,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.0257506649624659e-13,
+        1.0248789664157876e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2459030.5942856343,
+      "referenceJulianDateTT": 2459030.5929895006,
+      "sameModelRootMinusPublicSearchSeconds": 0.0042724609375,
+      "sameModelRootMinusReferenceSeconds": 111.99022710323334,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.052915129557853e-14,
+        2.0498793634748935e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2459030.5942856343,
+      "referenceJulianDateTT": 2459030.5929895006,
+      "sameModelRootMinusPublicSearchSeconds": 0.0079345703125,
+      "sameModelRootMinusReferenceSeconds": 111.99388921260834,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-06"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.415729079107253e-12,
+        1.602263894479039e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2465090.7916866704,
+      "referenceJulianDateTT": 2465090.7921297355,
+      "sameModelRootMinusPublicSearchSeconds": -0.6182861328125,
+      "sameModelRootMinusReferenceSeconds": -38.89910846948624,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-07"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.8313332581242356e-13,
+        3.204467940998157e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2465090.7916866704,
+      "referenceJulianDateTT": 2465090.7921297355,
+      "sameModelRootMinusPublicSearchSeconds": -0.6182861328125,
+      "sameModelRootMinusReferenceSeconds": -38.89910846948624,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-07"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.661703744719304e-14,
+        6.410410396950894e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2465090.7916866704,
+      "referenceJulianDateTT": 2465090.7921297355,
+      "sameModelRootMinusPublicSearchSeconds": -0.6207275390625,
+      "sameModelRootMinusReferenceSeconds": -38.90154987573624,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-07"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        5.07563175516923e-13,
+        -5.057243686323876e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2465105.492150364,
+      "referenceJulianDateTT": 2465105.4918307494,
+      "sameModelRootMinusPublicSearchSeconds": 0.0177001953125,
+      "sameModelRootMinusReferenceSeconds": 27.632396519184113,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-07"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.0151471677155577e-13,
+        -1.0114738907551768e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2465105.492150364,
+      "referenceJulianDateTT": 2465105.4918307494,
+      "sameModelRootMinusPublicSearchSeconds": 0.0189208984375,
+      "sameModelRootMinusReferenceSeconds": 27.633617222309113,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-07"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.030537196717752e-14,
+        -2.02320799003175e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2465105.492150364,
+      "referenceJulianDateTT": 2465105.4918307494,
+      "sameModelRootMinusPublicSearchSeconds": 0.0189208984375,
+      "sameModelRootMinusReferenceSeconds": 27.633617222309113,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-07"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        9.93575881291786e-13,
+        -9.953678506424701e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2476319.7816645643,
+      "referenceJulianDateTT": 2476319.7810986387,
+      "sameModelRootMinusPublicSearchSeconds": -0.0091552734375,
+      "sameModelRootMinusReferenceSeconds": 48.88681769371033,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-08"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.9871040576879828e-13,
+        -1.990673251239805e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2476319.7816645643,
+      "referenceJulianDateTT": 2476319.7810986387,
+      "sameModelRootMinusPublicSearchSeconds": -0.0091552734375,
+      "sameModelRootMinusReferenceSeconds": 48.88681769371033,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-08"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.974555060071161e-14,
+        -3.9816240582357665e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2476319.7816645643,
+      "referenceJulianDateTT": 2476319.7810986387,
+      "sameModelRootMinusPublicSearchSeconds": -0.0115966796875,
+      "sameModelRootMinusReferenceSeconds": 48.88437628746033,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-08"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -3.7790603979459547e-13,
+        3.7178246592439734e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2476334.1872327896,
+      "referenceJulianDateTT": 2476334.189428442,
+      "sameModelRootMinusPublicSearchSeconds": 0.0823974609375,
+      "sameModelRootMinusReferenceSeconds": -189.62198495864868,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-08"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -7.56031522108902e-14,
+        7.436499332991175e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2476334.1872327896,
+      "referenceJulianDateTT": 2476334.189428442,
+      "sameModelRootMinusPublicSearchSeconds": 0.0823974609375,
+      "sameModelRootMinusReferenceSeconds": -189.62198495864868,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-08"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.5111176199233967e-14,
+        1.4877855891715086e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2476334.1872327896,
+      "referenceJulianDateTT": 2476334.189428442,
+      "sameModelRootMinusPublicSearchSeconds": 0.0701904296875,
+      "sameModelRootMinusReferenceSeconds": -189.63419198989868,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-08"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        9.374710209508752e-13,
+        -9.504333084442429e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2484337.993426944,
+      "referenceJulianDateTT": 2484337.9937565,
+      "sameModelRootMinusPublicSearchSeconds": -0.0689697265625,
+      "sameModelRootMinusReferenceSeconds": -28.542603254318237,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.874967195392152e-13,
+        -1.901009731575254e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2484337.993426944,
+      "referenceJulianDateTT": 2484337.9937565,
+      "sameModelRootMinusPublicSearchSeconds": -0.0689697265625,
+      "sameModelRootMinusReferenceSeconds": -28.542603254318237,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.751079308278449e-14,
+        -3.8007791358651843e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2484337.993426944,
+      "referenceJulianDateTT": 2484337.9937565,
+      "sameModelRootMinusPublicSearchSeconds": -0.0738525390625,
+      "sameModelRootMinusReferenceSeconds": -28.547486066818237,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.565994713740974e-13,
+        5.570097334761659e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2484353.466783587,
+      "referenceJulianDateTT": 2484353.466389346,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 34.06180799007416,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.1117409076666362e-13,
+        1.1133888949688142e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2484353.466783587,
+      "referenceJulianDateTT": 2484353.466389346,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 34.06302869319916,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.2250430664616516e-14,
+        2.2288160900219012e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2484353.466783587,
+      "referenceJulianDateTT": 2484353.466389346,
+      "sameModelRootMinusPublicSearchSeconds": -0.0445556640625,
+      "sameModelRootMinusReferenceSeconds": 34.01786267757416,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        9.989977595159516e-13,
+        -1.0416303236615576e-12
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2484365.826419101,
+      "referenceJulianDateTT": 2484365.8275778284,
+      "sameModelRootMinusPublicSearchSeconds": -0.2093505859375,
+      "sameModelRootMinusReferenceSeconds": -100.32339215278625,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.9979807738823574e-13,
+        -2.0832380959179275e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2484365.826419101,
+      "referenceJulianDateTT": 2484365.8275778284,
+      "sameModelRootMinusPublicSearchSeconds": -0.2093505859375,
+      "sameModelRootMinusReferenceSeconds": -100.32339215278625,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.995718686478078e-14,
+        -4.166502212687995e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2484365.826419101,
+      "referenceJulianDateTT": 2484365.8275778284,
+      "sameModelRootMinusPublicSearchSeconds": -0.2093505859375,
+      "sameModelRootMinusReferenceSeconds": -100.32339215278625,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-09"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.323579700701627e-12,
+        1.2266711084396587e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2486364.983465386,
+      "referenceJulianDateTT": 2486364.983160435,
+      "sameModelRootMinusPublicSearchSeconds": 0.3802490234375,
+      "sameModelRootMinusReferenceSeconds": 26.728003919124603,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-10"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.6459173393944546e-13,
+        2.453814061664783e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2486364.983465386,
+      "referenceJulianDateTT": 2486364.983160435,
+      "sameModelRootMinusPublicSearchSeconds": 0.3778076171875,
+      "sameModelRootMinusReferenceSeconds": 26.725562512874603,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-10"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.293552055030126e-14,
+        4.916813484134863e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2486364.983465386,
+      "referenceJulianDateTT": 2486364.983160435,
+      "sameModelRootMinusPublicSearchSeconds": 0.3790283203125,
+      "sameModelRootMinusReferenceSeconds": 26.726783215999603,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-10"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        8.454218228259869e-13,
+        -8.467978922233055e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2486377.0373509033,
+      "referenceJulianDateTT": 2486377.0371414125,
+      "sameModelRootMinusPublicSearchSeconds": -0.0079345703125,
+      "sameModelRootMinusReferenceSeconds": 18.09206783771515,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-10"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.6906484892609264e-13,
+        -1.693823033221964e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2486377.0373509033,
+      "referenceJulianDateTT": 2486377.0371414125,
+      "sameModelRootMinusPublicSearchSeconds": -0.0079345703125,
+      "sameModelRootMinusReferenceSeconds": 18.09206783771515,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-10"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.383274563284466e-14,
+        -3.387264427279213e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2486377.0373509033,
+      "referenceJulianDateTT": 2486377.0371414125,
+      "sameModelRootMinusPublicSearchSeconds": -0.0103759765625,
+      "sameModelRootMinusReferenceSeconds": 18.08962643146515,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-10"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        7.874751198344576e-13,
+        -7.908205340578789e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2495333.048760927,
+      "referenceJulianDateTT": 2495333.0484781554,
+      "sameModelRootMinusPublicSearchSeconds": -0.0213623046875,
+      "sameModelRootMinusReferenceSeconds": 24.4100883603096,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-11"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.5748643708568544e-13,
+        -1.5817295390130326e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2495333.048760927,
+      "referenceJulianDateTT": 2495333.0484781554,
+      "sameModelRootMinusPublicSearchSeconds": -0.0225830078125,
+      "sameModelRootMinusReferenceSeconds": 24.4088676571846,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-11"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.15038793663458e-14,
+        -3.161099854098737e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2495333.048760927,
+      "referenceJulianDateTT": 2495333.0484781554,
+      "sameModelRootMinusPublicSearchSeconds": -0.0262451171875,
+      "sameModelRootMinusReferenceSeconds": 24.4052055478096,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-11"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.334802494229459e-12,
+        1.469349381749696e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2495345.226136524,
+      "referenceJulianDateTT": 2495345.225644635,
+      "sameModelRootMinusPublicSearchSeconds": -0.4791259765625,
+      "sameModelRootMinusReferenceSeconds": 42.020100355148315,
+      "stencilWidthTTDays": 0.001,
+      "window": "stratum-11"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.668997835242326e-13,
+        2.9376154286886447e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2495345.226136524,
+      "referenceJulianDateTT": 2495345.225644635,
+      "sameModelRootMinusPublicSearchSeconds": -0.4815673828125,
+      "sameModelRootMinusReferenceSeconds": 42.017658948898315,
+      "stencilWidthTTDays": 0.0002,
+      "window": "stratum-11"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.3480657402626974e-14,
+        5.877199768522523e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2495345.226136524,
+      "referenceJulianDateTT": 2495345.225644635,
+      "sameModelRootMinusPublicSearchSeconds": -0.4888916015625,
+      "sameModelRootMinusReferenceSeconds": 42.010334730148315,
+      "stencilWidthTTDays": 4e-05,
+      "window": "stratum-11"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.1265164148732687e-12,
+        1.1231107190090572e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2415023.2073172466,
+      "referenceJulianDateTT": 2415023.207045825,
+      "sameModelRootMinusPublicSearchSeconds": 0.0164794921875,
+      "sameModelRootMinusReferenceSeconds": 23.467287719249725,
+      "stencilWidthTTDays": 0.001,
+      "window": "opening"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.2524083292951858e-13,
+        2.2458207168951638e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2415023.2073172466,
+      "referenceJulianDateTT": 2415023.207045825,
+      "sameModelRootMinusPublicSearchSeconds": 0.0177001953125,
+      "sameModelRootMinusReferenceSeconds": 23.468508422374725,
+      "stencilWidthTTDays": 0.0002,
+      "window": "opening"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -4.503212039375093e-14,
+        4.4856045960939284e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2415023.2073172466,
+      "referenceJulianDateTT": 2415023.207045825,
+      "sameModelRootMinusPublicSearchSeconds": 0.0091552734375,
+      "sameModelRootMinusReferenceSeconds": 23.459963500499725,
+      "stencilWidthTTDays": 4e-05,
+      "window": "opening"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        7.484360353693376e-13,
+        -7.484360353693376e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2415039.188682986,
+      "referenceJulianDateTT": 2415039.188310953,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 32.14427024126053,
+      "stencilWidthTTDays": 0.001,
+      "window": "opening"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.4970490125332248e-13,
+        -1.4967844672031383e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2415039.188682986,
+      "referenceJulianDateTT": 2415039.188310953,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 32.14304953813553,
+      "stencilWidthTTDays": 0.0002,
+      "window": "opening"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.995043449360857e-14,
+        -2.996387860054739e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2415039.188682986,
+      "referenceJulianDateTT": 2415039.188310953,
+      "sameModelRootMinusPublicSearchSeconds": 0.0030517578125,
+      "sameModelRootMinusReferenceSeconds": 32.14671164751053,
+      "stencilWidthTTDays": 4e-05,
+      "window": "opening"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        5.89240895659815e-13,
+        -5.892326557233041e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2451548.016981673,
+      "referenceJulianDateTT": 2451548.016246832,
+      "sameModelRootMinusPublicSearchSeconds": 0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 63.490871489048004,
+      "stencilWidthTTDays": 0.001,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.178393320422355e-13,
+        -1.1785104142569836e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2451548.016981673,
+      "referenceJulianDateTT": 2451548.016246832,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 63.489650785923004,
+      "stencilWidthTTDays": 0.0002,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.3570555229834866e-14,
+        -2.3569687868096878e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2451548.016981673,
+      "referenceJulianDateTT": 2451548.016246832,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 63.489650785923004,
+      "stencilWidthTTDays": 4e-05,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.3955512093155598e-12,
+        1.3782772666226517e-12
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2451563.449853482,
+      "referenceJulianDateTT": 2451563.450442696,
+      "sameModelRootMinusPublicSearchSeconds": 0.0628662109375,
+      "sameModelRootMinusReferenceSeconds": -50.84520608186722,
+      "stencilWidthTTDays": 0.001,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -2.791139715185853e-13,
+        2.7564625929010766e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2451563.449853482,
+      "referenceJulianDateTT": 2451563.450442696,
+      "sameModelRootMinusPublicSearchSeconds": 0.0628662109375,
+      "sameModelRootMinusReferenceSeconds": -50.84520608186722,
+      "stencilWidthTTDays": 0.0002,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -5.5822534095195664e-14,
+        5.5129078385673935e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2451563.449853482,
+      "referenceJulianDateTT": 2451563.450442696,
+      "sameModelRootMinusPublicSearchSeconds": 0.0628662109375,
+      "sameModelRootMinusReferenceSeconds": -50.84520608186722,
+      "stencilWidthTTDays": 4e-05,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        8.121133973637562e-13,
+        -8.125076132736719e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2451575.555197261,
+      "referenceJulianDateTT": 2451575.5559110697,
+      "sameModelRootMinusPublicSearchSeconds": -0.0030517578125,
+      "sameModelRootMinusReferenceSeconds": -61.67614310979843,
+      "stencilWidthTTDays": 0.001,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.624117507148526e-13,
+        -1.6250976259124528e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2451575.555197261,
+      "referenceJulianDateTT": 2451575.5559110697,
+      "sameModelRootMinusPublicSearchSeconds": -0.0030517578125,
+      "sameModelRootMinusReferenceSeconds": -61.67614310979843,
+      "stencilWidthTTDays": 0.0002,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.2481829725927724e-14,
+        -3.250308008850844e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2451575.555197261,
+      "referenceJulianDateTT": 2451575.5559110697,
+      "sameModelRootMinusPublicSearchSeconds": -0.0030517578125,
+      "sameModelRootMinusReferenceSeconds": -61.67614310979843,
+      "stencilWidthTTDays": 4e-05,
+      "window": "j2000"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        9.12871774699786e-13,
+        -8.883237027912383e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2488443.595258262,
+      "referenceJulianDateTT": 2488443.5958653027,
+      "sameModelRootMinusPublicSearchSeconds": 0.1361083984375,
+      "sameModelRootMinusReferenceSeconds": -52.31220901012421,
+      "stencilWidthTTDays": 0.001,
+      "window": "extension-2101"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.8259959516653268e-13,
+        -1.7765823534521274e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2488443.595258262,
+      "referenceJulianDateTT": 2488443.5958653027,
+      "sameModelRootMinusPublicSearchSeconds": 0.1348876953125,
+      "sameModelRootMinusReferenceSeconds": -52.31342971324921,
+      "stencilWidthTTDays": 0.0002,
+      "window": "extension-2101"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        3.651202604149084e-14,
+        -3.5497646488913404e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2488443.595258262,
+      "referenceJulianDateTT": 2488443.5958653027,
+      "sameModelRootMinusPublicSearchSeconds": 0.1373291015625,
+      "sameModelRootMinusReferenceSeconds": -52.31098830699921,
+      "stencilWidthTTDays": 4e-05,
+      "window": "extension-2101"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -7.664381282412869e-13,
+        7.662698600641171e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2488459.559365095,
+      "referenceJulianDateTT": 2488459.5590289757,
+      "sameModelRootMinusPublicSearchSeconds": -0.0006103515625,
+      "sameModelRootMinusReferenceSeconds": 29.0401092171669,
+      "stencilWidthTTDays": 0.001,
+      "window": "extension-2101"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.531140665644859e-13,
+        1.5333654485027992e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2488459.559365095,
+      "referenceJulianDateTT": 2488459.5590289757,
+      "sameModelRootMinusPublicSearchSeconds": 0.0042724609375,
+      "sameModelRootMinusReferenceSeconds": 29.0449920296669,
+      "stencilWidthTTDays": 0.0002,
+      "window": "extension-2101"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -3.075881563341376e-14,
+        3.055628666759347e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2488459.559365095,
+      "referenceJulianDateTT": 2488459.5590289757,
+      "sameModelRootMinusPublicSearchSeconds": 0.0115966796875,
+      "sameModelRootMinusReferenceSeconds": 29.0523162484169,
+      "stencilWidthTTDays": 4e-05,
+      "window": "extension-2101"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -8.004998573729605e-13,
+        8.278954778673242e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2499371.169635811,
+      "referenceJulianDateTT": 2499371.1686593555,
+      "sameModelRootMinusPublicSearchSeconds": -0.1690673828125,
+      "sameModelRootMinusReferenceSeconds": 84.19667899608612,
+      "stencilWidthTTDays": 0.001,
+      "window": "closing"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -1.600694403414149e-13,
+        1.6559323356979405e-13
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2499371.169635811,
+      "referenceJulianDateTT": 2499371.1686593555,
+      "sameModelRootMinusPublicSearchSeconds": -0.1702880859375,
+      "sameModelRootMinusReferenceSeconds": 84.19545829296112,
+      "stencilWidthTTDays": 0.0002,
+      "window": "closing"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        -3.201562279175896e-14,
+        3.31193406033492e-14
+      ],
+      "kind": "pericenter",
+      "publicSearchJulianDateTT": 2499371.169635811,
+      "referenceJulianDateTT": 2499371.1686593555,
+      "sameModelRootMinusPublicSearchSeconds": -0.1983642578125,
+      "sameModelRootMinusReferenceSeconds": 84.16738212108612,
+      "stencilWidthTTDays": 4e-05,
+      "window": "closing"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        1.0072060373234049e-12,
+        -1.0253373670943144e-12
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2499383.0115704476,
+      "referenceJulianDateTT": 2499383.011145916,
+      "sameModelRootMinusPublicSearchSeconds": -0.0885009765625,
+      "sameModelRootMinusReferenceSeconds": 36.59104257822037,
+      "stencilWidthTTDays": 0.001,
+      "window": "closing"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        2.0144779941388968e-13,
+        -2.0506209577608736e-13
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2499383.0115704476,
+      "referenceJulianDateTT": 2499383.011145916,
+      "sameModelRootMinusPublicSearchSeconds": -0.0897216796875,
+      "sameModelRootMinusReferenceSeconds": 36.58982187509537,
+      "stencilWidthTTDays": 0.0002,
+      "window": "closing"
+    },
+    {
+      "finalBisectionWidthSeconds": 0.001220703125,
+      "initialBracketNormDifferencesAU": [
+        4.029675898520324e-14,
+        -4.101580186599563e-14
+      ],
+      "kind": "apocenter",
+      "publicSearchJulianDateTT": 2499383.0115704476,
+      "referenceJulianDateTT": 2499383.011145916,
+      "sameModelRootMinusPublicSearchSeconds": -0.0921630859375,
+      "sameModelRootMinusReferenceSeconds": 36.58738046884537,
+      "stencilWidthTTDays": 4e-05,
+      "window": "closing"
+    }
+  ],
+  "scriptSHA256": "1a2e9e3ae4ccbd57eb32d07e32b272e0d06fe25c09197d3aeea6b7b9eb117bfe",
+  "stencilWidthsTTDays": [
+    0.001,
+    0.0002,
+    4e-05
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "archive": "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json",
+  "archiveSHA256": "8fdcf4da68f200aeb7c12e665dc610ce3bd3a2c8e338e96bd53fc9a9279cc41e",
+  "generator": "Scripts/reference-data/build-fixtures.py",
+  "sources": [
+    {
+      "path": "Scripts/reference-data/sources/astronomy-engine.c",
+      "sha256": "3ef243a3ee4c10fc05a5cb460d753e4e17eb2f57dad7892690e12599088717ac",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/source/c/astronomy.c"
+    },
+    {
+      "path": "Scripts/reference-data/sources/astronomy-engine-ctest.c",
+      "sha256": "f498d483e5d2b488b5b40e492f6ede838ff69a0110aac9e03c80a8bbb5b6d1a4",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/ctest.c"
+    },
+    {
+      "path": "Scripts/reference-data/sources/parse-moon-phases.js",
+      "sha256": "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/parse_moon_phases.js"
+    },
+    {
+      "path": "Scripts/reference-data/sources/normalize-eclipses.py",
+      "sha256": "27aad287e710b6e55c13cb2ccbc6da588bcec718ba9b6fddacb47bd8896c3f6f",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/norm.py"
+    },
+    {
+      "path": "Scripts/reference-data/sources/readme-lunar-eclipse.txt",
+      "sha256": "9fed27ab68cf32b1d3b28f6910dc0f3645947ce75f350da33b3e419b776df170",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/readme_lunar_eclipse.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/seasons.txt",
+      "sha256": "92a0b2a5f8c67510b49f342f6f7a763cb6eee1ef32413344e71ce169a3582383",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons/seasons.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/moonphases.txt",
+      "sha256": "959ec955d89b4d9d2366a737ecffad0ace1deafdb7d54947c94a0585b316c064",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/moonphases.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/moon_nodes.txt",
+      "sha256": "c6140f77c8642be53687a4f7be00497c2bae6cc78ac6d9d6c61be73c06a4a1d5",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moon_nodes/moon_nodes.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/moon_apsides.txt",
+      "sha256": "d01d330774ce3f7ae6c912eef86adc982f833cbdf0345f6fa16cc1af7e187e8b",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/apsides/moon.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/earth_apsides.txt",
+      "sha256": "38405b56a8dce7b9a19405e29242bdf4c08e978ae48b5f14123a65b57a874cf1",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/apsides/earth.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/riseset.txt",
+      "sha256": "92f5c1edf647c3f46d8964cfab06315fbe09cb580bc512d1418d41039424ff48",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/riseset/riseset.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/local_solar_eclipse.txt",
+      "sha256": "1273c79b53122d6e5efc264b3c64e571e9a47d777103eaffbcdf5fb44c7743f0",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/local_solar_eclipse.txt"
+    },
+    {
+      "path": "Scripts/reference-data/sources/mercury.html",
+      "sha256": "e29ff3e1ada11eaee343032f0c5b927ccf9a9b2cacad8e006a2bd6b4fc71ba40",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/mercury.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/venus.html",
+      "sha256": "c06f2f10efc8554328bb51ed1725d13f1ec53a5a82a0c25089dcf1104994ca7f",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/venus.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/solar_1701.html",
+      "sha256": "3c5c9d8e7acfdf48c023e4f7feb14272273121c0620b948cb106f90b6ed04a06",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/se1701.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/solar_2001.html",
+      "sha256": "820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/se2001.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/lunar_1701.html",
+      "sha256": "15ed1e6e6b1153f6c85e724258aa91e23655fecb08ac7623fd6e2b4b1d8199f7",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/le1701.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/lunar_1901.html",
+      "sha256": "587cf5bf48e1b9f17b0e2b6d72d42fc81828f62e9a9252d7f661a747b95154ca",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/le1901.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/lunar_2001.html",
+      "sha256": "cf12604099d2ed7766180139a4e79633ae361dd9030e2bd618f8b3eadaefde72",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse/le2001.html"
+    },
+    {
+      "path": "Scripts/reference-data/sources/astronomy-engine-license.txt",
+      "sha256": "a76df666a7db8a06f599d08e07c3ff74c4b250b50b49c43353af2bd5bb34604e",
+      "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/LICENSE"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/callisto-vector.json",
+      "sha256": "ed9c3a527e7a0b30acf0777cc647e8b5f8957ad4e6347b147dd74f34a84a434f",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/callisto-vector.query.json",
+      "sha256": "5563d44a1a0f0ed1f7dcbbdad3834058181f052d09aefb7ad857d724e5aea236",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/chiron-vector.json",
+      "sha256": "2e222ca76c280df480c993489c93af30b5c49babda4aba37e60bc1a954291704",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/chiron-vector.query.json",
+      "sha256": "965a49a4450ea91a89ba0baf4b8836e3937f068bdaa5e0940835d916bc8ba72f",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/europa-vector.json",
+      "sha256": "eac288e6512eeef9850c1087052426bcc394e6a287aa17bc29ec4e84db2da9f0",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/europa-vector.query.json",
+      "sha256": "4a5d5018b32653d60c9c652eb79680385bdd70a46f248a7e3dcabaf446399f44",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/ganymede-vector.json",
+      "sha256": "f76302a946d97f80836fcbb1010ebeae1c18c315b04dee61ddb23816c446e241",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/ganymede-vector.query.json",
+      "sha256": "9cd234ea55255992f0f35a7f47b06e05ea7c04355a24ed30ad92c1832c23d59d",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/io-vector.json",
+      "sha256": "4c09f6807a15f45ecd936d38ab1c5ca71dfe759bc063c0a3ac1685b1f1aaa981",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/io-vector.query.json",
+      "sha256": "f20330c61f533ee38a5235929338c4ff17a7bbfd1a59e75e8053536d32da19e6",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/mars-observer.json",
+      "sha256": "bf7e3f1b312565705475d46e4bc001de5f660324af95b11f5cb6fc600dc48e26",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/mars-observer.query.json",
+      "sha256": "b15522b72df9ce43ac2a3d30c0a8d1b529a9fe415297dafa131ea57623ed5730",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/mercury-station.json",
+      "sha256": "53a3e45c16ae9893616f8a7e34eb9f3b0d75b991833f9d98a01f15672c777e77",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/mercury-station.query.json",
+      "sha256": "5709a771eeeb27ff4810948aca367a26ff250144dabf42300b73c3da258749da",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/moon-observer.json",
+      "sha256": "6b4461550efef94244e96e3734c561148766097fc7dcb35c452e0c89e9bdf754",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/moon-observer.query.json",
+      "sha256": "d4c0955486186df9f5d54a39117bfd4ff05485ba695351afa2c93709aaec2ba8",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/pluto-observer.json",
+      "sha256": "77b610db8bd803d1d41e9dc0ec5f7b70db9346028956a94f07e3364af05ae5d7",
+      "url": "generated from the adjacent query recipe"
+    },
+    {
+      "path": "Scripts/reference-data/sources/horizons/pluto-observer.query.json",
+      "sha256": "21cc88e9d9f135171ad20012fd566465330ccddcbb6f8c84b64afd42d7b75f20",
+      "url": "generated from the adjacent query recipe"
+    }
+  ],
+  "upstreamRevision": "865d3da7d8112bbc7911238052c6af4aaf877181"
+}

@@ -1,0 +1,120 @@
+{
+  "classification": "shipping-geometric-lunar-coefficients-derived-by-Heirloom-Logic-from-official-JPL-DE440s",
+  "coverage": {
+    "physicalLowerJulianDateTDB": 2414986.5,
+    "physicalUpperJulianDateTDB": 2499425.5,
+    "requiredExclusiveUpperJulianDateTT": 2499391.5,
+    "requiredLowerJulianDateTT": 2415020.5,
+    "routing": "use bundle automatically in the required TT interval; C2 blend to existing model across the exterior 32-day margins; retain existing lunar model farther outside; no opt-in or public-domain change",
+    "transitionWidthDaysTT": 32
+  },
+  "generation": {
+    "exclusiveLastSourceRecord": 25669,
+    "firstSourceRecord": 4558,
+    "jplephemSourcesSHA256": {
+      "__init__.py": "1c56b1960e3254f847c8cd51e180624f478f25c1b184ff7ea06c89870dd70d58",
+      "__main__.py": "97492749d60940e4890000f8f89a0cf190a9f9970ff40d2cf0156ad79043dc0f",
+      "ascii.py": "9ae81b16bf24bb92a8d4ab0294439e22bcdcfb97597118b9df30ff45026989f6",
+      "calendar.py": "deb4cebc1fbade4e16741b3785377dc0bcab377b3447b1ec711a2014829179aa",
+      "commandline.py": "dda3b1a04467cefe1378b8c61107690a3d6953896f912e1be0e82328d6e1c45a",
+      "daf.py": "08df1560fa1199c57c41e6b058cf617cabe7a3c039af5db988e5432686a559da",
+      "descriptorlib.py": "41147668a55e011d92b78839e46bade16b40d1e9d8fdaaef655c6802ab619c23",
+      "ephem.py": "a131ccdd1e7a6a6570abde80f2f3d93ac876a05c065ff335249ec0db175f1121",
+      "exceptions.py": "d4f8b543d53a9b544bf33ecd085c583158fccaf1cbf56fadcbdfcf434a17f13f",
+      "excerpter.py": "17292560034f415b577326d4d1fccb70b13d35770333b99d64b3bbff265a8e16",
+      "names.py": "dd49b91db15ee33d107afa675c11ba7cd12cfb8da50b09ffd997c1f9ce093d84",
+      "pck.py": "aa383c08bd0089a2cec85ecaa48e91681ad45165de1ed931ce92552957dbddaf",
+      "spk.py": "224d31fa12817de2bd1f1e38b30bc289c0a72677844bc554bb7101b206783357",
+      "test.py": "35581ae7fab8d6a25d82601ba1f2d618a3eae28b6fef94b3d9eb17d7210dc864"
+    },
+    "jplephemVersion": "2.24",
+    "numpyVersion": "2.5.3",
+    "operation": "subtract matching type-2 Chebyshev records for (3,301) minus (3,399); no refit, truncation, or quantization",
+    "script": "Scripts/ephemeris/generate-lunar-bundle.py",
+    "scriptSHA256": "9d2bbb817b8422308cb95816b73d25fe9b8d0b204acf430379bdb1968b2c2439"
+  },
+  "nativeTimeFrame": {
+    "erfaCommit": "9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3",
+    "erfaVersion": "2.0.1",
+    "filesSHA256": {
+      "Documentation/Migration/LunarBundledSources/ERFA-LICENSE": "b1858f9a263f22c438a455a32945da51a31a0ae25a21055da13bb7ed57cc3b51",
+      "Sources/CLibAstronomy/EphemerisTime/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
+      "Sources/CLibAstronomy/EphemerisTime/erfa.h": "9549553b95ca2fbbcdcabcc69d82fb3cdd376c28b03c2793200138ff55727088",
+      "Sources/CLibAstronomy/EphemerisTime/erfam.h": "0da6313033aacf9c64533a7e74be49ecda97b4aaa87e134f98287e4ff279886f",
+      "Sources/CLibAstronomy/EphemerisTime/fw2m.c": "480d1ae7780566980b8f80f4c6daa2be330a80e99861d892dc5a9f7b11da47c0",
+      "Sources/CLibAstronomy/EphemerisTime/ir.c": "55e3325cd77770315f20dfdee5e7028f56b7bfb97be966db922abcc8885091f1",
+      "Sources/CLibAstronomy/EphemerisTime/obl06.c": "550260874d5e5fa3be77296b85b92c54c726fee6fbb1bb44748d04c17ffb37c2",
+      "Sources/CLibAstronomy/EphemerisTime/pfw06.c": "085f49861026fab98633d8479795090b3278a0d246a938ebdf10fde326ef1987",
+      "Sources/CLibAstronomy/EphemerisTime/pmat06.c": "f8c33e0f8003fc5482bf091456beaed55d10ffc608d7df04b877615a09238a09",
+      "Sources/CLibAstronomy/EphemerisTime/rx.c": "b740bba3cce0502620662f6e667369734f6adf56064919394ae1ae3ae3e70c64",
+      "Sources/CLibAstronomy/EphemerisTime/rz.c": "d4ef2eb4a9744617b510c2370ba5ff5f3c0acaafb07a0eb6138c6f2128005bcc"
+    },
+    "headerSHA256": "85878abd0e3eafe49d55f9f4f1a27466f92d348a1038c67a115acab97c7a582d",
+    "outputFrame": "IAU 2006 mean equatorial J2000, eraPmat06(2451545,0) times ICRS vector",
+    "rate": "dTDB/dTT = 1 + centered eraDtdb difference over 0.02 TT day divided by 0.02*86400 seconds",
+    "sourceBaseURL": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/",
+    "time": "full ERFA eraDtdb periodic geocentric TDB-TT model, evaluated as (2451545,TT-offset); zero topocentric coordinates",
+    "wrapperSHA256": "5c5a8d642686eb256ed01985b7283008c83ac4fc3c6d62c1a7b3cbe000900e0a"
+  },
+  "notices": {
+    "derivedDataProducer": "Heirloom Logic",
+    "erfaLicense": "Documentation/Migration/LunarBundledSources/ERFA-LICENSE",
+    "naifRulesURL": "https://naif.jpl.nasa.gov/naif/rules.html",
+    "noticeResource": "Documentation/Migration/LunarBundledSources/moon-NOTICE.txt",
+    "noticeSHA256": "a2018135905143f3985c618db37deef02576201f5d25ff608bc914e90410bbe5",
+    "publicationDOI": "10.3847/1538-3881/abd414",
+    "upstreamProducer": "NASA/JPL; original comments retained as provenance"
+  },
+  "qualifiedSlice": {
+    "byteOrder": "little-endian",
+    "bytes": 6581696,
+    "coefficientCountPerAxis": 13,
+    "coefficientGridStartJulianDateTDB": 2415016.5,
+    "exclusiveLastSourceRecord": 25661,
+    "file": "moon-de440.bin (regeneration proof only; not shipped)",
+    "firstSourceRecord": 4566,
+    "headerBytes": 56,
+    "intervalDaysTDB": 4.0,
+    "layout": "record,axis,ascending Chebyshev degree",
+    "magic": "MOONDEV1",
+    "recordCount": 21095,
+    "scalar": "Float64",
+    "sha256": "a1921ec68223515ce97bea46d6db171329ddba8219c349f4c4b0d2ecce81f89c"
+  },
+  "resource": {
+    "arrayLittleEndianFloat64SHA256": "2562169b16711fab7f213dc6194e78dc70bd726ec198b0ca00181b5e27bba2d7",
+    "bytes": 19586727,
+    "coefficientCountPerAxis": 13,
+    "coefficientGridStartJulianDateTDB": 2414984.5,
+    "compiledArrayBytes": 6586632,
+    "exclusiveLastSourceRecord": 25669,
+    "file": "Sources/CLibAstronomy/EphemerisData/moon_data.inc",
+    "firstSourceRecord": 4558,
+    "foldedKmLittleEndianFloat64SHA256": "d6a8b6a75b044bf8eebf2961d49120389f24f68edb9bf0a8d3a105dda8c61a58",
+    "intervalDaysTDB": 4.0,
+    "layout": "record,axis,ascending Chebyshev degree",
+    "recordCount": 21111,
+    "scalar": "C double; exact hexadecimal floating constants",
+    "sha256": "4301ff85cde083cc7ab74b208e684a424f1ae0f1991ae1265c71dc1420282200"
+  },
+  "schemaVersion": 1,
+  "source": {
+    "bytes": 32726016,
+    "originalCommentsResource": "Documentation/Migration/LunarBundledSources/moon-de440-source-comments.txt",
+    "originalCommentsSHA256": "15c12d810ea47c2cc8d6adb6b906ffaa7b98bdd924e9c571b077654a3163e735",
+    "producer": "NASA/JPL",
+    "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2",
+    "solution": "DE440",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
+  },
+  "state": {
+    "analyticDerivativeUnits": "AU/TDB-day; native rate adapter scales public velocity to AU/TT-day",
+    "center": 399,
+    "corrections": "geometric; no light-time or aberration",
+    "frame": "ICRF/ICRS axes",
+    "positionUnits": "AU (149597870.7 km exactly)",
+    "sourceCenter": 3,
+    "sourceFrameID": 1,
+    "target": 301
+  }
+}

@@ -8,6 +8,7 @@ astronomy_source=${1:-"$source_root/astronomy.c"}
 compiler=${CC:-cc}
 build_dir=$(mktemp -d "${TMPDIR:-/tmp}/astronomykit-vsop-cache.XXXXXX")
 trap 'rm -rf "$build_dir"' EXIT HUP INT TERM
+CC="$compiler" sh "$repo_root/Scripts/ephemeris/compile-support.sh" "$source_root" "$build_dir"
 
 compile()
 {
@@ -28,7 +29,7 @@ double counted_sin(double);
 HEADER
 compile -pthread -include "$build_dir/count.h" -c "$astronomy_source" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/vsop_cache_probe.c" -o "$build_dir/probe.o"
-"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/vsop-cache-probe"
+"$compiler" -pthread "$build_dir"/*.o "$build_dir/ephemeris.a" -lm -o "$build_dir/vsop-cache-probe"
 "$build_dir/vsop-cache-probe"
 
 # A negative control proves the probe rejects an engine with caching disabled.
@@ -41,7 +42,7 @@ assert source.count(marker) == 1
 Path(sys.argv[2]).write_text(source.replace(marker, marker + "\n    return NULL; /* diagnostic: bypass cache */"))
 PYTHON
 compile -pthread -include "$build_dir/count.h" -c "$build_dir/uncached.c" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/vsop-cache-probe"
+"$compiler" -pthread "$build_dir"/*.o "$build_dir/ephemeris.a" -lm -o "$build_dir/vsop-cache-probe"
 negative_status=0
 "$build_dir/vsop-cache-probe" > "$build_dir/negative.log" 2>&1 || negative_status=$?
 if [ "$negative_status" -ne 1 ]; then
@@ -56,7 +57,7 @@ echo "Cache probe rejected the uncached negative control."
 # Separately prove that qualified NEW epochs avoid the full series.
 compile -c "$script_dir/polynomial/work_probe.c" -o "$build_dir/probe.o"
 compile -pthread -include "$build_dir/count.h" -c "$astronomy_source" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/polynomial-probe"
+"$compiler" -pthread "$build_dir"/*.o "$build_dir/ephemeris.a" -lm -o "$build_dir/polynomial-probe"
 "$build_dir/polynomial-probe"
 python3 - "$astronomy_source" "$build_dir/full-only.c" <<'PYTHON'
 import sys
@@ -69,7 +70,7 @@ source = source.replace(marker, 'static int PolynomialPosition(int b, double t, 
 Path(sys.argv[2]).write_text(source)
 PYTHON
 compile -pthread -include "$build_dir/count.h" -c "$build_dir/full-only.c" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir"/*.o -lm -o "$build_dir/polynomial-probe"
+"$compiler" -pthread "$build_dir"/*.o "$build_dir/ephemeris.a" -lm -o "$build_dir/polynomial-probe"
 negative_status=0
 "$build_dir/polynomial-probe" > "$build_dir/negative.log" 2>&1 || negative_status=$?
 if [ "$negative_status" -ne 1 ]; then

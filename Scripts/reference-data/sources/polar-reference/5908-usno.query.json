@@ -1,0 +1,12 @@
+{
+  "acquiredUTC": "2026-10-03T19:14:45.951234+00:00",
+  "endpoint": "https://aa.usno.navy.mil/api/rstt/oneday",
+  "parameters": {
+    "coords": "90,0",
+    "date": "2022-03-18",
+    "dst": "false",
+    "tz": "0"
+  },
+  "responseSHA256": "e8cc2a197f8d86dd8dd268d9a9dacacc0fcc818c14b5695348e953311293ec6c",
+  "url": "https://aa.usno.navy.mil/api/rstt/oneday?date=2022-03-18&coords=90%2C0&tz=0&dst=false"
+}

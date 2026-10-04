@@ -1,0 +1,21 @@
+{
+  "parameters": {
+    "CAL_TYPE": "'GREGORIAN'",
+    "CENTER": "'500@10'",
+    "COMMAND": "'299'",
+    "CSV_FORMAT": "'YES'",
+    "EPHEM_TYPE": "'VECTORS'",
+    "MAKE_EPHEM": "'YES'",
+    "OBJ_DATA": "'NO'",
+    "OUT_UNITS": "'AU-D'",
+    "REF_PLANE": "'FRAME'",
+    "REF_SYSTEM": "'ICRF'",
+    "TIME_TYPE": "'TT'",
+    "TLIST": "'2459004.23384469,2459004.23453913,2459004.23523358,2459004.23592802,2459004.23662246'",
+    "TLIST_TYPE": "'JD'",
+    "VEC_CORR": "'NONE'",
+    "VEC_TABLE": "'3'"
+  },
+  "planSHA256": "7967115f17eeede65ebbfb14ee00f33a6a0b241c08a56c19e61b6800df0a8514",
+  "responseSHA256": "b5b3708ad14f3b8d21588ba35085a7697d9cfc41f2b5461b38dff83b36b220aa"
+}

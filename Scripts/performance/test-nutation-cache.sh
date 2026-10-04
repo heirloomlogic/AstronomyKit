@@ -8,6 +8,7 @@ astronomy_source=${1:-"$source_root/astronomy.c"}
 compiler=${CC:-cc}
 build_dir=$(mktemp -d "${TMPDIR:-/tmp}/astronomykit-nutation-cache.XXXXXX")
 trap 'rm -rf "$build_dir"' EXIT HUP INT TERM
+CC="$compiler" sh "$repo_root/Scripts/ephemeris/compile-support.sh" "$source_root" "$build_dir"
 
 compile()
 {
@@ -32,7 +33,7 @@ void counted_iau2000b_eval(void);
 HEADER
 compile -include "$build_dir/count.h" -c "$build_dir/instrumented.c" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/nutation_cache_probe.c" -o "$build_dir/probe.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" -lm -o "$build_dir/nutation-cache-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/nutation-cache-probe"
 "$build_dir/nutation-cache-probe"
 
 python3 - "$astronomy_source" "$build_dir/legacy.c" <<'PYTHON'
@@ -73,10 +74,10 @@ PYTHON
 
 compile -c "$astronomy_source" -o "$build_dir/astronomy.o"
 compile -c "$script_dir/nutation_output_probe.c" -o "$build_dir/output-probe.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" -lm -o "$build_dir/cached-output-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/cached-output-probe"
 "$build_dir/cached-output-probe" > "$build_dir/cached.out"
 compile -c "$build_dir/legacy.c" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" -lm -o "$build_dir/legacy-output-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/output-probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/legacy-output-probe"
 "$build_dir/legacy-output-probe" > "$build_dir/legacy.out"
 cmp "$build_dir/cached.out" "$build_dir/legacy.out"
 echo "Cached and pre-cache nutation positions, rates, and metadata are bit-identical."
@@ -91,7 +92,7 @@ assert source.count(marker) == 1
 Path(sys.argv[2]).write_text(source.replace(marker, marker + "\n    return NULL; /* diagnostic: bypass cache */"))
 PYTHON
 compile -include "$build_dir/count.h" -c "$build_dir/uncached-instrumented.c" -o "$build_dir/astronomy.o"
-"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" -lm -o "$build_dir/nutation-cache-probe"
+"$compiler" -pthread "$build_dir/astronomy.o" "$build_dir/probe.o" "$build_dir/ephemeris.a" -lm -o "$build_dir/nutation-cache-probe"
 negative_status=0
 "$build_dir/nutation-cache-probe" > "$build_dir/negative.log" 2>&1 || negative_status=$?
 if [ "$negative_status" -ne 1 ]; then

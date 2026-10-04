@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Independent, frozen-epoch model diagnostics; never reads acceptance samples/budgets."""
 import argparse
+import sys
 import csv
 import hashlib
+import importlib.util
 import json
 import math
 import re
@@ -10,6 +12,9 @@ import subprocess
 import tempfile
 import urllib.request
 from pathlib import Path
+ARCHIVE_SPEC = importlib.util.spec_from_file_location('source_archive', Path(__file__).with_name('source_archive.py'))
+source_archive = importlib.util.module_from_spec(ARCHIVE_SPEC)
+ARCHIVE_SPEC.loader.exec_module(source_archive)
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / 'Scripts/reference-data/sources/distance/model-diagnostics/outer-planets'
@@ -271,7 +276,7 @@ def measure():
     input_rows = [(b,jd) for b in BODIES for jd in dates()]
     with tempfile.TemporaryDirectory(prefix='outer-planet-local-probe-') as temp:
         binary = Path(temp)/'probe'
-        subprocess.run(['cc','-O2','-std=c11','-pthread','-I',str(ROOT/'Sources/CLibAstronomy/include'),str(ROOT/'Scripts/reference-data/distance-probe.c'),'-lm','-o',str(binary)],check=True)
+        subprocess.run(['cc','-O2','-std=c11','-pthread','-I',str(ROOT/'Sources/CLibAstronomy/include'),str(ROOT/'Scripts/reference-data/distance-probe.c'),*map(str, sorted(p for p in (ROOT/'Sources/CLibAstronomy').rglob('*.c') if p.name != 'astronomy.c')),'-lm','-o',str(binary)],check=True)
         actual = [json.loads(line) for line in subprocess.check_output([str(binary)], input=''.join(f'{b} heliocentric {jd-2451545:.17g}\n' for b,jd in input_rows),text=True).splitlines()]
     if len(actual) != len(input_rows):
         raise ValueError('local probe coverage mismatch')
@@ -316,7 +321,7 @@ def measure():
                            for key in values[0] if key not in ('body','jdTT','rawRadiusAU')}
     paths = sorted(RAW.glob('*.json')) + [RAW/'de200-header.txt'] + [RAW/'vsop87.chk',RAW/'naif0012.tls',Path(__file__),ROOT/'Scripts/model-data/manifest.json',ROOT/'Scripts/model-data/vsop87.txt',ROOT/'Scripts/reference-data/distance-probe.c']
     paths += [ROOT/f'Scripts/model-data/VSOP87B.{v[0]}' for v in BODIES.values()]
-    paths += sorted((ROOT/'Sources/CLibAstronomy').rglob('*.c')) + sorted((ROOT/'Sources/CLibAstronomy').rglob('*.h'))
+    paths += sorted((ROOT/'Sources/CLibAstronomy').rglob('*.c')) + sorted((ROOT/'Sources/CLibAstronomy').rglob('*.h')) + sorted((ROOT/'Sources/CLibAstronomy').rglob('*.inc'))
     hashes = {str(p.relative_to(ROOT)):sha(p.read_bytes()) for p in paths if p != REPORT}
     return {'schemaVersion':1,'sampleCountPerBody':len(dates()),'purpose':'Model diagnosis only; no acceptance policy or product error limits.',
             'vectorFrameCaveat':'rawMinusDE200VectorKm uses Bretagnon-Francou (1988) eq.1 obliquity and -0.0930 arcsec equinox relation; rawDE200AxesMinusDE441ICRFVectorKm and de200AxesMinusDE441ICRFVectorKm use SPICE DE-200-to-J2000, which is identity and does not establish physical ICRF alignment. These are numerical differences in mixed physical axes, not frame-resolved vector causal attribution. Constants have published finite precision. rawFK5MinusDE441ICRFVectorKm exposes another frame convention. Radial decomposition is rotation invariant.',
@@ -328,6 +333,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('action',choices=['fetch-de200','acquire-horizons','extract-de200','high-precision','report','check'])
     args = parser.parse_args()
+    if __name__ == "__main__" and args.action == "check":
+        source_archive.replay(ROOT, Path(__file__), sys.argv[1:])
+        return
     if args.action == 'fetch-de200':
         CACHE.mkdir(parents=True, exist_ok=True)
         url = json.loads((RAW / 'de200.bsp.download.json').read_bytes())['url']

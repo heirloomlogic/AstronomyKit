@@ -1,0 +1,432 @@
+{
+  "assessedDomain": "1900-01-01 <= TT < 2101-01-01",
+  "classification": "retrospective-product-target-assessment-not-new-holdout-or-qualification",
+  "inputsSHA256": {
+    "Documentation/Migration/approved-accuracy-targets.json": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553",
+    "Documentation/Migration/distance-acceptance.json": "5c2f1e876854662b3f94525f2b01589a42ebaa8fad35048c3830d882e687c372",
+    "Documentation/Migration/distance-allowances.json": "46eddee496ef2a3e07dc9c563f8da845e5cf6f8fafa009dd79e1ee3b995aeb3f",
+    "Documentation/Migration/distance-characterization.json": "dbf643669766fe2fb32b0e0632e6189cc2872ddfecdddd1d78a3f419fdd2e16c",
+    "Scripts/reference-data/assess-approved-distance.py": "114c83bbcd7d0e9bfc53bc4da0df2d03c04ebeb98f5b71f62564e1aa20130b54"
+  },
+  "limitations": [
+    "These epochs and residuals were already observed before adopting the new target; the old heldout is not a fresh independent acceptance set for it.",
+    "No new 2101-2130 samples are present; full required-domain qualification remains unperformed.",
+    "Received-light references retain the historical fixed-Sun bridge and alignment estimates; no exact barycentric/public-default-aberration range equivalence is claimed.",
+    "Nominal residual comparisons do not incorporate a certified physical-reference or convention-uncertainty bound. A non-exceedance is not a qualified pass.",
+    "Moon results use its existing instantaneous geometric exception. Outer-planet/Pluto center semantics and vector-frame differences remain explicitly unresolved."
+  ],
+  "maximumRelativeDistanceErrorByBody": {
+    "Earth": 1e-06,
+    "Jupiter": 1e-06,
+    "Mars": 1e-06,
+    "Mercury": 1e-06,
+    "Moon": 0.0001,
+    "Neptune": 1e-05,
+    "Pluto": 0.0001,
+    "Saturn": 1e-06,
+    "Sun": 1e-06,
+    "Uranus": 1e-05,
+    "Venus": 1e-06
+  },
+  "nominalExceedanceCount": 0,
+  "phases": {
+    "characterization": {
+      "nominalExceedances": 0,
+      "samples": 2489,
+      "series": {
+        "earth-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 148.2333440686856,
+          "maximumErrorPPM": 0.022412854407902548,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 3.3223323590079747,
+          "worstJulianDateTT": 2480346.22897966
+        },
+        "jupiter-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0024502309507147798,
+          "allowedErrorKmAtWorstPPM": 891.8183537386257,
+          "maximumErrorPPM": 0.4818296948700475,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 429.70456526139003,
+          "worstJulianDateTT": 2488434.499988431
+        },
+        "jupiter-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 785.2076359023649,
+          "maximumErrorPPM": 0.3538698975169483,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 277.86134564629515,
+          "worstJulianDateTT": 2415457.58636838
+        },
+        "mars-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.000919124617950868,
+          "allowedErrorKmAtWorstPPM": 156.54418894979202,
+          "maximumErrorPPM": 0.38328413339515777,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 60.00090379966887,
+          "worstJulianDateTT": 2488088.50259066
+        },
+        "mars-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 207.22453299861763,
+          "maximumErrorPPM": 0.03426448928569044,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 7.1004427906633385,
+          "worstJulianDateTT": 2427486.35524923
+        },
+        "mercury-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0007498582187102001,
+          "allowedErrorKmAtWorstPPM": 143.35510463848274,
+          "maximumErrorPPM": 0.13963101988085705,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 20.016819465798328,
+          "worstJulianDateTT": 2485542.64457677
+        },
+        "mercury-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 54.278593210631385,
+          "maximumErrorPPM": 0.07789884346998054,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 4.228239636285722,
+          "worstJulianDateTT": 2488434.499988431
+        },
+        "moon-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 36.46714515933715,
+          "maximumErrorPPM": 39.030908311757734,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 100.0,
+          "worstAbsoluteErrorKm": 14.233457991056481,
+          "worstJulianDateTT": 2431560.73006586
+        },
+        "neptune-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.03671314635334547,
+          "allowedErrorKmAtWorstPPM": 43706.519635099874,
+          "maximumErrorPPM": 2.286425839988101,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 9993.171586963965,
+          "worstJulianDateTT": 2460253.02362222
+        },
+        "neptune-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 44737.54336010451,
+          "maximumErrorPPM": 2.0801386972846516,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 9306.02951648034,
+          "worstJulianDateTT": 2460253.02362222
+        },
+        "pluto-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0114505147396974,
+          "allowedErrorKmAtWorstPPM": 612483.2460396214,
+          "maximumErrorPPM": 34.92950541130053,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 100.0,
+          "worstAbsoluteErrorKm": 213937.36856871867,
+          "worstJulianDateTT": 2470442.15392115
+        },
+        "pluto-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 616236.5635000076,
+          "maximumErrorPPM": 34.345876659584924,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 100.0,
+          "worstAbsoluteErrorKm": 211651.8500309773,
+          "worstJulianDateTT": 2469428.04401553
+        },
+        "saturn-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.011248677298437195,
+          "allowedErrorKmAtWorstPPM": 1259.5233089763806,
+          "maximumErrorPPM": 0.592621677444927,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 746.4208161465679,
+          "worstJulianDateTT": 2454549.73402494
+        },
+        "saturn-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 1366.6923552332657,
+          "maximumErrorPPM": 0.5100149303976212,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 697.0335064292551,
+          "worstJulianDateTT": 2421669.86761821
+        },
+        "sun-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0015141301970536115,
+          "allowedErrorKmAtWorstPPM": 148.23334406868767,
+          "maximumErrorPPM": 0.02241291883336998,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 3.3223419090105026,
+          "worstJulianDateTT": 2480346.22897966
+        },
+        "uranus-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.02390338321341255,
+          "allowedErrorKmAtWorstPPM": 25904.2727120596,
+          "maximumErrorPPM": 3.331698081134471,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 8630.5215687953,
+          "worstJulianDateTT": 2471355.0784273
+        },
+        "uranus-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 27434.6396024462,
+          "maximumErrorPPM": 3.173859819148893,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 8707.370028703495,
+          "worstJulianDateTT": 2471811.14875553
+        },
+        "venus-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 1.0293110475345422e-05,
+          "allowedErrorKmAtWorstPPM": 77.55091137270193,
+          "maximumErrorPPM": 0.09386700996335083,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 7.279472170488351,
+          "worstJulianDateTT": 2456718.54287533
+        },
+        "venus-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 107.82461982168611,
+          "maximumErrorPPM": 0.015014262330280614,
+          "nominalExceedances": 0,
+          "samples": 131,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 1.6189071276655704,
+          "worstJulianDateTT": 2453122.57369113
+        }
+      }
+    },
+    "prior-heldout": {
+      "nominalExceedances": 0,
+      "samples": 2546,
+      "series": {
+        "earth-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 147.11526766201723,
+          "maximumErrorPPM": 0.01945369743481068,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 2.8619359051380706,
+          "worstJulianDateTT": 2486250.94362751
+        },
+        "jupiter-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.00020715515140091052,
+          "allowedErrorKmAtWorstPPM": 720.1943993323054,
+          "maximumErrorPPM": 0.5884565832669332,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 423.80313551906966,
+          "worstJulianDateTT": 2475859.00675081
+        },
+        "jupiter-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 775.9418521075668,
+          "maximumErrorPPM": 0.40543135643656236,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 314.5911576158693,
+          "worstJulianDateTT": 2417641.16134029
+        },
+        "mars-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.00027144859748658054,
+          "allowedErrorKmAtWorstPPM": 77.64647989110806,
+          "maximumErrorPPM": 0.4720874361687398,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 36.65592761932082,
+          "worstJulianDateTT": 2482505.93331603
+        },
+        "mars-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 208.34644661131694,
+          "maximumErrorPPM": 0.034548816438798834,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 7.198123139650391,
+          "worstJulianDateTT": 2452922.27114247
+        },
+        "mercury-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0019676513994766123,
+          "allowedErrorKmAtWorstPPM": 120.72537875085183,
+          "maximumErrorPPM": 0.1268298501897736,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 15.31158170107422,
+          "worstJulianDateTT": 2482106.96435903
+        },
+        "mercury-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 52.14576865858355,
+          "maximumErrorPPM": 0.0739608935295777,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 3.856747643775488,
+          "worstJulianDateTT": 2485094.18042274
+        },
+        "moon-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 38.64289688198595,
+          "maximumErrorPPM": 39.59257725692319,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 100.0,
+          "worstAbsoluteErrorKm": 15.29971880231345,
+          "worstJulianDateTT": 2423297.33660238
+        },
+        "neptune-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.03374913740564636,
+          "allowedErrorKmAtWorstPPM": 43953.325249778114,
+          "maximumErrorPPM": 2.2964731196854307,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 10093.762995690635,
+          "worstJulianDateTT": 2462840.55437702
+        },
+        "neptune-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 44703.89394361443,
+          "maximumErrorPPM": 2.08248122225963,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 9309.501969946303,
+          "worstJulianDateTT": 2461124.50400469
+        },
+        "pluto-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.014602705673061428,
+          "allowedErrorKmAtWorstPPM": 626940.6457022454,
+          "maximumErrorPPM": 34.570733717553395,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 100.0,
+          "worstAbsoluteErrorKm": 216737.98119283313,
+          "worstJulianDateTT": 2470156.89999398
+        },
+        "pluto-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 614156.2174593773,
+          "maximumErrorPPM": 34.36569765887322,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 100.0,
+          "worstAbsoluteErrorKm": 211059.06884526153,
+          "worstJulianDateTT": 2469210.78834137
+        },
+        "saturn-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.00932626889223303,
+          "allowedErrorKmAtWorstPPM": 1494.4864093067245,
+          "maximumErrorPPM": 0.5379624519236174,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 803.9775731171683,
+          "worstJulianDateTT": 2455029.03294872
+        },
+        "saturn-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 1409.9162554552515,
+          "maximumErrorPPM": 0.4928907423391819,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 694.9346697874187,
+          "worstJulianDateTT": 2455029.03294872
+        },
+        "sun-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0016131981081525658,
+          "allowedErrorKmAtWorstPPM": 147.1152676620152,
+          "maximumErrorPPM": 0.019454032735422008,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 2.8619852329772146,
+          "worstJulianDateTT": 2486250.94362751
+        },
+        "uranus-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.010582288442721095,
+          "allowedErrorKmAtWorstPPM": 26073.433490396917,
+          "maximumErrorPPM": 3.3059598359616538,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 8619.772390486967,
+          "worstJulianDateTT": 2472828.40971731
+        },
+        "uranus-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 27435.42088032011,
+          "maximumErrorPPM": 3.169357688831127,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 10.0,
+          "worstAbsoluteErrorKm": 8695.266211336058,
+          "worstJulianDateTT": 2471819.38567857
+        },
+        "venus-geocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0005200719859261997,
+          "allowedErrorKmAtWorstPPM": 49.06550615488458,
+          "maximumErrorPPM": 0.08429947811781209,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 4.136196562443067,
+          "worstJulianDateTT": 2436252.40314046
+        },
+        "venus-heliocentric": {
+          "alignmentRemainderEstimateKmAtWorstPPM": 0.0,
+          "allowedErrorKmAtWorstPPM": 107.573730940445,
+          "maximumErrorPPM": 0.014610458345691791,
+          "nominalExceedances": 0,
+          "samples": 134,
+          "targetPPM": 1.0,
+          "worstAbsoluteErrorKm": 1.571701514996028,
+          "worstJulianDateTT": 2436252.40314046
+        }
+      }
+    }
+  },
+  "requiredDomain": {
+    "startInclusive": "1900-01-01T00:00:00",
+    "stopExclusive": "2131-01-01T00:00:00",
+    "timeScale": "TT"
+  },
+  "schemaVersion": 1
+}

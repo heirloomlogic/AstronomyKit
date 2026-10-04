@@ -1,0 +1,32 @@
+from pathlib import Path
+p=Path('Tests/AstronomyKitTests/ReproducibilityTests.swift');s=p.read_text();Path('/tmp/ReproducibilityTests.before.swift').write_text(s)
+s=s.replace('''    ) {
+        #expect(
+            close(ecliptic.longitude''','''    ) {
+        if label.hasPrefix("Moon") || label.hasPrefix("Pluto") {
+            print("BUNDLESNAPSHOT", lon, ecliptic.longitude.bitPattern)
+            print("BUNDLESNAPSHOT", lat, ecliptic.latitude.bitPattern)
+            print("BUNDLESNAPSHOT", dist, ecliptic.distance.bitPattern)
+        }
+        #expect(
+            close(ecliptic.longitude''',1)
+s=s.replace('''    ) {
+        #expect(
+            close(equatorial.rightAscension''','''    ) {
+        if label.hasPrefix("Moon") || label.hasPrefix("Pluto") {
+            print("BUNDLESNAPSHOT", ra, equatorial.rightAscension.bitPattern)
+            print("BUNDLESNAPSHOT", dec, equatorial.declination.bitPattern)
+            print("BUNDLESNAPSHOT", dist, equatorial.distance.bitPattern)
+        }
+        #expect(
+            close(equatorial.rightAscension''',1)
+s=s.replace('''        let angleTolerance = moon ? 5e-7 : 1e-9''','''        if label.hasPrefix("Moon") || label.hasPrefix("Pluto") {
+            print("BUNDLESNAPSHOT", lonRate, state.longitudeRate.bitPattern)
+            print("BUNDLESNAPSHOT", latRate, state.latitudeRate.bitPattern)
+            print("BUNDLESNAPSHOT", distRate, state.distanceRate.bitPattern)
+        }
+        let angleTolerance = moon ? 5e-7 : 1e-9''')
+s=s.replace('''        #expect(
+            close(fullMoon.universalTime''','''        print("BUNDLESNAPSHOT", UInt64(0x40c2_f50d_e615_4cc1), fullMoon.universalTime.bitPattern)
+        #expect(
+            close(fullMoon.universalTime''',1);p.write_text(s)

@@ -2,6 +2,7 @@
 """Replay sampled radial-rate diagnostics without introducing an accuracy allowance."""
 
 import argparse
+import sys
 import hashlib
 import importlib.util
 import json
@@ -10,6 +11,9 @@ import platform
 import subprocess
 import tempfile
 from pathlib import Path
+ARCHIVE_SPEC = importlib.util.spec_from_file_location('source_archive', Path(__file__).with_name('source_archive.py'))
+source_archive = importlib.util.module_from_spec(ARCHIVE_SPEC)
+ARCHIVE_SPEC.loader.exec_module(source_archive)
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location("distance_archive", Path(__file__).with_name("distance-accuracy.py"))
@@ -118,6 +122,7 @@ def input_hashes():
     paths = [Path(__file__), PROBE, Path(__file__).with_name("distance-accuracy.py")]
     paths += sorted((ROOT / "Sources/CLibAstronomy").rglob("*.c"))
     paths += sorted((ROOT / "Sources/CLibAstronomy").rglob("*.h"))
+    paths += sorted((ROOT / "Sources/CLibAstronomy").rglob("*.inc"))
     for phase in ("characterization", "heldout"):
         paths += sorted((DISTANCE.RAW / phase).glob("*.json"))
     return {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
@@ -127,7 +132,7 @@ def measure(records):
     with tempfile.TemporaryDirectory(prefix="range-rate-") as temporary:
         binary = Path(temporary) / "probe"
         command = ["cc", "-O2", "-std=c11", "-pthread", "-fno-fast-math", "-ffp-contract=off", "-I", str(ROOT / "Sources/CLibAstronomy/include"),
-                   str(PROBE), str(ROOT / "Sources/CLibAstronomy/astronomy.c"), "-lm", "-o", str(binary)]
+                   str(PROBE), *map(str, sorted((ROOT / "Sources/CLibAstronomy").rglob("*.c"))), "-lm", "-o", str(binary)]
         subprocess.run(command, check=True)
         inputs = "".join(f"{r['body']} {r['mode']} {r['julianDateTT'] - 2451545:.17g}\n" for r in records)
         output = subprocess.check_output([str(binary)], input=inputs, text=True)
@@ -192,6 +197,9 @@ def main():
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--output", type=Path, default=REPORT)
     arguments = parser.parse_args()
+    if __name__ == "__main__" and "--check" in sys.argv[1:]:
+        source_archive.replay(ROOT, Path(__file__), sys.argv[1:])
+        return
     if arguments.check:
         old = json.loads(arguments.output.read_text())
         validate_report(old)

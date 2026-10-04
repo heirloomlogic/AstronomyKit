@@ -1,0 +1,106 @@
+{
+  "alignmentBodies": {
+    "Jupiter": "599",
+    "Mars": "499",
+    "Mercury": "199",
+    "Neptune": "899",
+    "Pluto": "999",
+    "Saturn": "699",
+    "Uranus": "799",
+    "Venus": "299"
+  },
+  "alignmentTargetAnglesDegrees": [
+    0,
+    180
+  ],
+  "alignmentWindows": [
+    {
+      "id": "1900",
+      "startJulianDateTT": 2415020.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2415385.5
+    },
+    {
+      "id": "1930",
+      "startJulianDateTT": 2425977.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2426342.5
+    },
+    {
+      "id": "1960",
+      "startJulianDateTT": 2436934.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2437300.5
+    },
+    {
+      "id": "1990",
+      "startJulianDateTT": 2447892.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2448257.5
+    },
+    {
+      "id": "2020",
+      "startJulianDateTT": 2458849.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2459215.5
+    },
+    {
+      "id": "2050",
+      "startJulianDateTT": 2469807.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2470172.5
+    },
+    {
+      "id": "2080",
+      "startJulianDateTT": 2480764.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2481130.5
+    },
+    {
+      "id": "2101",
+      "startJulianDateTT": 2488434.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2488799.5
+    },
+    {
+      "id": "2130",
+      "startJulianDateTT": 2499026.5,
+      "stepDays": 1,
+      "stopJulianDateTT": 2499391.5
+    }
+  ],
+  "classification": "finite-geometric-event-extension-frozen-before-event-reference-evaluation",
+  "coarseFineMaximumDifferenceSeconds": 60,
+  "eventTargetStrictMaximumSeconds": 60.0,
+  "excludedFamilies": [
+    "stations",
+    "apparent-geocentric-pair-events",
+    "planetary-apsides",
+    "seasons",
+    "rise-set",
+    "eclipses",
+    "transits"
+  ],
+  "fineOffsetsSeconds": [
+    -120,
+    -60,
+    0,
+    60,
+    120
+  ],
+  "interpolationConvergenceLimitSeconds": 0.05,
+  "limitations": [
+    "finite sampled events only",
+    "local FK5-related J2000 frame versus independent ICRS frame bias retained as part of API residual",
+    "physical ephemeris and frame uncertainty not certified",
+    "node reference windows were originally frozen for apsides, before node residuals were observed"
+  ],
+  "moonNodeWindows": "same16predetermined31daywindows as parent; reuse geometric NONE coarse vectors, acquire separately bound fine roots",
+  "parentSamplingPlanSHA256": "b06e01e62f1208d821dcf6fa2475b9072c3892499e9acff18f9e84b6cbd6f110",
+  "policySHA256": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553",
+  "pyerfaVersion": "2.0.1.5",
+  "referenceFrame": "ERFA ecm06 IAU2006 ICRS to mean ecliptic/equinox of date, explicit two-part TT",
+  "referenceNumericalAllowanceSeconds": 1.0,
+  "referenceRootScalar": "nodes: normalized date-ecliptic z; alignments: direction*sin(Earth longitude minus planet longitude), innerdirection=-1 outerdirection=+1",
+  "schemaVersion": 1
+}

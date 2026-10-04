@@ -78,11 +78,30 @@ def read_json(path):
     return json.loads(path.read_text())
 
 
+def check_archived_evidence(baseline_module, baseline, artifact):
+    """Validate historical measurements against the exact pre-bundle source set."""
+    helper = ROOT / "Scripts/reference-data/source_archive.py"
+    spec = importlib.util.spec_from_file_location("performance_source_archive", helper)
+    archive = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(archive)
+    catalog = archive.manifest(ROOT)
+    with archive.baseline_tree(ROOT) as historical:
+        # The archive helper preserves the original C target membership. Every
+        # other recorded input must still match its frozen measurement hash.
+        (historical / "Package.swift").symlink_to(ROOT / "Package.swift")
+        result = check_evidence(baseline_module, baseline, artifact, baseline_module.source_hashes(historical))
+    return {**result, "source": "archived-" + result["source"],
+            "archiveRevision": catalog["sourceRevision"],
+            "shippingModelQualified": False,
+            "scope": "historical pre-bundle evidence only; current shipping performance and issue #83 remain separate"}
+
+
 def main():
     parser = argparse.ArgumentParser()
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument("--write", action="store_true")
     action.add_argument("--check", action="store_true")
+    action.add_argument("--check-archive", action="store_true", help="verify frozen pre-bundle evidence without qualifying current shipping code")
     arguments = parser.parse_args()
 
     baseline_module = load_baseline_module()
@@ -97,7 +116,7 @@ def main():
         return
 
     artifact = read_json(CANDIDATE_PATH) if CANDIDATE_PATH.exists() else None
-    result = check_evidence(baseline_module, baseline, artifact, baseline_module.source_hashes())
+    result = check_archived_evidence(baseline_module, baseline, artifact) if arguments.check_archive else check_evidence(baseline_module, baseline, artifact, baseline_module.source_hashes())
     print(json.dumps(result, indent=2, sort_keys=True))
 
 

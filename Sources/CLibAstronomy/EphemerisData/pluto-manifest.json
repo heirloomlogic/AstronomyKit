@@ -1,0 +1,149 @@
+{
+  "components": [
+    {
+      "bytes": 380216,
+      "cFilename": "pluto_barycenter.inc",
+      "cPrefix": "pluto_barycenter_bundle",
+      "center": 0,
+      "coefficientCountPerAxis": 6,
+      "filename": "pluto-barycenter.bin",
+      "intervalDays": 32.0,
+      "kernel": "de440s.bsp",
+      "lowerJulianDateTDB": 2414980.5,
+      "recordCount": 2640,
+      "sha256": "21ee95c16ea79ba44f1795c82e2fa847faeb2d91c4849a81317059d97e52352b",
+      "sign": 1,
+      "sourceSegments": [
+        {
+          "center": 0,
+          "firstRecord": 569,
+          "frame": 1,
+          "sourceLabel": "DE-0440LE-0440",
+          "sourceSegmentEndTDB": 2506352.5,
+          "sourceSegmentStartTDB": 2396752.5,
+          "stopRecordExclusive": 3209,
+          "target": 9,
+          "type": 2
+        }
+      ],
+      "startJulianDateTDB": 2414960.5,
+      "target": 9,
+      "upperJulianDateTDB": 2499431.5
+    },
+    {
+      "bytes": 1393712,
+      "cFilename": "pluto_negative_sun.inc",
+      "cPrefix": "pluto_negative_sun_bundle",
+      "center": 0,
+      "coefficientCountPerAxis": 11,
+      "filename": "pluto-negative-sun.bin",
+      "intervalDays": 16.0,
+      "kernel": "de440s.bsp",
+      "lowerJulianDateTDB": 2414980.5,
+      "recordCount": 5279,
+      "sha256": "f872fa0607fc0f300d32aeb3c51c6f9712ef72c0ffb9c7a42b52d525f354fe8c",
+      "sign": -1,
+      "sourceSegments": [
+        {
+          "center": 0,
+          "firstRecord": 1139,
+          "frame": 1,
+          "sourceLabel": "DE-0440LE-0440",
+          "sourceSegmentEndTDB": 2506352.5,
+          "sourceSegmentStartTDB": 2396752.5,
+          "stopRecordExclusive": 6418,
+          "target": 10,
+          "type": 2
+        }
+      ],
+      "startJulianDateTDB": 2414976.5,
+      "target": 10,
+      "upperJulianDateTDB": 2499431.5
+    },
+    {
+      "bytes": 10810040,
+      "cFilename": "pluto_center_offset.inc",
+      "cPrefix": "pluto_center_offset_bundle",
+      "center": 9,
+      "coefficientCountPerAxis": 16,
+      "filename": "pluto-center-offset.bin",
+      "intervalDays": 3.0,
+      "kernel": "plu060.bsp",
+      "lowerJulianDateTDB": 2414980.5,
+      "recordCount": 28151,
+      "sha256": "5a7eab7e158fadba547c2030bc9c07739c9f69f37451864c38e70ce499d091f3",
+      "sign": 1,
+      "sourceSegments": [
+        {
+          "center": 9,
+          "firstRecord": 12161,
+          "frame": 1,
+          "sourceLabel": "PLU060",
+          "sourceSegmentEndTDB": 2456293.5,
+          "sourceSegmentStartTDB": 2378497.5,
+          "stopRecordExclusive": 25932,
+          "target": 999,
+          "type": 2
+        },
+        {
+          "center": 9,
+          "firstRecord": 0,
+          "frame": 1,
+          "sourceLabel": "PLU060",
+          "sourceSegmentEndTDB": 2524591.5,
+          "sourceSegmentStartTDB": 2456293.5,
+          "stopRecordExclusive": 14380,
+          "target": 999,
+          "type": 2
+        }
+      ],
+      "startJulianDateTDB": 2414980.5,
+      "target": 999,
+      "upperJulianDateTDB": 2499431.5
+    }
+  ],
+  "coordinateContract": "heliocentric geometric ICRF Pluto body center999; km position and analytic km/day velocity at TDB",
+  "creditURL": "https://naif.jpl.nasa.gov/naif/credit.html",
+  "derivativeProduct": "Renamed native coefficient excerpts; not original NASA/JPL SPK kernels",
+  "domainUpperExclusive": true,
+  "generatorSHA256": "64e3eef1052c37567e837cdd20c2faf8a38fc5141dbc13e362b2c3a642ac3f55",
+  "originalDataAcknowledgement": "NASA/JPL Solar System Dynamics DE440 and PLU060; NASA/JPL NAIF distribution",
+  "planSHA256": "adbae2741cc22ddbe04245b50f7ebc6ac41fb93861dbfe7e5715df89912115f0",
+  "producer": "Heirloom Logic / AstronomyKit",
+  "productionCFiles": {
+    "pluto_barycenter.inc": {
+      "bytes": 1132390,
+      "sha256": "7f70b0ee6c6ce9fb357088cda1f2986341854e2a2b28b862b836bf2be280d950"
+    },
+    "pluto_center_offset.inc": {
+      "bytes": 32090328,
+      "sha256": "5cbf68be2ed3818c41937d5073e1b9efe600510ff092ad97db94aa8c333cd1ae"
+    },
+    "pluto_negative_sun.inc": {
+      "bytes": 4151340,
+      "sha256": "205531e2c68914db58548a6782095137df7199beed7f77dca122edbe2bae125a"
+    }
+  },
+  "productionRepresentation": "C99 hexadecimal Float64 constants: each original signed km coefficient divided once by149597870.7km/AU; static const double AU arrays; record-axis-ascendingdegree; binary MOONDEV1 exactkm proof excerpts development-only",
+  "publicTTDomain": [
+    2415020.5,
+    2499391.5
+  ],
+  "representation": "MOONDEV1; 56-byte header <8sQQdddd; record,axis,ascending-degree little-endian Float64; sum signed components; retain full intersecting original records without refitting",
+  "rulesURL": "https://naif.jpl.nasa.gov/naif/rules.html",
+  "schemaVersion": 1,
+  "sourceCommentsURL": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.cmt",
+  "sources": {
+    "de440s.bsp": {
+      "bytes": 32726016,
+      "sha256": "c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp"
+    },
+    "plu060.bsp": {
+      "bytes": 135207936,
+      "sha256": "dfbb102491a26ed41ae08ca3f8963f22f0219df1d8f265ab87b9ad825a826fc6",
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp"
+    }
+  },
+  "totalPayloadBytes": 12583968
+}

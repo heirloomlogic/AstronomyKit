@@ -59,7 +59,15 @@ jobs:
           python3 Scripts/reference-data/outer-planet-diagnostic.py check
           python3 Scripts/reference-data/pluto-model-diagnostic.py --check
           python3 Scripts/migration/verify_performance_baseline.py
-          python3 Scripts/migration/performance_candidate.py --check
+          # Verify the pre-bundle performance archive; it does not qualify the repaired model.
+          python3 Scripts/migration/performance_candidate.py --check-archive
+
+      - name: Verify bundled ephemeris integrity
+        run: |
+          python3 Scripts/ephemeris/generate-lunar-bundle.py --check
+          python3 Scripts/ephemeris/verify-pluto.py
+          python3 -m unittest Scripts/ephemeris/test_pluto_artifacts.py -v
+          python3 -m unittest Scripts/reference-data/test_bundled_public_api.py -v
 
       - name: Verify polynomial artifacts and analytic evaluator
         run: |
@@ -88,6 +96,13 @@ jobs:
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
+
+      - name: Verify bundled ephemeris integrity
+        run: |
+          python3 Scripts/ephemeris/generate-lunar-bundle.py --check
+          python3 Scripts/ephemeris/verify-pluto.py
+          python3 -m unittest Scripts/ephemeris/test_pluto_artifacts.py -v
+          python3 -m unittest Scripts/reference-data/test_bundled_public_api.py -v
 
       - name: Verify polynomial artifacts and analytic evaluator
         run: |

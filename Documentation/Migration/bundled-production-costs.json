@@ -1,0 +1,149 @@
+{
+  "binaryBytes": 32549880,
+  "binarySHA256": "9d342ecc50850e2010cefa63962b0200903ca2536b71749351764e7e264ce752",
+  "classification": "descriptive-local-release-public-API-cost-not-a-platform-or-hosted-performance-gate",
+  "host": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "limitations": [
+    "Five new process trials per operation on one macOS host; no device or hosted RSS qualification.",
+    "Baseline launches the same executable without touching coefficient tables; RSS deltas are descriptive and do not isolate table mappings from framework/runtime allocations.",
+    "Each operation evaluates100000 distinct TT epochs spanning1900\u20132130, including AstroTime construction."
+  ],
+  "sourceSHA256": {
+    "Scripts/ephemeris/measure-production.py": "3076030fceb8aff4eb50f69a32b369af3cc889ae90bda67afc96aad84af878b3",
+    "Sources/CLibAstronomy/EphemerisData/moon_data.inc": "4301ff85cde083cc7ab74b208e684a424f1ae0f1991ae1265c71dc1420282200",
+    "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc": "7f70b0ee6c6ce9fb357088cda1f2986341854e2a2b28b862b836bf2be280d950",
+    "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc": "5cbf68be2ed3818c41937d5073e1b9efe600510ff092ad97db94aa8c333cd1ae",
+    "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc": "205531e2c68914db58548a6782095137df7199beed7f77dca122edbe2bae125a",
+    "Sources/CLibAstronomy/astronomy.c": "ad59caf513ce813fd1cbdb8b1bbc5e57bf19958b8c9768f0fd8be1ad69330843",
+    "Sources/CLibAstronomy/ephemeris.c": "0f651a5ad5ca2c24132ed0a13f7d79816921020bf10af807c3f7d08c53d98027",
+    "Tools/Migration/BundledEphemerisCostRunner/main.swift": "33553df2e29350a350f82cfa7ca477766237630f1d20d98e7ddf4950309c9ffa"
+  },
+  "summary": {
+    "baseline": {
+      "medianMicrosecondsPerStateIncludingTimeConstruction": 7.958,
+      "medianPeakRSSBytes": 8617984
+    },
+    "moon": {
+      "medianMicrosecondsPerStateIncludingTimeConstruction": 124.65816375,
+      "medianPeakRSSBytes": 15417344
+    },
+    "pluto": {
+      "medianMicrosecondsPerStateIncludingTimeConstruction": 78.583045,
+      "medianPeakRSSBytes": 21348352
+    }
+  },
+  "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+  "trials": {
+    "baseline": [
+      {
+        "checksum": 0,
+        "count": 0,
+        "elapsedNanoseconds": 7958,
+        "operation": "baseline",
+        "peakRSSBytes": 8601600
+      },
+      {
+        "checksum": 0,
+        "count": 0,
+        "elapsedNanoseconds": 3875084,
+        "operation": "baseline",
+        "peakRSSBytes": 8634368
+      },
+      {
+        "checksum": 0,
+        "count": 0,
+        "elapsedNanoseconds": 6083,
+        "operation": "baseline",
+        "peakRSSBytes": 8617984
+      },
+      {
+        "checksum": 0,
+        "count": 0,
+        "elapsedNanoseconds": 10333,
+        "operation": "baseline",
+        "peakRSSBytes": 8617984
+      },
+      {
+        "checksum": 0,
+        "count": 0,
+        "elapsedNanoseconds": 5500,
+        "operation": "baseline",
+        "peakRSSBytes": 8585216
+      }
+    ],
+    "moon": [
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 5281816750,
+        "operation": "moon",
+        "peakRSSBytes": 15384576
+      },
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 11324627416,
+        "operation": "moon",
+        "peakRSSBytes": 15400960
+      },
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 12465816375,
+        "operation": "moon",
+        "peakRSSBytes": 15417344
+      },
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 27223298250,
+        "operation": "moon",
+        "peakRSSBytes": 15417344
+      },
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 17279962458,
+        "operation": "moon",
+        "peakRSSBytes": 15417344
+      }
+    ],
+    "pluto": [
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 7628552667,
+        "operation": "pluto",
+        "peakRSSBytes": 21331968
+      },
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 5172194583,
+        "operation": "pluto",
+        "peakRSSBytes": 21331968
+      },
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 50648591375,
+        "operation": "pluto",
+        "peakRSSBytes": 21348352
+      },
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 40431506958,
+        "operation": "pluto",
+        "peakRSSBytes": 21348352
+      },
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 7858304500,
+        "operation": "pluto",
+        "peakRSSBytes": 21348352
+      }
+    ]
+  }
+}

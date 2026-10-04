@@ -2,8 +2,10 @@
 """Separate independent characterization, policy freezing, and held-out acceptance."""
 
 import argparse
+import sys
 import csv
 import hashlib
+import importlib.util
 import json
 import math
 import random
@@ -13,6 +15,9 @@ import tempfile
 import time
 import urllib.request
 from pathlib import Path
+ARCHIVE_SPEC = importlib.util.spec_from_file_location('source_archive', Path(__file__).with_name('source_archive.py'))
+source_archive = importlib.util.module_from_spec(ARCHIVE_SPEC)
+ARCHIVE_SPEC.loader.exec_module(source_archive)
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / "Scripts/reference-data/sources/distance"
@@ -208,6 +213,7 @@ def input_hashes(phase):
     paths = [Path(__file__), ROOT / "Scripts/reference-data/distance-probe.c"]
     paths += sorted((ROOT / "Sources/CLibAstronomy").rglob("*.c"))
     paths += sorted((ROOT / "Sources/CLibAstronomy").rglob("*.h"))
+    paths += sorted((ROOT / "Sources/CLibAstronomy").rglob("*.inc"))
     paths += sorted((RAW / phase).glob("*.json"))
     return {str(path.relative_to(ROOT)): digest(path.read_bytes()) for path in paths}
 
@@ -216,7 +222,7 @@ def measure(records):
     with tempfile.TemporaryDirectory(prefix="astronomykit-distance-") as directory:
         binary = Path(directory) / "probe"
         subprocess.run(["cc", "-O2", "-std=c11", "-pthread", "-I", str(ROOT / "Sources/CLibAstronomy/include"),
-                        str(ROOT / "Scripts/reference-data/distance-probe.c"), "-lm", "-o", str(binary)], check=True)
+                        str(ROOT / "Scripts/reference-data/distance-probe.c"), *map(str, sorted(p for p in (ROOT / "Sources/CLibAstronomy").rglob("*.c") if p.name != "astronomy.c")), "-lm", "-o", str(binary)], check=True)
         inputs = "".join(f"{row['body']} {row['mode']} {row['julianDateTT'] - 2451545:.17g}\n" for row in records)
         output = subprocess.check_output([str(binary)], input=inputs, text=True)
     actuals = [json.loads(line) for line in output.splitlines()]
@@ -325,6 +331,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["refresh-characterization", "characterize", "freeze", "refresh-heldout", "accept", "check"])
     action = parser.parse_args().action
+    if __name__ == "__main__" and action == "check":
+        source_archive.replay(ROOT, Path(__file__), sys.argv[1:])
+        return
     if action.startswith("refresh-"):
         refresh(action.removeprefix("refresh-"))
     elif action == "characterize":

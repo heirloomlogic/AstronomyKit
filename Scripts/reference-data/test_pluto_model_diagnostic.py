@@ -58,7 +58,7 @@ class PlutoDiagnosticTests(unittest.TestCase):
         with self.assertRaises(ValueError):m.relative_force_source('unrecognized source')
 
     def test_official_top2013_reproduces_stored_seed_positions_and_velocities(self):
-        source=(m.ROOT/'Sources/CLibAstronomy/astronomy.c').read_text()
+        source=m.source_archive.read_bytes(m.ROOT, m.ROOT/'Sources/CLibAstronomy/astronomy.c').decode()
         report=json.loads((m.EVIDENCE/'top2013-report.json').read_text())
         for row in report['rows']:
             if row['ttDays'] in self.plan['seedTTDays']:
@@ -89,6 +89,7 @@ class PlutoDiagnosticTests(unittest.TestCase):
             evidence=root/m.EVIDENCE.relative_to(m.ROOT)
             shutil.copytree(m.EVIDENCE,evidence)
             shutil.copytree(m.ROOT/'Sources/CLibAstronomy',root/'Sources/CLibAstronomy')
+            shutil.copytree(m.ROOT/m.source_archive.ARCHIVE,root/m.source_archive.ARCHIVE)
             for source in m.source_paths():
                 target=root/source.relative_to(m.ROOT)
                 target.parent.mkdir(parents=True,exist_ok=True)

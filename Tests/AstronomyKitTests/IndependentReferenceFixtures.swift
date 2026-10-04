@@ -337,6 +337,29 @@ struct IndependentRangeRateArchive: Decodable {
     }
 }
 
+// The original diagnostic archive remains immutable. Only Moon and Pluto changed
+// production models; their repeatability snapshots have an explicit separate version.
+private struct BundledRangeRateRegression: Decodable {
+    let model: String
+    let results: [Record]
+
+    struct Record: Decodable {
+        let body: String
+        let mode: String
+        let julianDateTT: Double
+        let production: IndependentRangeRateArchive.Record.Production
+
+        var key: String { "\(body)/\(mode)/\(julianDateTT)" }
+    }
+
+    static func load() throws -> Self {
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("Documentation/Migration/BundledRegressionSnapshots/range-rates-v1.json")
+        return try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
+    }
+}
+
 @Suite("Independent radial-rate diagnostic replay")
 struct IndependentRangeRateTests {
     @Test("Reference radial projections preserve units and signed motion")
@@ -360,11 +383,21 @@ struct IndependentRangeRateTests {
         }
     }
 
-    @Test("Public state rates reproduce the recorded production diagnostics")
+    @Test("Public state rates replay versioned production diagnostics without changing the historical archive")
     func publicStateReplay() throws {
+        let bundled = try BundledRangeRateRegression.load()
+        #expect(bundled.model == "bundled-de440-pluto-center-v1")
+        #expect(bundled.results.count == 795)
+        let current = Dictionary(uniqueKeysWithValues: bundled.results.map { ($0.key, $0.production) })
         for row in try IndependentRangeRateArchive.load().results {
             let body = try #require(CelestialBody.allCases.first { $0.name == row.body })
             let time = AstroTime(tt: row.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
+            let expected: IndependentRangeRateArchive.Record.Production
+            if body == .moon || body == .pluto {
+                expected = try #require(current["\(row.body)/\(row.mode)/\(row.julianDateTT)"])
+            } else {
+                expected = row.production
+            }
             let rate: Double
             if row.mode == "heliocentric" {
                 let state = try body.heliocentricState(at: time)
@@ -374,10 +407,10 @@ struct IndependentRangeRateTests {
             } else {
                 rate = try body.geocentricEclipticState(at: time, aberration: .none).distanceRate
                 let corrected = try body.geocentricEclipticState(at: time, aberration: .corrected).distanceRate
-                #expect(abs(corrected - row.production.correctedRateAUPerTTDay) <= 1e-12)
+                #expect(abs(corrected - expected.correctedRateAUPerTTDay) <= 1e-12)
             }
             // Production replay tolerance is separate from the unbounded independent residual.
-            #expect(abs(rate - row.production.rateAUPerTTDay) <= 1e-12)
+            #expect(abs(rate - expected.rateAUPerTTDay) <= 1e-12)
         }
     }
 }

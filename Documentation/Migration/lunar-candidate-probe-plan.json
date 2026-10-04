@@ -1,0 +1,14 @@
+{
+  "classification": "retrospective-lunar-candidate-feasibility-not-new-acceptance-or-production-change",
+  "candidateURL": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp",
+  "segments": [[3,301], [3,399]],
+  "observable": "geometric Moon center minus Earth center, simultaneous epoch",
+  "timeConversion": "explicit TT to approximate geocentric TDB via pinned ERFA dtdb/tttdb; retain approximation, no future UTC conversion",
+  "positionCases": "all 259 geocentric-none Moon cases in the frozen current-model assessment",
+  "eventCases": "all 35 lunar apsides and 38 lunar nodes already independently archived; retrospective candidate diagnostics only",
+  "eventBracketHalfWidthSeconds": 10,
+  "rootIterations": 18,
+  "excerptDateGuardsTDB": ["1899/12/31", "2131/1/2"],
+  "measurements": ["full file bytes", "selected segment bytes", "Moon/Earth excerpt bytes", "sampled candidate radius/angular residuals", "candidate event-time residuals"],
+  "unproven": ["new candidate holdout", "Swift implementation", "shipping data representation/licensing validation", "runtime/RSS qualification", "model integration boundaries", "physical covariance or continuous accuracy"]
+}

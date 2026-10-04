@@ -30,3 +30,5 @@ The report also measures the neighboring South Pole sunset and both North Pole c
 ## Result
 
 No production implementation fault was established. All 5,909 archived rows and the 70.8-second allowance remain intact, including the exact known-issue assertion for source line 2923. Issue #124 stays open for an accuracy-compatible decision about the source/model relationship; issue #81 remains open for its broader model-selection acceptance.
+
+[PolarSunriseIndependentEvidence.md](PolarSunriseIndependentEvidence.md) adds a separate four-event JPL/USNO investigation acquired on 2026-10-03. It compares both models against independent JPL elevations at common TT epochs under the library's explicit solar-radius/refraction convention, while retaining the remaining Earth-orientation differences. It supports retaining the current model for now but does not close the archived-minute failure or select an accuracy acceptance policy.

@@ -273,10 +273,7 @@ public enum Moon {
 
     /// Calculates the Moon's ecliptic position and velocity.
     ///
-    /// The position fields are bit-identical to ``ecliptic(at:)``. The rates are a
-    /// central difference of the lunar series over about 43 seconds of Terrestrial
-    /// Time, carried through the analytic rotation rates of the mean obliquity,
-    /// nutation, and true obliquity; expect about 1e-7 degrees per day of noise.
+    /// The position fields are bit-identical to ``ecliptic(at:)``. Throughout 1900–2130 TT, the rates use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, the rates use a central difference of the legacy lunar series over about 43 seconds of Terrestrial Time. All paths include the analytic rotation rates of mean obliquity, nutation, and true obliquity. These conventions do not establish independent rate accuracy.
     ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The ecliptic position and velocity of the Moon.

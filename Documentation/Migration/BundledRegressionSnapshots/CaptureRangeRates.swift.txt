@@ -1,0 +1,26 @@
+import Foundation
+import Testing
+@testable import AstronomyKit
+
+@Suite struct TemporaryBundleSnapshotCapture {
+    @Test func capture() throws {
+        var rows = [[String: Any]]()
+        for row in try IndependentRangeRateArchive.load().results where row.body == "Moon" || row.body == "Pluto" {
+            let body = try #require(CelestialBody.allCases.first { $0.name == row.body })
+            let time = AstroTime(tt: row.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
+            let rate: Double
+            let corrected: Double
+            if row.mode == "heliocentric" {
+                let state = try body.heliocentricState(at: time)
+                let p = state.position, v = state.velocity
+                rate = (p.x*v.x + p.y*v.y + p.z*v.z)/hypot(hypot(p.x,p.y),p.z)
+                corrected = rate
+            } else {
+                rate = try body.geocentricEclipticState(at: time, aberration: .none).distanceRate
+                corrected = try body.geocentricEclipticState(at: time, aberration: .corrected).distanceRate
+            }
+            rows.append(["body": row.body, "mode": row.mode, "julianDateTT": row.julianDateTT, "production": ["rateAUPerTTDay": rate, "correctedRateAUPerTTDay": corrected]])
+        }
+        try JSONSerialization.data(withJSONObject: ["model": "bundled-de440-pluto-center-v1", "classification": "production-regression-snapshot-not-independent-rate-accuracy", "results": rows], options: [.prettyPrinted, .sortedKeys]).write(to: URL(fileURLWithPath: "/tmp/bundled-rate-regression.json"))
+    }
+}

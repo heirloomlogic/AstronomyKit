@@ -1,5 +1,7 @@
 # Outer-planet and Pluto model-fitness diagnosis
 
+This diagnosis records the pre-bundle production model. The archived failures remain intact; [bundled integration evidence](BundledEphemerisIntegration.md) records the authorized Moon/Pluto repair and its remaining limits.
+
 This investigation follows [DistanceModelFollowup.md](DistanceModelFollowup.md) and is tracked in [issue #119](https://github.com/heirloomlogic/AstronomyKit/issues/119). The owner requested completion of the diagnosis while leaving product limits undecided. Production numerical models, the original distance characterization, allowances, holdout, and acceptance fixtures remain unchanged. New experiment dates were selected before acquiring their reference values; these are diagnostic samples rather than a new acceptance set.
 
 The scientific investigations and their source-bound results are recorded in [OuterPlanetModelDiagnosis.md](OuterPlanetModelDiagnosis.md) and [PlutoModelDiagnosis.md](PlutoModelDiagnosis.md). Raw responses, request recipes, extracted reference states, experiment plans, evaluator provenance, and reports live under `Scripts/reference-data/sources/distance/model-diagnostics/`. Large downloaded kernels, the official TOP2013 evaluator/control/coefficient downloads, and disposable compiled model variants live under `.context/` and are not committed package data; their exact source URLs and hashes remain archived.
@@ -74,6 +76,8 @@ Pre-commit integrity review also bound the transitive polynomial coefficient hea
 The approval concerns sampled diagnosis and evidence integrity. Product acceptance, a replacement choice, continuous error bounds, hosted CI, downstream integration, and release readiness remain outside it.
 
 ## Next decision
+
+The subsequent [owner decision record](AccuracyAcceptanceDecisions.md) sets 1900–2130 TT, inclusive, as the distance/model-fitness accuracy target. Existing finite distance acceptance covers only 1900–2100. Numerical product limits and replacement selection remain open; the approved date target does not expand the historical evidence's validated coverage.
 
 The diagnosis supports specific repair experiments and identifies reference/model differences that arithmetic changes cannot remove. Model selection remains open by the owner's instruction. Before selecting a production change, define maximum useful radial and 3D vector errors independently of these measurements, intended geometric or received-light observables, center semantics, and the required date range. Then compare candidate fitness and cost, freeze a new model and acceptance policy, and acquire a newly independent holdout. Retain the historical evidence and keep finite sampled claims separate from continuous accuracy guarantees.
 

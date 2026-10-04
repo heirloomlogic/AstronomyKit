@@ -121,6 +121,13 @@
         Astronomy_EclipticGeoMoon never fail (Astronomy_GeoMoonState, the
         Moon node search) now check their status. Results inside the range
         are bit-identical; Pluto keeps its narrower range.
+      - Patch 19: immutable DE440 Moon (301-399) and Pluto center (999-10)
+        Chebyshev tables, shared TT/TDB and ICRS/EQJ transforms. CalcMoon
+        and CalcPluto route all consumers through the same model. Analytic
+        source and frame derivatives include a C2 blend to the legacy model
+        during the 32 days exterior to the 1900-through-2130 TT interval.
+        GeoMoonState uses the position at the requested instant, and Pluto
+        states include the legacy interpolant's blend derivative throughout.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -175,6 +182,7 @@
 #endif
 
 #include "astronomy.h"
+#include "ephemeris.h"
 
 /* Keep contraction unchanged while using the platform's native math library. */
 #pragma STDC FP_CONTRACT OFF
@@ -3040,6 +3048,37 @@ static void CalcMoonRaw(
 #undef CO
 #undef SI
 
+/* Convert the immutable EQJ source into the existing mean-ecliptic-of-date
+ * lunar seam, including the derivative of both moving-frame rotations. */
+static int BundledMoonEcmState(double tt, double pos[3], double vel[3])
+{
+    astro_time_t time = {0};
+    time.tt = tt;
+    double p[3], v[3], eqm[3], eqmv[3], a[3], b[3];
+    double obl = mean_obliq(time.tt)*DEG2RAD;
+    double rate = mean_obliq_rate(time.tt)*DEG2RAD;
+    double c = cos(obl), sn = sin(obl);
+    astro_rotation_t prec, prec_rate;
+    int k;
+    if (!Astronomy_BundledMoon(time.tt, p, v)) return 0;
+    prec = precession_rot(time, FROM_2000);
+    prec_rate = precession_rot_rate(time, FROM_2000);
+    rotate(p, prec.rot, eqm);
+    rotate(v, prec.rot, a);
+    rotate(p, prec_rate.rot, b);
+    for (k = 0; k < 3; ++k) eqmv[k] = a[k]+b[k];
+    pos[0] = eqm[0];
+    pos[1] = c*eqm[1] + sn*eqm[2];
+    pos[2] = -sn*eqm[1] + c*eqm[2];
+    vel[0] = eqmv[0];
+    vel[1] = c*eqmv[1] + sn*eqmv[2] + rate*pos[2];
+    vel[2] = -sn*eqmv[1] + c*eqmv[2] - rate*pos[1];
+    return 1;
+}
+
+static void MoonSphereToRect(double lon, double lat, double dist, double pos[3]);
+static void GeoMoonStateEqj(astro_time_t time, double pos[3], double vel[3]);
+
 static void CalcMoon(
     double centuries_since_j2000,
     double *geo_eclip_lon,
@@ -3056,7 +3095,27 @@ static void CalcMoon(
         return;
     }
 
-    CalcMoonRaw(centuries_since_j2000, geo_eclip_lon, geo_eclip_lat, distance_au);
+    {
+        double tt = centuries_since_j2000*36525.0;
+        double weight_rate, weight = Astronomy_EphemerisWeight(tt, &weight_rate);
+        double pos[3], vel[3], legacy[3];
+        if (weight > 0 && BundledMoonEcmState(tt, pos, vel))
+        {
+            if (weight < 1)
+            {
+                int k;
+                CalcMoonRaw(centuries_since_j2000, geo_eclip_lon, geo_eclip_lat, distance_au);
+                MoonSphereToRect(*geo_eclip_lon, *geo_eclip_lat, *distance_au, legacy);
+                for (k = 0; k < 3; ++k) pos[k] = legacy[k] + weight*(pos[k]-legacy[k]);
+            }
+            *distance_au = sqrt(pos[0]*pos[0]+pos[1]*pos[1]+pos[2]*pos[2]);
+            *geo_eclip_lon = atan2(pos[1], pos[0]);
+            if (*geo_eclip_lon < 0) *geo_eclip_lon += PI2;
+            *geo_eclip_lat = atan2(pos[2], hypot(pos[0], pos[1]));
+        }
+        else
+            CalcMoonRaw(centuries_since_j2000, geo_eclip_lon, geo_eclip_lat, distance_au);
+    }
     if (cached != NULL)
     {
         cached->lon = *geo_eclip_lon;
@@ -3077,11 +3136,12 @@ static void CalcMoon(
  * The coordinates are oriented with respect to the Earth's equator at the J2000 epoch.
  * In Astronomy Engine, this orientation is called EQJ.
  *
- * This algorithm is based on the Nautical Almanac Office's *Improved Lunar Ephemeris* of 1954,
- * which in turn derives from E. W. Brown's lunar theories from the early twentieth century.
- * It is adapted from Turbo Pascal code from the book
- * [Astronomy on the Personal Computer](https://www.springer.com/us/book/9783540672210)
- * by Montenbruck and Pfleger.
+ * From 1900 through 2130 TT this uses bundled DE440 Moon-minus-Earth body-center
+ * coefficients, evaluated in TDB and rotated from ICRS into the declared frame.
+ * A C2 blend in the exterior 32 days on either side joins the legacy model,
+ * based on the Nautical Almanac Office's Improved Lunar Ephemeris of 1954 and
+ * adapted from Montenbruck and Pfleger's Astronomy on the Personal Computer.
+ * The existing wider accepted time range is preserved.
  *
  * To calculate ecliptic spherical coordinates instead, see #Astronomy_EclipticGeoMoon.
  *
@@ -3138,11 +3198,12 @@ astro_vector_t Astronomy_GeoMoon(astro_time_t time)
  * is corrected for precession and nutation, and the plane of the Earth's
  * orbit is corrected for gradual obliquity drift.
  *
- * This algorithm is based on the Nautical Almanac Office's *Improved Lunar Ephemeris* of 1954,
- * which in turn derives from E. W. Brown's lunar theories from the early twentieth century.
- * It is adapted from Turbo Pascal code from the book
- * [Astronomy on the Personal Computer](https://www.springer.com/us/book/9783540672210)
- * by Montenbruck and Pfleger.
+ * From 1900 through 2130 TT this uses bundled DE440 Moon-minus-Earth body-center
+ * coefficients, evaluated in TDB and rotated from ICRS into the declared frame.
+ * A C2 blend in the exterior 32 days on either side joins the legacy model,
+ * based on the Nautical Almanac Office's Improved Lunar Ephemeris of 1954 and
+ * adapted from Montenbruck and Pfleger's Astronomy on the Personal Computer.
+ * The existing wider accepted time range is preserved.
  *
  * To calculate a J2000 mean equator vector instead, use #Astronomy_GeoMoon.
  *
@@ -3213,47 +3274,16 @@ astro_spherical_t Astronomy_EclipticGeoMoon(astro_time_t time)
  */
 astro_state_vector_t Astronomy_GeoMoonState(astro_time_t time)
 {
-    /*
-        This is a hack, because trying to figure out how to derive a time
-        derivative for CalcMoon() would be extremely painful!
-        Calculate just before and just after the given time.
-        Average to find position, subtract to find velocity.
-    */
-    const double dt = 1.0e-5;   /* 0.864 seconds */
-    astro_vector_t r1, r2;
-    astro_time_t t1, t2;
     astro_state_vector_t s;
-
-    t1 = Astronomy_AddDays(time, -dt);
-    t2 = Astronomy_AddDays(time, +dt);
-
-    r1 = Astronomy_GeoMoon(t1);
-    r2 = Astronomy_GeoMoon(t2);
-
-    /* AstronomyKit local patch (accepted time range): Astronomy_GeoMoon can
-       now fail, and its NaN vector must not reach the average below. */
-    if (r1.status != ASTRO_SUCCESS)
-        return StateVecError(r1.status, time);
-    if (r2.status != ASTRO_SUCCESS)
-        return StateVecError(r2.status, time);
-
-    /* The desired position is the average of the two calculated positions. */
-    s.x = (r1.x + r2.x) / 2;
-    s.y = (r1.y + r2.y) / 2;
-    s.z = (r1.z + r2.z) / 2;
-
-    /* The difference of the position vectors divided by the time span gives the velocity vector. */
-    s.vx = (r2.x - r1.x) / (2 * dt);
-    s.vy = (r2.y - r1.y) / (2 * dt);
-    s.vz = (r2.z - r1.z) / (2 * dt);
+    double pos[3], vel[3];
+    if (!EphemerisTimeOk(time)) return StateVecError(ASTRO_BAD_TIME, time);
+    GeoMoonStateEqj(time, pos, vel);
+    s.x = pos[0]; s.y = pos[1]; s.z = pos[2];
+    s.vx = vel[0]; s.vy = vel[1]; s.vz = vel[2];
     s.t = time;
     s.status = ASTRO_SUCCESS;
-
-    /* AstronomyKit local patch (non-finite result guards). */
-    s = CheckStateResult(s);
-    return s;
+    return CheckStateResult(s);
 }
-
 
 /**
  * @brief Calculates the geocentric position and velocity of the Earth/Moon barycenter.
@@ -4720,7 +4750,7 @@ static body_grav_calc_t CalcPlutoOneWay(major_bodies_t *bary, const body_state_t
 }
 
 
-static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int helio, int exact_velocity)
+static astro_status_t CalcPlutoLegacy(body_state_t *bstate, astro_time_t time, int helio, int exact_velocity)
 {
     terse_vector_t acc, ra, rb, va, vb;
     major_bodies_t bary;
@@ -4817,6 +4847,40 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
         VecDecr(&bstate->v, bary.Sun.v);
     }
 
+    return ASTRO_SUCCESS;
+}
+
+/* Bundled body-center dispatch precedes the legacy integrator/cache mutex.
+ * The surrounding barycentric system retains its existing solar model. */
+static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int helio, int exact_velocity)
+{
+    double rate, weight = Astronomy_EphemerisWeight(time.tt, &rate);
+    double p[3], v[3];
+    body_state_t legacy;
+    major_bodies_t bary;
+    astro_status_t status;
+    if (weight == 0 || !Astronomy_BundledPluto(time.tt, p, v))
+        return CalcPlutoLegacy(bstate, time, helio, 1);
+    if (!helio)
+    {
+        MajorBodyBary(&bary, time.tt);
+        p[0] += bary.Sun.r.x; p[1] += bary.Sun.r.y; p[2] += bary.Sun.r.z;
+        v[0] += bary.Sun.v.x; v[1] += bary.Sun.v.y; v[2] += bary.Sun.v.z;
+    }
+    if (weight < 1)
+    {
+        status = CalcPlutoLegacy(&legacy, time, helio, 1);
+        if (status != ASTRO_SUCCESS) return status;
+        v[0] = legacy.v.x + weight*(v[0]-legacy.v.x) + rate*(p[0]-legacy.r.x);
+        v[1] = legacy.v.y + weight*(v[1]-legacy.v.y) + rate*(p[1]-legacy.r.y);
+        v[2] = legacy.v.z + weight*(v[2]-legacy.v.z) + rate*(p[2]-legacy.r.z);
+        p[0] = legacy.r.x + weight*(p[0]-legacy.r.x);
+        p[1] = legacy.r.y + weight*(p[1]-legacy.r.y);
+        p[2] = legacy.r.z + weight*(p[2]-legacy.r.z);
+    }
+    bstate->tt = time.tt;
+    bstate->r.x = p[0]; bstate->r.y = p[1]; bstate->r.z = p[2];
+    bstate->v.x = v[0]; bstate->v.y = v[1]; bstate->v.z = v[2];
     return ASTRO_SUCCESS;
 }
 
@@ -7302,8 +7366,8 @@ static astro_ecliptic_state_t ecliptic_state_from_eqj(
 }
 
 /*
-    Half-width of the central difference that supplies the Moon's velocity, in TT days
-    (about 43 seconds). CalcMoon has no analytic derivative in this engine; the step balances
+    Half-width of the central difference used only for the legacy Moon's velocity,
+    in TT days (about 43 seconds). The bundled model has analytic derivatives; this step balances
     the series' last-bit noise against the h^2 truncation term at roughly 1e-7 degrees/day.
 */
 #define MOON_STATE_STEP_DAYS 5.0e-4
@@ -7335,6 +7399,38 @@ static void MoonEcmState(
 
     CalcMoon(time.tt / 36525.0, lon, lat, dist);
     MoonSphereToRect(*lon, *lat, *dist, ecm);
+
+    {
+        double rate, weight, p[3], v[3], legacy[3];
+        astro_time_t source_time = time;
+        source_time.tt = (time.tt/36525.0)*36525.0;
+        weight = Astronomy_EphemerisWeight(source_time.tt, &rate);
+        if (weight > 0 && BundledMoonEcmState(source_time.tt, p, v))
+        {
+            if (weight < 1)
+            {
+                CalcMoonRaw(source_time.tt/36525.0, &lon2, &lat2, &dist_plus);
+                MoonSphereToRect(lon2, lat2, dist_plus, legacy);
+                CalcMoonRaw((source_time.tt+MOON_STATE_STEP_DAYS)/36525.0, &lon2, &lat2, &dist_plus);
+                MoonSphereToRect(lon2, lat2, dist_plus, plus);
+                CalcMoonRaw((source_time.tt-MOON_STATE_STEP_DAYS)/36525.0, &lon2, &lat2, &dist_minus);
+                MoonSphereToRect(lon2, lat2, dist_minus, minus);
+                for (k = 0; k < 3; ++k)
+                {
+                    double oldv = (plus[k]-minus[k])/(2*MOON_STATE_STEP_DAYS);
+                    v[k] = oldv + weight*(v[k]-oldv) + rate*(p[k]-legacy[k]);
+                }
+            }
+            *dist_rate = 0;
+            for (k = 0; k < 3; ++k)
+            {
+                ecm_vel[k] = v[k];
+                *dist_rate += ecm[k]*v[k];
+            }
+            *dist_rate /= *dist;
+            return;
+        }
+    }
 
     CalcMoon((time.tt + MOON_STATE_STEP_DAYS) / 36525.0, &lon2, &lat2, &dist_plus);
     MoonSphereToRect(lon2, lat2, dist_plus, plus);
@@ -7394,9 +7490,9 @@ static void GeoMoonStateEqj(astro_time_t time, double pos[3], double vel[3])
  * analytic time derivative of that position with respect to Terrestrial Time days,
  * holding Delta T fixed: they include the derivative of the light-time solution,
  * the observer's motion under the engine's backdated-observer aberration approximation,
- * and the rotation of the true ecliptic and equinox of date. The Moon's velocity is a
- * central difference of the lunar series over `MOON_STATE_STEP_DAYS`; every other body's
- * velocity is analytic.
+ * and the rotation of the true ecliptic and equinox of date. The Moon's velocity is
+ * analytic in the bundled interval; the legacy lunar model outside it uses a
+ * central difference over `MOON_STATE_STEP_DAYS`.
  *
  * Supported bodies: the Sun, the Moon, Mercury through Neptune except the Earth, and Pluto.
  * Any other body returns `ASTRO_INVALID_BODY`.
@@ -7491,9 +7587,9 @@ astro_ecliptic_state_t Astronomy_SunEclipticState(astro_time_t time)
  * @brief Geocentric ecliptic position and velocity of the Moon (AstronomyKit local patch).
  *
  * The position fields repeat #Astronomy_EclipticGeoMoon operation for operation and are
- * bit-identical to it; `dist` is the lunar series' own distance. The rate fields are a
- * central difference of the lunar series over `MOON_STATE_STEP_DAYS`, carried through
- * the analytic rotation rates of the mean obliquity, nutation, and true obliquity.
+ * bit-identical to it; `dist` is the lunar series' own distance. The rate fields are
+ * analytic in the bundled interval, with a central difference of the legacy series
+ * outside it. Both include analytic frame rates and the exterior blend derivative.
  *
  * @param time  The observation time.
  * @return      The ecliptic state; check `status` before use.
