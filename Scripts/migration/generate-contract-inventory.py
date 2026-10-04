@@ -126,6 +126,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/reference-data/test_approved_distance.py": 81,
     "Scripts/reference-data/test_polar_reference.py": 81,
     "Scripts/reference-data/test_position_events.py": 81,
+    "Scripts/reference-data/test_planetary_apsides.py": 81,
     "Scripts/reference-data/test_geometric_events.py": 81,
     "Scripts/reference-data/test_lunar_event_diagnosis.py": 81,
     "Scripts/reference-data/test_native_lunar_probe.py": 81,
