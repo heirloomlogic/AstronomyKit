@@ -1,0 +1,31 @@
+# Foundation-free development Sun pilot
+
+The measured development Sun runner no longer links Foundation. The bounded remediation for [#83](https://github.com/heirloomlogic/AstronomyKit/issues/83) preserves the model expressions, coefficients and workload lifecycle. Five-trial Linux startup RSS is below the unchanged 11,182,080-byte ceiling, but the aggregate Release workload still exceeds it. The pilot remains unqualified and #83 remains open.
+
+Conditional Darwin/Glibc imports replace Foundation in the scalar math files; PilotTime needs no platform import. A fixed-schema writer replaces JSONEncoder/Data/FileHandle, and POSIX CLOCK_MONOTONIC replaces DispatchTime at the same timing boundaries. The writer sorts keys, omits absent optionals, preserves decoded finite Double and integer values, escapes JSON strings, and rejects nonfinite numbers before writing a record. JSON text may differ from JSONEncoder. The Foundation-only RSS positive control remains unchanged. Tests use Foundation as an independent serialization oracle; it is absent from the measured runner dependency path.
+
+Nine focused Sun tests and five model-data tests pass in Debug and Release on Apple and hosted Linux. Serialization controls cover signed zero, subnormal/maximum finite values, UInt64/Int extremes, omitted fields, status-only errors, Unicode/control escaping, deterministic output and nonfinite rejection. Clock controls cover nondecreasing reads, invalid ranges and both multiplication/addition overflow. Counts, epoch sequence, checksums, warmup and evaluator lifetimes are unchanged. The [preservation receipt](SunPilotFoundationFreeEvidence/preservation.json) verifies 549 historical or locked inputs against the assigned base, including the original reports, root manifest and performance baseline. The four scalar model files are byte-identical after removing their import blocks.
+
+| Complete frozen-C campaign | Debug cases | Release cases | Maximum altitude difference | Other compared coordinates | Fallback perturbation |
+| --- | ---: | ---: | ---: | --- | --- |
+| Apple arm64, Swift 6.4 | 67,240 | 67,240 | 1.1368683772161603e-13° | Exact | Detected in both configurations |
+| Linux x86_64, Swift 6.2.1 | 67,240 | 67,240 | 1.1368683772161603e-13° | Exact | Detected in both configurations |
+
+Time fields, statuses, fallback decisions and iteration counts pass their exact comparisons. These sampled results are regression parity with the locked C engine; they do not establish independent astronomical accuracy, certify intervals or publish solar error bounds. Both campaigns retain the original tolerances and eight intentional fallback perturbations per configuration.
+
+| Linux startup control, five fresh processes | Minimum RSS bytes | Maximum RSS bytes | Unchanged ceiling |
+| --- | ---: | ---: | --- |
+| Minimal Swift | 9,654,272 | 9,768,960 | All below |
+| Foundation-only positive control | 17,297,408 | 17,416,192 | All above |
+| Model-linked control | 9,740,288 | 9,785,344 | All below |
+| Current pilot runner | 9,859,072 | 9,969,664 | All below |
+
+The fresh [RSS report](SunPilotFoundationFreeEvidence/rss-linux-report.json) retains five trials, ldd/ELF/symbol receipts and process mappings sampled while each child was observed blocked in read(fd 0). Foundation is present only on the positive control and absent from both the dynamic-linkage receipts and mappings of the candidate/model/minimal controls. Independent-process peak differences still do not establish additive component costs or causal ownership of residual pages.
+
+The complete Linux Release aggregate workload peaks are 12,271,616, 12,341,248, 12,406,784, 12,419,072 and 12,427,264 bytes; all exceed the unchanged 11,182,080-byte ceiling. Its maximum clean build is 6.9753 seconds, incremental build 1.6391 seconds and stripped binary 14,268,528 bytes, which pass their original absolute observations. Apple's aggregate Release maximum is 7,225,344 bytes, with no exceeded build, size or memory observation. These platform observations do not replace the frozen mixed astronomical latency/throughput gate, which the Sun-only pilot still cannot execute. Memory, comparable runtime and independent reviewed release evidence remain required before #83 closes. This unit does not change caches, model contracts, workloads or thresholds to address the remaining failure.
+
+Evidence binds implementation head `efb9447f222832affee28dc48e00cf92c073f155`, based on PR #132 at `92ed5d4ff0c1c114f162698d12b01ab9621d942a`. Apple tested that clean head locally. Hosted [full campaign 37234730699](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37234730699) and [startup campaign 37234730657](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37234730657) tested clean merge `49c50b9a88553b837d368c244eea9703f75ff2ae` for that source head. Apple and Linux full campaigns have identical source snapshots. The later evidence/documentation commit leaves every measured source hash unchanged; it does not claim new binary execution at the documentation head.
+
+The first candidate `b05db975be2a44df7efaa216f96affb9ff45ffa5` passed Apple but failed the [Linux build](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37234528663): Swift 6.2 treated main.swift as top-level code once the second runner source existed. The final implementation renamed it to Runner.swift with identical contents, then reran both complete platform campaigns. The tracked final evidence uses the corrected source snapshot.
+
+The [Apple report](SunPilotFoundationFreeEvidence/macos-report.json), [Linux report](SunPilotFoundationFreeEvidence/linux-report.json) and RSS report retain original source/toolchain, manifest, binary and command receipts. Their matching `.tar.gz` archives retain raw rows, inputs, logs and compensation source/IR or linkage/mapping records; matching `*-archive.json` files bind archive hashes and enumerate retained paths and omitted executable hashes. Executables remain in the local Apple campaign or hosted Linux artifacts. Source bindings, reported artifact hashes and archives were verified before publication. Reproduce with the commands in [SunPilotProtocol.md](SunPilotProtocol.md), using a fresh output directory. Historical archives remain unchanged.
