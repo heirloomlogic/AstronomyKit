@@ -10,7 +10,7 @@ One unchanged Neptune alignment differs by 60.243447 seconds. It fails the nomin
 
 Old exact production snapshots cannot serve as expected outputs of a repaired model. [Versioned regression evidence](BundledRegressionSnapshots/README.md) retains the original reproduction source and 5,035-row rate archive, lists 67 changed Moon/Pluto literal occurrences, and separately captures 795 updated Moon/Pluto rate rows. Every numerical comparison budget is unchanged. Unaffected bodies retain their original expectations. Historical diagnostic scripts explicitly replay their byte-pinned baseline instead of replacing their reports with repaired outputs.
 
-[Local production cost evidence](bundled-production-costs.json) uses five new process trials per operation with 100,000 distinct TT epochs in an optimized Swift executable. It measures full public state calls, including `AstroTime` construction. This is descriptive evidence from one macOS host; device costs, hosted RSS attribution and the pure-Swift migration performance gates in [#83](https://github.com/heirloomlogic/AstronomyKit/issues/83) remain separate. The historical performance archive is verified as historical evidence and does not qualify this larger shipping model against its old budgets.
+[Local production cost evidence](bundled-production-costs.json) uses five new process trials per operation with 100,000 distinct TT epochs in an optimized Swift executable. It measures full public state calls, including `AstroTime` construction. Measured latency varied under other host workloads; process RSS is about 15 MiB for Moon and 20 MiB for Pluto. This is descriptive evidence from one macOS host; device costs, hosted RSS attribution and the pure-Swift migration performance gates in [#83](https://github.com/heirloomlogic/AstronomyKit/issues/83) remain separate. The historical performance archive is verified as historical evidence and does not qualify this larger shipping model against its old budgets.
 
 ## Reproduction
 
@@ -33,3 +33,7 @@ python3 Scripts/ephemeris/measure-production.py
 ```
 
 Full coefficient regeneration additionally requires the exact DE440s/PLU060 kernels and pinned scientific dependencies listed in the individual source evidence. Large original kernels are development inputs and are not shipped in the package.
+
+## Local validation
+
+The shipping Swift suite passes 713 tests across 188 suites with the existing known polar sunrise issue. Reference tooling passes 101 Python tests; the migration tests pass after deriving the frozen oracle population from its named baseline tree. Generated data integrity, complete compiler constant round-trips, cache positive/negative controls, 30 sanitizer seed inputs and 17,622 binary64/binary128 solar states pass unchanged numerical ceilings. Strict lint passes for the shipping sources/tests, model runner and new cost runner. Hosted CI and independent review are recorded in the pull request.

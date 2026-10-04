@@ -20,16 +20,16 @@
   },
   "summary": {
     "baseline": {
-      "medianMicrosecondsPerStateIncludingTimeConstruction": 6.209,
-      "medianPeakRSSBytes": 8601600
+      "medianMicrosecondsPerStateIncludingTimeConstruction": 7.958,
+      "medianPeakRSSBytes": 8617984
     },
     "moon": {
-      "medianMicrosecondsPerStateIncludingTimeConstruction": 28.08256791,
-      "medianPeakRSSBytes": 15400960
+      "medianMicrosecondsPerStateIncludingTimeConstruction": 124.65816375,
+      "medianPeakRSSBytes": 15417344
     },
     "pluto": {
-      "medianMicrosecondsPerStateIncludingTimeConstruction": 35.36122708,
-      "medianPeakRSSBytes": 21315584
+      "medianMicrosecondsPerStateIncludingTimeConstruction": 78.583045,
+      "medianPeakRSSBytes": 21348352
     }
   },
   "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
@@ -38,111 +38,111 @@
       {
         "checksum": 0,
         "count": 0,
-        "elapsedNanoseconds": 6209,
+        "elapsedNanoseconds": 7958,
         "operation": "baseline",
         "peakRSSBytes": 8601600
       },
       {
         "checksum": 0,
         "count": 0,
-        "elapsedNanoseconds": 11083,
+        "elapsedNanoseconds": 3875084,
         "operation": "baseline",
-        "peakRSSBytes": 8601600
+        "peakRSSBytes": 8634368
       },
       {
         "checksum": 0,
         "count": 0,
-        "elapsedNanoseconds": 5042,
+        "elapsedNanoseconds": 6083,
         "operation": "baseline",
         "peakRSSBytes": 8617984
       },
       {
         "checksum": 0,
         "count": 0,
-        "elapsedNanoseconds": 4625,
+        "elapsedNanoseconds": 10333,
+        "operation": "baseline",
+        "peakRSSBytes": 8617984
+      },
+      {
+        "checksum": 0,
+        "count": 0,
+        "elapsedNanoseconds": 5500,
         "operation": "baseline",
         "peakRSSBytes": 8585216
-      },
-      {
-        "checksum": 0,
-        "count": 0,
-        "elapsedNanoseconds": 6500,
-        "operation": "baseline",
-        "peakRSSBytes": 8617984
       }
     ],
     "moon": [
       {
         "checksum": -0.0832006844869728,
         "count": 100000,
-        "elapsedNanoseconds": 9572171333,
-        "operation": "moon",
-        "peakRSSBytes": 15417344
-      },
-      {
-        "checksum": -0.0832006844869728,
-        "count": 100000,
-        "elapsedNanoseconds": 4623033459,
-        "operation": "moon",
-        "peakRSSBytes": 15417344
-      },
-      {
-        "checksum": -0.0832006844869728,
-        "count": 100000,
-        "elapsedNanoseconds": 2808256791,
+        "elapsedNanoseconds": 5281816750,
         "operation": "moon",
         "peakRSSBytes": 15384576
       },
       {
         "checksum": -0.0832006844869728,
         "count": 100000,
-        "elapsedNanoseconds": 2512718416,
+        "elapsedNanoseconds": 11324627416,
         "operation": "moon",
         "peakRSSBytes": 15400960
       },
       {
         "checksum": -0.0832006844869728,
         "count": 100000,
-        "elapsedNanoseconds": 2417315708,
+        "elapsedNanoseconds": 12465816375,
         "operation": "moon",
-        "peakRSSBytes": 15400960
+        "peakRSSBytes": 15417344
+      },
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 27223298250,
+        "operation": "moon",
+        "peakRSSBytes": 15417344
+      },
+      {
+        "checksum": -0.0832006844869728,
+        "count": 100000,
+        "elapsedNanoseconds": 17279962458,
+        "operation": "moon",
+        "peakRSSBytes": 15417344
       }
     ],
     "pluto": [
       {
         "checksum": 953647.331328496,
         "count": 100000,
-        "elapsedNanoseconds": 3666701416,
-        "operation": "pluto",
-        "peakRSSBytes": 21315584
-      },
-      {
-        "checksum": 953647.331328496,
-        "count": 100000,
-        "elapsedNanoseconds": 3195577791,
-        "operation": "pluto",
-        "peakRSSBytes": 21315584
-      },
-      {
-        "checksum": 953647.331328496,
-        "count": 100000,
-        "elapsedNanoseconds": 4365893084,
+        "elapsedNanoseconds": 7628552667,
         "operation": "pluto",
         "peakRSSBytes": 21331968
       },
       {
         "checksum": 953647.331328496,
         "count": 100000,
-        "elapsedNanoseconds": 3491706542,
+        "elapsedNanoseconds": 5172194583,
         "operation": "pluto",
-        "peakRSSBytes": 21315584
+        "peakRSSBytes": 21331968
       },
       {
         "checksum": 953647.331328496,
         "count": 100000,
-        "elapsedNanoseconds": 3536122708,
+        "elapsedNanoseconds": 50648591375,
         "operation": "pluto",
-        "peakRSSBytes": 21315584
+        "peakRSSBytes": 21348352
+      },
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 40431506958,
+        "operation": "pluto",
+        "peakRSSBytes": 21348352
+      },
+      {
+        "checksum": 953647.331328496,
+        "count": 100000,
+        "elapsedNanoseconds": 7858304500,
+        "operation": "pluto",
+        "peakRSSBytes": 21348352
       }
     ]
   }
