@@ -1,0 +1,7 @@
+Building for production...
+[0/4] Write sources
+[1/4] Write swift-version--6DDE17EDADE5ABEB.txt
+[3/5] Compiling AstronomySunPilotRunner main.swift
+[3/5] Write Objects.LinkFileList
+[4/5] Linking AstronomySunPilotRunner
+Build of product 'AstronomySunPilotRunner' complete! (0.88s)

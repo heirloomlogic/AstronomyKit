@@ -1,0 +1,1145 @@
+{
+  "entries": [
+    {
+      "command": [
+        "swift",
+        "package",
+        "dump-package"
+      ],
+      "cwd": "/tmp/sun-pilot-rss-package-arpd5vic/package",
+      "files": {
+        "stderr": {
+          "path": "0001-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0001-stdout.log",
+          "sha256": "b728c825f538c66a5beadb9debf47aceb48e7eed37fe5e6c0e8e7c8e2c16ee39"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyRSSMinimalSwift",
+        "--scratch-path",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release"
+      ],
+      "cwd": "/tmp/sun-pilot-rss-package-arpd5vic/package",
+      "elapsedSeconds": 0.49825601599999914,
+      "files": {
+        "stderr": {
+          "path": "0002-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0002-stdout.log",
+          "sha256": "64fe66f2f9f9113bf81ea6d444279e8c5f60c3b487f4a7e1b2047a4616068b43"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyRSSFoundationOnly",
+        "--scratch-path",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release"
+      ],
+      "cwd": "/tmp/sun-pilot-rss-package-arpd5vic/package",
+      "elapsedSeconds": 1.316408578000022,
+      "files": {
+        "stderr": {
+          "path": "0003-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0003-stdout.log",
+          "sha256": "126c21197f4124cc97282c59b8857d7913626ace4ee354b3e390c1d2c1eba1f3"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomyRSSModelLinked",
+        "--scratch-path",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release"
+      ],
+      "cwd": "/tmp/sun-pilot-rss-package-arpd5vic/package",
+      "elapsedSeconds": 3.470358616999988,
+      "files": {
+        "stderr": {
+          "path": "0004-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0004-stdout.log",
+          "sha256": "04913723f6d3972c8dda04ddd0d3d1a89062c0289da70796ff7041f68506e402"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "AstronomySunPilotRunner",
+        "--scratch-path",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release"
+      ],
+      "cwd": "/tmp/sun-pilot-rss-package-arpd5vic/package",
+      "elapsedSeconds": 1.0364317580000204,
+      "files": {
+        "stderr": {
+          "path": "0005-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0005-stdout.log",
+          "sha256": "bd72f013742543baf534548028325026d7160a521bf5b99e548cb4a96339e44d"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--show-bin-path",
+        "--scratch-path",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release"
+      ],
+      "cwd": "/tmp/sun-pilot-rss-package-arpd5vic/package",
+      "elapsedSeconds": 0.11709745699999985,
+      "files": {
+        "stderr": {
+          "path": "0006-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0006-stdout.log",
+          "sha256": "9c7a80ce75f262cf05cb10fc2664cdbd11089b301f2fe6fa8793f15382904fe7"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpt8_z0pac",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0007-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0007-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0007-time.log",
+          "sha256": "513d76016dc10d379debfb302a2ff8f278d2fdd5cb97e2fc3b202b6abd7822f5"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpipk1lbvv",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0008-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0008-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0008-time.log",
+          "sha256": "770f67b684822506d58c923c672b643f36f18ed4261568081ef7da847363ce82"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpz3v9cpcy",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0009-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0009-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0009-time.log",
+          "sha256": "0894ca6b1dc08ab46e1f4c83eae21d077e4a6a32c0a672034612abfb18d5c252"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpxcfl35mj",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0010-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0010-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0010-time.log",
+          "sha256": "28e62f91d489f94ff26e508c6586f5f212c981357f49f2a5a447912cdccaabc3"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp8rmx4i8q",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0011-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0011-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0011-time.log",
+          "sha256": "acfad43f0a7cbe80092d0177c04b3ea2ecd22b5afdd247bd1faae74c552fed07"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "file",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.00179292699999678,
+      "files": {
+        "stderr": {
+          "path": "0012-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0012-stdout.log",
+          "sha256": "b09b016b906e811ce97037c5eca9ce3b99b2da8f46e00050688ae3ccded15a1b"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "ldd",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.007196837000009282,
+      "files": {
+        "stderr": {
+          "path": "0013-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0013-stdout.log",
+          "sha256": "805ff62ee265ea172ba4fa5a5da983f11bf42a81b22b7b58abe66353be2420c4"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "nm",
+        "-S",
+        "--size-sort",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.540437484999984,
+      "files": {
+        "stderr": {
+          "path": "0014-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0014-stdout.log",
+          "sha256": "e96eaa9e343123c2e2893d5f7326e9162c78cf5f1490689a6000a6c48882f535"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-l",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0042760569999984455,
+      "files": {
+        "stderr": {
+          "path": "0015-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0015-stdout.log",
+          "sha256": "d432efe8c70bdde349a4e711d53a752ee5d063695a8d98ff36baaf7ba063544e"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-d",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0009225530000094295,
+      "files": {
+        "stderr": {
+          "path": "0016-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0016-stdout.log",
+          "sha256": "41a555ff1cef9595b9bb8fff81cbf365005927cc66dae5a1050fe02350e6d57b"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-n",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.000887610000006589,
+      "files": {
+        "stderr": {
+          "path": "0017-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0017-stdout.log",
+          "sha256": "2d4f439f9d2d92c2480dc2fa814dd56391e084b0346127d69455ec65aae758f4"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp27oti6h9",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0018-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0018-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0018-time.log",
+          "sha256": "494e34cac60a8bdbf8bf2fe5a05d17656337d5fd2a67220003db3b70f8dbfc94"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmphg6zclp2",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0019-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0019-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0019-time.log",
+          "sha256": "226bfc1313af156e589200df5faea8ebc203a5ebe941fbea03557971d6f4f2b7"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmph9smf_h9",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0020-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0020-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0020-time.log",
+          "sha256": "4ca9814faf4b9139d72f81cae1071ac191750bd3f96cad821cfc38de08faf004"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpnrxxbpmb",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0021-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0021-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0021-time.log",
+          "sha256": "46843149f4b2735c768331c74c34467266d67b7b2d3b6a53a0ed5e37e38b5a3d"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpr40s_tfs",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0022-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0022-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0022-time.log",
+          "sha256": "80d41ef02f507d0ca400785f37ab9af5a68b96926c7d04d8055425a9a90a9dfe"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "file",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0015533549999986462,
+      "files": {
+        "stderr": {
+          "path": "0023-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0023-stdout.log",
+          "sha256": "79269020d684d349ed7cf4b7079d537eed0cbfcb5be051aa59d993a5fadcc5c0"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "ldd",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.005707353999980569,
+      "files": {
+        "stderr": {
+          "path": "0024-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0024-stdout.log",
+          "sha256": "2ef61a719aeb114c244f0525bed68b951831011cc395a1f42531c690f39ebc82"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "nm",
+        "-S",
+        "--size-sort",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.03151801299998169,
+      "files": {
+        "stderr": {
+          "path": "0025-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0025-stdout.log",
+          "sha256": "40db4b286eb850412bcefa3b2e93c231e20dfed0ff829ba6fcaa12031cf0d253"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-l",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.001206402000008211,
+      "files": {
+        "stderr": {
+          "path": "0026-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0026-stdout.log",
+          "sha256": "e5c34c621053d3178cbef30cdf48bc45e6521dc1f7c9dc3b7424d1c29eae6c8d"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-d",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0009499249999862514,
+      "files": {
+        "stderr": {
+          "path": "0027-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0027-stdout.log",
+          "sha256": "6194da0c53e34469736cc4d3519d98b6515e79c4f4863a71b56273c69998f231"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-n",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSFoundationOnly"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0008965439999997216,
+      "files": {
+        "stderr": {
+          "path": "0028-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0028-stdout.log",
+          "sha256": "066985b35a2be3ea2535b3050e0b4c8b23c0ae2e8002fc777789974f6030682c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp2hszz1w1",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0029-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0029-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0029-time.log",
+          "sha256": "e14237f95d1388c27cccf0c6ae3f3045155654448025acf436e4af12bb9f81a5"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpjwsrp3sn",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0030-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0030-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0030-time.log",
+          "sha256": "dd77199b9443c2e0ff52c74e57a8831d24f71700b37bc4d8009904a901c197bc"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp4qibk7k9",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0031-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0031-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0031-time.log",
+          "sha256": "f48c038e6b0001115a03990f78175f816514d3010b57e8c0dda391f5b1ed1662"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp56kjaklg",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0032-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0032-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0032-time.log",
+          "sha256": "23230300186ae11265f680b34209fd5ef8ec4c81ac9727c89c1ff05c2811e4b0"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp3690rlpi",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0033-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0033-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0033-time.log",
+          "sha256": "b5ac28774079da82a1908a7182d944319b65974c6ec4c87781a71c333ac2f446"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "file",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0030597919999877377,
+      "files": {
+        "stderr": {
+          "path": "0034-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0034-stdout.log",
+          "sha256": "5d8fe4ee14c4bf519cbe2ed8072d5177f57bf67ed7f2a5008cf22f336532d2cd"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "ldd",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.00561436000000981,
+      "files": {
+        "stderr": {
+          "path": "0035-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0035-stdout.log",
+          "sha256": "2d879cfebd8d8b6b76437df3eda3dd7d59139ec81464f7cf4a234b49c0275789"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "nm",
+        "-S",
+        "--size-sort",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.03079691299998899,
+      "files": {
+        "stderr": {
+          "path": "0036-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0036-stdout.log",
+          "sha256": "ef919c796af03f4f2f9bd91b827001f606957ddb7cd5dc15d5efc5c1a8a2b001"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-l",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0012127810000208683,
+      "files": {
+        "stderr": {
+          "path": "0037-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0037-stdout.log",
+          "sha256": "16acb2c1ec23d72fd47e9855b24dcc0e6573edbb18113614e95d2c495b56e203"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-d",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0009854789999792501,
+      "files": {
+        "stderr": {
+          "path": "0038-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0038-stdout.log",
+          "sha256": "6a68624655feaae231577401c2fd8da682a6906d11edae459f3155c23adb7564"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-n",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSModelLinked"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.000905727999992223,
+      "files": {
+        "stderr": {
+          "path": "0039-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0039-stdout.log",
+          "sha256": "28540cb015a64ff2d5d52027eebf5d2d67df011e6922786246e6b43308eaaa5c"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp5rlb78r_",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner",
+        "--rss-stage",
+        "startup"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0040-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0040-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0040-time.log",
+          "sha256": "99c93f2a7dddac79725c86e6321be3eb04aa7c4a001e96a7ca3bd476ece63203"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpfmuihoez",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner",
+        "--rss-stage",
+        "startup"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0041-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0041-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0041-time.log",
+          "sha256": "a28050c8025695ffe1e9e5e71f357a6a4af0e0996fa1112e00c583827824ca23"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmpqclq1d42",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner",
+        "--rss-stage",
+        "startup"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0042-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0042-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0042-time.log",
+          "sha256": "0a2f799a04735972f711cb390c7513bdf98496aabe2baf66e26ebc911d4d29d7"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp8p3wjes6",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner",
+        "--rss-stage",
+        "startup"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0043-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0043-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0043-time.log",
+          "sha256": "02d5383c534f905f591b9472b4b792b2a70cc18fd54e1fa8823fdebd019772fe"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "/usr/bin/time",
+        "-v",
+        "-o",
+        "/tmp/tmp6a7laf7c",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner",
+        "--rss-stage",
+        "startup"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "files": {
+        "stderr": {
+          "path": "0044-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0044-stdout.log",
+          "sha256": "51ff0d2f0d3a5d61edec31785532ea0d570f8c348d58b15b94ff9c2ca6e926a4"
+        },
+        "time": {
+          "path": "0044-time.log",
+          "sha256": "b294eb605722e6705b51b4e4182bd3aafda1fe52927c7ee9a49d96c163557494"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "file",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.002978227999989258,
+      "files": {
+        "stderr": {
+          "path": "0045-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0045-stdout.log",
+          "sha256": "9bde6ce05e123d90fb5dc688178cb3419ccf69888a7e31d9f16d5e6b3371a7ff"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "ldd",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.005592296000003216,
+      "files": {
+        "stderr": {
+          "path": "0046-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0046-stdout.log",
+          "sha256": "d3b73dde0c008a5d6de1ada78fd4decec4a235565262bf87308cf16602d39cf1"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "nm",
+        "-S",
+        "--size-sort",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.03043553599999882,
+      "files": {
+        "stderr": {
+          "path": "0047-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0047-stdout.log",
+          "sha256": "18e045c8b12c46c99b04b09aaaaf18add724e753aa4da88ca2eee7693c5b8323"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-l",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0011660309999967922,
+      "files": {
+        "stderr": {
+          "path": "0048-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0048-stdout.log",
+          "sha256": "c2cee946a9c2ebd11ade86d33ca080c0a17962b65d4a10bdc83e9c6816f77297"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-d",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0009024430000010852,
+      "files": {
+        "stderr": {
+          "path": "0049-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0049-stdout.log",
+          "sha256": "ff3587fc57dd021541259dd5fcbd5146f4e4251cc219673934fadda15b012588"
+        }
+      },
+      "returncode": 0
+    },
+    {
+      "command": [
+        "readelf",
+        "-W",
+        "-n",
+        "/tmp/sun-pilot-rss-package-arpd5vic/package/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomySunPilotRunner"
+      ],
+      "cwd": "/home/runner/work/AstronomyKit/AstronomyKit",
+      "elapsedSeconds": 0.0008732489999943027,
+      "files": {
+        "stderr": {
+          "path": "0050-stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout": {
+          "path": "0050-stdout.log",
+          "sha256": "d712a6869d455bc1101c3bab04ac9fc7162f4bb199888a5c1b6391d5d6be3245"
+        }
+      },
+      "returncode": 0
+    }
+  ]
+}
