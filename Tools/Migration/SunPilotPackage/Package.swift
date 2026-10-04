@@ -6,7 +6,12 @@ import PackageDescription
 let package = Package(
     name: "AstronomySunPilot",
     platforms: [.macOS(.v15)],
-    products: [.executable(name: "AstronomySunPilotRunner", targets: ["AstronomySunPilotRunner"])],
+    products: [
+        .executable(name: "AstronomySunPilotRunner", targets: ["AstronomySunPilotRunner"]),
+        .executable(name: "AstronomyRSSMinimalSwift", targets: ["AstronomyRSSMinimalSwift"]),
+        .executable(name: "AstronomyRSSFoundationOnly", targets: ["AstronomyRSSFoundationOnly"]),
+        .executable(name: "AstronomyRSSModelLinked", targets: ["AstronomyRSSModelLinked"]),
+    ],
     targets: [
         .target(
             name: "CLibAstronomy", path: "Sources/CLibAstronomy", publicHeadersPath: "include",
@@ -45,6 +50,15 @@ let package = Package(
         .executableTarget(
             name: "AstronomySunPilotRunner", dependencies: ["AstronomyModelPrototype"],
             path: "Tools/Migration/SunPilotRunner"),
+        .executableTarget(
+            name: "AstronomyRSSMinimalSwift",
+            path: "Tools/Migration/SunPilotRSSDiagnostics/MinimalSwiftRunner"),
+        .executableTarget(
+            name: "AstronomyRSSFoundationOnly",
+            path: "Tools/Migration/SunPilotRSSDiagnostics/FoundationOnlyRunner"),
+        .executableTarget(
+            name: "AstronomyRSSModelLinked", dependencies: ["AstronomyModelPrototype"],
+            path: "Tools/Migration/SunPilotRSSDiagnostics/ModelLinkedRunner"),
         .testTarget(name: "AstronomySunPilotTests", dependencies: ["AstronomyModelPrototype", "CLibAstronomy"]),
     ]
 )

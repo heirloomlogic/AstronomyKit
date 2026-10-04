@@ -1,0 +1,31 @@
+
+Elf file type is DYN (Position-Independent Executable file)
+Entry point 0x5ba0
+There are 10 program headers, starting at offset 64
+
+Program Headers:
+  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
+  PHDR           0x000040 0x0000000000000040 0x0000000000000040 0x000230 0x000230 R   0x8
+  INTERP         0x000270 0x0000000000000270 0x0000000000000270 0x00001c 0x00001c R   0x1
+      [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
+  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x021468 0x021468 R E 0x1000
+  LOAD           0x021d20 0x0000000000022d20 0x0000000000022d20 0xd76bae 0xd78080 RW  0x1000
+  DYNAMIC        0x022c90 0x0000000000023c90 0x0000000000023c90 0x0002c0 0x0002c0 RW  0x8
+  NOTE           0x000290 0x0000000000000290 0x0000000000000290 0x000020 0x000020 R   0x8
+  NOTE           0x0002b0 0x00000000000002b0 0x00000000000002b0 0x000044 0x000044 R   0x4
+  GNU_EH_FRAME   0x0203cc 0x00000000000203cc 0x00000000000203cc 0x00109c 0x00109c R   0x4
+  GNU_STACK      0x000000 0x0000000000000000 0x0000000000000000 0x000000 0x000000 RW  0x10
+  GNU_RELRO      0x021d20 0x0000000000022d20 0x0000000000022d20 0x0012e0 0x0012e0 RW  0x8
+
+ Section to Segment mapping:
+  Segment Sections...
+   00     
+   01     .interp 
+   02     .interp .note.gnu.property .note.ABI-tag .note.gnu.build-id .dynsym .dynstr .gnu.hash .gnu.version .gnu.version_r .rela.dyn .rela.plt .init .plt .text .fini swift5_protocols swift5_protocol_conformances swift5_type_metadata swift5_fieldmd swift5_builtin swift5_assocty swift5_capture swift5_reflstr swift5_typeref swift5_mpenum swift5_replace swift5_replac2 swift5_accessible_functions swift5_runtime_attributes swift5_tests .swift_modhash swift5_entry .eh_frame .eh_frame_hdr 
+   03     .fini_array .init_array .data.rel.ro .dynamic .got .got.plt .tm_clone_table .data .rodata .bss 
+   04     .dynamic 
+   05     .note.gnu.property 
+   06     .note.ABI-tag .note.gnu.build-id 
+   07     .eh_frame_hdr 
+   08     
+   09     .fini_array .init_array .data.rel.ro .dynamic .got 

@@ -2,7 +2,7 @@
 
 ## Decision
 
-Issue #83 remains open. The final merged pilot evidence repeats the Linux RSS failure on two clean hosted merge revisions, while the matched C process remains below 3.2 MB. A successful workflow means the evidence campaign completed; both reports retain `qualified: false` and name `peakResidentBytes` as the exceeded fixed budget.
+Issue #83 remains open. In the corrected same-toolchain run, minimal Swift stayed below the 11,182,080-byte ceiling and Foundation-only exceeded it in every trial. The model-linked and unchanged-runner process ranges were separately observed above the Foundation-only range. These independent process peaks do not identify causal ownership, additive component cost, or removable cost. The earlier pilot evidence also repeats the Linux RSS failure on two clean hosted merge revisions, while the matched C process remains below 3.2 MB. A successful workflow means the evidence campaign completed; every qualification report retains `qualified: false`.
 
 ## Existing receipts
 
@@ -12,6 +12,25 @@ Issue #83 remains open. The final merged pilot evidence repeats the Linux RSS fa
 | [37088619287](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37088619287) | `f9d01dcac7c541fd1b7e742f1da34cad96f19c29` | `3405fbc0711b25a393af644a3b8692baf108cbba` | 21,397,504 bytes | 2,977,792 bytes | RSS fails; numerical campaign passes |
 
 The fixed ceiling is 11,182,080 bytes from `performance-baseline.json` with SHA-256 `fb0be646199060b40860f858a210fa5f6b461ecf6aac06741ac0aa1ad027844a`. The two isolated-manifest runs use the same manifest bytes and source hashes; their peak difference is 12,288 bytes. This repeat establishes that the first result was not removed by the final documentation commit. It does not identify which runtime stage makes pages resident.
+
+## Same-toolchain startup controls
+
+[Workflow 37204541003](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37204541003) tested clean merge revision `63c43c630a7380f334ea3f4e8f1b83db2b97869e` for source head `3a1870346ba96fb58a1760ff5564471ed4e61921` with Swift 6.2.1 on x86_64 Linux. One materialized package built four Release executables. Each measurement launched a new process under `/usr/bin/time -v`; every control has five trials.
+
+| Control | Boundary | Peak RSS, five-trial range (median) | Result |
+| --- | --- | ---: | --- |
+| Minimal Swift | Swift standard library, no Foundation or model target | 9,510,912–9,551,872 (9,535,488) bytes | Below ceiling in all trials |
+| Foundation only | Same scalar output through `Data` and `FileHandle`, no model target | 17,149,952–17,256,448 (17,215,488) bytes | Above ceiling in all trials |
+| Model linked | Foundation plus model symbols, without model evaluation on the measured path | 17,297,408–17,436,672 (17,379,328) bytes | Range observed above Foundation-only |
+| Unchanged runner | Existing `AstronomySunPilotRunner --rss-stage startup` | 17,620,992–17,793,024 (17,747,968) bytes | Range observed above Foundation-only |
+
+The model-linked and unchanged-runner ranges are both disjoint above the Foundation-only range. The Foundation-only minimum is 5,967,872 bytes above the ceiling. Minimal Swift remains below the ceiling. Because peak RSS is independently measured for each process and is not additive, the differences among these distributions do not establish candidate-owned cost or show what a candidate change could remove.
+
+The corrected archived [report and raw evidence](SunPilotRSSEvidence/linux-37204541003/report.json) record the evaluated package, complete source hashes, four binary hashes and sizes, 50 build and inspection commands, five raw `/usr/bin/time` records per control, `ldd` output, sorted symbol tables, ELF headers and dynamic sections, and `/proc` mappings. Before every mapping snapshot, the coordinator directly observed the child blocked in the x86_64 Linux `read` syscall with file descriptor zero through `/proc/<pid>/syscall`; the snapshots contain 68, 96, 96, and 97 entries for minimal Swift, Foundation-only, model-linked, and the unchanged runner. The model-linked symbol table contains `SunPilot`, `PilotTime`, and `PilotEvaluator`; the Foundation-only symbol table does not. `hosted-execution.json` binds the archive to the source head, tested merge, and workflow URL.
+
+[Workflow 37203472066](https://github.com/heirloomlogic/AstronomyKit/actions/runs/37203472066) is retained as historical evidence at [linux-37203472066](SunPilotRSSEvidence/linux-37203472066/report.json). Its five-trial RSS observations remain recorded, but its causal classifier and mapping-readiness claim were corrected by workflow 37204541003. The historical archive remains byte-for-byte available and is not the basis for the corrected attribution conclusion.
+
+Reproduce the coordinator checks on any platform with `python3 -m unittest discover -s Scripts/migration -p test_sun_pilot_rss.py -v`. Run the evidence campaign on Linux with `python3 Scripts/migration/sun_pilot_rss.py --output <empty-directory>`. A later environment may produce different RSS values; this conclusion applies to the recorded hosted toolchain and five trials.
 
 ## Original hosted attribution result and correction
 
@@ -64,6 +83,6 @@ Peak RSS is cumulative within each process. A stage difference shows that more p
 
 ## Bounded recommendation and remaining gates
 
-The stage campaign does not replace the 11,182,080-byte ceiling. Before changing coefficients, caches, or evaluation code, a bounded follow-up should separate the same-toolchain Swift executable and runtime floor from pages made resident by linking the isolated pilot package. That check can identify whether any candidate-owned startup cost is removable under the frozen gate; it must preserve the current binary, model, and workload receipts as controls. If the floor remains above the ceiling, report the gate as unresolved rather than growing the budget.
+The stage campaign and same-toolchain controls do not replace the 11,182,080-byte ceiling. The controls separately observe minimal Swift, Foundation-only, model-linked, and unchanged-runner processes while preserving the prior binary, model, and workload receipts. Foundation-only exceeds the ceiling on the recorded toolchain. The independent process distributions do not establish a removable candidate-owned startup cost, so the memory gate remains unresolved.
 
 The native Sun runner still cannot execute the frozen mixed workload containing other planets, lunar state, Pluto, and seasons, so its latency and throughput observations cannot pass that gate. Production integration remains blocked until the original memory and comparable-runtime criteria pass and independent review approves the evidence.
