@@ -16,7 +16,8 @@ POLICY = DOCS / "approved-accuracy-targets.json"
 REPORT = DOCS / "planetary-apsis-assessment.json"
 RAW = ROOT / "Scripts/reference-data/sources/planetary-apsides"
 BINARY = ROOT / ".context/accuracy-qualification/build-runner/debug/AccuracyQualificationRunner"
-POSITION_SPEC = importlib.util.spec_from_file_location("position_events", Path(__file__).with_name("qualify-position-events.py"))
+POSITION_HELPER = Path(__file__).with_name("qualify-position-events.py")
+POSITION_SPEC = importlib.util.spec_from_file_location("position_events", POSITION_HELPER)
 Q = importlib.util.module_from_spec(POSITION_SPEC)
 POSITION_SPEC.loader.exec_module(Q)
 
@@ -420,7 +421,7 @@ def normalized_body_evidence(roots, identity, public, pairing):
 
 
 def input_hashes():
-    paths = [PLAN, POLICY, Path(__file__), Path(__file__).with_name("test_planetary_apsides.py"), ROOT / "Scripts/reference-data/build-accuracy-runner.py", ROOT / "Package.swift"]
+    paths = [PLAN, POLICY, Path(__file__), POSITION_HELPER, Path(__file__).with_name("test_planetary_apsides.py"), ROOT / "Scripts/reference-data/build-accuracy-runner.py", ROOT / "Package.swift"]
     for directory, patterns in [(RAW, ["*.json"]), (ROOT / "Sources/CLibAstronomy", ["*.c", "*.h"]), (ROOT / "Sources/AstronomyKit", ["*.swift"]), (ROOT / "Tools/Migration/AccuracyQualificationRunner", ["*.swift"])]:
         for pattern in patterns:
             paths += sorted(directory.rglob(pattern))

@@ -168,6 +168,19 @@ class PlanetaryApsisTests(unittest.TestCase):
         changed_input = {**later_commit, "inputSHA256": {"source": "changed"}}
         self.assertNotEqual(A.scientific_report(expected), A.scientific_report(changed_input))
 
+    def test_input_hashes_bind_result_neutral_shared_helper_edits(self):
+        helper = ROOT / "Scripts/reference-data/qualify-position-events.py"
+        relative = str(helper.relative_to(ROOT))
+        original = helper.read_bytes()
+        before = A.input_hashes()
+        try:
+            helper.write_bytes(original + b"\n# provenance mutation control\n")
+            after = A.input_hashes()
+        finally:
+            helper.write_bytes(original)
+        self.assertIn(relative, before)
+        self.assertNotEqual(before[relative], after[relative])
+
 
 if __name__ == "__main__":
     unittest.main()
