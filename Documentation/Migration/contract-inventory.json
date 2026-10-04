@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 118,
     "localPatches": 19,
     "publicSwiftAPI": 577,
-    "testOwners": 89,
-    "tests": 979
+    "testOwners": 90,
+    "tests": 986
   },
   "crossCuttingContracts": [
     {
@@ -3772,6 +3772,7 @@
     "Scripts/reference-data/test_polar_reference.py": "44fb87a0b3ec8a6928ba2ffd202da77f71735289cb11f32dae2f6518c5124544",
     "Scripts/reference-data/test_position_events.py": "b13f31912b23a3fae745af0a7767d8a659fe55c79c90b3052b88c246a205240f",
     "Scripts/reference-data/test_range_rate_investigation.py": "55ae0d261f180376a93926e91c3b7cbfec16ed59c3b95c0def7caba057855d9a",
+    "Scripts/reference-data/test_saturn_apsis.py": "6d3a30301b5383862a818d459bed069869e3db3d657cd3001d20974d93818581",
     "Scripts/reference-data/test_source_archive.py": "949b8d3d319553221bbf22034fc033806d41a4ddd76191a57ae859b8b6c52a91",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
@@ -13445,6 +13446,13 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_range_rate_investigation.py",
       "testCount": 9
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_saturn_apsis.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_saturn_apsis.py",
+      "testCount": 7
     },
     {
       "classification": "invariant",
