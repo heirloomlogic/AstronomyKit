@@ -1,0 +1,42 @@
+
+Dynamic section at offset 0x3cf0 contains 39 entries:
+  Tag        Type                         Name/Value
+ 0x0000000000000003 (PLTGOT)             0x4fe8
+ 0x0000000000000002 (PLTRELSZ)           768 (bytes)
+ 0x0000000000000017 (JMPREL)             0x10e8
+ 0x0000000000000014 (PLTREL)             RELA
+ 0x0000000000000007 (RELA)               0xfb0
+ 0x0000000000000008 (RELASZ)             312 (bytes)
+ 0x0000000000000009 (RELAENT)            24 (bytes)
+ 0x000000006ffffff9 (RELACOUNT)          4
+ 0x0000000000000015 (DEBUG)              0x0
+ 0x0000000000000006 (SYMTAB)             0x2f8
+ 0x000000000000000b (SYMENT)             24 (bytes)
+ 0x0000000000000005 (STRTAB)             0x718
+ 0x000000000000000a (STRSZ)              1981 (bytes)
+ 0x000000006ffffef5 (GNU_HASH)           0xed8
+ 0x0000000000000001 (NEEDED)             Shared library: [libswiftCore.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libswift_Concurrency.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libswift_StringProcessing.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libswift_RegexParser.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libswiftGlibc.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libBlocksRuntime.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libdispatch.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libswiftDispatch.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libFoundation.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libFoundationEssentials.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libFoundationInternationalization.so]
+ 0x0000000000000001 (NEEDED)             Shared library: [libm.so.6]
+ 0x0000000000000001 (NEEDED)             Shared library: [libc.so.6]
+ 0x000000000000000c (INIT)               0x13e8
+ 0x000000000000000d (FINI)               0x2f40
+ 0x000000000000001a (FINI_ARRAY)         0x4cd0
+ 0x000000000000001c (FINI_ARRAYSZ)       8 (bytes)
+ 0x0000000000000019 (INIT_ARRAY)         0x4cd8
+ 0x000000000000001b (INIT_ARRAYSZ)       16 (bytes)
+ 0x000000000000001d (RUNPATH)            Library runpath: [/opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux:$ORIGIN]
+ 0x000000006ffffffb (FLAGS_1)            Flags: PIE
+ 0x000000006ffffff0 (VERSYM)             0xf08
+ 0x000000006ffffffe (VERNEED)            0xf60
+ 0x000000006fffffff (VERNEEDNUM)         1
+ 0x0000000000000000 (NULL)               0x0

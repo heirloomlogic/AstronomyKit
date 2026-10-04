@@ -1,0 +1,8 @@
+[0/1] Planning build
+Building for production...
+[0/4] Write sources
+[1/4] Write swift-version--6DDE17EDADE5ABEB.txt
+[3/5] Compiling AstronomyRSSFoundationOnly main.swift
+[3/5] Write Objects.LinkFileList
+[4/5] Linking AstronomyRSSFoundationOnly
+Build of product 'AstronomyRSSFoundationOnly' complete! (2.29s)

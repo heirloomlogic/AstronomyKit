@@ -1,0 +1,68 @@
+561339963000-561339965000 r-xp 00000000 08:01 9700711                    $PACKAGE/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift
+561339965000-561339966000 r--p 00001000 08:01 9700711                    $PACKAGE/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift
+561339966000-561339967000 rw-p 00002000 08:01 9700711                    $PACKAGE/.build/rss-attribution-release/x86_64-unknown-linux-gnu/release/AstronomyRSSMinimalSwift
+56136b913000-56136b934000 rw-p 00000000 00:00 0                          [heap]
+7f9d17e00000-7f9d17e9d000 r--p 00000000 08:01 6449                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7f9d17e9d000-7f9d17fe5000 r-xp 0009d000 08:01 6449                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7f9d17fe5000-7f9d1806c000 r--p 001e5000 08:01 6449                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7f9d1806c000-7f9d18077000 r--p 0026b000 08:01 6449                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7f9d18077000-7f9d1807a000 rw-p 00276000 08:01 6449                       /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.33
+7f9d1807a000-7f9d1807e000 rw-p 00000000 00:00 0 
+7f9d18117000-7f9d18127000 r--p 00000000 08:01 34908                      /usr/lib/x86_64-linux-gnu/libm.so.6
+7f9d18127000-7f9d181a6000 r-xp 00010000 08:01 34908                      /usr/lib/x86_64-linux-gnu/libm.so.6
+7f9d181a6000-7f9d181fe000 r--p 0008f000 08:01 34908                      /usr/lib/x86_64-linux-gnu/libm.so.6
+7f9d181fe000-7f9d181ff000 r--p 000e7000 08:01 34908                      /usr/lib/x86_64-linux-gnu/libm.so.6
+7f9d181ff000-7f9d18200000 rw-p 000e8000 08:01 34908                      /usr/lib/x86_64-linux-gnu/libm.so.6
+7f9d18200000-7f9d18228000 r--p 00000000 08:01 34905                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f9d18228000-7f9d183b1000 r-xp 00028000 08:01 34905                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f9d183b1000-7f9d18400000 r--p 001b1000 08:01 34905                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f9d18400000-7f9d18404000 r--p 001ff000 08:01 34905                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f9d18404000-7f9d18406000 rw-p 00203000 08:01 34905                      /usr/lib/x86_64-linux-gnu/libc.so.6
+7f9d18406000-7f9d18413000 rw-p 00000000 00:00 0 
+7f9d18438000-7f9d1843d000 rw-p 00000000 00:00 0 
+7f9d1843d000-7f9d1843f000 r-xp 00000000 08:01 9438366                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libBlocksRuntime.so
+7f9d1843f000-7f9d18440000 r--p 00001000 08:01 9438366                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libBlocksRuntime.so
+7f9d18440000-7f9d18441000 rw-p 00002000 08:01 9438366                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libBlocksRuntime.so
+7f9d18441000-7f9d1844e000 r-xp 00000000 08:01 9438389                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftGlibc.so
+7f9d1844e000-7f9d1844f000 r--p 0000c000 08:01 9438389                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftGlibc.so
+7f9d1844f000-7f9d18450000 rw-p 0000d000 08:01 9438389                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftGlibc.so
+7f9d18450000-7f9d18451000 rw-p 00000000 00:00 0 
+7f9d18451000-7f9d1849a000 r-xp 00000000 08:01 9438381                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libdispatch.so
+7f9d1849a000-7f9d184ac000 r--p 00048000 08:01 9438381                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libdispatch.so
+7f9d184ac000-7f9d184ad000 rw-p 0005a000 08:01 9438381                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libdispatch.so
+7f9d184ad000-7f9d184b0000 rw-p 00000000 00:00 0 
+7f9d184b0000-7f9d184b4000 r--p 00000000 08:01 6451                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9d184b4000-7f9d184d8000 r-xp 00004000 08:01 6451                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9d184d8000-7f9d184dc000 r--p 00028000 08:01 6451                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9d184dc000-7f9d184dd000 r--p 0002b000 08:01 6451                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9d184dd000-7f9d184de000 rw-p 0002c000 08:01 6451                       /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7f9d184e2000-7f9d184e8000 rw-p 00000000 00:00 0 
+7f9d184e8000-7f9d185de000 r-xp 00000000 08:01 9438399                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_RegexParser.so
+7f9d185de000-7f9d185df000 ---p 000f6000 08:01 9438399                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_RegexParser.so
+7f9d185df000-7f9d185e4000 r--p 000f6000 08:01 9438399                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_RegexParser.so
+7f9d185e4000-7f9d185f5000 rw-p 000fb000 08:01 9438399                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_RegexParser.so
+7f9d185f5000-7f9d18600000 rw-p 00000000 00:00 0 
+7f9d18600000-7f9d18bb2000 r-xp 00000000 08:01 9438384                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftCore.so
+7f9d18bb2000-7f9d18bc7000 r--p 005b1000 08:01 9438384                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftCore.so
+7f9d18bc7000-7f9d18cb8000 rw-p 005c6000 08:01 9438384                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftCore.so
+7f9d18cb8000-7f9d18cc4000 r--p 006b7000 08:01 9438384                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswiftCore.so
+7f9d18cc4000-7f9d18cef000 rw-p 00000000 00:00 0 
+7f9d18cf0000-7f9d18cf4000 rw-p 00000000 00:00 0 
+7f9d18cf4000-7f9d18d99000 r-xp 00000000 08:01 9438400                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_StringProcessing.so
+7f9d18d99000-7f9d18d9e000 r--p 000a4000 08:01 9438400                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_StringProcessing.so
+7f9d18d9e000-7f9d18da8000 rw-p 000a9000 08:01 9438400                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_StringProcessing.so
+7f9d18da8000-7f9d18dad000 rw-p 00000000 00:00 0 
+7f9d18dad000-7f9d18e3e000 r-xp 00000000 08:01 9438397                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_Concurrency.so
+7f9d18e3e000-7f9d18e42000 r--p 00090000 08:01 9438397                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_Concurrency.so
+7f9d18e42000-7f9d18e4b000 rw-p 00094000 08:01 9438397                    /opt/hostedtoolcache/swift-Ubuntu/6.2.1/x64/usr/lib/swift/linux/libswift_Concurrency.so
+7f9d18e4b000-7f9d18e52000 rw-p 00000000 00:00 0 
+7f9d18e52000-7f9d18e56000 r--p 00000000 00:00 0                          [vvar]
+7f9d18e56000-7f9d18e58000 r--p 00000000 00:00 0                          [vvar_vclock]
+7f9d18e58000-7f9d18e5a000 r-xp 00000000 00:00 0                          [vdso]
+7f9d18e5a000-7f9d18e5b000 r--p 00000000 08:01 34902                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f9d18e5b000-7f9d18e86000 r-xp 00001000 08:01 34902                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f9d18e86000-7f9d18e90000 r--p 0002c000 08:01 34902                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f9d18e90000-7f9d18e92000 r--p 00036000 08:01 34902                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7f9d18e92000-7f9d18e94000 rw-p 00038000 08:01 34902                      /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffc730b5000-7ffc730d7000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
