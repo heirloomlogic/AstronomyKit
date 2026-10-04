@@ -161,6 +161,13 @@ class PlanetaryApsisTests(unittest.TestCase):
         for query in queries:
             self.assertEqual(plan_hash, json.loads(query.read_bytes())["planSHA256"])
 
+    def test_scientific_report_ignores_only_commit_time_git_receipt(self):
+        expected = {"candidateRevision": "old", "candidateDirty": False, "inputSHA256": {"source": "bound"}, "totals": {"paired": 2}}
+        later_commit = {**expected, "candidateRevision": "later", "candidateDirty": True}
+        self.assertEqual(A.scientific_report(expected), A.scientific_report(later_commit))
+        changed_input = {**later_commit, "inputSHA256": {"source": "changed"}}
+        self.assertNotEqual(A.scientific_report(expected), A.scientific_report(changed_input))
+
 
 if __name__ == "__main__":
     unittest.main()

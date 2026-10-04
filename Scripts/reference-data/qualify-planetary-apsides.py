@@ -427,6 +427,11 @@ def input_hashes():
     return {str(path.relative_to(ROOT)): digest(path.read_bytes()) for path in sorted(set(paths))}
 
 
+def scientific_report(report):
+    """Return the source-bound result without the commit-time Git receipt."""
+    return {key: value for key, value in report.items() if key not in {"candidateRevision", "candidateDirty"}}
+
+
 def acquire():
     for body_name, body in load_plan()["bodies"].items():
         roots, _ = references(body_name, body, True)
@@ -488,6 +493,10 @@ def assess(binary):
         "candidateDirty": bool(subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT, text=True).strip()),
         "planSHA256": digest(PLAN.read_bytes()),
         "inputSHA256": input_hashes(),
+        "coordinatorProtocol": {
+            "version": 1,
+            "scriptSHA256": digest(Path(__file__).read_bytes()),
+        },
         "referenceConventions": plan["referenceSource"],
         "executableProvenance": {
             "path": str(binary.resolve().relative_to(ROOT)) if binary.resolve().is_relative_to(ROOT) else str(binary.resolve()),
@@ -534,7 +543,7 @@ def main():
             raise ValueError("planetary apsis report already frozen")
         REPORT.write_bytes(data)
         print(json.dumps(report["totals"], sort_keys=True))
-    elif REPORT.read_bytes() != data:
+    elif scientific_report(json.loads(REPORT.read_bytes())) != scientific_report(report):
         raise ValueError("planetary apsis report drift")
     else:
         print("Offline planetary apsis replay matched: " + json.dumps(report["totals"], sort_keys=True))
