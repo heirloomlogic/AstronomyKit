@@ -161,6 +161,15 @@ def retain_command_output(output, name, command, binary):
     return {"path": path.relative_to(output).as_posix(), "sha256": MEASURE.sha256(path)}
 
 
+def validate_mapping_snapshot(name, contents):
+    count = len(contents.splitlines())
+    if count < 20:
+        raise ValueError(f"{name} mapping snapshot was captured before the runtime finished loading")
+    if name != "minimalSwift" and "libFoundation.so" not in contents:
+        raise ValueError(f"{name} mapping snapshot has no Foundation mapping")
+    return count
+
+
 def retain_mapping(output, name, binary, arguments, package):
     process = subprocess.Popen([str(binary), *arguments], cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     maps_path = Path(f"/proc/{process.pid}/maps")
@@ -172,7 +181,12 @@ def retain_mapping(output, name, binary, arguments, package):
     if process.poll() is not None or not maps_path.exists():
         stdout, stderr = process.communicate(timeout=1)
         raise RuntimeError(f"{name} did not remain alive for a mapping snapshot: {stdout}{stderr}")
+    time.sleep(0.1)
+    if process.poll() is not None:
+        stdout, stderr = process.communicate(timeout=1)
+        raise RuntimeError(f"{name} exited before the mapping snapshot: {stdout}{stderr}")
     contents = maps_path.read_text().replace(str(package), "$PACKAGE")
+    mapping_count = validate_mapping_snapshot(name, contents)
     path = output / "linkage" / f"{name}.proc-maps.txt"
     path.write_text(contents)
     stdout, stderr = process.communicate(input="", timeout=5)
@@ -181,7 +195,7 @@ def retain_mapping(output, name, binary, arguments, package):
     return {
         "path": path.relative_to(output).as_posix(),
         "sha256": MEASURE.sha256(path),
-        "mappingCount": len(contents.splitlines()),
+        "mappingCount": mapping_count,
         "snapshotPoint": "ready for stdin before scalar output" if arguments else "unchanged runner ready for numerical stdin",
     }
 

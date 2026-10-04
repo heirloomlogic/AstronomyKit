@@ -63,6 +63,14 @@ class SunPilotRSSControlTests(unittest.TestCase):
         self.assertFalse(result["modelLinkageRangeSeparatedFromFoundation"])
         self.assertEqual(result["decision"], "no-separated-candidate-linkage-cost")
 
+    def test_mapping_snapshot_requires_loaded_runtime_and_foundation(self):
+        loaded = "\n".join(["mapping"] * 20 + ["/usr/lib/swift/linux/libFoundation.so"])
+        self.assertEqual(MODULE.validate_mapping_snapshot("foundationOnly", loaded), 21)
+        with self.assertRaisesRegex(ValueError, "before the runtime finished loading"):
+            MODULE.validate_mapping_snapshot("minimalSwift", "\n".join(["mapping"] * 12))
+        with self.assertRaisesRegex(ValueError, "Foundation mapping"):
+            MODULE.validate_mapping_snapshot("modelLinked", "\n".join(["mapping"] * 21))
+
 
 if __name__ == "__main__":
     unittest.main()
