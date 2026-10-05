@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 118,
     "localPatches": 19,
     "publicSwiftAPI": 577,
-    "testOwners": 91,
-    "tests": 1015
+    "testOwners": 92,
+    "tests": 1022
   },
   "crossCuttingContracts": [
     {
@@ -3741,6 +3741,7 @@
     "MAINTAINING.md": "b862ad5eaf3b679d43f991ff1f021934a413a2881d38df0d33030d24bc4679d1",
     "Scripts/ephemeris/test_lunar_bundle.py": "a1eb8f4eca38531eab3d952f159a607675bee57bfec3aa9905b4640d9ea556df",
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
+    "Scripts/migration/test_compare_sun_pilot_allocations.py": "d74b53b92888ccd0555c90bd2490e651aab782831c9fc578d8adbe3b6b3b9301",
     "Scripts/migration/test_comparison.py": "64772ae05b99400ded4377c96d9a159ef3e1e589aa03f83c24f18ca24e658883",
     "Scripts/migration/test_foundation.py": "bb9225d194aa3037e9d24a86144a7da708edb9f933d96752b852b9c5a8c26a0f",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
@@ -3862,7 +3863,7 @@
     "Tests/AstronomyKitTests/TransitTests.swift": "30b58e28857f43079a02b0ce078a6502e08effe5b8da64c14c045695b08eb0b5",
     "Tests/AstronomyKitTests/VsopCacheTests.swift": "8bd6fbd8643eccb65271eaddcd2ac518ea7281766f4f749b3d2b44146ad13827",
     "Tests/AstronomyModelPrototypeTests/ModelDataTests.swift": "f54955cd587247c60435f30a9ed16618300146e8bb58766dda017de582c05aef",
-    "Tests/AstronomySunPilotTests/SunPilotTests.swift": "f646cbf5a19f4cbd077ba958b7c2a4e61a2058d8305592fae368d33d67453beb"
+    "Tests/AstronomySunPilotTests/SunPilotTests.swift": "afb881bc268fed7e9a38d917643458463de2aec668ca0132d0d3713c2a732091"
   },
   "localPatches": [
     {
@@ -13232,6 +13233,13 @@
       "testCount": 3
     },
     {
+      "classification": "invariant",
+      "id": "Scripts/migration/test_compare_sun_pilot_allocations.py",
+      "migrationIssue": 83,
+      "path": "Scripts/migration/test_compare_sun_pilot_allocations.py",
+      "testCount": 5
+    },
+    {
       "classification": "independent-reference",
       "id": "Scripts/migration/test_comparison.py",
       "migrationIssue": 80,
@@ -13852,7 +13860,7 @@
       "id": "Tests/AstronomySunPilotTests/SunPilotTests.swift",
       "migrationIssue": 83,
       "path": "Tests/AstronomySunPilotTests/SunPilotTests.swift",
-      "testCount": 10
+      "testCount": 12
     }
   ]
 }

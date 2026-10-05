@@ -25,18 +25,6 @@ struct PilotMatrix {
 struct PilotOrientation {
     static let radians = Double.pi / 180.0
     static let arcsecond = 4.848136811095359935899141e-6
-    struct Term: Sendable {
-        let multipliers: [Double]
-        let coefficients: [Double]
-    }
-    static let rows = (0..<PrototypeModelData.nutationRowCount).map { index in
-        guard let row = PrototypeModelData.nutationRow(at: index) else {
-            preconditionFailure("Generated nutation metadata exceeds its row table")
-        }
-        return Term(
-            multipliers: row.multipliers.map(Double.init),
-            coefficients: row.coefficientBits.map { Double(bitPattern: $0) })
-    }
     let psi, eps, meanObliquity: Double
     let precession, nutation: PilotMatrix
 
@@ -56,14 +44,20 @@ struct PilotOrientation {
         ]
         var p = 0.0
         var e = 0.0
-        for row in Self.rows.reversed() {
+        for index in stride(from: PrototypeModelData.nutationRowCount - 1, through: 0, by: -1) {
+            guard let row = PrototypeModelData.nutationTerm(at: index) else {
+                preconditionFailure("Generated nutation metadata exceeds its row table")
+            }
             var arg = 0.0
-            for j in 0..<5 { arg += row.multipliers[j] * args[j] }
+            arg += row.m0 * args[0]
+            arg += row.m1 * args[1]
+            arg += row.m2 * args[2]
+            arg += row.m3 * args[3]
+            arg += row.m4 * args[4]
             let sarg = sin(arg)
             let carg = cos(arg)
-            let c = row.coefficients
-            p += (c[0] + c[1] * t) * sarg + c[2] * carg
-            e += (c[3] + c[4] * t) * carg + c[5] * sarg
+            p += (row.c0 + row.c1 * t) * sarg + row.c2 * carg
+            e += (row.c3 + row.c4 * t) * carg + row.c5 * sarg
         }
         psi = -0.000135 + p * 1e-7
         eps = 0.000388 + e * 1e-7
