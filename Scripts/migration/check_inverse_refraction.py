@@ -20,7 +20,8 @@ import time
 ROOT = Path(__file__).resolve().parents[2]
 HOME = ROOT / "Tools/Migration/InverseRefraction147"
 PROTOCOL = ROOT / "Documentation/Migration/inverse-refraction-147-protocol.json"
-TOOLS = [Path(__file__), HOME / "Probe.swift", HOME / "Package.swift.txt", PROTOCOL]
+STRADDLE_PROTOCOL = ROOT / "Documentation/Migration/inverse-refraction-147-straddle-protocol.json"
+TOOLS = [Path(__file__), HOME / "Probe.swift", HOME / "Package.swift.txt"]
 EVIDENCE = HOME / "Evidence"
 EVIDENCE_MANIFEST_SHA256 = "707c9dd4aaacbb9f808638da450fd83643776e846b76b08fb5a3a8c0a2a6ee0f"
 
@@ -109,12 +110,12 @@ def hashes(files):
     return {name: sha(data) for name, data in sorted(files.items())}
 
 
-def acquire(output, revision):
+def acquire(output, revision, protocol_path=PROTOCOL):
     output.mkdir(parents=True, exist_ok=False)  # Reserve before any build or fresh process.
-    protocol = load(PROTOCOL)
+    protocol = load(protocol_path)
     cases = selection(protocol)
     tool_revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    tools = {path.relative_to(ROOT).as_posix(): path.read_bytes() for path in TOOLS}
+    tools = {path.relative_to(ROOT).as_posix(): path.read_bytes() for path in TOOLS + [protocol_path]}
     for name, data in tools.items():
         if data != subprocess.check_output(["git", "show", tool_revision + ":" + name], cwd=ROOT):
             raise ValueError("commit probe tooling before acquisition: " + name)
@@ -149,11 +150,11 @@ def acquire(output, revision):
         save(output / "raw-processes.json.gz", packets)  # Custody precedes parsing/assessment.
     if hashes({name: (package / name).read_bytes() for name in files}) != receipt["inputSHA256"] or sha(binary.read_bytes()) != receipt["binarySHA256"]:
         raise ValueError("inputs or executable changed during execution")
-    return validate(output)
+    return validate(output, protocol_path)
 
 
-def validate(folder):
-    protocol = load(PROTOCOL)
+def validate(folder, protocol_path=PROTOCOL):
+    protocol = load(protocol_path)
     receipt = load(folder / "build-receipt.json.gz")
     manifest_data = (EVIDENCE / "manifest.json").read_bytes()
     if sha(manifest_data) != EVIDENCE_MANIFEST_SHA256:
@@ -165,8 +166,8 @@ def validate(folder):
         if sha(path.read_bytes()) != manifest["filesSHA256"][str(path.relative_to(EVIDENCE))]:
             raise ValueError("registered build receipt differs")
         registered[load(path)["binarySHA256"]] = label
-    tools = {path.relative_to(ROOT).as_posix(): subprocess.check_output(["git", "show", receipt["toolRevision"] + ":" + path.relative_to(ROOT).as_posix()], cwd=ROOT) for path in TOOLS}
-    if receipt["toolSHA256"] != hashes(tools) or tools[PROTOCOL.relative_to(ROOT).as_posix()] != PROTOCOL.read_bytes():
+    tools = {path.relative_to(ROOT).as_posix(): subprocess.check_output(["git", "show", receipt["toolRevision"] + ":" + path.relative_to(ROOT).as_posix()], cwd=ROOT) for path in TOOLS + [protocol_path]}
+    if receipt["toolSHA256"] != hashes(tools) or tools[protocol_path.relative_to(ROOT).as_posix()] != protocol_path.read_bytes():
         raise ValueError("tool/protocol identity differs")
     original = source_files(receipt["sourceRevision"])
     original_manifest = sha(original.pop("Package.swift"))
@@ -312,6 +313,49 @@ def assess(current, baseline=None, write=True):
     return assessment
 
 
+def straddle_neighbors(protocol):
+    neighbors = {value: [repr(math.nextafter(float(value), direction)) for direction in (-math.inf, math.inf)] for value in protocol["straddles"]}
+    if protocol["inputs"] != [name for value in protocol["straddles"] for name in [value, *neighbors[value]]]:
+        raise ValueError("straddle population differs from its adjacent doubles")
+    return neighbors
+
+
+def assess_straddle(current, pre_repair, write=True):
+    protocol = load(STRADDLE_PROTOCOL)
+    neighbors = straddle_neighbors(protocol)
+    cases = selection(protocol)
+    if load(pre_repair / "build-receipt.json.gz")["sourceRevision"] != protocol["preRepairRevision"]:
+        raise ValueError("pre-repair revision differs")
+    saved = dict(zip(cases, validate(pre_repair, STRADDLE_PROTOCOL)))
+    results = dict(zip(cases, validate(current, STRADDLE_PROTOCOL)))
+    for case, result in results.items():
+        if saved[case] is None or result is None or not result["finite"] or (case[2] == "horizon" and not result["timePreserved"]):
+            raise ValueError("straddle termination/result expectation failed")
+    for (mode, value, route, model), result in results.items():
+        before = saved[(mode, value, route, model)]
+        if mode != "normal" or value not in neighbors:
+            if before != result:
+                raise ValueError("payload outside the straddle repair changed")
+        elif route == "direct":
+            if before["correctionBits"] != "0":
+                raise ValueError("pre-repair straddle did not return zero correction")
+            if result["correctionBits"] == "0" or result["correctionBits"] not in {results[(mode, name, route, model)]["correctionBits"] for name in neighbors[value]}:
+                raise ValueError("straddle correction is not an adjacent converged inverse")
+        else:
+            uncorrected = saved[("none", value, route, model)]["vectorBits"]
+            if before["vectorBits"] != uncorrected:
+                raise ValueError("pre-repair straddle vector was corrected")
+            if result["vectorBits"] == uncorrected:
+                raise ValueError("straddle vector kept zero correction")
+    assessment = {"currentProcesses": len(results), "preRepairProcesses": len(saved), "repairedStraddleProcesses": len(neighbors) * len(protocol["routes"]) * len(protocol["models"]),
+                  "unchangedPayloads": len(results) - len(neighbors) * len(protocol["routes"]) * len(protocol["models"]),
+                  "currentReceiptSHA256": sha((current / "build-receipt.json.gz").read_bytes()),
+                  "preRepairReceiptSHA256": sha((pre_repair / "build-receipt.json.gz").read_bytes())}
+    if write:
+        save(current / "assessment.json", assessment)
+    return assessment
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--acquire", type=Path)
@@ -319,11 +363,16 @@ if __name__ == "__main__":
     parser.add_argument("--current", type=Path)
     parser.add_argument("--baseline", type=Path)
     parser.add_argument("--check-archive", action="store_true")
+    parser.add_argument("--straddle", action="store_true", help="Use the adjacent-double straddle protocol; --current then requires the pre-repair record as --baseline.")
     arguments = parser.parse_args()
     if arguments.check_archive:
         print(dumps(check_archive()))
     elif arguments.acquire:
-        acquire(arguments.acquire.resolve(), arguments.revision)
+        acquire(arguments.acquire.resolve(), arguments.revision, STRADDLE_PROTOCOL if arguments.straddle else PROTOCOL)
+    elif arguments.current and arguments.straddle:
+        if not arguments.baseline:
+            parser.error("--straddle --current requires the pre-repair record as --baseline")
+        print(dumps(assess_straddle(arguments.current.resolve(), arguments.baseline.resolve())))
     elif arguments.current:
         print(dumps(assess(arguments.current.resolve(), arguments.baseline.resolve() if arguments.baseline else None)))
     else:

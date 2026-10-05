@@ -16,6 +16,58 @@ class InverseRefractionControls(unittest.TestCase):
         self.assertEqual(312, len(cases))
         self.assertEqual(312, len(set(cases)))
 
+    def test_straddle_population_is_frozen_with_adjacent_doubles(self):
+        protocol = M.load(M.STRADDLE_PROTOCOL)
+        cases = M.selection(protocol)
+        self.assertEqual((324, 324, 9), (len(cases), len(set(cases)), len(M.straddle_neighbors(protocol))))
+        protocol["inputs"][1], protocol["inputs"][2] = protocol["inputs"][2], protocol["inputs"][1]
+        with self.assertRaisesRegex(ValueError, "adjacent doubles"):
+            M.straddle_neighbors(protocol)
+
+    def test_straddle_assessment_requires_adjacent_inverse_and_unchanged_payloads(self):
+        protocol = M.load(M.STRADDLE_PROTOCOL)
+        cases = M.selection(protocol)
+        neighbors = M.straddle_neighbors(protocol)
+
+        def payloads(repaired):
+            result = []
+            for mode, value, route, model in cases:
+                straddle = mode == "normal" and value in neighbors
+                if route == "direct":
+                    bits = "0" if mode == "none" or (straddle and not repaired) else ("c" + neighbors[value][0][-4:] if straddle else "c" + value[-4:])
+                    result.append({"correctionBits": bits, "finite": True})
+                else:
+                    corrected = mode != "none" and (repaired or not straddle)
+                    result.append({"vectorBits": [mode if corrected else "none", value, model], "finite": True, "timePreserved": True})
+            return result
+        with tempfile.TemporaryDirectory() as name:
+            current, pre_repair = Path(name) / "current", Path(name) / "pre-repair"
+            for folder, revision in ((current, "repaired"), (pre_repair, protocol["preRepairRevision"])):
+                folder.mkdir()
+                M.save(folder / "build-receipt.json.gz", {"sourceRevision": revision})
+            straddle = cases.index(("normal", protocol["straddles"][0], "direct", "espenakMeeus"))
+            vector = cases.index(("normal", protocol["straddles"][0], "horizon", "espenakMeeus"))
+            unaffected = cases.index(("jplHorizons", protocol["straddles"][0], "direct", "espenakMeeus"))
+            mutations = [(None, None, None), (1, straddle, {"correctionBits": "0", "finite": True}),
+                         (1, straddle, {"correctionBits": "c0000", "finite": True}),
+                         (1, unaffected, {"correctionBits": "c0001", "finite": True}),
+                         (0, straddle, {"correctionBits": "c0002", "finite": True}),
+                         (1, vector, {"vectorBits": ["none", protocol["straddles"][0], "espenakMeeus"], "finite": True, "timePreserved": True})]
+            for record, index, replacement in mutations:
+                records = [payloads(False), payloads(True)]
+                if record is not None:
+                    records[record][index] = replacement
+
+                def validate(folder, protocol_path):
+                    self.assertEqual(M.STRADDLE_PROTOCOL, protocol_path)
+                    return records[folder == current]
+                with self.subTest(record=record, index=index), patch.object(M, "validate", validate):
+                    if record is None:
+                        self.assertEqual(288, M.assess_straddle(current, pre_repair, write=False)["unchangedPayloads"])
+                    else:
+                        with self.assertRaises(ValueError):
+                            M.assess_straddle(current, pre_repair, write=False)
+
     def test_existing_output_rejects_before_execution(self):
         with tempfile.TemporaryDirectory() as name, patch.object(M, "process") as process:
             with self.assertRaises(FileExistsError):
