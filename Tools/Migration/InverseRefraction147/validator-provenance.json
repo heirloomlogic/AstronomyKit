@@ -1,0 +1,17 @@
+{
+  "activeChange": "Immutable full execution-record registration and local runtime/source corroboration; the probe replaces a force unwrap with an invalid-argument guard. Original measured tooling remains authenticated by its recorded Git revision; production source bytes match ca7b075b.",
+  "activeSHA256": {
+    "Scripts/migration/check_current_search.py": "fdf8b6e4fd29c3d5251cbf4fc6609e8d1940d9b9c8dd97721cc7e3dc0f3afc05",
+    "Scripts/migration/check_inverse_refraction.py": "ee964c01989da67f0af58b26d9bddb373ce1632562574127c2fec23e008f271b",
+    "Scripts/reference-data/check-current-seasonal-search.py": "7ae612ad69acf7c74f405e974a1602812330caa2d780f948e49da12cf6842451",
+    "Scripts/reference-data/source_archive.py": "214c9a799d3c73328816afadfe0269b1030eecb1b679cdbccf6c07dc38e69e38",
+    "Tools/Migration/InverseRefraction147/Probe.swift": "0cab88a1ef7af79d069964c33aa020eb9d4fe19d24cafb1f65423acb2a4acad8"
+  },
+  "classification": "mutable-current-validator-provenance-outside-measured-manifests",
+  "measuredExecutionManifestSHA256": "707c9dd4aaacbb9f808638da450fd83643776e846b76b08fb5a3a8c0a2a6ee0f",
+  "measuredSourceRevisions": [
+    "e1cb1fdf147e5b4e2777f38f16e843087e68b21c",
+    "ea24af7f27df4c0f4d5b37de39b8b9c98bfbe169",
+    "ca7b075b50962eae4fbdb7101bd0913bcb4e3569"
+  ]
+}

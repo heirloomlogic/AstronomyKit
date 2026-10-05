@@ -18,7 +18,9 @@ case "90.nextDown": altitude = Double(90).nextDown
 case "90.nextUp": altitude = Double(90).nextUp
 case "-90.nextDown": altitude = Double(-90).nextDown
 case "-90.nextUp": altitude = Double(-90).nextUp
-default: altitude = Double(arguments[2])!
+default:
+    guard let value = Double(arguments[2]) else { fatalError("invalid altitude") }
+    altitude = value
 }
 let model: DeltaTModel = arguments[4] == "espenakMeeus" ? .espenakMeeus : .jplHorizons
 let time = AstroTime(ut: 10_000, deltaTModel: model)

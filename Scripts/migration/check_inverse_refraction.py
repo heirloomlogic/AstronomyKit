@@ -136,6 +136,16 @@ def acquire(output, revision):
 def validate(folder):
     protocol = load(PROTOCOL)
     receipt = load(folder / "build-receipt.json.gz")
+    manifest_data = (EVIDENCE / "manifest.json").read_bytes()
+    if sha(manifest_data) != EVIDENCE_MANIFEST_SHA256:
+        raise ValueError("immutable execution authority differs")
+    manifest = json.loads(manifest_data)
+    registered = {}
+    for label in ("baseline", "initial-current", "current"):
+        path = EVIDENCE / label / "build-receipt.json.gz"
+        if sha(path.read_bytes()) != manifest["filesSHA256"][str(path.relative_to(EVIDENCE))]:
+            raise ValueError("registered build receipt differs")
+        registered[load(path)["binarySHA256"]] = label
     tools = {path.relative_to(ROOT).as_posix(): subprocess.check_output(["git", "show", receipt["toolRevision"] + ":" + path.relative_to(ROOT).as_posix()], cwd=ROOT) for path in TOOLS}
     if receipt["toolSHA256"] != hashes(tools) or tools[PROTOCOL.relative_to(ROOT).as_posix()] != PROTOCOL.read_bytes():
         raise ValueError("tool/protocol identity differs")
@@ -150,6 +160,25 @@ def validate(folder):
     if sha(build_path.read_bytes()) != receipt["buildProcessSHA256"] or build["command"] != receipt["buildCommand"] or build["exitCode"] != 0 or not build["reaped"] or build["termination"] != "process":
         raise ValueError("build execution differs")
     binary = Path(receipt["binaryPath"])
+    identity = sha(binary.read_bytes()) if binary.exists() else receipt["binarySHA256"]
+    if identity in registered:
+        label = registered[identity]
+        for name in ("build-receipt.json.gz", "build-process.json.gz", "raw-processes.json.gz"):
+            if sha((folder / name).read_bytes()) != manifest["filesSHA256"][label + "/" + name]:
+                raise ValueError("registered execution record detached: " + name)
+    elif not binary.exists():
+        raise ValueError("unregistered executable unavailable; historical execution is not authenticated")
+    else:
+        copied = {str(path.relative_to(folder / "package")): path.read_bytes() for path in (folder / "package/Sources").rglob("*") if path.is_file()}
+        copied["Package.swift"] = (folder / "package/Package.swift").read_bytes()
+        if hashes(copied) != receipt["inputSHA256"]:
+            raise ValueError("fresh executable private source inputs detached")
+        swift = shutil.which("swift")
+        if receipt["buildCommand"] != [swift, "build", "--package-path", str(folder / "package"), "--scratch-path", str(folder / "build"), "-c", protocol["configuration"], "--product", "InverseRefractionProbe", "--verbose"]:
+            raise ValueError("fresh build command differs from actual selected recipe")
+        version = subprocess.check_output([swift, "--version"], env={"PATH": os.defpath, "HOME": os.environ["HOME"]})
+        if base64.b64decode(receipt["swiftVersion"]["stdoutBase64"]) != version:
+            raise ValueError("unregistered live compiler differs; no historical attestation")
     if binary.exists():
         if sha(binary.read_bytes()) != receipt["binarySHA256"]:
             raise ValueError("retained executable differs")
@@ -175,8 +204,6 @@ def validate(folder):
             if len(lines) != 2 or lines[0] != "entered":
                 raise ValueError("public payload framing differs")
             result = json.loads(lines[1])
-            if [result[key] for key in ("mode", "input", "route", "model")] != list(case):
-                raise ValueError("returned request differs")
             validate_payload(case, result)
             results.append(result)
         else:
@@ -214,6 +241,8 @@ def validate_payload(case, result):
     fields.update({"correctionBits"} if case[2] == "direct" else {"vectorBits", "timePreserved"})
     if set(result) != fields or type(result["finite"]) is not bool:
         raise ValueError("payload field/type population differs")
+    if [result[key] for key in ("mode", "input", "route", "model")] != list(case):
+        raise ValueError("returned request differs")
     input_value = case[1]
     if ".next" in input_value:
         base, direction = input_value.split(".")

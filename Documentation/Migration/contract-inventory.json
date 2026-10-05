@@ -2855,7 +2855,7 @@
     "localPatches": 21,
     "publicSwiftAPI": 577,
     "testOwners": 101,
-    "tests": 1126
+    "tests": 1129
   },
   "crossCuttingContracts": [
     {
@@ -3748,7 +3748,7 @@
     "Scripts/migration/test_current_search.py": "49d682bb37a07e37a7e19bd1836b9ce0cf1a7b6386644d95c19b73b5ba501713",
     "Scripts/migration/test_foundation.py": "17677d7b22710642be0e49869971a2045dbb7b2a52613e4e1663e566ec61327a",
     "Scripts/migration/test_historical_research.py": "e7c7e01c3b3b1db85d03ff70cc5965952e1c7e6ac17f2a29eebed937dff76294",
-    "Scripts/migration/test_inverse_refraction.py": "aeaf19165eb6d2b8b5506608e4eacbd34098a148509db234aed4f96dddb3c613",
+    "Scripts/migration/test_inverse_refraction.py": "594c8c83e64adcacf0476a947476391d033b17e64d47534a78c32bb0798f07d0",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "89841bef8defc3124450ad379d32f21810cedc8ee954ff8ffd83b0e133ae0a91",
     "Scripts/migration/test_search_callback_corpus.py": "823992036d73516ded4b21de38b55127ea4bf1f27882a141eb046c5a2f0532ff",
@@ -13307,7 +13307,7 @@
       "id": "Scripts/migration/test_inverse_refraction.py",
       "migrationIssue": 86,
       "path": "Scripts/migration/test_inverse_refraction.py",
-      "testCount": 6
+      "testCount": 9
     },
     {
       "classification": "invariant",

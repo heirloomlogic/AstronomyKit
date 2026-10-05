@@ -96,7 +96,7 @@ class InverseRefractionControls(unittest.TestCase):
             packets = M.load(raw)
             for mutated in (packets[:-1], packets + [packets[0]], packets[::-1]):
                 M.save(raw, mutated)
-                with self.assertRaisesRegex(ValueError, "population"):
+                with self.assertRaises(ValueError):
                     M.validate(directory)
             raw.write_bytes(original)
             import base64
