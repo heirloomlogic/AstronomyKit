@@ -31,6 +31,65 @@ class InverseRefractionControls(unittest.TestCase):
         self.assertTrue(packet["reaped"])
         self.assertEqual("ZW50ZXJlZAo=", packet["stdoutBase64"])
 
+    def test_interrupted_runner_kills_and_reaps_probe(self):
+        import os
+        import signal
+        import subprocess
+        import sys
+        import time
+        for number in (signal.SIGINT, signal.SIGTERM):
+            with self.subTest(signal=number.name), tempfile.TemporaryDirectory() as name:
+                marker = Path(name) / "probe.pid"
+                # The probe spins for at most 30 seconds even if every cleanup below fails.
+                probe = (f"import os, time\nopen({str(marker)!r} + '.tmp', 'w').write(str(os.getpid()))\nos.replace({str(marker)!r} + '.tmp', {str(marker)!r})\n"
+                         "end = time.monotonic() + 30\nwhile time.monotonic() < end: pass")
+                runner = ("import importlib.util, os, signal, sys\nsignal.signal(signal.SIGINT, signal.default_int_handler)\n"
+                          f"spec = importlib.util.spec_from_file_location('inverse', {spec.origin!r})\nM = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(M)\n"
+                          f"M.process([sys.executable, '-c', {probe!r}], 60, {{'PATH': os.defpath}})")
+                child = None
+                with subprocess.Popen([sys.executable, "-c", runner], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, start_new_session=True) as parent:
+                    try:
+                        deadline = time.monotonic() + 10
+                        while not marker.exists():
+                            self.assertLess(time.monotonic(), deadline, "probe did not start")
+                            time.sleep(0.02)
+                        child = int(marker.read_text())
+                        os.kill(parent.pid, number)
+                        parent.communicate(timeout=10)
+                        self.assertNotEqual(0, parent.returncode)
+                        with self.assertRaises(ProcessLookupError):
+                            os.kill(child, 0)
+                    finally:
+                        for group in (child, parent.pid):
+                            try:
+                                if group:
+                                    os.killpg(group, signal.SIGKILL)
+                            except (ProcessLookupError, PermissionError):
+                                pass
+
+    def test_runner_exception_kills_and_reaps_probe(self):
+        import os
+        import signal
+        import subprocess
+        import sys
+        started = []
+
+        def failing(child, *arguments, **options):
+            started.append(child.pid)
+            raise RuntimeError("runner failed")
+        try:
+            with patch.object(subprocess.Popen, "communicate", failing), self.assertRaisesRegex(RuntimeError, "runner failed"):
+                M.process([sys.executable, "-c", "import time; time.sleep(30)"], 60, {"PATH": os.defpath})
+            with self.assertRaises(ProcessLookupError):
+                os.kill(started[0], 0)
+        finally:
+            for pid in started:
+                try:
+                    os.killpg(pid, signal.SIGKILL)
+                    os.waitpid(pid, 0)
+                except (ProcessLookupError, PermissionError, ChildProcessError):
+                    pass
+
     def test_saved_finiteness_cannot_override_bits(self):
         case = ("none", "0", "direct", "espenakMeeus")
         result = {"mode": case[0], "input": case[1], "route": case[2], "model": case[3],

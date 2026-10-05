@@ -52,20 +52,39 @@ def selection(protocol):
     return cases
 
 
-def process(command, timeout, environment):
-    start = time.monotonic()
-    child = subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE, env=environment, start_new_session=True)
-    termination = "process"
+def kill_group(child):
     try:
-        out, err = child.communicate(timeout=timeout)
-    except subprocess.TimeoutExpired:
-        try:
-            os.killpg(child.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
-        out, err = child.communicate(timeout=5)
-        termination = "timeout-killed-and-reaped"
+        os.killpg(child.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):  # Already exited; macOS reports EPERM for a zombie-only group.
+        pass
+
+
+def stop_on_signal(number, frame):
+    raise SystemExit(128 + number)
+
+
+def process(command, timeout, environment):
+    """Run a child in its own session; every exit path kills its process group and reaps it."""
+    start = time.monotonic()
+    # The child's new session keeps terminal signals away from it, so the runner must stop it.
+    handlers = {number: signal.signal(number, stop_on_signal) for number in (signal.SIGTERM, signal.SIGHUP)}
+    try:
+        with subprocess.Popen(command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, env=environment, start_new_session=True) as child:
+            termination = "process"
+            try:
+                out, err = child.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                kill_group(child)
+                out, err = child.communicate(timeout=5)
+                termination = "timeout-killed-and-reaped"
+            except BaseException:
+                kill_group(child)
+                child.wait()
+                raise
+    finally:
+        for number, handler in handlers.items():
+            signal.signal(number, signal.SIG_DFL if handler is None else handler)
     return {"command": command, "termination": termination, "exitCode": child.returncode,
             "reaped": child.poll() is not None, "elapsedSeconds": time.monotonic() - start,
             "stdoutBase64": base64.b64encode(out).decode(), "stderrBase64": base64.b64encode(err).decode(),
