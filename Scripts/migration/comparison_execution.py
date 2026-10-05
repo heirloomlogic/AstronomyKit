@@ -15,7 +15,10 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 PROTOCOL = ROOT / 'Documentation/Migration/comparison-replay-execution-protocol.json'
 TOOL_PATHS = ('Scripts/migration/comparison_execution.py', 'Scripts/migration/run-comparison.py', 'Scripts/migration/replay_historical_research.py', 'Tools/Migration/Oracle/build-oracle.py', 'Tools/Migration/Oracle/build-oracle.sh')
-BEFORE_FIX_REVISION = '2bddd2de1bb21d23ce70d8f2f88eea7693c04c57'
+REGISTERED_ENVIRONMENTS = {
+    'd848a6af77f6f4328ec819d460f3b2bb46a9f1d6': ('2bddd2de1bb21d23ce70d8f2f88eea7693c04c57', 'Tools/Migration/ComparisonReplay/complete-'),
+    '02602f09f0703f348f8797d090eca53aba0858a8': ('38f946082a9a1a898eb8f7c6291f1bc85157e61e', 'Tools/Migration/ComparisonValidation146/final-bound-'),
+}
 ENVIRONMENT_MARKER = b'# comparison-build-environment '
 RECIPE = {'configuration': 'release', 'product': 'AstronomyMigrationRunner', 'extraSwiftFlags': [], 'manifestConditions': {'.dev-tooling': False, '.model-prototype': False}}
 
@@ -85,40 +88,53 @@ def capture_environment(swift_command):
     return captured
 
 
-def validate_environment(receipt, log):
-    """Bind receipt identities to new command capture or immutable prior measured logs."""
-    if log.startswith(ENVIRONMENT_MARKER):
+def select_current_environment():
+    swift_command = shutil.which('swift')
+    if swift_command is None:
+        raise ValueError('no independently selected current Swift executable')
+    return capture_environment(swift_command)
+
+
+def validate_environment(receipt, log, attempt=None):
+    """Select historical authority before reading headers; corroborate unregistered local captures."""
+    registered = REGISTERED_ENVIRONMENTS.get((attempt or {}).get('toolRevision'))
+    if registered is not None:
+        mode = attempt.get('mode')
+        if mode not in {'historical', 'current'}:
+            raise ValueError('registered environment mode changed')
+        revision, prefix = registered
+        c = load(ROOT / 'Scripts/migration/run-comparison.py', 'registered_build_environment')
+        path = prefix + mode + '/'
+        trusted_log = gzip.decompress(c.git_blob(revision, path + 'swift-build.log.gz'))
+        prior = read_json(gzip.decompress(c.git_blob(revision, path + 'candidate-build.json.gz')))
+        if log != trusted_log:
+            raise ValueError('build environment detached from registered immutable log')
+        identities = {name: prior[name] for name in ('swift', 'platform')}
+        compiler_command = prior['command'][0]
+        body = log.split(b'\n', 1)[1] if log.startswith(ENVIRONMENT_MARKER) else log
+    else:
+        if not log.startswith(ENVIRONMENT_MARKER):
+            raise ValueError('unregistered environment lacks current runtime capture')
         header, body = log.split(b'\n', 1)
         captured = read_json(header[len(ENVIRONMENT_MARKER):])
         required = {name + suffix for name in ('swift', 'platform') for suffix in ('Command', 'ExitCode', 'StdoutBase64', 'StderrBase64')}
-        if set(captured) != required:
-            raise ValueError('environment capture population changed')
+        if set(captured) != required or any(type(captured[name + 'ExitCode']) is not int for name in ('swift', 'platform')):
+            raise ValueError('environment capture population or termination type changed')
+        selected = select_current_environment()
+        if captured != selected:
+            raise ValueError('environment capture detached from independently selected current runtime')
         identities = {}
         for name in ('swift', 'platform'):
-            command = captured[name + 'Command']
+            command = selected[name + 'Command']
             expected_tail = ['--version'] if name == 'swift' else ['-c', 'import platform; print(platform.platform())']
-            if not isinstance(command, list) or not command or not isinstance(command[0], str) or not Path(command[0]).is_absolute() or command[1:] != expected_tail or type(captured[name + 'ExitCode']) is not int or captured[name + 'ExitCode'] != 0:
+            if not isinstance(command, list) or not command or not isinstance(command[0], str) or not Path(command[0]).is_absolute() or command[1:] != expected_tail or type(selected[name + 'ExitCode']) is not int or selected[name + 'ExitCode'] != 0:
                 raise ValueError('environment command or termination changed')
-            stdout = base64.b64decode(captured[name + 'StdoutBase64'], validate=True).decode().strip()
-            stderr = base64.b64decode(captured[name + 'StderrBase64'], validate=True)
+            stdout = base64.b64decode(selected[name + 'StdoutBase64'], validate=True).decode().strip()
+            base64.b64decode(selected[name + 'StderrBase64'], validate=True)
             if not stdout:
                 raise ValueError('environment command capture failed')
             identities[name] = stdout
-        compiler_command = captured['swiftCommand'][0]
-    else:
-        c = load(ROOT / 'Scripts/migration/run-comparison.py', 'prior_build_environment')
-        identities = None
-        for mode in ('historical', 'current'):
-            prefix = f'Tools/Migration/ComparisonReplay/complete-{mode}/'
-            archived_log = gzip.decompress(c.git_blob(BEFORE_FIX_REVISION, prefix + 'swift-build.log.gz'))
-            if log == archived_log:
-                prior = read_json(gzip.decompress(c.git_blob(BEFORE_FIX_REVISION, prefix + 'candidate-build.json.gz')))
-                identities = {'swift': prior['swift'], 'platform': prior['platform']}
-                compiler_command = prior['command'][0]
-                break
-        if identities is None:
-            raise ValueError('no captured environment or immutable prior measured-log binding')
-        body = log
+        compiler_command = selected['swiftCommand'][0]
     if any(type(receipt.get(name)) is not str or receipt[name] != identities[name] for name in ('swift', 'platform')):
         raise ValueError('receipt compiler/platform identity detached from build evidence')
     if identities['swift'].splitlines()[0].encode() not in [line.strip() for line in body.splitlines()]:
@@ -348,7 +364,7 @@ def verify_evidence(output):
     if not binary.is_relative_to((output / 'build').resolve()) or binary.name != RECIPE['product']:
         raise ValueError('binary location detached from isolated build')
     validate_build(binary, receipt, package, package, expected_tools, output / 'build')
-    compiler_command = validate_environment(receipt, (output / 'swift-build.log').read_bytes())
+    compiler_command = validate_environment(receipt, (output / 'swift-build.log').read_bytes(), attempt)
     expected_command = [compiler_command, 'build', '--package-path', str(package), '--scratch-path', str(output / 'build'), '-c', 'release', '--product', 'AstronomyMigrationRunner', '--verbose']
     if receipt['command'] != expected_command or receipt['manifestSHA256'] != sha((package / 'Package.swift').read_bytes()) or receipt['buildLogSHA256'] != sha((output / 'swift-build.log').read_bytes()) or receipt['fingerprintSHA256'] != c.executable_fingerprint(binary):
         raise ValueError('build conditions, log or fingerprint changed')

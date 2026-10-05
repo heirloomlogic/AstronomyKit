@@ -172,24 +172,76 @@ class ExecutionIntegrityTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 E.validate_packet(changed, case)
 
-    def test_build_claims_bind_to_consumed_environment_capture(self):
+    def environment_fixture(self):
         fields = {'swiftCommand': ['/compiler/swift', '--version'], 'swiftExitCode': 0, 'swiftStdoutBase64': base64.b64encode(b'Swift version 6.2\nTarget: x86_64-unknown-linux-gnu\n').decode(), 'swiftStderrBase64': '', 'platformCommand': ['/python', '-c', 'import platform; print(platform.platform())'], 'platformExitCode': 0, 'platformStdoutBase64': base64.b64encode(b'Linux-test-platform\n').decode(), 'platformStderrBase64': ''}
-        log = ('# comparison-build-environment ' + json.dumps(fields, sort_keys=True) + '\nSwift version 6.2\nactual compilation log\n').encode()
         receipt = {'swift': 'Swift version 6.2\nTarget: x86_64-unknown-linux-gnu', 'platform': 'Linux-test-platform'}
-        E.validate_environment(receipt, log)
+        return fields, receipt
+
+    def environment_log(self, fields):
+        return ('# comparison-build-environment ' + json.dumps(fields, sort_keys=True) + '\nSwift version 6.2\nactual compilation log\n').encode()
+
+    def test_build_claims_bind_to_independent_runtime_selection(self):
+        fields, receipt = self.environment_fixture()
+        log = self.environment_log(fields)
+        with mock.patch.object(E, 'select_current_environment', create=True, return_value=fields):
+            E.validate_environment(receipt, log)
+            for field in ['swift', 'platform']:
+                with self.subTest(field=field), self.assertRaises(ValueError):
+                    E.validate_environment({**receipt, field: 'invented'}, log)
+            with self.assertRaises(ValueError):
+                E.validate_environment(receipt, log.replace(b'\nSwift version 6.2\n', b'\nSwift version 999\n'))
+            for code in (1, False, 0.0):
+                with self.subTest(code=code), self.assertRaises(ValueError):
+                    E.validate_environment(receipt, self.environment_log(dict(fields, swiftExitCode=code)))
         informational = dict(fields, swiftStderrBase64=base64.b64encode(b'swift-driver version: 1.168.6\n').decode())
-        informational_log = ('# comparison-build-environment ' + json.dumps(informational) + '\nSwift version 6.2\n').encode()
-        E.validate_environment(receipt, informational_log)
-        for field in ['swift', 'platform']:
-            changed = {**receipt, field: 'invented'}
-            with self.subTest(field=field), self.assertRaises(ValueError):
-                E.validate_environment(changed, log)
-        with self.assertRaises(ValueError):
-            E.validate_environment(receipt, log.replace(b'\nSwift version 6.2\n', b'\nSwift version 999\n'))
-        changed = dict(fields, swiftExitCode=1)
-        bad_log = ('# comparison-build-environment '+json.dumps(changed)+'\nSwift version 6.2\n').encode()
-        with self.assertRaises(ValueError):
-            E.validate_environment(receipt, bad_log)
+        with mock.patch.object(E, 'select_current_environment', create=True, return_value=informational):
+            E.validate_environment(receipt, self.environment_log(informational))
+
+    def test_jointly_rehashed_header_cannot_choose_environment_authority(self):
+        fields, receipt = self.environment_fixture()
+        forged = copy.deepcopy(fields)
+        forged['swiftCommand'][0] = '/nonexistent/forged/swift'
+        forged['platformCommand'][0] = '/nonexistent/forged/python'
+        forged['platformStdoutBase64'] = base64.b64encode(b'fabricated-platform\n').decode()
+        with mock.patch.object(E, 'select_current_environment', create=True, return_value=fields), self.assertRaises(ValueError):
+            E.validate_environment({**receipt, 'platform': 'fabricated-platform'}, self.environment_log(forged))
+
+    def test_registered_authority_precedes_mutable_header_and_is_portable(self):
+        c = E.load(ROOT / 'Scripts/migration/run-comparison.py', 'test_registered_environment')
+        for tool_revision, (snapshot, prefix) in E.REGISTERED_ENVIRONMENTS.items():
+            for mode in ('historical', 'current'):
+                path = prefix + mode + '/'
+                log = __import__('gzip').decompress(c.git_blob(snapshot, path + 'swift-build.log.gz'))
+                receipt = E.read_json(__import__('gzip').decompress(c.git_blob(snapshot, path + 'candidate-build.json.gz')))
+                attempt = {'toolRevision': tool_revision, 'mode': mode}
+                with self.subTest(tool_revision=tool_revision, mode=mode), mock.patch.object(E, 'select_current_environment', side_effect=AssertionError('historical anchor must be portable')):
+                    self.assertEqual(E.validate_environment(receipt, log, attempt), receipt['command'][0])
+                    fields, _ = self.environment_fixture()
+                    fields['swiftCommand'][0] = '/nonexistent/forged/swift'
+                    fields['platformCommand'][0] = '/nonexistent/forged/python'
+                    fields['swiftStdoutBase64'] = base64.b64encode((receipt['swift'] + '\n').encode()).decode()
+                    fields['platformStdoutBase64'] = base64.b64encode(b'fabricated-platform\n').decode()
+                    body = log.split(b'\n', 1)[1] if log.startswith(E.ENVIRONMENT_MARKER) else log
+                    forged_log = E.ENVIRONMENT_MARKER + json.dumps(fields).encode() + b'\n' + body
+                    with self.assertRaises(ValueError):
+                        E.validate_environment(dict(receipt, platform='fabricated-platform'), forged_log, attempt)
+                    with self.assertRaises(ValueError):
+                        E.validate_environment(dict(receipt, swift='invented'), log, attempt)
+
+    def test_unregistered_runtime_rejects_each_jointly_editable_claim(self):
+        fields, receipt = self.environment_fixture()
+        for field in ('swiftCommand', 'platformCommand', 'swiftStdoutBase64', 'platformStdoutBase64'):
+            forged = copy.deepcopy(fields)
+            forged_receipt = dict(receipt)
+            if field.endswith('Command'):
+                forged[field][0] = '/nonexistent/forged/' + field
+            else:
+                forged[field] = base64.b64encode(b'fabricated-identity\n').decode()
+                forged_receipt['swift' if field.startswith('swift') else 'platform'] = 'fabricated-identity'
+            with self.subTest(field=field), mock.patch.object(E, 'select_current_environment', return_value=fields), self.assertRaises(ValueError):
+                E.validate_environment(forged_receipt, self.environment_log(forged))
+        with mock.patch.object(E, 'select_current_environment', side_effect=AssertionError('header must not supply authority')), self.assertRaises(ValueError):
+            E.validate_environment(receipt, b'Swift version 6.2\n')
 
     def test_old_archive_fingerprint_failure_is_not_normalized_away(self):
         self.assertFalse(E.original_reproduction_passes(sampled_match=True, fingerprint_match=False, original_closure_recorded=False))

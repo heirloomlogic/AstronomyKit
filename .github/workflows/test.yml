@@ -47,6 +47,8 @@ jobs:
           Scripts/migration/generate-contract-inventory.py --check
           python3 -m unittest Scripts/migration/test_foundation.py -v
           git cat-file -e "d32812388b63b384d03939be0af245152df618b6^{commit}" || git fetch --no-tags --depth=1 origin d32812388b63b384d03939be0af245152df618b6
+          git cat-file -e "2bddd2de1bb21d23ce70d8f2f88eea7693c04c57^{commit}" || git fetch --no-tags --depth=1 origin 2bddd2de1bb21d23ce70d8f2f88eea7693c04c57
+          git cat-file -e "38f946082a9a1a898eb8f7c6291f1bc85157e61e^{commit}" || git fetch --no-tags --depth=1 origin 38f946082a9a1a898eb8f7c6291f1bc85157e61e
           python3 -m unittest Scripts/migration/test_comparison.py Scripts/migration/test_comparison_execution.py -v
           python3 -m unittest Scripts/migration/test_performance.py -v
           python3 -m unittest Scripts/migration/test_performance_candidate.py -v
