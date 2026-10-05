@@ -160,6 +160,43 @@ struct ObserverTests {
             #expect(observer.gravity > 9.7)
             #expect(observer.gravity < 9.9)
         }
+
+        /// WGS 84 normal gravity on the ellipsoid, Somigliana's closed form
+        /// γ = γe (1 + k sin²φ) / √(1 − e² sin²φ), with the constants of NIMA
+        /// TR8350.2, 3rd edition (2000), chapter 4.
+        static let equatorialGravity = 9.780_325_335_9
+        static let polarGravity = 9.832_184_937_8
+        static let somiglianaK = 0.001_931_852_652_41
+        static let eccentricitySquared = 0.006_694_379_990_14
+
+        /// 1e-9 m/s². The constants are published to 1e-10 m/s², and γp follows
+        /// from γe, k and e² to within 6e-11 m/s². Swapping the equator and pole
+        /// changes gravity by 0.05 m/s², and using sin φ in place of sin²φ
+        /// changes it by 0.01 m/s² at 45°.
+        static let somiglianaTolerance = 1e-9
+
+        static func somigliana(latitude: Double) -> Double {
+            let s2 = pow(sin(latitude * .pi / 180), 2)
+            return equatorialGravity * (1 + somiglianaK * s2) / (1 - eccentricitySquared * s2).squareRoot()
+        }
+
+        @Test(
+            "Sea-level gravity at the equator and poles is the published WGS 84 value",
+            arguments: [(0.0, equatorialGravity), (90.0, polarGravity), (-90.0, polarGravity)]
+        )
+        func gravityAtEquatorAndPoles(latitude: Double, expected: Double) {
+            let gravity = Observer(latitude: latitude, longitude: 0).gravity
+
+            #expect(abs(gravity - expected) < Self.somiglianaTolerance, "\(gravity) m/s², expected \(expected)")
+        }
+
+        @Test("Sea-level gravity between them follows Somigliana's formula", arguments: [30.0, 45.0, -60.0])
+        func gravityFollowsSomigliana(latitude: Double) {
+            let gravity = Observer(latitude: latitude, longitude: 0).gravity
+            let expected = Self.somigliana(latitude: latitude)
+
+            #expect(abs(gravity - expected) < Self.somiglianaTolerance, "\(gravity) m/s², expected \(expected)")
+        }
     }
 
     // MARK: - Protocol Conformances

@@ -58,6 +58,42 @@ struct AtmosphereTests {
         #expect(atm.pressure < 600)  // Much lower than sea level
     }
 
+    // MARK: - Standard Atmosphere Values
+
+    /// The 1976 U.S. Standard Atmosphere, which is the ISO 2533 (ICAO)
+    /// standard atmosphere below 32 km: 101,325 Pa and 288.15 K at sea level,
+    /// −6.5 K/km to 11 km, 216.65 K to 20 km, then +1 K/km to 32 km, with
+    /// geopotential heights.
+    ///
+    /// 1e-9: pressure and temperature here are exact in the standard, so the
+    /// only error is converting Pa to mbar and K to °C (about 1e-13). A Kelvin
+    /// offset wrong by 0.1 K shows at every height, and a 1 % lapse-rate error
+    /// moves the 5 km temperature by 0.33 K.
+    static let standardTolerance = 1e-9
+
+    @Test("Sea level is the standard atmosphere's base")
+    func seaLevelBase() throws {
+        let atm = try Atmosphere.at(elevation: 0)
+
+        #expect(abs(atm.pressure - 1_013.25) < Self.standardTolerance, "\(atm.pressure) mbar")
+        #expect(abs(atm.temperature - 15) < Self.standardTolerance, "\(atm.temperature)°C")
+        #expect(abs(atm.density - 1) < Self.standardTolerance, "density \(atm.density)")
+    }
+
+    @Test(
+        "Temperature follows the standard lapse rates",
+        arguments: [
+            (5_000.0, 255.65), (11_000, 216.65), (15_000, 216.65), (20_000, 216.65), (26_000, 222.65),
+            (32_000, 228.65),
+        ]
+    )
+    func standardTemperature(geopotentialHeight: Double, kelvin: Double) throws {
+        let atm = try Atmosphere.at(elevation: geopotentialHeight)
+        let expected = kelvin - 273.15
+
+        #expect(abs(atm.temperature - expected) < Self.standardTolerance, "\(atm.temperature)°C, expected \(expected)")
+    }
+
     @Test("Atmosphere is Equatable")
     func equatable() throws {
         let atm1 = try Atmosphere.at(elevation: 1_000)
