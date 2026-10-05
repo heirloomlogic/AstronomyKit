@@ -2855,7 +2855,7 @@
     "localPatches": 20,
     "publicSwiftAPI": 577,
     "testOwners": 98,
-    "tests": 1091
+    "tests": 1093
   },
   "crossCuttingContracts": [
     {
@@ -3762,7 +3762,7 @@
     "Scripts/reference-data/test_approved_distance.py": "0cfe3e0563b080192d355f48460ca80d320e96d6c03493afc440be74cb85c81f",
     "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
     "Scripts/reference-data/test_bundled_public_api.py": "bcec34528023c0bd233da5b7b8bed7c33ed689ff513e726c4b006832f78ef474",
-    "Scripts/reference-data/test_current_seasonal_search.py": "2090ca64b732757a82ec43121f2ecb7b156daaeaa592e91717c5557768f7a3fd",
+    "Scripts/reference-data/test_current_seasonal_search.py": "b11fb2f7134cea6ff4084dd79560bafe366d4bae53acbcdc5070dbeaa19bb778",
     "Scripts/reference-data/test_diagnose_polar_sunrise.py": "96688a62ad6a72a8a53fc1b2e53b854ea124711ac0600086ee1b6d0ec554bac1",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_geometric_events.py": "480595a0f3df2c26ec1f35f0c7be8d83de8d752479fd64df7793c02d31c48f20",
@@ -3780,7 +3780,7 @@
     "Scripts/reference-data/test_range_rate_investigation.py": "55ae0d261f180376a93926e91c3b7cbfec16ed59c3b95c0def7caba057855d9a",
     "Scripts/reference-data/test_saturn_apsis.py": "6d3a30301b5383862a818d459bed069869e3db3d657cd3001d20974d93818581",
     "Scripts/reference-data/test_season_phase_events.py": "b07bef22399cdc29e866141ac5528f7d14b9a964d5515b4401be29cf8e5312ea",
-    "Scripts/reference-data/test_seasonal_roots.py": "4064cf7d9e840e1eb06902cdff2f0d292e12c9a1bdfc25d35c65e143e4091732",
+    "Scripts/reference-data/test_seasonal_roots.py": "0b899c0a5b14080643a0400e3192d2ced65fb0b5b4ca5dceee6c15d45c8c44a8",
     "Scripts/reference-data/test_source_archive.py": "949b8d3d319553221bbf22034fc033806d41a4ddd76191a57ae859b8b6c52a91",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
@@ -13396,7 +13396,7 @@
       "id": "Scripts/reference-data/test_current_seasonal_search.py",
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_current_seasonal_search.py",
-      "testCount": 5
+      "testCount": 7
     },
     {
       "classification": "invariant",

@@ -85,3 +85,58 @@ class CurrentSeasonalInputs(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'stale'):
                     C.check()
             assess.assert_not_called()
+
+    def test_actual_assessor_uses_private_manifest_without_legacy_package(self):
+        from unittest import mock
+        import tempfile
+        saved = json.loads(C.S.REPORT.read_text())
+        plan = json.loads(C.S.PLAN.read_text())
+        source = C.S.source_hashes()
+        references = {mode: [e['reference'] for e in saved['events'] if e['mode'] == mode and e['deltaTModel'] == plan['publicDeltaTModels'][0]] for mode in ['nominal', 'matched']}
+        requests, results = [], []
+        for model in plan['publicDeltaTModels']:
+            for year in range(plan['selection']['firstYear'], plan['selection']['lastYear'] + 1):
+                request = {'operation': 'seasonal-roots', 'year': year, 'deltaTModel': model}
+                requests.append(request)
+                results.append({'request': request, 'status': 'success', 'events': [e['actual'] for e in saved['events'] if e['mode'] == 'nominal' and e['deltaTModel'] == model and e['year'] == year]})
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            def private_build(work, output):
+                package = work / 'package'
+                package.mkdir()
+                (package / 'Package.swift').write_text(C.B.MANIFEST)
+                binary = work / 'runner'
+                binary.write_bytes(b'isolated test executable')
+                return binary, {'manifestSHA256': C.S.Q.digest(C.B.MANIFEST.encode()), 'completeCurrentSourceSHA256': {}, 'revision': 'test revision'}
+            legacy = root / '.context/accuracy-qualification/runner-package/Package.swift'
+            self.assertFalse(legacy.exists())
+            with mock.patch.object(C, 'ROOT', root), mock.patch.object(C.S, 'ROOT', root), mock.patch.object(C, 'build_current', side_effect=private_build), mock.patch.object(C, 'validate_build_link'), mock.patch.object(C, 'validate_inputs'), mock.patch.object(C.S, 'load_plan', return_value=plan), mock.patch.object(C.S, 'references', side_effect=lambda mode: (references[mode], [])), mock.patch.object(C.S, 'public_results', return_value=(requests, results)) as scientific, mock.patch.object(C.S, 'source_hashes', return_value=source), mock.patch.object(C.S.G, 'environment', return_value={}), mock.patch.object(C.S.subprocess, 'check_output', return_value='test identity'), mock.patch.object(C.S, 'validate_replay'):
+                output = C.check()
+            scientific.assert_called_once()
+            measured = json.loads((output / 'assessment.json').read_text())
+            self.assertEqual(len(measured['events']), 3696)
+            self.assertEqual(measured['publicRunner']['isolatedManifestSHA256'], C.S.Q.digest(C.B.MANIFEST.encode()))
+            self.assertTrue((output / 'execution-receipt.json').is_file())
+            self.assertFalse(legacy.exists())
+
+    def test_invalid_private_manifest_rejects_before_scientific_execution(self):
+        from unittest import mock
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            def detached_build(work, output):
+                package = work / 'package'
+                package.mkdir()
+                (package / 'Package.swift').write_text('detached manifest')
+                binary = work / 'runner'
+                binary.write_bytes(b'test executable')
+                receipt = {'classification': 'fresh-current-copied-source-build', 'completeCurrentSourceSHA256': C.complete_sources(), 'runnerSourceSHA256': C.runner_sources(), 'manifestSHA256': C.S.Q.digest(C.B.MANIFEST.encode()), 'buildRecipeSHA256': C.S.Q.digest(Path(C.__file__).read_bytes()), 'manifestProviderSHA256': C.S.Q.digest(Path(C.B.__file__).read_bytes()), 'flags': [], 'binarySHA256': C.S.Q.digest(binary.read_bytes())}
+                return binary, receipt
+            with mock.patch.object(C, 'build_current', side_effect=detached_build), mock.patch.object(C.S, 'public_results') as scientific:
+                with self.assertRaisesRegex(ValueError, 'private build manifest detached'):
+                    C.check()
+            scientific.assert_not_called()
+            with mock.patch.object(C.S, 'public_results') as scientific, mock.patch.object(C.S, 'references') as reference:
+                with self.assertRaises(FileNotFoundError):
+                    C.S.assess(Path(directory) / 'unused runner', manifest=Path(directory) / 'missing-private-manifest')
+            scientific.assert_not_called()
+            reference.assert_not_called()

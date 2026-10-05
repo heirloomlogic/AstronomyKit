@@ -15,7 +15,7 @@ G=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(G)
 Q=G.Q
 PLAN=ROOT/'Documentation/Migration/seasonal-root-sampling-plan.json'
 REPORT=ROOT/'Documentation/Migration/seasonal-root-assessment.json'
-REPLAY_RECEIPT=ROOT/'Documentation/Migration/seasonal-root-replay-provenance.json'
+REPLAY_RECEIPT=ROOT/'Documentation/Migration/seasonal-root-current-validator-provenance.json'
 REPLAY_TIME_TOLERANCE_DAYS=1e-7
 RAW=ROOT/'Scripts/reference-data/sources/seasonal-roots'
 KINDS=['marchEquinox','juneSolstice','septemberEquinox','decemberSolstice']
@@ -211,7 +211,9 @@ def source_hashes():
     return {str(p.relative_to(ROOT)):Q.digest(p.read_bytes()) for p in sorted(set(paths)) if p.is_file()}
 
 
-def assess(binary):
+def assess(binary, *, manifest=None):
+    manifest=ROOT/'.context/accuracy-qualification/runner-package/Package.swift' if manifest is None else Path(manifest)
+    manifest_digest=Q.digest(manifest.read_bytes())
     plan=load_plan();references_by_mode={};provenance={}
     for mode in ['nominal','matched']: references_by_mode[mode],provenance[mode]=references(mode)
     requests,results=public_results(binary);events=[];summary={}
@@ -225,7 +227,7 @@ def assess(binary):
                 events.append({'mode':mode,'deltaTModel':request['deltaTModel'],'year':request['year'],'reference':reference,'actual':actual,'signedTimeErrorSeconds':error,'nominalWithinStrictTarget':abs(error)<plan['strictMaximumTimeErrorSeconds'],'numericalEnvelopeClassification':classification})
                 entry['count']+=1;entry['nominalExceedances']+=int(abs(error)>=60);entry['numericalEnvelopeExceedances']+=int(classification=='exceeded');entry['inconclusiveNumericalEnvelopes']+=int(classification=='inconclusive-numerical-envelope');entry['referenceControlFailures']+=int(bool(reference['numericalFailures']));entry['maximumAbsoluteTimeErrorSeconds']=max(entry['maximumAbsoluteTimeErrorSeconds'],abs(error))
     environment=G.environment();environment['frameDefinition']=plan['nominalReference']['frame']
-    return {'schemaVersion':1,'classification':'finite-nominal-seasonal-evidence-physical-apparent-qualification-incomplete','inputSHA256':source_hashes(),'referenceEnvironment':environment,'publicRunner':{'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'executableSHA256':Q.digest(binary.read_bytes()),'compiler':subprocess.check_output(['swift','--version'],text=True).strip(),'isolatedManifestSHA256':Q.digest((ROOT/'.context/accuracy-qualification/runner-package/Package.swift').read_bytes())},'provenance':provenance,'summary':summary,'events':events,'limitations':plan['limitations'],'physicalApparentQualification':'unsupported: '+plan['nominalReference']['physicalQualification']}
+    return {'schemaVersion':1,'classification':'finite-nominal-seasonal-evidence-physical-apparent-qualification-incomplete','inputSHA256':source_hashes(),'referenceEnvironment':environment,'publicRunner':{'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'executableSHA256':Q.digest(binary.read_bytes()),'compiler':subprocess.check_output(['swift','--version'],text=True).strip(),'isolatedManifestSHA256':manifest_digest},'provenance':provenance,'summary':summary,'events':events,'limitations':plan['limitations'],'physicalApparentQualification':'unsupported: '+plan['nominalReference']['physicalQualification']}
 
 
 def require_finite_payload(value):

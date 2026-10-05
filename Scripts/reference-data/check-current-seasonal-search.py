@@ -64,15 +64,17 @@ def build_current(work, output):
         'binarySHA256': S.Q.digest(binary.read_bytes()), 'buildLogSHA256': S.Q.digest(log.read_bytes()),
         'swiftCompiler': subprocess.check_output(['swift', '--version'], text=True).strip(),
         'flags': [], 'revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()}
-    validate_build_link(binary, receipt)
+    validate_build_link(binary, receipt, package / 'Package.swift')
     return binary, receipt
 
 
-def validate_build_link(binary, receipt):
+def validate_build_link(binary, receipt, manifest=None):
     if receipt['classification'] != 'fresh-current-copied-source-build' or receipt['completeCurrentSourceSHA256'] != complete_sources() or receipt['runnerSourceSHA256'] != runner_sources():
         raise ValueError('seasonal executable/source linkage stale or detached')
     if receipt['manifestSHA256'] != S.Q.digest(B.MANIFEST.encode()) or receipt['buildRecipeSHA256'] != S.Q.digest(Path(__file__).read_bytes()) or receipt['manifestProviderSHA256'] != S.Q.digest(Path(B.__file__).read_bytes()) or receipt['flags'] != []:
         raise ValueError('seasonal build recipe detached')
+    if manifest is not None and receipt['manifestSHA256'] != S.Q.digest(manifest.read_bytes()):
+        raise ValueError('seasonal private build manifest detached')
     if receipt['binarySHA256'] != S.Q.digest(binary.read_bytes()):
         raise ValueError('seasonal executable changed after authenticated build')
 
@@ -85,14 +87,14 @@ def check():
     with tempfile.TemporaryDirectory(prefix='seasonal-build-', dir=ROOT / '.context') as directory:
         binary, build_receipt = build_current(Path(directory), output)
         (output / 'build-receipt.json').write_text(json.dumps(build_receipt, sort_keys=True, indent=2, allow_nan=False) + '\n')
-        validate_build_link(binary, build_receipt)
+        manifest = Path(directory) / 'package/Package.swift'
+        validate_build_link(binary, build_receipt, manifest)
         before = S.source_hashes()
-        current = S.assess(binary)
-        current['publicRunner']['isolatedManifestSHA256'] = build_receipt['manifestSHA256']
+        current = S.assess(binary, manifest=manifest)
         # Keep the measured payload before assessment/validation can reject it.
         payload = output / 'assessment.json'
         payload.write_text(json.dumps(current, sort_keys=True, indent=2, allow_nan=False) + '\n')
-        validate_build_link(binary, build_receipt)
+        validate_build_link(binary, build_receipt, manifest)
         if S.source_hashes() != before:
             raise ValueError('current seasonal inputs changed during execution')
         S.validate_report_semantics(current)
