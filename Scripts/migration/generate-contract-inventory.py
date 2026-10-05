@@ -76,6 +76,7 @@ TEST_ISSUES = {
     "GravitySimulationTests.swift": 88,
     "HugeTimeTests.swift": 97,
     "IlluminationTests.swift": 89,
+    "InverseRefractionTests.swift": 86,
     "IndependentReferenceFixtures.swift": 81,
     "JPLValidationTests.swift": 81,
     "JupiterMoonsTests.swift": 90,
@@ -107,6 +108,7 @@ TEST_ISSUES = {
 }
 
 SCRIPT_TEST_ISSUES = {
+    "Scripts/migration/test_inverse_refraction.py": 86,
     "Scripts/migration/test_search_callback_corpus.py": 84,
     "Scripts/migration/test_current_search.py": 84,
     "Scripts/migration/test_historical_research.py": 80,
@@ -174,6 +176,7 @@ PATCH_ISSUES = {
     18: 84,
     19: 81,
     20: 84,
+    21: 86,
 }
 
 GENERATED_ISSUES = {
@@ -490,10 +493,10 @@ def local_patches(root):
         number = int(number_text)
         if number in PATCH_ISSUES and number not in {entry["patch"] for entry in entries}:
             entries.append({"id": f"patch-{number:02d}", "patch": number, "title": title, "migrationIssue": PATCH_ISSUES[number]})
-        if number == 20:
+        if number == 21:
             break
-    if [entry["patch"] for entry in entries] != list(range(1, 21)):
-        raise RuntimeError("MAINTAINING.md must contain exactly the 20 mapped local patch groups")
+    if [entry["patch"] for entry in entries] != list(range(1, 22)):
+        raise RuntimeError("MAINTAINING.md must contain exactly the 21 mapped local patch groups")
     return entries
 
 

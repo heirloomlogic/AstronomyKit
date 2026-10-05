@@ -72,6 +72,8 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
 
 20. **Ascending search validation.** `Astronomy_Search` accepts its tolerance midpoint and quadratic early return only when chronologically ordered callback endpoints establish an ascending bracket (earlier value <= 0, later value >= 0, with at least one strict sign). Quadratic acceptance also requires a positive fitted derivative. Previously, a descending quadratic root or a short constant window could report success. Unbracketed outer intervals still evaluate and subdivide at the midpoint; the existing single-root assumption, error propagation, model capture, tolerance expressions and iteration limit remain unchanged. Preserve both success-path guards after an upstream sync. See [ascending search repair evidence](Documentation/Migration/AscendingSearchRepair.md).
 
+21. **Bounded inverse refraction.** `Astronomy_InverseRefraction` returns zero correction for nonfinite/out-of-range input or a nonfinite, stalled, cycling or exhausted inverse iteration. The successful residual expression and strict `1e-14` convergence comparison are unchanged. Both `Refraction.inverseRefractionAngle(at:)` and `Vector3D.from(horizon:at:refraction:)` use this shared guard. Preserve it after an upstream sync; the forward refraction model is unchanged.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the corresponding `+upstream-A.B.C` engine version.

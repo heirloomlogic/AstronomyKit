@@ -228,6 +228,19 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     limit_days = TakeDouble(&reader);
     meters_above_ground = TakeDouble(&reader);
 
+    /* Inverse refraction and its horizontal-vector caller share the altitude input. */
+    for (int mode = REFRACTION_NONE; mode <= REFRACTION_JPLHOR; ++mode)
+    {
+        double correction = Astronomy_InverseRefraction((astro_refraction_t)mode, observer.latitude);
+        if (!isfinite(correction))
+            abort();
+        Sink = correction;
+        astro_spherical_t sphere = { ASTRO_SUCCESS, observer.latitude, observer.longitude, star_dist };
+        astro_vector_t horizontal = Astronomy_VectorFromHorizon(sphere, time, (astro_refraction_t)mode);
+        CheckStatus(horizontal.status, "Astronomy_VectorFromHorizon");
+        Sink = horizontal.x + horizontal.y + horizontal.z;
+    }
+
     {
         astro_vector_t vector = Astronomy_HelioVector(body, time);
         CheckFiniteSuccess(vector.status, 3, (const double[]){ vector.x, vector.y, vector.z }, "Astronomy_HelioVector");

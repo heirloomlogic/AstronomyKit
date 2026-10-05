@@ -7,10 +7,12 @@ import hashlib
 import io
 import itertools
 import json
+import math
 import os
 from pathlib import Path
 import shutil
 import signal
+import struct
 import subprocess
 import tarfile
 import time
@@ -56,7 +58,10 @@ def process(command, timeout, environment):
     try:
         out, err = child.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
-        os.killpg(child.pid, signal.SIGKILL)
+        try:
+            os.killpg(child.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
         out, err = child.communicate(timeout=5)
         termination = "timeout-killed-and-reaped"
     return {"command": command, "termination": termination, "exitCode": child.returncode,
@@ -143,8 +148,13 @@ def validate(folder):
     if sha(build_path.read_bytes()) != receipt["buildProcessSHA256"] or build["command"] != receipt["buildCommand"] or build["exitCode"] != 0 or not build["reaped"] or build["termination"] != "process":
         raise ValueError("build execution differs")
     binary = Path(receipt["binaryPath"])
-    if binary.exists() and sha(binary.read_bytes()) != receipt["binarySHA256"]:
-        raise ValueError("retained executable differs")
+    if binary.exists():
+        if sha(binary.read_bytes()) != receipt["binarySHA256"]:
+            raise ValueError("retained executable differs")
+        scratch = binary.parent.parent
+        generated = {path.relative_to(scratch).as_posix(): sha(path.read_bytes()) for path in sorted(scratch.rglob("*")) if path.is_file() and path.suffix in {".swift", ".h", ".modulemap"}}
+        if generated != receipt["generatedSHA256"]:
+            raise ValueError("actual generated build inputs differ")
     packets = load(folder / "raw-processes.json.gz")
     cases = selection(protocol)
     if [packet["case"] for packet in packets] != [list(case) for case in cases]:
@@ -165,10 +175,43 @@ def validate(folder):
             result = json.loads(lines[1])
             if [result[key] for key in ("mode", "input", "route", "model")] != list(case):
                 raise ValueError("returned request differs")
+            validate_payload(case, result)
             results.append(result)
         else:
             raise ValueError("public process failed; raw packet retained")
     return results
+
+
+def number(bits):
+    if not isinstance(bits, str) or not 1 <= len(bits) <= 16 or any(character not in "0123456789abcdef" for character in bits):
+        raise ValueError("invalid double bits")
+    return struct.unpack(">d", int(bits, 16).to_bytes(8, "big"))[0]
+
+
+def validate_payload(case, result):
+    fields = {"mode", "input", "route", "model", "inputBits", "utBits", "ttBits", "finite"}
+    fields.update({"correctionBits"} if case[2] == "direct" else {"vectorBits", "timePreserved"})
+    if set(result) != fields or type(result["finite"]) is not bool:
+        raise ValueError("payload field/type population differs")
+    input_value = case[1]
+    if ".next" in input_value:
+        base, direction = input_value.split(".")
+        expected = math.nextafter(float(base), math.inf if direction == "nextUp" else -math.inf)
+    else:
+        expected = float(input_value)
+    actual = number(result["inputBits"])
+    if not ((math.isnan(expected) and math.isnan(actual)) or struct.pack(">d", actual) == struct.pack(">d", expected)):
+        raise ValueError("input double differs")
+    if number(result["utBits"]) != 10000 or not math.isfinite(number(result["ttBits"])):
+        raise ValueError("time payload differs")
+    if case[2] == "direct":
+        values = [number(result["correctionBits"])]
+    else:
+        if not isinstance(result["vectorBits"], list) or len(result["vectorBits"]) != 3 or type(result["timePreserved"]) is not bool:
+            raise ValueError("vector payload differs")
+        values = [number(value) for value in result["vectorBits"]]
+    if result["finite"] != all(math.isfinite(value) for value in values):
+        raise ValueError("saved finiteness differs")
 
 
 def assess(current, baseline=None):

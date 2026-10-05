@@ -87,7 +87,7 @@ class ContractInventoryTests(unittest.TestCase):
 
     def test_all_documented_patch_groups_are_present(self):
         patches = self.inventory["localPatches"]
-        self.assertEqual(list(range(1, 21)), [entry["patch"] for entry in patches])
+        self.assertEqual(list(range(1, 22)), [entry["patch"] for entry in patches])
 
     def test_all_generated_sources_are_present(self):
         expected = {

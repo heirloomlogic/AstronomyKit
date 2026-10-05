@@ -131,6 +131,8 @@
       - Ascending search validation: both success paths in Astronomy_Search
         require callback endpoint signs that establish an ascending bracket;
         quadratic acceptance also requires a positive fitted derivative.
+      - Bounded inverse refraction: invalid input, nonfinite iteration, stall,
+        two-state cycle or exhausted iteration returns zero correction.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -11007,26 +11009,35 @@ double Astronomy_Refraction(astro_refraction_t refraction, double altitude)
  * @return
  *      The angular adjustment in degrees to be added to the
  *      altitude angle to correct for atmospheric lensing.
- *      This will be less than or equal to zero.
+ *      Returns zero for a nonfinite or out-of-range altitude, or when the inverse iteration cannot converge.
  */
 double Astronomy_InverseRefraction(astro_refraction_t refraction, double bent_altitude)
 {
-    double altitude, diff;
+    double altitude, diff, next, previous = NAN;
+    int iter;
 
-    if (bent_altitude < -90.0 || bent_altitude > +90.0)
+    if (!isfinite(bent_altitude) || bent_altitude < -90.0 || bent_altitude > +90.0)
         return 0.0;     /* no attempt to correct an invalid altitude */
 
     /* Find the pre-adjusted altitude whose refraction correction leads to 'altitude'. */
     altitude = bent_altitude - Astronomy_Refraction(refraction, bent_altitude);
-    for(;;)
+    for (iter = 0; iter < 1000; ++iter)
     {
         /* See how close we got. */
         diff = (altitude + Astronomy_Refraction(refraction, altitude)) - bent_altitude;
+        if (!isfinite(diff))
+            return 0.0;
         if (fabs(diff) < 1.0e-14)
             return altitude - bent_altitude;
 
-        altitude -= diff;
+        next = altitude - diff;
+        /* The forward model's range boundary can produce a two-state cycle. */
+        if (!isfinite(next) || next == altitude || next == previous)
+            return 0.0;
+        previous = altitude;
+        altitude = next;
     }
+    return 0.0;
 }
 
 /**
