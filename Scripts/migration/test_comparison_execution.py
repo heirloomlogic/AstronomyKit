@@ -162,6 +162,9 @@ class ExecutionIntegrityTests(unittest.TestCase):
         log = ('# comparison-build-environment ' + json.dumps(fields, sort_keys=True) + '\nSwift version 6.2\nactual compilation log\n').encode()
         receipt = {'swift': 'Swift version 6.2\nTarget: x86_64-unknown-linux-gnu', 'platform': 'Linux-test-platform'}
         E.validate_environment(receipt, log)
+        informational = dict(fields, swiftStderrBase64=base64.b64encode(b'swift-driver version: 1.168.6\n').decode())
+        informational_log = ('# comparison-build-environment ' + json.dumps(informational) + '\nSwift version 6.2\n').encode()
+        E.validate_environment(receipt, informational_log)
         for field in ['swift', 'platform']:
             changed = {**receipt, field: 'invented'}
             with self.subTest(field=field), self.assertRaises(ValueError):

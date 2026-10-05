@@ -101,7 +101,7 @@ def validate_environment(receipt, log):
                 raise ValueError('environment command or termination changed')
             stdout = base64.b64decode(captured[name + 'StdoutBase64'], validate=True).decode().strip()
             stderr = base64.b64decode(captured[name + 'StderrBase64'], validate=True)
-            if not stdout or stderr:
+            if not stdout:
                 raise ValueError('environment command capture failed')
             identities[name] = stdout
         compiler_command = captured['swiftCommand'][0]
