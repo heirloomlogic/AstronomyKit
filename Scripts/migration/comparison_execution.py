@@ -15,9 +15,11 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 PROTOCOL = ROOT / 'Documentation/Migration/comparison-replay-execution-protocol.json'
 TOOL_PATHS = ('Scripts/migration/comparison_execution.py', 'Scripts/migration/run-comparison.py', 'Scripts/migration/replay_historical_research.py', 'Tools/Migration/Oracle/build-oracle.py', 'Tools/Migration/Oracle/build-oracle.sh')
-REGISTERED_ENVIRONMENTS = {
-    'd848a6af77f6f4328ec819d460f3b2bb46a9f1d6': ('2bddd2de1bb21d23ce70d8f2f88eea7693c04c57', 'Tools/Migration/ComparisonReplay/complete-'),
-    '02602f09f0703f348f8797d090eca53aba0858a8': ('38f946082a9a1a898eb8f7c6291f1bc85157e61e', 'Tools/Migration/ComparisonValidation146/final-bound-'),
+REGISTERED_EXECUTIONS = {
+    '64af5bbb67a0b479a1646b91a461b7d457844e477f3feba3f866c98ff941c767': ('2bddd2de1bb21d23ce70d8f2f88eea7693c04c57', 'Tools/Migration/ComparisonReplay/complete-historical/'),
+    '665a937fc7c74e4e1ae21a24782b00a4f9a426162dab2f2898acb4191a21e2ba': ('2bddd2de1bb21d23ce70d8f2f88eea7693c04c57', 'Tools/Migration/ComparisonReplay/complete-current/'),
+    '2c11c67a2ec8d58fe36a7b0d52ad650a1247a670368c03f628b3f0dd82093c9f': ('38f946082a9a1a898eb8f7c6291f1bc85157e61e', 'Tools/Migration/ComparisonValidation146/final-bound-historical/'),
+    'c9a414d9e5c5d01985d146877e1ca9467dc0023a4481256407c3d3a06a7d3e06': ('38f946082a9a1a898eb8f7c6291f1bc85157e61e', 'Tools/Migration/ComparisonValidation146/final-bound-current/'),
 }
 ENVIRONMENT_MARKER = b'# comparison-build-environment '
 RECIPE = {'configuration': 'release', 'product': 'AstronomyMigrationRunner', 'extraSwiftFlags': [], 'manifestConditions': {'.dev-tooling': False, '.model-prototype': False}}
@@ -95,20 +97,21 @@ def select_current_environment():
     return capture_environment(swift_command)
 
 
-def validate_environment(receipt, log, attempt=None):
-    """Select historical authority before reading headers; corroborate unregistered local captures."""
-    registered = REGISTERED_ENVIRONMENTS.get((attempt or {}).get('toolRevision'))
+def validate_environment(receipt, log, attempt=None, binary_sha256=None):
+    """Bind registered execution authority to retained bytes; corroborate other local captures."""
+    if attempt is not None and binary_sha256 is None:
+        raise ValueError('retained executable digest required for execution authority')
+    if binary_sha256 is not None and receipt.get('binarySHA256') != binary_sha256:
+        raise ValueError('receipt detached from retained executable bytes')
+    registered = REGISTERED_EXECUTIONS.get(binary_sha256)
     if registered is not None:
-        mode = attempt.get('mode')
-        if mode not in {'historical', 'current'}:
-            raise ValueError('registered environment mode changed')
-        revision, prefix = registered
-        c = load(ROOT / 'Scripts/migration/run-comparison.py', 'registered_build_environment')
-        path = prefix + mode + '/'
+        revision, path = registered
+        c = load(ROOT / 'Scripts/migration/run-comparison.py', 'registered_build_execution')
         trusted_log = gzip.decompress(c.git_blob(revision, path + 'swift-build.log.gz'))
         prior = read_json(gzip.decompress(c.git_blob(revision, path + 'candidate-build.json.gz')))
-        if log != trusted_log:
-            raise ValueError('build environment detached from registered immutable log')
+        trusted_attempt = read_json(gzip.decompress(c.git_blob(revision, path + 'attempt.json.gz')))
+        if binary_sha256 != prior['binarySHA256'] or c.canonical_bytes(receipt) != c.canonical_bytes(prior) or c.canonical_bytes(attempt) != c.canonical_bytes(trusted_attempt) or log != trusted_log:
+            raise ValueError('retained executable detached from registered immutable execution')
         identities = {name: prior[name] for name in ('swift', 'platform')}
         compiler_command = prior['command'][0]
         body = log.split(b'\n', 1)[1] if log.startswith(ENVIRONMENT_MARKER) else log
@@ -288,7 +291,7 @@ def execute(mode, output=None):
         binary = Path(bin_path) / 'AstronomyMigrationRunner'
         receipt = {'generatedInputsSHA256': generated_inputs(output / 'build'), 'sourceRevision': revision, 'sourceInputsSHA256': source_inputs(package), 'sourcePopulationMeaning': 'all project Sources plus public runner and actual manifest; includes conservative uncompiled optional sources', 'trackedTreeSHA256': tracked, 'toolSHA256': initial_tools, 'recipe': RECIPE, 'command': command, 'manifestSHA256': sha((package / 'Package.swift').read_bytes()), 'binaryRelativePath': str(binary.relative_to(output)), 'binarySHA256': sha(binary.read_bytes()), 'fingerprintSHA256': c.executable_fingerprint(binary), 'swift': base64.b64decode(environment['swiftStdoutBase64']).decode().strip(), 'platform': base64.b64decode(environment['platformStdoutBase64']).decode().strip(), 'buildLogSHA256': sha((output / 'swift-build.log').read_bytes())}
         save(output / 'candidate-build.json', receipt)
-        validate_environment(receipt, (output / 'swift-build.log').read_bytes())
+        validate_environment(receipt, (output / 'swift-build.log').read_bytes(), read_json((output / 'attempt.json').read_bytes()), sha(binary.read_bytes()))
         validate_build(binary, receipt, ROOT if mode == 'current' else package, package, build_root=output / 'build')
         with (output / 'oracle-build.log').open('wb') as log:
             subprocess.run([sys.executable, str(ROOT / 'Tools/Migration/Oracle/build-oracle.py'), str(output / 'oracle')], check=True, stdout=log, stderr=subprocess.STDOUT, timeout=protocol['buildTimeoutSeconds'])
@@ -364,7 +367,7 @@ def verify_evidence(output):
     if not binary.is_relative_to((output / 'build').resolve()) or binary.name != RECIPE['product']:
         raise ValueError('binary location detached from isolated build')
     validate_build(binary, receipt, package, package, expected_tools, output / 'build')
-    compiler_command = validate_environment(receipt, (output / 'swift-build.log').read_bytes(), attempt)
+    compiler_command = validate_environment(receipt, (output / 'swift-build.log').read_bytes(), attempt, sha(binary.read_bytes()))
     expected_command = [compiler_command, 'build', '--package-path', str(package), '--scratch-path', str(output / 'build'), '-c', 'release', '--product', 'AstronomyMigrationRunner', '--verbose']
     if receipt['command'] != expected_command or receipt['manifestSHA256'] != sha((package / 'Package.swift').read_bytes()) or receipt['buildLogSHA256'] != sha((output / 'swift-build.log').read_bytes()) or receipt['fingerprintSHA256'] != c.executable_fingerprint(binary):
         raise ValueError('build conditions, log or fingerprint changed')

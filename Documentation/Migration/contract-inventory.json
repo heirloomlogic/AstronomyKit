@@ -2855,7 +2855,7 @@
     "localPatches": 20,
     "publicSwiftAPI": 577,
     "testOwners": 99,
-    "tests": 1111
+    "tests": 1113
   },
   "crossCuttingContracts": [
     {
@@ -3743,7 +3743,7 @@
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
     "Scripts/migration/test_comparison.py": "c1a95c5cc8ca8fa7e57decdc656e70f50b8533525cbba908ee6e620a832c8879",
-    "Scripts/migration/test_comparison_execution.py": "fedf8436b626be1800db41b44880679bfbd6608c60f17eaa692b1b894085e1df",
+    "Scripts/migration/test_comparison_execution.py": "2d54d516e137d69936456c924b79d6426244fd346ea299ad04bee116e969d39b",
     "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
     "Scripts/migration/test_current_search.py": "0207424330238554246e6b2831f1e5da2345653101f4049985ac8be2d1c99111",
     "Scripts/migration/test_foundation.py": "d7a459d712fd1c2cf5195132d499b916bd823a5f2410dad64c177c454b937c8c",
@@ -13264,7 +13264,7 @@
       "id": "Scripts/migration/test_comparison_execution.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison_execution.py",
-      "testCount": 14
+      "testCount": 16
     },
     {
       "classification": "invariant",
