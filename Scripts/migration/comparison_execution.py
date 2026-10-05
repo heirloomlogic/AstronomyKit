@@ -3,6 +3,7 @@ import base64
 import hashlib
 import importlib.util
 import json
+import math
 from pathlib import Path
 import platform
 import subprocess
@@ -29,7 +30,12 @@ def sha(data):
 def read_json(data):
     def reject(value):
         raise ValueError(f'nonfinite JSON constant: {value}')
-    return json.loads(data, parse_constant=reject)
+    def finite_float(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError('nonfinite JSON number')
+        return number
+    return json.loads(data, parse_constant=reject, parse_float=finite_float)
 
 
 def save(path, value):
@@ -147,8 +153,11 @@ def execute(mode, output=None):
     c = load(ROOT / 'Scripts/migration/run-comparison.py', 'comparison_contract')
     revision = protocol['historicalSelection'] if mode == 'historical' else subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
     initial_tools = tool_hashes()
-    save(output / 'attempt.json', {'mode': mode, 'sourceRevision': revision, 'protocolSHA256': sha(PROTOCOL.read_bytes()), 'toolSHA256': initial_tools, 'toolRevision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()})
+    tool_revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    save(output / 'attempt.json', {'mode': mode, 'sourceRevision': revision, 'protocolSHA256': sha(PROTOCOL.read_bytes()), 'toolSHA256': initial_tools, 'toolRevision': tool_revision})
     try:
+        if initial_tools != {name: sha(c.git_blob(tool_revision, name)) for name in TOOL_PATHS} or PROTOCOL.read_bytes() != c.git_blob(tool_revision, str(PROTOCOL.relative_to(ROOT))):
+            raise ValueError('acquisition tooling/protocol must match its committed receipt identity')
         archive = c.ARTIFACT_PATH
         if sha((archive / 'manifest.json').read_bytes()) != protocol['originalArchiveManifestSHA256'] or sha(c.ORACLE_LOCK_PATH.read_bytes()) != protocol['oracleLockSHA256']:
             raise ValueError('frozen archive or oracle selection changed')
@@ -195,6 +204,9 @@ def execute(mode, output=None):
             validate_packet(packets[role][-1], {'id': 'invalid-request-control', 'command': ['invalid', 'request', 'espenak-meeus']})
             if packets[role][-1]['exitCode'] == 0:
                 raise ValueError('invalid request unexpectedly succeeded')
+            control_record = records([packets[role][-1]], [{'id': 'invalid-request-control', 'command': ['invalid', 'request', 'espenak-meeus']}])[0]
+            if {name: value for name, value in control_record.items() if name != 'id'} != metadata['failureControls'][role]:
+                raise ValueError('invalid-request archived control changed')
         validate_build(binary, receipt, ROOT if mode == 'current' else package, package)
         load(ROOT / 'Scripts/migration/replay_historical_research.py', 'post_execution_authentication').authenticate(package, revision)
         if sha(oracle.read_bytes()) != oracle_hash:

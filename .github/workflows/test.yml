@@ -313,3 +313,51 @@ jobs:
       - name: Lint isolated research runner
         if: runner.os == 'macOS'
         run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/SearchResearch/main.swift
+
+  comparison-execution-health:
+    strategy:
+      matrix:
+        os: [macos-26, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Checkout complete source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up evidence Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+      - name: Install Swift on Linux
+        if: runner.os == 'Linux'
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+      - name: Execute and authenticate separate observations
+        run: |
+          python3 -m unittest Scripts/migration/test_comparison.py Scripts/migration/test_comparison_execution.py -v
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+          import sys
+          for mode, criterion in [('check', 'originalReproductionPassed'), ('current', 'scientificComparisonPassed')]:
+              output = Path('.context') / f'comparison-hosted-{mode}'
+              completed = subprocess.run([sys.executable, 'Scripts/migration/run-comparison.py', '--' + mode, '--output', str(output)])
+              report = json.loads((output / 'assessment.json').read_text())
+              assert report['executionCompleted'] is True
+              assert completed.returncode == (0 if report[criterion] is True else 1)
+              subprocess.run([sys.executable, 'Scripts/migration/run-comparison.py', '--verify-evidence', str(output)], check=True)
+          PY
+      - name: Retain observations including non-success
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: comparison-execution-${{ matrix.os }}
+          path: |
+            .context/comparison-hosted-check/*.json
+            .context/comparison-hosted-check/*.log
+            .context/comparison-hosted-current/*.json
+            .context/comparison-hosted-current/*.log

@@ -40,7 +40,16 @@ python3 Scripts/migration/run-comparison.py --check
 python3 -m unittest Scripts/migration/test_comparison.py -v
 ```
 
-`--check` rebuilds both executables, replays all 18 cases, recovers all 7,746,010 downstream records, and rejects a stale archive or any undeclared C/Swift difference. Exact parsed JSON equality remains the default while the Swift surface delegates to the frozen C implementation. The Chiron case retains the three raw coordinate differences caused by #108's source-backed integration-step correction; its declaration names the exact permitted paths and independent evidence, and any missing or additional difference fails. The archive also proves that deliberate numeric, status, Delta T model, and event-order mutations are detected, and that invalid requests fail in both runner processes.
+`--check` now executes an isolated, authenticated historical source selection and preserves the original archive. Its strict original-reproduction criterion remains unmet: the original receipt records 39 inputs and a base label, omits complete build closure, and the sampled reconstruction has a different candidate fingerprint. It returns non-success rather than claiming that matching 18 sampled outputs proves original executable identity. `--current` builds a separately identified current candidate through the public module and applies the unchanged exact comparison obligation. The current Pluto position and state cases have undeclared differences and return non-success. The existing three exact Chiron coordinate differences remain the sole declared exception. Issue #144 remains open.
+
+```sh
+python3 Scripts/migration/run-comparison.py --check --output /new/historical-evidence
+python3 Scripts/migration/run-comparison.py --current --output /new/current-evidence
+python3 Scripts/migration/run-comparison.py --verify-evidence /existing/evidence
+python3 -m unittest Scripts/migration/test_comparison_execution.py -v
+```
+
+Each acquisition requires a new destination, materializes committed sources, links the release product in a private build, authenticates all project source files, generated inputs, the public runner, manifest, execution tools and binary, and saves every raw packet before assessment. The conservative source population includes optional sources that are not compiled by this recipe. Compiler commands and flags remain in the build log. Offline verification checks the saved raw/derived semantics and retained source/build identities; its success authenticates the record, even when original identity or the scientific comparison failed. The hosted `comparison-execution-health` job verifies this distinction and uploads the non-success observations. These finite source-bound observations provide no independent physical accuracy claim. See [ComparisonReplayEvidence.md](ComparisonReplayEvidence.md) for provenance and the remaining original-identity limit.
 
 ## Numerical evidence classes
 

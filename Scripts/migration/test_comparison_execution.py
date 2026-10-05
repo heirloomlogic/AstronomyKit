@@ -87,6 +87,21 @@ class ExecutionIntegrityTests(unittest.TestCase):
                 E.execute('current', Path(directory))
             self.assertEqual(marker.read_bytes(), b'keep')
 
+    def test_nonfinite_raw_packet_is_saved_before_assessment(self):
+        case, _ = self.packet()
+        completed = __import__('subprocess').CompletedProcess([], 0, stdout=b'{"value":1e999}', stderr=b'')
+        with mock.patch.object(E.subprocess, 'run', return_value=completed):
+            packet = E.capture(Path('/runner'), case, 1)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'raw.json'
+            E.save(path, packet)
+            saved = E.read_json(path.read_bytes())
+            self.assertIsNone(saved['result'])
+            self.assertTrue(saved['parseError'])
+            self.assertEqual(base64.b64decode(saved['stdoutBase64']), b'{"value":1e999}')
+            with self.assertRaises(ValueError):
+                E.validate_packet(saved, case)
+
     def test_launch_failure_packet_remains_serializable_before_assessment(self):
         case, _ = self.packet()
         packet = E.capture(Path('/definitely/not/a/runner'), case, 1)
