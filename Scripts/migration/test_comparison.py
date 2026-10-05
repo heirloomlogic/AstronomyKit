@@ -132,7 +132,7 @@ class ComparisonProtocolTests(unittest.TestCase):
             set(manifest["files"]),
         )
 
-    def test_archive_names_the_exact_candidate_sources(self):
+    def test_selected_historical_tree_matches_recorded_partial_inputs(self):
         protocol = json.loads((ROOT / "Documentation/Migration/comparison-replay-protocol.json").read_text())
         recorded = json.loads((ARTIFACTS / "metadata.json").read_text())["sourceHashes"]
         actual = {path: self.comparison.sha256_bytes(self.comparison.git_blob(protocol["historicalSelection"], path)) for path in recorded}
@@ -191,6 +191,13 @@ class ComparisonProtocolTests(unittest.TestCase):
         with mock.patch.object(self.comparison, 'generate_archive', create=True, side_effect=AssertionError('live candidate must not be acquired for archive replay')), mock.patch.object(self.comparison, 'historical_replay', create=True, return_value={'classification': 'historical-executable-replay', 'executionCompleted': True, 'originalReproductionPassed': True}), mock.patch('sys.argv', ['run-comparison.py', '--check']):
             result = self.comparison.main()
         self.assertEqual(result['classification'], 'historical-executable-replay')
+
+    def test_sampled_replay_does_not_pass_incomplete_original_identity(self):
+        report = {'executionCompleted': True, 'historicalSampledReplayPassed': True, 'candidateFingerprintMatchesOriginal': False, 'originalCompleteClosureRecorded': False, 'originalReproductionPassed': False}
+        with mock.patch.object(self.comparison, 'historical_replay', return_value=report), mock.patch('sys.argv', ['run-comparison.py', '--check']):
+            with self.assertRaises(SystemExit) as error:
+                self.comparison.main()
+        self.assertEqual(error.exception.code, 1)
 
     def test_current_mode_keeps_scientific_failure_distinct_from_execution_health(self):
         report = {'executionCompleted': True, 'scientificComparisonPassed': False, 'failed': ['pluto-position-em', 'pluto-state-jpl']}

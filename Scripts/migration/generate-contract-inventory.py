@@ -118,7 +118,7 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/model-prototype/test_generate_swift_models.py": 82,
     "Scripts/model-prototype/test_measure.py": 82,
     "Scripts/migration/test_comparison.py": 80,
-    "Scripts/migration/test_comparison_execution.py": 144,
+    "Scripts/migration/test_comparison_execution.py": 80,
     "Scripts/migration/test_foundation.py": 80,
     "Scripts/migration/test_performance.py": 80,
     "Scripts/migration/test_sun_pilot.py": 83,

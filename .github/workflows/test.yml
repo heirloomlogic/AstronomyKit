@@ -335,6 +335,11 @@ jobs:
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
+      - name: Materialize recorded Git selections
+        run: |
+          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 1add73ec6c117e9b6f3d26e745a3487262ff4c75 d32812388b63b384d03939be0af245152df618b6; do
+            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
+          done
       - name: Execute and authenticate separate observations
         run: |
           python3 -m unittest Scripts/migration/test_comparison.py Scripts/migration/test_comparison_execution.py -v

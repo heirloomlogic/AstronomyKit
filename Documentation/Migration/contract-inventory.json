@@ -2855,7 +2855,7 @@
     "localPatches": 20,
     "publicSwiftAPI": 577,
     "testOwners": 99,
-    "tests": 1104
+    "tests": 1105
   },
   "crossCuttingContracts": [
     {
@@ -3742,8 +3742,8 @@
     "Scripts/ephemeris/test_lunar_bundle.py": "a1eb8f4eca38531eab3d952f159a607675bee57bfec3aa9905b4640d9ea556df",
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
-    "Scripts/migration/test_comparison.py": "e69bfa5e6150e399642ce6e30dbf495347b47e7830ce7df09e432c68a13c81b6",
-    "Scripts/migration/test_comparison_execution.py": "a9953852aaa8d00a4e327ce9cad7bb43d7c5b61d757456982c6d07e0baca9b12",
+    "Scripts/migration/test_comparison.py": "c1a95c5cc8ca8fa7e57decdc656e70f50b8533525cbba908ee6e620a832c8879",
+    "Scripts/migration/test_comparison_execution.py": "e1d1830bf6efede064ccf1c8ca92185fe5363907928ca3dbe1537e56d90d6583",
     "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
     "Scripts/migration/test_current_search.py": "0207424330238554246e6b2831f1e5da2345653101f4049985ac8be2d1c99111",
     "Scripts/migration/test_foundation.py": "d7a459d712fd1c2cf5195132d499b916bd823a5f2410dad64c177c454b937c8c",
@@ -13257,12 +13257,12 @@
       "id": "Scripts/migration/test_comparison.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison.py",
-      "testCount": 17
+      "testCount": 18
     },
     {
       "classification": "invariant",
       "id": "Scripts/migration/test_comparison_execution.py",
-      "migrationIssue": 144,
+      "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison_execution.py",
       "testCount": 8
     },
