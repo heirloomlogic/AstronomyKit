@@ -1,6 +1,6 @@
 {
-  "candidateDirty": true,
-  "candidateRevision": "e5eb63bbc4568d8ee0c0ac27d86fd3705e9c69fa",
+  "candidateDirty": false,
+  "candidateRevision": "7d577000d1062cdb034e05dd8d97ac3e2eef22d2",
   "classification": "finite-archived-reference-comparison-not-continuous-certification",
   "coverage": {
     "approved": {
