@@ -63,6 +63,21 @@ struct SearchTests {
         #expect(abs(quadratic.universalTime - 20000.375) * 86400 < 0.001)
     }
 
+    @Test("Reversed ordinary windows retain ascending direction", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func reversedWindow(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        let end = start.addingDays(1)
+        let ascending = try #require(
+            try AstroSearch.find(from: end, to: start, toleranceSeconds: 0.001) {
+                $0.universalTime - 20000.375
+            })
+        #expect(abs(ascending.universalTime - 20000.375) * 86400 < 0.001)
+        let descending = try AstroSearch.find(from: end, to: start, toleranceSeconds: 0.001) {
+            20000.375 - $0.universalTime
+        }
+        #expect(descending == nil)
+    }
+
     @Test("An internal ascending bracket remains discoverable", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
     func internalAscendingBracket(model: DeltaTModel) throws {
         let start = AstroTime(ut: 20000, deltaTModel: model)

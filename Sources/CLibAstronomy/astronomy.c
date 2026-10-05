@@ -7823,7 +7823,10 @@ astro_search_result_t Astronomy_Search(
         /* AstronomyKit local patch: callback signs establish direction;
          * an interpolant's slope alone does not establish an ascending event.
          * Include a zero endpoint only when the other endpoint supplies direction. */
-        int ascending_bracket = (f1 <= 0.0 && f2 >= 0.0 && (f1 < 0.0 || f2 > 0.0));
+        int forward = (t1.ut <= t2.ut);
+        double earlier = forward ? f1 : f2;
+        double later = forward ? f2 : f1;
+        int ascending_bracket = (earlier <= 0.0 && later >= 0.0 && (earlier < 0.0 || later > 0.0));
         if (++iter > iter_limit)
             return SearchError(ASTRO_NO_CONVERGE);
 
@@ -7892,14 +7895,14 @@ astro_search_result_t Astronomy_Search(
 
         /* After quadratic interpolation attempt. */
         /* Now just divide the region in two parts and pick whichever one appears to contain a root. */
-        if (f1 < 0.0 && fmid >= 0.0)
+        if ((forward && f1 < 0.0 && fmid >= 0.0) || (!forward && fmid < 0.0 && f1 >= 0.0))
         {
             t2 = tmid;
             f2 = fmid;
             continue;
         }
 
-        if (fmid < 0.0 && f2 >= 0.0)
+        if ((forward && fmid < 0.0 && f2 >= 0.0) || (!forward && f2 < 0.0 && fmid >= 0.0))
         {
             t1 = tmid;
             f1 = fmid;

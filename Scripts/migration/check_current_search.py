@@ -37,6 +37,28 @@ def source_identity():
     return actual
 
 
+def load_supplement(directory=M.SUPPLEMENT):
+    manifest_bytes = (directory / "manifest.json").read_bytes()
+    if M.sha(manifest_bytes) != M.SUPPLEMENT_MANIFEST_SHA256:
+        raise ValueError("supplement immutable identity changed")
+    manifest = json.loads(manifest_bytes)
+    expected = {"protocol.json", "build-receipt.json", "assessment.json", "raw-runs.json.gz", "collector.txt"}
+    if set(manifest["filesSHA256"]) != expected or {p.name for p in directory.iterdir() if p.is_file()} != expected | {"manifest.json"}:
+        raise ValueError("supplement artifact population changed")
+    for name, digest in manifest["filesSHA256"].items():
+        if M.sha((directory / name).read_bytes()) != digest:
+            raise ValueError("supplement raw artifact detached")
+    if (directory / "protocol.json").read_bytes() != (M.HOME / "supplement.json").read_bytes():
+        raise ValueError("supplement archived selection changed")
+    M.validate_receipt(json.loads((directory / "build-receipt.json").read_text()), M.SUPPLEMENT_REVISION)
+    runs = json.loads(gzip.decompress((directory / "raw-runs.json.gz").read_bytes()))
+    derived = M.assessment(runs, M.supplement_protocol()["cases"])
+    if derived != json.loads((directory / "assessment.json").read_text()):
+        raise ValueError("supplement saved derivation false")
+    M.validate_supplement_branches(runs, M.supplement_protocol()["cases"])
+    return runs
+
+
 def compare(saved, current, cases):
     plan = selection()
     M.require_population([c["id"] for c in cases], [c["id"] for c in M.protocol()["cases"] + M.supplement_protocol()["cases"]])
@@ -62,7 +84,7 @@ def compare(saved, current, cases):
 def compare_events(old, new, field=""):
     if isinstance(old, str) and (old.startswith("f64:") or old in ("nan", "+inf", "-inf")):
         tolerance = 1e-8 if field in ("ut", "tt", "expectedCapturedTT") else 1e-12
-        if not R_packet_equal(old, new, tolerance):
+        if not packet_equal(old, new, tolerance):
             raise ValueError("unchanged numerical packet exceeds historical envelope")
     elif isinstance(old, dict):
         if not isinstance(new, dict) or set(old) != set(new):
@@ -78,7 +100,7 @@ def compare_events(old, new, field=""):
         raise ValueError("unchanged semantic field differs")
 
 
-def R_packet_equal(old, new, tolerance):
+def packet_equal(old, new, tolerance):
     return isinstance(new, str) and M.close_packets(old, new, tolerance)
 
 
@@ -113,14 +135,14 @@ def build(work):
 def check():
     selection()
     original, _, _ = M.load_archive()
-    supplement = json.loads(gzip.decompress((M.SUPPLEMENT / "raw-runs.json.gz").read_bytes()))
+    supplement = load_supplement()
     cases = M.protocol()["cases"] + M.supplement_protocol()["cases"]
     saved = {model: original[model]["swift"] + supplement[model]["swift"] for model in M.protocol()["models"]}
     with tempfile.TemporaryDirectory(prefix="current-search-", dir=ROOT / ".context") as directory:
         binary, receipt = build(Path(directory))
         current = {model: [{"id": case["id"], **M.run_command([str(binary), *M.arguments(case, model)], M.protocol()["bounds"]["subprocessTimeoutSeconds"])} for case in cases] for model in M.protocol()["models"]}
         output = ROOT / ".context/current-search-repair"
-        output.mkdir(exist_ok=True)
+        output.mkdir(exist_ok=False)
         M.write_gzip(output / "raw-runs.json.gz", current)
         (output / "build-receipt.json").write_text(M.dumps(receipt))
         changes = compare(saved, current, cases)

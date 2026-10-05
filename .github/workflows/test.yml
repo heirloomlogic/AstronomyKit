@@ -232,6 +232,7 @@ jobs:
           python3 Scripts/migration/replay_historical_research.py seasonal
           python3 Scripts/reference-data/build-accuracy-runner.py
           python3 Scripts/reference-data/check-seasonal-public-runner.py
+          python3 -m unittest Scripts/reference-data/test_current_seasonal_search.py -v
           python3 Scripts/reference-data/check-current-seasonal-search.py
 
   constellation-corpus-replay:
@@ -300,6 +301,7 @@ jobs:
       - name: Replay source-bound corpus and directed controls
         run: |
           python3 Scripts/migration/replay_historical_research.py callback
+          python3 -m unittest Scripts/migration/test_current_search.py -v
           python3 Scripts/migration/check_current_search.py
       - name: Prepare existing generated lint configuration
         if: runner.os == 'macOS'
