@@ -16,6 +16,7 @@ DOCS = ROOT / "Documentation/Migration"
 PLAN = DOCS / "season-phase-sampling-plan.json"
 POLICY = DOCS / "approved-accuracy-targets.json"
 REPORT = DOCS / "season-phase-assessment.json"
+INITIAL_REPORT = DOCS / "season-phase-assessment-initial.json"
 BINARY = ROOT / ".context/accuracy-qualification/build-runner/debug/AccuracyQualificationRunner"
 BUILD_HELPER = Path(__file__).with_name("build-bundled-runner.py")
 BUILD_SPEC = importlib.util.spec_from_file_location("bundled_runner", BUILD_HELPER)
@@ -50,6 +51,31 @@ def validate_plan(plan):
         raise ValueError("season/phase approved domain changed")
     if plan.get("expectedRetainedCounts") != {"lunarPhases": 1038, "seasons": 804}:
         raise ValueError("season/phase retained counts changed")
+    if plan.get("classification") != "prospective-replay-plan-after-prior-results-observed":
+        raise ValueError("season/phase measurement chronology changed")
+    chronology = plan.get("measurementChronology", {})
+    initial = chronology.get("initialAssessment", {})
+    if chronology.get("firstRepositoryCommit") != "7d577000d1062cdb034e05dd8d97ac3e2eef22d2" or initial != {
+        "path": str(INITIAL_REPORT.relative_to(ROOT)),
+        "sha256": digest(INITIAL_REPORT.read_bytes()),
+    }:
+        raise ValueError("season/phase initial assessment archive changed")
+    expected_acquisition = {
+        "lunarPhases": {
+            "acquisitionScriptSHA256": "c45c24ef50da3aa4439feaff6d498e084ffb3f28998c1b5643bf5b0964f30175",
+            "acquisitionScriptURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/maketest.bat",
+            "parserSHA256": "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263",
+            "parserURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/parse_moon_phases.js",
+            "sourceAPI": "https://api.usno.navy.mil/moon/phase?year=YEAR",
+        },
+        "seasons": {
+            "acquisitionScriptSHA256": "27c1a14ff1184bd09e246d83d2c94a6b6ba0c2f971ef267c3fe205b4b77bb38f",
+            "acquisitionScriptURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons/maketest.bat",
+            "parserSHA256": "d20f3901b918162f211a299baedf8022c9b4578de0bda09bd31a37a77f215d00",
+            "parserURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons/parse_seasons.js",
+            "sourceAPI": "https://api.usno.navy.mil/seasons?year=YEAR",
+        },
+    }
     for family in ("seasons", "lunarPhases"):
         source = plan.get("referenceSources", {}).get(family, {})
         path = ROOT / source.get("path", "")
@@ -57,8 +83,9 @@ def validate_plan(plan):
             raise ValueError(f"season/phase source detached for {family}")
         if source.get("upstreamRevision") != "865d3da7d8112bbc7911238052c6af4aaf877181":
             raise ValueError(f"season/phase source revision changed for {family}")
-        if "aa.usno.navy.mil/api/" not in source.get("sourceAPI", ""):
-            raise ValueError(f"season/phase source query provenance missing for {family}")
+        for key, expected in expected_acquisition[family].items():
+            if source.get(key) != expected:
+                raise ValueError(f"season/phase source query provenance changed for {family}")
     return plan
 
 
@@ -309,14 +336,23 @@ def scientific_report(report):
     return {key: value for key, value in report.items() if key not in {"candidateDirty", "candidateRevision"}}
 
 
+def write_report(path, data, replace_existing):
+    if path.exists() and not replace_existing:
+        raise FileExistsError(f"refusing to replace frozen assessment {path}; pass --replace-existing for intentional regeneration")
+    path.write_bytes(data)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("action", choices=("report", "check"))
     parser.add_argument("--binary", type=Path, default=BINARY)
+    parser.add_argument("--replace-existing", action="store_true")
     args = parser.parse_args()
+    if args.action != "report" and args.replace_existing:
+        parser.error("--replace-existing is valid only with report")
     report = build_report(args.binary)
     if args.action == "report":
-        REPORT.write_bytes(encoded(report))
+        write_report(REPORT, encoded(report), args.replace_existing)
     else:
         if not REPORT.exists() or scientific_report(json.loads(REPORT.read_bytes())) != scientific_report(report):
             raise ValueError(f"season/phase assessment is stale: {REPORT}")

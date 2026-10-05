@@ -1,6 +1,8 @@
+import hashlib
 import importlib.util
 import json
 import math
+import tempfile
 import types
 import unittest
 from pathlib import Path
@@ -40,6 +42,34 @@ class SeasonPhaseEventTests(unittest.TestCase):
         changed["referenceSources"]["seasons"]["sha256"] = "0" * 64
         with self.assertRaisesRegex(ValueError, "source"):
             Q.validate_plan(changed)
+
+    def test_plan_discloses_prior_observation_and_preserves_initial_assessment(self):
+        plan = Q.load_plan()
+        self.assertEqual("prospective-replay-plan-after-prior-results-observed", plan["classification"])
+        chronology = plan["measurementChronology"]
+        self.assertEqual("7d577000d1062cdb034e05dd8d97ac3e2eef22d2", chronology["firstRepositoryCommit"])
+        self.assertIn("results had already been observed", chronology["prospectiveReplay"])
+        archive = ROOT / chronology["initialAssessment"]["path"]
+        self.assertEqual(chronology["initialAssessment"]["sha256"], hashlib.sha256(archive.read_bytes()).hexdigest())
+
+    def test_plan_pins_actual_upstream_acquisition_endpoints(self):
+        plan = Q.load_plan()
+        seasons = plan["referenceSources"]["seasons"]
+        phases = plan["referenceSources"]["lunarPhases"]
+        self.assertEqual("https://api.usno.navy.mil/seasons?year=YEAR", seasons["sourceAPI"])
+        self.assertEqual("https://api.usno.navy.mil/moon/phase?year=YEAR", phases["sourceAPI"])
+        self.assertEqual("27c1a14ff1184bd09e246d83d2c94a6b6ba0c2f971ef267c3fe205b4b77bb38f", seasons["acquisitionScriptSHA256"])
+        self.assertEqual("c45c24ef50da3aa4439feaff6d498e084ffb3f28998c1b5643bf5b0964f30175", phases["acquisitionScriptSHA256"])
+
+    def test_report_refuses_implicit_replacement(self):
+        with tempfile.TemporaryDirectory() as directory:
+            report = Path(directory) / "assessment.json"
+            report.write_bytes(b"original\n")
+            with self.assertRaisesRegex(FileExistsError, "--replace-existing"):
+                Q.write_report(report, b"replacement\n", replace_existing=False)
+            self.assertEqual(b"original\n", report.read_bytes())
+            Q.write_report(report, b"replacement\n", replace_existing=True)
+            self.assertEqual(b"replacement\n", report.read_bytes())
 
     def test_parsers_retain_every_predeclared_event_in_order(self):
         plan = Q.load_plan()
