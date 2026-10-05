@@ -10,6 +10,7 @@ from pathlib import Path
 import statistics
 
 ROOT = Path(__file__).resolve().parents[2]
+BASELINE_REVISION = "2376ee3df52f141f6394cb442243feb7cdbd6b86"
 OPERATIONS = {"firstAccess": 1, "freshPolynomial": 200, "repeatedPolynomial": 200,
               "freshFallback": 200, "repeatedFallback": 200}
 CHANGED_INPUTS = {"Sources/AstronomyModelPrototype/EarthPilot.swift",
@@ -24,6 +25,8 @@ def digest(path):
 
 
 def validate_reports(baseline, candidate):
+    if baseline.get("candidateRevision") != BASELINE_REVISION:
+        raise ValueError("baseline revision differs from the frozen allocation protocol")
     for record in (baseline, candidate):
         if (record["status"] != "complete-evidence" or record["diagnostic"]
                 or record["candidateDirty"] or record["numericalPassed"] is not True):
@@ -98,17 +101,47 @@ def validate_reports(baseline, candidate):
             "originalCeilingBytes": ceiling, "qualified": False}
 
 
+def validate_raw_records(name, data):
+    def reject_constant(value):
+        raise ValueError(f"nonfinite JSON constant in {name}: {value}")
+    if name == "inputs.json.gz":
+        records = json.loads(data, parse_constant=reject_constant)
+        expected_count = 67240
+        if not isinstance(records, list):
+            raise ValueError("input corpus must be a JSON array")
+    else:
+        records = [json.loads(line, parse_constant=reject_constant) for line in data.splitlines()]
+        expected_count = 8 if name.endswith("-perturbed.jsonl.gz") else 67240
+        if any(not isinstance(row, dict) or not isinstance(row.get("status"), str) for row in records):
+            raise ValueError(f"invalid output row in {name}")
+    if len(records) != expected_count or any(not isinstance(row, dict) for row in records):
+        raise ValueError(f"raw record count or structure differs from the frozen corpus: {name}")
+    return len(records)
+
+
 def compare_directories(baseline, candidate):
     records = [json.loads((path / "report.json").read_text()) for path in (baseline, candidate)]
     result = validate_reports(*records)
     bound = {}
+    artifact_hashes = {"baseline": {}, "candidate": {}}
+    record_counts = {}
     for name in ("inputs.json.gz", "oracle.jsonl.gz", "debug.jsonl.gz", "release.jsonl.gz",
                  "debug-perturbed.jsonl.gz", "release-perturbed.jsonl.gz"):
-        data = [gzip.decompress((path / name).read_bytes()) for path in (baseline, candidate)]
+        data = []
+        for label, record, path in zip(("baseline", "candidate"), records, (baseline, candidate)):
+            contents = (path / name).read_bytes()
+            actual_hash = hashlib.sha256(contents).hexdigest()
+            expected_hash = record.get("artifactSHA256", {}).get(name)
+            if expected_hash != actual_hash:
+                raise ValueError(f"{label} artifact hash mismatch or missing report binding: {name}")
+            artifact_hashes[label][name] = actual_hash
+            data.append(gzip.decompress(contents))
         if data[0] != data[1]:
             raise ValueError(f"baseline/candidate raw rows differ: {name}")
+        record_counts[name] = validate_raw_records(name, data[0])
         bound[name] = hashlib.sha256(data[0]).hexdigest()
-    result.update({"schemaVersion": 2, "status": "complete-paired-evidence", "matchingUncompressedSHA256": bound,
+    result.update({"schemaVersion": 3, "status": "complete-paired-evidence", "matchingUncompressedSHA256": bound,
+                   "validatedArtifactSHA256": artifact_hashes, "validatedRawRecordCounts": record_counts,
                    "protocolSHA256": digest(ROOT / "Documentation/Migration/SunPilotAllocationProtocol.md"),
                    "validatorSHA256": digest(Path(__file__)),
                    "reports": {label: {"revision": record["candidateRevision"], "reportSHA256": digest(path / "report.json")}

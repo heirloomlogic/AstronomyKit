@@ -3,7 +3,7 @@
   "observations": {
     "apple": {
       "candidateToBaselineRatio": 3.7034850504665777,
-      "comparisonSHA256": "a18f55190746de2d992136cd7fea63c35bfd605a45dd32637a063cca2c2a5934",
+      "comparisonSHA256": "9dda8bb6fe26c6e938975bcfd0486d57476656cc006e561df6d3cbdfcf836858",
       "freshFallbackMedianNanoseconds": {
         "baseline": 10502000,
         "candidate": 38894000
@@ -11,7 +11,7 @@
     },
     "linux": {
       "candidateToBaselineRatio": 2.4260403468280236,
-      "comparisonSHA256": "97c814af7af677ff9af635fa47a147b834c24b140fef4cfe114de3e8e162cf58",
+      "comparisonSHA256": "8f2f979253866d10fb6f84fe4430518d277a5836a2b27cc5dbbcef06c428e87f",
       "freshFallbackMedianNanoseconds": {
         "baseline": 34901678,
         "candidate": 84672879
