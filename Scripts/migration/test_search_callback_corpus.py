@@ -186,6 +186,69 @@ class Controls(unittest.TestCase):
         self.assertEqual(derived["processes"], 204)
         self.assertEqual(derived["differences"], [])
 
+    def test_archived_receipt_rehash_cannot_change_semantics(self):
+        import json
+
+        receipt = json.loads((m.ARCHIVE / "build-receipt.json").read_text())
+        for field, value in [
+            ("environment", {}),
+            ("binarySHA256", {}),
+            ("fastMath", 0),
+            ("swiftSHA256", "0" * 64),
+        ]:
+            altered = copy.deepcopy(receipt)
+            altered[field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                m.validate_receipt(altered, m.ACQUISITION_REVISION)
+
+    def test_replay_rejects_saved_epoch_and_final_result(self):
+        saved, _, _ = m.load_archive()
+        import json
+
+        for mutation in ["epoch", "tag", "model", "final", "error", "population"]:
+            changed = copy.deepcopy(saved)
+            run = changed["espenak-meeus"]["c"][0]
+            events = [json.loads(line) for line in run["stdout"].splitlines()]
+            if mutation == "epoch":
+                events[-1]["time"]["ut"] = m.packet(23000)
+            if mutation == "tag":
+                events[-1]["time"]["ut"] = "nan"
+            if mutation == "model":
+                events[-1]["time"]["model"] = "jpl-horizons"
+            if mutation == "final":
+                events[-1]["outcome"] = "absent"
+            if mutation == "error":
+                events[-1]["firstErrorVisit"] = 1
+            if mutation == "population":
+                run["id"] = "other"
+            run["stdout"] = "".join(json.dumps(e) + "\n" for e in events)
+            run["stdoutSHA256"] = m.sha(run["stdout"].encode())
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                m.compare_replay(saved, changed)
+
+    def test_immutable_manifest_rejects_rehashed_archive(self):
+        import json
+        import tempfile
+        import shutil
+        from unittest import mock
+
+        with tempfile.TemporaryDirectory() as directory:
+            archive = Path(directory) / "archive"
+            shutil.copytree(m.ARCHIVE, archive)
+            manifest = json.loads((archive / "manifest.json").read_text())
+            manifest["toolSHA256"] = {}
+            (archive / "manifest.json").write_text(m.dumps(manifest))
+            with mock.patch.object(m, "ARCHIVE", archive), self.assertRaises(
+                ValueError
+            ):
+                m.load_archive()
+
+    def test_supplement_selection_is_separate(self):
+        selected = m.supplement_protocol(m.SUPPLEMENT_REVISION)
+        self.assertEqual(len(selected["cases"]), 2)
+        self.assertEqual(m.protocol()["caseCount"], 51)
+        m.validate_failed_attempt()
+
     def test_timeout_retains_partial(self):
         import sys
 
@@ -196,7 +259,7 @@ class Controls(unittest.TestCase):
                 "-c",
                 "import time; print('partial',flush=True); time.sleep(2)",
             ],
-            0.05,
+            0.5,
         )
         self.assertEqual(result["termination"], "research-timeout")
         self.assertEqual(result["stdout"], "partial\n")

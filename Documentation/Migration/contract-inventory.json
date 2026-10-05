@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 118,
     "localPatches": 19,
     "publicSwiftAPI": 577,
-    "testOwners": 94,
-    "tests": 1056
+    "testOwners": 95,
+    "tests": 1069
   },
   "crossCuttingContracts": [
     {
@@ -3747,6 +3747,7 @@
     "Scripts/migration/test_foundation.py": "bb9225d194aa3037e9d24a86144a7da708edb9f933d96752b852b9c5a8c26a0f",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "89841bef8defc3124450ad379d32f21810cedc8ee954ff8ffd83b0e133ae0a91",
+    "Scripts/migration/test_search_callback_corpus.py": "823992036d73516ded4b21de38b55127ea4bf1f27882a141eb046c5a2f0532ff",
     "Scripts/migration/test_sun_pilot.py": "ffa210f825e52632d39f5a5034a57d221aaa82c26f4e58bd29f4904a6e047501",
     "Scripts/migration/test_sun_pilot_rss.py": "74ef1eed80b22aed63fb6fa34ed7bcb9a1acecf351a6b59715ad9f194df857ad",
     "Scripts/model-prototype/test_generate_swift_models.py": "4cd335d674af4a12fe405c265744682c45af78bbd7f9e95476e1c3f964a3106c",
@@ -13275,6 +13276,13 @@
       "migrationIssue": 80,
       "path": "Scripts/migration/test_performance_candidate.py",
       "testCount": 7
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/migration/test_search_callback_corpus.py",
+      "migrationIssue": 84,
+      "path": "Scripts/migration/test_search_callback_corpus.py",
+      "testCount": 13
     },
     {
       "classification": "invariant",

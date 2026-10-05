@@ -267,3 +267,42 @@ jobs:
       - name: Lint isolated research runner
         if: runner.os == 'macOS'
         run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/ConstellationResearch/main.swift
+
+  search-callback-corpus-replay:
+    strategy:
+      matrix:
+        os: [macos-26, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up evidence Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+      - name: Install Swift on Linux
+        if: runner.os == 'Linux'
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+      - name: Materialize frozen oracle revision
+        run: |
+          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 fb6593186068564da917d0a5cafd9a91035198b3 5805e024861454b173bdbeb627320c63b2956054 478fea15da86a4df5869fdb4230bd0fcfc1a37b1 5cc05267558d120fea033a021e982af291af0331 97fc275f6fd455ed73063a6961698569783dddb8; do
+            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
+          done
+      - name: Replay source-bound corpus and directed controls
+        run: |
+          python3 -m unittest Scripts/migration/test_search_callback_corpus.py -v
+          python3 Scripts/migration/search_callback_corpus.py check
+      - name: Prepare existing generated lint configuration
+        if: runner.os == 'macOS'
+        run: |
+          touch .dev-tooling
+          swift package resolve
+          .build/checkouts/Persnicket/bin/ci-lint-setup
+      - name: Lint isolated research runner
+        if: runner.os == 'macOS'
+        run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/SearchResearch/main.swift

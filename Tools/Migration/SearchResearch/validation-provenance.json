@@ -1,0 +1,13 @@
+{
+  "classification": "mutable-current-validator-provenance-excluded-from-historical-measurement-manifests",
+  "currentTestSHA256": "823992036d73516ded4b21de38b55127ea4bf1f27882a141eb046c5a2f0532ff",
+  "currentToolSHA256": {
+    "Scripts/migration/search_callback_corpus.py": "46c165ac8b9b2223e309b4eb9ca23ed8816d22bc979d392e2adb2a5d2314ff9c",
+    "Tools/Migration/SearchResearch/main.swift": "d161afc827210ae6e123fce4abdeaf77e16bca65cd0d4bed7fbaead210516549",
+    "Tools/Migration/SearchResearch/search-main.c": "751e8b1bcc83adc71aeaf4a4293d63dfa8f6d1b0a167e8d8ee1a28f82a662669"
+  },
+  "failedAttemptRevision": "5805e024861454b173bdbeb627320c63b2956054",
+  "originalManifestSHA256": "6a07415eb67fdb8646c6ae39624c207a53b09b936c8b9ab376b15dd4c3d8603d",
+  "schemaVersion": 1,
+  "supplementManifestSHA256": "83fcb71f6989e02f1e70f8057f9547336654bb145356e45dce3e36db9a241614"
+}
