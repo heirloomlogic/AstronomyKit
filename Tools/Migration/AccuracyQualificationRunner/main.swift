@@ -127,6 +127,19 @@ func runAccuracyBatch() throws {
                 }
                 events.sort { ($0["julianDateTT"] as! Double) < ($1["julianDateTT"] as! Double) }
                 output = ["status": "success", "events": events]
+            case "seasonal-roots":
+                guard let year = request["year"] as? Int, (1900...2130).contains(year)
+                else { throw RunnerError.usage }
+                let seasons = try Seasons.forYear(year)
+                output = [
+                    "status": "success",
+                    "events": [
+                        ["kind": "marchEquinox", "julianDateTT": seasons.marchEquinox.terrestrialTime + 2_451_545],
+                        ["kind": "juneSolstice", "julianDateTT": seasons.juneSolstice.terrestrialTime + 2_451_545],
+                        ["kind": "septemberEquinox", "julianDateTT": seasons.septemberEquinox.terrestrialTime + 2_451_545],
+                        ["kind": "decemberSolstice", "julianDateTT": seasons.decemberSolstice.terrestrialTime + 2_451_545],
+                    ],
+                ]
             case "seasons":
                 guard let year = request["year"] as? Int,
                     let referenceJulianDatesUT = request["referenceJulianDatesUT"] as? [Double],
