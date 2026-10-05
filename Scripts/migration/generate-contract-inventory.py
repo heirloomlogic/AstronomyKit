@@ -108,6 +108,8 @@ TEST_ISSUES = {
 
 SCRIPT_TEST_ISSUES = {
     "Scripts/migration/test_search_callback_corpus.py": 84,
+    "Scripts/migration/test_current_search.py": 84,
+    "Scripts/migration/test_historical_research.py": 80,
     "Scripts/migration/test_constellation_corpus.py": 91,
     "Scripts/reference-data/test_source_archive.py": 81,
     "Scripts/ephemeris/test_pluto_artifacts.py": 81,
@@ -169,6 +171,7 @@ PATCH_ISSUES = {
     17: 97,
     18: 84,
     19: 81,
+    20: 84,
 }
 
 GENERATED_ISSUES = {
@@ -485,10 +488,10 @@ def local_patches(root):
         number = int(number_text)
         if number in PATCH_ISSUES and number not in {entry["patch"] for entry in entries}:
             entries.append({"id": f"patch-{number:02d}", "patch": number, "title": title, "migrationIssue": PATCH_ISSUES[number]})
-        if number == 19:
+        if number == 20:
             break
-    if [entry["patch"] for entry in entries] != list(range(1, 20)):
-        raise RuntimeError("MAINTAINING.md must contain exactly the 19 mapped local patch groups")
+    if [entry["patch"] for entry in entries] != list(range(1, 21)):
+        raise RuntimeError("MAINTAINING.md must contain exactly the 20 mapped local patch groups")
     return entries
 
 

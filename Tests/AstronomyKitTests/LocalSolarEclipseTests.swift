@@ -45,19 +45,18 @@ struct LocalSolarEclipseTests {
         #expect(second.peak.time > first.peak.time)
     }
 
-    @Test("Total eclipse has total begin/end")
-    func totalEclipsePhases() throws {
-        // Search for a total eclipse with a longer range if needed
-        let startTime = AstroTime(year: 2_024, month: 1, day: 1)
-        // Use a location in the path of the 2024 total eclipse
-        let observer = Observer(latitude: 44.35, longitude: -99.46)  // South Dakota
-
+    @Test("Known total eclipse contacts remain ordered", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func totalEclipsePhases(model: DeltaTModel) throws {
+        let startTime = AstroTime(year: 2_024, month: 1, day: 1, deltaTModel: model)
+        let observer = Observer(latitude: 32.7767, longitude: -96.7970)  // Dallas
         let eclipse = try Eclipse.searchLocalSolar(after: startTime, from: observer)
-
-        // The eclipse may or may not be total depending on exact location
-        if eclipse.kind == .total {
-            #expect(eclipse.totalBegin != nil)
-            #expect(eclipse.totalEnd != nil)
-        }
+        #expect(eclipse.kind == .total)
+        let begin = try #require(eclipse.totalBegin)
+        let end = try #require(eclipse.totalEnd)
+        #expect(eclipse.partialBegin.time < begin.time)
+        #expect(begin.time < eclipse.peak.time)
+        #expect(eclipse.peak.time < end.time)
+        #expect(end.time < eclipse.partialEnd.time)
+        #expect(eclipse.peak.time.deltaTModel == model)
     }
 }

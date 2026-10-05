@@ -224,13 +224,15 @@ jobs:
       - name: Install isolated independent reference dependencies
         run: |
           python3 -m pip install --only-binary=:all: --target .context/accuracy-qualification/python-reference pyerfa==2.0.1.5 numpy==2.3.5
-      - name: Build isolated public seasonal runner
-        run: python3 Scripts/reference-data/build-accuracy-runner.py
+      - name: Materialize reviewed seasonal experiment
+        run: git cat-file -e "2d54fd251a36e94f14324daed6d0937fc250d364^{commit}" || git fetch --no-tags --depth=1 origin 2d54fd251a36e94f14324daed6d0937fc250d364
       - name: Replay retained seasonal reference experiment offline
         run: |
-          python3 -m unittest Scripts/reference-data/test_seasonal_roots.py -v
+          python3 -m unittest Scripts/migration/test_historical_research.py -v
+          python3 Scripts/migration/replay_historical_research.py seasonal
+          python3 Scripts/reference-data/build-accuracy-runner.py
           python3 Scripts/reference-data/check-seasonal-public-runner.py
-          python3 Scripts/reference-data/qualify-seasonal-roots.py check
+          python3 Scripts/reference-data/check-current-seasonal-search.py
 
   constellation-corpus-replay:
     strategy:
@@ -253,11 +255,13 @@ jobs:
         with:
           swift-version: "6.2"
       - name: Materialize frozen oracle revision
-        run: git cat-file -e "cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit}" || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
+        run: |
+          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 2d54fd251a36e94f14324daed6d0937fc250d364 97fc275f6fd455ed73063a6961698569783dddb8; do
+            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
+          done
       - name: Replay source-bound corpus and directed controls
         run: |
-          python3 -m unittest Scripts/migration/test_constellation_corpus.py -v
-          python3 Scripts/migration/constellation-corpus.py check
+          python3 Scripts/migration/replay_historical_research.py constellation
       - name: Prepare existing generated lint configuration
         if: runner.os == 'macOS'
         run: |
@@ -290,13 +294,13 @@ jobs:
           swift-version: "6.2"
       - name: Materialize frozen oracle revision
         run: |
-          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 fb6593186068564da917d0a5cafd9a91035198b3 5805e024861454b173bdbeb627320c63b2956054 478fea15da86a4df5869fdb4230bd0fcfc1a37b1 5cc05267558d120fea033a021e982af291af0331 97fc275f6fd455ed73063a6961698569783dddb8; do
+          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 fb6593186068564da917d0a5cafd9a91035198b3 5805e024861454b173bdbeb627320c63b2956054 478fea15da86a4df5869fdb4230bd0fcfc1a37b1 5cc05267558d120fea033a021e982af291af0331 97fc275f6fd455ed73063a6961698569783dddb8 a06ce8653f7de3aed64bb4ce0509b1d10bc683ab ae52585219e6c5e64bdc75debdb179bfe3bbe46e; do
             git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
           done
       - name: Replay source-bound corpus and directed controls
         run: |
-          python3 -m unittest Scripts/migration/test_search_callback_corpus.py -v
-          python3 Scripts/migration/search_callback_corpus.py check
+          python3 Scripts/migration/replay_historical_research.py callback
+          python3 Scripts/migration/check_current_search.py
       - name: Prepare existing generated lint configuration
         if: runner.os == 'macOS'
         run: |
