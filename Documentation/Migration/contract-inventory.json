@@ -2855,7 +2855,7 @@
     "localPatches": 21,
     "publicSwiftAPI": 577,
     "testOwners": 101,
-    "tests": 1133
+    "tests": 1135
   },
   "crossCuttingContracts": [
     {
@@ -3738,7 +3738,7 @@
     }
   ],
   "inputHashes": {
-    "MAINTAINING.md": "e0949024900c144524e9de0d6b16f2ea1524dbeaf15996815290cec925d7a350",
+    "MAINTAINING.md": "a2989a9b1a9adf19ceb7f0fc55297ed6656a623029e92b21a3cbde3bdd944dfa",
     "Scripts/ephemeris/test_lunar_bundle.py": "a1eb8f4eca38531eab3d952f159a607675bee57bfec3aa9905b4640d9ea556df",
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
@@ -3843,7 +3843,7 @@
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "f4e67f5e779d930be05e81025dcc247fd5b7bad1a66ef95aaf0b84fa46aab439",
-    "Tests/AstronomyKitTests/InverseRefractionTests.swift": "078fac8d1454686fdc2bac7b3df09b2747297af8d1a0f52cd5910978d2a415c4",
+    "Tests/AstronomyKitTests/InverseRefractionTests.swift": "66d80a5a19dbf230fcba19272d51df106d74ef1e0877879ff8d3315ff354ff1a",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -13741,7 +13741,7 @@
       "id": "Tests/AstronomyKitTests/InverseRefractionTests.swift",
       "migrationIssue": 86,
       "path": "Tests/AstronomyKitTests/InverseRefractionTests.swift",
-      "testCount": 5
+      "testCount": 7
     },
     {
       "classification": "independent-reference",

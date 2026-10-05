@@ -27,6 +27,41 @@ struct InverseRefractionTests {
         #expect(Refraction.normal.inverseRefractionAngle(at: 90) == 0)
         #expect(Refraction.jplHorizons.inverseRefractionAngle(at: 90) == 0)
         #expect(Refraction.jplHorizons.inverseRefractionAngle(at: -90) == 0)
+        // No altitude in range refracts to this one: refraction drops to zero below -90 degrees.
+        #expect(Refraction.jplHorizons.inverseRefractionAngle(at: -89.5) == 0)
+    }
+
+    /// Below -1 degree the normal model's forward map has slope above one, so it skips some doubles. From magnitude 64
+    /// the spacing of doubles exceeds the 1e-14 tolerance, and the two neighbors that bracket a skipped altitude
+    /// alternate without either meeting it.
+    @Test("Normal mode returns an inverse within one ulp below -64 degrees")
+    func straddledInverses() {
+        let count = 200_000
+        var failures: [Double] = []
+        for index in 0..<count {
+            let apparent = -90 + 26 * Double(index) / Double(count)
+            let geometric = apparent + Refraction.normal.inverseRefractionAngle(at: apparent)
+            if abs(geometric + Refraction.normal.refractionAngle(at: geometric) - apparent) > apparent.ulp {
+                failures.append(apparent)
+            }
+        }
+        #expect(failures.isEmpty, "\(failures.count) altitudes, first \(failures.prefix(3))")
+    }
+
+    @Test("Horizontal caller applies a straddled inverse", arguments: DeltaTModel.allCases)
+    func straddledHorizontal(model: DeltaTModel) {
+        let apparent = -69.320_219_183_602_32
+        let correction = Refraction.normal.inverseRefractionAngle(at: apparent)
+        let geometric = apparent + correction
+        #expect(correction != 0)
+        #expect(abs(geometric + Refraction.normal.refractionAngle(at: geometric) - apparent) <= apparent.ulp)
+        let time = AstroTime(ut: 10_000, deltaTModel: model)
+        let vector = Vector3D.from(
+            horizon: Spherical(latitude: apparent, longitude: 123, distance: 2), at: time, refraction: .normal)
+        let expected = Vector3D.from(
+            horizon: Spherical(latitude: geometric, longitude: 123, distance: 2), at: time, refraction: .none)
+        #expect(vector.x == expected.x && vector.y == expected.y && vector.z == expected.z)
+        #expect(vector.time == time)
     }
 
     @Test("Successful inversions reproduce the apparent altitude", arguments: modes)
