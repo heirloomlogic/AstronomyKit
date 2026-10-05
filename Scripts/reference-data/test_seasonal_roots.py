@@ -61,5 +61,29 @@ class SeasonalControls(unittest.TestCase):
                 changed=dict(recipe);changed[key]=value
                 with self.assertRaises(ValueError): S.bound_bytes(directory,'other',changed)
 
+    def test_replay_report_payload_controls(self):
+        saved={'events':[{'actual':{'kind':'marchEquinox','julianDateTT':2451600},'signedTimeErrorSeconds':1,'nominalWithinStrictTarget':True}],
+               'summary':{'nominal/jpl-horizons':{'count':1,'maximumAbsoluteTimeErrorSeconds':1}},'publicRunner':{'executableSHA256':'old'},'referenceEnvironment':{'platform':'old'},'classification':'nominal-incomplete','inputSHA256':{'raw':'bound'}}
+        rebuilt=copy.deepcopy(saved);rebuilt['publicRunner']['executableSHA256']='new';rebuilt['referenceEnvironment']['platform']='new'
+        S.validate_replay(saved,rebuilt)
+        for edit in ['summary','classification','input','time','event']:
+            changed=copy.deepcopy(rebuilt)
+            if edit=='summary':changed['summary']['nominal/jpl-horizons']['count']=2
+            if edit=='classification':changed['classification']='qualified'
+            if edit=='input':changed['inputSHA256']['raw']='unbound'
+            if edit=='time':changed['events'][0]['actual']['julianDateTT']+=60/86400
+            if edit=='event':changed['events'][0]['nominalWithinStrictTarget']=False
+            with self.subTest(edit=edit),self.assertRaises(ValueError): S.validate_replay(saved,changed)
+
+    def test_retained_response_convention_controls(self):
+        name='nominal-coarse-000'
+        saved=json.loads((S.RAW/(name+'.query.json')).read_bytes());recipe=saved['parameters'];data=S.bound_bytes(S.RAW,name,recipe)
+        rows,_=S.Q.parse_response(data,recipe);self.assertEqual(len(rows),1000)
+        for key,value in [('TIME_TYPE',"'TDB'"),('REF_PLANE',"'ECLIPTIC'"),('VEC_CORR',"'NONE'"),('COMMAND',"'399'")]:
+            wrong=dict(recipe);wrong[key]=value
+            with self.subTest(key=key),self.assertRaises(ValueError): S.Q.parse_response(data,wrong)
+        for replacement in [b'{}',b'not JSON',data.replace(b'$$SOE',b'absent')]:
+            with self.assertRaises(ValueError): S.Q.parse_response(replacement,recipe)
+
 
 if __name__=='__main__': unittest.main()

@@ -134,10 +134,22 @@ func runAccuracyBatch() throws {
                 output = [
                     "status": "success",
                     "events": [
-                        ["kind": "marchEquinox", "julianDateTT": seasons.marchEquinox.terrestrialTime + 2_451_545],
-                        ["kind": "juneSolstice", "julianDateTT": seasons.juneSolstice.terrestrialTime + 2_451_545],
-                        ["kind": "septemberEquinox", "julianDateTT": seasons.septemberEquinox.terrestrialTime + 2_451_545],
-                        ["kind": "decemberSolstice", "julianDateTT": seasons.decemberSolstice.terrestrialTime + 2_451_545],
+                        [
+                            "kind": "marchEquinox",
+                            "julianDateTT": seasons.marchEquinox.terrestrialTime + 2_451_545,
+                        ],
+                        [
+                            "kind": "juneSolstice",
+                            "julianDateTT": seasons.juneSolstice.terrestrialTime + 2_451_545,
+                        ],
+                        [
+                            "kind": "septemberEquinox",
+                            "julianDateTT": seasons.septemberEquinox.terrestrialTime + 2_451_545,
+                        ],
+                        [
+                            "kind": "decemberSolstice",
+                            "julianDateTT": seasons.decemberSolstice.terrestrialTime + 2_451_545,
+                        ],
                     ],
                 ]
             case "seasons":

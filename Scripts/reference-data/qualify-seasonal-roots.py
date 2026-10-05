@@ -187,16 +187,26 @@ def assess(binary):
     return {'schemaVersion':1,'classification':'finite-nominal-seasonal-evidence-physical-apparent-qualification-incomplete','inputSHA256':source_hashes(),'referenceEnvironment':environment,'publicRunner':{'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'executableSHA256':Q.digest(binary.read_bytes()),'compiler':subprocess.check_output(['swift','--version'],text=True).strip(),'isolatedManifestSHA256':Q.digest((ROOT/'.context/accuracy-qualification/runner-package/Package.swift').read_bytes())},'provenance':provenance,'summary':summary,'events':events,'limitations':plan['limitations'],'physicalApparentQualification':'unsupported: '+plan['nominalReference']['physicalQualification']}
 
 
+def validate_replay(saved,current):
+    # Keep original receipts; compare scientific payloads separately from rebuilt runtime identity.
+    left=json.loads(json.dumps(saved));right=json.loads(json.dumps(current))
+    if len(left['events'])!=len(right['events']): raise ValueError('seasonal replay population changed')
+    for old,new in zip(left['events'],right['events']):
+        if abs(old['actual']['julianDateTT']-new['actual']['julianDateTT'])>1e-7: raise ValueError('rebuilt public seasonal time changed')
+        if old['actual']['kind']!=new['actual']['kind']: raise ValueError('rebuilt public seasonal identity changed')
+        new['actual']=old['actual'];new['signedTimeErrorSeconds']=old['signedTimeErrorSeconds']
+    if left['summary'].keys()!=right['summary'].keys(): raise ValueError('replay summary groups changed')
+    for key in left['summary']:
+        name='maximumAbsoluteTimeErrorSeconds'
+        if abs(left['summary'][key][name]-right['summary'][key][name])>0.00864: raise ValueError('rebuilt summary timing changed')
+        right['summary'][key][name]=left['summary'][key][name]
+    for value in (left,right):
+        value.pop('publicRunner');value.pop('referenceEnvironment')
+    if left!=right: raise ValueError('offline scientific seasonal replay changed')
+
+
 def check(binary):
-    saved=json.loads(REPORT.read_bytes());current=assess(binary)
-    if saved['inputSHA256']!=current['inputSHA256'] or saved['provenance']!=current['provenance']: raise ValueError('archived seasonal evidence source binding changed')
-    if len(saved['events'])!=len(current['events']): raise ValueError('seasonal replay population changed')
-    for old,new in zip(saved['events'],current['events']):
-        a=dict(old);b=dict(new)
-        # Rebuilt binaries may differ by up to 8.64 ms, far below the frozen 1 s allowance.
-        if abs(a['actual']['julianDateTT']-b['actual']['julianDateTT'])>1e-7: raise ValueError('rebuilt public seasonal time changed')
-        for value in (a,b): value.pop('actual');value.pop('signedTimeErrorSeconds')
-        if a!=b: raise ValueError('offline scientific seasonal replay changed')
+    saved=json.loads(REPORT.read_bytes());current=assess(binary);validate_replay(saved,current)
     print('Offline replay preserved all seasonal identities, reference controls and strict classifications; rebuilt runner provenance is separate.',flush=True)
 
 

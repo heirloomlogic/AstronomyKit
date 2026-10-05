@@ -68,3 +68,7 @@ The owner authorized independent progress. After presenting the new model-archit
 ## Owner-selected bundled-data follow-up
 
 The owner subsequently selected the bundled ephemeris prototype direction. [LunarBundledPrototypeEvidence.md](LunarBundledPrototypeEvidence.md) records the completed native TT/frame/event integration and a newly frozen 128-position/52-event holdout. All fresh sampled targets pass; local integrated TT/frame costs are about 4.9 microseconds per state and 12 MiB total peak process RSS. This is development-only finite evidence; production/API/shipping and broader/Pluto qualification remain separate.
+
+## Full-interval nominal seasonal roots
+
+[SeasonalRootEvidence.md](SeasonalRootEvidence.md) adds 924 independently bracketed and refined seasonal roots in 1900–2130 TT, with fresh Horizons LT+S vectors and an independent ERFA true-equinox date frame. Both public Delta-T models preserve identities, counts and order; nominal maximum timing errors are below 9.071 s and all frozen numerical controls pass. Separate fixed-delay diagnostics have maxima below 1.073 s. Physical apparent-source uncertainty remains unsupported, so this does not complete the previously pending physical seasonal qualification or close issue #81. Historical minute-resolution evidence remains unchanged.
