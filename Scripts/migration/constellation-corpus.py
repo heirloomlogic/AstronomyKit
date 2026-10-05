@@ -26,6 +26,39 @@ SNAPSHOTS = TOOL / "AcquisitionTools"
 CONTEXT = ROOT / ".context/constellation-research"
 LOCK = ROOT / "Tools/Migration/Oracle/oracle-lock.json"
 
+# Immutable recorded tools and build identities for this experiment only.
+ARCHIVED_TOOL_SHA256 = {
+    "acquisition": {
+        "Scripts/migration/constellation-corpus.py": "3266f7f88ae1fa6cd31b7949bf5eeb44363c98bec82894b4812b4f8c24242b90",
+        "Tools/Migration/ConstellationResearch/constellation-main.c": "7bc4d5c12592c98a2442aabd4e23be101cbb9fe0e3dfbd21a50f4c44a1d18644",
+        "Tools/Migration/ConstellationResearch/main.swift": "33bfcdaeb0961dc0d6853d032c715c6faca21318d8368806018fa7e232f4a0c1",
+    },
+    "derivation": {
+        "Scripts/migration/constellation-corpus.py": "24f6af786a94966d33f9a2d0dd4ccab9ea6f17f91f0b144617d349cdbac8c690",
+        "Tools/Migration/ConstellationResearch/constellation-main.c": "404e6b11c3cd34b75a4753e3dae882b44f370771d51e128271b520684f9f79f7",
+        "Tools/Migration/ConstellationResearch/main.swift": "8d51934007597de5c373c3391060458227fdc157afa783bc136c6a4ec1c43aa6",
+    },
+}
+ARCHIVED_BUILD_IDENTITIES = {
+    "acquisition": {
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "architecture": "arm64",
+        "cCompiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+        "swiftCompiler": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+        "cBinarySHA256": "4811b83e867ecdc4cf1ac442ebf46a3f99cafe1ff12bb919abc2d15175ff63bf",
+        "swiftBinarySHA256": "eee5562c2bc6eb40ccd8233b6b57bfeb8d8415be9b5e992a35a4c9f511225def",
+    },
+    "derivation": {
+        "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+        "architecture": "arm64",
+        "cCompiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+        "swiftCompiler": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+        "cBinarySHA256": "682dfcd0ae3b11bd5fa70573e30091752812ca50087fdc45caf27556de7da719",
+        "swiftBinarySHA256": "28d530cc0620b3ef44f400de94bf05fd9243e6eb9c6621950b9f28c912172976",
+    },
+}
+TOOL_PATHS = frozenset(ARCHIVED_TOOL_SHA256["acquisition"])
+
 
 def encoded(value):
     return (
@@ -330,6 +363,152 @@ def validate_results(requests, rows, tables):
             raise ValueError("interior/direct input unexpectedly failed")
 
 
+def public_manifest(archived=False):
+    spec = importlib.util.spec_from_file_location(
+        "accuracy_build", ROOT / "Scripts/reference-data/build-accuracy-runner.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    manifest = module.MANIFEST.replace(
+        "AccuracyQualificationRunner", "ConstellationResearch"
+    )
+    configuration = 'sources: ["main.swift"]'
+    if not archived:
+        configuration = (
+            'exclude: ["AcquisitionTools", "Artifacts", "DerivationTools", "DerivedEvidence", "README.md", "protocol.json", "constellation-main.c", "validation-provenance.json"], '
+            + configuration
+        )
+    return manifest.replace(
+        'path: "Sources/ConstellationResearch")',
+        'path: "Sources/ConstellationResearch", ' + configuration + ")",
+    )
+
+
+def validate_tool_population(mapping, directory=None, stage=None):
+    if type(mapping) is not dict or set(mapping) != TOOL_PATHS:
+        raise ValueError("mandatory three-tool population changed")
+    if stage is not None and mapping != ARCHIVED_TOOL_SHA256[stage]:
+        raise ValueError("recorded tool identities changed")
+    if directory is not None:
+        expected = {Path(name).name + ".txt" for name in TOOL_PATHS}
+        entries = list(directory.iterdir())
+        if {p.name for p in entries} != expected or any(
+            not p.is_file() or p.is_symlink() for p in entries
+        ):
+            raise ValueError("mandatory snapshot population changed")
+    for name, sha in mapping.items():
+        path = (
+            ROOT / name if directory is None else directory / (Path(name).name + ".txt")
+        )
+        if digest(path.read_bytes()) != sha:
+            raise ValueError("tool source authentication failed: " + name)
+
+
+def validate_build_receipt(receipt, stage):
+    lock = json.loads(LOCK.read_bytes())
+    if type(receipt) is not dict or set(receipt) != {
+        "c",
+        "swift",
+        "platform",
+        "architecture",
+    }:
+        raise ValueError("mandatory build receipt structure changed")
+    c, swift = receipt["c"], receipt["swift"]
+    c_fields = {
+        "oracleLockSHA256",
+        "sourceRevision",
+        "sourceFilesSHA256",
+        "adapterSHA256",
+        "flags",
+        "binarySHA256",
+        "compiler",
+    }
+    swift_fields = {"binarySHA256", "manifestSHA256", "compiler"}
+    if stage != "acquisition":
+        swift_fields.add("cCompilerFlagsAdded")
+    if (
+        type(c) is not dict
+        or set(c) != c_fields
+        or type(swift) is not dict
+        or set(swift) != swift_fields
+    ):
+        raise ValueError("mandatory backend build fields changed")
+    recorded = stage in ARCHIVED_TOOL_SHA256
+    tools = (
+        ARCHIVED_TOOL_SHA256[stage]
+        if recorded
+        else {name: digest((ROOT / name).read_bytes()) for name in TOOL_PATHS}
+    )
+    expected = {
+        "oracleLockSHA256": digest(LOCK.read_bytes()),
+        "sourceRevision": load_plan()["oracleRevision"],
+        "sourceFilesSHA256": lock["files"],
+        "adapterSHA256": tools[
+            "Tools/Migration/ConstellationResearch/constellation-main.c"
+        ],
+        "flags": lock["build"]["flags"],
+    }
+    if any(c[name] != value for name, value in expected.items()):
+        raise ValueError(
+            "C source/adapter/build conditions contradict frozen experiment"
+        )
+    if swift["manifestSHA256"] != digest(public_manifest(archived=recorded).encode()):
+        raise ValueError("Swift manifest contradicts recorded source selection")
+    if (
+        stage != "acquisition"
+        and swift["cCompilerFlagsAdded"] != lock["build"]["flags"]
+    ):
+        raise ValueError("matched-build C flags are missing or changed")
+    for value in [
+        receipt["platform"],
+        receipt["architecture"],
+        c["compiler"],
+        swift["compiler"],
+    ]:
+        if type(value) is not str or not value.strip():
+            raise ValueError("missing build environment identity")
+    for value in [c["binarySHA256"], swift["binarySHA256"]]:
+        if (
+            type(value) is not str
+            or re.fullmatch(r"[0-9a-f]{64}", value) is None
+            or value == "0" * 64
+        ):
+            raise ValueError("invalid built binary identity")
+    identities = {
+        "platform": receipt["platform"],
+        "architecture": receipt["architecture"],
+        "cCompiler": c["compiler"],
+        "swiftCompiler": swift["compiler"],
+        "cBinarySHA256": c["binarySHA256"],
+        "swiftBinarySHA256": swift["binarySHA256"],
+    }
+    if recorded:
+        # Bind this historical receipt; rebuilt platforms and compilers may differ.
+        if identities != ARCHIVED_BUILD_IDENTITIES[stage]:
+            raise ValueError("recorded build environment/binary identities changed")
+    else:
+        current = {
+            "platform": platform.platform(),
+            "architecture": platform.machine(),
+            "cCompiler": subprocess.check_output(
+                [os.environ.get("CC", "/usr/bin/clang"), "--version"], text=True
+            ).splitlines()[0],
+            "swiftCompiler": subprocess.check_output(
+                ["swift", "--version"], text=True
+            ).strip(),
+            "cBinarySHA256": digest((CONTEXT / "locked-constellation").read_bytes()),
+            "swiftBinarySHA256": digest(
+                (CONTEXT / "public-build/debug/ConstellationResearch").read_bytes()
+            ),
+        }
+        if (
+            identities != current
+            or digest((CONTEXT / "public-package/Package.swift").read_bytes())
+            != swift["manifestSHA256"]
+        ):
+            raise ValueError("rebuilt receipt disagrees with actual current build")
+
+
 def build():
     plan = load_plan()
     lock = json.loads(LOCK.read_bytes())
@@ -369,11 +548,6 @@ def build():
                 [compiler, "--version"], text=True
             ).splitlines()[0],
         }
-    spec = importlib.util.spec_from_file_location(
-        "accuracy_build", ROOT / "Scripts/reference-data/build-accuracy-runner.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
     package = CONTEXT / "public-package"
     (package / "Sources").mkdir(parents=True, exist_ok=True)
     for name, target in [
@@ -389,14 +563,7 @@ def build():
             raise ValueError("research package source path occupied")
         else:
             link.symlink_to(target, target_is_directory=True)
-    manifest = module.MANIFEST.replace(
-        "AccuracyQualificationRunner", "ConstellationResearch"
-    )
-    # The C adapter and artifacts are outside this Swift executable's source set.
-    manifest = manifest.replace(
-        'path: "Sources/ConstellationResearch")',
-        'path: "Sources/ConstellationResearch", exclude: ["AcquisitionTools", "Artifacts", "DerivationTools", "DerivedEvidence", "README.md", "protocol.json", "constellation-main.c", "validation-provenance.json"], sources: ["main.swift"])',
-    )
+    manifest = public_manifest()
     (package / "Package.swift").write_text(manifest)
     command = [
         "swift",
@@ -582,10 +749,8 @@ def authenticate_archive():
     for name, sha in manifest["artifactSHA256"].items():
         if digest((DATA / name).read_bytes()) != sha:
             raise ValueError("detached constellation artifact: " + name)
-    for name, sha in manifest["toolSHA256"].items():
-        snapshot = SNAPSHOTS / (Path(name).name + ".txt")
-        if digest(snapshot.read_bytes()) != sha:
-            raise ValueError("detached original acquisition tool: " + name)
+    validate_tool_population(manifest["toolSHA256"], SNAPSHOTS, "acquisition")
+    validate_build_receipt(read_rows(DATA / "build-receipt.json"), "acquisition")
     tables = parse_tables(sources()["lockedText"])
     if tables != read_rows(DATA / "tables.json") or table_cases(tables) != read_rows(
         DATA / "table-cases.json"
@@ -793,19 +958,18 @@ def check():
     for name, sha in manifest["artifactSHA256"].items():
         if digest((DERIVED / name).read_bytes()) != sha:
             raise ValueError("derived artifact hash mismatch: " + name)
-    for name, sha in manifest["toolSHA256"].items():
-        snapshot = TOOL / "DerivationTools" / (Path(name).name + ".txt")
-        if digest(snapshot.read_bytes()) != sha:
-            raise ValueError("derived tooling provenance changed")
+    validate_tool_population(
+        manifest["toolSHA256"], TOOL / "DerivationTools", "derivation"
+    )
+    validate_build_receipt(read_rows(DERIVED / "build-receipt.json"), "derivation")
     provenance = read_rows(TOOL / "validation-provenance.json")
     if provenance["derivedManifestSHA256"] != digest(
         (DERIVED / "manifest.json").read_bytes()
     ):
         raise ValueError("validator detached from derivation")
-    for name, sha in provenance["toolSHA256"].items():
-        if digest((ROOT / name).read_bytes()) != sha:
-            raise ValueError("current validation tooling provenance changed")
-    build()
+    validate_tool_population(provenance["toolSHA256"])
+    rebuilt_receipt = build()
+    validate_build_receipt(rebuilt_receipt, "current")
     public = read_rows(DATA / "public-inputs.json")
     transforms = {
         m: run(

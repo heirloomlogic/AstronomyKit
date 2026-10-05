@@ -258,6 +258,12 @@ jobs:
         run: |
           python3 -m unittest Scripts/migration/test_constellation_corpus.py -v
           python3 Scripts/migration/constellation-corpus.py check
+      - name: Prepare existing generated lint configuration
+        if: runner.os == 'macOS'
+        run: |
+          touch .dev-tooling
+          swift package resolve
+          .build/checkouts/Persnicket/bin/ci-lint-setup
       - name: Lint isolated research runner
         if: runner.os == 'macOS'
         run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/ConstellationResearch/main.swift
