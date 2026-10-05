@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parents[2]
 HOME = ROOT / "Tools/Migration/InverseRefraction147"
 PROTOCOL = ROOT / "Documentation/Migration/inverse-refraction-147-protocol.json"
 TOOLS = [Path(__file__), HOME / "Probe.swift", HOME / "Package.swift.txt", PROTOCOL]
+EVIDENCE = HOME / "Evidence"
+EVIDENCE_MANIFEST_SHA256 = "707c9dd4aaacbb9f808638da450fd83643776e846b76b08fb5a3a8c0a2a6ee0f"
 
 
 def sha(data):
@@ -182,6 +184,25 @@ def validate(folder):
     return results
 
 
+def check_archive(directory=EVIDENCE):
+    data = (directory / "manifest.json").read_bytes()
+    if sha(data) != EVIDENCE_MANIFEST_SHA256:
+        raise ValueError("immutable measured execution manifest differs")
+    manifest = json.loads(data)
+    population = {str(path.relative_to(directory)) for path in directory.rglob("*") if path.is_file()}
+    if population != set(manifest["filesSHA256"]) | {"manifest.json"}:
+        raise ValueError("measured artifact population differs")
+    for name, digest in manifest["filesSHA256"].items():
+        if sha((directory / name).read_bytes()) != digest:
+            raise ValueError("measured execution artifact differs: " + name)
+    for current in ("initial-current", "current"):
+        expected = load(directory / current / "assessment.json")
+        actual = assess(directory / current, directory / "baseline", write=False)
+        if actual != expected:
+            raise ValueError("saved measured assessment differs")
+    return {"recordedCurrentProofs": 2, "baselineProcesses": 312, "currentProcessesPerProof": 312, "baselineTimeouts": 68}
+
+
 def number(bits):
     if not isinstance(bits, str) or not 1 <= len(bits) <= 16 or any(character not in "0123456789abcdef" for character in bits):
         raise ValueError("invalid double bits")
@@ -214,7 +235,7 @@ def validate_payload(case, result):
         raise ValueError("saved finiteness differs")
 
 
-def assess(current, baseline=None):
+def assess(current, baseline=None, write=True):
     results = validate(current)
     protocol = load(PROTOCOL)
     cases = selection(protocol)
@@ -238,7 +259,8 @@ def assess(current, baseline=None):
                   "baselineTimeouts": old.count(None), "successfulBaselinePayloadsExactlyMatched": len(old) - old.count(None),
                   "currentReceiptSHA256": sha((current / "build-receipt.json.gz").read_bytes()),
                   "baselineReceiptSHA256": sha((baseline / "build-receipt.json.gz").read_bytes()) if baseline else None}
-    save(current / "assessment.json", assessment)
+    if write:
+        save(current / "assessment.json", assessment)
     return assessment
 
 
@@ -248,8 +270,11 @@ if __name__ == "__main__":
     parser.add_argument("--revision", default="HEAD")
     parser.add_argument("--current", type=Path)
     parser.add_argument("--baseline", type=Path)
+    parser.add_argument("--check-archive", action="store_true")
     arguments = parser.parse_args()
-    if arguments.acquire:
+    if arguments.check_archive:
+        print(dumps(check_archive()))
+    elif arguments.acquire:
         acquire(arguments.acquire.resolve(), arguments.revision)
     elif arguments.current:
         print(dumps(assess(arguments.current.resolve(), arguments.baseline.resolve() if arguments.baseline else None)))

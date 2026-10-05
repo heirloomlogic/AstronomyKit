@@ -1,6 +1,7 @@
 import importlib.util
 import tempfile
 import unittest
+import shutil
 from pathlib import Path
 from unittest.mock import patch
 
@@ -59,6 +60,78 @@ class InverseRefractionControls(unittest.TestCase):
         result["extra"] = 0
         with self.assertRaisesRegex(ValueError, "population"):
             M.validate_payload(case, result)
+
+    def test_actual_process_failure_keeps_output_and_reaps(self):
+        import os
+        import sys
+        packet = M.process([sys.executable, "-c", "import sys; print('partial'); print('failed', file=sys.stderr); sys.exit(3)"], 5, {"PATH": os.defpath})
+        self.assertEqual(3, packet["exitCode"])
+        self.assertTrue(packet["reaped"])
+        self.assertEqual("cGFydGlhbAo=", packet["stdoutBase64"])
+        self.assertEqual("ZmFpbGVkCg==", packet["stderrBase64"])
+
+    def test_retained_payload_and_complete_input_mutations_reject(self):
+        archive = M.HOME / "Evidence/baseline"
+        self.assertTrue(archive.is_dir(), "retained baseline is mandatory")
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name) / "copy"
+            shutil.copytree(archive, directory)
+            receipt_path = directory / "build-receipt.json.gz"
+            original = receipt_path.read_bytes()
+            for mutation in ("hash", "missing", "extra"):
+                receipt = M.load(receipt_path)
+                coefficient = next(path for path in receipt["inputSHA256"] if path.endswith(".inc"))
+                if mutation == "hash":
+                    receipt["inputSHA256"][coefficient] = "0" * 64
+                elif mutation == "missing":
+                    receipt["inputSHA256"].pop(coefficient)
+                else:
+                    receipt["inputSHA256"]["Sources/extra.inc"] = "0" * 64
+                M.save(receipt_path, receipt)
+                with self.assertRaisesRegex(ValueError, "source/manifest"):
+                    M.validate(directory)
+                receipt_path.write_bytes(original)
+            raw = directory / "raw-processes.json.gz"
+            original = raw.read_bytes()
+            packets = M.load(raw)
+            for mutated in (packets[:-1], packets + [packets[0]], packets[::-1]):
+                M.save(raw, mutated)
+                with self.assertRaisesRegex(ValueError, "population"):
+                    M.validate(directory)
+            raw.write_bytes(original)
+            import base64
+            import json
+            returned = next(index for index, packet in enumerate(packets) if packet["exitCode"] == 0)
+            for field, value in (("model", "wrong-model"), ("finite", False), ("inputBits", "0")):
+                mutated = M.load(raw)
+                packet = mutated[returned]
+                lines = base64.b64decode(packet["stdoutBase64"]).decode().splitlines()
+                payload = json.loads(lines[1])
+                payload[field] = value
+                out = ("entered\n" + json.dumps(payload) + "\n").encode()
+                packet["stdoutBase64"] = base64.b64encode(out).decode()
+                packet["stdoutSHA256"] = M.sha(out)
+                M.save(raw, mutated)
+                with self.assertRaises(ValueError):
+                    M.validate(directory)
+                raw.write_bytes(original)
+
+    def test_registered_execution_record_cannot_be_rehashed_or_replaced(self):
+        import json
+        M.check_archive()
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name) / "copy"
+            shutil.copytree(M.EVIDENCE, directory)
+            receipt = directory / "current/build-receipt.json.gz"
+            shutil.copyfile(directory / "initial-current/build-receipt.json.gz", receipt)
+            with self.assertRaisesRegex(ValueError, "execution artifact"):
+                M.check_archive(directory)
+            manifest_path = directory / "manifest.json"
+            manifest = json.loads(manifest_path.read_bytes())
+            manifest["filesSHA256"]["current/build-receipt.json.gz"] = M.sha(receipt.read_bytes())
+            M.save(manifest_path, manifest)
+            with self.assertRaisesRegex(ValueError, "immutable measured"):
+                M.check_archive(directory)
 
 
 if __name__ == "__main__":
