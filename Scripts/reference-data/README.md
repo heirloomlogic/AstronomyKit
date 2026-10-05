@@ -29,6 +29,8 @@ NASA factual data is generally not subject to U.S. copyright; acknowledge NASA a
 
 The harness limits are third-party parity thresholds, not scientific accuracy guarantees. Future civil UTC also depends on leap seconds that have not been announced. The two issue #110 readings, 93.35 seconds for the 2100 quarter and 160.36 seconds for the 2099 eclipse, result from treating the archived harness coordinates as civil UTC. The source-compatible TT and UT comparisons remain bounded; tests retain the civil readings only as unbounded finite diagnostics. The full rise/set comparison has 5,908 rows within the unchanged 70.8-second allowance and one active known failure: source line 2,923 is `75.985957542` TT seconds from the archived South Pole sunrise. Issue #124 tracks that public API result. The row remains in the test, and an unexpected pass requires the known-issue annotation to be revisited.
 
+The separate [season and lunar-phase comparison](../../Documentation/Migration/SeasonPhaseEvidence.md) applies the approved strict `<60 seconds` rule to every retained 1900–2100 event in the existing pinned tables. It preserves all 804 annual season events and 1,038 lunar quarters from 21 decennial years, including 54 and 166 nominal failures respectively. The tables stop at 2100, lunar coverage is decennial, and their one-minute timestamps have no recorded rounding direction. The result is finite nominal evidence, not full 1900–2130 or second-resolution qualification. The original fixture rows and allowances are unchanged.
+
 ## Required-interval position and event pilot
 
 [PositionEventValidationEvidence.md](../../Documentation/Migration/PositionEventValidationEvidence.md) reports the frozen 1900–2130 TT public-API pilot and its retained timing failures. `qualify-position-events.py` archives 29 independent vector series plus lunar apsis reference roots; `qualify-geometric-events.py` adds geometric lunar nodes and simultaneous heliocentric alignments using a pinned independent IAU2006 date-plane transform. The public Swift runner streams explicit-TT requests through `accuracy-batch`. These tools preserve historical fixture budgets and production models.
@@ -52,6 +54,7 @@ Current production replay uses the bundled runner and the separate [v2 public AP
 ```sh
 python3 Scripts/reference-data/build-bundled-runner.py
 python3 Scripts/reference-data/qualify-bundled-ephemeris.py check
+python3 Scripts/reference-data/qualify-season-phase-events.py check
 python3 -B -m unittest discover -s Scripts/reference-data -p 'test_*.py' -v
 ```
 

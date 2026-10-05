@@ -11,6 +11,13 @@ func runAccuracyBatch() throws {
             guard let request = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                 let operation = request["operation"] as? String
             else { throw RunnerError.usage }
+            let deltaTModel: DeltaTModel
+            switch request["deltaTModel"] as? String ?? "jpl-horizons" {
+            case "jpl-horizons": deltaTModel = .jplHorizons
+            case "espenak-meeus": deltaTModel = .espenakMeeus
+            default: throw RunnerError.usage
+            }
+            AstronomyConfig.setDeltaTModel(deltaTModel)
             switch operation {
             case "position":
                 guard let code = request["body"] as? Int32,
@@ -120,6 +127,50 @@ func runAccuracyBatch() throws {
                 }
                 events.sort { ($0["julianDateTT"] as! Double) < ($1["julianDateTT"] as! Double) }
                 output = ["status": "success", "events": events]
+            case "seasons":
+                guard let year = request["year"] as? Int,
+                    let referenceJulianDatesUT = request["referenceJulianDatesUT"] as? [Double],
+                    referenceJulianDatesUT.count == 4,
+                    referenceJulianDatesUT.allSatisfy(\.isFinite)
+                else { throw RunnerError.usage }
+                let seasons = try Seasons.forYear(year)
+                let events: [[String: Any]] = [
+                    ["kind": "marchEquinox", "julianDateTT": seasons.marchEquinox.terrestrialTime + 2_451_545],
+                    ["kind": "juneSolstice", "julianDateTT": seasons.juneSolstice.terrestrialTime + 2_451_545],
+                    ["kind": "septemberEquinox", "julianDateTT": seasons.septemberEquinox.terrestrialTime + 2_451_545],
+                    ["kind": "decemberSolstice", "julianDateTT": seasons.decemberSolstice.terrestrialTime + 2_451_545],
+                ]
+                output = [
+                    "status": "success",
+                    "events": events,
+                    "referenceJulianDatesTT": referenceJulianDatesUT.map {
+                        AstroTime(ut: $0 - 2_451_545, deltaTModel: deltaTModel).terrestrialTime + 2_451_545
+                    },
+                ]
+            case "lunar-phases":
+                guard let start = request["startJulianDateUT"] as? Double,
+                    let stop = request["stopJulianDateUT"] as? Double,
+                    let referenceJulianDatesUT = request["referenceJulianDatesUT"] as? [Double],
+                    start.isFinite, stop.isFinite, stop > start, stop - start <= 367,
+                    referenceJulianDatesUT.count <= 60,
+                    referenceJulianDatesUT.allSatisfy(\.isFinite)
+                else { throw RunnerError.usage }
+                let quarters = try Moon.quarters(
+                    from: AstroTime(ut: start - 2_451_545, deltaTModel: deltaTModel),
+                    to: AstroTime(ut: stop - 2_451_545, deltaTModel: deltaTModel)
+                )
+                output = [
+                    "status": "success",
+                    "events": quarters.map {
+                        [
+                            "kind": phaseName($0.phase),
+                            "julianDateTT": $0.time.terrestrialTime + 2_451_545,
+                        ] as [String: Any]
+                    },
+                    "referenceJulianDatesTT": referenceJulianDatesUT.map {
+                        AstroTime(ut: $0 - 2_451_545, deltaTModel: deltaTModel).terrestrialTime + 2_451_545
+                    },
+                ]
             default: throw RunnerError.usage
             }
             output["request"] = request
@@ -129,6 +180,15 @@ func runAccuracyBatch() throws {
         let encoded = try JSONSerialization.data(withJSONObject: output, options: [.sortedKeys])
         FileHandle.standardOutput.write(encoded)
         FileHandle.standardOutput.write(Data([0x0a]))
+    }
+}
+
+func phaseName(_ phase: MoonPhase) -> String {
+    switch phase {
+    case .new: "new"
+    case .firstQuarter: "firstQuarter"
+    case .full: "full"
+    case .thirdQuarter: "lastQuarter"
     }
 }
 

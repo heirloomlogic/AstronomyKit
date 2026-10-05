@@ -4,6 +4,8 @@ Issue #80 freezes the patched C engine before the Swift engine is evaluated. The
 
 [`IndependentReferenceEvidence.md`](IndependentReferenceEvidence.md) records the offline JPL, USNO, NASA, and EclipseWise reference archive, its evidence classes, mutation controls, known disagreements, and unsupported domains.
 
+[`SeasonPhaseEvidence.md`](SeasonPhaseEvidence.md) applies the strict event target to every pinned season from 1900 through 2100 and every lunar quarter in the archive's decennial years, while retaining nominal failures, source-precision limits and the missing 2101–2130 coverage.
+
 ## Frozen C oracle
 
 [`oracle-lock.json`](../../Tools/Migration/Oracle/oracle-lock.json) pins AstronomyKit revision `cdb533dbe85c76b39a958ca92f9155d8bd55b392`, upstream Astronomy Engine revision `826e26ff3a6dc03ee46658b1138fef582d96c5d9`, 38 source and coefficient files, the oracle driver, their SHA-256 hashes, C build flags, and the recorded OS, architecture, compiler, Swift, and Xcode versions. The build script reads the engine files from the pinned Git object, copies the content-addressed driver into the temporary source tree, verifies every hash, and compiles the oracle outside the Swift package dependency graph.
