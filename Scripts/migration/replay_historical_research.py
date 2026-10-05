@@ -65,7 +65,13 @@ def materialize(suite, destination):
         authenticate(destination, revision)
     else:
         destination.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run(["git", "clone", "--shared", "--no-checkout", str(ROOT), str(destination)], check=True)
+        subprocess.run(["git", "init", "-q", str(destination)], check=True)
+        objects = Path(subprocess.check_output(["git", "rev-parse", "--git-path", "objects"], cwd=ROOT, text=True).strip())
+        if not objects.is_absolute():
+            objects = ROOT / objects
+        info = destination / ".git/objects/info"
+        info.mkdir(parents=True, exist_ok=True)
+        (info / "alternates").write_text(str(objects.resolve()) + "\n")
         subprocess.run(["git", "checkout", "--detach", revision], cwd=destination, check=True)
         authenticate(destination, revision)
     if suite == "seasonal":

@@ -27,3 +27,11 @@ class CurrentSeasonalInputs(unittest.TestCase):
                 mutated['inputSHA256']['unapproved'] = '0' * 64
             with self.assertRaisesRegex(ValueError, 'actual files'):
                 C.validate_inputs(saved, mutated)
+
+    def test_complete_map_includes_generated_coefficients(self):
+        complete = C.complete_sources()
+        coefficient_paths = {str(p.relative_to(C.ROOT)) for p in (C.ROOT / 'Sources/CLibAstronomy').rglob('*.inc')}
+        self.assertTrue(coefficient_paths)
+        self.assertTrue(coefficient_paths <= set(complete))
+        for path in coefficient_paths:
+            self.assertEqual(complete[path], C.S.Q.digest((C.ROOT / path).read_bytes()))

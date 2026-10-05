@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check repaired public callback behavior separately from retained historical traces."""
 import argparse
+from functools import lru_cache
 import gzip
 import importlib.util
 import json
@@ -28,9 +29,16 @@ def selection():
     return plan
 
 
+@lru_cache(maxsize=1)
+def baseline_sources():
+    revision = selection()['baseRevision']
+    paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', revision, '--', 'Sources/AstronomyKit', 'Sources/CLibAstronomy'], cwd=ROOT, text=True).splitlines()
+    return {path: M.sha(M.git_bytes(revision, path)) for path in paths}
+
+
 def source_identity():
-    actual = {str(p.relative_to(ROOT)): M.sha(p.read_bytes()) for scope in ("AstronomyKit", "CLibAstronomy") for p in sorted((ROOT / "Sources" / scope).rglob("*")) if p.is_file() and p.suffix in (".swift", ".c", ".h", ".modulemap")}
-    original = M.protocol()["currentSourceFilesSHA256"]
+    actual = {str(p.relative_to(ROOT)): M.sha(p.read_bytes()) for scope in ("AstronomyKit", "CLibAstronomy") for p in sorted((ROOT / "Sources" / scope).rglob("*")) if p.is_file()}
+    original = baseline_sources()
     changed = sorted(p for p in set(actual) | set(original) if actual.get(p) != original.get(p))
     if changed != selection()["sourceChangePopulation"]:
         raise ValueError("current source changes exceed the named solver repair")

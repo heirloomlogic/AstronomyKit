@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import unittest
+from unittest import mock
 import shutil
 import tempfile
 
@@ -29,7 +30,7 @@ class CurrentSearchTests(unittest.TestCase):
 
     def test_live_source_change_population(self):
         actual = R.source_identity()
-        original = R.M.protocol()["currentSourceFilesSHA256"]
+        original = R.baseline_sources()
         self.assertEqual([p for p in actual if actual[p] != original[p]], ["Sources/CLibAstronomy/astronomy.c"])
 
     def test_authenticated_supplement_and_rehashed_mutation(self):
@@ -53,3 +54,27 @@ class CurrentSearchTests(unittest.TestCase):
         for changed in [events[::-1], events[:-1], [{"event": "callback", "time": {"ut": R.M.packet(20001.0)}, "value": R.M.packet(1.0)}, events[-1]], [events[0], {"event": "terminal", "outcome": "value"}]]:
             with self.assertRaises(ValueError):
                 R.compare_events(events, changed)
+
+
+    def test_generated_input_hash_missing_and_extra_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'Sources/CLibAstronomy').mkdir(parents=True)
+            (root / 'Sources/AstronomyKit').mkdir()
+            solver = root / 'Sources/CLibAstronomy/astronomy.c'
+            coefficient = root / 'Sources/CLibAstronomy/model.inc'
+            solver.write_text('repaired solver')
+            coefficient.write_text('immutable coefficients')
+            original = {'Sources/CLibAstronomy/astronomy.c': R.M.sha(b'old solver'), 'Sources/CLibAstronomy/model.inc': R.M.sha(coefficient.read_bytes())}
+            with mock.patch.object(R, 'ROOT', root), mock.patch.object(R, 'baseline_sources', return_value=original):
+                R.source_identity()
+                coefficient.write_text('tampered coefficients')
+                with self.assertRaisesRegex(ValueError, 'source changes'):
+                    R.source_identity()
+                coefficient.unlink()
+                with self.assertRaisesRegex(ValueError, 'source changes'):
+                    R.source_identity()
+                coefficient.write_text('immutable coefficients')
+                (root / 'Sources/CLibAstronomy/extra.inc').write_text('extra')
+                with self.assertRaisesRegex(ValueError, 'source changes'):
+                    R.source_identity()

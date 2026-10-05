@@ -3,6 +3,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 SPEC = importlib.util.spec_from_file_location("history", Path(__file__).with_name("replay_historical_research.py"))
 H = importlib.util.module_from_spec(SPEC)
@@ -43,3 +44,28 @@ class HistoricalResearchTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "revision"):
                 H.authenticate(root, "0" * 40)
             self.assertEqual(H.authenticate(root, revision), original)
+
+    def test_materializes_available_pinned_objects_without_changing_driver_head(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "driver"
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / "Sources").mkdir()
+            source = root / "Sources/solver.c"
+            source.write_text("historical solver")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            commit = ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm"]
+            subprocess.run(commit + ["historical"], cwd=root, check=True)
+            revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            source.write_text("current repaired solver")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(commit + ["current"], cwd=root, check=True)
+            current = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+            # Model an actions/checkout shallow boundary; all fetched pinned objects
+            # remain available even when their commits are not advertised by refs.
+            (root / ".git/shallow").write_text(current + "\n")
+            destination = Path(directory) / "historical"
+            with mock.patch.object(H, "ROOT", root), mock.patch.dict(H.SUITES, {'callback': (revision, [])}):
+                H.materialize('callback', destination)
+            self.assertEqual((destination / "Sources/solver.c").read_text(), "historical solver")
+            self.assertEqual(subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(), current)
+            H.authenticate(destination, revision)

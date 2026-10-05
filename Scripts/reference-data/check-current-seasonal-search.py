@@ -3,6 +3,7 @@
 import copy
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,18 +22,23 @@ def validate_inputs(saved, current):
     S.validate_source_provenance(saved, validator_inputs, json.loads(S.REPLAY_RECEIPT.read_text()))
 
 
+def complete_sources():
+    return {str(path.relative_to(ROOT)): S.Q.digest(path.read_bytes()) for name in ('AstronomyKit', 'CLibAstronomy') for path in sorted((ROOT / 'Sources' / name).rglob('*')) if path.is_file()}
+
+
 def check():
     saved = json.loads(S.REPORT.read_text())
     S.validate_report_semantics(saved)
     before = S.source_hashes()
+    complete_before = complete_sources()
     binary_before = S.Q.digest(S.Q.BINARY.read_bytes())
     current = S.assess(S.Q.BINARY)
     S.validate_report_semantics(current)
-    if S.source_hashes() != before or S.Q.digest(S.Q.BINARY.read_bytes()) != binary_before:
+    if complete_sources() != complete_before or S.source_hashes() != before or S.Q.digest(S.Q.BINARY.read_bytes()) != binary_before:
         raise ValueError('current seasonal inputs changed during execution')
     output = ROOT / ".context/current-seasonal-search.json"
     output.write_text(json.dumps(current, sort_keys=True, indent=2, allow_nan=False) + "\n")
-    receipt = {'classification': 'current-seasonal-regression-not-original-historical-build', 'executionValidatorSHA256': S.Q.digest(Path(__file__).read_bytes()), 'actualSourceSHA256': current['inputSHA256'], 'actualPublicRunner': current['publicRunner'], 'rawAssessmentSHA256': S.Q.digest(output.read_bytes())}
+    receipt = {'classification': 'current-seasonal-regression-not-original-historical-build', 'executionValidatorSHA256': S.Q.digest(Path(__file__).read_bytes()), 'actualSourceSHA256': current['inputSHA256'], 'completeCurrentSourceSHA256': complete_before, 'currentExecutionRevision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'actualPublicRunner': current['publicRunner'], 'rawAssessmentSHA256': S.Q.digest(output.read_bytes())}
     output.with_suffix('.receipt.json').write_text(json.dumps(receipt, sort_keys=True, indent=2, allow_nan=False) + '\n')
     validate_inputs(saved, current)
     normalized = copy.deepcopy(current)
