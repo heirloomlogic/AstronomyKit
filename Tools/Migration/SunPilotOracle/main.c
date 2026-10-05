@@ -48,6 +48,19 @@ static void workload(const char *mode, int *operations, unsigned long long *elap
     *checksum = sum;
 }
 
+static int checkpoint(const char *name, int has_workload, int operations, unsigned long long elapsed, double checksum)
+{
+    char acknowledgement[32];
+    if (has_workload)
+        printf("{\"checkpoint\":\"%s\",\"workload\":{\"operations\":%d,\"elapsedNanoseconds\":%llu,\"checksum\":%.17g}}\n", name, operations, elapsed, checksum);
+    else
+        printf("{\"checkpoint\":\"%s\"}\n", name);
+    if (fflush(stdout) != 0) return 3;
+    if (!fgets(acknowledgement, sizeof(acknowledgement), stdin)) return 4;
+    if (strcmp(acknowledgement, "continue\n") != 0 && strcmp(acknowledgement, "continue\r\n") != 0) return 5;
+    return 0;
+}
+
 static int performance(void)
 {
     const char *modes[] = {"firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback"};
@@ -60,6 +73,27 @@ static int performance(void)
         workload(modes[mode], &operations, &elapsed, &checksum);
         printf("%s\"%s\":{\"operations\":%d,\"elapsedNanoseconds\":%llu,\"checksum\":%.17g}", mode ? "," : "", modes[mode], operations, elapsed, checksum);
     }
+    printf("}\n");
+    return 0;
+}
+
+static int checkpoint_performance(void)
+{
+    const char *modes[] = {"firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback"};
+    int operations[5];
+    unsigned long long elapsed[5];
+    double checksum[5];
+    int status = checkpoint("beforeWork", 0, 0, 0, 0);
+    if (status) return status;
+    for (int mode = 0; mode < 5; ++mode)
+    {
+        workload(modes[mode], &operations[mode], &elapsed[mode], &checksum[mode]);
+        status = checkpoint(modes[mode], 1, operations[mode], elapsed[mode], checksum[mode]);
+        if (status) return status;
+    }
+    printf("{");
+    for (int mode = 0; mode < 5; ++mode)
+        printf("%s\"%s\":{\"operations\":%d,\"elapsedNanoseconds\":%llu,\"checksum\":%.17g}", mode ? "," : "", modes[mode], operations[mode], elapsed[mode], checksum[mode]);
     printf("}\n");
     return 0;
 }
@@ -111,6 +145,7 @@ static int rss_stage(const char *stage)
 int main(int argc, char **argv)
 {
     if (argc == 2 && strcmp(argv[1], "--performance") == 0) return performance();
+    if (argc == 2 && strcmp(argv[1], "--rss-aggregate-checkpoints") == 0) return checkpoint_performance();
     if (argc == 3 && strcmp(argv[1], "--rss-stage") == 0) return rss_stage(argv[2]);
     char model[32], scale[16], value_text[64], lat_text[64], lon_text[64], height_text[64], ut_text[64];
     while (scanf("%31s %15s %63s %63s %63s %63s %63s", model, scale, value_text, lat_text, lon_text, height_text, ut_text) == 7)

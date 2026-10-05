@@ -10,6 +10,10 @@ struct Sample: Encodable {
 @main
 struct Runner {
     static func main() throws {
+        if CommandLine.arguments.contains("--rss-aggregate-checkpoints") {
+            try aggregateCheckpoints()
+            return
+        }
         if let index = CommandLine.arguments.firstIndex(of: "--rss-stage"),
             CommandLine.arguments.indices.contains(index + 1)
         {
@@ -78,6 +82,11 @@ struct Runner {
         let checksum: Double
     }
 
+    static let aggregateModes = [
+        "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback",
+        "repeatedFallback",
+    ]
+
     static func workload(_ mode: String, evaluator: inout PilotEvaluator) throws -> Workload {
         let site = PilotObserver(latitude: 35, longitude: -80, height: 100)
         let count = mode == "firstAccess" ? 1 : 200
@@ -135,9 +144,28 @@ struct Runner {
         var report: [String: Workload] = [:]
         var evaluator = PilotEvaluator()
         for mode in [
-            "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback",
+            "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback",
+            "repeatedFallback",
         ] {
             report[mode] = try workload(mode, evaluator: &evaluator)
+        }
+        try PilotOutput.line(PilotJSON.object(try report.mapValues { try $0.json() }))
+    }
+
+    static func aggregateCheckpoints() throws {
+        func checkpoint(_ name: String, workload: Workload? = nil) throws {
+            var fields = ["checkpoint": PilotJSON.string(name)]
+            if let workload { fields["workload"] = try workload.json() }
+            try PilotOutput.line(PilotJSON.object(fields))
+            guard readLine() == "continue" else { throw PilotError.invalidParameter }
+        }
+        var report: [String: Workload] = [:]
+        var evaluator = PilotEvaluator()
+        try checkpoint("beforeWork")
+        for mode in aggregateModes {
+            let value = try workload(mode, evaluator: &evaluator)
+            report[mode] = value
+            try checkpoint(mode, workload: value)
         }
         try PilotOutput.line(PilotJSON.object(try report.mapValues { try $0.json() }))
     }

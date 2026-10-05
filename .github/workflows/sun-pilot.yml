@@ -12,6 +12,7 @@ on:
       - "Scripts/migration/test_sun_pilot.py"
       - "Scripts/model-prototype/**"
       - "Documentation/Migration/SunPilotProtocol.md"
+      - "Documentation/Migration/SunPilotAggregateRSSProtocol.md"
       - ".github/workflows/sun-pilot.yml"
   workflow_dispatch:
 
