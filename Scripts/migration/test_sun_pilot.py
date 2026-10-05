@@ -191,6 +191,15 @@ Rss:                  8 kB
             with self.subTest(name=name), self.assertRaisesRegex(ValueError, "smaps"):
                 MODULE.classify_smaps(contents, Path("/tmp/runner"))
 
+    def test_smaps_complete_prefix_must_match_the_retained_maps_inventory(self):
+        first = "00400000-00401000 r-xp 00000000 08:01 1 /tmp/runner"
+        second = "00600000-00601000 rw-p 00000000 00:00 0 [heap]"
+        maps = f"{first}\n{second}\n"
+        smaps = f"{first}\nRss:                  4 kB\n{second}\nRss:                  8 kB\n"
+        MODULE.validate_smaps_mapping_inventory(smaps, maps)
+        with self.assertRaisesRegex(ValueError, "inventory"):
+            MODULE.validate_smaps_mapping_inventory(f"{first}\nRss:                  4 kB\n", maps)
+
     def test_checkpoint_workloads_bind_to_uninstrumented_counts_and_checksums(self):
         trials = [self.aggregate_trial() for _ in range(5)]
         campaign = {"trials": trials}

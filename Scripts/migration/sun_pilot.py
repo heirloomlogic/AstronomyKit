@@ -369,6 +369,19 @@ def mapping_class(path, binary):
     return "otherFileBacked"
 
 
+def mapping_inventory(contents):
+    return [tuple(line.split(maxsplit=5)) for line in contents.splitlines() if re.match(r"^[0-9a-f]+-[0-9a-f]+\s", line)]
+
+
+def validate_smaps_mapping_inventory(smaps, maps):
+    maps_lines = [line for line in maps.splitlines() if line]
+    maps_inventory = mapping_inventory(maps)
+    if not maps_inventory or len(maps_inventory) != len(maps_lines):
+        raise ValueError("aggregate maps inventory is malformed")
+    if mapping_inventory(smaps) != maps_inventory:
+        raise ValueError("aggregate smaps mapping inventory differs from maps")
+
+
 def classify_smaps(contents, binary):
     totals = {}
     current = None
@@ -516,6 +529,7 @@ def retain_proc_checkpoint(directory, checkpoint, pid, binary):
         path.write_text(text)
         contents[name] = text
         retained[name] = {"path": path.name, "sha256": MEASURE.sha256(path)}
+    validate_smaps_mapping_inventory(contents["smaps"], contents["maps"])
     return {
         "checkpoint": checkpoint,
         "mappingRSSBytes": classify_smaps(contents["smaps"], binary.resolve()),
