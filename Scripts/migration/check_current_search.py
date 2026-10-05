@@ -21,6 +21,14 @@ M = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(M)
 PLAN = ROOT / "Tools/Migration/SearchRepair/protocol.json"
 PROSPECTIVE = "ae52585219e6c5e64bdc75debdb179bfe3bbe46e"
+# Issue #149 corrected the sign of one DocC example. Only these baseline and
+# corrected article bytes are accepted; other source-tree changes still fail.
+DOCUMENTATION_CORRECTIONS = {
+    "Sources/AstronomyKit/Documentation.docc/CoordinateSystems.md": (
+        "0b560b86bb7bbe92d7e60571e2b3bb13bf74066ea5a97cbdeb8a1a3282762354",
+        "2e1ffedad9047136400eb37dbb61338e075e4d05319a87650cb9f17d26c82e58",
+    ),
+}
 
 
 def selection():
@@ -51,6 +59,11 @@ def source_identity():
         if source_archive.without_api_comments(before) != source_archive.without_api_comments(after):
             raise ValueError("current coordinate implementation exceeds the named solver repair")
         changed.remove(coordinates)
+    for path, (before, after) in DOCUMENTATION_CORRECTIONS.items():
+        if path in changed:
+            if original.get(path) != before or actual.get(path) != after:
+                raise ValueError("current article differs from its registered documentation correction")
+            changed.remove(path)
     if changed != selection()["sourceChangePopulation"]:
         raise ValueError("current source changes exceed the named solver repair")
     return actual
