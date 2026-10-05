@@ -302,86 +302,6 @@ def command_output(command):
     return subprocess.check_output(command, cwd=ROOT, text=True).strip()
 
 
-def source_hashes():
-    paths = [
-        ROOT / "Package.swift",
-        CORPUS_PATH,
-        POPULATION_LOCK_PATH,
-        ORACLE_LOCK_PATH,
-        ROOT / "Tools/Migration/Oracle/oracle-main.c",
-        ROOT / "Tools/Migration/SwiftRunner/main.swift",
-        Path(__file__).resolve(),
-    ]
-    paths.extend(sorted((ROOT / "Sources/AstronomyKit").glob("*.swift")))
-    return {path.relative_to(ROOT).as_posix(): sha256_path(path) for path in paths}
-
-
-def generate_archive():
-    corpus = json.loads(CORPUS_PATH.read_text())
-    validate_corpus(corpus)
-    population_lock = json.loads(POPULATION_LOCK_PATH.read_text())
-    populations, downstream_cases = recover_populations(population_lock)
-    cases = corpus["cases"] + downstream_cases
-    with tempfile.TemporaryDirectory() as temporary:
-        oracle_directory = Path(temporary) / "oracle"
-        subprocess.run([str(ROOT / "Tools/Migration/Oracle/build-oracle.sh"), str(oracle_directory)], cwd=ROOT, check=True)
-        subprocess.run(["swift", "build", "-c", "release", "--target", "AstronomyMigrationRunner"], cwd=ROOT, check=True)
-        swift_binary = Path(command_output(["swift", "build", "-c", "release", "--show-bin-path"])) / "AstronomyMigrationRunner"
-        c_binary = oracle_directory / "astronomy-oracle"
-        c_outputs, swift_outputs, comparisons, failed = compare_cases(cases, c_binary, swift_binary)
-        if failed:
-            raise ValueError(f"candidate differs from frozen oracle: {failed}")
-        failure_controls = {
-            "frozenC": run_process(c_binary, ["invalid", "request", "espenak-meeus"]),
-            "swiftCandidate": run_process(swift_binary, ["invalid", "request", "espenak-meeus"]),
-        }
-        if any(record["process"]["exitCode"] == 0 for record in failure_controls.values()):
-            raise ValueError("runner failure control unexpectedly succeeded")
-        oracle_build = json.loads((oracle_directory / "build-metadata.json").read_text())
-        metadata = {
-            "schemaVersion": 1,
-            "protocol": "separate-process-json-v1",
-            "roles": {
-                "frozenReference": "content-addressed C oracle built outside the Swift package dependency graph",
-                "candidate": "release-built Swift executable linked through the public AstronomyKit module",
-            },
-            "candidateBaseRevision": corpus["candidateBaseRevision"],
-            "frozenRevision": json.loads(ORACLE_LOCK_PATH.read_text())["baselineRevision"],
-            "sourceHashes": source_hashes(),
-            "executables": {
-                "frozenC": {"sha256": sha256_path(c_binary), "build": oracle_build},
-                "swiftCandidate": {
-                    "fingerprintSHA256": executable_fingerprint(swift_binary),
-                    "normalization": "strip debug and symbols; remove the code signature and UUID from the host-built thin Mach-O on Darwin",
-                },
-            },
-            "environment": {
-                "platform": platform.platform(),
-                "machine": platform.machine(),
-                "python": platform.python_version(),
-                "swift": command_output(["swift", "--version"]),
-                "cc": command_output(["cc", "--version"]).splitlines()[0],
-            },
-            "processIsolation": {"oneProcessPerRunnerPerCase": True, "sharedAddressSpace": False},
-            "failureControls": failure_controls,
-        }
-        inputs = {"schemaVersion": 1, "cases": cases}
-        diffs = {
-            "schemaVersion": 1,
-            "contract": "exact parsed JSON equality; numerical and external-accuracy contracts are deferred to chain link 3",
-            "comparisons": comparisons,
-            "negativeControls": negative_controls(c_outputs),
-        }
-        return {
-            "inputs.json": inputs,
-            "c-output.json": {"schemaVersion": 1, "runner": "frozen-c-oracle", "cases": c_outputs},
-            "swift-output.json": {"schemaVersion": 1, "runner": "swift-candidate", "cases": swift_outputs},
-            "diffs.json": diffs,
-            "metadata.json": metadata,
-            "downstream-populations.json": populations,
-        }
-
-
 def manifest_for(files):
     return {"schemaVersion": 1, "files": {name: sha256_bytes(canonical_bytes(value)) for name, value in sorted(files.items())}}
 
@@ -395,38 +315,43 @@ def validate_archive(directory, manifest):
             raise ValueError(f"archive digest mismatch: {name}")
 
 
-def write_archive(files):
-    ARTIFACT_PATH.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=ARTIFACT_PATH.parent) as temporary:
-        staging = Path(temporary)
-        for name, value in files.items():
-            staging.joinpath(name).write_bytes(canonical_bytes(value))
-        manifest = manifest_for(files)
-        staging.joinpath("manifest.json").write_bytes(canonical_bytes(manifest))
-        for path in staging.iterdir():
-            shutil.copy2(path, ARTIFACT_PATH / path.name)
+def execution_module():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("comparison_execution", Path(__file__).with_name("comparison_execution.py"))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
-def check_archive(files):
-    manifest = json.loads((ARTIFACT_PATH / "manifest.json").read_text())
-    validate_archive(ARTIFACT_PATH, manifest)
-    generated_manifest = manifest_for(files)
-    if manifest != generated_manifest:
-        changed = [name for name in ARCHIVE_FILES if manifest["files"].get(name) != generated_manifest["files"].get(name)]
-        raise ValueError(f"comparison archive is stale: {changed}")
+def historical_replay(output=None):
+    return execution_module().execute("historical", output)
+
+
+def current_comparison(output=None):
+    return execution_module().execute("current", output)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Run the frozen C and Swift migration candidates as separate processes.")
+    parser = argparse.ArgumentParser(description="Execute isolated historical replay or a separately identified current comparison.")
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument("--write", action="store_true", help="Regenerate the checked-in comparison archive.")
-    mode.add_argument("--check", action="store_true", help="Regenerate and verify the checked-in comparison archive.")
+    mode.add_argument("--write", action="store_true", help="Unsupported: original archive is immutable.")
+    mode.add_argument("--check", action="store_true", help="Execute selected historical inputs; require original identity and closure for success.")
+    mode.add_argument("--verify-evidence", type=Path, help="Validate saved raw/derived semantics and authenticated build receipts without new measurements.")
+    mode.add_argument("--current", action="store_true", help="Execute current committed inputs under unchanged exact comparison obligations.")
+    parser.add_argument("--output", type=Path, help="New evidence directory; an existing destination is rejected before acquisition.")
     arguments = parser.parse_args()
-    files = generate_archive()
     if arguments.write:
-        write_archive(files)
-    else:
-        check_archive(files)
+        parser.error("the original archive cannot be rewritten; select --check or --current")
+    if arguments.verify_evidence:
+        report = execution_module().verify_evidence(arguments.verify_evidence)
+        print(canonical_bytes(report).decode(), end="")
+        return report
+    report = historical_replay(arguments.output) if arguments.check else current_comparison(arguments.output)
+    print(canonical_bytes(report).decode(), end="")
+    passed = report.get("originalReproductionPassed") if arguments.check else report.get("scientificComparisonPassed")
+    if passed is not True:
+        raise SystemExit(1)
+    return report
 
 
 if __name__ == "__main__":
