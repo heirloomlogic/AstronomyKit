@@ -24,6 +24,10 @@ STRADDLE_PROTOCOL = ROOT / "Documentation/Migration/inverse-refraction-147-strad
 TOOLS = [Path(__file__), HOME / "Probe.swift", HOME / "Package.swift.txt"]
 EVIDENCE = HOME / "Evidence"
 EVIDENCE_MANIFEST_SHA256 = "707c9dd4aaacbb9f808638da450fd83643776e846b76b08fb5a3a8c0a2a6ee0f"
+REPAIR_EVIDENCE = HOME / "StraddleRepairEvidence"
+REPAIR_MANIFEST_SHA256 = "1ab42acfcf6ade24af03972281c9c8d45a9921ac97c2c788db538d8f589c655a"
+REGISTRATIONS = ((EVIDENCE, EVIDENCE_MANIFEST_SHA256, ("baseline", "initial-current", "current")),
+                 (REPAIR_EVIDENCE, REPAIR_MANIFEST_SHA256, ("current", "straddle-pre-repair", "straddle-current")))
 
 
 def sha(data):
@@ -153,19 +157,29 @@ def acquire(output, revision, protocol_path=PROTOCOL):
     return validate(output, protocol_path)
 
 
+def registered_records():
+    """Map each registered executable identity to the hashes of its immutable execution record."""
+    registered = {}
+    for directory, digest, labels in REGISTRATIONS:
+        data = (directory / "manifest.json").read_bytes()
+        if sha(data) != digest:
+            raise ValueError("immutable execution authority differs")
+        files = json.loads(data)["filesSHA256"]
+        for label in labels:
+            path = directory / label / "build-receipt.json.gz"
+            if sha(path.read_bytes()) != files[label + "/build-receipt.json.gz"]:
+                raise ValueError("registered build receipt differs")
+            identity = load(path)["binarySHA256"]
+            if identity in registered:
+                raise ValueError("registered executable identity is ambiguous")
+            registered[identity] = {name: files[label + "/" + name] for name in ("build-receipt.json.gz", "build-process.json.gz", "raw-processes.json.gz")}
+    return registered
+
+
 def validate(folder, protocol_path=PROTOCOL):
     protocol = load(protocol_path)
     receipt = load(folder / "build-receipt.json.gz")
-    manifest_data = (EVIDENCE / "manifest.json").read_bytes()
-    if sha(manifest_data) != EVIDENCE_MANIFEST_SHA256:
-        raise ValueError("immutable execution authority differs")
-    manifest = json.loads(manifest_data)
-    registered = {}
-    for label in ("baseline", "initial-current", "current"):
-        path = EVIDENCE / label / "build-receipt.json.gz"
-        if sha(path.read_bytes()) != manifest["filesSHA256"][str(path.relative_to(EVIDENCE))]:
-            raise ValueError("registered build receipt differs")
-        registered[load(path)["binarySHA256"]] = label
+    registered = registered_records()
     tools = {path.relative_to(ROOT).as_posix(): subprocess.check_output(["git", "show", receipt["toolRevision"] + ":" + path.relative_to(ROOT).as_posix()], cwd=ROOT) for path in TOOLS + [protocol_path]}
     if receipt["toolSHA256"] != hashes(tools) or tools[protocol_path.relative_to(ROOT).as_posix()] != protocol_path.read_bytes():
         raise ValueError("tool/protocol identity differs")
@@ -182,9 +196,8 @@ def validate(folder, protocol_path=PROTOCOL):
     binary = Path(receipt["binaryPath"])
     identity = sha(binary.read_bytes()) if binary.exists() else receipt["binarySHA256"]
     if identity in registered:
-        label = registered[identity]
-        for name in ("build-receipt.json.gz", "build-process.json.gz", "raw-processes.json.gz"):
-            if sha((folder / name).read_bytes()) != manifest["filesSHA256"][label + "/" + name]:
+        for name, digest in registered[identity].items():
+            if sha((folder / name).read_bytes()) != digest:
                 raise ValueError("registered execution record detached: " + name)
     elif not binary.exists():
         raise ValueError("unregistered executable unavailable; historical execution is not authenticated")
@@ -231,9 +244,9 @@ def validate(folder, protocol_path=PROTOCOL):
     return results
 
 
-def check_archive(directory=EVIDENCE):
+def check_registration(directory, digest):
     data = (directory / "manifest.json").read_bytes()
-    if sha(data) != EVIDENCE_MANIFEST_SHA256:
+    if sha(data) != digest:
         raise ValueError("immutable measured execution manifest differs")
     manifest = json.loads(data)
     population = {str(path.relative_to(directory)) for path in directory.rglob("*") if path.is_file()}
@@ -242,12 +255,33 @@ def check_archive(directory=EVIDENCE):
     for name, digest in manifest["filesSHA256"].items():
         if sha((directory / name).read_bytes()) != digest:
             raise ValueError("measured execution artifact differs: " + name)
+
+
+def check_archive(directory=EVIDENCE):
+    check_registration(directory, EVIDENCE_MANIFEST_SHA256)
     for current in ("initial-current", "current"):
         expected = load(directory / current / "assessment.json")
         actual = assess(directory / current, directory / "baseline", write=False)
         if actual != expected:
             raise ValueError("saved measured assessment differs")
     return {"recordedCurrentProofs": 2, "baselineProcesses": 312, "currentProcessesPerProof": 312, "baselineTimeouts": 68}
+
+
+def check_repair_archive(directory=REPAIR_EVIDENCE):
+    check_registration(directory, REPAIR_MANIFEST_SHA256)
+    paired = load(directory / "current/assessment.json")
+    straddle = load(directory / "straddle-current/assessment.json")
+    if assess(directory / "current", EVIDENCE / "baseline", write=False) != paired or assess_straddle(directory / "straddle-current", directory / "straddle-pre-repair", write=False) != straddle:
+        raise ValueError("saved measured assessment differs")
+    try:
+        assess_straddle(directory / "straddle-pre-repair", directory / "straddle-pre-repair", write=False)
+    except ValueError as error:
+        if str(error) != "straddle correction is not an adjacent converged inverse":
+            raise
+    else:
+        raise ValueError("pre-repair straddle record meets the repaired expectation")
+    return {"repairedSourceProcesses": paired["currentProcesses"], "successfulBaselinePayloadsExactlyMatched": paired["successfulBaselinePayloadsExactlyMatched"],
+            "straddleProcessesPerRecord": straddle["currentProcesses"], "repairedStraddleProcesses": straddle["repairedStraddleProcesses"]}
 
 
 def number(bits):
@@ -366,7 +400,7 @@ if __name__ == "__main__":
     parser.add_argument("--straddle", action="store_true", help="Use the adjacent-double straddle protocol; --current then requires the pre-repair record as --baseline.")
     arguments = parser.parse_args()
     if arguments.check_archive:
-        print(dumps(check_archive()))
+        print(dumps({"initialMeasurements": check_archive(), "straddleRepair": check_repair_archive()}))
     elif arguments.acquire:
         acquire(arguments.acquire.resolve(), arguments.revision, STRADDLE_PROTOCOL if arguments.straddle else PROTOCOL)
     elif arguments.current and arguments.straddle:

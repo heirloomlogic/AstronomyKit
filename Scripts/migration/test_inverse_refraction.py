@@ -244,6 +244,23 @@ class InverseRefractionControls(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "immutable measured"):
                 M.check_archive(directory)
 
+    def test_repaired_straddle_record_cannot_be_rehashed_or_replaced(self):
+        import json
+        self.assertEqual(36, M.check_repair_archive()["repairedStraddleProcesses"])
+        with tempfile.TemporaryDirectory() as name:
+            directory = Path(name) / "copy"
+            shutil.copytree(M.REPAIR_EVIDENCE, directory)
+            assessment = directory / "straddle-current/assessment.json"
+            shutil.copyfile(directory / "current/assessment.json", assessment)
+            with self.assertRaisesRegex(ValueError, "execution artifact"):
+                M.check_repair_archive(directory)
+            manifest_path = directory / "manifest.json"
+            manifest = json.loads(manifest_path.read_bytes())
+            manifest["filesSHA256"]["straddle-current/assessment.json"] = M.sha(assessment.read_bytes())
+            M.save(manifest_path, manifest)
+            with self.assertRaisesRegex(ValueError, "immutable measured"):
+                M.check_repair_archive(directory)
+
 
 if __name__ == "__main__":
     unittest.main()
