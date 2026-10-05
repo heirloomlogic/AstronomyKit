@@ -2855,7 +2855,7 @@
     "localPatches": 20,
     "publicSwiftAPI": 577,
     "testOwners": 98,
-    "tests": 1085
+    "tests": 1086
   },
   "crossCuttingContracts": [
     {
@@ -3744,7 +3744,7 @@
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
     "Scripts/migration/test_comparison.py": "64772ae05b99400ded4377c96d9a159ef3e1e589aa03f83c24f18ca24e658883",
     "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
-    "Scripts/migration/test_current_search.py": "184b7c5e5fd00d71c39d3178f4329e3e35e7ad7263a2d1535b9277e270a14acc",
+    "Scripts/migration/test_current_search.py": "c84f82bc99169301e81ae12888b0a58dc1ff323453ec73606ae56f08680dce04",
     "Scripts/migration/test_foundation.py": "d7a459d712fd1c2cf5195132d499b916bd823a5f2410dad64c177c454b937c8c",
     "Scripts/migration/test_historical_research.py": "e7c7e01c3b3b1db85d03ff70cc5965952e1c7e6ac17f2a29eebed937dff76294",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
@@ -13270,7 +13270,7 @@
       "id": "Scripts/migration/test_current_search.py",
       "migrationIssue": 84,
       "path": "Scripts/migration/test_current_search.py",
-      "testCount": 5
+      "testCount": 6
     },
     {
       "classification": "smoke",

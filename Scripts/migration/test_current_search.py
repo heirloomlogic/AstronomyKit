@@ -79,3 +79,38 @@ class CurrentSearchTests(unittest.TestCase):
                 (root / 'Sources/CLibAstronomy/extra.inc').write_text('extra')
                 with self.assertRaisesRegex(ValueError, 'source changes'):
                     R.source_identity()
+    def test_retained_repair_evidence_is_bound_and_semantically_recomputed(self):
+        directory = R.ROOT / 'Tools/Migration/SearchRepair/Evidence'
+        manifest_bytes = (directory / 'manifest.json').read_bytes()
+        self.assertEqual(R.M.sha(manifest_bytes), 'c4ea6b4c06ad38771516c715a8274e4263516eec95816895a2b13fa679086465')
+        manifest = json.loads(manifest_bytes)
+        self.assertEqual({p.name for p in directory.iterdir()}, set(manifest['filesSHA256']) | {'manifest.json'})
+        for name, digest in manifest['filesSHA256'].items():
+            self.assertEqual(R.M.sha((directory / name).read_bytes()), digest)
+        current = json.loads(gzip.decompress((directory / 'callback-raw-runs.json.gz').read_bytes()))
+        original, _, _ = R.M.load_archive()
+        supplement = R.load_supplement()
+        cases = R.M.protocol()['cases'] + R.M.supplement_protocol()['cases']
+        saved = {m: original[m]['swift'] + supplement[m]['swift'] for m in R.M.protocol()['models']}
+        changes = R.compare(saved, current, cases)
+        report = json.loads((directory / 'callback-assessment.json').read_text())
+        self.assertEqual(report['namedChanges'], changes)
+        self.assertEqual(report['processes'], 106)
+        self.assertEqual(report['rawSHA256'], manifest['filesSHA256']['callback-raw-runs.json.gz'])
+        receipt = json.loads((directory / 'callback-build-receipt.json').read_text())
+        self.assertEqual(receipt['revision'], manifest['repairSourceRevision'])
+        self.assertIs(receipt['trackedTreeDirty'], False)
+        expected_population = set(R.baseline_sources())
+        self.assertEqual(set(receipt['sourceSHA256']), expected_population)
+        for path, digest in receipt['sourceSHA256'].items():
+            self.assertEqual(R.M.sha(R.M.git_bytes(receipt['revision'], path)), digest)
+        self.assertEqual(receipt['validatorSHA256'], R.M.sha(R.M.git_bytes(receipt['revision'], 'Scripts/migration/check_current_search.py')))
+        self.assertEqual(receipt['adapterSHA256'], R.M.sha((R.M.HOME / 'main.swift').read_bytes()))
+        self.assertEqual(receipt['manifestSHA256'], R.M.sha(R.M.MANIFEST.encode()))
+        self.assertEqual(receipt['flags'], json.loads(R.M.LOCK.read_text())['build']['flags'])
+        base = json.loads(gzip.decompress((directory / 'migration-base.json.gz').read_bytes()))
+        candidate = json.loads(gzip.decompress((directory / 'migration-current.json.gz').read_bytes()))
+        for field in ['cases', 'cOutputs', 'swiftOutputs', 'comparisons', 'failed']:
+            self.assertEqual(base[field], candidate[field])
+        self.assertEqual(len(base['cases']), 18)
+        self.assertEqual(base['failed'], ['pluto-position-em', 'pluto-state-jpl'])
