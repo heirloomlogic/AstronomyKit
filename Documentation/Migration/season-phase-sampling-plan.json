@@ -1,0 +1,95 @@
+{
+  "approvedPolicy": {
+    "path": "Documentation/Migration/approved-accuracy-targets.json",
+    "sha256": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553"
+  },
+  "classification": "prospective-replay-plan-after-prior-results-observed",
+  "comparison": {
+    "displayResolutionSeconds": 60,
+    "referenceRoundingDirection": "not-recorded",
+    "thresholdSeconds": 60,
+    "timingRule": "strictlyLessThan"
+  },
+  "domain": {
+    "approved": {
+      "startInclusiveTT": "1900-01-01T00:00:00",
+      "stopExclusiveTT": "2131-01-01T00:00:00"
+    },
+    "lunarPhases": {
+      "omitted": "all non-decennial calendar years from 1900 through 2100 and every calendar year from 2101 through 2130",
+      "omissionBasis": "the pinned lunar table contains only one year per decade and ends at 2100; this plan retains every archived year in the approved interval",
+      "retainedCalendarYears": {
+        "first": 1900,
+        "last": 2100,
+        "step": 10
+      }
+    },
+    "seasons": {
+      "omitted": "every calendar year from 2101 through 2130",
+      "omissionBasis": "the pinned season table ends at 2100; this plan retains every archived season in the approved interval",
+      "retainedCalendarYears": {
+        "first": 1900,
+        "last": 2100,
+        "step": 1
+      }
+    }
+  },
+  "expectedRetainedCounts": {
+    "lunarPhases": 1038,
+    "seasons": 804
+  },
+  "measurementChronology": {
+    "firstRepositoryCommit": "7d577000d1062cdb034e05dd8d97ac3e2eef22d2",
+    "initialAssessment": {
+      "path": "Documentation/Migration/season-phase-assessment-initial.json",
+      "sha256": "0c85f0e03d2f73f0d5e367aca8829f9a0a0202e9d30e685a947e414d9cf6610d"
+    },
+    "initialObservation": "the local plan was written before the first runner execution, but the plan and assessment first entered repository history together; repository history does not independently prove the original premeasurement chronology",
+    "prospectiveReplay": "this revision freezes the same retained rows, identities, threshold, and omissions for a new replay after the initial results had already been observed; it is not a blind first measurement"
+  },
+  "referenceSources": {
+    "lunarPhases": {
+      "acquisitionRecipe": "generate/moonphase/maketest.bat downloaded one response for every tenth year from 1800 through 2100 and generate/moonphase/parse_moon_phases.js transformed those files at the pinned Astronomy Engine revision",
+      "acquisitionScriptSHA256": "c45c24ef50da3aa4439feaff6d498e084ffb3f28998c1b5643bf5b0964f30175",
+      "acquisitionScriptURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/maketest.bat",
+      "eventIdentities": [
+        "new",
+        "firstQuarter",
+        "full",
+        "lastQuarter"
+      ],
+      "origin": "Earth center",
+      "path": "Scripts/reference-data/sources/moonphases.txt",
+      "sha256": "959ec955d89b4d9d2366a737ecffad0ace1deafdb7d54947c94a0585b316c064",
+      "parserSHA256": "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263",
+      "parserURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/parse_moon_phases.js",
+      "sourceAPI": "https://api.usno.navy.mil/moon/phase?year=YEAR",
+      "timeScaleTreatment": "calendar fields are treated as UT coordinates and converted to TT with Astronomy_DeltaT_EspenakMeeus",
+      "units": "calendar minute",
+      "upstreamRevision": "865d3da7d8112bbc7911238052c6af4aaf877181",
+      "upstreamURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/moonphase/moonphases.txt"
+    },
+    "seasons": {
+      "acquisitionRecipe": "generate/seasons/maketest.bat downloaded one response for every year from 1800 through 2100 and generate/seasons/parse_seasons.js transformed those files at the pinned Astronomy Engine revision",
+      "acquisitionScriptSHA256": "27c1a14ff1184bd09e246d83d2c94a6b6ba0c2f971ef267c3fe205b4b77bb38f",
+      "acquisitionScriptURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons/maketest.bat",
+      "eventIdentities": [
+        "marchEquinox",
+        "juneSolstice",
+        "septemberEquinox",
+        "decemberSolstice"
+      ],
+      "origin": "Earth center",
+      "path": "Scripts/reference-data/sources/seasons.txt",
+      "sha256": "92a0b2a5f8c67510b49f342f6f7a763cb6eee1ef32413344e71ce169a3582383",
+      "parserSHA256": "d20f3901b918162f211a299baedf8022c9b4578de0bda09bd31a37a77f215d00",
+      "parserURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons/parse_seasons.js",
+      "sourceAPI": "https://api.usno.navy.mil/seasons?year=YEAR",
+      "timeScaleTreatment": "calendar fields are treated as UT coordinates and converted to TT with Astronomy_DeltaT_EspenakMeeus",
+      "units": "calendar minute",
+      "upstreamRevision": "865d3da7d8112bbc7911238052c6af4aaf877181",
+      "upstreamURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/generate/seasons/seasons.txt"
+    }
+  },
+  "schemaVersion": 1
+}
