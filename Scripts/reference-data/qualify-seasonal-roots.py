@@ -15,6 +15,8 @@ G=importlib.util.module_from_spec(SPEC);SPEC.loader.exec_module(G)
 Q=G.Q
 PLAN=ROOT/'Documentation/Migration/seasonal-root-sampling-plan.json'
 REPORT=ROOT/'Documentation/Migration/seasonal-root-assessment.json'
+REPLAY_RECEIPT=ROOT/'Documentation/Migration/seasonal-root-replay-provenance.json'
+REPLAY_TIME_TOLERANCE_DAYS=1e-7
 RAW=ROOT/'Scripts/reference-data/sources/seasonal-roots'
 KINDS=['marchEquinox','juneSolstice','septemberEquinox','decemberSolstice']
 
@@ -60,6 +62,42 @@ def vector_batches(mode,stage,dates,acquire=False):
         metadata.append({'pair':name,**meta})
         if acquire: print(f'archived {name}: {len(parsed)} rows',flush=True)
     return rows,metadata
+
+
+def archived_dates(mode,stage,count):
+    plan=load_plan();definition=plan['nominalReference'] if mode=='nominal' else plan['matchedDiagnostic']
+    delay=0 if mode=='nominal' else definition['fixedDelayDays'];size=plan['numericalControls']['batchSize']
+    paths=sorted(RAW.glob(f'{mode}-{stage}-*.query.json'))
+    expected=[RAW/f'{mode}-{stage}-{i:03d}.query.json' for i in range(math.ceil(count/size))]
+    if paths!=expected: raise ValueError('archived seasonal batch selection changed')
+    dates=[]
+    for index,path in enumerate(paths):
+        recipe=json.loads(path.read_bytes())['parameters']
+        query_dates=[float(value) for value in recipe['TLIST'].strip("'").split(',')]
+        if len(query_dates)!=min(size,count-index*size) or any(not math.isfinite(jd) for jd in query_dates): raise ValueError('archived seasonal batch count/epochs changed')
+        if recipe!=Q.parameters(definition['target'],definition['center'],definition['vectorCorrection'],query_dates): raise ValueError('archived seasonal conventions changed')
+        name=path.name.removesuffix('.query.json');Q.parse_response(bound_bytes(RAW,name,recipe),recipe)
+        reception=[round(jd+delay,plan['numericalControls']['queryDecimalPlaces']) for jd in query_dates]
+        if any(round(jd-delay,plan['numericalControls']['queryDecimalPlaces'])!=query for jd,query in zip(reception,query_dates)): raise ValueError('archived fixed-delay epochs do not round-trip')
+        dates+=reception
+    if dates!=sorted(set(dates)): raise ValueError('archived seasonal epochs are not strictly ordered')
+    return dates
+
+
+def validate_sample_epochs(dates,seeds,offsets):
+    precision=load_plan()['numericalControls']['queryDecimalPlaces'];offsets=sorted(offsets)
+    if len(dates)!=len(seeds)*len(offsets) or dates!=sorted(set(dates)): raise ValueError('seasonal sample selection/count/order changed')
+    groups=[]
+    for index,seed in enumerate(seeds):
+        epoch=seed['julianDateTT'];group=dates[index*len(offsets):(index+1)*len(offsets)]
+        for jd,offset in zip(group,offsets):
+            if not math.isfinite(jd) or not math.isfinite(epoch) or round(jd,precision)!=jd: raise ValueError('invalid archived seasonal sample epoch')
+            # Quantized acquisition inputs are immutable; this bound only validates
+            # their relation to independently recomputed roots, including JD ulps.
+            rounding_bound=10**(-precision)+4*max(math.ulp(epoch),math.ulp(jd))
+            if abs(jd-(epoch+offset/86400))>rounding_bound: raise ValueError('archived seasonal refinement spacing/selection drift')
+        groups.append(dict(zip(offsets,group)))
+    return groups
 
 
 def date_frame(jd):
@@ -120,12 +158,13 @@ def references(mode,acquire=False):
     dates=[start+i*step for i in range(math.ceil((stop-start)/step))]+[stop]
     coarse,meta=vector_batches(mode,'coarse',dates,acquire);candidates=coarse_candidates(coarse,mode)
     offsets=control['fineOffsetsSeconds']+control['halfFineOffsetsSeconds']
-    dates=sorted({round(root['julianDateTT']+offset/86400,8) for root in candidates for offset in offsets})
+    dates=sorted({round(root['julianDateTT']+offset/86400,8) for root in candidates for offset in offsets}) if acquire else archived_dates(mode,'fine',len(candidates)*len(offsets))
+    groups=validate_sample_epochs(dates,candidates,offsets)
     fine,fine_meta=vector_batches(mode,'fine',dates,acquire);meta+=fine_meta;by_date={r['receptionJulianDateTT']:r for r in fine};roots=[]
-    for candidate in candidates:
+    for candidate,group in zip(candidates,groups):
         results=[]
         for key in ['fineOffsetsSeconds','halfFineOffsetsSeconds']:
-            local=[by_date[round(candidate['julianDateTT']+offset/86400,8)] for offset in control[key]]
+            local=[by_date[group[offset]] for offset in control[key]]
             scalars=scalar_rows(local,mode,candidate['targetDegrees']);root,direction=Q.interpolated_root(scalars,3);quadratic,qdirection=Q.interpolated_root(scalars,2)
             results.append((root,abs(root-quadratic)*86400,direction==qdirection=='pericenter'))
         coarse_diff=abs(results[0][0]-candidate['julianDateTT'])*86400;half_diff=abs(results[0][0]-results[1][0])*86400
@@ -134,10 +173,12 @@ def references(mode,acquire=False):
         if coarse_diff>control['maximumCoarseFineDifferenceSeconds']: failures.append('coarse/fine convergence')
         if half_diff>control['maximumHalfGridDifferenceSeconds']: failures.append('half-grid convergence')
         roots.append({**candidate,'julianDateTT':results[1][0],'coarseJulianDateTT':candidate['julianDateTT'],'coarseFineDifferenceSeconds':coarse_diff,'halfGridDifferenceSeconds':half_diff,'quadraticCubicDifferenceSeconds':[r[1] for r in results],'numericalFailures':failures})
-    dates=sorted({round(root['julianDateTT']+offset/86400,8) for root in roots for offset in control['directBracketOffsetsSeconds']})
+    offsets=control['directBracketOffsetsSeconds']
+    dates=sorted({round(root['julianDateTT']+offset/86400,8) for root in roots for offset in offsets}) if acquire else archived_dates(mode,'direct',len(roots)*len(offsets))
+    groups=validate_sample_epochs(dates,roots,offsets)
     direct,direct_meta=vector_batches(mode,'direct',dates,acquire);meta+=direct_meta;by_date={r['receptionJulianDateTT']:r for r in direct}
-    for root in roots:
-        local=[by_date[round(root['julianDateTT']+offset/86400,8)] for offset in control['directBracketOffsetsSeconds']]
+    for root,group in zip(roots,groups):
+        local=[by_date[group[offset]] for offset in offsets]
         values=[r['rangeRateAUPerDay'] for r in scalar_rows(local,mode,root['targetDegrees'])]
         root['directBracketResidualDegrees']=values
         if not values[0]<0<values[1]: root['numericalFailures'].append('direct ascending bracket')
@@ -187,27 +228,80 @@ def assess(binary):
     return {'schemaVersion':1,'classification':'finite-nominal-seasonal-evidence-physical-apparent-qualification-incomplete','inputSHA256':source_hashes(),'referenceEnvironment':environment,'publicRunner':{'revision':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'executableSHA256':Q.digest(binary.read_bytes()),'compiler':subprocess.check_output(['swift','--version'],text=True).strip(),'isolatedManifestSHA256':Q.digest((ROOT/'.context/accuracy-qualification/runner-package/Package.swift').read_bytes())},'provenance':provenance,'summary':summary,'events':events,'limitations':plan['limitations'],'physicalApparentQualification':'unsupported: '+plan['nominalReference']['physicalQualification']}
 
 
+def require_finite_payload(value):
+    if isinstance(value,float) and not math.isfinite(value): raise ValueError('nonfinite seasonal payload value')
+    if isinstance(value,dict):
+        for item in value.values(): require_finite_payload(item)
+    elif isinstance(value,list):
+        for item in value: require_finite_payload(item)
+
+
+def validate_report_semantics(payload):
+    require_finite_payload(payload);plan=load_plan();summary={}
+    expected_count=plan['selection']['expectedEvents']*2*len(plan['publicDeltaTModels'])
+    if len(payload['events'])!=expected_count: raise ValueError('seasonal report population changed')
+    for index,event in enumerate(payload['events']):
+        model=plan['publicDeltaTModels'][index//(plan['selection']['expectedEvents']*2)]
+        year=plan['selection']['firstYear']+(index%(plan['selection']['expectedEvents']*2))//8
+        mode='nominal' if index%8<4 else 'matched';kind=KINDS[index%4]
+        if event['deltaTModel']!=model or event['year']!=year or event['mode']!=mode: raise ValueError('seasonal report event selection changed')
+        actual,reference=event['actual'],event['reference']
+        for row in (actual,reference):
+            jd=row['julianDateTT']
+            if type(jd) not in (int,float) or not math.isfinite(jd) or not year_start(year)<=jd<year_start(year+1) or row['kind']!=kind: raise ValueError('invalid seasonal report epoch/identity')
+        if reference['targetDegrees']!=plan['targetAnglesDegrees'][index%4]: raise ValueError('seasonal report target changed')
+        error=(actual['julianDateTT']-reference['julianDateTT'])*86400
+        if type(event['signedTimeErrorSeconds']) not in (int,float) or event['signedTimeErrorSeconds']!=error: raise ValueError('saved seasonal residual inconsistent with epochs')
+        nominal=abs(error)<plan['strictMaximumTimeErrorSeconds']
+        classification='unresolved-reference-controls' if reference['numericalFailures'] else Q.event_classification(error,plan['numericalControls']['referenceNumericalAllowanceSeconds'])
+        if type(event['nominalWithinStrictTarget']) is not bool or event['nominalWithinStrictTarget']!=nominal or event['numericalEnvelopeClassification']!=classification: raise ValueError('seasonal report classification inconsistent with residual')
+        key=mode+'/'+model;entry=summary.setdefault(key,{'count':0,'nominalExceedances':0,'numericalEnvelopeExceedances':0,'inconclusiveNumericalEnvelopes':0,'referenceControlFailures':0,'maximumAbsoluteTimeErrorSeconds':0})
+        entry['count']+=1;entry['nominalExceedances']+=int(not nominal);entry['numericalEnvelopeExceedances']+=int(classification=='exceeded');entry['inconclusiveNumericalEnvelopes']+=int(classification=='inconclusive-numerical-envelope');entry['referenceControlFailures']+=int(bool(reference['numericalFailures']));entry['maximumAbsoluteTimeErrorSeconds']=max(entry['maximumAbsoluteTimeErrorSeconds'],abs(error))
+    if payload['summary']!=summary: raise ValueError('seasonal report summary inconsistent with events')
+
+
 def validate_replay(saved,current):
-    # Keep original receipts; compare scientific payloads separately from rebuilt runtime identity.
-    left=json.loads(json.dumps(saved));right=json.loads(json.dumps(current))
-    if len(left['events'])!=len(right['events']): raise ValueError('seasonal replay population changed')
+    validate_report_semantics(saved);validate_report_semantics(current)
+    left=json.loads(json.dumps(saved));right=json.loads(json.dumps(current));time_bound=REPLAY_TIME_TOLERANCE_DAYS*86400
     for old,new in zip(left['events'],right['events']):
-        if abs(old['actual']['julianDateTT']-new['actual']['julianDateTT'])>1e-7: raise ValueError('rebuilt public seasonal time changed')
-        if old['actual']['kind']!=new['actual']['kind']: raise ValueError('rebuilt public seasonal identity changed')
-        new['actual']=old['actual'];new['signedTimeErrorSeconds']=old['signedTimeErrorSeconds']
+        for field in ['actual','reference']:
+            if abs(old[field]['julianDateTT']-new[field]['julianDateTT'])>REPLAY_TIME_TOLERANCE_DAYS: raise ValueError('rebuilt seasonal epoch changed')
+            if old[field]['kind']!=new[field]['kind']: raise ValueError('rebuilt seasonal identity changed')
+        # Validate both residuals first; normalization cannot conceal invalid saved evidence.
+        if abs(old['signedTimeErrorSeconds']-new['signedTimeErrorSeconds'])>2*time_bound: raise ValueError('rebuilt seasonal residual changed')
+        for field in ['coarseJulianDateTT','coarseFineDifferenceSeconds','halfGridDifferenceSeconds']:
+            scale=86400 if field=='coarseJulianDateTT' else 1
+            if abs(old['reference'][field]-new['reference'][field])*scale>2*time_bound: raise ValueError('rebuilt seasonal refinement changed')
+        for field in ['quadraticCubicDifferenceSeconds','directBracketResidualDegrees']:
+            bound=2*time_bound if field=='quadraticCubicDifferenceSeconds' else 1e-12
+            if len(old['reference'][field])!=len(new['reference'][field]) or any(abs(a-b)>bound for a,b in zip(old['reference'][field],new['reference'][field])): raise ValueError('rebuilt seasonal reference control changed')
+        reference=dict(new['reference'])
+        for field in ['julianDateTT','coarseJulianDateTT','coarseFineDifferenceSeconds','halfGridDifferenceSeconds','quadraticCubicDifferenceSeconds','directBracketResidualDegrees']: reference[field]=old['reference'][field]
+        new['reference']=reference;new['actual']=old['actual'];new['signedTimeErrorSeconds']=old['signedTimeErrorSeconds']
     if left['summary'].keys()!=right['summary'].keys(): raise ValueError('replay summary groups changed')
     for key in left['summary']:
         name='maximumAbsoluteTimeErrorSeconds'
-        if abs(left['summary'][key][name]-right['summary'][key][name])>0.00864: raise ValueError('rebuilt summary timing changed')
+        if abs(left['summary'][key][name]-right['summary'][key][name])>2*time_bound: raise ValueError('rebuilt summary timing changed')
         right['summary'][key][name]=left['summary'][key][name]
-    for value in (left,right):
-        value.pop('publicRunner');value.pop('referenceEnvironment')
+    for value in (left,right): value.pop('publicRunner');value.pop('referenceEnvironment')
     if left!=right: raise ValueError('offline scientific seasonal replay changed')
 
 
+def validate_source_provenance(saved,current,receipt):
+    require_finite_payload(receipt)
+    if receipt['originalAssessmentSHA256']!=Q.digest(REPORT.read_bytes()) or receipt['replayInputSHA256']!=current['inputSHA256']: raise ValueError('seasonal replay provenance detached from original assessment/current inputs')
+    original=saved['inputSHA256'];updated=current['inputSHA256'];changed={key for key in original.keys()|updated.keys() if original.get(key)!=updated.get(key)}
+    if changed!=set(receipt['changedValidatorPaths']) or changed!={'Scripts/reference-data/qualify-seasonal-roots.py'}: raise ValueError('original scientific inputs changed outside replay validator')
+    if receipt['originalValidatorSHA256']!=original['Scripts/reference-data/qualify-seasonal-roots.py']: raise ValueError('original validator identity changed')
+    if receipt['planSHA256']!=Q.digest(PLAN.read_bytes()): raise ValueError('replay plan changed')
+
+
 def check(binary):
-    saved=json.loads(REPORT.read_bytes());current=assess(binary);validate_replay(saved,current)
-    print('Offline replay preserved all seasonal identities, reference controls and strict classifications; rebuilt runner provenance is separate.',flush=True)
+    saved=json.loads(REPORT.read_bytes());current=assess(binary);receipt=json.loads(REPLAY_RECEIPT.read_bytes())
+    validate_source_provenance(saved,current,receipt)
+    current['inputSHA256']=saved['inputSHA256']
+    validate_replay(saved,current)
+    print('Offline replay validated archived epochs, residual semantics, finite payloads, source bindings and strict classifications; original measurements retained.',flush=True)
 
 
 def main():
