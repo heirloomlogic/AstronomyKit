@@ -66,7 +66,7 @@
     "queryDecimalPlaces": 8,
     "referenceNumericalAllowanceSeconds": 1
   },
-  "numpyVersion": "2.2.6",
+  "numpyVersion": "2.3.5",
   "policySHA256": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553",
   "publicDeltaTModels": [
     "jpl-horizons",
