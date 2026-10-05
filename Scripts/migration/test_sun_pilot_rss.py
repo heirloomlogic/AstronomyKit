@@ -14,9 +14,9 @@ class SunPilotRSSControlTests(unittest.TestCase):
     def test_control_inventory_separates_runtime_foundation_model_and_runner(self):
         self.assertEqual(
             tuple(MODULE.CONTROLS),
-            ("minimalSwift", "foundationOnly", "modelLinked", "unchangedRunner"),
+            ("minimalSwift", "foundationOnly", "modelLinked", "pilotRunner"),
         )
-        self.assertEqual(MODULE.CONTROLS["unchangedRunner"]["arguments"], ["--rss-stage", "startup"])
+        self.assertEqual(MODULE.CONTROLS["pilotRunner"]["arguments"], ["--rss-stage", "startup"])
         self.assertEqual(MODULE.TRIALS, 5)
 
     def test_validate_measurements_requires_five_fresh_process_samples(self):
@@ -32,14 +32,14 @@ class SunPilotRSSControlTests(unittest.TestCase):
             "minimalSwift": self.samples(70, 71, 72, 73, 74),
             "foundationOnly": self.samples(130, 131, 132, 133, 134),
             "modelLinked": self.samples(140, 141, 142, 143, 144),
-            "unchangedRunner": self.samples(150, 151, 152, 153, 154),
+            "pilotRunner": self.samples(150, 151, 152, 153, 154),
         }
         result = MODULE.summarize_measurements(measurements, ceiling=100)
         self.assertTrue(result["foundationControlExceedsCeiling"])
         self.assertTrue(result["modelLinkedRangeDisjointAboveFoundation"])
-        self.assertTrue(result["unchangedRunnerRangeDisjointAboveFoundation"])
+        self.assertTrue(result["pilotRunnerRangeDisjointAboveFoundation"])
         self.assertEqual(result["modelLinkedMedianDifferenceFromFoundationBytes"], 10)
-        self.assertEqual(result["unchangedRunnerMedianDifferenceFromFoundationBytes"], 20)
+        self.assertEqual(result["pilotRunnerMedianDifferenceFromFoundationBytes"], 20)
         self.assertEqual(result["causalAttribution"], "not-established-by-independent-process-peak-rss")
         self.assertEqual(result["decision"], "foundation-control-exceeds-ceiling")
         for removed in ("candidateRemovalCanMeetCeiling", "candidateLinkageCostDetected", "modelLinkageRangeSeparatedFromFoundation"):
@@ -50,7 +50,7 @@ class SunPilotRSSControlTests(unittest.TestCase):
             "minimalSwift": self.samples(70, 71, 72, 73, 74),
             "foundationOnly": self.samples(80, 81, 82, 83, 84),
             "modelLinked": self.samples(110, 111, 112, 113, 114),
-            "unchangedRunner": self.samples(120, 121, 122, 123, 124),
+            "pilotRunner": self.samples(120, 121, 122, 123, 124),
         }
         result = MODULE.summarize_measurements(measurements, ceiling=100)
         self.assertFalse(result["foundationControlExceedsCeiling"])
@@ -63,7 +63,7 @@ class SunPilotRSSControlTests(unittest.TestCase):
             "minimalSwift": self.samples(70, 71, 72, 73, 74),
             "foundationOnly": self.samples(80, 82, 84, 86, 88),
             "modelLinked": self.samples(86, 88, 90, 92, 94),
-            "unchangedRunner": self.samples(87, 89, 91, 93, 95),
+            "pilotRunner": self.samples(87, 89, 91, 93, 95),
         }
         result = MODULE.summarize_measurements(measurements, ceiling=100)
         self.assertFalse(result["modelLinkedRangeDisjointAboveFoundation"])
@@ -79,10 +79,14 @@ class SunPilotRSSControlTests(unittest.TestCase):
     def test_mapping_snapshot_requires_expected_loaded_libraries(self):
         loaded = "\n".join(["mapping"] * 20 + ["/usr/lib/swift/linux/libFoundation.so"])
         self.assertEqual(MODULE.validate_mapping_snapshot("foundationOnly", loaded), 21)
+        for name in ("minimalSwift", "modelLinked", "pilotRunner"):
+            self.assertEqual(MODULE.validate_mapping_snapshot(name, "\n".join(["mapping"] * 21)), 21)
+            with self.assertRaisesRegex(ValueError, "unexpectedly includes Foundation"):
+                MODULE.validate_mapping_snapshot(name, loaded)
         with self.assertRaisesRegex(ValueError, "too few mappings"):
             MODULE.validate_mapping_snapshot("minimalSwift", "\n".join(["mapping"] * 12))
         with self.assertRaisesRegex(ValueError, "Foundation mapping"):
-            MODULE.validate_mapping_snapshot("modelLinked", "\n".join(["mapping"] * 21))
+            MODULE.validate_mapping_snapshot("foundationOnly", "\n".join(["mapping"] * 21))
 
 
 if __name__ == "__main__":

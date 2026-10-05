@@ -31,7 +31,7 @@ CONTROLS = {
         "arguments": [],
         "mappingArguments": ["--mapping-control"],
     },
-    "unchangedRunner": {
+    "pilotRunner": {
         "product": "AstronomySunPilotRunner",
         "arguments": ["--rss-stage", "startup"],
         "mappingArguments": [],
@@ -101,7 +101,7 @@ def summarize_measurements(measurements, ceiling):
         }
     foundation = summaries["foundationOnly"]
     model = summaries["modelLinked"]
-    runner = summaries["unchangedRunner"]
+    runner = summaries["pilotRunner"]
     linkage_separated = model["minimumBytes"] > foundation["maximumBytes"]
     runner_separated = runner["minimumBytes"] > foundation["maximumBytes"]
     if summaries["minimalSwift"]["minimumBytes"] > ceiling:
@@ -115,9 +115,9 @@ def summarize_measurements(measurements, ceiling):
         "controls": summaries,
         "foundationControlExceedsCeiling": foundation["minimumBytes"] > ceiling,
         "modelLinkedRangeDisjointAboveFoundation": linkage_separated,
-        "unchangedRunnerRangeDisjointAboveFoundation": runner_separated,
+        "pilotRunnerRangeDisjointAboveFoundation": runner_separated,
         "modelLinkedMedianDifferenceFromFoundationBytes": model["medianBytes"] - foundation["medianBytes"],
-        "unchangedRunnerMedianDifferenceFromFoundationBytes": runner["medianBytes"] - foundation["medianBytes"],
+        "pilotRunnerMedianDifferenceFromFoundationBytes": runner["medianBytes"] - foundation["medianBytes"],
         "causalAttribution": "not-established-by-independent-process-peak-rss",
         "decision": decision,
     }
@@ -157,8 +157,10 @@ def validate_mapping_snapshot(name, contents):
     count = len(contents.splitlines())
     if count < 20:
         raise ValueError(f"{name} mapping snapshot has too few mappings")
-    if name != "minimalSwift" and "libFoundation.so" not in contents:
+    if name == "foundationOnly" and "libFoundation.so" not in contents:
         raise ValueError(f"{name} mapping snapshot has no Foundation mapping")
+    if name != "foundationOnly" and "libFoundation" in contents:
+        raise ValueError(f"{name} mapping snapshot unexpectedly includes Foundation")
     return count
 
 
@@ -231,7 +233,7 @@ def main():
     baseline = ROOT / "Documentation/Migration/performance-baseline.json"
     budget = json.loads(baseline.read_text())["budgets"]["peakResidentBytes"]
     report = {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "status": "running",
         "qualified": False,
         "candidateRevision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),

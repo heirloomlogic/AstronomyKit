@@ -1,5 +1,9 @@
 // Adapted from Astronomy Engine; its MIT notice is retained in THIRD_PARTY_NOTICES.
-import Foundation
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#endif
 
 /// Equatorial J2000 Cartesian coordinates in astronomical units.
 public struct PilotVector: Sendable {
