@@ -127,7 +127,7 @@ class ExecutionIntegrityTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 E.validate_packet(saved, case)
 
-    def test_rehashed_model_status_order_changes_remain_scientific_differences(self):
+    def test_rehashed_numeric_change_remains_scientific_difference(self):
         c = E.load(ROOT / 'Scripts/migration/run-comparison.py', 'test_semantics')
         case, packet = self.packet()
         original = E.records([packet], [case])
@@ -156,6 +156,21 @@ class ExecutionIntegrityTests(unittest.TestCase):
                 changed.update(stdoutBase64=base64.b64encode(raw).decode(), stdoutSHA256=digest(raw))
                 with self.subTest(case=case['id'], field=field, value=value), self.assertRaises(ValueError):
                     E.validate_packet(changed, case)
+
+    def test_invalid_request_process_and_result_contract(self):
+        for model in ('espenak-meeus', 'jpl-horizons'):
+            case = {'id': 'invalid', 'command': ['invalid', 'request', model]}
+            packet = {'id': 'invalid', 'command': case['command'], 'exitCode': 64, 'termination': 'process', 'stdoutBase64': '', 'stderrBase64': base64.b64encode(b'invalid comparison request\n').decode(), 'stdoutSHA256': digest(b''), 'stderrSHA256': digest(b'invalid comparison request\n'), 'result': None}
+            E.validate_packet(packet, case)
+            changed = copy.deepcopy(packet)
+            changed['exitCode'] = 0
+            with self.assertRaises(ValueError):
+                E.validate_packet(changed, case)
+            changed = copy.deepcopy(packet)
+            raw = json.dumps({'model': model, 'status': 'success'}).encode()
+            changed.update(stdoutBase64=base64.b64encode(raw).decode(), stdoutSHA256=digest(raw), result=json.loads(raw))
+            with self.assertRaises(ValueError):
+                E.validate_packet(changed, case)
 
     def test_build_claims_bind_to_consumed_environment_capture(self):
         fields = {'swiftCommand': ['/compiler/swift', '--version'], 'swiftExitCode': 0, 'swiftStdoutBase64': base64.b64encode(b'Swift version 6.2\nTarget: x86_64-unknown-linux-gnu\n').decode(), 'swiftStderrBase64': '', 'platformCommand': ['/python', '-c', 'import platform; print(platform.platform())'], 'platformExitCode': 0, 'platformStdoutBase64': base64.b64encode(b'Linux-test-platform\n').decode(), 'platformStderrBase64': ''}

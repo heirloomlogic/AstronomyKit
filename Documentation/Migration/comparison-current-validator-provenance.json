@@ -1,0 +1,12 @@
+{
+  "classification": "mutable-current-validator-provenance",
+  "measuredToolRevision": "02602f09f0703f348f8797d090eca53aba0858a8",
+  "originalMeasuredArchives": "Unchanged; this file is outside all original measured manifests.",
+  "toolSHA256": {
+    "Scripts/migration/comparison_execution.py": "899ca2b165430ed928620e3869c5f1b426604988a4c9fb3f28b1833449e7027f",
+    "Scripts/migration/replay_historical_research.py": "89a9c2ef7350c8e833beb302b984e1f5fba26b39a8f3b2876bfe62fad1cf9139",
+    "Scripts/migration/run-comparison.py": "afbc15c7a606e6353119c3b3527df85ec051733c4b7f5d1169a908747d2e5223",
+    "Tools/Migration/Oracle/build-oracle.py": "cdb37623a894e3f2be983f005f6f4cbd80c890c9e418e9d4530d58c4c9bfab98",
+    "Tools/Migration/Oracle/build-oracle.sh": "3f91e3de155f2df6cfb036daed031a1aabb97b8f035a6ee330ae1f5fc842b977"
+  }
+}
