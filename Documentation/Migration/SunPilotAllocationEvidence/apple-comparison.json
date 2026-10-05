@@ -1,0 +1,67 @@
+{
+  "allCandidateReleaseTrialsBelowEveryBaselineTrial": true,
+  "baselineWithinOriginalCeiling": true,
+  "candidateWithinOriginalCeiling": true,
+  "environment": {
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+    "system": "Darwin"
+  },
+  "matchingUncompressedSHA256": {
+    "debug-perturbed.jsonl.gz": "f025b7ea87ffd39649439abe7bb448de70af9788a1d4a9548595acb38205c06d",
+    "debug.jsonl.gz": "b3cfa7c61e1b9ea656c97e08e62e23188f323414162d1ccc59b8b032caa4333c",
+    "inputs.json.gz": "fc06f7f6a21aeac9dd360d2900042224d9ecdf62931d7ab40b86161e9aa499f0",
+    "oracle.jsonl.gz": "4b6344a79287d1dd95ce9c88ded954cfb16eac893a57c5b06e48980be0ede0c9",
+    "release-perturbed.jsonl.gz": "f025b7ea87ffd39649439abe7bb448de70af9788a1d4a9548595acb38205c06d",
+    "release.jsonl.gz": "4fbd3085b96289945189d125de65aaf8c1736e02bc0a96b8040ce2f04fa568df"
+  },
+  "originalCeilingBytes": 11182080,
+  "protocolSHA256": "b826a14c082d168b1694fdd022b8a0c4fb6b3817f052527feaa980fe9e022c57",
+  "qualified": false,
+  "releaseMedianReductionBytes": 131072,
+  "reports": {
+    "baseline": {
+      "reportSHA256": "261a36054dda32e2eeeffc42975088a53ec799bee4a15b80022942c84a535a8f",
+      "revision": "2376ee3df52f141f6394cb442243feb7cdbd6b86"
+    },
+    "candidate": {
+      "reportSHA256": "d9c5f7fc96076326f18abb21da72b47af6a2454bb342ef34654ee0f56e3757f6",
+      "revision": "f93fc8dee058790fbf4b97f4e8a57f20cc9bd4e6"
+    }
+  },
+  "rssRetentionConditionPassed": false,
+  "schemaVersion": 2,
+  "status": "complete-paired-evidence",
+  "trialPeakResidentBytes": {
+    "baseline-debug": [
+      7684096,
+      7684096,
+      7684096,
+      7684096,
+      7667712
+    ],
+    "baseline-release": [
+      7208960,
+      7208960,
+      7208960,
+      7208960,
+      7208960
+    ],
+    "candidate-debug": [
+      7569408,
+      7569408,
+      7569408,
+      7569408,
+      7569408
+    ],
+    "candidate-release": [
+      7077888,
+      7077888,
+      7077888,
+      7077888,
+      7077888
+    ]
+  },
+  "validatorSHA256": "78c38cb0e1c45f211cbfb36a124f39d8a272cca9e0aa6ed76b113a6cc53e5a63"
+}

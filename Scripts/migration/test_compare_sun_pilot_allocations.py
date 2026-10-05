@@ -32,21 +32,21 @@ class ComparisonTests(unittest.TestCase):
 
     def test_separated_trials_support_retention_without_passing_ceiling(self):
         result = MODULE.validate_reports(self.baseline, self.candidate)
-        self.assertTrue(result["retainSourceExperiment"])
+        self.assertTrue(result["rssRetentionConditionPassed"])
         self.assertFalse(result["candidateWithinOriginalCeiling"])
 
     def test_only_isolated_manifest_root_paths_are_normalized(self):
         for record, root in ((self.baseline, "/tmp/first"), (self.candidate, "/tmp/second")):
             record["effectivePackage"]["evaluatedManifest"] = {"packageKind": {"root": [root]}, "targets": []}
             record["effectivePackage"]["evaluatedManifestSHA256"] = root
-        self.assertTrue(MODULE.validate_reports(self.baseline, self.candidate)["retainSourceExperiment"])
+        self.assertTrue(MODULE.validate_reports(self.baseline, self.candidate)["rssRetentionConditionPassed"])
         self.candidate["effectivePackage"]["evaluatedManifest"]["targets"] = ["changed"]
         with self.assertRaises(ValueError):
             MODULE.validate_reports(self.baseline, self.candidate)
 
     def test_overlap_is_retained_as_a_negative_observation(self):
         self.candidate["configurations"]["release"]["runtime"][4]["peakResidentBytes"] = 12500000
-        self.assertFalse(MODULE.validate_reports(self.baseline, self.candidate)["retainSourceExperiment"])
+        self.assertFalse(MODULE.validate_reports(self.baseline, self.candidate)["rssRetentionConditionPassed"])
 
     def test_changed_workloads_and_nonfinite_values_are_rejected(self):
         for field, value in (("operations", 199), ("checksum", 1.25), ("checksum", math.nan)):

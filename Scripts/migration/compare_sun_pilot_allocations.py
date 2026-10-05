@@ -92,7 +92,7 @@ def validate_reports(baseline, candidate):
     separated = max(new) < min(old)
     return {"trialPeakResidentBytes": peaks, "releaseMedianReductionBytes": statistics.median(old) - statistics.median(new),
             "allCandidateReleaseTrialsBelowEveryBaselineTrial": separated,
-            "retainSourceExperiment": separated and baseline["environment"]["system"] == "Linux",
+            "rssRetentionConditionPassed": separated and baseline["environment"]["system"] == "Linux",
             "baselineWithinOriginalCeiling": max(old) <= ceiling,
             "candidateWithinOriginalCeiling": max(new) <= ceiling,
             "originalCeilingBytes": ceiling, "qualified": False}
@@ -108,7 +108,7 @@ def compare_directories(baseline, candidate):
         if data[0] != data[1]:
             raise ValueError(f"baseline/candidate raw rows differ: {name}")
         bound[name] = hashlib.sha256(data[0]).hexdigest()
-    result.update({"schemaVersion": 1, "status": "complete-paired-evidence", "matchingUncompressedSHA256": bound,
+    result.update({"schemaVersion": 2, "status": "complete-paired-evidence", "matchingUncompressedSHA256": bound,
                    "protocolSHA256": digest(ROOT / "Documentation/Migration/SunPilotAllocationProtocol.md"),
                    "validatorSHA256": digest(Path(__file__)),
                    "reports": {label: {"revision": record["candidateRevision"], "reportSHA256": digest(path / "report.json")}

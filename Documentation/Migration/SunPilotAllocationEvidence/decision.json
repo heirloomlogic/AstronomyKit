@@ -1,0 +1,33 @@
+{
+  "baseRevision": "2376ee3df52f141f6394cb442243feb7cdbd6b86",
+  "observations": {
+    "apple": {
+      "candidateToBaselineRatio": 3.7034850504665777,
+      "comparisonSHA256": "a18f55190746de2d992136cd7fea63c35bfd605a45dd32637a063cca2c2a5934",
+      "freshFallbackMedianNanoseconds": {
+        "baseline": 10502000,
+        "candidate": 38894000
+      }
+    },
+    "linux": {
+      "candidateToBaselineRatio": 2.4260403468280236,
+      "comparisonSHA256": "97c814af7af677ff9af635fa47a147b834c24b140fef4cfe114de3e8e162cf58",
+      "freshFallbackMedianNanoseconds": {
+        "baseline": 34901678,
+        "candidate": 84672879
+      }
+    }
+  },
+  "originalIssueRemainsOpen": 83,
+  "qualified": false,
+  "reason": "The finite RSS improvement does not clear the original ceiling and incurs fresh-fallback slowdowns on both tested platforms.",
+  "rejectedSourceRevision": "f93fc8dee058790fbf4b97f4e8a57f20cc9bd4e6",
+  "restoredSourceSHA256": {
+    "Sources/AstronomyModelPrototype/EarthPilot.swift": "829cc806747246b87602497010d16249ddfb373276bcaed53d7e1489be009303",
+    "Sources/AstronomyModelPrototype/ModelData.swift": "db726cc23f74013893db50f8b3932cc1a2f853afe3b8d96aee6808d2f45e2f33",
+    "Sources/AstronomyModelPrototype/PilotOrientation.swift": "8d3c609cf7fbed794782b861cccd6b455ddf5362785583e9a960887e709645c2",
+    "Tests/AstronomySunPilotTests/SunPilotTests.swift": "f646cbf5a19f4cbd077ba958b7c2a4e61a2058d8305592fae368d33d67453beb"
+  },
+  "schemaVersion": 1,
+  "sourceExperimentRetained": false
+}

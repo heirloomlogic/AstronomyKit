@@ -61,39 +61,6 @@ public struct NutationRow: Sendable {
 
 /// Access to the complete generated model prototype.
 public enum PrototypeModelData {
-    static let earthVSOPSeries: ArraySlice<GeneratedVSOPSeries> = {
-        let earth = PrototypeBody.earth.rawValue
-        guard let first = generatedVSOPSeries.firstIndex(where: { $0.body == earth }),
-            let last = generatedVSOPSeries.lastIndex(where: { $0.body == earth })
-        else { preconditionFailure("Generated VSOP metadata has no Earth series") }
-        return generatedVSOPSeries[first...last]
-    }()
-
-    struct NutationTerm {
-        let m0, m1, m2, m3, m4: Double
-        let c0, c1, c2, c3, c4, c5: Double
-    }
-
-    static func nutationTerm(at index: Int) -> NutationTerm? {
-        guard index >= 0, index < nutationIntegerBits.count / 5,
-            index < nutationCoefficientBits.count / 6
-        else { return nil }
-        let m = index * 5
-        let c = index * 6
-        return NutationTerm(
-            m0: Double(Int64(bitPattern: nutationIntegerBits[m])),
-            m1: Double(Int64(bitPattern: nutationIntegerBits[m + 1])),
-            m2: Double(Int64(bitPattern: nutationIntegerBits[m + 2])),
-            m3: Double(Int64(bitPattern: nutationIntegerBits[m + 3])),
-            m4: Double(Int64(bitPattern: nutationIntegerBits[m + 4])),
-            c0: Double(bitPattern: nutationCoefficientBits[c]),
-            c1: Double(bitPattern: nutationCoefficientBits[c + 1]),
-            c2: Double(bitPattern: nutationCoefficientBits[c + 2]),
-            c3: Double(bitPattern: nutationCoefficientBits[c + 3]),
-            c4: Double(bitPattern: nutationCoefficientBits[c + 4]),
-            c5: Double(bitPattern: nutationCoefficientBits[c + 5]))
-    }
-
     /// Metadata for every generated polynomial body in ``PrototypeBody`` order.
     public static var polynomialMetadata: [PolynomialMetadata] {
         generatedPolynomialMetadata.map {
