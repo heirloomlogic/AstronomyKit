@@ -1,0 +1,9 @@
+{
+  "classification": "prospective-active-validator-binding",
+  "reviewedSourceRevision": "2bddd2de1bb21d23ce70d8f2f88eea7693c04c57",
+  "scope": "Compiler/platform claims consume raw environment command bytes in the build log and match the compiler version emitted during compilation. Returned model and status must match the requested model and the original finite request status contract.",
+  "priorMeasuredIdentityBinding": "Unmodified complete historical/current build logs and receipt identities are authenticated through their immutable reviewed Git snapshots; this authenticates recorded claims without retroactively claiming new command capture.",
+  "freshProof": "Same 18 cases and paired invalid-request controls, acquired only after committing validator/tooling. Raw packets, original protocols, acquired receipts, numerical obligations and Chiron allowance remain unchanged.",
+  "originalIssueCompletion": false,
+  "scientificPolicyChange": false
+}
