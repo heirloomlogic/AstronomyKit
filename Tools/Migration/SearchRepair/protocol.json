@@ -1,0 +1,31 @@
+{
+  "baseRevision": "a06ce8653f7de3aed64bb4ce0509b1d10bc683ab",
+  "classification": "prospective-current-public-repair-regression-not-historical-replay",
+  "currentPublicProcesses": 106,
+  "expectedOutcomeForNamedChanges": "absent",
+  "historicalPartitions": {
+    "original": 51,
+    "supplement": 2
+  },
+  "namedExpectedChanges": {
+    "espenak-meeus": [
+      "root-descending",
+      "root-equal-window",
+      "root-short-absent-window"
+    ],
+    "jpl-horizons": [
+      "root-descending",
+      "root-equal-window",
+      "root-short-absent-window",
+      "root-extreme-time"
+    ]
+  },
+  "originalProtocolSHA256": "b5c6788075b8b4b52ea8e220d2ca4556172ee41efaabc541713bbc5b063eed6e",
+  "researchBounds": "Use the unchanged original subprocess timeout and callback caps; save all raw packets before assessment. No new acquisition or physical accuracy claim.",
+  "schemaVersion": 1,
+  "sourceChangePopulation": [
+    "Sources/CLibAstronomy/astronomy.c"
+  ],
+  "supplementProtocolSHA256": "7ea82e4b2f0540e8186877d217199f3b281e62432fb41b01e47325e091b59d61",
+  "unchangedCases": "All other cases retain ordered semantic packets under the original platform envelope, including light-time, callback errors, nonfinite input and ordinary endpoints. Locked C is retained historical evidence, never relabeled repaired current behavior."
+}
