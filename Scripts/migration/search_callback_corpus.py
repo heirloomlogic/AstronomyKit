@@ -436,10 +436,10 @@ def validate_run(run, case, model, backend):
             if backend == "c" and last["rawStatus"] not in (3, 4, 5, 11):
                 raise ValueError("unknown source algorithm error")
             if backend == "swift" and last["rawStatus"] not in (
-                "noConvergence",
-                "badTime",
-                "badVector",
-                "invalidParameter",
+                "Numeric solver failed to converge",
+                "Date/time outside allowed range",
+                "Vector magnitude too small to normalize",
+                "Invalid parameter value",
             ):
                 raise ValueError("unknown public algorithm error")
         elif (
@@ -586,6 +586,11 @@ def acquire(binaries, receipt):
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
     runs, controls = collect_runs(binaries), executable_controls(binaries)
+    attempt = ROOT / ".context" / f"search-collection-{revision}"
+    attempt.mkdir(exist_ok=False)
+    write_gzip(attempt / "raw-runs.json.gz", runs)
+    write_gzip(attempt / "mutation-runs.json.gz", controls)
+    (attempt / "build-receipt.json").write_text(dumps(receipt))
     derived = assessment(runs)
     ARCHIVE.mkdir()
     (ARCHIVE / "protocol.json").write_bytes((HOME / "protocol.json").read_bytes())
