@@ -176,6 +176,21 @@ Rss:                 20 kB
         self.assertNotIn("heap", summary["reproduciblePositiveGrowth"].get("firstAccess", {}))
         self.assertFalse(summary["removableOwnerEstablished"])
 
+    def test_smaps_classification_rejects_missing_truncated_and_duplicate_rss_rows(self):
+        complete = """00400000-00401000 r-xp 00000000 08:01 1 /tmp/runner
+Rss:                  4 kB
+00600000-00601000 rw-p 00000000 00:00 0 [heap]
+Rss:                  8 kB
+"""
+        malformed = {
+            "missing": complete.replace("Rss:                  4 kB\n", ""),
+            "truncated": complete + "00700000-00701000 rw-p 00000000 00:00 0\n",
+            "duplicate": complete.replace("Rss:                  4 kB\n", "Rss:                  4 kB\nRss:                  4 kB\n"),
+        }
+        for name, contents in malformed.items():
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, "smaps"):
+                MODULE.classify_smaps(contents, Path("/tmp/runner"))
+
     def test_checkpoint_workloads_bind_to_uninstrumented_counts_and_checksums(self):
         trials = [self.aggregate_trial() for _ in range(5)]
         campaign = {"trials": trials}
@@ -197,6 +212,19 @@ Rss:                 20 kB
         with tempfile.TemporaryFile() as stream:
             with self.assertRaisesRegex(RuntimeError, "closed"):
                 MODULE.read_process_line(stream.fileno(), 0.01)
+
+    def test_final_checkpoint_output_requires_immediate_eof(self):
+        final = b'{"firstAccess":{}}\n'
+        with tempfile.TemporaryFile() as stream:
+            stream.write(final)
+            stream.seek(0)
+            self.assertEqual(MODULE.read_final_checkpoint_output(stream.fileno(), 0.01), {"firstAccess": {}})
+        for trailing in (b'{"firstAccess":{}}\n', b"foreign output\n"):
+            with self.subTest(trailing=trailing), tempfile.TemporaryFile() as stream:
+                stream.write(final + trailing)
+                stream.seek(0)
+                with self.assertRaisesRegex(ValueError, "trailing"):
+                    MODULE.read_final_checkpoint_output(stream.fileno(), 0.01)
 
     @mock.patch.object(MODULE.os, "killpg")
     def test_process_cleanup_kills_and_reaps_a_running_group(self, killpg):

@@ -372,17 +372,28 @@ def mapping_class(path, binary):
 def classify_smaps(contents, binary):
     totals = {}
     current = None
+    rss_seen = False
     for line in contents.splitlines():
         if re.match(r"^[0-9a-f]+-[0-9a-f]+\s", line):
+            if current is not None and not rss_seen:
+                raise ValueError("aggregate smaps mapping lacks an RSS row")
             fields = line.split(maxsplit=5)
             current = mapping_class(fields[5] if len(fields) == 6 else "", binary)
-        elif current is not None and line.startswith("Rss:"):
+            rss_seen = False
+        elif line.startswith("Rss:"):
+            if current is None:
+                raise ValueError("aggregate smaps RSS row lacks a mapping")
+            if rss_seen:
+                raise ValueError("aggregate smaps mapping has duplicate RSS rows")
             fields = line.split()
             if len(fields) != 3 or fields[2] != "kB":
                 raise ValueError("aggregate smaps RSS row is malformed")
             totals[current] = totals.get(current, 0) + int(fields[1]) * 1024
-    if not totals:
-        raise ValueError("aggregate smaps snapshot has no RSS rows")
+            rss_seen = True
+    if current is None:
+        raise ValueError("aggregate smaps snapshot has no mappings")
+    if not rss_seen:
+        raise ValueError("aggregate smaps mapping lacks an RSS row")
     return dict(sorted(totals.items()))
 
 
@@ -418,6 +429,24 @@ def read_process_line(descriptor, timeout_seconds):
         data.extend(byte)
         if len(data) > 1_000_000:
             raise ValueError("aggregate checkpoint line is too large")
+
+
+def require_process_stdout_eof(descriptor, timeout_seconds):
+    deadline = time.monotonic() + timeout_seconds
+    remaining = deadline - time.monotonic()
+    if remaining <= 0 or not select.select([descriptor], [], [], max(0, remaining))[0]:
+        raise TimeoutError("aggregate checkpoint process did not close stdout")
+    if os.read(descriptor, 65_536):
+        raise ValueError("aggregate checkpoint emitted trailing output")
+
+
+def read_final_checkpoint_output(descriptor, timeout_seconds):
+    try:
+        output = json.loads(read_process_line(descriptor, timeout_seconds))
+    except json.JSONDecodeError as error:
+        raise ValueError("aggregate checkpoint final output is malformed JSON") from error
+    require_process_stdout_eof(descriptor, timeout_seconds)
+    return output
 
 
 def cleanup_process_group(process):
@@ -527,11 +556,8 @@ def aggregate_checkpoint_trial(binary, output, label, trial_index):
                 checkpoints.append(snapshot)
                 process.stdin.write(b"continue\n")
                 process.stdin.flush()
-            try:
-                workloads = json.loads(read_process_line(process.stdout.fileno(), AGGREGATE_TIMEOUT_SECONDS))
-            except json.JSONDecodeError as error:
-                raise ValueError("aggregate checkpoint final output is malformed JSON") from error
             process.stdin.close()
+            workloads = read_final_checkpoint_output(process.stdout.fileno(), AGGREGATE_TIMEOUT_SECONDS)
             process.wait(timeout=AGGREGATE_TIMEOUT_SECONDS)
             stderr = process.stderr.read().decode(errors="replace")
             if process.returncode:
