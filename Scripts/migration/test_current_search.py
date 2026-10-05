@@ -31,7 +31,18 @@ class CurrentSearchTests(unittest.TestCase):
     def test_live_source_change_population(self):
         actual = R.source_identity()
         original = R.baseline_sources()
-        self.assertEqual([p for p in actual if actual[p] != original[p]], ["Sources/CLibAstronomy/astronomy.c"])
+        self.assertEqual([p for p in actual if actual[p] != original[p]], ["Sources/AstronomyKit/Coordinates.swift", "Sources/CLibAstronomy/astronomy.c"])
+
+    def test_coordinate_api_comments_do_not_allow_implementation_changes(self):
+        before = b"/// old description\nfunc inverse() { return 0 }\n"
+        self.assertEqual(R.source_archive.without_api_comments(before), R.source_archive.without_api_comments(b"/// new description\nfunc inverse() { return 0 }\n"))
+        self.assertNotEqual(R.source_archive.without_api_comments(before), R.source_archive.without_api_comments(b"/// new description\nfunc inverse() { return 1 }\n"))
+        read = Path.read_bytes
+        coordinate = R.ROOT / "Sources/AstronomyKit/Coordinates.swift"
+        def changed(path):
+            return read(path) + b"\nfunc unexpectedExecutableChange() {}\n" if path == coordinate else read(path)
+        with mock.patch.object(Path, "read_bytes", changed), self.assertRaisesRegex(ValueError, "coordinate implementation"):
+            R.source_identity()
 
     def test_authenticated_supplement_and_rehashed_mutation(self):
         R.load_supplement()

@@ -114,12 +114,14 @@ MIGRATION_RATE_SOURCES = {
 }
 
 
+def without_api_comments(data):
+    return b'\n'.join(line for line in data.splitlines() if not line.lstrip().startswith(b'///'))
+
+
 def migration_source_hashes(root, current):
     """Validate frozen Swift inputs and permit only API-comment changes in live sources."""
     root = Path(root)
     result = dict(current)
-    def without_api_comments(data):
-        return b'\n'.join(line for line in data.splitlines() if not line.lstrip().startswith(b'///'))
     for name, expected in MIGRATION_RATE_SOURCES.items():
         historical = (root / 'Scripts/reference-data/sources/migration-rate-contract' / (name + '.archive')).read_bytes()
         if hashlib.sha256(historical).hexdigest() != expected:

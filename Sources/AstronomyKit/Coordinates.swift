@@ -115,6 +115,7 @@ extension Vector3D {
     }
 
     /// Creates a Cartesian vector from horizontal coordinates.
+    /// Uses the supplied altitude without refraction correction when the inverse iteration cannot converge.
     public static func from(
         horizon: Spherical,
         at time: AstroTime,

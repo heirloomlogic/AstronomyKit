@@ -42,13 +42,15 @@ struct InverseRefractionTests {
     func horizontal(mode: Refraction, model: DeltaTModel) {
         let time = AstroTime(ut: 10_000, deltaTModel: model)
         for altitude in Self.neighborhoods {
-            let vector = Vector3D.from(horizon: Spherical(latitude: altitude, longitude: 123, distance: 2), at: time, refraction: mode)
+            let vector = Vector3D.from(
+                horizon: Spherical(latitude: altitude, longitude: 123, distance: 2), at: time, refraction: mode)
             #expect(vector.x.isFinite && vector.y.isFinite && vector.z.isFinite)
             #expect(abs(vector.magnitude - 2) < 1e-14)
             #expect(vector.time == time)
             #expect(vector.time.deltaTModel == model)
         }
-        let invalid = Vector3D.from(horizon: Spherical(latitude: .nan, longitude: 123, distance: 2), at: time, refraction: mode)
+        let invalid = Vector3D.from(
+            horizon: Spherical(latitude: .nan, longitude: 123, distance: 2), at: time, refraction: mode)
         #expect(invalid.x.isNaN && invalid.y.isNaN && invalid.z.isNaN)
         #expect(invalid.time == time)
     }

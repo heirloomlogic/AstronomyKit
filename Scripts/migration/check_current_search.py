@@ -10,6 +10,10 @@ import platform
 import shutil
 import subprocess
 import tempfile
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "reference-data"))
+import source_archive
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location("callbacks", ROOT / "Scripts/migration/search_callback_corpus.py")
@@ -40,6 +44,13 @@ def source_identity():
     actual = {str(p.relative_to(ROOT)): M.sha(p.read_bytes()) for scope in ("AstronomyKit", "CLibAstronomy") for p in sorted((ROOT / "Sources" / scope).rglob("*")) if p.is_file()}
     original = baseline_sources()
     changed = sorted(p for p in set(actual) | set(original) if actual.get(p) != original.get(p))
+    coordinates = "Sources/AstronomyKit/Coordinates.swift"
+    if coordinates in changed:
+        before = M.git_bytes(selection()["baseRevision"], coordinates)
+        after = (ROOT / coordinates).read_bytes()
+        if source_archive.without_api_comments(before) != source_archive.without_api_comments(after):
+            raise ValueError("current coordinate implementation exceeds the named solver repair")
+        changed.remove(coordinates)
     if changed != selection()["sourceChangePopulation"]:
         raise ValueError("current source changes exceed the named solver repair")
     return actual

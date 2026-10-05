@@ -226,7 +226,12 @@ def assess(current, baseline=None):
     old = validate(baseline) if baseline else []
     if baseline and load(baseline / "build-receipt.json.gz")["sourceRevision"] != protocol["baselineRevision"]:
         raise ValueError("baseline revision differs")
-    for saved, result in zip(old, results):
+    known_hangs = {("none", "nan"), ("normal", "nan"), ("jplHorizons", "nan"), ("normal", "90"), ("jplHorizons", "90"), ("jplHorizons", "-90")}
+    for case, saved, result in zip(cases, old, results):
+        if tuple(case[:2]) in known_hangs and saved is not None:
+            raise ValueError("baseline known hang control did not fail")
+        if saved is None and case[2] == "direct" and result["correctionBits"] != "0":
+            raise ValueError("nonconvergent inverse did not return zero correction")
         if saved is not None and saved != result:
             raise ValueError("successful baseline payload changed")
     assessment = {"currentProcesses": len(results), "currentTimeouts": 0, "baselineProcesses": len(old),

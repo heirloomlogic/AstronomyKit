@@ -6,7 +6,11 @@ import json
 import subprocess
 import shutil
 import tempfile
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import source_archive
 
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location("seasons", Path(__file__).with_name("qualify-seasonal-roots.py"))
@@ -20,10 +24,17 @@ def validate_inputs(saved, current):
     if current['inputSHA256'] != S.source_hashes():
         raise ValueError('current seasonal source map detached from actual files')
     changed = sorted(path for path in set(saved['inputSHA256']) | set(current['inputSHA256']) if saved['inputSHA256'].get(path) != current['inputSHA256'].get(path))
+    coordinates = 'Sources/AstronomyKit/Coordinates.swift'
+    if coordinates in changed:
+        original = subprocess.check_output(['git', 'show', '2d54fd251a36e94f14324daed6d0937fc250d364:' + coordinates], cwd=ROOT)
+        if S.Q.digest(original) != saved['inputSHA256'][coordinates] or source_archive.without_api_comments(original) != source_archive.without_api_comments((ROOT / coordinates).read_bytes()):
+            raise ValueError('current coordinate implementation exceeds seasonal regression scope')
+        changed.remove(coordinates)
     if changed != ['Scripts/reference-data/qualify-seasonal-roots.py', 'Sources/CLibAstronomy/astronomy.c']:
         raise ValueError('current seasonal source changes exceed the named repair')
     validator_inputs = copy.deepcopy(current)
     validator_inputs['inputSHA256']['Sources/CLibAstronomy/astronomy.c'] = saved['inputSHA256']['Sources/CLibAstronomy/astronomy.c']
+    validator_inputs['inputSHA256'][coordinates] = saved['inputSHA256'][coordinates]
     S.validate_source_provenance(saved, validator_inputs, json.loads(S.REPLAY_RECEIPT.read_text()))
 
 

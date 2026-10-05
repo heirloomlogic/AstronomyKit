@@ -34,7 +34,8 @@ case "direct":
     packet["correctionBits"] = bits(correction)
     packet["finite"] = correction.isFinite
 case "horizon":
-    let vector = Vector3D.from(horizon: Spherical(latitude: altitude, longitude: 123, distance: 2), at: time, refraction: mode)
+    let vector = Vector3D.from(
+        horizon: Spherical(latitude: altitude, longitude: 123, distance: 2), at: time, refraction: mode)
     packet["vectorBits"] = [bits(vector.x), bits(vector.y), bits(vector.z)]
     packet["finite"] = vector.x.isFinite && vector.y.isFinite && vector.z.isFinite
     packet["timePreserved"] = vector.time == time
