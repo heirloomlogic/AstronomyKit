@@ -11,7 +11,10 @@ import math
 import os
 from pathlib import Path
 import platform
+import re
+import select
 import shutil
+import signal
 import statistics
 import subprocess
 import sys
@@ -39,6 +42,13 @@ RSS_STAGE_DESCRIPTIONS = {
     "repeatedFallback": "Run the existing warm-up plus 200 repeated fallback observations.",
     "aggregate": "Run all five existing workloads and encode their timing report.",
 }
+AGGREGATE_MODES = (
+    "firstAccess", "freshPolynomial", "repeatedPolynomial", "freshFallback", "repeatedFallback",
+)
+AGGREGATE_CHECKPOINTS = ("beforeWork", *AGGREGATE_MODES)
+AGGREGATE_OPERATIONS = {mode: 1 if mode == "firstAccess" else 200 for mode in AGGREGATE_MODES}
+AGGREGATE_TRIALS = 5
+AGGREGATE_TIMEOUT_SECONDS = 10
 
 
 def load_module(name, relative):
@@ -133,7 +143,8 @@ def write_json(path, value):
 def source_hashes():
     hashes = MEASURE.prototype_inputs(ROOT)
     for relative in ("Scripts/migration/sun_pilot.py", "Scripts/migration/test_sun_pilot.py",
-                     "Documentation/Migration/SunPilotProtocol.md", ".github/workflows/sun-pilot.yml"):
+                     "Documentation/Migration/SunPilotProtocol.md", "Documentation/Migration/SunPilotAggregateRSSProtocol.md",
+                     ".github/workflows/sun-pilot.yml"):
         path = ROOT / relative
         if path.exists():
             hashes[relative] = MEASURE.sha256(path)
@@ -302,6 +313,303 @@ def rss_attribution(binary, count):
     return validate_rss_attribution(receipt, count)
 
 
+def validate_workload(mode, workload):
+    if not isinstance(workload, dict) or set(workload) != {"operations", "elapsedNanoseconds", "checksum"}:
+        raise ValueError(f"aggregate checkpoint {mode} has malformed workload data")
+    if workload["operations"] != AGGREGATE_OPERATIONS[mode]:
+        raise ValueError(f"aggregate checkpoint {mode} changed its operation count")
+    if type(workload["elapsedNanoseconds"]) is not int or workload["elapsedNanoseconds"] < 0:
+        raise ValueError(f"aggregate checkpoint {mode} has invalid elapsed time")
+    if type(workload["checksum"]) not in (int, float) or not math.isfinite(workload["checksum"]):
+        raise ValueError(f"aggregate checkpoint {mode} has invalid checksum")
+    return workload
+
+
+def validate_aggregate_checkpoint_trial(trial):
+    if type(trial.get("externalPeakResidentBytes")) is not int or trial["externalPeakResidentBytes"] <= 0:
+        raise ValueError("aggregate checkpoint trial has invalid external peak RSS")
+    checkpoints = trial.get("checkpoints")
+    if not isinstance(checkpoints, list) or tuple(row.get("checkpoint") for row in checkpoints) != AGGREGATE_CHECKPOINTS:
+        raise ValueError("aggregate checkpoint sequence differs")
+    workloads = trial.get("workloads")
+    if not isinstance(workloads, dict) or set(workloads) != set(AGGREGATE_MODES):
+        raise ValueError("aggregate checkpoint final workload inventory differs")
+    for index, row in enumerate(checkpoints):
+        mapping = row.get("mappingRSSBytes")
+        if not isinstance(mapping, dict) or any(type(value) is not int or value < 0 for value in mapping.values()):
+            raise ValueError(f"aggregate checkpoint {row.get('checkpoint')} has invalid mapping RSS")
+        if index == 0:
+            if "workload" in row:
+                raise ValueError("aggregate before-work checkpoint unexpectedly contains a workload")
+            continue
+        mode = AGGREGATE_MODES[index - 1]
+        checkpoint_workload = validate_workload(mode, row.get("workload"))
+        final_workload = validate_workload(mode, workloads.get(mode))
+        if checkpoint_workload != final_workload:
+            raise ValueError(f"aggregate checkpoint {mode} differs from final output")
+    return trial
+
+
+def mapping_class(path, binary):
+    if not path:
+        return "anonymous"
+    if path == "[heap]":
+        return "heap"
+    if path.startswith("[stack"):
+        return "stack"
+    if path.startswith("["):
+        return "kernelSpecial"
+    cleaned = path.removesuffix(" (deleted)")
+    if Path(cleaned) == binary:
+        return "executable"
+    if "/swift/" in cleaned or Path(cleaned).name.startswith("libswift"):
+        return "swiftRuntime"
+    if ".so" in Path(cleaned).name:
+        return "sharedLibrary"
+    return "otherFileBacked"
+
+
+def classify_smaps(contents, binary):
+    totals = {}
+    current = None
+    for line in contents.splitlines():
+        if re.match(r"^[0-9a-f]+-[0-9a-f]+\s", line):
+            fields = line.split(maxsplit=5)
+            current = mapping_class(fields[5] if len(fields) == 6 else "", binary)
+        elif current is not None and line.startswith("Rss:"):
+            fields = line.split()
+            if len(fields) != 3 or fields[2] != "kB":
+                raise ValueError("aggregate smaps RSS row is malformed")
+            totals[current] = totals.get(current, 0) + int(fields[1]) * 1024
+    if not totals:
+        raise ValueError("aggregate smaps snapshot has no RSS rows")
+    return dict(sorted(totals.items()))
+
+
+def parse_status_memory(contents):
+    values = {}
+    for line in contents.splitlines():
+        key, separator, remainder = line.partition(":")
+        if separator and key in {"VmRSS", "VmHWM"}:
+            fields = remainder.split()
+            if len(fields) != 2 or fields[1] != "kB":
+                raise ValueError(f"aggregate status {key} row is malformed")
+            values[key + "Bytes"] = int(fields[0]) * 1024
+    if set(values) != {"VmRSSBytes", "VmHWMBytes"}:
+        raise ValueError("aggregate status snapshot lacks VmRSS or VmHWM")
+    return values
+
+
+def read_process_line(descriptor, timeout_seconds):
+    deadline = time.monotonic() + timeout_seconds
+    data = bytearray()
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0 or not select.select([descriptor], [], [], max(0, remaining))[0]:
+            raise TimeoutError("aggregate checkpoint timed out")
+        byte = os.read(descriptor, 1)
+        if not byte:
+            raise RuntimeError("aggregate checkpoint process closed stdout")
+        if byte == b"\n":
+            try:
+                return data.decode()
+            except UnicodeDecodeError as error:
+                raise ValueError("aggregate checkpoint is not UTF-8") from error
+        data.extend(byte)
+        if len(data) > 1_000_000:
+            raise ValueError("aggregate checkpoint line is too large")
+
+
+def cleanup_process_group(process):
+    if process.poll() is None:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
+
+
+def discover_child_pid(process, timeout_seconds):
+    path = Path(f"/proc/{process.pid}/task/{process.pid}/children")
+    deadline = time.monotonic() + timeout_seconds
+    last = ""
+    while time.monotonic() < deadline and process.poll() is None:
+        try:
+            last = path.read_text().strip()
+        except OSError:
+            last = ""
+        children = last.split()
+        if len(children) == 1:
+            return int(children[0])
+        if len(children) > 1:
+            raise RuntimeError(f"aggregate timing wrapper has multiple children: {last}")
+        time.sleep(0.01)
+    raise RuntimeError(f"aggregate timing wrapper child was not observed: {last}")
+
+
+def is_blocked_stdin_read(contents, machine):
+    syscall = {"x86_64": 0, "aarch64": 63, "arm64": 63}.get(machine)
+    fields = contents.split()
+    if syscall is None or len(fields) < 2 or fields[0] == "running":
+        return False
+    try:
+        return int(fields[0], 0) == syscall and int(fields[1], 0) == 0
+    except ValueError:
+        return False
+
+
+def observe_blocked_checkpoint(pid, timeout_seconds):
+    path = Path(f"/proc/{pid}/syscall")
+    deadline = time.monotonic() + timeout_seconds
+    last = "unavailable"
+    while time.monotonic() < deadline:
+        try:
+            last = path.read_text().strip()
+        except OSError as error:
+            last = f"{type(error).__name__}: {error}"
+        if is_blocked_stdin_read(last, platform.machine()):
+            return {"mechanism": "proc-syscall-read-stdin", "observedSyscall": last}
+        time.sleep(0.01)
+    raise TimeoutError(f"aggregate checkpoint did not block on stdin: {last}")
+
+
+def retain_proc_checkpoint(directory, checkpoint, pid, binary):
+    readiness = observe_blocked_checkpoint(pid, AGGREGATE_TIMEOUT_SECONDS)
+    retained = {}
+    contents = {}
+    for name in ("status", "smaps", "maps"):
+        text = Path(f"/proc/{pid}/{name}").read_text()
+        path = directory / f"{checkpoint}.{name}.txt"
+        path.write_text(text)
+        contents[name] = text
+        retained[name] = {"path": path.name, "sha256": MEASURE.sha256(path)}
+    return {
+        "checkpoint": checkpoint,
+        "mappingRSSBytes": classify_smaps(contents["smaps"], binary.resolve()),
+        "processStatus": parse_status_memory(contents["status"]),
+        "readiness": readiness,
+        "retained": retained,
+    }
+
+
+def aggregate_checkpoint_trial(binary, output, label, trial_index):
+    if platform.system() != "Linux":
+        raise RuntimeError("aggregate checkpoint measurement requires Linux")
+    directory = output / "aggregate-checkpoints" / label / f"trial-{trial_index}"
+    directory.mkdir(parents=True, exist_ok=False)
+    with tempfile.NamedTemporaryFile() as stream:
+        time_path = Path(stream.name)
+        command = [*MEASURE.time_arguments(time_path), str(binary), "--rss-aggregate-checkpoints"]
+        process = subprocess.Popen(
+            command, cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            start_new_session=True,
+        )
+        try:
+            child_pid = discover_child_pid(process, AGGREGATE_TIMEOUT_SECONDS)
+            checkpoints = []
+            for expected in AGGREGATE_CHECKPOINTS:
+                try:
+                    payload = json.loads(read_process_line(process.stdout.fileno(), AGGREGATE_TIMEOUT_SECONDS))
+                except json.JSONDecodeError as error:
+                    raise ValueError("aggregate checkpoint emitted malformed JSON") from error
+                if payload.get("checkpoint") != expected or set(payload) - {"checkpoint", "workload"}:
+                    raise ValueError(f"aggregate checkpoint differs: expected {expected}")
+                snapshot = retain_proc_checkpoint(directory, expected, child_pid, binary)
+                if expected == "beforeWork":
+                    if "workload" in payload:
+                        raise ValueError("aggregate before-work checkpoint contains a workload")
+                else:
+                    snapshot["workload"] = validate_workload(expected, payload.get("workload"))
+                checkpoints.append(snapshot)
+                process.stdin.write(b"continue\n")
+                process.stdin.flush()
+            try:
+                workloads = json.loads(read_process_line(process.stdout.fileno(), AGGREGATE_TIMEOUT_SECONDS))
+            except json.JSONDecodeError as error:
+                raise ValueError("aggregate checkpoint final output is malformed JSON") from error
+            process.stdin.close()
+            process.wait(timeout=AGGREGATE_TIMEOUT_SECONDS)
+            stderr = process.stderr.read().decode(errors="replace")
+            if process.returncode:
+                raise subprocess.CalledProcessError(process.returncode, command, "", stderr)
+            trial = {
+                "checkpoints": checkpoints,
+                "externalPeakResidentBytes": MEASURE.parse_rss(time_path),
+                "targetPID": child_pid,
+                "workloads": workloads,
+            }
+            validate_aggregate_checkpoint_trial(trial)
+            MEASURE.ACTIVE_LOG.save(command, ROOT, "Checkpoint JSON and proc snapshots retained separately.", stderr, process.returncode, time_path.read_text())
+            return trial
+        except Exception:
+            cleanup_process_group(process)
+            raise
+
+
+def summarize_aggregate_checkpoints(trials):
+    if len(trials) != AGGREGATE_TRIALS:
+        raise ValueError("aggregate checkpoint campaign requires five trials")
+    for trial in trials:
+        validate_aggregate_checkpoint_trial(trial)
+    stage_summaries = {}
+    growth = {}
+    for index, checkpoint in enumerate(AGGREGATE_CHECKPOINTS):
+        classes = sorted({name for trial in trials for name in trial["checkpoints"][index]["mappingRSSBytes"]})
+        stage_summaries[checkpoint] = {}
+        for name in classes:
+            values = [trial["checkpoints"][index]["mappingRSSBytes"].get(name, 0) for trial in trials]
+            stage_summaries[checkpoint][name] = {
+                "minimumBytes": min(values), "medianBytes": int(statistics.median(values)), "maximumBytes": max(values),
+            }
+        if index:
+            previous_classes = {name for trial in trials for name in trial["checkpoints"][index - 1]["mappingRSSBytes"]}
+            for name in sorted(set(classes) | previous_classes):
+                deltas = [
+                    trial["checkpoints"][index]["mappingRSSBytes"].get(name, 0)
+                    - trial["checkpoints"][index - 1]["mappingRSSBytes"].get(name, 0)
+                    for trial in trials
+                ]
+                if min(deltas) > 0:
+                    growth.setdefault(checkpoint, {})[name] = {
+                        "minimumBytes": min(deltas), "medianBytes": int(statistics.median(deltas)), "maximumBytes": max(deltas),
+                    }
+    peaks = [trial["externalPeakResidentBytes"] for trial in trials]
+    return {
+        "externalPeakResidentBytes": {"minimum": min(peaks), "median": int(statistics.median(peaks)), "maximum": max(peaks)},
+        "mappingRSSByCheckpoint": stage_summaries,
+        "reproduciblePositiveGrowth": growth,
+        "removableOwnerEstablished": False,
+        "causalLimit": "Checkpoint instrumentation and mapping classes show residency correlation, not allocator ownership, additive cost, or removability.",
+    }
+
+
+def validate_checkpoint_workloads(campaign, uninstrumented):
+    trials = campaign.get("trials", [])
+    if len(trials) != AGGREGATE_TRIALS or len(uninstrumented) != AGGREGATE_TRIALS:
+        raise ValueError("aggregate checkpoint workload binding requires five matched trials")
+    for trial in trials:
+        validate_aggregate_checkpoint_trial(trial)
+    for mode in AGGREGATE_MODES:
+        baseline = uninstrumented[0].get("workloads", {}).get(mode, {})
+        validate_workload(mode, baseline)
+        expected = {"operations": baseline["operations"], "checksum": baseline["checksum"]}
+        samples = uninstrumented + [{"workloads": trial["workloads"]} for trial in trials]
+        for sample in samples:
+            workload = validate_workload(mode, sample.get("workloads", {}).get(mode))
+            if {"operations": workload["operations"], "checksum": workload["checksum"]} != expected:
+                raise ValueError(f"aggregate checkpoint workload {mode} differs from the uninstrumented run")
+    return {"modeOrder": list(AGGREGATE_MODES), "operationCounts": AGGREGATE_OPERATIONS, "checksumsMatchUninstrumented": True}
+
+
+def aggregate_checkpoint_campaign(binary, output, label):
+    trials = [aggregate_checkpoint_trial(binary, output, label, index) for index in range(1, AGGREGATE_TRIALS + 1)]
+    return {"trials": trials, "summary": summarize_aggregate_checkpoints(trials)}
+
+
 def inspect_compensation(output):
     source = ROOT / "Sources/AstronomyModelPrototype/EarthPilot.swift"
     text = source.read_text()
@@ -335,7 +643,7 @@ def verify_output_delivery(binary):
         MEASURE.ACTIVE_LOG.save(command, ROOT, result.stdout, result.stderr, result.returncode)
     if result.returncode:
         raise RuntimeError("runner output delivery regressions failed:\n" + result.stderr)
-    return {"passed": True, "regressionTests": 3, "binarySHA256": MEASURE.sha256(binary)}
+    return {"passed": True, "regressionTests": 4, "binarySHA256": MEASURE.sha256(binary)}
 
 
 def main():
@@ -370,7 +678,8 @@ def main():
               "sourceSHA256": inputs,
               "environment": {"platform": platform.platform(), "machine": platform.machine(), "system": platform.system(),
                               "swift": subprocess.check_output(["swift", "--version"], text=True).strip()},
-              "protocolSHA256": MEASURE.sha256(ROOT / "Documentation/Migration/SunPilotProtocol.md")}
+              "protocolSHA256": MEASURE.sha256(ROOT / "Documentation/Migration/SunPilotProtocol.md"),
+              "aggregateRSSProtocolSHA256": MEASURE.sha256(ROOT / "Documentation/Migration/SunPilotAggregateRSSProtocol.md")}
     write_json(output / "report.json", record)
     record["compensationCodeGeneration"] = inspect_compensation(output)
     record["oracle"] = build_oracle(output / "sun-pilot-oracle")
@@ -382,6 +691,20 @@ def main():
         "stageSemantics": RSS_STAGE_DESCRIPTIONS,
         "oracle": rss_attribution(output / "sun-pilot-oracle", runtime_trials),
     }
+    aggregate_investigation = platform.system() == "Linux" and not arguments.quick
+    if aggregate_investigation:
+        record["aggregateCheckpointInvestigation"] = {
+            "schemaVersion": 1,
+            "status": "running",
+            "instrumentedDiagnostic": True,
+            "separateFromUninstrumentedFixedBudgetGate": True,
+            "trialCountPerBinary": AGGREGATE_TRIALS,
+            "checkpointOrder": list(AGGREGATE_CHECKPOINTS),
+            "modeOrder": list(AGGREGATE_MODES),
+            "operationCounts": AGGREGATE_OPERATIONS,
+            "fixedCeilingBytes": json.loads((ROOT / "Documentation/Migration/performance-baseline.json").read_text())["budgets"]["peakResidentBytes"],
+            "oracle": aggregate_checkpoint_campaign(output / "sun-pilot-oracle", output, "oracle"),
+        }
     record["configurations"] = {}
     with tempfile.TemporaryDirectory(prefix="sun-pilot-package-") as temporary:
         package = Path(temporary) / "package"
@@ -409,6 +732,8 @@ def main():
             build_record.update({"outputDelivery": delivery, "comparison": result, "perturbationDetected": True, "perturbationFailures": control["failures"], "runtime": values,
                                  "binarySHA256": MEASURE.sha256(binary)})
             record["rssAttribution"][configuration] = stage_values
+            if configuration == "release" and aggregate_investigation:
+                record["aggregateCheckpointInvestigation"]["candidate"] = aggregate_checkpoint_campaign(binary, output, "candidate")
             stripped = output / f"sun-pilot-{configuration}-stripped"
             shutil.copy2(binary, stripped)
             strip = ["strip", "-S", "-x", str(stripped)] if platform.system() == "Darwin" else ["strip", "--strip-all", str(stripped)]
@@ -416,6 +741,20 @@ def main():
             build_record["strippedBinaryBytes"] = stripped.stat().st_size
             record["configurations"][configuration] = build_record
             write_json(output / "report.json", record)
+    if aggregate_investigation:
+        investigation = record["aggregateCheckpointInvestigation"]
+        investigation["oracleWorkloadBinding"] = validate_checkpoint_workloads(investigation["oracle"], record["oracleRuntime"])
+        investigation["candidateWorkloadBinding"] = validate_checkpoint_workloads(investigation["candidate"], record["configurations"]["release"]["runtime"])
+        observed_growth = bool(investigation["candidate"]["summary"]["reproduciblePositiveGrowth"])
+        investigation.update({
+            "status": "complete-evidence",
+            "assessment": {
+                "reproducibleCandidateMappingClassGrowthObserved": observed_growth,
+                "removableOwnerEstablished": False,
+                "decision": "mapping-class-growth-observed-without-removable-owner" if observed_growth else "no-reproducible-mapping-class-growth-or-removable-owner",
+                "limit": "The checkpoint protocol, pipes, timing wrapper, and proc snapshots can perturb residency. Only the separate uninstrumented aggregate trials determine the fixed memory gate.",
+            },
+        })
     MEASURE.require_unchanged_snapshot(inputs, source_hashes())
     frozen = json.loads((ROOT / "Documentation/Migration/performance-baseline.json").read_text())
     release = record["configurations"]["release"]
