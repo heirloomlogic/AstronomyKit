@@ -2855,7 +2855,7 @@
     "localPatches": 20,
     "publicSwiftAPI": 577,
     "testOwners": 98,
-    "tests": 1086
+    "tests": 1091
   },
   "crossCuttingContracts": [
     {
@@ -3744,7 +3744,7 @@
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
     "Scripts/migration/test_comparison.py": "64772ae05b99400ded4377c96d9a159ef3e1e589aa03f83c24f18ca24e658883",
     "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
-    "Scripts/migration/test_current_search.py": "c84f82bc99169301e81ae12888b0a58dc1ff323453ec73606ae56f08680dce04",
+    "Scripts/migration/test_current_search.py": "0207424330238554246e6b2831f1e5da2345653101f4049985ac8be2d1c99111",
     "Scripts/migration/test_foundation.py": "d7a459d712fd1c2cf5195132d499b916bd823a5f2410dad64c177c454b937c8c",
     "Scripts/migration/test_historical_research.py": "e7c7e01c3b3b1db85d03ff70cc5965952e1c7e6ac17f2a29eebed937dff76294",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
@@ -3762,7 +3762,7 @@
     "Scripts/reference-data/test_approved_distance.py": "0cfe3e0563b080192d355f48460ca80d320e96d6c03493afc440be74cb85c81f",
     "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
     "Scripts/reference-data/test_bundled_public_api.py": "bcec34528023c0bd233da5b7b8bed7c33ed689ff513e726c4b006832f78ef474",
-    "Scripts/reference-data/test_current_seasonal_search.py": "cc24ad7ea6154c3a029bf17056b0fce3f65018d8974d7f04084e05664c1be7bf",
+    "Scripts/reference-data/test_current_seasonal_search.py": "2090ca64b732757a82ec43121f2ecb7b156daaeaa592e91717c5557768f7a3fd",
     "Scripts/reference-data/test_diagnose_polar_sunrise.py": "96688a62ad6a72a8a53fc1b2e53b854ea124711ac0600086ee1b6d0ec554bac1",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_geometric_events.py": "480595a0f3df2c26ec1f35f0c7be8d83de8d752479fd64df7793c02d31c48f20",
@@ -13270,7 +13270,7 @@
       "id": "Scripts/migration/test_current_search.py",
       "migrationIssue": 84,
       "path": "Scripts/migration/test_current_search.py",
-      "testCount": 6
+      "testCount": 8
     },
     {
       "classification": "smoke",
@@ -13396,7 +13396,7 @@
       "id": "Scripts/reference-data/test_current_seasonal_search.py",
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_current_seasonal_search.py",
-      "testCount": 2
+      "testCount": 5
     },
     {
       "classification": "invariant",

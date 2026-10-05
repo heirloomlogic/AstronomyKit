@@ -114,3 +114,36 @@ class CurrentSearchTests(unittest.TestCase):
             self.assertEqual(base[field], candidate[field])
         self.assertEqual(len(base['cases']), 18)
         self.assertEqual(base['failed'], ['pluto-position-em', 'pluto-state-jpl'])
+
+    def test_existing_destination_rejects_before_build_or_process(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            output = root / '.context/current-search-repair'
+            output.mkdir(parents=True)
+            sentinel = output / 'prior-packets'
+            sentinel.write_text('preserved')
+            with mock.patch.object(R, 'ROOT', root), mock.patch.object(R, 'selection'), mock.patch.object(R, 'load_supplement', return_value={m: {'swift': []} for m in R.M.protocol()['models']}), mock.patch.object(R.M, 'load_archive', return_value=({m: {'swift': []} for m in R.M.protocol()['models']}, None, None)), mock.patch.object(R, 'build', return_value=(root / 'binary', {})) as build, mock.patch.object(R.M, 'run_command', return_value={}) as process:
+                with self.assertRaises(FileExistsError):
+                    R.check()
+            build.assert_not_called()
+            process.assert_not_called()
+            self.assertEqual(sentinel.read_text(), 'preserved')
+
+    def test_process_exception_preserves_every_completed_packet(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / '.context').mkdir()
+            output = root / '.context/attempt'
+            models = R.M.protocol()['models']
+            import sys
+            partial = R.M.run_command([sys.executable, '-c', "import sys; print('partial observation'); print('process failed', file=sys.stderr); sys.exit(3)"], 5)
+            self.assertEqual(partial['termination'], 'process-error')
+            self.assertEqual(partial['exitCode'], 3)
+            with mock.patch.object(R, 'ROOT', root), mock.patch.object(R, 'selection'), mock.patch.object(R, 'load_supplement', return_value={m: {'swift': []} for m in models}), mock.patch.object(R.M, 'load_archive', return_value=({m: {'swift': []} for m in models}, None, None)), mock.patch.object(R, 'build', return_value=(root / 'binary', {})), mock.patch.object(R.M, 'run_command', side_effect=[partial, OSError('injected process failure')]), mock.patch.object(R, 'compare') as assess:
+                with self.assertRaisesRegex(OSError, 'injected'):
+                    R.check(output)
+            saved = json.loads(gzip.decompress((output / 'raw-runs.json.gz').read_bytes()))
+            self.assertEqual(len(saved[models[0]]), 1)
+            self.assertEqual(saved[models[0]][0]['stdout'], partial['stdout'])
+            self.assertEqual(json.loads((output / 'acquisition-error.json').read_text())['savedProcesses'], 1)
+            assess.assert_not_called()

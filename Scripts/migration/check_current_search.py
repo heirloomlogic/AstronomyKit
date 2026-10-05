@@ -140,7 +140,9 @@ def build(work):
     return binary, receipt
 
 
-def check():
+def check(output=None):
+    output = ROOT / ".context/current-search-repair" if output is None else Path(output)
+    output.mkdir(parents=True, exist_ok=False)
     selection()
     original, _, _ = M.load_archive()
     supplement = load_supplement()
@@ -148,11 +150,17 @@ def check():
     saved = {model: original[model]["swift"] + supplement[model]["swift"] for model in M.protocol()["models"]}
     with tempfile.TemporaryDirectory(prefix="current-search-", dir=ROOT / ".context") as directory:
         binary, receipt = build(Path(directory))
-        current = {model: [{"id": case["id"], **M.run_command([str(binary), *M.arguments(case, model)], M.protocol()["bounds"]["subprocessTimeoutSeconds"])} for case in cases] for model in M.protocol()["models"]}
-        output = ROOT / ".context/current-search-repair"
-        output.mkdir(exist_ok=False)
-        M.write_gzip(output / "raw-runs.json.gz", current)
         (output / "build-receipt.json").write_text(M.dumps(receipt))
+        current = {model: [] for model in M.protocol()["models"]}
+        try:
+            for model in M.protocol()["models"]:
+                for case in cases:
+                    run = {"id": case["id"], **M.run_command([str(binary), *M.arguments(case, model)], M.protocol()["bounds"]["subprocessTimeoutSeconds"])}
+                    current[model].append(run)
+                    M.write_gzip(output / "raw-runs.json.gz", current)
+        except Exception as error:
+            (output / "acquisition-error.json").write_text(M.dumps({"classification": "incomplete-acquisition", "exceptionType": type(error).__name__, "message": str(error), "savedProcesses": sum(map(len, current.values()))}))
+            raise
         changes = compare(saved, current, cases)
         if source_identity() != receipt["sourceSHA256"]:
             raise ValueError("current sources changed during execution")
@@ -163,5 +171,6 @@ def check():
 
 
 if __name__ == "__main__":
-    argparse.ArgumentParser(description=__doc__).parse_args()
-    check()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, help="Reserve a new attempt directory; existing evidence is never overwritten.")
+    check(parser.parse_args().output)
