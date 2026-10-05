@@ -20,11 +20,9 @@ HOME = ROOT / "Tools/Migration/SearchResearch"
 ARCHIVE = HOME / "Artifacts"
 LOCK = ROOT / "Tools/Migration/Oracle/oracle-lock.json"
 PROSPECTIVE = "fb6593186068564da917d0a5cafd9a91035198b3"
-ACQUISITION_REVISION = "478fea15da86a4df5869fdb4230bd0fcfc1a37b1"
-MANIFEST_SHA256 = "6a07415eb67fdb8646c6ae39624c207a53b09b936c8b9ab376b15dd4c3d8603d"
-SUPPLEMENT_REVISION = None
-SUPPLEMENT_MANIFEST_SHA256 = None
-SUPPLEMENT = HOME / "Supplement"
+ACQUISITION_REVISION = (
+    None  # Fixed to the committed adapters before archived acquisition.
+)
 TOOLS = [
     "Tools/Migration/SearchResearch/search-main.c",
     "Tools/Migration/SearchResearch/main.swift",
@@ -438,10 +436,10 @@ def validate_run(run, case, model, backend):
             if backend == "c" and last["rawStatus"] not in (3, 4, 5, 11):
                 raise ValueError("unknown source algorithm error")
             if backend == "swift" and last["rawStatus"] not in (
-                "Numeric solver failed to converge",
-                "Date/time outside allowed range",
-                "Vector magnitude too small to normalize",
-                "Invalid parameter value",
+                "noConvergence",
+                "badTime",
+                "badVector",
+                "invalidParameter",
             ):
                 raise ValueError("unknown public algorithm error")
         elif (
@@ -459,18 +457,6 @@ def validate_run(run, case, model, backend):
 def normalized(events, case):
     events = json.loads(json.dumps(events))
     terminal = events[-1]
-    if terminal.get("outcome") == "algorithm-error":
-        categories = {
-            3: "no-convergence",
-            4: "bad-time",
-            5: "bad-vector",
-            11: "invalid-parameter",
-            "Numeric solver failed to converge": "no-convergence",
-            "Date/time outside allowed range": "bad-time",
-            "Vector magnitude too small to normalize": "bad-vector",
-            "Invalid parameter value": "invalid-parameter",
-        }
-        terminal["algorithmErrorClass"] = categories[terminal["rawStatus"]]
     terminal.pop("rawStatus", None)
     terminal.pop("errorVisit", None)
     if case["operation"] == "light" and terminal.get("outcome") == "value":
@@ -479,12 +465,11 @@ def normalized(events, case):
     return events
 
 
-def assessment(runs, cases=None):
+def assessment(runs):
     p = protocol()
-    cases = p["cases"] if cases is None else cases
     summary = {
         "processes": 0,
-        "caseCount": len(cases),
+        "caseCount": p["caseCount"],
         "perModel": {},
         "differences": [],
     }
@@ -492,10 +477,10 @@ def assessment(runs, cases=None):
         counters = {backend: Counter() for backend in ("c", "swift")}
         for backend in ("c", "swift"):
             require_population(
-                [r["id"] for r in runs[model][backend]], [c["id"] for c in cases]
+                [r["id"] for r in runs[model][backend]], [c["id"] for c in p["cases"]]
             )
         for case, c_run, swift_run in zip(
-            cases, runs[model]["c"], runs[model]["swift"]
+            p["cases"], runs[model]["c"], runs[model]["swift"]
         ):
             parsed = {}
             for backend, run in [("c", c_run), ("swift", swift_run)]:
@@ -517,8 +502,7 @@ def assessment(runs, cases=None):
     return summary
 
 
-def collect_runs(binaries, cases=None):
-    cases = protocol()["cases"] if cases is None else cases
+def collect_runs(binaries):
     return {
         model: {
             backend: [
@@ -529,7 +513,7 @@ def collect_runs(binaries, cases=None):
                         protocol()["bounds"]["subprocessTimeoutSeconds"],
                     ),
                 }
-                for case in cases
+                for case in protocol()["cases"]
             ]
             for backend, binary in binaries.items()
         }
@@ -602,11 +586,6 @@ def acquire(binaries, receipt):
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
     runs, controls = collect_runs(binaries), executable_controls(binaries)
-    attempt = ROOT / ".context" / f"search-collection-{revision}"
-    attempt.mkdir(exist_ok=False)
-    write_gzip(attempt / "raw-runs.json.gz", runs)
-    write_gzip(attempt / "mutation-runs.json.gz", controls)
-    (attempt / "build-receipt.json").write_text(dumps(receipt))
     derived = assessment(runs)
     ARCHIVE.mkdir()
     (ARCHIVE / "protocol.json").write_bytes((HOME / "protocol.json").read_bytes())
@@ -657,8 +636,6 @@ def acquire(binaries, receipt):
 
 
 def load_archive():
-    if sha((ARCHIVE / "manifest.json").read_bytes()) != MANIFEST_SHA256:
-        raise ValueError("immutable historical manifest identity changed")
     manifest = json.loads((ARCHIVE / "manifest.json").read_text())
     if (
         ACQUISITION_REVISION is None
@@ -763,8 +740,7 @@ def load_archive():
     return runs, receipt, derived
 
 
-def compare_replay(saved, current, cases=None):
-    cases = protocol()["cases"] if cases is None else cases
+def compare_replay(saved, current):
     differences = []
 
     def compare(a, b, path):
@@ -796,7 +772,7 @@ def compare_replay(saved, current, cases=None):
     for model in protocol()["models"]:
         for backend in ("c", "swift"):
             for case, a, b in zip(
-                cases, saved[model][backend], current[model][backend]
+                protocol()["cases"], saved[model][backend], current[model][backend]
             ):
                 for key in ("id", "exitCode", "termination"):
                     compare(a[key], b[key], f"{model}/{backend}/{case['id']}/{key}")
@@ -809,160 +785,9 @@ def compare_replay(saved, current, cases=None):
         raise ValueError(f"replay differs outside frozen envelope: {differences[:12]}")
 
 
-def supplement_protocol(revision=None):
-    data = (HOME / "supplement.json").read_bytes()
-    if revision and data != git_bytes(
-        revision, "Tools/Migration/SearchResearch/supplement.json"
-    ):
-        raise ValueError("prospective supplement changed")
-    value = json.loads(data)
-    if (
-        value["caseCount"] != 2
-        or value["models"] != protocol()["models"]
-        or [c["id"] for c in value["cases"]]
-        != ["supplement-light-finite-nonconvergence", "supplement-light-finite-cap"]
-    ):
-        raise ValueError("supplement population detached")
-    return value
-
-
-def validate_supplement_branches(runs, cases):
-    for model in protocol()["models"]:
-        for backend in ("c", "swift"):
-            for case, run in zip(cases, runs[model][backend]):
-                events = validate_run(run, case, model, backend)
-                if case["id"].endswith("nonconvergence"):
-                    if (
-                        len(events) != 12
-                        or events[-1]["outcome"] != "algorithm-error"
-                        or normalized(events, case)[-1]["algorithmErrorClass"]
-                        != "no-convergence"
-                    ):
-                        raise ValueError(
-                            "finite supplement did not exercise ten-iteration nonconvergence"
-                        )
-                    for event in events[1:-1]:
-                        if not all(
-                            math.isfinite(number(v)) for v in event["result"]["xyz"]
-                        ):
-                            raise ValueError("supplement vector not finite")
-                elif run["termination"] != "research-callback-cap":
-                    raise ValueError("supplement did not exercise cap")
-
-
-def acquire_supplement(binaries, receipt):
-    if SUPPLEMENT.exists():
-        raise ValueError("supplement archive already exists")
-    if subprocess.check_output(
-        ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT
-    ):
-        raise ValueError("commit supplement before acquisition")
-    revision = subprocess.check_output(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-    ).strip()
-    selected = supplement_protocol(revision)
-    original, historical, _ = load_archive()
-    for field in expected_receipt_fields():
-        if receipt[field] != historical[field]:
-            raise ValueError("supplement changed original build conditions")
-    runs = collect_runs(binaries, selected["cases"])
-    attempt = ROOT / ".context" / f"search-supplement-{revision}"
-    attempt.mkdir(exist_ok=False)
-    write_gzip(attempt / "raw-runs.json.gz", runs)
-    (attempt / "build-receipt.json").write_text(dumps(receipt))
-    derived = assessment(runs, selected["cases"])
-    validate_supplement_branches(runs, selected["cases"])
-    SUPPLEMENT.mkdir()
-    (SUPPLEMENT / "protocol.json").write_bytes((HOME / "supplement.json").read_bytes())
-    (SUPPLEMENT / "build-receipt.json").write_text(dumps(receipt))
-    (SUPPLEMENT / "assessment.json").write_text(dumps(derived))
-    write_gzip(SUPPLEMENT / "raw-runs.json.gz", runs)
-    (SUPPLEMENT / "collector.txt").write_bytes(Path(__file__).read_bytes())
-    manifest = {
-        "schemaVersion": 1,
-        "prospectiveAcquisitionRevision": revision,
-        "originalManifestSHA256": MANIFEST_SHA256,
-        "toolSHA256": tool_map(),
-        "toolSnapshots": {
-            TOOLS[0]: "../Artifacts/tools/0.txt",
-            TOOLS[1]: "../Artifacts/tools/1.txt",
-            TOOLS[2]: "collector.txt",
-        },
-        "filesSHA256": {
-            p.name: sha(p.read_bytes()) for p in sorted(SUPPLEMENT.iterdir())
-        },
-    }
-    (SUPPLEMENT / "manifest.json").write_text(dumps(manifest))
-    print(dumps(derived))
-
-
-def check_supplement(binaries):
-    if (
-        SUPPLEMENT_REVISION is None
-        or sha((SUPPLEMENT / "manifest.json").read_bytes())
-        != SUPPLEMENT_MANIFEST_SHA256
-    ):
-        raise ValueError("supplement immutable identity changed")
-    selected = supplement_protocol(SUPPLEMENT_REVISION)
-    manifest = json.loads((SUPPLEMENT / "manifest.json").read_text())
-    if (
-        manifest["prospectiveAcquisitionRevision"] != SUPPLEMENT_REVISION
-        or manifest["originalManifestSHA256"] != MANIFEST_SHA256
-    ):
-        raise ValueError("supplement revision detached")
-    validate_tools(manifest["toolSHA256"], tool_map(SUPPLEMENT_REVISION))
-    expected_snapshots = {
-        TOOLS[0]: "../Artifacts/tools/0.txt",
-        TOOLS[1]: "../Artifacts/tools/1.txt",
-        TOOLS[2]: "collector.txt",
-    }
-    if manifest["toolSnapshots"] != expected_snapshots:
-        raise ValueError("supplement mandatory tool population changed")
-    expected_files = {
-        "protocol.json",
-        "build-receipt.json",
-        "assessment.json",
-        "raw-runs.json.gz",
-        "collector.txt",
-    }
-    if set(manifest["filesSHA256"]) != expected_files or {
-        p.name for p in SUPPLEMENT.iterdir() if p.is_file()
-    } != expected_files | {"manifest.json"}:
-        raise ValueError("supplement artifact population changed")
-    for path, digest in manifest["filesSHA256"].items():
-        if sha((SUPPLEMENT / path).read_bytes()) != digest:
-            raise ValueError("supplement raw artifact detached")
-    for tool, path in expected_snapshots.items():
-        if sha((SUPPLEMENT / path).read_bytes()) != manifest["toolSHA256"][tool]:
-            raise ValueError("supplement tool snapshot detached")
-    if (SUPPLEMENT / "protocol.json").read_bytes() != (
-        HOME / "supplement.json"
-    ).read_bytes():
-        raise ValueError("supplement archived selection changed")
-    validate_receipt(
-        json.loads((SUPPLEMENT / "build-receipt.json").read_text()), SUPPLEMENT_REVISION
-    )
-    runs = json.loads(gzip.decompress((SUPPLEMENT / "raw-runs.json.gz").read_bytes()))
-    if set(runs) != set(protocol()["models"]) or any(
-        set(runs[m]) != {"c", "swift"} for m in runs
-    ):
-        raise ValueError("supplement backend/model population changed")
-    derived = assessment(runs, selected["cases"])
-    if derived != json.loads((SUPPLEMENT / "assessment.json").read_text()):
-        raise ValueError("supplement saved derivation false")
-    validate_supplement_branches(runs, selected["cases"])
-    current = collect_runs(binaries, selected["cases"])
-    assessment(current, selected["cases"])
-    validate_supplement_branches(current, selected["cases"])
-    compare_replay(runs, current, selected["cases"])
-    return derived
-
-
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "mode", choices=["build-controls", "acquire", "supplement-acquire", "check"]
-    )
+    parser.add_argument("mode", choices=["build-controls", "acquire", "check"])
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="search-research-") as directory:
         binaries, receipt = build(Path(directory))
@@ -976,8 +801,6 @@ def main():
                     }
                 )
             )
-        elif args.mode == "supplement-acquire":
-            acquire_supplement(binaries, receipt)
         elif args.mode == "acquire":
             acquire(binaries, receipt)
         else:
@@ -991,10 +814,8 @@ def main():
             current_derived = assessment(current)
             compare_replay(saved, current)
             controls = executable_controls(binaries)
-            supplementary = check_supplement(binaries)
             report = {
                 "status": "finite-authenticated-replay",
-                "supplementary": supplementary,
                 "historicalAssessment": derived,
                 "currentAssessment": current_derived,
                 "currentBuildReceipt": receipt,
@@ -1012,7 +833,6 @@ def main():
                     {
                         "status": report["status"],
                         "processes": derived["processes"],
-                        "supplementary": supplementary,
                         "differences": derived["differences"],
                         "executableMutationsRejected": len(controls),
                     }

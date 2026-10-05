@@ -153,6 +153,39 @@ class Controls(unittest.TestCase):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 m.validate_run(altered, case, "espenak-meeus", "c")
 
+    def test_separate_assessment_population(self):
+        import json
+
+        case, run, events = self.sample_run()
+        swapped = copy.deepcopy(run)
+        swapped["stdout"] = (
+            run["stdout"]
+            .replace("espenak-meeus", "TEMP")
+            .replace("jpl-horizons", "espenak-meeus")
+            .replace("TEMP", "jpl-horizons")
+        )
+        swapped["stdoutSHA256"] = m.sha(swapped["stdout"].encode())
+        runs = {
+            "espenak-meeus": {"c": [{"id": case["id"], **run}], "swift": []},
+            "jpl-horizons": {"c": [{"id": case["id"], **swapped}], "swift": []},
+        }
+        for model in runs:
+            public = copy.deepcopy(runs[model]["c"][0])
+            parsed = [json.loads(line) for line in public["stdout"].splitlines()]
+            parsed[-1]["rawStatus"] = "value"
+            public["stdout"] = "".join(json.dumps(e) + "\n" for e in parsed)
+            public["stdoutSHA256"] = m.sha(public["stdout"].encode())
+            runs[model]["swift"] = [public]
+        result = m.assessment(runs, [case])
+        self.assertEqual(result["caseCount"], 1)
+        self.assertEqual(result["processes"], 4)
+        self.assertEqual(result["differences"], [])
+
+    def test_current_original_archive_semantics(self):
+        runs, receipt, derived = m.load_archive()
+        self.assertEqual(derived["processes"], 204)
+        self.assertEqual(derived["differences"], [])
+
     def test_timeout_retains_partial(self):
         import sys
 
