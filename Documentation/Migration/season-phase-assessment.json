@@ -1,6 +1,6 @@
 {
   "candidateDirty": false,
-  "candidateRevision": "7d577000d1062cdb034e05dd8d97ac3e2eef22d2",
+  "candidateRevision": "f7ae7a9d80dea4ea82bf1dd8a0118a3cc6cc6ba9",
   "classification": "finite-archived-reference-comparison-not-continuous-certification",
   "coverage": {
     "approved": {
@@ -39269,16 +39269,16 @@
   },
   "inputSHA256": {
     "Documentation/Migration/approved-accuracy-targets.json": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553",
-    "Documentation/Migration/season-phase-sampling-plan.json": "487ed112e9d95988569703fb339fe47c46d179234243e2f5e97694756055ff8c",
+    "Documentation/Migration/season-phase-sampling-plan.json": "7b78cef9de2344f1dde9349bf8fb1e24aec7617f4a9a17922fa8d4a8f17ecfbb",
     "Scripts/reference-data/build-accuracy-runner.py": "8f19655069c3ead9b7f8b315ce68cb85c946ee4ab25df0570376e8984228a114",
     "Scripts/reference-data/build-bundled-runner.py": "f2d3c2280259752eb068897692e6f7e17a4bec9491c559b8b95ab95460afd07d",
-    "Scripts/reference-data/qualify-season-phase-events.py": "58a657db25245d0b4788ec9449856200a21fb80eb6e0aa92857a404255c420d1",
+    "Scripts/reference-data/qualify-season-phase-events.py": "cf19a528291526f21137f0a7e925c2506a35d0b64479abad250d275c5c83a366",
     "Scripts/reference-data/sources/moonphases.txt": "959ec955d89b4d9d2366a737ecffad0ace1deafdb7d54947c94a0585b316c064",
     "Scripts/reference-data/sources/parse-moon-phases.js": "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263",
     "Scripts/reference-data/sources/seasons.txt": "92a0b2a5f8c67510b49f342f6f7a763cb6eee1ef32413344e71ce169a3582383",
     "Tools/Migration/AccuracyQualificationRunner/main.swift": "b1940170c1275cb0b6a9247b7bd31006939ee84c5c4a7318f53e4cd1cecfa2be"
   },
-  "planSHA256": "487ed112e9d95988569703fb339fe47c46d179234243e2f5e97694756055ff8c",
+  "planSHA256": "7b78cef9de2344f1dde9349bf8fb1e24aec7617f4a9a17922fa8d4a8f17ecfbb",
   "referencePrecision": {
     "displayResolutionSeconds": 60,
     "physicalStrictTargetQualification": "indeterminate-without-recorded-rounding-direction",
