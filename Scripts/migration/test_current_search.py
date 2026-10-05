@@ -66,7 +66,8 @@ class CurrentSearchTests(unittest.TestCase):
             solver.write_text('repaired solver')
             coefficient.write_text('immutable coefficients')
             original = {'Sources/CLibAstronomy/astronomy.c': R.M.sha(b'old solver'), 'Sources/CLibAstronomy/model.inc': R.M.sha(coefficient.read_bytes())}
-            with mock.patch.object(R, 'ROOT', root), mock.patch.object(R, 'baseline_sources', return_value=original):
+            plan = R.selection()
+            with mock.patch.object(R, 'ROOT', root), mock.patch.object(R, 'baseline_sources', return_value=original), mock.patch.object(R, 'selection', return_value=plan):
                 R.source_identity()
                 coefficient.write_text('tampered coefficients')
                 with self.assertRaisesRegex(ValueError, 'source changes'):
