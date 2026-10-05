@@ -53,7 +53,13 @@ def source_inputs(root):
     return {str(p.relative_to(root)): sha(p.read_bytes()) for p in sorted(paths)}
 
 
-def validate_build(binary, receipt, source, package, expected_tools=None):
+def generated_inputs(build_root):
+    if build_root is None:
+        return {}
+    return {str(p.relative_to(build_root)): sha(p.read_bytes()) for p in sorted(build_root.rglob('*')) if p.is_file() and p.suffix in {'.swift', '.h', '.modulemap'}}
+
+
+def validate_build(binary, receipt, source, package, expected_tools=None, build_root=None):
     expected = source_inputs(source)
     if receipt['sourceInputsSHA256'] != expected or source_inputs(package) != expected:
         raise ValueError('complete source input population or digest changed')
@@ -61,6 +67,8 @@ def validate_build(binary, receipt, source, package, expected_tools=None):
         raise ValueError('mandatory execution tool population or digest changed')
     if receipt['recipe'] != RECIPE or any((package / name).exists() for name in RECIPE['manifestConditions']):
         raise ValueError('private build recipe or manifest conditions changed')
+    if receipt['generatedInputsSHA256'] != generated_inputs(build_root):
+        raise ValueError('generated private-build input population or digest changed')
     if receipt['binarySHA256'] != sha(binary.read_bytes()):
         raise ValueError('detached or stale executable')
 
@@ -182,9 +190,9 @@ def execute(mode, output=None):
             subprocess.run(command, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=protocol['buildTimeoutSeconds'])
         bin_path = subprocess.check_output(['swift', 'build', '--package-path', str(package), '--scratch-path', str(output / 'build'), '-c', 'release', '--show-bin-path'], text=True).strip()
         binary = Path(bin_path) / 'AstronomyMigrationRunner'
-        receipt = {'sourceRevision': revision, 'sourceInputsSHA256': source_inputs(package), 'sourcePopulationMeaning': 'all project Sources plus public runner and actual manifest; includes conservative uncompiled optional sources', 'trackedTreeSHA256': tracked, 'toolSHA256': initial_tools, 'recipe': RECIPE, 'command': command, 'manifestSHA256': sha((package / 'Package.swift').read_bytes()), 'binaryRelativePath': str(binary.relative_to(output)), 'binarySHA256': sha(binary.read_bytes()), 'fingerprintSHA256': c.executable_fingerprint(binary), 'swift': subprocess.check_output(['swift', '--version'], text=True).strip(), 'platform': platform.platform(), 'buildLogSHA256': sha((output / 'swift-build.log').read_bytes())}
+        receipt = {'generatedInputsSHA256': generated_inputs(output / 'build'), 'sourceRevision': revision, 'sourceInputsSHA256': source_inputs(package), 'sourcePopulationMeaning': 'all project Sources plus public runner and actual manifest; includes conservative uncompiled optional sources', 'trackedTreeSHA256': tracked, 'toolSHA256': initial_tools, 'recipe': RECIPE, 'command': command, 'manifestSHA256': sha((package / 'Package.swift').read_bytes()), 'binaryRelativePath': str(binary.relative_to(output)), 'binarySHA256': sha(binary.read_bytes()), 'fingerprintSHA256': c.executable_fingerprint(binary), 'swift': subprocess.check_output(['swift', '--version'], text=True).strip(), 'platform': platform.platform(), 'buildLogSHA256': sha((output / 'swift-build.log').read_bytes())}
         save(output / 'candidate-build.json', receipt)
-        validate_build(binary, receipt, ROOT if mode == 'current' else package, package)
+        validate_build(binary, receipt, ROOT if mode == 'current' else package, package, build_root=output / 'build')
         with (output / 'oracle-build.log').open('wb') as log:
             subprocess.run([sys.executable, str(ROOT / 'Tools/Migration/Oracle/build-oracle.py'), str(output / 'oracle')], check=True, stdout=log, stderr=subprocess.STDOUT, timeout=protocol['buildTimeoutSeconds'])
         oracle = output / 'oracle/astronomy-oracle'
@@ -207,7 +215,7 @@ def execute(mode, output=None):
             control_record = records([packets[role][-1]], [{'id': 'invalid-request-control', 'command': ['invalid', 'request', 'espenak-meeus']}])[0]
             if {name: value for name, value in control_record.items() if name != 'id'} != metadata['failureControls'][role]:
                 raise ValueError('invalid-request archived control changed')
-        validate_build(binary, receipt, ROOT if mode == 'current' else package, package)
+        validate_build(binary, receipt, ROOT if mode == 'current' else package, package, build_root=output / 'build')
         load(ROOT / 'Scripts/migration/replay_historical_research.py', 'post_execution_authentication').authenticate(package, revision)
         if sha(oracle.read_bytes()) != oracle_hash:
             raise ValueError('oracle executable changed during acquisition')
@@ -258,7 +266,7 @@ def verify_evidence(output):
     binary = (output / receipt['binaryRelativePath']).resolve()
     if not binary.is_relative_to((output / 'build').resolve()) or binary.name != RECIPE['product']:
         raise ValueError('binary location detached from isolated build')
-    validate_build(binary, receipt, package, package, expected_tools)
+    validate_build(binary, receipt, package, package, expected_tools, output / 'build')
     expected_command = ['swift', 'build', '--package-path', str(package), '--scratch-path', str(output / 'build'), '-c', 'release', '--product', 'AstronomyMigrationRunner', '--verbose']
     if receipt['command'] != expected_command or receipt['manifestSHA256'] != sha((package / 'Package.swift').read_bytes()) or receipt['buildLogSHA256'] != sha((output / 'swift-build.log').read_bytes()) or receipt['fingerprintSHA256'] != c.executable_fingerprint(binary):
         raise ValueError('build conditions, log or fingerprint changed')

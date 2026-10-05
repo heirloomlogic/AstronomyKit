@@ -63,13 +63,26 @@ class ExecutionIntegrityTests(unittest.TestCase):
             binary = root / 'runner'
             binary.write_bytes(b'fresh test executable')
             tools = {name: digest((ROOT / name).read_bytes()) for name in E.TOOL_PATHS}
-            receipt = {'sourceInputsSHA256': {name: digest(data) for name, data in contents.items()}, 'toolSHA256': tools, 'recipe': {'configuration': 'release', 'product': 'AstronomyMigrationRunner', 'extraSwiftFlags': [], 'manifestConditions': {'.dev-tooling': False, '.model-prototype': False}}, 'binarySHA256': digest(binary.read_bytes())}
+            receipt = {'generatedInputsSHA256': {}, 'sourceInputsSHA256': {name: digest(data) for name, data in contents.items()}, 'toolSHA256': tools, 'recipe': {'configuration': 'release', 'product': 'AstronomyMigrationRunner', 'extraSwiftFlags': [], 'manifestConditions': {'.dev-tooling': False, '.model-prototype': False}}, 'binarySHA256': digest(binary.read_bytes())}
             E.validate_build(binary, receipt, source, package)
             for field, value in [('sourceInputsSHA256', {}), ('toolSHA256', {}), ('binarySHA256', '0' * 64), ('recipe', {'configuration': 'debug'})]:
                 changed = copy.deepcopy(receipt)
                 changed[field] = value
                 with self.subTest(field=field), self.assertRaises(ValueError):
                     E.validate_build(binary, changed, source, package)
+            build_root = root / 'build'
+            accessor = build_root / 'AstronomyKit.build/DerivedSources/resource_bundle_accessor.swift'
+            accessor.parent.mkdir(parents=True)
+            accessor.write_bytes(b'generated resource accessor')
+            receipt['generatedInputsSHA256'] = E.generated_inputs(build_root)
+            E.validate_build(binary, receipt, source, package, build_root=build_root)
+            accessor.write_bytes(b'changed generated accessor')
+            with self.assertRaises(ValueError):
+                E.validate_build(binary, receipt, source, package, build_root=build_root)
+            accessor.unlink()
+            with self.assertRaises(ValueError):
+                E.validate_build(binary, receipt, source, package, build_root=build_root)
+            receipt['generatedInputsSHA256'] = {}
             generated = package / 'Sources/CLibAstronomy/generated/table.inc'
             generated.write_bytes(b'changed coefficient')
             with self.assertRaises(ValueError):
