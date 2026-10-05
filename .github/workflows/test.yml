@@ -231,3 +231,33 @@ jobs:
           python3 -m unittest Scripts/reference-data/test_seasonal_roots.py -v
           python3 Scripts/reference-data/check-seasonal-public-runner.py
           python3 Scripts/reference-data/qualify-seasonal-roots.py check
+
+  constellation-corpus-replay:
+    strategy:
+      matrix:
+        os: [macos-26, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up evidence Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14.7"
+      - name: Install Swift on Linux
+        if: runner.os == 'Linux'
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+      - name: Materialize frozen oracle revision
+        run: git cat-file -e "cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit}" || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
+      - name: Replay source-bound corpus and directed controls
+        run: |
+          python3 -m unittest Scripts/migration/test_constellation_corpus.py -v
+          python3 Scripts/migration/constellation-corpus.py check
+      - name: Lint isolated research runner
+        if: runner.os == 'macOS'
+        run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/ConstellationResearch/main.swift

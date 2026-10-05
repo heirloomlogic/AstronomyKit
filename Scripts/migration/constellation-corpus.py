@@ -1,0 +1,932 @@
+#!/usr/bin/env python3
+"""Source-bound constellation research; no native implementation or physical qualification."""
+
+import argparse
+import gzip
+import hashlib
+import importlib.util
+import io
+import json
+import math
+import os
+import platform
+import re
+import struct
+import subprocess
+import tarfile
+import tempfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+TOOL = ROOT / "Tools/Migration/ConstellationResearch"
+PLAN = TOOL / "protocol.json"
+DATA = TOOL / "Artifacts"
+DERIVED = TOOL / "DerivedEvidence"
+SNAPSHOTS = TOOL / "AcquisitionTools"
+CONTEXT = ROOT / ".context/constellation-research"
+LOCK = ROOT / "Tools/Migration/Oracle/oracle-lock.json"
+
+
+def encoded(value):
+    return (
+        json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n"
+    ).encode()
+
+
+def digest(value):
+    return hashlib.sha256(value).hexdigest()
+
+
+def git(*args):
+    return subprocess.check_output(["git", *args], cwd=ROOT)
+
+
+def bits(value):
+    return struct.pack(">d", value).hex()
+
+
+def load_plan():
+    plan = json.loads(PLAN.read_bytes())
+    if plan["oracleLockSHA256"] != digest(LOCK.read_bytes()):
+        raise ValueError("oracle lock changed")
+    for name, sha in plan["currentSourcesSHA256"].items():
+        if digest((ROOT / name).read_bytes()) != sha:
+            raise ValueError("prospective constellation source changed: " + name)
+    if (
+        plan["baseRevision"] != "2d54fd251a36e94f14324daed6d0937fc250d364"
+        or plan["oracleRevision"] != json.loads(LOCK.read_bytes())["baselineRevision"]
+    ):
+        raise ValueError("wrong research baseline")
+    return plan
+
+
+def source_section(text):
+    start = text.index("typedef struct\n{\n    const char *symbol;")
+    end = text.index("\n\n\nstatic astro_lunar_eclipse_t LunarEclipseError", start)
+    return text[start:end]
+
+
+def sources():
+    plan = load_plan()
+    locked = git(
+        "show", plan["oracleRevision"] + ":Sources/CLibAstronomy/astronomy.c"
+    ).decode()
+    current = (ROOT / "Sources/CLibAstronomy/astronomy.c").read_text()
+    if (
+        digest(locked.encode())
+        != json.loads(LOCK.read_bytes())["files"]["Sources/CLibAstronomy/astronomy.c"]
+    ):
+        raise ValueError("locked source detached")
+    original = source_section(locked)
+    latest = source_section(current)
+    if original != latest:
+        raise ValueError(
+            "constellation source changed after frozen oracle; reconcile explicitly"
+        )
+    notice = locked[: locked.index("#include <math.h>")]
+    return {
+        "lockedText": original,
+        "currentText": latest,
+        "notices": notice,
+        "lockedSHA256": digest(locked.encode()),
+        "currentSHA256": digest(current.encode()),
+    }
+
+
+def parse_tables(text):
+    info = text.split("static const constel_info_t ConstelInfo[] = {", 1)[1].split(
+        "};", 1
+    )[0]
+    bounds = text.split("static const constel_boundary_t ConstelBounds[] = {", 1)[
+        1
+    ].split("};", 1)[0]
+    names = [
+        {"index": int(i), "symbol": symbol, "name": name}
+        for i, symbol, name in re.findall(
+            r'/\*\s*(\d+)\s*\*/\s*\{\s*"([^"]+)"\s*,\s*"([^"]+)"', info
+        )
+    ]
+    records = []
+    for index, lo, hi, dec in re.findall(
+        r"\{\s*(\d+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([-\d.]+)\s*\}", bounds
+    ):
+        values = [float(lo), float(hi), float(dec)]
+        records.append(
+            {
+                "index": int(index),
+                "raLo": values[0],
+                "raHi": values[1],
+                "decLo": values[2],
+                "coefficientBits": [bits(v) for v in values],
+            }
+        )
+    if (
+        len(names) != 88
+        or [n["index"] for n in names] != list(range(88))
+        or len(records) != 357
+    ):
+        raise ValueError("incomplete source table/name parsing")
+    if any(
+        not 0 <= r["index"] < 88
+        or not 0 <= r["raLo"] < r["raHi"] <= 8640
+        or not -2160 <= r["decLo"] <= 2160
+        for r in records
+    ):
+        raise ValueError("invalid source boundary")
+    return {"names": names, "records": records}
+
+
+def match_record(tables, ra, dec, mutation="none"):
+    indices = (
+        range(len(tables["records"]) - 1, -1, -1)
+        if mutation == "reverse"
+        else range(len(tables["records"]))
+    )
+    for i in indices:
+        r = tables["records"][i]
+        lower = r["raLo"] < ra if mutation == "lower-exclusive" else r["raLo"] <= ra
+        upper = r["raHi"] >= ra if mutation == "upper-inclusive" else r["raHi"] > ra
+        if r["decLo"] <= dec and lower and upper:
+            return i
+    return None
+
+
+def table_result(tables, case, mutation="none"):
+    index = match_record(tables, case["raCompact"], case["decCompact"], mutation)
+    if index is None:
+        return {"id": case["id"], "status": "no-table-match"}
+    name = tables["names"][tables["records"][index]["index"]]
+    return {
+        "id": case["id"],
+        "status": "success",
+        "matchedRecord": index,
+        **name,
+        "name": "Changed name" if mutation == "name" else name["name"],
+    }
+
+
+def table_cases(tables):
+    cases = []
+    for i, row in enumerate(tables["records"]):
+        for side, value in [("ra-low", row["raLo"]), ("ra-high", row["raHi"])]:
+            for rlabel, ra in [
+                ("below", math.nextafter(value, -math.inf)),
+                ("tie", value),
+                ("above", math.nextafter(value, math.inf)),
+            ]:
+                for dlabel, dec in [
+                    ("below", math.nextafter(row["decLo"], -math.inf)),
+                    ("tie", row["decLo"]),
+                    ("above", math.nextafter(row["decLo"], math.inf)),
+                ]:
+                    cases.append(
+                        {
+                            "id": f"record-{i:03d}-{side}-{rlabel}-dec-{dlabel}",
+                            "record": i,
+                            "kind": "table-boundary",
+                            "raCompact": ra,
+                            "decCompact": dec,
+                        }
+                    )
+        for label, dec in [
+            ("below", math.nextafter(row["decLo"], -math.inf)),
+            ("tie", row["decLo"]),
+            ("above", math.nextafter(row["decLo"], math.inf)),
+        ]:
+            cases.append(
+                {
+                    "id": f"record-{i:03d}-ra-mid-dec-{label}",
+                    "record": i,
+                    "kind": "table-boundary",
+                    "raCompact": (row["raLo"] + row["raHi"]) / 2,
+                    "decCompact": dec,
+                }
+            )
+    return cases
+
+
+def representatives(tables):
+    selected = {}
+    for i, row in enumerate(tables["records"]):
+        ra = (row["raLo"] + row["raHi"]) / 2
+        upper = min(
+            [
+                r["decLo"]
+                for r in tables["records"][:i]
+                if r["raLo"] <= ra < r["raHi"] and r["decLo"] > row["decLo"]
+            ]
+            + [2160]
+        )
+        dec = (row["decLo"] + upper) / 2
+        matched = match_record(tables, ra, dec)
+        if matched is not None and tables["records"][matched]["index"] == row["index"]:
+            selected.setdefault(
+                row["index"],
+                {
+                    "id": f'representative-{row["index"]:02d}',
+                    "kind": "representative",
+                    "raCompact": ra,
+                    "decCompact": dec,
+                    "matchedRecord": matched,
+                },
+            )
+    if set(selected) != set(range(88)):
+        raise ValueError(
+            "deterministic source representatives do not cover all88 names"
+        )
+    return [selected[i] for i in range(88)]
+
+
+def command_rows(cases, operation):
+    return [
+        {
+            "id": c["id"],
+            "operation": operation,
+            "raHours": format(c["raCompact"], ".17g"),
+            "decDegrees": format(c["decCompact"], ".17g"),
+        }
+        for c in cases
+    ]
+
+
+def run(binary, initial, after, requests, mutation="none"):
+    lines = "".join(
+        f"{r['id']} {r['operation']} {r['raHours']} {r['decDegrees']}\n"
+        for r in requests
+    )
+    result = subprocess.run(
+        [str(binary), initial, after, mutation],
+        input=lines,
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=60,
+    )
+    rows = json.loads("[" + ",".join(result.stdout.splitlines()) + "]")
+    if any(not isinstance(row, dict) for row in rows):
+        raise ValueError("invalid research response shape")
+    return rows
+
+
+def finite_payload(value):
+    if isinstance(value, float) and not math.isfinite(value):
+        raise ValueError("nonfinite successful research payload")
+    if isinstance(value, dict):
+        for item in value.values():
+            finite_payload(item)
+    elif isinstance(value, list):
+        for item in value:
+            finite_payload(item)
+
+
+def validate_results(requests, rows, tables):
+    finite_payload(rows)
+    if len(rows) != len(requests):
+        raise ValueError("research response count mismatch")
+    names = {n["symbol"]: n["name"] for n in tables["names"]}
+    for request, row in zip(requests, rows):
+        if row.get("id") != request["id"]:
+            raise ValueError("research response selection/order detached")
+        if row.get("status") not in {
+            "success",
+            "invalid-parameter",
+            "bad-vector",
+            "internal-error",
+            "bad-time",
+            "astronomy-error",
+        }:
+            raise ValueError("unknown research status")
+        if row.get("status") == "success":
+            if (
+                row.get("symbol") not in names
+                or row.get("name") != names[row["symbol"]]
+            ):
+                raise ValueError("research name mapping changed")
+            if request["operation"] == "lookup":
+                if set(row) != {"id", "status", "symbol", "name", "ra1875", "dec1875"}:
+                    raise ValueError("incomplete successful lookup")
+                if request.get("kind") == "invalid":
+                    raise ValueError("invalid input unexpectedly succeeded")
+                ra, dec = row["ra1875"], row["dec1875"]
+                if (
+                    type(ra) not in (int, float)
+                    or type(dec) not in (int, float)
+                    or not 0 <= ra < 24
+                    or not -90 <= dec <= 90
+                ):
+                    raise ValueError("invalid returned B1875 coordinates")
+                index = match_record(tables, ra * 360, dec * 24)
+                if (
+                    index is None
+                    or tables["names"][tables["records"][index]["index"]]["symbol"]
+                    != row["symbol"]
+                ):
+                    raise ValueError(
+                        "returned constellation contradicts its B1875 coordinates"
+                    )
+        elif set(row) != {"id", "status"}:
+            raise ValueError("error response contains stale values")
+        elif request.get("kind") not in {"invalid", "table-boundary"}:
+            raise ValueError("interior/direct input unexpectedly failed")
+
+
+def build():
+    plan = load_plan()
+    lock = json.loads(LOCK.read_bytes())
+    CONTEXT.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="constellation-oracle-") as temporary:
+        source = Path(temporary)
+        archive = git("archive", plan["oracleRevision"], *lock["files"])
+        with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as stream:
+            stream.extractall(source)
+        for name, sha in lock["files"].items():
+            if digest((source / name).read_bytes()) != sha:
+                raise ValueError("unbound oracle source closure: " + name)
+        compiler = os.environ.get("CC", "/usr/bin/clang")
+        engine = source / "Sources/CLibAstronomy"
+        command = [
+            compiler,
+            *lock["build"]["flags"],
+            "-I",
+            str(engine),
+            "-I",
+            str(engine / "include"),
+            str(TOOL / "constellation-main.c"),
+            "-lm",
+            "-pthread",
+            "-o",
+            str(CONTEXT / "locked-constellation"),
+        ]
+        subprocess.run(command, check=True, cwd=ROOT)
+        c_receipt = {
+            "oracleLockSHA256": digest(LOCK.read_bytes()),
+            "sourceRevision": plan["oracleRevision"],
+            "sourceFilesSHA256": lock["files"],
+            "adapterSHA256": digest((TOOL / "constellation-main.c").read_bytes()),
+            "flags": lock["build"]["flags"],
+            "binarySHA256": digest((CONTEXT / "locked-constellation").read_bytes()),
+            "compiler": subprocess.check_output(
+                [compiler, "--version"], text=True
+            ).splitlines()[0],
+        }
+    spec = importlib.util.spec_from_file_location(
+        "accuracy_build", ROOT / "Scripts/reference-data/build-accuracy-runner.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    package = CONTEXT / "public-package"
+    (package / "Sources").mkdir(parents=True, exist_ok=True)
+    for name, target in [
+        ("AstronomyKit", ROOT / "Sources/AstronomyKit"),
+        ("CLibAstronomy", ROOT / "Sources/CLibAstronomy"),
+        ("ConstellationResearch", TOOL),
+    ]:
+        link = package / "Sources" / name
+        if link.is_symlink():
+            if link.resolve() != target.resolve():
+                raise ValueError("research package source symlink detached")
+        elif link.exists():
+            raise ValueError("research package source path occupied")
+        else:
+            link.symlink_to(target, target_is_directory=True)
+    manifest = module.MANIFEST.replace(
+        "AccuracyQualificationRunner", "ConstellationResearch"
+    )
+    # The C adapter and artifacts are outside this Swift executable's source set.
+    manifest = manifest.replace(
+        'path: "Sources/ConstellationResearch")',
+        'path: "Sources/ConstellationResearch", exclude: ["AcquisitionTools", "Artifacts", "DerivationTools", "DerivedEvidence", "README.md", "protocol.json", "constellation-main.c", "validation-provenance.json"], sources: ["main.swift"])',
+    )
+    (package / "Package.swift").write_text(manifest)
+    command = [
+        "swift",
+        "build",
+        "--package-path",
+        str(package),
+        "--scratch-path",
+        str(CONTEXT / "public-build"),
+        "--product",
+        "ConstellationResearch",
+    ]
+    flags = lock["build"]["flags"]
+    for flag in flags:
+        command.extend(["-Xcc", flag])
+    subprocess.run(command, check=True, cwd=ROOT)
+    swift = CONTEXT / "public-build/debug/ConstellationResearch"
+    return {
+        "c": c_receipt,
+        "swift": {
+            "binarySHA256": digest(swift.read_bytes()),
+            "manifestSHA256": digest(manifest.encode()),
+            "cCompilerFlagsAdded": flags,
+            "compiler": subprocess.check_output(
+                ["swift", "--version"], text=True
+            ).strip(),
+        },
+        "platform": platform.platform(),
+        "architecture": platform.machine(),
+    }
+
+
+def direct_cases():
+    values = [
+        -48,
+        -24,
+        math.nextafter(0, -math.inf),
+        -0.0,
+        0.0,
+        math.nextafter(24, -math.inf),
+        24,
+        math.nextafter(24, math.inf),
+        48,
+        1e308,
+        -1e308,
+    ]
+    requests = [
+        {
+            "id": f"direct-{i:02d}-{j}",
+            "kind": "wrap-pole",
+            "operation": "lookup",
+            "raHours": format(ra, ".17g"),
+            "decDegrees": format(dec, ".17g"),
+        }
+        for i, ra in enumerate(values)
+        for j, dec in enumerate([-90, 0, 90])
+    ]
+    invalid = [
+        ("nan", "0"),
+        ("inf", "0"),
+        ("-inf", "0"),
+        ("0", "nan"),
+        ("0", "inf"),
+        ("0", "-inf"),
+        ("0", format(math.nextafter(-90, -math.inf), ".17g")),
+        ("0", format(math.nextafter(90, math.inf), ".17g")),
+    ]
+    return requests + [
+        {
+            "id": f"invalid-{i}",
+            "kind": "invalid",
+            "operation": "lookup",
+            "raHours": ra,
+            "decDegrees": dec,
+        }
+        for i, (ra, dec) in enumerate(invalid)
+    ]
+
+
+def warmup():
+    return {
+        "id": "warmup",
+        "operation": "lookup",
+        "raHours": "2.53",
+        "decDegrees": "89.26",
+    }
+
+
+def read_rows(path):
+    data = (
+        gzip.decompress(path.read_bytes())
+        if path.suffix == ".gz"
+        else path.read_bytes()
+    )
+    value = json.loads(data)
+    finite_payload(value)
+    return value
+
+
+def assess_archive():
+    tables = read_rows(DATA / "tables.json")
+    samples = read_rows(DATA / "table-cases.json")
+    public = read_rows(DATA / "public-inputs.json")
+    pairs = {}
+    summary = {
+        "tableRecords": 357,
+        "tableCases": len(samples),
+        "sourceNames": 88,
+        "representativesPerModel": {},
+        "withinPlatformParityDifferences": 0,
+        "transformedTableIdentityDifferences": {},
+        "coldInitializationDifferences": 0,
+        "postInitializationModelDifferences": 0,
+    }
+    for initial in load_plan()["models"]:
+        nominal = read_rows(DATA / f"c-{initial}-{initial}.json.gz")
+        summary["representativesPerModel"][initial] = len(
+            {
+                r["symbol"]
+                for c, r in zip(public[initial], nominal)
+                if c.get("kind") == "representative" and r["status"] == "success"
+            }
+        )
+        changes = []
+        for c, r in zip(public[initial], nominal):
+            if "tableExpected" in c and r.get("symbol") != c["tableExpected"].get(
+                "symbol"
+            ):
+                changes.append(
+                    {
+                        "id": c["id"],
+                        "tableExpected": c["tableExpected"],
+                        "actual": r,
+                        "classification": "transformed-nominal-table-boundary-identity-difference",
+                    }
+                )
+        summary["transformedTableIdentityDifferences"][initial] = len(changes)
+        pairs[initial] = {"tableIdentityObservations": changes}
+        for after in load_plan()["models"]:
+            a = read_rows(DATA / f"c-{initial}-{after}.json.gz")
+            b = read_rows(DATA / f"swift-{initial}-{after}.json.gz")
+            validate_results(public[initial], a, tables)
+            validate_results(public[initial], b, tables)
+            differences = [
+                {"id": x["id"], "locked": x, "public": y}
+                for x, y in zip(a, b)
+                if x != y
+            ]
+            summary["withinPlatformParityDifferences"] += len(differences)
+            summary["postInitializationModelDifferences"] += sum(
+                x != y for x, y in zip(nominal, a)
+            )
+            cold_c = read_rows(DATA / f"cold-c-{initial}-{after}.json.gz")
+            cold_s = read_rows(DATA / f"cold-swift-{initial}-{after}.json.gz")
+            summary["coldInitializationDifferences"] += sum(
+                x != y for x, y in zip(cold_c, cold_s)
+            )
+            pairs[initial + "/" + after] = {
+                "differences": differences,
+                "requests": len(a),
+            }
+    if any(value != 88 for value in summary["representativesPerModel"].values()):
+        raise ValueError(
+            "current public representatives do not cover all88 constellations"
+        )
+    return {
+        "classification": "finite-source-bound-legacy-parity-not-independent-physical-accuracy",
+        "summary": summary,
+        "pairs": pairs,
+        "limitations": load_plan()["limitations"],
+    }
+
+
+def authenticate_archive():
+    manifest = read_rows(DATA / "manifest.json")
+    if (
+        manifest["protocolSHA256"] != digest(PLAN.read_bytes())
+        or manifest["sourceRevision"] != load_plan()["oracleRevision"]
+    ):
+        raise ValueError("detached prospective protocol/source revision")
+    expected = {p.name for p in DATA.iterdir() if p.name != "manifest.json"}
+    if expected != set(manifest["artifactSHA256"]):
+        raise ValueError("artifact population changed")
+    for name, sha in manifest["artifactSHA256"].items():
+        if digest((DATA / name).read_bytes()) != sha:
+            raise ValueError("detached constellation artifact: " + name)
+    for name, sha in manifest["toolSHA256"].items():
+        snapshot = SNAPSHOTS / (Path(name).name + ".txt")
+        if digest(snapshot.read_bytes()) != sha:
+            raise ValueError("detached original acquisition tool: " + name)
+    tables = parse_tables(sources()["lockedText"])
+    if tables != read_rows(DATA / "tables.json") or table_cases(tables) != read_rows(
+        DATA / "table-cases.json"
+    ):
+        raise ValueError("source table/case semantics changed")
+    if [table_result(tables, c) for c in table_cases(tables)] != read_rows(
+        DATA / "table-output.json"
+    ):
+        raise ValueError("source first-match semantics changed")
+    # Recompute the original assessment unchanged, including its original C representative label.
+    if assess_archive() != read_rows(DATA / "assessment.json"):
+        raise ValueError("archived parity assessment semantics changed")
+    for initial in load_plan()["models"]:
+        for after in load_plan()["models"]:
+            for backend in ["c", "swift"]:
+                validate_results(
+                    cold_requests(),
+                    read_rows(DATA / f"cold-{backend}-{initial}-{after}.json.gz"),
+                    tables,
+                )
+    return tables
+
+
+def valid_samples(tables):
+    return [
+        c
+        for c in table_cases(tables)
+        if 0 <= c["raCompact"] < 8640 and -2160 <= c["decCompact"] <= 2160
+    ] + representatives(tables)
+
+
+def validate_public_selection(tables, public, transforms):
+    if set(public) != set(load_plan()["models"]):
+        raise ValueError("public model selection changed")
+    valid = valid_samples(tables)
+    numeric = load_plan()["crossPlatformArchiveComparison"]
+    for model, requests in public.items():
+        if (
+            requests[:1] != [warmup()]
+            or requests[-41:] != direct_cases()
+            or len(requests) != len(valid) + 42
+        ):
+            raise ValueError("public direct/representative selection changed")
+        transformed = transforms[model]
+        if len(transformed) != len(valid):
+            raise ValueError("incomplete source frame transform")
+        for request, case, row in zip(requests[1:-41], valid, transformed):
+            expected = {
+                "id": case["id"],
+                "operation": "lookup",
+                "kind": case["kind"],
+                "tableRACompact": case["raCompact"],
+                "tableDECCompact": case["decCompact"],
+                "tableExpected": table_result(tables, case),
+            }
+            if {
+                k: v for k, v in request.items() if k not in {"raHours", "decDegrees"}
+            } != expected:
+                raise ValueError(
+                    "public source selection/order/frame metadata detached"
+                )
+            finite_payload(row)
+            if (
+                set(row) != {"id", "status", "raHours", "decDegrees"}
+                or row["id"] != case["id"]
+                or row["status"] != "success"
+            ):
+                raise ValueError("invalid source transform response")
+            ra, dec = float(request["raHours"]), float(request["decDegrees"])
+            if (
+                not math.isfinite(ra)
+                or not math.isfinite(dec)
+                or not 0 <= ra < 24
+                or not -90 <= dec <= 90
+            ):
+                raise ValueError("invalid archived J2000 input")
+            if (
+                abs((ra - row["raHours"] + 12) % 24 - 12)
+                > numeric["rightAscensionRegressionHours"]
+                or abs(dec - row["decDegrees"]) > numeric["angularRegressionDegrees"]
+            ):
+                raise ValueError("archived J2000 input contradicts frozen source frame")
+
+
+def cold_requests():
+    anchors = load_plan()["freshProcesses"]["concurrentColdStart"]["anchors"]
+    return [
+        {
+            "id": f"cold-{i}-{j}",
+            "operation": "lookup",
+            "raHours": format(ra, ".17g"),
+            "decDegrees": format(dec, ".17g"),
+        }
+        for i in range(32)
+        for j, (ra, dec) in enumerate(anchors)
+    ]
+
+
+def compare_archive(requests, old, new):
+    numeric = load_plan()["crossPlatformArchiveComparison"]
+    changed = []
+    if len(old) != len(requests) or len(new) != len(requests):
+        raise ValueError("archive replay count changed")
+    for request, x, y in zip(requests, old, new):
+        if x["id"] != request["id"] or y["id"] != request["id"]:
+            raise ValueError("rebuilt constellation order changed")
+        if x["status"] != y["status"]:
+            if request.get("kind") != "table-boundary":
+                raise ValueError("rebuilt interior/direct status changed")
+            changed.append(request["id"])
+            continue
+        if x["status"] == "success":
+            if (
+                abs((x["ra1875"] - y["ra1875"] + 12) % 24 - 12)
+                > numeric["rightAscensionRegressionHours"]
+                or abs(x["dec1875"] - y["dec1875"])
+                > numeric["angularRegressionDegrees"]
+            ):
+                raise ValueError(
+                    "rebuilt constellation coordinates exceed existing platform regression contract"
+                )
+            if x["symbol"] != y["symbol"]:
+                if request.get("kind") != "table-boundary":
+                    raise ValueError(
+                        "rebuilt interior/direct constellation identity changed"
+                    )
+                changed.append(request["id"])
+    return changed
+
+
+def controls(tables, public, transforms):
+    c = CONTEXT / "locked-constellation"
+    swift = CONTEXT / "public-build/debug/ConstellationResearch"
+    samples = table_cases(tables)
+    base = read_rows(DATA / "table-output.json")
+    counts = {}
+    for mutation in ["reverse", "lower-exclusive", "upper-inclusive", "name"]:
+        actual = run(
+            c,
+            "espenak-meeus",
+            "espenak-meeus",
+            command_rows(samples, "table"),
+            mutation,
+        )
+        expected = [table_result(tables, case, mutation) for case in samples]
+        if actual != expected:
+            raise ValueError(
+                "injected C table mutation does not match directed control"
+            )
+        counts[mutation] = sum(x != y for x, y in zip(base, actual))
+        if not counts[mutation]:
+            raise ValueError("table mutation went undetected")
+    frame = run(
+        c,
+        "espenak-meeus",
+        "espenak-meeus",
+        command_rows(valid_samples(tables), "inverse"),
+        "identity-frame",
+    )
+    drift = 0
+    for x, y in zip(transforms["espenak-meeus"], frame):
+        if (
+            abs((x["raHours"] - y["raHours"] + 12) % 24 - 12) > 1e-8 / 15
+            or abs(x["decDegrees"] - y["decDegrees"]) > 1e-8
+        ):
+            drift += 1
+    if not drift:
+        raise ValueError("identity-frame mutation went undetected")
+    counts["identity-frame"] = drift
+    echoes = {}
+    for model, requests in public.items():
+        selected = [
+            {**r, "operation": "echo"} for r in requests if r.get("kind") != "invalid"
+        ]
+        expected = [
+            {
+                "id": r["id"],
+                "raBits": bits(float(r["raHours"])),
+                "decBits": bits(float(r["decDegrees"])),
+            }
+            for r in selected
+        ]
+        for backend, binary in [("c", c), ("swift", swift)]:
+            if run(binary, model, model, selected) != expected:
+                raise ValueError("input parsing changes effective public doubles")
+            echoes[backend + "/" + model] = len(selected)
+    return {
+        "mutationsDetected": counts,
+        "identicalEffectiveInputDoubleBits": echoes,
+        "publicRepresentation": "Double passed directly to Constellation.find; no Angle conversion",
+    }
+
+
+def check():
+    tables = authenticate_archive()
+    manifest = read_rows(DERIVED / "manifest.json")
+    if manifest["originalManifestSHA256"] != digest(
+        (DATA / "manifest.json").read_bytes()
+    ) or manifest["protocolSHA256"] != digest(PLAN.read_bytes()):
+        raise ValueError("derived evidence detached from original experiment")
+    if set(manifest["artifactSHA256"]) != {
+        p.name for p in DERIVED.iterdir() if p.name != "manifest.json"
+    }:
+        raise ValueError("derived artifact population changed")
+    for name, sha in manifest["artifactSHA256"].items():
+        if digest((DERIVED / name).read_bytes()) != sha:
+            raise ValueError("derived artifact hash mismatch: " + name)
+    for name, sha in manifest["toolSHA256"].items():
+        snapshot = TOOL / "DerivationTools" / (Path(name).name + ".txt")
+        if digest(snapshot.read_bytes()) != sha:
+            raise ValueError("derived tooling provenance changed")
+    provenance = read_rows(TOOL / "validation-provenance.json")
+    if provenance["derivedManifestSHA256"] != digest(
+        (DERIVED / "manifest.json").read_bytes()
+    ):
+        raise ValueError("validator detached from derivation")
+    for name, sha in provenance["toolSHA256"].items():
+        if digest((ROOT / name).read_bytes()) != sha:
+            raise ValueError("current validation tooling provenance changed")
+    build()
+    public = read_rows(DATA / "public-inputs.json")
+    transforms = {
+        m: run(
+            CONTEXT / "locked-constellation",
+            m,
+            m,
+            command_rows(valid_samples(tables), "inverse"),
+        )
+        for m in load_plan()["models"]
+    }
+    validate_public_selection(tables, public, transforms)
+    assessment = read_rows(DERIVED / "assessment.json")
+    expected_pairs = {}
+    for initial in load_plan()["models"]:
+        nominal = read_rows(DERIVED / f"c-{initial}-{initial}.json.gz")
+        for after in load_plan()["models"]:
+            a = read_rows(DERIVED / f"c-{initial}-{after}.json.gz")
+            b = read_rows(DERIVED / f"swift-{initial}-{after}.json.gz")
+            validate_results(public[initial], a, tables)
+            validate_results(public[initial], b, tables)
+            if a != b or a != nominal:
+                raise ValueError("retained matched parity/model semantics changed")
+            cold_c = read_rows(DERIVED / f"cold-c-{initial}-{after}.json.gz")
+            cold_s = read_rows(DERIVED / f"cold-swift-{initial}-{after}.json.gz")
+            if cold_c != cold_s:
+                raise ValueError("retained matched cold parity changed")
+            changes = compare_archive(
+                public[initial], read_rows(DATA / f"c-{initial}-{after}.json.gz"), a
+            )
+            count = len(
+                {
+                    r["symbol"]
+                    for q, r in zip(public[initial], b)
+                    if q.get("kind") == "representative"
+                }
+            )
+            if count != 88:
+                raise ValueError(
+                    "retained current public representative coverage failed"
+                )
+            expected_pairs[initial + "/" + after] = {
+                "requests": len(a),
+                "exactParityDifferences": 0,
+                "currentPublicRepresentatives": count,
+                "coldSerialDifferences": 0,
+                "postInitialModelDifferences": 0,
+                "archivedNominalBoundaryIdentityChanges": changes,
+            }
+    if (
+        assessment.get("pairs") != expected_pairs
+        or assessment.get("classification")
+        != "matched-C-build-diagnostic; original ordinary-Debug mismatches retained"
+    ):
+        raise ValueError("derived assessment semantic claims changed")
+    if controls(tables, public, transforms) != assessment["controls"]:
+        raise ValueError("derived control results changed")
+    observations = {}
+    for initial in load_plan()["models"]:
+        nominal = None
+        for after in load_plan()["models"]:
+            rows = {}
+            cold_rows = {}
+            for backend, binary in [
+                ("c", CONTEXT / "locked-constellation"),
+                ("swift", CONTEXT / "public-build/debug/ConstellationResearch"),
+            ]:
+                rows[backend] = run(binary, initial, after, public[initial])
+                validate_results(public[initial], rows[backend], tables)
+                old = read_rows(DERIVED / f"{backend}-{initial}-{after}.json.gz")
+                validate_results(public[initial], old, tables)
+                observations[backend + "/" + initial + "/" + after] = compare_archive(
+                    public[initial], old, rows[backend]
+                )
+                cold_rows[backend] = run(
+                    binary,
+                    initial,
+                    after,
+                    [
+                        {
+                            "id": "cold",
+                            "operation": "cold",
+                            "raHours": "0",
+                            "decDegrees": "0",
+                        }
+                    ],
+                )
+                validate_results(cold_requests(), cold_rows[backend], tables)
+                old_cold = read_rows(
+                    DERIVED / f"cold-{backend}-{initial}-{after}.json.gz"
+                )
+                validate_results(cold_requests(), old_cold, tables)
+                compare_archive(cold_requests(), old_cold, cold_rows[backend])
+                if (
+                    cold_rows[backend]
+                    != run(binary, initial, after, [warmup()] + cold_requests())[1:]
+                ):
+                    raise ValueError("fresh cold/serial initialization differs")
+            if rows["c"] != rows["swift"] or cold_rows["c"] != cold_rows["swift"]:
+                raise ValueError("matched-build within-platform parity failed")
+            if nominal is None:
+                nominal = rows["c"]
+            if nominal != rows["c"]:
+                raise ValueError("post-initial model change altered initialized lookup")
+            if {
+                r["symbol"]
+                for q, r in zip(public[initial], rows["swift"])
+                if q.get("kind") == "representative"
+            } != {n["symbol"] for n in tables["names"]}:
+                raise ValueError("current public representative coverage failed")
+    print(
+        "Offline authenticated matched-build replay passed; transformed-boundary archive observations: "
+        + json.dumps({k: len(v) for k, v in observations.items()}, sort_keys=True)
+    )
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("action", choices=["check"])
+    parser.parse_args()
+    check()
+
+
+if __name__ == "__main__":
+    main()
