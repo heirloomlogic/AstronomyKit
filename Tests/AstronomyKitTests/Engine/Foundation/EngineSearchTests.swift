@@ -320,8 +320,9 @@ struct EngineSearchTests {
             var calls = 0
             #expect(throws: AstronomyError.noConvergence) {
                 try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.001, fallback: model) {
+                    time -> Double in
                     calls += 1
-                    return Self.step($0.ut - Self.base)
+                    return Self.step(time.ut - Self.base)
                 }
             }
             #expect(calls == 42)
@@ -418,7 +419,8 @@ struct EngineSearchTests {
         let (start, end) = Self.window(model)
         var calls = 0
         #expect(throws: CallbackFailure(call: failingCall)) {
-            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001, fallback: model) { time in
+            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001, fallback: model) {
+                time -> Double in
                 calls += 1
                 if calls == failingCall { throw CallbackFailure(call: failingCall) }
                 return Self.rising(time.ut - Self.base)

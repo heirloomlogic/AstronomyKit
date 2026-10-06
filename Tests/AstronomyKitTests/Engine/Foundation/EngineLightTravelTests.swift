@@ -193,7 +193,8 @@ struct EngineLightTravelTests {
     func convergesOnLastCall(model: DeltaTModel) throws {
         let observation = Engine.Time(ut: Self.base, deltaTModel: model)
         var calls = 0
-        let vector = try Engine.LightTravel.correct(at: observation, fallback: model) { time in
+        let vector = try Engine.LightTravel.correct(at: observation, fallback: model) {
+            time -> Engine.Vector<Engine.EQJ> in
             calls += 1
             return Self.vector(1 + 0.01 * Double(min(calls, 9)), 0, 0, at: time)
         }

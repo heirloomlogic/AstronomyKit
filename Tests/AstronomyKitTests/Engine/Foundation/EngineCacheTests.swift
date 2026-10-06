@@ -193,11 +193,11 @@ struct EngineBoundedCacheTests {
         let overfull = Counter()
         DispatchQueue.concurrentPerform(iterations: lookups) { index in
             let key = (index * 37) % 64
-            let value = cache.value(for: key) {
+            let found = cache.value(for: key) { () -> Int in
                 if cache.count > 4 { overfull.record() }
                 return key + 1_000
             }
-            if value != key + 1_000 { mismatches.record() }
+            if found != key + 1_000 { mismatches.record() }
         }
         #expect(mismatches.count == 0)
         #expect(overfull.count == 0)
@@ -212,11 +212,11 @@ struct EngineBoundedCacheTests {
         let registry = Engine.CacheRegistry()
         let cache = Engine.BoundedCache<Int, Int>(capacity: 2, registry: registry)
         _ = cache.value(for: 1) { 10 }
-        let value = cache.value(for: 2) {
+        let found = cache.value(for: 2) { () -> Int in
             registry.removeAll()
             return 20
         }
-        #expect(value == 20)
+        #expect(found == 20)
         #expect(cache.count == 1)
         #expect(cache.value(for: 2) { -1 } == 20)
         #expect(cache.value(for: 1) { 11 } == 11)
@@ -235,12 +235,12 @@ struct EngineBoundedCacheTests {
         let finished = DispatchSemaphore(value: 0)
         let result = Box()
         DispatchQueue.global().async {
-            let value = cache.value(for: 2) {
+            let found = cache.value(for: 2) { () -> Int in
                 computing.signal()
                 resume.wait()
                 return 20
             }
-            result.set(value)
+            result.set(found)
             finished.signal()
         }
         computing.wait()
@@ -273,12 +273,12 @@ struct EngineBoundedCacheTests {
                 return
             }
             let key = (index * 13) % 32
-            let value = outer.value(for: key) {
+            let found = outer.value(for: key) { () -> Int in
                 let square = inner.value(for: key) { key * key }
                 if inner.count > 8 || outer.count > 4 { overfull.record() }
                 return square + 1
             }
-            if value != key * key + 1 { mismatches.record() }
+            if found != key * key + 1 { mismatches.record() }
         }
         #expect(mismatches.count == 0)
         #expect(overfull.count == 0)

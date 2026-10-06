@@ -30,7 +30,7 @@ struct EngineContractTests {
         let text = try String(contentsOf: file, encoding: .utf8)
         return text.split(separator: "\n", omittingEmptySubsequences: false).enumerated()
             .map { (number: $0.offset + 1, text: $0.element) }
-            .filter { !$0.text.drop { $0 == " " }.hasPrefix("//") }
+            .filter { line in !line.text.drop { $0 == " " }.hasPrefix("//") }
     }
 
     @Test("Engine sources neither import the C engine nor use Mutex")
