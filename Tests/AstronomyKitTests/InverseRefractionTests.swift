@@ -3,8 +3,8 @@ import Testing
 
 @testable import AstronomyKit
 
-/// The pre-repair inverse looped forever on six mode and altitude pairs, under both Delta T models and on both the
-/// direct and the horizontal route.
+/// The inverse refraction iteration terminates for every altitude in the protocol, under both Delta T models and on both
+/// the direct and the horizontal route, including the six mode and altitude pairs whose inversion cannot converge.
 ///
 /// A loop inside the C engine never reaches a cancellation point, so `.timeLimit` alone cannot stop it: the limit is
 /// recorded only once the call returns. Each test therefore runs its work through ``terminating(_:)``, which abandons
@@ -18,7 +18,7 @@ struct InverseRefractionTests {
         90, Double(90).nextDown, Double(90).nextUp, 89.999_999_999_999, 89.999_999, 89.999, 89,
     ]
 
-    /// An apparent altitude from the 26-input termination protocol of issue #147, named as the protocol names it.
+    /// An apparent altitude from the 26-input termination protocol, identified by its name.
     struct ProtocolInput: Sendable, CustomTestStringConvertible {
         let name: String
         let altitude: Double
@@ -56,10 +56,8 @@ struct InverseRefractionTests {
         ),
     ]
 
-    /// Regression values, not independent truth: the correction bit patterns that the repaired source returned on
-    /// Apple arm64 for every protocol input with a nonzero correction, recorded in the #147 measured execution
-    /// (`InverseRefraction147/Evidence/current/raw-processes.json.gz`). The ulp-straddle repair left all of them
-    /// unchanged.
+    /// Regression values, not independent truth: the correction bit patterns the engine returns on Apple arm64 for every
+    /// protocol input with a nonzero correction.
     static let goldenCorrections: [(mode: Refraction, values: [String: UInt64])] = [
         (
             .normal,

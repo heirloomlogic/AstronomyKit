@@ -1,5 +1,4 @@
 {
-  "allowancesSHA256": "46eddee496ef2a3e07dc9c563f8da845e5cf6f8fafa009dd79e1ee3b995aeb3f",
   "provenance": {
     "earth-heliocentric": {
       "center": "Sun (10)",
@@ -38641,6 +38640,5 @@
       ],
       "referenceRangeAU": 1.0040002463626307
     }
-  ],
-  "schemaVersion": 1
+  ]
 }

@@ -35,4 +35,4 @@ jobs:
           .build/checkouts/Persnicket/bin/ci-lint-setup
 
       - name: Lint (strict)
-        run: find Sources Tests Tools/Migration/ModelPrototypeRunner -type f -name '*.swift' ! -path '*/Generated/*' -print0 | xargs -0 xcrun swift-format lint --strict --parallel --configuration .swift-format
+        run: find Sources Tests -type f -name '*.swift' -print0 | xargs -0 xcrun swift-format lint --strict --parallel --configuration .swift-format

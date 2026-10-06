@@ -5,8 +5,8 @@
     Upstream commit: 826e26ff3a6dc03ee46658b1138fef582d96c5d9 (2025-01-27)
 
     Local patches not in upstream:
-      - Full VSOP87B series and 77-term IAU2000B; coefficient tables are
-        generated offline into generated/ from pinned upstream source data.
+      - Full VSOP87B series and 77-term IAU2000B; the coefficient tables are
+        checked in under generated/.
       - Bounded thread-local caching of pure VSOP series at exact TT keys;
         caller time metadata and mutable engine configuration are never cached.
       - Bounded thread-local caching of IAU2000B nutation angles and rates at

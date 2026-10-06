@@ -122,21 +122,6 @@ class JupiterMoonToleranceDomainTests(unittest.TestCase):
         )
 
 
-class LunarReferenceConventionTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.builder = load_builder()
-
-    def test_tolerances_and_comparison_scales_come_from_pinned_harness(self):
-        conventions = self.builder.lunar_reference_conventions()
-
-        self.assertEqual(90.0, conventions["phaseToleranceSeconds"])
-        self.assertEqual("terrestrialTimeDerivedFromUT", conventions["phaseComparisonScale"])
-        self.assertEqual(120.0, conventions["eclipseToleranceSeconds"])
-        self.assertEqual("universalTime", conventions["eclipseComparisonScale"])
-        self.assertEqual("Astronomy_DeltaT_EspenakMeeus", conventions["deltaTModel"])
-
-
 class RiseSetFixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -155,59 +140,45 @@ class RiseSetFixtureTests(unittest.TestCase):
         self.assertEqual({"1750", "2050"}, {min(row["utc"][:4] for row in rows), max(row["utc"][:4] for row in rows)})
         self.assertEqual({70.8}, {row["timeToleranceSeconds"] for row in rows})
 
-    def test_tolerance_and_time_scale_come_from_pinned_harness(self):
-        conventions = self.builder.rise_set_conventions()
-
-        self.assertEqual(70.8, conventions["timeToleranceSeconds"])
-        self.assertEqual("terrestrialTimeDerivedFromUT", conventions["comparisonScale"])
-        self.assertEqual("Astronomy_DeltaT_EspenakMeeus", conventions["deltaTModel"])
-        self.assertEqual("earlierOfRiseAndSetByTerrestrialTime", conventions["eventSelection"])
-
     def test_malformed_and_dropped_sequence_rows_are_rejected(self):
-        conventions = {"timeToleranceSeconds": 70.8}
-        with mock.patch.object(self.builder, "rise_set_conventions", return_value=conventions):
-            with mock.patch.object(self.builder, "source_text", return_value="Sun 0 0 invalid r\n"):
-                with self.assertRaisesRegex(RuntimeError, "line 1"):
-                    self.builder.parse_rise_set()
-            with mock.patch.object(
-                self.builder,
-                "source_text",
-                return_value="Sun 181 0 2022-01-01T06:00Z r\n",
-            ):
-                with self.assertRaisesRegex(RuntimeError, "coordinates at line 1"):
-                    self.builder.parse_rise_set()
-            with mock.patch.object(
-                self.builder,
-                "source_text",
-                return_value=(
-                    "Sun 0 0 2022-01-01T06:00Z r\n"
-                    "Sun 0 0 2022-01-02T06:00Z r\n"
-                ),
-            ):
-                with self.assertRaisesRegex(RuntimeError, "alternate"):
-                    self.builder.parse_rise_set()
-            with mock.patch.object(
-                self.builder,
-                "source_text",
-                return_value=(
-                    "Sun 0 0 2022-01-01T06:00Z r\n"
-                    "Sun 0 0 2022-01-01T18:00Z s\n"
-                ),
-            ):
-                with self.assertRaisesRegex(RuntimeError, "expected 5909"):
-                    self.builder.parse_rise_set()
+        with mock.patch.object(self.builder, "source_text", return_value="Sun 0 0 invalid r\n"):
+            with self.assertRaisesRegex(RuntimeError, "line 1"):
+                self.builder.parse_rise_set()
+        with mock.patch.object(
+            self.builder,
+            "source_text",
+            return_value="Sun 181 0 2022-01-01T06:00Z r\n",
+        ):
+            with self.assertRaisesRegex(RuntimeError, "coordinates at line 1"):
+                self.builder.parse_rise_set()
+        with mock.patch.object(
+            self.builder,
+            "source_text",
+            return_value=(
+                "Sun 0 0 2022-01-01T06:00Z r\n"
+                "Sun 0 0 2022-01-02T06:00Z r\n"
+            ),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "alternate"):
+                self.builder.parse_rise_set()
+        with mock.patch.object(
+            self.builder,
+            "source_text",
+            return_value=(
+                "Sun 0 0 2022-01-01T06:00Z r\n"
+                "Sun 0 0 2022-01-01T18:00Z s\n"
+            ),
+        ):
+            with self.assertRaisesRegex(RuntimeError, "expected 5909"):
+                self.builder.parse_rise_set()
 
     def test_nonchronological_rows_are_rejected(self):
-        conventions = {"timeToleranceSeconds": 70.8}
-        with (
-            mock.patch.object(self.builder, "rise_set_conventions", return_value=conventions),
-            mock.patch.object(
-                self.builder,
-                "source_text",
-                return_value=(
-                    "Sun 0 0 2022-01-02T18:00Z s\n"
-                    "Sun 0 0 2022-01-01T06:00Z r\n"
-                ),
+        with mock.patch.object(
+            self.builder,
+            "source_text",
+            return_value=(
+                "Sun 0 0 2022-01-02T18:00Z s\n"
+                "Sun 0 0 2022-01-01T06:00Z r\n"
             ),
         ):
             with self.assertRaisesRegex(RuntimeError, "chronological"):

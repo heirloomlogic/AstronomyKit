@@ -56,7 +56,7 @@ struct LunarNodeTests {
 
     /// The node search steps 10 days at a time until the Moon's latitude
     /// changes sign. A non-finite start gives a NaN latitude that never does,
-    /// and from 2^57 days the step no longer changes the time. Since #62 all of
+    /// and from 2^57 days the step no longer changes the time. All of
     /// these fail the accepted time range at the first latitude evaluation.
     @Test(
         "Search from a start time it cannot step from throws badTime",

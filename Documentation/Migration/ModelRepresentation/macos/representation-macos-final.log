@@ -1,9 +1,0 @@
-swift-driver version: 1.168.6 swift-driver version: 1.168.6 {
-  "failures": [],
-  "passed": true,
-  "summary": {
-    "cleanReleaseSeconds": 5.700390124984551,
-    "incrementalReleaseSeconds": 1.87772920797579,
-    "strippedExecutableBytes": 14342224
-  }
-}

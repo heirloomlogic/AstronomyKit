@@ -4,7 +4,7 @@ What a downstream certificate can rely on when it records a time's scales and De
 
 ## Overview
 
-This article bounds how far `CelestialBody.sun.horizon(at:from:refraction: .none).altitude` can be from the value the same model would give in exact real arithmetic, for a time inside the polynomial coverage of the Earth ephemeris (TT from 1900-01-01 through the end of 2100). Every number comes from one of two places. Derived bounds are computed in exact rational arithmetic from the shipped sources by `Scripts/numerics/solar-altitude/bounds.py` and recorded in `bounds.json`; the derivations are below, and `test_bounds.py` checks that every figure quoted here is current and rounded away from the exact value, never toward it. Measured values come from `measure.py`, which builds the vendored engine twice from the same source, as shipped in binary64 and rewritten to binary128 with every decimal constant taken exactly, and compares the two over a grid. A measurement is evidence about the sampled inputs on the platform that ran it, not a bound. Where neither exists, the article says so.
+This article bounds how far `CelestialBody.sun.horizon(at:from:refraction: .none).altitude` can be from the value the same model would give in exact real arithmetic, for a time inside the polynomial coverage of the Earth ephemeris (TT from 1900-01-01 through the end of 2100). Every number comes from one of two places. Bounds were derived in exact rational arithmetic from the shipped sources; the derivations are below, and every figure quoted here is rounded away from the exact value, never toward it. Measured values were obtained by building the vendored engine twice from the same source, as shipped in binary64 and rewritten to binary128 with every decimal constant taken exactly, and comparing the two over a grid. A measurement is evidence about the sampled inputs on the platform that ran it, not a bound. Where neither exists, the article says so.
 
 It does not bound the distance between the model and the sky. The model is VSOP87B for the Earth, IAU 2006 precession as expressed in the engine, IAU2000B nutation, the Espenak-Meeus or JPL Horizons Delta T polynomials, and a light-time correction with a first-order aberration approximation. `JPLValidationTests` and `AuditValidationTests` compare that model with JPL Horizons at about one arcminute. The numbers here are between ten thousand and a billion times smaller than that.
 
@@ -70,9 +70,9 @@ Inside the coverage the Earth comes from degree-12 Chebyshev polynomials on eigh
 
 - Speed `speedAUPerDay` ≤ 0.018708 AU/day. Each velocity component is bounded by `Σ k² |a_k| / (width/2)`, since `|T_k'(x)| ≤ k²` on `[-1, 1]`.
 - Radius `radiusAU` ≥ 0.97383 AU and `radiusMaxAU` ≤ 1.0262 AU. On a one-day grid that includes both ends of every segment the exact radius is at least `radiusGridAU` = 0.98319 AU; every instant is within half a day of a grid point of its own segment, so the grid bounds widen by half a day at the speed bound.
-- Join discontinuity `joinMaxAU` ≤ 2.20e-13 AU per boundary, the length of the vector difference between the end value of one segment and the start value of the next (`Σ a_k` and `Σ (-1)^k a_k` per axis), summed over all boundaries 2.85e-10 AU (`joinSumAU`), which agrees with the issue's `< 1e-9` figure. Seen from the Earth, one jump turns the Sun's direction by at most `asin(joinMaxAU / radiusAU)` = `joinDegrees` = 1.29e-11°. The shipped function is discontinuous there; an enclosure of a time interval that crosses a boundary must widen by this much.
+- Join discontinuity `joinMaxAU` ≤ 2.20e-13 AU per boundary, the length of the vector difference between the end value of one segment and the start value of the next (`Σ a_k` and `Σ (-1)^k a_k` per axis), summed over all boundaries 2.85e-10 AU (`joinSumAU`), below 1e-9 AU. Seen from the Earth, one jump turns the Sun's direction by at most `asin(joinMaxAU / radiusAU)` = `joinDegrees` = 1.29e-11°. The shipped function is discontinuous there; an enclosure of a time interval that crosses a boundary must widen by this much.
 
-The rounding of the polynomial evaluation is measured, not derived: the largest difference between the binary64 and binary128 Earth position over the coverage grid was 3.22e-16 AU per axis, which is at most 3.3e-14° of direction. The fit error between the polynomials and the compensated full series was measured during qualification at 53 samples per segment, at most 0.41 of the `max(1e-12, |reference| × 1e-12)` AU budget (see `Scripts/performance/polynomial/README.md`); there is no bound between samples, and the shipped model is the polynomial, not the series.
+The rounding of the polynomial evaluation is measured, not derived: the largest difference between the binary64 and binary128 Earth position over the coverage grid was 3.22e-16 AU per axis, which is at most 3.3e-14° of direction. The fit error between the polynomials and the compensated full series was measured during qualification at 53 samples per segment, at most 0.41 of the `max(1e-12, |reference| × 1e-12)` AU budget; there is no bound between samples, and the shipped model is the polynomial, not the series.
 
 ## Light-time termination
 
@@ -82,7 +82,7 @@ The measurement shows this term directly. The step `|τ_{n+1} - τ_n|` is about 
 
 ## Frame rotation and the horizon transform
 
-Precession and nutation matrices, the observer vector, the sidereal time, and `Astronomy_Horizon` are products, sums, and libm calls with no useful closed-form bound in this article. They are measured. Over the coverage grid (194,733 epochs at 0.377-day spacing, six observers from the equator to 89.9° latitude and from sea level to 1000 m, 1,168,398 samples; `measure.py --step 0.377`, Apple clang `-O2` and Apple libm, arm64; the same grid against a `-O0` build gave the same 1.006e-9°):
+Precession and nutation matrices, the observer vector, the sidereal time, and `Astronomy_Horizon` are products, sums, and libm calls with no useful closed-form bound in this article. They are measured. Over the coverage grid (194,733 epochs at 0.377-day spacing, six observers from the equator to 89.9° latitude and from sea level to 1000 m, 1,168,398 samples; Apple clang `-O2` and Apple libm, arm64; the same grid against a `-O0` build gave the same 1.006e-9°):
 
 | Quantity | Largest difference, binary64 against binary128 |
 |---|---|
@@ -103,12 +103,12 @@ The binary64 build is not bit-identical across optimization levels: the equator 
 
 ## libm
 
-The path calls `sin`, `cos`, `atan2`, `hypot`, `sqrt`, and `fmod`. `sqrt` is correctly rounded and `fmod` is exact under IEEE 754 and C. For the others, this investigation found no proven bound for any platform this package builds on. Two documented sources describe them:
+The path calls `sin`, `cos`, `atan2`, `hypot`, `sqrt`, and `fmod`. `sqrt` is correctly rounded and `fmod` is exact under IEEE 754 and C. For the others, no proven bound is known for any platform this package builds on. Two documented sources describe them:
 
 - The GNU C Library manual (§19.7, "Known Maximum Errors in Math Functions") states a goal, not a bound: each function behaves "as if it computes an infinite-precision result that is within a few ulp" of the mathematical value, and "the math testsuite only flags results larger than 9ulp" as errors.
 - Gladman, Innocente, Mather, Ozaki, and Zimmermann, *Accuracy of Mathematical Functions in Single, Double, Double Extended, and Quadruple Precision* (August 2026 version; the glibc manual cites it), report the largest known double-precision errors found by a black-box search, which the authors state are lower bounds on the largest error. For GNU libc 2.44: `sin` 0.516, `cos` 0.516, `atan2` 0.524, `hypot` 0.792, `sqrt` 0.500 ulp. For the Apple Math Library 26.5.2 (Darwin 25.5.0): `sin` 0.944, `cos` 0.948, `atan2` 0.747, `hypot` 1.21, `sqrt` 0.500 ulp. Apple publishes no accuracy specification for its libm.
 
-The measurement above includes whatever libm the binary64 build linked, so it is evidence about that library on that machine. The CI check (`measure.py --check`, Linux, glibc) repeats a reduced grid on every pull request and fails above the ceilings in `bounds.json`.
+The measurement above includes whatever libm the binary64 build linked, so it is evidence about that library on that machine.
 
 ## The budget
 
@@ -142,15 +142,6 @@ A certificate can add the derived terms that apply to how its time was construct
 
 `Sun.altitudeObservation(at:from:deltaTModel:)` takes a civil `Date`, `altitudeObservation(terrestrialTime:from:deltaTModel:)` a TT, and `altitudeObservation(universalTime:from:deltaTModel:)` a UT; the Delta T model is a required argument. Each builds the ``AstroTime`` with the matching initializer, evaluates `horizon(refraction: .none)`, and returns a ``SolarAltitudeObservation``: the time with both scales and its model, the observer, the altitude, and an ``SolarAltitudeObservation/ErrorBound`` that sums the derived terms for that construction. A `Date` from 1961 on adds `civilToTTDegrees` and `ttInverseDegrees`; a `Date` before 1961 adds `civilToUTDegrees` and `forwardTTDegrees`; a TT adds `ttInverseDegrees`; a UT adds `forwardTTDegrees`; every observation adds `lightTimeDegrees` and `eraDegrees`. The total rounds each addition up, so it is never below the exact sum. The measured line is not in the bound, and the type's documentation says so.
 
-The constants live in `Sources/AstronomyKit/SolarAltitudeBounds.swift`, which `bounds.py --write` generates from the same exact values as `bounds.json`, each rounded to binary64 away from zero, together with the engine's inverse tolerance expression as it is written in `astronomy.c`, and `bounds.py --check` verifies. No number in the Swift API is typed by hand, and the forward TT the gap check compares against comes from the engine through `AstroTime(ut:deltaTModel:)`.
+The constants live in `Sources/AstronomyKit/SolarAltitudeBounds.swift`, each the exact derived value rounded to binary64 away from zero, together with the engine's inverse tolerance expression as it is written in `astronomy.c`. The Swift API takes every number from that file, and the forward TT the gap check compares against comes from the engine through `AstroTime(ut:deltaTModel:)`.
 
 The entry points throw ``SolarAltitudeObservation/Unsupported`` for the cases listed above: a TT outside the coverage, including the first `backdateMaxDays` of it, where the loop backdates into the series; a TT inside a Delta T gap, detected because the stored pair's residual `|tt - fl(ut + fl(ΔT(ut) / 86400))|` exceeds the inverse tolerance, which a converged inverse never does and a bisected one always does; a civil date within `civilCalendarDays` of a UTC segment start; an observer more than 10 km from the ellipsoid. A non-finite time throws `badTime` and an invalid observer `invalidParameter`, as `horizon` does. No entry point takes an ``AstroTime``: a time does not record which initializer built it, and the terms depend on that. A time the engine derived, such as a search result, is rebuilt exactly from its `universalTime` and `deltaTModel`. For an enclosure over an interval, ``SolarAltitudeObservation/joinDiscontinuityDegrees`` is the step per polynomial boundary and ``SolarAltitudeObservation/polynomialSegmentDays`` the boundary spacing from the start of ``SolarAltitudeObservation/polynomialCoverage``.
-
-## Reproducing
-
-```sh
-python3 Scripts/numerics/solar-altitude/bounds.py            # derived bounds, exact arithmetic
-python3 Scripts/numerics/solar-altitude/measure.py --step 0.377   # the coverage grid above (needs libquadmath)
-python3 Scripts/numerics/solar-altitude/measure.py --outside --step 7.3
-python3 Scripts/numerics/solar-altitude/measure.py --step 0.377 --optimization=-O0
-```

@@ -37,9 +37,9 @@ Run the whole suite with `swift test`. Suites run in parallel in one process, an
 
 `Fuzzing/` holds a libFuzzer harness for the vendored C library, outside the Swift package. If you change how the Swift layer passes numbers into the C code, or change the C code itself, replay the seed corpus under AddressSanitizer and UndefinedBehaviorSanitizer with `sh Fuzzing/build.sh replay && .build/fuzz/replay-bridge Fuzzing/corpus`. That works with Apple clang; fuzzing for new inputs needs clang from LLVM. The Fuzz workflow replays the corpus and fuzzes on Linux for pull requests that touch the C library. See [Fuzzing/README.md](Fuzzing/README.md).
 
-### Updating the vendored C library
+### Changing the vendored C library
 
-AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, the analytic ecliptic state, guards against non-finite or extreme inputs, checks that reject non-finite results, an accepted time range for the ephemeris models, and a Delta T function captured in each time value. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
+AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with local patches: thread safety, the full VSOP87B and IAU2000B tables, compensated summation, polynomial evaluation, the analytic ecliptic state, guards against non-finite or extreme inputs, checks that reject non-finite results, an accepted time range for the ephemeris models, and a Delta T function captured in each time value. The project does not sync with upstream Astronomy Engine. When you change the C library, keep the patches listed in [MAINTAINING.md](MAINTAINING.md) intact and the accuracy tests passing.
 
 ## Code of Conduct
 

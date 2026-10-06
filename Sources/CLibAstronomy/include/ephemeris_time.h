@@ -2,7 +2,7 @@
 #define ASTRONOMY_EPHEMERIS_TIME_H
 
 /* Official ERFA source notices are retained in each source file.
-   Full license: Documentation/Migration/LunarBundledSources/ERFA-LICENSE. */
+   Full license: THIRD_PARTY_NOTICES. */
 
 #ifdef __cplusplus
 extern "C" {

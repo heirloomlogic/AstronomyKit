@@ -28,8 +28,8 @@ struct PlutoRangeTests {
         }
     }
 
-    /// A NaN TT used to pass both table-range comparisons and reach a NaN to
-    /// `int` conversion (#58). `AstroTime(ut: -.infinity)` also has a NaN TT,
+    /// A NaN TT passes both table-range comparisons and reaches a NaN to
+    /// `int` conversion without the guard (#58). `AstroTime(ut: -.infinity)` also has a NaN TT,
     /// because Delta T turns an infinite UT into NaN.
     @Test(
         "Every Pluto position path throws badTime for a non-finite TT",

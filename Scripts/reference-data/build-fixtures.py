@@ -22,8 +22,6 @@ UPSTREAM_REVISION = "865d3da7d8112bbc7911238052c6af4aaf877181"
 UPSTREAM_BASE = f"https://raw.githubusercontent.com/cosinekitty/astronomy/{UPSTREAM_REVISION}"
 
 UPSTREAM_SOURCES = {
-    "astronomy-engine.c": ("source/c/astronomy.c", "3ef243a3ee4c10fc05a5cb460d753e4e17eb2f57dad7892690e12599088717ac"),
-    "astronomy-engine-ctest.c": ("generate/ctest.c", "f498d483e5d2b488b5b40e492f6ede838ff69a0110aac9e03c80a8bbb5b6d1a4"),
     "parse-moon-phases.js": ("generate/moonphase/parse_moon_phases.js", "19d0658653ad7a289b8f8c51fced6ad76e056f7c54133a3ae660d3333d16e263"),
     "normalize-eclipses.py": ("generate/eclipse/norm.py", "27aad287e710b6e55c13cb2ccbc6da588bcec718ba9b6fddacb47bd8896c3f6f"),
     "readme-lunar-eclipse.txt": ("generate/eclipse/readme_lunar_eclipse.txt", "9fed27ab68cf32b1d3b28f6910dc0f3645947ce75f350da33b3e419b776df170"),
@@ -62,6 +60,10 @@ HORIZONS_VECTOR_QUERIES = {
 JUPITER_MOON_RELATIVE_TOLERANCE = 9e-4
 JUPITER_MOON_TOLERANCE_JD_TDB_RANGE = (2_426_545.0, 2_476_545.0)
 RISE_SET_ROW_COUNT = 5_909
+# Limits from Astronomy Engine's C test harness, generate/ctest.c at UPSTREAM_REVISION (865d3da7): MoonPhase 90 s, LunarEclipseTest 2 min, RiseSet 1.18 min.
+LUNAR_PHASE_TOLERANCE_SECONDS = 90.0
+LUNAR_ECLIPSE_TOLERANCE_SECONDS = 120.0
+RISE_SET_TOLERANCE_SECONDS = 70.8
 
 
 def sha256(data: bytes) -> str:
@@ -205,76 +207,7 @@ def selected_lines(name: str, predicate) -> list[str]:
     return [line for line in source_text(name).splitlines() if predicate(line)]
 
 
-def lunar_reference_conventions() -> dict[str, object]:
-    harness = source_text("astronomy-engine-ctest.c")
-    engine = source_text("astronomy-engine.c")
-    phase = re.search(
-        r"static int MoonPhase\(void\)\s*\{(?P<body>.*?)static int MoonReversePhase",
-        harness,
-        re.DOTALL,
-    )
-    eclipse = re.search(
-        r"static int LunarEclipseTest\(void\)\s*\{(?P<body>.*?)/\*-+\*/",
-        harness,
-        re.DOTALL,
-    )
-    if phase is None or eclipse is None:
-        raise RuntimeError("pinned lunar validation functions are missing")
-    phase_limit = re.search(r"threshold_seconds = ([0-9.]+)", phase["body"])
-    eclipse_limit = re.search(r"diff_limit = ([0-9.]+)", eclipse["body"])
-    if phase_limit is None or eclipse_limit is None:
-        raise RuntimeError("pinned lunar validation tolerances are missing")
-    if "mq.time.tt - expected_time.tt" not in phase["body"]:
-        raise RuntimeError("pinned lunar phase comparison no longer uses TT")
-    if "eclipse.peak.ut - peak_time.ut" not in eclipse["body"]:
-        raise RuntimeError("pinned lunar eclipse comparison no longer uses UT")
-    delta_t_model = "Astronomy_DeltaT_EspenakMeeus"
-    if f"DeltaTFunc = {delta_t_model};" not in engine:
-        raise RuntimeError("pinned default Delta T model changed")
-    return {
-        "phaseToleranceSeconds": float(phase_limit.group(1)),
-        "phaseComparisonScale": "terrestrialTimeDerivedFromUT",
-        "eclipseToleranceSeconds": 60 * float(eclipse_limit.group(1)),
-        "eclipseComparisonScale": "universalTime",
-        "deltaTModel": delta_t_model,
-    }
-
-
-def rise_set_conventions() -> dict[str, object]:
-    harness = source_text("astronomy-engine-ctest.c")
-    engine = source_text("astronomy-engine.c")
-    rise_set = re.search(
-        r"static int RiseSet\(void\)\s*\{(?P<body>.*?)/\*-+\*/",
-        harness,
-        re.DOTALL,
-    )
-    if rise_set is None:
-        raise RuntimeError("pinned rise/set validation function is missing")
-    body = rise_set["body"]
-    limit = re.search(r"error_minutes > ([0-9.]+)", body)
-    if limit is None:
-        raise RuntimeError("pinned rise/set tolerance is missing")
-    required = {
-        "correct_date = Astronomy_MakeTime": "UT calendar construction",
-        "a_evt.time.tt - correct_date.tt": "TT comparison",
-        "r_evt.time.tt < s_evt.time.tt": "chronological event selection",
-    }
-    for expression, meaning in required.items():
-        if expression not in body:
-            raise RuntimeError(f"pinned rise/set harness no longer preserves {meaning}")
-    delta_t_model = "Astronomy_DeltaT_EspenakMeeus"
-    if f"DeltaTFunc = {delta_t_model};" not in engine:
-        raise RuntimeError("pinned default Delta T model changed")
-    return {
-        "timeToleranceSeconds": 60 * float(limit.group(1)),
-        "comparisonScale": "terrestrialTimeDerivedFromUT",
-        "deltaTModel": delta_t_model,
-        "eventSelection": "earlierOfRiseAndSetByTerrestrialTime",
-    }
-
-
 def parse_rise_set() -> list[dict[str, object]]:
-    conventions = rise_set_conventions()
     pattern = re.compile(
         r"^(Sun|Moon)\s+([+-]?\d+(?:\.\d+)?)\s+([+-]?\d+(?:\.\d+)?)\s+"
         r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z)\s+([rs])$"
@@ -317,7 +250,7 @@ def parse_rise_set() -> list[dict[str, object]]:
                 "latitudeDegrees": latitude,
                 "utc": timestamp,
                 "direction": "rise" if direction == "r" else "set",
-                "timeToleranceSeconds": conventions["timeToleranceSeconds"],
+                "timeToleranceSeconds": RISE_SET_TOLERANCE_SECONDS,
             }
         )
         previous_time = event_time
@@ -330,7 +263,6 @@ def parse_rise_set() -> list[dict[str, object]]:
 
 
 def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
-    lunar_conventions = lunar_reference_conventions()
     seasons = []
     for line in selected_lines("seasons.txt", lambda item: item[:4] in {"1800", "2000", "2100"} and ("Equinox" in item or "Solstice" in item)):
         timestamp, kind = line.split()
@@ -345,7 +277,7 @@ def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
         quarter_text, timestamp = line.split()
         year, quarter = int(timestamp[:4]), int(quarter_text)
         if year in {1800, 2000, 2100}:
-            by_year_and_quarter.setdefault((year, quarter), {"phase": phase_names[quarter], "sourceTime": timestamp, "toleranceSeconds": lunar_conventions["phaseToleranceSeconds"]})
+            by_year_and_quarter.setdefault((year, quarter), {"phase": phase_names[quarter], "sourceTime": timestamp, "toleranceSeconds": LUNAR_PHASE_TOLERANCE_SECONDS})
     phases.extend(by_year_and_quarter[key] for key in sorted(by_year_and_quarter))
 
     nodes = []
@@ -387,7 +319,6 @@ def parse_upstream_events() -> dict[str, list[dict[str, object]]]:
 
 
 def parse_eclipses() -> dict[str, list[dict[str, object]]]:
-    lunar_conventions = lunar_reference_conventions()
     month = {name: index + 1 for index, name in enumerate("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split())}
     lunar_pattern = re.compile(r"^\s{2}(\d{4})\s+(\w{3})\s+(\d{2})\s+(\d{2}):(\d{2})\s+\S+\s+\d+\s+\S+\s+\S+\s+\S+\s+(\d+m|-)\s+(\d+m|-)")
     lunar = []
@@ -399,7 +330,7 @@ def parse_eclipses() -> dict[str, list[dict[str, object]]]:
             partial = 0 if match.group(6) == "-" else int(match.group(6)[:-1])
             total = 0 if match.group(7) == "-" else int(match.group(7)[:-1])
             if not lunar or int(match.group(1)) != int(lunar[-1]["universalTime"][:4]):
-                lunar.append({"universalTime": f"{match.group(1)}-{month[match.group(2)]:02d}-{int(match.group(3)):02d}T{int(match.group(4)):02d}:{int(match.group(5)):02d}Z", "partialSemiDurationMinutes": partial, "totalSemiDurationMinutes": total, "toleranceSeconds": lunar_conventions["eclipseToleranceSeconds"], "durationToleranceMinutes": lunar_conventions["eclipseToleranceSeconds"] / 60})
+                lunar.append({"universalTime": f"{match.group(1)}-{month[match.group(2)]:02d}-{int(match.group(3)):02d}T{int(match.group(4)):02d}:{int(match.group(5)):02d}Z", "partialSemiDurationMinutes": partial, "totalSemiDurationMinutes": total, "toleranceSeconds": LUNAR_ECLIPSE_TOLERANCE_SECONDS, "durationToleranceMinutes": LUNAR_ECLIPSE_TOLERANCE_SECONDS / 60})
 
     solar_pattern = re.compile(r'^<a\s+href="[^"]+">\d+</a>\s+(\d{4})\s+(\w{3})\s+(\d{2})\s+(\d{2}):(\d{2}):(\d{2})\s+-?\d+\s+\S+\s+<a\s+href="[^"]+">\d+</a>\s+([PATH])\S?\s+\S+\s+\S+\s+(\d+\.\d[NS])\s+(\d+\.\d[EW])')
     solar = []
@@ -558,10 +489,8 @@ def main() -> int:
         refresh_sources()
     sources = verify_sources()
     archive_data = encoded(build_archive())
-    manifest = {"archive": str((OUTPUT_DIR / "reference-fixtures.json").relative_to(ROOT)), "archiveSHA256": sha256(archive_data), "generator": str(Path(__file__).relative_to(ROOT)), "sources": sources, "upstreamRevision": UPSTREAM_REVISION}
     write_or_check(OUTPUT_DIR / "reference-fixtures.json", archive_data, args.check)
-    write_or_check(OUTPUT_DIR / "manifest.json", encoded(manifest), args.check)
-    print(f"verified {len(sources)} source artifacts and archive {manifest['archiveSHA256']}")
+    print(f"verified {len(sources)} source artifacts and archive {sha256(archive_data)}")
     return 0
 
 

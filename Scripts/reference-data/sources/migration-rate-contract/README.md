@@ -1,3 +1,0 @@
-# Historical Swift rate comments
-
-These three `.archive` files preserve the original migration-comparison Swift inputs after public rate documentation changes. Their SHA-256 values remain those in `Tools/Migration/Comparison/Artifacts/reference/metadata.json`; `source_archive.migration_source_hashes` validates their bytes and requires the live Swift files to match after removing API-comment lines. Any executable-code difference fails that check. Historical performance replay also materializes these original Swift inputs in its temporary tree. The comparison and performance archives remain unchanged. Current qualification binds the live Swift sources in the separate v2 public API assessment.

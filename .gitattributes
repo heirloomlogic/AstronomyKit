@@ -1,9 +1,6 @@
 Scripts/reference-data/sources/** -whitespace
 
 # Preserve byte-locked upstream source and attribution whitespace.
-Documentation/Migration/LunarBundledSources/moon-de440-source-comments.txt -whitespace
-Documentation/Migration/SunPilotRSSEvidence/** -whitespace
-Scripts/ephemeris/pluto-attribution/* -whitespace
 Sources/CLibAstronomy/EphemerisTime/dtdb.c -whitespace
 Sources/CLibAstronomy/EphemerisTime/erfa.h -whitespace
 Sources/CLibAstronomy/EphemerisTime/erfam.h -whitespace
@@ -15,5 +12,5 @@ Sources/CLibAstronomy/EphemerisTime/pmat06.c -whitespace
 Sources/CLibAstronomy/EphemerisTime/rx.c -whitespace
 Sources/CLibAstronomy/EphemerisTime/rz.c -whitespace
 
-# Generated coefficients are reproduced and verified by their generators.
+# Checked-in generated coefficient tables.
 Sources/CLibAstronomy/EphemerisData/*.inc linguist-generated=true

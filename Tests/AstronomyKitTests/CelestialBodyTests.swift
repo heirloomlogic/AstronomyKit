@@ -282,7 +282,7 @@ struct CelestialBodyTests {
             #expect(CelestialBody.allCases.count == 17)
         }
 
-        @Test("The former internal star slot is not a valid case")
+        @Test("The internal star slot is not a valid case")
         func starSlotRemoved() {
             #expect(CelestialBody(rawValue: 101) == nil)
         }
