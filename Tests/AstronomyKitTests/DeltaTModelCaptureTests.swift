@@ -104,8 +104,7 @@ struct DeltaTModelCaptureTests {
     /// is what `Codable` records, rebuilds a different TT.
     @Test("A recorded pair rebuilds a time bit for bit, including a TT in a Delta T gap")
     func pairRebuildsTime() throws {
-        let jump = try #require(EngineTimeConversionTests.jumps.first { $0.model == .espenakMeeus && $0.isGap })
-        let gapTT = jump.beforeTT + (jump.afterTT - jump.beforeTT) / 2
+        let gapTT = try #require(EngineTimeTests.gapTimes(.espenakMeeus).first).tt
         let gapTime = AstroTime(tt: gapTT, deltaTModel: .espenakMeeus)
         let times = [
             gapTime,

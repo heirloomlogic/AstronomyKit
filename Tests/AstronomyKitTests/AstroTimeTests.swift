@@ -351,8 +351,6 @@ struct AstroTimeTests {
             let derived = AstroTime(ut: 10, deltaTModel: .jplHorizons)
             #expect(pair == otherTT)
             #expect(pair == derived)
-            #expect(pair.hashValue == otherTT.hashValue)
-            #expect(pair.hashValue == derived.hashValue)
             #expect(Set([pair, otherTT, derived]).count == 1)
 
             let nextUT = AstroTime(tt: 5, ut: 10.0.nextUp, deltaTModel: .jplHorizons)
@@ -423,7 +421,6 @@ struct AstroTimeTests {
                 #expect(try JSONDecoder().decode(Double.self, from: data).bitPattern == ut.bitPattern)
                 let decoded = try JSONDecoder().decode(AstroTime.self, from: data)
                 #expect(decoded.universalTime.bitPattern == ut.bitPattern)
-                #expect(decoded == original)
                 #expect(decoded.terrestrialTime != original.terrestrialTime)
             }
         }

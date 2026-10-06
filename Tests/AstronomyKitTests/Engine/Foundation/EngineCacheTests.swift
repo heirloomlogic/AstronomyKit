@@ -47,11 +47,11 @@ struct EngineBoundedCacheTests {
 
     struct Failure: Error, Equatable {}
 
-    /// Fills `cache` with `capacity` keys it has not seen and checks that it
-    /// then holds exactly those, which it does only when its entries and its
-    /// eviction slots agree.
-    static func expectConsistent(_ cache: Engine.BoundedCache<Int, Int>, freshKeys: Range<Int>) {
-        let keys = freshKeys.prefix(cache.capacity)
+    /// Fills `cache` with `capacity` keys from `firstKey` on, which it has not
+    /// seen, and checks that it then holds exactly those, which it does only
+    /// when its entries and its eviction slots agree.
+    static func expectConsistent(_ cache: Engine.BoundedCache<Int, Int>, firstKey: Int) {
+        let keys = firstKey..<firstKey + cache.capacity
         for key in keys {
             _ = cache.value(for: key) { key }
         }
@@ -204,7 +204,7 @@ struct EngineBoundedCacheTests {
         #expect(cache.count <= 4)
         let statistics = cache.statistics
         #expect(statistics.hits + statistics.misses == lookups)
-        Self.expectConsistent(cache, freshKeys: 10_000..<10_004)
+        Self.expectConsistent(cache, firstKey: 10_000)
     }
 
     @Test("A reset from inside a computation empties the cache; the computed value is stored after it")
@@ -220,7 +220,7 @@ struct EngineBoundedCacheTests {
         #expect(cache.count == 1)
         #expect(cache.value(for: 2) { -1 } == 20)
         #expect(cache.value(for: 1) { 11 } == 11)
-        Self.expectConsistent(cache, freshKeys: 100..<102)
+        Self.expectConsistent(cache, firstKey: 100)
     }
 
     /// The computation waits on another thread while this one resets the
@@ -286,8 +286,8 @@ struct EngineBoundedCacheTests {
         #expect(outer.count <= 4)
         let statistics = outer.statistics
         #expect(statistics.hits + statistics.misses == lookups - lookups / 16)
-        Self.expectConsistent(inner, freshKeys: 1_000..<1_008)
-        Self.expectConsistent(outer, freshKeys: 1_000..<1_004)
+        Self.expectConsistent(inner, firstKey: 1_000)
+        Self.expectConsistent(outer, firstKey: 1_000)
     }
 }
 
