@@ -53,13 +53,15 @@ struct EngineContractTests {
 
     /// The shared registry keeps every cache it holds for the life of the
     /// process, so a cache made anywhere but a `static let` could grow it
-    /// without bound.
-    @Test("Engine caches are created only as static let properties")
+    /// without bound. Any code line outside `EngineCache.swift` that names
+    /// `BoundedCache` must declare a `static let`, which covers a call, an
+    /// `.init` call, an inferred type annotation and a type alias.
+    @Test("Engine code names BoundedCache only in static let declarations")
     func cachesAreStatic() throws {
         let files = try Self.swiftFiles(under: Self.sources.appendingPathComponent("Engine"))
-        let creation = #/BoundedCache\s*(<.*>)?\s*\(/#
+        let named = #/\bBoundedCache\b/#.wordBoundaryKind(.simple)
         for file in files where file.lastPathComponent != "EngineCache.swift" {
-            for line in try Self.codeLines(of: file) where line.text.firstMatch(of: creation) != nil {
+            for line in try Self.codeLines(of: file) where line.text.firstMatch(of: named) != nil {
                 #expect(line.text.contains("static let"), "\(file.lastPathComponent):\(line.number)")
             }
         }

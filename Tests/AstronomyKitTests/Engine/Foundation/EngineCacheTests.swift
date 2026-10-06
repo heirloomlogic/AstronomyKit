@@ -226,7 +226,7 @@ struct EngineBoundedCacheTests {
     /// The computation waits on another thread while this one resets the
     /// registry, so the reset lands between the miss and the store.
     @Test("A reset while another thread computes does not change its result")
-    func resetDuringComputation() {
+    func resetDuringComputation() throws {
         let registry = Engine.CacheRegistry()
         let cache = Engine.BoundedCache<Int, Int>(capacity: 2, registry: registry)
         _ = cache.value(for: 1) { 10 }
@@ -237,17 +237,19 @@ struct EngineBoundedCacheTests {
         DispatchQueue.global().async {
             let found = cache.value(for: 2) { () -> Int in
                 computing.signal()
-                resume.wait()
+                _ = resume.wait(timeout: .now() + 20)
                 return 20
             }
             result.set(found)
             finished.signal()
         }
-        computing.wait()
+        let started = computing.wait(timeout: .now() + 20) == .success
+        try #require(started, "The computation did not start within 20 seconds")
         registry.removeAll()
         #expect(cache.count == 0)
         resume.signal()
-        finished.wait()
+        let completed = finished.wait(timeout: .now() + 20) == .success
+        try #require(completed, "The lookup did not finish within 20 seconds")
 
         #expect(result.value == 20)
         // The entry from before the reset is gone; the one computed across it is stored.
