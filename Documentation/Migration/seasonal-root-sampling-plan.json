@@ -1,0 +1,101 @@
+{
+  "baseRevision": "f64f6920672cc53c39bbc74076eb2f13bf7e1365",
+  "classification": "prospective-bounded-nominal-seasonal-reference-experiment",
+  "controls": [
+    "offline raw response/query/plan hash binding",
+    "wrong time scale and frame rejected",
+    "mean-equinoctial frame substitution detected",
+    "one-minute time shift changes strict classifications",
+    "missing, duplicated, reordered and wrong-year public event selection rejected",
+    "analytic directed-root and non-monotonic interpolation controls",
+    "ERFA rotation algebra, orthogonality, longitude sign",
+    "direct independently queried brackets and halved-grid convergence for every root"
+  ],
+  "eventKinds": [
+    "marchEquinox",
+    "juneSolstice",
+    "septemberEquinox",
+    "decemberSolstice"
+  ],
+  "limitations": [
+    "finite independently sampled roots, no continuous sky/domain certificate",
+    "all nominal residuals and all failed or inconclusive numerical controls retained",
+    "nominal numerical-envelope success does not establish physical apparent-season qualification",
+    "fixed-delay diagnostics cannot replace independent LT+S reference or the strict target",
+    "no evaluator or native event changes, no new standing policy, issue81 remains open"
+  ],
+  "matchedDiagnostic": {
+    "center": "10",
+    "fixedDelayDays": 0.005775518331089121,
+    "frameEpoch": "query TT = reception TT minus fixed delay",
+    "limitation": "matches fixed-delay shape, not native frame realization; Astronomy_AddDays shifts UT and recomputes TT, while this independent diagnostic shifts TT exactly",
+    "negateVector": true,
+    "target": "399",
+    "vectorCorrection": "NONE"
+  },
+  "nominalReference": {
+    "center": "399",
+    "frame": "ICRF vectors rotated at reception TT with Rx(obl06+deps06a) @ pnm06a; mean IAU2006 ecliptic plane with true equinox origin",
+    "physicalQualification": "unsupported: vector LT+S omits gravitational deflection; IAU2006/2000A differs from Horizons apparent observer IAU76/80 frame; ephemeris physical uncertainty not certified",
+    "target": "10",
+    "vectorCorrection": "LT+S"
+  },
+  "numericalControls": {
+    "batchSize": 1000,
+    "directBracketOffsetsSeconds": [
+      -0.5,
+      0.5
+    ],
+    "directBracketStrictAscending": true,
+    "fineOffsetsSeconds": [
+      -600,
+      -200,
+      200,
+      600
+    ],
+    "halfFineOffsetsSeconds": [
+      -300,
+      -100,
+      100,
+      300
+    ],
+    "maximumCoarseAdvanceDegrees": 5,
+    "maximumCoarseFineDifferenceSeconds": 120,
+    "maximumHalfGridDifferenceSeconds": 0.05,
+    "maximumQuadraticCubicDifferenceSeconds": 0.05,
+    "queryDecimalPlaces": 8,
+    "referenceNumericalAllowanceSeconds": 1
+  },
+  "numpyVersion": "2.3.5",
+  "policySHA256": "a1c3ab5421578425a4fad0327fe82db89c0f0819b184a0981484da87d7731553",
+  "publicDeltaTModels": [
+    "jpl-horizons",
+    "espenak-meeus"
+  ],
+  "pyerfaVersion": "2.0.1.5",
+  "schemaVersion": 1,
+  "selection": {
+    "coarseStepDays": 4,
+    "endpointIncludedForBracketingOnly": true,
+    "expectedEvents": 924,
+    "firstYear": 1900,
+    "lastYear": 2130,
+    "startJulianDateTT": 2415020.5,
+    "stopJulianDateTT": 2499391.5
+  },
+  "sources": [
+    "https://ssd.jpl.nasa.gov/horizons/manual.html#output",
+    "https://ssd.jpl.nasa.gov/horizons/manual.html#obsquan",
+    "https://github.com/liberfa/erfa/blob/v2.0.1/src/pnm06a.c",
+    "https://github.com/liberfa/erfa/blob/v2.0.1/src/nut06a.c",
+    "https://github.com/liberfa/erfa/blob/v2.0.1/src/rx.c"
+  ],
+  "strictMaximumTimeErrorSeconds": 60,
+  "targetAnglesDegrees": [
+    0,
+    90,
+    180,
+    270
+  ],
+  "timeScale": "TT; reception epoch; explicit Horizons JDTT labels, no TT/TDB derivative claim"
+}
