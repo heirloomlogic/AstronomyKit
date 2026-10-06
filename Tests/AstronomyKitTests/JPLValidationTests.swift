@@ -131,7 +131,7 @@ func angularSeparation(
 /// Standard tolerance in arcminutes (1 arcminute = Astronomy Engine stated accuracy).
 let toleranceArcminutes = 1.0
 
-/// Outer planet tolerance - slightly higher for Neptune/Uranus.
+/// Looser tolerance, asserted for Neptune (geocentric and Asheville) and Asheville Pluto.
 let outerPlanetToleranceArcminutes = 1.5
 
 // MARK: - Sun Validation
@@ -745,7 +745,7 @@ struct UranusValidationTests {
         ),
     ]
 
-    @Test("Uranus position matches JPL reference within 1.5 arcminutes")
+    @Test("Uranus position matches JPL reference within 1 arcminute")
     func uranusPositionAccuracy() throws {
         for ref in Self.referenceData {
             let computed = try CelestialBody.uranus.equatorial(
@@ -821,7 +821,7 @@ struct PlutoValidationTests {
         ),
     ]
 
-    @Test("Pluto position matches JPL reference within 1.5 arcminutes")
+    @Test("Pluto position matches JPL reference within 1 arcminute")
     func plutoPositionAccuracy() throws {
         for ref in Self.referenceData {
             let computed = try CelestialBody.pluto.equatorial(
@@ -1543,7 +1543,7 @@ struct AshevilleValidationTests {
         }
     }
 
-    @Test("Uranus topocentric position from Asheville matches JPL within 1.5 arcminutes")
+    @Test("Uranus topocentric position from Asheville matches JPL within 1 arcminute")
     func uranusAshevilleAccuracy() throws {
         for ref in Self.uranusData {
             let computed = try CelestialBody.uranus.equatorial(

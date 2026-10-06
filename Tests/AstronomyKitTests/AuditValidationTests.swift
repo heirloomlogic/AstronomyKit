@@ -144,8 +144,8 @@ struct AuditValidationTests {
             "actual ICRF AU vector: [\(position.x), \(position.y), \(position.z)]")
     }
 
-    /// Named sanity check: only finiteness is asserted at epochs without a sourced tolerance, so it is not accuracy
-    /// evidence.
+    /// Named sanity check: only finiteness is asserted, at every epoch including 2000-01-01 where
+    /// `boundedGalileanMoonState` also applies the sourced tolerance, so it is not accuracy evidence.
     @Test(
         "JPL Galilean moon state sanity check (finite only)",
         arguments: IndependentReferenceArchive.shared.vectors.filter { $0.origin == "jupiter" })
