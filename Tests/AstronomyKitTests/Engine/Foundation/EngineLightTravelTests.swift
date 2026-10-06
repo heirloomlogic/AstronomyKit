@@ -24,10 +24,10 @@ struct EngineLightTravelTests {
     /// Corrects with `position` of the days since `base`, recording every
     /// time the iteration passes it.
     static func correct(
-        at time: Engine.Time, fallback: DeltaTModel = .espenakMeeus, _ position: (Double) throws -> [Double]
+        at time: Engine.Time, _ position: (Double) throws -> [Double]
     ) throws -> (vector: Engine.Vector<Engine.EQJ>, calls: [Engine.Time]) {
         var calls: [Engine.Time] = []
-        let vector = try Engine.LightTravel.correct(at: time, fallback: fallback) { time -> Engine.Vector<Engine.EQJ> in
+        let vector = try Engine.LightTravel.correct(at: time) { time -> Engine.Vector<Engine.EQJ> in
             calls.append(time)
             let xyz = try position(time.ut - base)
             return Self.vector(xyz[0], xyz[1], xyz[2], at: time)
@@ -76,11 +76,11 @@ struct EngineLightTravelTests {
     }
 
     @Test(
-        "Every call has the observation time's model, whatever the fallback",
-        arguments: DeltaTModel.allCases, DeltaTModel.allCases)
-    func capturedModel(model: DeltaTModel, fallback: DeltaTModel) throws {
+        "Every call has the observation time's model",
+        arguments: DeltaTModel.allCases)
+    func capturedModel(model: DeltaTModel) throws {
         let observation = Engine.Time(ut: Self.base, deltaTModel: model)
-        let result = try Self.correct(at: observation, fallback: fallback) { [1 + 10 * $0, 0.2, 0.3] }
+        let result = try Self.correct(at: observation) { [1 + 10 * $0, 0.2, 0.3] }
         #expect(result.calls.count >= 3)
         for time in result.calls + [result.vector.time] {
             #expect(time.deltaTModel == model)
@@ -89,17 +89,23 @@ struct EngineLightTravelTests {
     }
 
     /// Espenak-Meeus TT overflows at UT 1e160, so the observation time is
-    /// invalid. JPL Horizons holds Delta T, so its backdated time is valid;
-    /// under Espenak-Meeus every backdated time is invalid too.
-    @Test("Backdating an invalid time uses the fallback model")
+    /// invalid, and every backdate of it is invalid too, so the iteration
+    /// never converges.
+    @Test("Every backdate of an invalid time is invalid")
     func invalidObservation() throws {
         let observation = Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus)
         try #require(!observation.isValid)
-        let jpl = try Self.correct(at: observation, fallback: .jplHorizons) { _ in [1, 0, 0] }
-        #expect(jpl.vector.time.deltaTModel == .jplHorizons)
-        #expect(jpl.calls.count == 2)
+        var calls: [Engine.Time] = []
         #expect(throws: AstronomyError.noConvergence) {
-            try Self.correct(at: observation, fallback: .espenakMeeus) { _ in [1, 0, 0] }
+            try Engine.LightTravel.correct(at: observation) { time -> Engine.Vector<Engine.EQJ> in
+                calls.append(time)
+                return Self.vector(1, 0, 0, at: time)
+            }
+        }
+        #expect(calls.count == Engine.LightTravel.iterationLimit)
+        for time in calls.dropFirst() {
+            #expect(time.ut.isNaN)
+            #expect(time.deltaTModel == nil)
         }
     }
 
@@ -130,9 +136,9 @@ struct EngineLightTravelTests {
     func resultTime() throws {
         let observation = Engine.Time(ut: Self.base, deltaTModel: .jplHorizons)
         var calls: [Engine.Time] = []
-        let vector = try Engine.LightTravel.correct(at: observation, fallback: .jplHorizons) { time in
+        let vector = try Engine.LightTravel.correct(at: observation) { time in
             calls.append(time)
-            return Self.vector(2, 0, 0, at: time.adding(days: 10, fallback: .jplHorizons))
+            return Self.vector(2, 0, 0, at: time.adding(days: 10))
         }
         let last = try #require(calls.last)
         #expect(vector.time.ut.bitPattern == last.ut.bitPattern)
@@ -162,7 +168,7 @@ struct EngineLightTravelTests {
         for (ut, x) in [(Self.base, Double.nan), (.nan, 1)] {
             var calls = 0
             #expect(throws: AstronomyError.noConvergence) {
-                try Engine.LightTravel.correct(at: Engine.Time(ut: ut, deltaTModel: model), fallback: model) { time in
+                try Engine.LightTravel.correct(at: Engine.Time(ut: ut, deltaTModel: model)) { time in
                     calls += 1
                     return Self.vector(x, 0, 0, at: time)
                 }
@@ -177,7 +183,7 @@ struct EngineLightTravelTests {
     func finiteNonconvergence(model: DeltaTModel) {
         var calls: [Engine.Time] = []
         #expect(throws: AstronomyError.noConvergence) {
-            try Engine.LightTravel.correct(at: Engine.Time(ut: Self.base, deltaTModel: model), fallback: model) {
+            try Engine.LightTravel.correct(at: Engine.Time(ut: Self.base, deltaTModel: model)) {
                 calls.append($0)
                 return Self.vector(1 + 100 * ($0.ut - Self.base), 0, 0, at: $0)
             }
@@ -193,7 +199,7 @@ struct EngineLightTravelTests {
     func convergesOnLastCall(model: DeltaTModel) throws {
         let observation = Engine.Time(ut: Self.base, deltaTModel: model)
         var calls = 0
-        let vector = try Engine.LightTravel.correct(at: observation, fallback: model) {
+        let vector = try Engine.LightTravel.correct(at: observation) {
             time -> Engine.Vector<Engine.EQJ> in
             calls += 1
             return Self.vector(1 + 0.01 * Double(min(calls, 9)), 0, 0, at: time)
@@ -209,7 +215,7 @@ struct EngineLightTravelTests {
         let observation = Engine.Time(ut: Self.base, deltaTModel: model)
         var calls = 0
         #expect(throws: CallbackFailure(call: failingCall)) {
-            try Engine.LightTravel.correct(at: observation, fallback: model) { time in
+            try Engine.LightTravel.correct(at: observation) { time in
                 calls += 1
                 if calls == failingCall { throw CallbackFailure(call: failingCall) }
                 // Slow contraction, so the seventh call is reached.

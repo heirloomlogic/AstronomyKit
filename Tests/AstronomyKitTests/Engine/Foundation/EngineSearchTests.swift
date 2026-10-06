@@ -21,18 +21,18 @@ struct EngineSearchTests {
     /// A one-day window from `base` under `model`.
     static func window(_ model: DeltaTModel) -> (start: Engine.Time, end: Engine.Time) {
         let start = Engine.Time(ut: base, deltaTModel: model)
-        return (start, start.adding(days: 1, fallback: model))
+        return (start, start.adding(days: 1))
     }
 
     /// Searches from `start` to `end` with `function` of the days since
     /// `base`, recording every time the search passes it.
     static func search(
-        from start: Engine.Time, to end: Engine.Time, tolerance: Double = 0.001, fallback: DeltaTModel = .espenakMeeus,
+        from start: Engine.Time, to end: Engine.Time, tolerance: Double = 0.001,
         _ function: (Double) -> Double
     ) throws -> (root: Engine.Time?, calls: [Engine.Time]) {
         var calls: [Engine.Time] = []
         let root = try Engine.Search.ascendingRoot(
-            from: start, to: end, toleranceSeconds: tolerance, fallback: fallback
+            from: start, to: end, toleranceSeconds: tolerance
         ) { time in
             calls.append(time)
             return function(time.ut - base)
@@ -106,7 +106,7 @@ struct EngineSearchTests {
     func issue142(model: DeltaTModel) throws {
         let (start, end) = Self.window(model)
         #expect(try Self.search(from: start, to: end) { 0.375 - $0 }.root == nil)
-        let shortEnd = start.adding(days: 1e-10, fallback: model)
+        let shortEnd = start.adding(days: 1e-10)
         #expect(try Self.search(from: start, to: shortEnd) { _ in 1 }.root == nil)
     }
 
@@ -118,7 +118,7 @@ struct EngineSearchTests {
     func constant(model: DeltaTModel, value: Double) throws {
         let start = Engine.Time(ut: Self.base, deltaTModel: model)
         for days in [1.0, 1e-10, 0] {
-            let end = start.adding(days: days, fallback: model)
+            let end = start.adding(days: days)
             for tolerance in [0.001, 1.0, -0.001, Double.infinity] {
                 let result = try Self.search(from: start, to: end, tolerance: tolerance) { _ in value }
                 #expect(result.root == nil, "window \(days), tolerance \(tolerance)")
@@ -144,7 +144,7 @@ struct EngineSearchTests {
     @Test("A start that is not finite returns nil", arguments: DeltaTModel.allCases, [Double.nan, .infinity])
     func nonfiniteStart(model: DeltaTModel, ut: Double) throws {
         let start = Engine.Time(ut: ut, deltaTModel: model)
-        let end = start.adding(days: 1, fallback: model)
+        let end = start.adding(days: 1)
         #expect(try Self.search(from: start, to: end) { $0 - 0.375 }.root == nil)
     }
 
@@ -158,7 +158,7 @@ struct EngineSearchTests {
         arguments: DeltaTModel.allCases)
     func zeroEnds(model: DeltaTModel) throws {
         let (start, end) = Self.window(model)
-        let midpoint = start.adding(days: (end.tt - start.tt) / 2, fallback: model)
+        let midpoint = start.adding(days: (end.tt - start.tt) / 2)
         // (value at the earlier end, value at the later end, ascending bracket)
         let cases: [(Double, Double, Bool)] = [
             (0, 1, true), (-1, 0, true), (-1, 1, true),
@@ -167,7 +167,7 @@ struct EngineSearchTests {
         for (earlier, later, bracket) in cases {
             var calls = 0
             let root = try Engine.Search.ascendingRoot(
-                from: start, to: end, toleranceSeconds: .infinity, fallback: model
+                from: start, to: end, toleranceSeconds: .infinity
             ) { time in
                 calls += 1
                 switch time.ut {
@@ -241,18 +241,38 @@ struct EngineSearchTests {
     }
 
     @Test(
-        "Every time passed to the function has the start's model, whatever the fallback",
-        arguments: DeltaTModel.allCases, DeltaTModel.allCases)
-    func capturedModel(model: DeltaTModel, fallback: DeltaTModel) throws {
+        "Every time passed to the function has the start's model",
+        arguments: DeltaTModel.allCases)
+    func capturedModel(model: DeltaTModel) throws {
         let (start, end) = Self.window(model)
         for function in Self.functions {
-            let result = try Self.search(from: start, to: end, tolerance: 0.2, fallback: fallback, function)
+            let result = try Self.search(from: start, to: end, tolerance: 0.2, function)
             let root = try #require(result.root)
             #expect(result.calls.count >= 3)
             for time in result.calls + [root] {
                 #expect(time.deltaTModel == model)
                 #expect(time.tt.bitPattern == Engine.Time(ut: time.ut, deltaTModel: model).tt.bitPattern)
             }
+        }
+    }
+
+    /// Espenak-Meeus TT overflows at UT 1e160, so the start is invalid. The
+    /// end is valid, but midpoints and interpolated roots come from the
+    /// first bound, so every time the search derives is invalid.
+    @Test("Every time derived from an invalid start is invalid")
+    func invalidStart() throws {
+        let start = Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus)
+        let end = Engine.Time(ut: Self.base, deltaTModel: .jplHorizons)
+        try #require(!start.isValid)
+        var calls: [Engine.Time] = []
+        let root = try? Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001) { time -> Double in
+            calls.append(time)
+            return time.ut - Self.base - 0.375
+        }
+        try #require(calls.count >= 3)
+        for time in calls.dropFirst(2) + (root.map { [$0] } ?? []) {
+            #expect(time.ut.isNaN)
+            #expect(time.deltaTModel == nil)
         }
     }
 
@@ -265,7 +285,7 @@ struct EngineSearchTests {
         let (start, end) = Self.window(model)
         var calls = 0
         #expect(throws: CallbackFailure(call: failingCall)) {
-            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001, fallback: model) { time in
+            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001) { time in
                 calls += 1
                 if calls == failingCall { throw CallbackFailure(call: failingCall) }
                 let u = time.ut - Self.base
@@ -280,7 +300,7 @@ struct EngineSearchTests {
         let (start, end) = Self.window(.espenakMeeus)
         var calls = 0
         #expect(throws: error) {
-            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001, fallback: .espenakMeeus) {
+            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001) {
                 calls += 1
                 if calls == 3 { throw error }
                 return $0.ut - Self.base - 0.375
@@ -319,7 +339,7 @@ struct EngineSearchTests {
         for (first, second) in [(start, end), (end, start)] {
             var calls = 0
             #expect(throws: AstronomyError.noConvergence) {
-                try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.001, fallback: model) {
+                try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.001) {
                     time -> Double in
                     calls += 1
                     return Self.step(time.ut - Self.base)
@@ -385,7 +405,7 @@ struct EngineSearchTests {
         }
         // The rejected window: the search bisects the half from 0 to 0.5.
         #expect(Self.rising(call(5).ut - Self.base) > 0)
-        let bisected = start.adding(days: (call(3).tt - start.tt) / 2, fallback: model)
+        let bisected = start.adding(days: (call(3).tt - start.tt) / 2)
         #expect(call(7).ut.bitPattern == bisected.ut.bitPattern)
         // Each later call lies inside the window that replaced the search's.
         for number in 11...14 {
@@ -419,7 +439,7 @@ struct EngineSearchTests {
         let (start, end) = Self.window(model)
         var calls = 0
         #expect(throws: CallbackFailure(call: failingCall)) {
-            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001, fallback: model) {
+            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001) {
                 time -> Double in
                 calls += 1
                 if calls == failingCall { throw CallbackFailure(call: failingCall) }

@@ -88,14 +88,12 @@ struct EngineTimeTests {
             Engine.Time(tt: 9_131.25, deltaTModel: model),
             Engine.Time(tt: -1e6, deltaTModel: model),
             Engine.Time.civil(utcDays: 6_208.5, deltaTModel: model).time,
-            Engine.Time(ut: 1e15, deltaTModel: model).adding(days: 0.25, fallback: model),
-            Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus).adding(days: -1e160, fallback: model),
+            Engine.Time(ut: 1e15, deltaTModel: model).adding(days: 0.25),
         ] + gapTimes(model)
     }
 
     @Test("Pair reconstruction gives back every kind of engine time bit for bit", arguments: DeltaTModel.allCases)
     func pairRoundTrip(model: DeltaTModel) throws {
-        let other: DeltaTModel = model == .espenakMeeus ? .jplHorizons : .espenakMeeus
         for time in Self.madeTimes(model) {
             let recorded = try #require(time.deltaTModel)
             let rebuilt = Engine.Time.fromPair(ut: time.ut, tt: time.tt, deltaTModel: recorded)
@@ -103,8 +101,8 @@ struct EngineTimeTests {
             #expect(rebuilt.tt.bitPattern == time.tt.bitPattern, "\(time.ut)")
             #expect(rebuilt.deltaTModel == model)
             // Times derived from the rebuilt value match those from the original.
-            let derived = time.adding(days: 0.5, fallback: other)
-            let rebuiltDerived = rebuilt.adding(days: 0.5, fallback: other)
+            let derived = time.adding(days: 0.5)
+            let rebuiltDerived = rebuilt.adding(days: 0.5)
             #expect(rebuiltDerived.ut.bitPattern == derived.ut.bitPattern)
             #expect(rebuiltDerived.tt.bitPattern == derived.tt.bitPattern)
         }
