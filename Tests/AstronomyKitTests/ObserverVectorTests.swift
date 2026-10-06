@@ -5,6 +5,7 @@
 //  Tests for Observer vector/state functionality.
 //
 
+import Foundation
 import Testing
 
 @testable import AstronomyKit
@@ -62,6 +63,94 @@ struct ObserverVectorTests {
         // (This depends on Earth's orientation at the time)
         #expect(eqVec.magnitude > 0)
         #expect(poleVec.magnitude > 0)
+    }
+
+    // MARK: - Absolute Geometry
+
+    /// Checks observer vectors against the engine's documented ellipsoid and
+    /// the Earth rotation angle, not against the inverse transform.
+    @Suite("Absolute Geometry")
+    struct AbsoluteGeometryTests {
+        /// IERS Conventions (2010) Table 1.1: equatorial radius 6,378,136.6 m
+        /// and flattening 1/298.25642, the ellipsoid declared in astronomy.h.
+        static let equatorialRadiusKm = 6_378.1366
+        static let polarRadiusKm = equatorialRadiusKm * (1 - 1 / 298.25642)
+
+        /// The DE405 astronomical unit, 149,597,870.691 km (Standish 1998, JPL
+        /// IOM 312.F-98-048), which the engine's `KM_PER_AU` encodes.
+        static let kilometersPerAU = 149_597_870.691
+
+        /// 1 mm. Rounding at Earth-radius scale is about 1e-12 km, and the
+        /// engine's AU literal is within 1e-5 km of the DE405 value, which
+        /// scales an Earth radius by 5e-10 km. Swapping in the WGS 84
+        /// flattening moves the polar radius by 5.8 cm.
+        static let toleranceKm = 1e-6
+
+        static let heightMeters = 1_000.0
+        static let time = AstroTime(year: 2_025, month: 6, day: 21)
+
+        @Test("An equatorial observer is the equatorial radius plus height from the geocenter")
+        func equatorialRadius() throws {
+            let observer = Observer(latitude: 0, longitude: 0, height: Self.heightMeters)
+            let expected = Self.equatorialRadiusKm + Self.heightMeters / 1_000
+
+            for equator in [EquatorDate.ofDate, .j2000] {
+                let radius = try observer.vector(at: Self.time, equator: equator).magnitude * Self.kilometersPerAU
+                #expect(abs(radius - expected) < Self.toleranceKm, "\(equator): \(radius) km, expected \(expected) km")
+            }
+
+            #expect(try observer.vector(at: Self.time, equator: .ofDate).z == 0)
+        }
+
+        @Test("A polar observer is on the rotation axis at the polar radius plus height", arguments: [90.0, -90.0])
+        func polarRadius(latitude: Double) throws {
+            let observer = Observer(latitude: latitude, longitude: 0, height: Self.heightMeters)
+            let expected = Self.polarRadiusKm + Self.heightMeters / 1_000
+
+            let ofDate = try observer.vector(at: Self.time, equator: .ofDate)
+            let axial = ofDate.z * Self.kilometersPerAU
+            let offAxis = hypot(ofDate.x, ofDate.y) * Self.kilometersPerAU
+            #expect(
+                abs(axial - Double(signOf: latitude, magnitudeOf: expected)) < Self.toleranceKm,
+                "z = \(axial) km"
+            )
+            #expect(offAxis < Self.toleranceKm, "\(offAxis) km off the axis")
+
+            let radius = try observer.vector(at: Self.time, equator: .j2000).magnitude * Self.kilometersPerAU
+            #expect(abs(radius - expected) < Self.toleranceKm, "J2000: \(radius) km, expected \(expected) km")
+        }
+
+        /// Earth rotation angle at J2000 UT (`ut` 0): 360° × 0.7790572732640,
+        /// from IAU 2000 Resolution B1.8.
+        static let rotationAngleAtJ2000 = 360 * 0.779_057_273_264_0
+
+        /// Constant term of the IAU 2006 Greenwich mean sidereal time,
+        /// GMST = ERA + 0.014506″ + 4612.156534″ t + … (Capitaine, Wallace &
+        /// Chapront 2003, A&A 412, 567).
+        static let siderealOffsetDegrees = 0.014_506 / 3_600
+
+        /// 0.005″. At `ut` 0, TT is about 64 s later, so the precession and
+        /// GMST rate terms add under 1e-4″. Converting to J2000 removes
+        /// nutation, which cancels the equation of the equinoxes to first order
+        /// and leaves under 0.001″. A 1 s sidereal time error is 15″.
+        static let rightAscensionToleranceDegrees = 0.005 / 3_600
+
+        @Test(
+            "At J2000 an equatorial observer's J2000 right ascension is the Earth rotation angle plus longitude",
+            arguments: [0.0, 30.0, -120.0, 179.5]
+        )
+        func rightAscensionFollowsEarthRotationAngle(longitude: Double) throws {
+            let observer = Observer(latitude: 0, longitude: longitude)
+            let vector = try observer.vector(at: AstroTime(ut: 0), equator: .j2000)
+
+            let rightAscension = atan2(vector.y, vector.x) * 180 / .pi
+            let expected = Self.rotationAngleAtJ2000 + Self.siderealOffsetDegrees + longitude
+            let difference = IndependentReferenceMath.wrappedDifference(rightAscension, expected)
+            #expect(
+                abs(difference) < Self.rightAscensionToleranceDegrees,
+                "right ascension \(rightAscension)°, expected \(expected)°, off by \(difference * 3_600)″"
+            )
+        }
     }
 
     // MARK: - Reverse Observer from Vector

@@ -5,6 +5,7 @@
 //  Tests for RotationMatrix functionality.
 //
 
+import Foundation
 import Testing
 
 @testable import AstronomyKit
@@ -176,6 +177,124 @@ struct RotationTests {
             let combined = try toEcl.combined(with: toEqd)
 
             #expect(abs(combined[0, 0] - 1) < 0.001)
+        }
+    }
+
+    // MARK: - Absolute J2000 Frames
+
+    /// Checks the fixed J2000 rotations against published constants instead
+    /// of against each other: a matrix and its inverse that are wrong in the
+    /// same way still round-trip.
+    ///
+    /// Element `[i, j]` is the weight of input component `i` in output
+    /// component `j`, which is how `Astronomy_RotateVector` applies it.
+    @Suite("Absolute J2000 Frames")
+    struct AbsoluteJ2000FrameTests {
+        /// Mean obliquity of the J2000 ecliptic: 84,381.406″, the P03 value
+        /// adopted by IAU 2006 Resolution B1 (Capitaine, Wallace & Chapront
+        /// 2003, A&A 412, 567).
+        static let obliquity = 84_381.406 / 3_600 * .pi / 180
+        static let cosObliquity = cos(obliquity)
+        static let sinObliquity = sin(obliquity)
+
+        /// The engine stores the obliquity's cosine and sine as literals within
+        /// 5e-12 of the closed form. A 1″ obliquity error moves the sine by
+        /// 4.4e-6 and the cosine by 1.9e-6.
+        static let tolerance = 1e-10
+
+        /// Expected element `[i, j]` of the rotation about the x axis that
+        /// takes equatorial to ecliptic coordinates (`sign` +1) or back (−1).
+        static func obliquityRotation(_ sign: Double) -> [[Double]] {
+            let c = cosObliquity
+            let s = sign * sinObliquity
+            return [
+                [1, 0, 0],
+                [0, c, -s],
+                [0, s, c],
+            ]
+        }
+
+        static func expectElements(of matrix: RotationMatrix, equal expected: [[Double]]) {
+            for row in 0..<3 {
+                for col in 0..<3 {
+                    #expect(
+                        abs(matrix[row, col] - expected[row][col]) < tolerance,
+                        "[\(row), \(col)] = \(matrix[row, col]), expected \(expected[row][col])"
+                    )
+                }
+            }
+        }
+
+        @Test("EQJ to ECL is the IAU 2006 J2000 obliquity rotation")
+        func equatorialToEcliptic() throws {
+            let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()
+
+            Self.expectElements(of: rotation, equal: Self.obliquityRotation(1))
+        }
+
+        @Test("ECL to EQJ is the reverse obliquity rotation")
+        func eclipticToEquatorial() throws {
+            let rotation = try RotationMatrix.eclipticToEquatorialJ2000()
+
+            Self.expectElements(of: rotation, equal: Self.obliquityRotation(-1))
+        }
+
+        @Test("EQJ to ECL takes the celestial poles to their ecliptic positions")
+        func polesMapToEclipticPositions() throws {
+            let time = AstroTime(ut: 0)
+            let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()
+            let c = Self.cosObliquity
+            let s = Self.sinObliquity
+
+            // The north celestial pole sits at ecliptic longitude 90°, latitude 90° − ε.
+            let celestialPole = try Vector3D(x: 0, y: 0, z: 1, time: time).rotated(by: rotation)
+            #expect(abs(celestialPole.x) < Self.tolerance)
+            #expect(abs(celestialPole.y - s) < Self.tolerance)
+            #expect(abs(celestialPole.z - c) < Self.tolerance)
+
+            // The north ecliptic pole sits at RA 18h, declination 90° − ε.
+            let eclipticPole = try Vector3D(x: 0, y: -s, z: c, time: time).rotated(by: rotation)
+            #expect(abs(eclipticPole.x) < Self.tolerance)
+            #expect(abs(eclipticPole.y) < Self.tolerance)
+            #expect(abs(eclipticPole.z - 1) < Self.tolerance)
+        }
+
+        /// Each galactic element is a 16-digit literal, so a correctly typed
+        /// matrix is orthonormal to about 1e-15. A wrong sign, swapped
+        /// elements, or a wrong digit down to the 13th decimal place breaks
+        /// that by more than this.
+        static let orthonormalityTolerance = 1e-14
+
+        /// These checks hold for any galactic pole convention the matrix
+        /// encodes, so they test the stored literals rather than the convention.
+        @Test("EQJ to GAL is a proper rotation")
+        func galacticIsProperRotation() throws {
+            let m = try RotationMatrix.equatorialJ2000ToGalactic()
+
+            for i in 0..<3 {
+                for j in 0..<3 {
+                    let dot = m[i, 0] * m[j, 0] + m[i, 1] * m[j, 1] + m[i, 2] * m[j, 2]
+                    #expect(abs(dot - (i == j ? 1 : 0)) < Self.orthonormalityTolerance, "rows \(i), \(j): \(dot)")
+                }
+            }
+
+            let determinant =
+                m[0, 0] * (m[1, 1] * m[2, 2] - m[1, 2] * m[2, 1])
+                - m[0, 1] * (m[1, 0] * m[2, 2] - m[1, 2] * m[2, 0])
+                + m[0, 2] * (m[1, 0] * m[2, 1] - m[1, 1] * m[2, 0])
+            #expect(abs(determinant - 1) < Self.orthonormalityTolerance, "determinant \(determinant)")
+        }
+
+        @Test("GAL to EQJ is exactly the transpose of EQJ to GAL")
+        func galacticInverseIsTranspose() throws {
+            let toGalactic = try RotationMatrix.equatorialJ2000ToGalactic()
+            let toEquatorial = try RotationMatrix.galacticToEquatorialJ2000()
+
+            for row in 0..<3 {
+                for col in 0..<3 {
+                    #expect(toEquatorial[row, col] == toGalactic[col, row], "[\(row), \(col)]")
+                }
+            }
         }
     }
 
