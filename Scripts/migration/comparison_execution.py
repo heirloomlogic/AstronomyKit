@@ -1,7 +1,6 @@
 """Bounded, isolated execution for the comparison replay experiment (#144)."""
 import base64
 import hashlib
-import gzip
 import importlib.util
 import json
 import math
@@ -15,12 +14,6 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 PROTOCOL = ROOT / 'Documentation/Migration/comparison-replay-execution-protocol.json'
 TOOL_PATHS = ('Scripts/migration/comparison_execution.py', 'Scripts/migration/run-comparison.py', 'Scripts/migration/replay_historical_research.py', 'Tools/Migration/Oracle/build-oracle.py', 'Tools/Migration/Oracle/build-oracle.sh')
-REGISTERED_EXECUTIONS = {
-    '64af5bbb67a0b479a1646b91a461b7d457844e477f3feba3f866c98ff941c767': ('2bddd2de1bb21d23ce70d8f2f88eea7693c04c57', 'Tools/Migration/ComparisonReplay/complete-historical/'),
-    '665a937fc7c74e4e1ae21a24782b00a4f9a426162dab2f2898acb4191a21e2ba': ('2bddd2de1bb21d23ce70d8f2f88eea7693c04c57', 'Tools/Migration/ComparisonReplay/complete-current/'),
-    '2c11c67a2ec8d58fe36a7b0d52ad650a1247a670368c03f628b3f0dd82093c9f': ('38f946082a9a1a898eb8f7c6291f1bc85157e61e', 'Tools/Migration/ComparisonValidation146/final-bound-historical/'),
-    'c9a414d9e5c5d01985d146877e1ca9467dc0023a4481256407c3d3a06a7d3e06': ('38f946082a9a1a898eb8f7c6291f1bc85157e61e', 'Tools/Migration/ComparisonValidation146/final-bound-current/'),
-}
 ENVIRONMENT_MARKER = b'# comparison-build-environment '
 RECIPE = {'configuration': 'release', 'product': 'AstronomyMigrationRunner', 'extraSwiftFlags': [], 'manifestConditions': {'.dev-tooling': False, '.model-prototype': False}}
 
@@ -98,46 +91,33 @@ def select_current_environment():
 
 
 def validate_environment(receipt, log, attempt=None, binary_sha256=None):
-    """Bind registered execution authority to retained bytes; corroborate other local captures."""
+    """Bind the receipt to retained bytes and corroborate its environment against the current runtime."""
     if attempt is not None and binary_sha256 is None:
         raise ValueError('retained executable digest required for execution authority')
     if binary_sha256 is not None and receipt.get('binarySHA256') != binary_sha256:
         raise ValueError('receipt detached from retained executable bytes')
-    registered = REGISTERED_EXECUTIONS.get(binary_sha256)
-    if registered is not None:
-        revision, path = registered
-        c = load(ROOT / 'Scripts/migration/run-comparison.py', 'registered_build_execution')
-        trusted_log = gzip.decompress(c.git_blob(revision, path + 'swift-build.log.gz'))
-        prior = read_json(gzip.decompress(c.git_blob(revision, path + 'candidate-build.json.gz')))
-        trusted_attempt = read_json(gzip.decompress(c.git_blob(revision, path + 'attempt.json.gz')))
-        if binary_sha256 != prior['binarySHA256'] or c.canonical_bytes(receipt) != c.canonical_bytes(prior) or c.canonical_bytes(attempt) != c.canonical_bytes(trusted_attempt) or log != trusted_log:
-            raise ValueError('retained executable detached from registered immutable execution')
-        identities = {name: prior[name] for name in ('swift', 'platform')}
-        compiler_command = prior['command'][0]
-        body = log.split(b'\n', 1)[1] if log.startswith(ENVIRONMENT_MARKER) else log
-    else:
-        if not log.startswith(ENVIRONMENT_MARKER):
-            raise ValueError('unregistered environment lacks current runtime capture')
-        header, body = log.split(b'\n', 1)
-        captured = read_json(header[len(ENVIRONMENT_MARKER):])
-        required = {name + suffix for name in ('swift', 'platform') for suffix in ('Command', 'ExitCode', 'StdoutBase64', 'StderrBase64')}
-        if set(captured) != required or any(type(captured[name + 'ExitCode']) is not int for name in ('swift', 'platform')):
-            raise ValueError('environment capture population or termination type changed')
-        selected = select_current_environment()
-        if captured != selected:
-            raise ValueError('environment capture detached from independently selected current runtime')
-        identities = {}
-        for name in ('swift', 'platform'):
-            command = selected[name + 'Command']
-            expected_tail = ['--version'] if name == 'swift' else ['-c', 'import platform; print(platform.platform())']
-            if not isinstance(command, list) or not command or not isinstance(command[0], str) or not Path(command[0]).is_absolute() or command[1:] != expected_tail or type(selected[name + 'ExitCode']) is not int or selected[name + 'ExitCode'] != 0:
-                raise ValueError('environment command or termination changed')
-            stdout = base64.b64decode(selected[name + 'StdoutBase64'], validate=True).decode().strip()
-            base64.b64decode(selected[name + 'StderrBase64'], validate=True)
-            if not stdout:
-                raise ValueError('environment command capture failed')
-            identities[name] = stdout
-        compiler_command = selected['swiftCommand'][0]
+    if not log.startswith(ENVIRONMENT_MARKER):
+        raise ValueError('environment lacks current runtime capture')
+    header, body = log.split(b'\n', 1)
+    captured = read_json(header[len(ENVIRONMENT_MARKER):])
+    required = {name + suffix for name in ('swift', 'platform') for suffix in ('Command', 'ExitCode', 'StdoutBase64', 'StderrBase64')}
+    if set(captured) != required or any(type(captured[name + 'ExitCode']) is not int for name in ('swift', 'platform')):
+        raise ValueError('environment capture population or termination type changed')
+    selected = select_current_environment()
+    if captured != selected:
+        raise ValueError('environment capture detached from independently selected current runtime')
+    identities = {}
+    for name in ('swift', 'platform'):
+        command = selected[name + 'Command']
+        expected_tail = ['--version'] if name == 'swift' else ['-c', 'import platform; print(platform.platform())']
+        if not isinstance(command, list) or not command or not isinstance(command[0], str) or not Path(command[0]).is_absolute() or command[1:] != expected_tail or type(selected[name + 'ExitCode']) is not int or selected[name + 'ExitCode'] != 0:
+            raise ValueError('environment command or termination changed')
+        stdout = base64.b64decode(selected[name + 'StdoutBase64'], validate=True).decode().strip()
+        base64.b64decode(selected[name + 'StderrBase64'], validate=True)
+        if not stdout:
+            raise ValueError('environment command capture failed')
+        identities[name] = stdout
+    compiler_command = selected['swiftCommand'][0]
     if any(type(receipt.get(name)) is not str or receipt[name] != identities[name] for name in ('swift', 'platform')):
         raise ValueError('receipt compiler/platform identity detached from build evidence')
     if identities['swift'].splitlines()[0].encode() not in [line.strip() for line in body.splitlines()]:

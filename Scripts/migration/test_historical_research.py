@@ -3,7 +3,6 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from unittest import mock
 
 SPEC = importlib.util.spec_from_file_location("history", Path(__file__).with_name("replay_historical_research.py"))
 H = importlib.util.module_from_spec(SPEC)
@@ -11,12 +10,6 @@ SPEC.loader.exec_module(H)
 
 
 class HistoricalResearchTests(unittest.TestCase):
-    def test_exact_reviewed_population(self):
-        self.assertEqual(set(H.SUITES), {"callback", "constellation", "seasonal"})
-        self.assertEqual(H.SUITES["callback"][0], "a06ce8653f7de3aed64bb4ce0509b1d10bc683ab")
-        self.assertEqual(H.SUITES["constellation"][0], "97fc275f6fd455ed73063a6961698569783dddb8")
-        self.assertEqual(H.SUITES["seasonal"][0], "2d54fd251a36e94f14324daed6d0937fc250d364")
-
     def test_detects_replaced_source_extra_source_tool_and_revision(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -44,28 +37,3 @@ class HistoricalResearchTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "revision"):
                 H.authenticate(root, "0" * 40)
             self.assertEqual(H.authenticate(root, revision), original)
-
-    def test_materializes_available_pinned_objects_without_changing_driver_head(self):
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory) / "driver"
-            subprocess.run(["git", "init", "-q", str(root)], check=True)
-            (root / "Sources").mkdir()
-            source = root / "Sources/solver.c"
-            source.write_text("historical solver")
-            subprocess.run(["git", "add", "."], cwd=root, check=True)
-            commit = ["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm"]
-            subprocess.run(commit + ["historical"], cwd=root, check=True)
-            revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
-            source.write_text("current repaired solver")
-            subprocess.run(["git", "add", "."], cwd=root, check=True)
-            subprocess.run(commit + ["current"], cwd=root, check=True)
-            current = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
-            # Model an actions/checkout shallow boundary; all fetched pinned objects
-            # remain available even when their commits are not advertised by refs.
-            (root / ".git/shallow").write_text(current + "\n")
-            destination = Path(directory) / "historical"
-            with mock.patch.object(H, "ROOT", root), mock.patch.dict(H.SUITES, {'callback': (revision, [])}):
-                H.materialize('callback', destination)
-            self.assertEqual((destination / "Sources/solver.c").read_text(), "historical solver")
-            self.assertEqual(subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(), current)
-            H.authenticate(destination, revision)

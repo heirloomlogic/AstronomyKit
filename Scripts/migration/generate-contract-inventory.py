@@ -108,11 +108,7 @@ TEST_ISSUES = {
 }
 
 SCRIPT_TEST_ISSUES = {
-    "Scripts/migration/test_inverse_refraction.py": 86,
-    "Scripts/migration/test_search_callback_corpus.py": 84,
-    "Scripts/migration/test_current_search.py": 84,
     "Scripts/migration/test_historical_research.py": 80,
-    "Scripts/migration/test_constellation_corpus.py": 91,
     "Scripts/reference-data/test_source_archive.py": 81,
     "Scripts/ephemeris/test_pluto_artifacts.py": 81,
     "Scripts/ephemeris/test_lunar_bundle.py": 81,
@@ -124,7 +120,6 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/migration/test_foundation.py": 80,
     "Scripts/migration/test_performance.py": 80,
     "Scripts/migration/test_sun_pilot.py": 83,
-    "Scripts/migration/test_compare_sun_pilot_allocations.py": 83,
     "Scripts/migration/test_sun_pilot_rss.py": 83,
     "Scripts/migration/test_performance_candidate.py": 80,
     "Scripts/numerics/solar-altitude/test_bounds.py": 94,
@@ -137,8 +132,6 @@ SCRIPT_TEST_ISSUES = {
     "Scripts/reference-data/test_planetary_apsides.py": 81,
     "Scripts/reference-data/test_saturn_apsis.py": 81,
     "Scripts/reference-data/test_season_phase_events.py": 81,
-    "Scripts/reference-data/test_seasonal_roots.py": 81,
-    "Scripts/reference-data/test_current_seasonal_search.py": 81,
     "Scripts/reference-data/test_geometric_events.py": 81,
     "Scripts/reference-data/test_lunar_event_diagnosis.py": 81,
     "Scripts/reference-data/test_native_lunar_probe.py": 81,

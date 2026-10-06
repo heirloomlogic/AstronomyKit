@@ -58,8 +58,7 @@ struct InverseRefractionTests {
 
     /// Regression values, not independent truth: the correction bit patterns that the repaired source returned on
     /// Apple arm64 for every protocol input with a nonzero correction, recorded in the #147 measured execution
-    /// (`InverseRefraction147/Evidence/current/raw-processes.json.gz`). The ulp-straddle repair left all of them
-    /// unchanged.
+    /// (raw process evidence retained in the history of #148). The ulp-straddle repair left all of them unchanged.
     static let goldenCorrections: [(mode: Refraction, values: [String: UInt64])] = [
         (
             .normal,

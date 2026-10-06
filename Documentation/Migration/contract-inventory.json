@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 118,
     "localPatches": 21,
     "publicSwiftAPI": 577,
-    "testOwners": 101,
-    "tests": 1182
+    "testOwners": 94,
+    "tests": 1093
   },
   "crossCuttingContracts": [
     {
@@ -3738,20 +3738,15 @@
     }
   ],
   "inputHashes": {
-    "MAINTAINING.md": "a2989a9b1a9adf19ceb7f0fc55297ed6656a623029e92b21a3cbde3bdd944dfa",
+    "MAINTAINING.md": "e4b57c25c6d7bd2c678b7440ec449430c2bd95f7e35c7f9c659beecc2f70a704",
     "Scripts/ephemeris/test_lunar_bundle.py": "a1eb8f4eca38531eab3d952f159a607675bee57bfec3aa9905b4640d9ea556df",
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
-    "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
     "Scripts/migration/test_comparison.py": "c1a95c5cc8ca8fa7e57decdc656e70f50b8533525cbba908ee6e620a832c8879",
-    "Scripts/migration/test_comparison_execution.py": "2d54d516e137d69936456c924b79d6426244fd346ea299ad04bee116e969d39b",
-    "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
-    "Scripts/migration/test_current_search.py": "9376e9d722bd80c380fd5491fcc67e430e9db948bfc1afc1c43a0eddf9dd25a8",
+    "Scripts/migration/test_comparison_execution.py": "e5dd26456d8ffb7a2eb4c21189af527c8311fbb398c5881af72f77517474abc2",
     "Scripts/migration/test_foundation.py": "17677d7b22710642be0e49869971a2045dbb7b2a52613e4e1663e566ec61327a",
-    "Scripts/migration/test_historical_research.py": "e7c7e01c3b3b1db85d03ff70cc5965952e1c7e6ac17f2a29eebed937dff76294",
-    "Scripts/migration/test_inverse_refraction.py": "861efda0fcf624e0cadae4736a01a5d13d5940f6e13831a52025426d6a911575",
+    "Scripts/migration/test_historical_research.py": "8e008d48aa5248613d81317fd04c4b40a38206717f875a2e924d7dae9fe8a01e",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "89841bef8defc3124450ad379d32f21810cedc8ee954ff8ffd83b0e133ae0a91",
-    "Scripts/migration/test_search_callback_corpus.py": "823992036d73516ded4b21de38b55127ea4bf1f27882a141eb046c5a2f0532ff",
     "Scripts/migration/test_sun_pilot.py": "ffa210f825e52632d39f5a5034a57d221aaa82c26f4e58bd29f4904a6e047501",
     "Scripts/migration/test_sun_pilot_rss.py": "74ef1eed80b22aed63fb6fa34ed7bcb9a1acecf351a6b59715ad9f194df857ad",
     "Scripts/model-prototype/test_generate_swift_models.py": "4cd335d674af4a12fe405c265744682c45af78bbd7f9e95476e1c3f964a3106c",
@@ -3764,7 +3759,6 @@
     "Scripts/reference-data/test_approved_distance.py": "0cfe3e0563b080192d355f48460ca80d320e96d6c03493afc440be74cb85c81f",
     "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
     "Scripts/reference-data/test_bundled_public_api.py": "bcec34528023c0bd233da5b7b8bed7c33ed689ff513e726c4b006832f78ef474",
-    "Scripts/reference-data/test_current_seasonal_search.py": "1ea89fc31b8d74103b74e2dd13ee160bd7e7b06a5de2773feda157e24896dfdf",
     "Scripts/reference-data/test_diagnose_polar_sunrise.py": "96688a62ad6a72a8a53fc1b2e53b854ea124711ac0600086ee1b6d0ec554bac1",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_geometric_events.py": "480595a0f3df2c26ec1f35f0c7be8d83de8d752479fd64df7793c02d31c48f20",
@@ -3782,7 +3776,6 @@
     "Scripts/reference-data/test_range_rate_investigation.py": "55ae0d261f180376a93926e91c3b7cbfec16ed59c3b95c0def7caba057855d9a",
     "Scripts/reference-data/test_saturn_apsis.py": "6d3a30301b5383862a818d459bed069869e3db3d657cd3001d20974d93818581",
     "Scripts/reference-data/test_season_phase_events.py": "b07bef22399cdc29e866141ac5528f7d14b9a964d5515b4401be29cf8e5312ea",
-    "Scripts/reference-data/test_seasonal_roots.py": "0b899c0a5b14080643a0400e3192d2ced65fb0b5b4ca5dceee6c15d45c8c44a8",
     "Scripts/reference-data/test_source_archive.py": "949b8d3d319553221bbf22034fc033806d41a4ddd76191a57ae859b8b6c52a91",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
@@ -3843,7 +3836,7 @@
     "Tests/AstronomyKitTests/HugeTimeTests.swift": "aa733db364b9e07c7800d0839949837a1f234eb7642b2d4aaeeb3dae847e1282",
     "Tests/AstronomyKitTests/IlluminationTests.swift": "c7706623e14b236ff867e510faab5e4f231ec79b0e8223a0a9db48cbac1fa083",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "f4e67f5e779d930be05e81025dcc247fd5b7bad1a66ef95aaf0b84fa46aab439",
-    "Tests/AstronomyKitTests/InverseRefractionTests.swift": "ee4178a5c0c7a62a56a5e6026f6e49e9f7af0525eda024eacdff8e06af64b67d",
+    "Tests/AstronomyKitTests/InverseRefractionTests.swift": "d7498758801dbaab5256b6a5435c67d0014c75929a50b0a8ca577285cfd87a69",
     "Tests/AstronomyKitTests/JPLValidationTests.swift": "d916130d126bda75d23e881b66847e120c4baff1f1fd88437e4881ca5557f8db",
     "Tests/AstronomyKitTests/JupiterMoonsTests.swift": "f45786d7ab16bb9c4c00b00be64e1f68c836ce6d279082dbde71a44672e22084",
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
@@ -3865,7 +3858,7 @@
     "Tests/AstronomyKitTests/RiseSetTests.swift": "487c09fca1ab25bb8f8730f19f2aa2f9f40086bbc0cdfc826de94881c61dc702",
     "Tests/AstronomyKitTests/RotationAxisTests.swift": "84cc314524057f277df2b99fc435de6ccee4a2cd2fca52c2a440f04fd74e6874",
     "Tests/AstronomyKitTests/RotationTests.swift": "b468642bf0d4e02e34695cb2059be5f6eb4615f44c5952e007ab3764f4d8442b",
-    "Tests/AstronomyKitTests/SearchTests.swift": "5a09b2c5a77e59e620166c43886079bbe539757b8e06a48749c44e6239301ae2",
+    "Tests/AstronomyKitTests/SearchTests.swift": "dc5bb3a2213a497d25981304bbcbfe751c52ebf73b3745cbf12cd635b5e5ea67",
     "Tests/AstronomyKitTests/SeasonsTests.swift": "5272d29e5bdc8dbd07a5357b4d8192e35689cdc3e6e3703be15ff11ece0becf7",
     "Tests/AstronomyKitTests/SolarAltitudeObservationTests.swift": "60a3fd8b30e486ef9f1d0d2230501dfd51ed8fba00710947c4f0ba46c490ac49",
     "Tests/AstronomyKitTests/StateVectorExtensionTests.swift": "bf125387607cdd5f9eb4ea779ef3c3d158ded46450ec4712422b467c4e1308ec",
@@ -13254,13 +13247,6 @@
       "testCount": 3
     },
     {
-      "classification": "invariant",
-      "id": "Scripts/migration/test_compare_sun_pilot_allocations.py",
-      "migrationIssue": 83,
-      "path": "Scripts/migration/test_compare_sun_pilot_allocations.py",
-      "testCount": 11
-    },
-    {
       "classification": "independent-reference",
       "id": "Scripts/migration/test_comparison.py",
       "migrationIssue": 80,
@@ -13272,21 +13258,7 @@
       "id": "Scripts/migration/test_comparison_execution.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison_execution.py",
-      "testCount": 16
-    },
-    {
-      "classification": "invariant",
-      "id": "Scripts/migration/test_constellation_corpus.py",
-      "migrationIssue": 91,
-      "path": "Scripts/migration/test_constellation_corpus.py",
-      "testCount": 17
-    },
-    {
-      "classification": "invariant",
-      "id": "Scripts/migration/test_current_search.py",
-      "migrationIssue": 84,
-      "path": "Scripts/migration/test_current_search.py",
-      "testCount": 10
+      "testCount": 15
     },
     {
       "classification": "smoke",
@@ -13300,14 +13272,7 @@
       "id": "Scripts/migration/test_historical_research.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_historical_research.py",
-      "testCount": 3
-    },
-    {
-      "classification": "invariant",
-      "id": "Scripts/migration/test_inverse_refraction.py",
-      "migrationIssue": 86,
-      "path": "Scripts/migration/test_inverse_refraction.py",
-      "testCount": 14
+      "testCount": 1
     },
     {
       "classification": "invariant",
@@ -13322,13 +13287,6 @@
       "migrationIssue": 80,
       "path": "Scripts/migration/test_performance_candidate.py",
       "testCount": 7
-    },
-    {
-      "classification": "invariant",
-      "id": "Scripts/migration/test_search_callback_corpus.py",
-      "migrationIssue": 84,
-      "path": "Scripts/migration/test_search_callback_corpus.py",
-      "testCount": 13
     },
     {
       "classification": "invariant",
@@ -13413,13 +13371,6 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_bundled_public_api.py",
       "testCount": 5
-    },
-    {
-      "classification": "invariant",
-      "id": "Scripts/reference-data/test_current_seasonal_search.py",
-      "migrationIssue": 81,
-      "path": "Scripts/reference-data/test_current_seasonal_search.py",
-      "testCount": 8
     },
     {
       "classification": "invariant",
@@ -13539,13 +13490,6 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_season_phase_events.py",
       "testCount": 12
-    },
-    {
-      "classification": "invariant",
-      "id": "Scripts/reference-data/test_seasonal_roots.py",
-      "migrationIssue": 81,
-      "path": "Scripts/reference-data/test_seasonal_roots.py",
-      "testCount": 13
     },
     {
       "classification": "invariant",

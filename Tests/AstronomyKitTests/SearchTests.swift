@@ -253,8 +253,8 @@ struct SearchTests {
 
 /// The public contract of the two callback-driven solvers, `AstroSearch.find` and `AstroSearch.correctLightTravel`:
 /// which requests return a value, return nil or throw, how many times a throwing callback is visited, and which times
-/// the callbacks receive. The cases and outcomes come from the #84 callback corpus (`SearchResearch/protocol.json`
-/// and `supplement.json`) as replayed against the repaired source. Exact per-visit traces are deliberately not
+/// the callbacks receive. The cases and outcomes come from the #84 callback corpus protocol and supplement (retained in
+/// the history of #143) as replayed against the source repaired in #145. Exact per-visit traces are deliberately not
 /// pinned: visit counts other than the throwing visit are solver internals, not part of the contract.
 ///
 /// Every window starts from a time built with an explicit model, so these tests never depend on the process default.

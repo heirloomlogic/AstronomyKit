@@ -4,6 +4,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
+import subprocess
 import tempfile
 import unittest
 from unittest import mock
@@ -206,67 +207,18 @@ class ExecutionIntegrityTests(unittest.TestCase):
         with mock.patch.object(E, 'select_current_environment', create=True, return_value=fields), self.assertRaises(ValueError):
             E.validate_environment({**receipt, 'platform': 'fabricated-platform'}, self.environment_log(forged))
 
-    def registered_proofs(self):
-        c = E.load(ROOT / 'Scripts/migration/run-comparison.py', 'test_registered_execution')
-        proofs = []
-        self.assertEqual(len(E.REGISTERED_EXECUTIONS), 4)
-        for binary_sha, (snapshot, path) in E.REGISTERED_EXECUTIONS.items():
-            receipt = E.read_json(__import__('gzip').decompress(c.git_blob(snapshot, path + 'candidate-build.json.gz')))
-            attempt = E.read_json(__import__('gzip').decompress(c.git_blob(snapshot, path + 'attempt.json.gz')))
-            log = __import__('gzip').decompress(c.git_blob(snapshot, path + 'swift-build.log.gz'))
-            self.assertEqual(receipt['binarySHA256'], binary_sha)
-            proofs.append((receipt, attempt, log))
-        return proofs
-
-    def test_registered_authority_precedes_mutable_header_and_is_portable(self):
-        for receipt, attempt, log in self.registered_proofs():
-            with self.subTest(tool_revision=attempt['toolRevision'], mode=attempt['mode']), mock.patch.object(E, 'select_current_environment', side_effect=AssertionError('historical anchor must be portable')):
-                actual_sha = receipt['binarySHA256']
-                self.assertEqual(E.validate_environment(receipt, log, attempt, actual_sha), receipt['command'][0])
-                fields, _ = self.environment_fixture()
-                fields['swiftCommand'][0] = '/nonexistent/forged/swift'
-                fields['platformCommand'][0] = '/nonexistent/forged/python'
-                fields['swiftStdoutBase64'] = base64.b64encode((receipt['swift'] + '\n').encode()).decode()
-                fields['platformStdoutBase64'] = base64.b64encode(b'fabricated-platform\n').decode()
-                body = log.split(b'\n', 1)[1] if log.startswith(E.ENVIRONMENT_MARKER) else log
-                forged_log = E.ENVIRONMENT_MARKER + json.dumps(fields).encode() + b'\n' + body
-                with self.assertRaises(ValueError):
-                    E.validate_environment(dict(receipt, platform='fabricated-platform'), forged_log, attempt, actual_sha)
-                with self.assertRaises(ValueError):
-                    E.validate_environment(dict(receipt, swift='invented'), log, attempt, actual_sha)
-
-    def test_registered_generation_nomination_cannot_transfer_execution_authority(self):
-        proofs = [proof for proof in self.registered_proofs() if proof[1]['mode'] == 'historical']
-        for original, other in [(proofs[0], proofs[1]), (proofs[1], proofs[0])]:
-            receipt, _, _ = original
-            other_receipt, other_attempt, other_log = other
-            changed = copy.deepcopy(receipt)
-            changed['toolSHA256'] = other_attempt['toolSHA256']
-            changed['buildLogSHA256'] = digest(other_log)
-            changed['command'][0] = other_receipt['command'][0]
-            for name in ('swift', 'platform'):
-                changed[name] = other_receipt[name]
-            with self.assertRaises(ValueError):
-                E.validate_environment(changed, other_log, other_attempt, receipt['binarySHA256'])
-
-    def test_complete_registered_execution_linkage_and_active_validator_nomination(self):
-        for receipt, attempt, log in self.registered_proofs():
-            actual_sha = receipt['binarySHA256']
-            for field, value in [('binarySHA256', '0' * 64), ('toolSHA256', {}), ('sourceRevision', 'wrong-source'), ('trackedTreeSHA256', {}), ('sourceInputsSHA256', {}), ('generatedInputsSHA256', {}), ('manifestSHA256', '0' * 64), ('recipe', {}), ('command', ['/different/compiler']), ('buildLogSHA256', '0' * 64), ('binaryRelativePath', 'different/product')]:
-                changed = copy.deepcopy(receipt)
-                changed[field] = value
-                with self.subTest(mode=attempt['mode'], field=field), self.assertRaises(ValueError):
-                    E.validate_environment(changed, log, attempt, actual_sha)
-            for field, value in [('mode', 'current' if attempt['mode'] == 'historical' else 'historical'), ('toolRevision', 'active-validator-nomination'), ('sourceRevision', 'wrong-source'), ('toolSHA256', {}), ('protocolSHA256', '0' * 64)]:
-                changed = dict(attempt, **{field: value})
-                with self.subTest(mode=attempt['mode'], field=field), mock.patch.object(E, 'select_current_environment', side_effect=AssertionError('known executable cannot fall back to live runtime')), self.assertRaises(ValueError):
-                    E.validate_environment(receipt, log, changed, actual_sha)
+    def test_execution_authority_requires_the_retained_executable_digest(self):
+        fields, receipt = self.environment_fixture()
+        log = self.environment_log(fields)
+        attempt = {'mode': 'current'}
+        with mock.patch.object(E, 'select_current_environment', return_value=fields):
+            self.assertEqual(E.validate_environment(dict(receipt, binarySHA256='0' * 64), log, attempt, '0' * 64), '/compiler/swift')
             with self.assertRaises(ValueError):
                 E.validate_environment(receipt, log, attempt)
             with self.assertRaises(ValueError):
-                E.validate_environment(receipt, log, attempt, '0' * 64)
+                E.validate_environment(dict(receipt, binarySHA256='1' * 64), log, attempt, '0' * 64)
 
-    def test_unregistered_runtime_rejects_each_jointly_editable_claim(self):
+    def test_runtime_rejects_each_jointly_editable_claim(self):
         fields, receipt = self.environment_fixture()
         for field in ('swiftCommand', 'platformCommand', 'swiftStdoutBase64', 'platformStdoutBase64'):
             forged = copy.deepcopy(fields)
@@ -280,6 +232,32 @@ class ExecutionIntegrityTests(unittest.TestCase):
                 E.validate_environment(forged_receipt, self.environment_log(forged))
         with mock.patch.object(E, 'select_current_environment', side_effect=AssertionError('header must not supply authority')), self.assertRaises(ValueError):
             E.validate_environment(receipt, b'Swift version 6.2\n')
+
+    def test_materializes_available_pinned_objects_without_changing_driver_head(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / 'driver'
+            subprocess.run(['git', 'init', '-q', str(root)], check=True)
+            (root / 'Sources').mkdir()
+            source = root / 'Sources/solver.c'
+            source.write_text('historical solver')
+            subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+            commit = ['git', '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm']
+            subprocess.run(commit + ['historical'], cwd=root, check=True)
+            revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
+            source.write_text('current repaired solver')
+            subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+            subprocess.run(commit + ['current'], cwd=root, check=True)
+            current = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip()
+            # Model an actions/checkout shallow boundary; all fetched pinned objects
+            # remain available even when their commits are not advertised by refs.
+            (root / '.git/shallow').write_text(current + '\n')
+            destination = Path(directory) / 'historical'
+            load = E.load
+            with mock.patch.object(E, 'ROOT', root), mock.patch.object(E, 'load', side_effect=lambda path, name: load(ROOT / path.relative_to(root), name)):
+                tracked = E.materialize(revision, destination)
+            self.assertEqual((destination / 'Sources/solver.c').read_text(), 'historical solver')
+            self.assertEqual(subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(), current)
+            self.assertEqual(set(tracked), {'Sources/solver.c'})
 
     def test_old_archive_fingerprint_failure_is_not_normalized_away(self):
         self.assertFalse(E.original_reproduction_passes(sampled_match=True, fingerprint_match=False, original_closure_recorded=False))
