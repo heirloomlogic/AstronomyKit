@@ -1,0 +1,30 @@
+{
+  "artifactSHA256": {
+    "assessment.json": "572b8251d81fd28736e8184763139a816ea1dcd66ccad0db03edecb944cf5caa",
+    "build-receipt.json": "2e1c13bde199a5708b5a3c1e6d54bc7c9c4cbbbdaca385713734924117a9b097",
+    "c-espenak-meeus-espenak-meeus.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "c-espenak-meeus-jpl-horizons.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "c-jpl-horizons-espenak-meeus.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "c-jpl-horizons-jpl-horizons.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "cold-c-espenak-meeus-espenak-meeus.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-c-espenak-meeus-jpl-horizons.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-c-jpl-horizons-espenak-meeus.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-c-jpl-horizons-jpl-horizons.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-swift-espenak-meeus-espenak-meeus.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-swift-espenak-meeus-jpl-horizons.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-swift-jpl-horizons-espenak-meeus.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "cold-swift-jpl-horizons-jpl-horizons.json.gz": "39fc84885d3469313cfdcac702c17284238afb2b15219af75e6a78e4e220258f",
+    "swift-espenak-meeus-espenak-meeus.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "swift-espenak-meeus-jpl-horizons.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "swift-jpl-horizons-espenak-meeus.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb",
+    "swift-jpl-horizons-jpl-horizons.json.gz": "e54dc6e27b0cf6e8e8bf1c4c83a137216882e7bed5c52e95add9bc50391e4ecb"
+  },
+  "originalManifestSHA256": "a6beefcf6881cebef3cea797dbe8166b15c7b2a06f1e79ff544b06d6b000110d",
+  "protocolSHA256": "242288fc517638d57fcaab49c64e766b337bc4dfcc6c541ea752b9ffc74efafe",
+  "schemaVersion": 1,
+  "toolSHA256": {
+    "Scripts/migration/constellation-corpus.py": "24f6af786a94966d33f9a2d0dd4ccab9ea6f17f91f0b144617d349cdbac8c690",
+    "Tools/Migration/ConstellationResearch/constellation-main.c": "404e6b11c3cd34b75a4753e3dae882b44f370771d51e128271b520684f9f79f7",
+    "Tools/Migration/ConstellationResearch/main.swift": "8d51934007597de5c373c3391060458227fdc157afa783bc136c6a4ec1c43aa6"
+  }
+}

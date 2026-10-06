@@ -1,0 +1,53 @@
+{
+  "classification": "matched-C-build-diagnostic; original ordinary-Debug mismatches retained",
+  "controls": {
+    "identicalEffectiveInputDoubleBits": {
+      "c/espenak-meeus": 7471,
+      "c/jpl-horizons": 7471,
+      "swift/espenak-meeus": 7471,
+      "swift/jpl-horizons": 7471
+    },
+    "mutationsDetected": {
+      "identity-frame": 7437,
+      "lower-exclusive": 1447,
+      "name": 7349,
+      "reverse": 7289,
+      "upper-inclusive": 1049
+    },
+    "publicRepresentation": "Double passed directly to Constellation.find; no Angle conversion"
+  },
+  "pairs": {
+    "espenak-meeus/espenak-meeus": {
+      "archivedNominalBoundaryIdentityChanges": [],
+      "coldSerialDifferences": 0,
+      "currentPublicRepresentatives": 88,
+      "exactParityDifferences": 0,
+      "postInitialModelDifferences": 0,
+      "requests": 7479
+    },
+    "espenak-meeus/jpl-horizons": {
+      "archivedNominalBoundaryIdentityChanges": [],
+      "coldSerialDifferences": 0,
+      "currentPublicRepresentatives": 88,
+      "exactParityDifferences": 0,
+      "postInitialModelDifferences": 0,
+      "requests": 7479
+    },
+    "jpl-horizons/espenak-meeus": {
+      "archivedNominalBoundaryIdentityChanges": [],
+      "coldSerialDifferences": 0,
+      "currentPublicRepresentatives": 88,
+      "exactParityDifferences": 0,
+      "postInitialModelDifferences": 0,
+      "requests": 7479
+    },
+    "jpl-horizons/jpl-horizons": {
+      "archivedNominalBoundaryIdentityChanges": [],
+      "coldSerialDifferences": 0,
+      "currentPublicRepresentatives": 88,
+      "exactParityDifferences": 0,
+      "postInitialModelDifferences": 0,
+      "requests": 7479
+    }
+  }
+}

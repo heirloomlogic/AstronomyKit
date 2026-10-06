@@ -2854,8 +2854,8 @@
     "generatedArtifacts": 118,
     "localPatches": 19,
     "publicSwiftAPI": 577,
-    "testOwners": 93,
-    "tests": 1039
+    "testOwners": 94,
+    "tests": 1056
   },
   "crossCuttingContracts": [
     {
@@ -3743,6 +3743,7 @@
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
     "Scripts/migration/test_comparison.py": "64772ae05b99400ded4377c96d9a159ef3e1e589aa03f83c24f18ca24e658883",
+    "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
     "Scripts/migration/test_foundation.py": "bb9225d194aa3037e9d24a86144a7da708edb9f933d96752b852b9c5a8c26a0f",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "89841bef8defc3124450ad379d32f21810cedc8ee954ff8ffd83b0e133ae0a91",
@@ -13246,6 +13247,13 @@
       "migrationIssue": 80,
       "path": "Scripts/migration/test_comparison.py",
       "testCount": 14
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/migration/test_constellation_corpus.py",
+      "migrationIssue": 91,
+      "path": "Scripts/migration/test_constellation_corpus.py",
+      "testCount": 17
     },
     {
       "classification": "smoke",

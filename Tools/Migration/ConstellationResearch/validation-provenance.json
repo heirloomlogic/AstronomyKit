@@ -1,0 +1,10 @@
+{
+  "classification": "offline-validator-provenance; acquisition and matched-build raw evidence remain unchanged",
+  "derivedManifestSHA256": "e1d6ce033b6c9421f54e59b9f1f78b74bb6c1dfef41a37133494408925c30ad2",
+  "schemaVersion": 1,
+  "toolSHA256": {
+    "Scripts/migration/constellation-corpus.py": "eb6dcc5a187e198afb01208de3998b763fec0d0382cd332a326e947ffb7c28ea",
+    "Tools/Migration/ConstellationResearch/constellation-main.c": "404e6b11c3cd34b75a4753e3dae882b44f370771d51e128271b520684f9f79f7",
+    "Tools/Migration/ConstellationResearch/main.swift": "8d51934007597de5c373c3391060458227fdc157afa783bc136c6a4ec1c43aa6"
+  }
+}
