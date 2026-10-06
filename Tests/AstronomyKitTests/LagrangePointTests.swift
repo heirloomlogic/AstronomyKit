@@ -423,7 +423,7 @@ struct LagrangePointTests {
         }
 
         /// Newton's method for L3 does not converge for these masses of similar
-        /// size, and `calculateFast` used to hang.
+        /// size, so `calculateFast` would hang without an iteration limit.
         @Test("L3 that does not converge throws noConvergence")
         func nonConvergingL3ThrowsNoConvergence() {
             #expect(throws: AstronomyError.noConvergence) {

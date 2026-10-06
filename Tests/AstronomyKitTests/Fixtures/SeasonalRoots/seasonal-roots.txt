@@ -2,10 +2,10 @@
 # Columns: year, event, reference, Espenak-Meeus regression, JPL Horizons regression.
 # reference: independent truth. The JPL Horizons geocentric Sun vector (LT+S), rotated at reception TT into the
 #   mean IAU 2006 ecliptic of date with the true equinox (ERFA pnm06a, obl06, nut06a), interpolated to the
-#   quarter-longitude crossing. This is the nominal reference of the seasonal-root assessment of issue #81.
-# regression: what Seasons.forYear returned under each Delta T model when that assessment was measured. These
+#   quarter-longitude crossing. This is the nominal reference for the seasonal roots.
+# regression: what Seasons.forYear returns under each Delta T model. These
 #   are engine output, not truth; they detect changes to the engine.
-# Values are the shortest decimal strings that round-trip to the archived binary64 values.
+# Values are the shortest decimal strings that round-trip to the binary64 values.
 1900 marchEquinox 2415099.568728077 2415099.5687461626 2415099.5687461626
 1900 juneSolstice 2415192.40259529 2415192.402498112 2415192.402498112
 1900 septemberEquinox 2415286.013990732 2415286.013970345 2415286.013970345

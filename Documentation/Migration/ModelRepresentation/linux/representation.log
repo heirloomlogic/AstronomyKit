@@ -1,9 +1,0 @@
-{
-  "failures": [],
-  "passed": true,
-  "summary": {
-    "cleanReleaseSeconds": 5.001998940000021,
-    "incrementalReleaseSeconds": 1.0337670069999945,
-    "strippedExecutableBytes": 14237432
-  }
-}

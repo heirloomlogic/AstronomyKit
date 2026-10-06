@@ -8,14 +8,12 @@ and full project are available at https://github.com/cosinekitty/astronomy.
 
 Astronomy Engine
 
-AstronomyKit also retains the complete VSOP87B data and the 77 IAU2000B nutation
-coefficient rows from Astronomy Engine revision
-826e26ff3a6dc03ee46658b1138fef582d96c5d9 under Scripts/model-data, from which
-the shipping headers under Sources/CLibAstronomy/generated are produced. Exact
-source URLs and SHA-256 hashes are recorded in Scripts/model-data/manifest.json.
-VSOP87 is the planetary theory of Pierre Bretagnon and Gerard Francou (Bureau
-des Longitudes); the upstream explanatory document is retained as
-Scripts/model-data/vsop87.txt.
+AstronomyKit also includes the complete VSOP87B data and the 77 IAU2000B
+nutation coefficient rows from Astronomy Engine revision
+826e26ff3a6dc03ee46658b1138fef582d96c5d9, checked in as the C tables
+Sources/CLibAstronomy/generated/vsop87b_full.h and iau2000b_full.h. VSOP87 is
+the planetary theory of Pierre Bretagnon and Gerard Francou (Bureau des
+Longitudes).
 
 MIT License
 
@@ -38,3 +36,102 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+-------------------------------------------------------------------------------
+
+ERFA (Essential Routines for Fundamental Astronomy)
+
+The time and frame routines in Sources/CLibAstronomy/EphemerisTime (dtdb.c,
+fw2m.c, ir.c, obl06.c, pfw06.c, pmat06.c, rx.c, rz.c, erfa.h, erfam.h) are an
+unmodified subset of ERFA 2.0.1, commit
+9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3, https://github.com/liberfa/erfa.
+Each file retains its original notice. The AstronomyKit wrapper
+(ephemeris_time.c and include/ephemeris_time.h) is separate from the official
+routines. The ERFA license follows.
+
+Copyright (C) 2013-2021, NumFOCUS Foundation.
+All rights reserved.
+
+This library is derived, with permission, from the International
+Astronomical Union's "Standards of Fundamental Astronomy" library,
+available from http://www.iausofa.org.
+
+The ERFA version is intended to retain identical
+functionality to the SOFA library, but made distinct through
+different function and file names, as set out in the SOFA license
+conditions. The SOFA original has a role as a reference standard
+for the IAU and IERS, and consequently redistribution is permitted only
+in its unaltered state. The ERFA version is not subject to this
+restriction and therefore can be included in distributions which do not
+support the concept of "read only" software.
+
+Although the intent is to replicate the SOFA API (other than replacement of
+prefix names) and results (with the exception of bugs; any that are
+discovered will be fixed), SOFA is not responsible for any errors found
+in this version of the library.
+
+If you wish to acknowledge the SOFA heritage, please acknowledge that
+you are using a library derived from SOFA, rather than SOFA itself.
+
+
+TERMS AND CONDITIONS
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1 Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+
+2 Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+3 Neither the name of the Standards Of Fundamental Astronomy Board, the
+   International Astronomical Union nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-------------------------------------------------------------------------------
+
+NASA/JPL DE440 and PLU060 ephemeris data
+
+The Moon and Pluto coefficient arrays in Sources/CLibAstronomy/EphemerisData
+were derived by Heirloom Logic from NASA/JPL planetary and satellite
+ephemerides obtained from the official NAIF distribution:
+
+  de440s.bsp, JPL planetary and lunar ephemeris DE440, integrated 25 June 2020
+  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp
+  SHA-256 c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2
+
+  plu060.bsp, PLU060 satellite ephemeris with Pluto barycenter, Sun,
+  Earth-Moon barycenter and Earth from DE440 (BVS/NAIF, 3 April 2024)
+  https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp
+  SHA-256 dfbb102491a26ed41ae08ca3f8963f22f0219df1d8f265ab87b9ad825a826fc6
+
+Heirloom Logic is responsible for the subtraction, unit conversion,
+coefficient selection, serialization and integration in AstronomyKit. The
+derived arrays are not official JPL SPK kernels. This package ships derived
+numeric coefficients and its own evaluator; it does not ship the CSPICE
+toolkit.
+
+Reference: R.S. Park, W.M. Folkner, J.G. Williams, and D.H. Boggs, The JPL
+Planetary and Lunar Ephemerides DE440 and DE441, Astronomical Journal 161, 105
+(2021), DOI 10.3847/1538-3881/abd414.
+
+NASA's SPICE system is developed by the Navigation and Ancillary Information
+Facility (NAIF) at the California Institute of Technology/Jet Propulsion
+Laboratory under contract to NASA. Use and redistribution rules, including the
+disclaimer applicable to NAIF-provided materials, are at
+https://naif.jpl.nasa.gov/naif/rules.html.

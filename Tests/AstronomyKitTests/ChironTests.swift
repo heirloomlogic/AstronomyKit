@@ -178,7 +178,7 @@ struct ChironTests {
 
         @Test("Position is not frozen near a reference epoch")
         func notFrozenNearEpoch() throws {
-            // Regression test: a former shortcut returned the epoch state
+            // The state must be evaluated at the requested time, not returned
             // verbatim for any time within a day of a reference epoch.
             let epoch = AstroTime(year: 2_020, month: 1, day: 1)
             let nearby = epoch.addingHours(12)

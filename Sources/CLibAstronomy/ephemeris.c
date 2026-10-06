@@ -1,5 +1,4 @@
-/* AstronomyKit bundled ephemeris evaluator. Data provenance and generation
- * contracts are recorded alongside the immutable tables in EphemerisData. */
+/* AstronomyKit bundled ephemeris evaluator. Data provenance: THIRD_PARTY_NOTICES. */
 #include "ephemeris.h"
 #include "ephemeris_time.h"
 #include <math.h>

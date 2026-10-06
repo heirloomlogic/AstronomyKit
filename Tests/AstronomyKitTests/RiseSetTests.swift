@@ -430,9 +430,9 @@ struct RiseSetTests {
     // MARK: - Extreme Inputs (#57)
 
     /// The rise/set loop steps 0.42 days at a time until it passes
-    /// `start + limitDays`. These inputs used to keep it stepping forever.
+    /// `start + limitDays`. These inputs would keep it stepping forever.
     /// `AltitudeSearchTests` covers a window that runs into the stall point,
-    /// since both searches share the loop. Since #62 the accepted time range
+    /// since both searches share the loop. The accepted time range
     /// rejects the stalled start times below at the first altitude evaluation,
     /// before the step check is reached; the tests still pin the outcome.
     @Suite("Extreme Inputs")

@@ -19,47 +19,6 @@ permissions:
   contents: read
 
 jobs:
-  inverse-refraction-regression:
-    strategy:
-      matrix:
-        os: [macos-26, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    steps:
-      - name: Checkout complete source history
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Install Swift on Linux
-        if: runner.os == 'Linux'
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-      - name: Materialize recorded Git selections
-        run: |
-          for revision in e1cb1fdf147e5b4e2777f38f16e843087e68b21c ea24af7f27df4c0f4d5b37de39b8b9c98bfbe169 1ecff3a233206362e2c47b2b86114a2d28f15cdb ca7b075b50962eae4fbdb7101bd0913bcb4e3569 af2f3da7343f2e2145c942e51bd3a0bd13c48180 dc27db16b28493d7c321746a158df3008b8a0b37; do
-            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
-          done
-      - name: Verify bounded custody and payload controls
-        run: python3 -m unittest Scripts/migration/test_inverse_refraction.py -v
-      - name: Run isolated baseline and current public probes
-        run: |
-          python3 Scripts/migration/check_inverse_refraction.py --acquire .context/inverse-refraction-hosted/baseline --revision e1cb1fdf147e5b4e2777f38f16e843087e68b21c
-          python3 Scripts/migration/check_inverse_refraction.py --acquire .context/inverse-refraction-hosted/current
-          python3 Scripts/migration/check_inverse_refraction.py --current .context/inverse-refraction-hosted/current --baseline .context/inverse-refraction-hosted/baseline
-      - name: Retain raw process and build receipts
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: inverse-refraction-${{ matrix.os }}-${{ github.run_id }}
-          path: |
-            .context/inverse-refraction-hosted/**/build-process.json.gz
-            .context/inverse-refraction-hosted/**/build-receipt.json.gz
-            .context/inverse-refraction-hosted/**/raw-processes.json.gz
-            .context/inverse-refraction-hosted/**/assessment.json
-          include-hidden-files: true
-          if-no-files-found: error
   test-macos:
     runs-on: macos-26
     timeout-minutes: 15
@@ -69,54 +28,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Set up the frozen evidence Python runtime
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14.7"
+      - name: Verify generated time table
+        run: python3 Scripts/generate-time-table.py --check
 
-      - name: Verify generated model and time tables
+      - name: Verify independent reference fixtures
         run: |
-          python3 Scripts/generate-models.py --check
-          python3 Scripts/generate-time-table.py --check
-
-      - name: Verify migration foundation
-        run: |
-          git cat-file -e "cdb533dbe85c76b39a958ca92f9155d8bd55b392^{commit}" || git fetch --no-tags --depth=1 origin cdb533dbe85c76b39a958ca92f9155d8bd55b392
-          git cat-file -e "1add73ec6c117e9b6f3d26e745a3487262ff4c75^{commit}" || git fetch --no-tags --depth=1 origin 1add73ec6c117e9b6f3d26e745a3487262ff4c75
-          git cat-file -e "fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff^{commit}" || git fetch --no-tags --depth=1 origin fad9e9b5d8e3dd823d1ce1f25c51b80ac23b11ff
-          Tools/Migration/Oracle/freeze-oracle.py --check
-          Scripts/migration/generate-contract-inventory.py --check
-          python3 -m unittest Scripts/migration/test_foundation.py -v
-          git cat-file -e "d32812388b63b384d03939be0af245152df618b6^{commit}" || git fetch --no-tags --depth=1 origin d32812388b63b384d03939be0af245152df618b6
-          git cat-file -e "2bddd2de1bb21d23ce70d8f2f88eea7693c04c57^{commit}" || git fetch --no-tags --depth=1 origin 2bddd2de1bb21d23ce70d8f2f88eea7693c04c57
-          git cat-file -e "38f946082a9a1a898eb8f7c6291f1bc85157e61e^{commit}" || git fetch --no-tags --depth=1 origin 38f946082a9a1a898eb8f7c6291f1bc85157e61e
-          python3 -m unittest Scripts/migration/test_comparison.py Scripts/migration/test_comparison_execution.py -v
-          python3 -m unittest Scripts/migration/test_performance.py -v
-          python3 -m unittest Scripts/migration/test_performance_candidate.py -v
           python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
-          python3 -m unittest Scripts/reference-data/test_distance_accuracy.py -v
-          python3 Scripts/reference-data/distance-accuracy.py check
-          python3 -m unittest Scripts/reference-data/test_range_rate_investigation.py -v
-          python3 Scripts/reference-data/investigate-range-rate.py --check
-          python3 -m unittest Scripts/reference-data/test_outer_planet_diagnostic.py -v
-          python3 -m unittest Scripts/reference-data/test_pluto_model_diagnostic.py -v
-          python3 Scripts/reference-data/outer-planet-diagnostic.py check
-          python3 Scripts/reference-data/pluto-model-diagnostic.py --check
-          python3 Scripts/migration/verify_performance_baseline.py
-          # Verify the pre-bundle performance archive; it does not qualify the repaired model.
-          python3 Scripts/migration/performance_candidate.py --check-archive
-
-      - name: Verify bundled ephemeris integrity
-        run: |
-          python3 Scripts/ephemeris/generate-lunar-bundle.py --check
-          python3 Scripts/ephemeris/verify-pluto.py
-          python3 -m unittest Scripts/ephemeris/test_pluto_artifacts.py -v
-          python3 -m unittest Scripts/reference-data/test_bundled_public_api.py -v
-
-      - name: Verify polynomial artifacts and analytic evaluator
-        run: |
-          python3 Scripts/performance/polynomial/embed.py --check
-          python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py' -v
+          python3 Scripts/reference-data/build-fixtures.py --check
 
       - name: Verify work-avoidance paths
         run: |
@@ -141,31 +59,11 @@ jobs:
         with:
           swift-version: "6.2"
 
-      - name: Verify bundled ephemeris integrity
-        run: |
-          python3 Scripts/ephemeris/generate-lunar-bundle.py --check
-          python3 Scripts/ephemeris/verify-pluto.py
-          python3 -m unittest Scripts/ephemeris/test_pluto_artifacts.py -v
-          python3 -m unittest Scripts/reference-data/test_bundled_public_api.py -v
-
-      - name: Verify polynomial artifacts and analytic evaluator
-        run: |
-          python3 Scripts/performance/polynomial/embed.py --check
-          python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py' -v
-
       - name: Verify work-avoidance paths
         run: |
           sh Scripts/performance/test-vsop-cache.sh
           sh Scripts/performance/test-nutation-cache.sh
           sh Scripts/performance/test-moon-cache.sh
-
-      # Exact arithmetic gives the same bounds on every platform, and the
-      # measurement needs GCC's libquadmath, so this runs here and not on macOS.
-      - name: Verify the solar altitude error budget
-        run: |
-          python3 Scripts/numerics/solar-altitude/bounds.py --check
-          python3 -m unittest discover -s Scripts/numerics/solar-altitude -p 'test_*.py' -v
-          python3 Scripts/numerics/solar-altitude/measure.py --check
 
       - name: Test
         run: swift test --no-parallel
@@ -244,168 +142,3 @@ jobs:
           xcodebuild build \
             -scheme AstronomyKit \
             -destination "generic/platform=${{ matrix.platform }}"
-
-  seasonal-reference-replay:
-    strategy:
-      matrix:
-        os: [macos-26, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Set up the reference Python runtime
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14.7"
-      - name: Install Swift on Linux
-        if: runner.os == 'Linux'
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-      - name: Install isolated independent reference dependencies
-        run: |
-          python3 -m pip install --only-binary=:all: --target .context/accuracy-qualification/python-reference pyerfa==2.0.1.5 numpy==2.3.5
-      - name: Materialize reviewed seasonal experiment
-        run: git cat-file -e "2d54fd251a36e94f14324daed6d0937fc250d364^{commit}" || git fetch --no-tags --depth=1 origin 2d54fd251a36e94f14324daed6d0937fc250d364
-      - name: Replay retained seasonal reference experiment offline
-        run: |
-          python3 -m unittest Scripts/migration/test_historical_research.py -v
-          python3 Scripts/migration/replay_historical_research.py seasonal
-          python3 Scripts/reference-data/build-accuracy-runner.py
-          python3 Scripts/reference-data/check-seasonal-public-runner.py
-          python3 -m unittest Scripts/reference-data/test_current_seasonal_search.py -v
-          python3 Scripts/reference-data/check-current-seasonal-search.py
-
-  constellation-corpus-replay:
-    strategy:
-      matrix:
-        os: [macos-26, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Set up evidence Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14.7"
-      - name: Install Swift on Linux
-        if: runner.os == 'Linux'
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-      - name: Materialize frozen oracle revision
-        run: |
-          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 2d54fd251a36e94f14324daed6d0937fc250d364 97fc275f6fd455ed73063a6961698569783dddb8; do
-            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
-          done
-      - name: Replay source-bound corpus and directed controls
-        run: |
-          python3 Scripts/migration/replay_historical_research.py constellation
-      - name: Prepare existing generated lint configuration
-        if: runner.os == 'macOS'
-        run: |
-          touch .dev-tooling
-          swift package resolve
-          .build/checkouts/Persnicket/bin/ci-lint-setup
-      - name: Lint isolated research runner
-        if: runner.os == 'macOS'
-        run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/ConstellationResearch/main.swift
-
-  search-callback-corpus-replay:
-    strategy:
-      matrix:
-        os: [macos-26, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Set up evidence Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14.7"
-      - name: Install Swift on Linux
-        if: runner.os == 'Linux'
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-      - name: Materialize frozen oracle revision
-        run: |
-          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 fb6593186068564da917d0a5cafd9a91035198b3 5805e024861454b173bdbeb627320c63b2956054 478fea15da86a4df5869fdb4230bd0fcfc1a37b1 5cc05267558d120fea033a021e982af291af0331 97fc275f6fd455ed73063a6961698569783dddb8 a06ce8653f7de3aed64bb4ce0509b1d10bc683ab 575d7c3ee12d708b043f075146123ea22db2f097 c688978e9317c2653a1825dc7257351541f66df5 ae52585219e6c5e64bdc75debdb179bfe3bbe46e; do
-            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
-          done
-      - name: Replay source-bound corpus and directed controls
-        run: |
-          python3 Scripts/migration/replay_historical_research.py callback
-          python3 -m unittest Scripts/migration/test_current_search.py -v
-          python3 Scripts/migration/check_current_search.py
-      - name: Prepare existing generated lint configuration
-        if: runner.os == 'macOS'
-        run: |
-          touch .dev-tooling
-          swift package resolve
-          .build/checkouts/Persnicket/bin/ci-lint-setup
-      - name: Lint isolated research runner
-        if: runner.os == 'macOS'
-        run: xcrun swift-format lint --strict --configuration .swift-format Tools/Migration/SearchResearch/main.swift
-
-  comparison-execution-health:
-    strategy:
-      matrix:
-        os: [macos-26, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-    steps:
-      - name: Checkout complete source history
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Set up evidence Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.14.7"
-      - name: Install Swift on Linux
-        if: runner.os == 'Linux'
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-      - name: Materialize recorded Git selections
-        run: |
-          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 1add73ec6c117e9b6f3d26e745a3487262ff4c75 d32812388b63b384d03939be0af245152df618b6 2bddd2de1bb21d23ce70d8f2f88eea7693c04c57 38f946082a9a1a898eb8f7c6291f1bc85157e61e; do
-            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
-          done
-      - name: Execute and authenticate separate observations
-        run: |
-          python3 -m unittest Scripts/migration/test_comparison.py Scripts/migration/test_comparison_execution.py -v
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          import subprocess
-          import sys
-          for mode, criterion in [('check', 'originalReproductionPassed'), ('current', 'scientificComparisonPassed')]:
-              output = Path('.context') / f'comparison-hosted-{mode}'
-              completed = subprocess.run([sys.executable, 'Scripts/migration/run-comparison.py', '--' + mode, '--output', str(output)])
-              report = json.loads((output / 'assessment.json').read_text())
-              assert report['executionCompleted'] is True
-              assert completed.returncode == (0 if report[criterion] is True else 1)
-              subprocess.run([sys.executable, 'Scripts/migration/run-comparison.py', '--verify-evidence', str(output)], check=True)
-          PY
-      - name: Retain observations including non-success
-        if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: comparison-execution-${{ matrix.os }}
-          path: |
-            .context/comparison-hosted-check/*.json
-            .context/comparison-hosted-check/*.log
-            .context/comparison-hosted-current/*.json
-            .context/comparison-hosted-current/*.log

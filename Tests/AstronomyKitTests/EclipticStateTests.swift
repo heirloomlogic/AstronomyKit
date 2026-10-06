@@ -316,7 +316,7 @@ struct EclipticStateTests {
 
     // MARK: - 5. Light-time iteration-count switch
 
-    @Test("Mercury rate is smooth across the archived light-time iteration transition")
+    @Test("Mercury rate is smooth across a light-time iteration-count transition")
     func iterationSwitch() throws {
         let center = 19_590.68873
         let step = 1e-4
@@ -417,7 +417,7 @@ struct EclipticStateTests {
         #expect(abs(a - d) * 86_400 < 1, "roots differ by \(abs(a - d) * 86_400) s")
     }
 
-    /// The archived motion investigation's Mars case: the independent station time is
+    /// A Mars station whose independent reference time is
     /// TT -33748.35542866588, and at the model's own root the orbital and frame
     /// contributions to the longitude rate (about ∓3.7e-5 deg/day) cancel.
     @Test("Mars station near TT -33748.355 agrees with the differenced position")

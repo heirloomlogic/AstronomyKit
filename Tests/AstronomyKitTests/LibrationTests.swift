@@ -81,7 +81,7 @@ struct LibrationTests {
     }
 
     /// The fundamental arguments grow with time, and wrapping them into
-    /// [0, 360) used to take one loop step per 360 degrees: about 10^14 steps
+    /// [0, 360) with a loop takes one step per 360 degrees: about 10^14 steps
     /// at these times. The values are meaningless this far out; the test only
     /// checks that the call returns.
     @Test("Libration at a far-off time returns promptly", arguments: [1e16, -1e16])

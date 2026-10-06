@@ -98,8 +98,9 @@ extension BundledEphemerisTests {
 extension BundledEphemerisTests {
     @Test("Public lunar apsis and node searches retain the independent event direction and minute target")
     func lunarEventRegression() {
-        // Frozen DE440/ERFA fresh-00 reference, acquired before shipping integration:
-        // Documentation/Migration/lunar-candidate-holdout-assessment.json.
+        // Lunar perigee and ascending node of 1903 July (TT), located from geometric
+        // geocentric JPL Horizons DE441 Moon states; the node uses the IAU 2006 mean
+        // ecliptic of date.
         let pericenter = 2_416_319.984182304 - 2_451_545.0
         let ascending = 2_416_324.69497546 - 2_451_545.0
         let apsis = Astronomy_SearchLunarApsis(Astronomy_TerrestrialTime(pericenter - 3))

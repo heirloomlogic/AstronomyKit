@@ -97,7 +97,7 @@ struct SearchTests {
         let start = AstroTime(ut: 20000, deltaTModel: model)
         let end = start.addingDays(1)
         let lower = try AstroSearch.find(from: start, to: end, toleranceSeconds: 0.001) { $0.universalTime - 20000 }
-        // Retain the reviewed legacy model-sensitive observation without imposing a new endpoint policy.
+        // A root exactly at the lower endpoint is found under JPL Horizons and not under Espenak-Meeus; the contract imposes no endpoint policy.
         if model == .espenakMeeus {
             #expect(lower == nil)
         } else {
@@ -243,7 +243,7 @@ struct SearchTests {
 
     @Test("Sun.searchLongitude wraps a target far outside 0-360 in constant time")
     func sunLongitudeWrappedTarget() throws {
-        // 90 + 360 * 10^9 used to take 10^9 loop steps per function evaluation.
+        // Wrapping 90 + 360 * 10^9 takes one fmod, not 10^9 loop steps per function evaluation.
         let start = AstroTime(year: 2025, month: 1, day: 1)
         let direct = try #require(try Sun.searchLongitude(90, after: start))
         let wrapped = try #require(try Sun.searchLongitude(90 + 360 * 1e9, after: start))
@@ -253,12 +253,12 @@ struct SearchTests {
 
 /// The public contract of the two callback-driven solvers, `AstroSearch.find` and `AstroSearch.correctLightTravel`:
 /// which requests return a value, return nil or throw, how many times a throwing callback is visited, and which times
-/// the callbacks receive. The cases and outcomes come from the #84 callback corpus (`SearchResearch/protocol.json`
-/// and `supplement.json`) as replayed against the repaired source. Exact per-visit traces are deliberately not
-/// pinned: visit counts other than the throwing visit are solver internals, not part of the contract.
+/// the callbacks receive. The cases and outcomes below pin that contract. Exact
+/// per-visit traces are deliberately not pinned: visit counts other than the throwing visit are solver internals, not
+/// part of the contract.
 ///
 /// Every window starts from a time built with an explicit model, so these tests never depend on the process default.
-/// Every callback goes through ``Visits/record(_:)``, which throws after the corpus's 128-visit research cap, so a
+/// Every callback goes through ``Visits/record(_:)``, which throws after a 128-visit cap, so a
 /// solver that stopped terminating fails its test instead of stalling the run; `.timeLimit` cannot interrupt a loop
 /// inside the C engine.
 @Suite("Search callback contract", .timeLimit(.minutes(1)))
@@ -284,7 +284,7 @@ struct SearchCallbackContractTests {
     static let baseUT = 20_000.0
     static let errorVisits = [1, 2, 3, 4, 7]
 
-    /// Days since the window's base UT, as the corpus fixtures measure them.
+    /// Days since the window's base UT.
     static func elapsed(_ time: AstroTime, from base: Double = baseUT) -> Double {
         time.universalTime - base
     }
@@ -384,8 +384,8 @@ struct SearchCallbackContractTests {
         #expect(abs(Self.elapsed(root) - 0.375) * 86_400 <= 0.2)
     }
 
-    /// The cubic is flat at its root, which slows the solver's interpolation; the corpus measured a result 3.5 ms
-    /// from the root under Espenak-Meeus and an exact one under JPL Horizons.
+    /// The cubic is flat at its root, which slows the solver's interpolation; the result lands within 10 ms of the
+    /// root under both models.
     @Test("A cubic with a flat root still converges near it", arguments: DeltaTModel.allCases)
     func flatCubic(model: DeltaTModel) throws {
         let root = try #require(try Self.find(model) { ($0 - 0.375) * ($0 - 0.375) * ($0 - 0.375) })
@@ -405,10 +405,10 @@ struct SearchCallbackContractTests {
         }
     }
 
-    /// The corpus flipped the process default between the two models on every visit. Installing JPL Horizons as the
-    /// default would shift times built by suites running in parallel (see `DeltaTThreadSafetyTests`), so this captures
-    /// JPL Horizons and only ever installs the Espenak-Meeus default. A callback time rebuilt from the default would
-    /// then carry the wrong model and a different TT.
+    /// A callback may change the process default model mid-search. Installing JPL Horizons as the default would shift
+    /// times built by suites running in parallel (see `DeltaTThreadSafetyTests`), so this captures JPL Horizons and
+    /// only ever installs the Espenak-Meeus default. A callback time rebuilt from the default would then carry the
+    /// wrong model and a different TT.
     @Test("Callback times keep the captured model when a callback changes the default")
     func callbackTimesKeepCapturedModel() throws {
         defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }

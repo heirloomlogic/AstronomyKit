@@ -4,8 +4,6 @@ import Testing
 @testable import AstronomyKit
 
 private struct DistanceReferenceArchive: Decodable {
-    let schemaVersion: Int
-    let allowancesSHA256: String
     let references: [Reference]
 
     struct Reference: Decodable, Sendable {

@@ -125,7 +125,7 @@ struct RelativeLongitudeTests {
 
         @Test("A target angle outside 0-360 wraps to the same event")
         func wrappedTarget() throws {
-            // Wrapping 90 + 360k used to take k loop steps; it is now one fmod.
+            // Wrapping 90 + 360k takes one fmod, not k loop steps.
             let start = AstroTime(year: 2025, month: 1, day: 1)
             let direct = try CelestialBody.mars.searchRelativeLongitude(90, after: start)
             let wrapped = try CelestialBody.mars.searchRelativeLongitude(90 + 360 * 1_000_000, after: start)

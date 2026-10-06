@@ -30,60 +30,13 @@ let package = Package(
                 .headerSearchPath("include")
             ]
         ),
-        .executableTarget(
-            name: "AstronomyMigrationRunner",
-            dependencies: ["AstronomyKit"],
-            path: "Tools/Migration/SwiftRunner"
-        ),
-        .executableTarget(
-            name: "AstronomyMigrationPerformanceRunner",
-            dependencies: ["AstronomyKit"],
-            path: "Tools/Migration/PerformanceRunner"
-        ),
         .testTarget(
             name: "AstronomyKitTests",
-            dependencies: ["AstronomyKit"]
+            dependencies: ["AstronomyKit"],
+            exclude: ["Fixtures"]
         ),
     ]
 )
-
-let packageDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
-let modelPrototypeSentinel = packageDir.appendingPathComponent(".model-prototype").path
-
-if FileManager.default.fileExists(atPath: modelPrototypeSentinel) {
-    package.products.append(.library(name: "AstronomyModelPrototype", targets: ["AstronomyModelPrototype"]))
-    package.targets += [
-        .target(name: "AstronomyPolynomialMercuryPrototype"),
-        .target(name: "AstronomyPolynomialVenusPrototype"),
-        .target(name: "AstronomyPolynomialEarthPrototype"),
-        .target(name: "AstronomyPolynomialMarsPrototype"),
-        .target(name: "AstronomyPolynomialJupiterPrototype"),
-        .target(name: "AstronomyPolynomialSaturnPrototype"),
-        .target(name: "AstronomyPolynomialUranusPrototype"),
-        .target(name: "AstronomyPolynomialNeptunePrototype"),
-        .target(name: "AstronomyVSOPPrototype"),
-        .target(name: "AstronomyNutationPrototype"),
-        .target(name: "AstronomyModelPrototypeGenerated"),
-        .target(
-            name: "AstronomyModelPrototype",
-            dependencies: [
-                "AstronomyModelPrototypeGenerated",
-                "AstronomyPolynomialMercuryPrototype",
-                "AstronomyPolynomialVenusPrototype",
-                "AstronomyPolynomialEarthPrototype",
-                "AstronomyPolynomialMarsPrototype",
-                "AstronomyPolynomialJupiterPrototype",
-                "AstronomyPolynomialSaturnPrototype",
-                "AstronomyPolynomialUranusPrototype",
-                "AstronomyPolynomialNeptunePrototype",
-                "AstronomyVSOPPrototype",
-                "AstronomyNutationPrototype",
-            ]
-        ),
-        .executableTarget(name: "AstronomyModelPrototypeRunner", dependencies: ["AstronomyModelPrototype"], path: "Tools/Migration/ModelPrototypeRunner"),
-        .testTarget(name: "AstronomyModelPrototypeTests", dependencies: ["AstronomyModelPrototype"]),
-    ]
-}
 
 // MARK: - Dev-only tooling
 //
@@ -102,6 +55,7 @@ if FileManager.default.fileExists(atPath: modelPrototypeSentinel) {
 // SwiftPM caches the evaluated manifest keyed on its source text alone, so a gate that reads
 // an external file is invisible to that cache key.
 
+let packageDir = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
 let devSentinel = packageDir.appendingPathComponent(".dev-tooling").path
 
 if FileManager.default.fileExists(atPath: devSentinel) {
@@ -109,20 +63,7 @@ if FileManager.default.fileExists(atPath: devSentinel) {
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
         .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
     ]
-    let generatedPrototypeTargets: Set<String> = [
-        "AstronomyModelPrototypeGenerated",
-        "AstronomyNutationPrototype",
-        "AstronomyPolynomialEarthPrototype",
-        "AstronomyPolynomialJupiterPrototype",
-        "AstronomyPolynomialMarsPrototype",
-        "AstronomyPolynomialMercuryPrototype",
-        "AstronomyPolynomialNeptunePrototype",
-        "AstronomyPolynomialSaturnPrototype",
-        "AstronomyPolynomialUranusPrototype",
-        "AstronomyPolynomialVenusPrototype",
-        "AstronomyVSOPPrototype",
-    ]
-    for target in package.targets where target.name != "CLibAstronomy" && !generatedPrototypeTargets.contains(target.name) {
+    for target in package.targets where target.name != "CLibAstronomy" {
         target.plugins = (target.plugins ?? []) + [.plugin(name: "Persnoop", package: "Persnicket")]
     }
 }

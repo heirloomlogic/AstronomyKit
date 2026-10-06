@@ -1,6 +1,0 @@
-{
-  "epochsSHA256": "aa87d839bbbfc60f758ee82c4f3444adb92099f4c2dc4985f60acf731c85fe98",
-  "method": "60 decimal digits; decimal coefficients from original fixed columns; mpmath cos/fsum; direct power series",
-  "mpmathVersion": "1.4.1",
-  "sha256": "ce0ceb68d7bd5a23d45017340cd0630effa5beb26340814efcc6ad4e12a602a4"
-}

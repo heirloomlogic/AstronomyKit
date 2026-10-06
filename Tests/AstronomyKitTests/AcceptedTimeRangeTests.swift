@@ -10,9 +10,9 @@ import Testing
 @testable import AstronomyKit
 
 /// The ephemeris models accept a Terrestrial Time within 4000 Julian years of
-/// J2000 (`|tt| <= 1_461_000` days). Outside it they used to report success with
+/// J2000 (`|tt| <= 1_461_000` days). Outside it they would report success with
 /// absurd values (a negative distance for Mars at `ut: 1e10`) and then NaN (every
-/// distance at `ut: 1e300`); they now throw `badTime`.
+/// distance at `ut: 1e300`); they throw `badTime`.
 @Suite("Accepted Time Range")
 struct AcceptedTimeRangeTests {
     static let limit = 1_461_000.0
@@ -73,9 +73,9 @@ struct AcceptedTimeRangeTests {
         #expect(throws: AstronomyError.badTime) { _ = try Jupiter.moons(at: time) }
     }
 
-    /// The issue's cases: Neptune's apsis search used to return its start time
+    /// Neptune's apsis search would return its start time
     /// with a NaN distance at `ut: 1e300`, a 3.8e40 AU distance at `1e15`, and
-    /// -1068 AU at `1e8`; Mars returned 11,499 AU at `1e8`.
+    /// -1068 AU at `1e8`, and Mars an 11,499 AU distance at `1e8`.
     @Test("Apsis and node searches throw badTime far outside the range", arguments: farTimes)
     func searchesThrow(ut: Double) {
         let time = AstroTime(ut: ut)

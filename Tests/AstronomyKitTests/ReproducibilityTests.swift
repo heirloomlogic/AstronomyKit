@@ -2,10 +2,8 @@
 // Expected values are frozen reference bit patterns; comparisons allow
 // native-libm rounding differences within tight budgets.
 // These tight regression budgets are not absolute astronomical accuracy claims.
-// Independent JPL/Audit and event references remain unchanged.
-// Moon/Pluto expectations explicitly use bundled-de440-pluto-center-v1.
-// The original source and exact old/new mapping are preserved in
-// Documentation/Migration/BundledRegressionSnapshots/; all tolerances are unchanged.
+// Absolute accuracy is checked against published JPL and USNO values elsewhere.
+// Moon and Pluto expectations come from the bundled DE440 and Pluto ephemerides.
 
 import Testing
 
@@ -423,8 +421,7 @@ struct ReproducibilityTests {
 
     @Test("Chiron ecliptic position at 2026-07-24T00:00Z (within 1900–2150 bounds)")
     func chironEcliptic2026() throws {
-        // Issue #108 intentionally replaces the frozen C oracle's single long
-        // integration step with the pinned upstream harness's half-day steps.
+        // Chiron is integrated in half-day steps rather than a single long step.
         expectEcliptic(
             try Chiron.ecliptic(at: Self.t2026),
             lon: 0x403e_d067_f549_56d8, lat: 0x3fd0_01bd_28a6_4e04, dist: 0x4032_421b_f154_458f,
@@ -435,8 +432,7 @@ struct ReproducibilityTests {
     // MARK: - 7. Geocentric Ecliptic Rates
 
     /// Compares ecliptic rates in degrees per day and AU per day. The Moon's rates
-    /// are now analytic in the bundled interval. Preserve the historical Moon
-    /// regression budgets so model replacement does not silently redefine them.
+    /// are analytic in the bundled interval and keep looser budgets than the other bodies.
     private func expectEclipticRates(
         _ state: EclipticState,
         lonRate: UInt64,

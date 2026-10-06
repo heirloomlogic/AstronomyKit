@@ -35,9 +35,9 @@ Positions, states, distances, and the searches built on them accept a Terrestria
 
 ## Planetary calculation performance
 
-For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates polynomial approximations of the complete VSOP87B model. Position and heliocentric velocity use the same polynomial; distance comes from its position vector. Segments that fail the numerical regression checks, and dates outside this coverage, use the complete original series. Supported dates are unchanged.
+For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates polynomial approximations of the complete VSOP87B model. Position and heliocentric velocity use the same polynomial; distance comes from its position vector. Segments that did not meet the 1e-12 AU fit budget, and dates outside this coverage, use the complete original series. Supported dates are unchanged.
 
-The tables add about 11.5 MB before platform packaging. No files are downloaded or loaded at runtime. See the [polynomial evaluation notes](Scripts/performance/polynomial/README.md).
+The polynomial tables add about 11.5 MB before platform packaging. No files are downloaded or loaded at runtime.
 
 ## Numerical compatibility
 
@@ -354,6 +354,8 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 ## Credits
 
 - [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross, the underlying C library (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
+- [ERFA](https://github.com/liberfa/erfa), derived from the IAU SOFA library, for the time and frame routines of the bundled Moon and Pluto ephemerides
+- NASA/JPL DE440 and PLU060 ephemerides, from which the bundled Moon and Pluto coefficients are derived
 
 ## License
 
