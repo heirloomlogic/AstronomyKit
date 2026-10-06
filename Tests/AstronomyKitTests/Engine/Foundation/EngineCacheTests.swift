@@ -295,6 +295,13 @@ struct EngineBoundedCacheTests {
 
 @Suite("Engine.CacheRegistry")
 struct EngineCacheRegistryTests {
+    /// Caches kept referenced, from any thread, so the registry keeps them.
+    final class Kept: @unchecked Sendable {
+        private let lock = NSLock()
+        private var caches: [Engine.BoundedCache<Int, Int>] = []
+        func add(_ cache: Engine.BoundedCache<Int, Int>) { lock.withLock { caches.append(cache) } }
+    }
+
     @Test("removeAll empties every cache registered with it and no other")
     func resetReachesRegisteredCaches() {
         let registry = Engine.CacheRegistry()
@@ -317,15 +324,36 @@ struct EngineCacheRegistryTests {
     @Test("Caches registered while another thread resets are all reachable")
     func concurrentRegistration() {
         let registry = Engine.CacheRegistry()
+        let kept = Kept()
         DispatchQueue.concurrentPerform(iterations: 64) { index in
             if index.isMultiple(of: 8) {
                 registry.removeAll()
             } else {
                 let cache = Engine.BoundedCache<Int, Int>(capacity: 1, registry: registry)
                 _ = cache.value(for: index) { index }
+                kept.add(cache)
             }
         }
-        #expect(registry.count == 56)
+        withExtendedLifetime(kept) {
+            #expect(registry.count == 56)
+        }
+    }
+
+    @Test("A cache nobody references leaves the registry")
+    func droppedCacheLeaves() {
+        let registry = Engine.CacheRegistry()
+        let kept = Engine.BoundedCache<Int, Int>(capacity: 1, registry: registry)
+        _ = kept.value(for: 1) { 1 }
+        for index in 0..<100 {
+            let dropped = Engine.BoundedCache<Int, Int>(capacity: 1, registry: registry)
+            _ = dropped.value(for: index) { index }
+        }
+
+        withExtendedLifetime(kept) {
+            #expect(registry.count == 1)
+            registry.removeAll()
+            #expect(kept.count == 0)
+        }
     }
 
     /// A cache in the shared registry, made once like an engine cache.

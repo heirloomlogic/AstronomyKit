@@ -117,32 +117,43 @@ extension Engine {
 
     /// The caches that one reset empties.
     ///
-    /// A cache registers when it is created. Engine caches are `static let`
-    /// properties of the module that owns them, created on first use, so the
-    /// registry holds exactly the caches that can hold entries. Tests create
-    /// their own registry.
+    /// A cache registers when it is created. The registry holds it weakly, so
+    /// a cache nobody references leaves the registry, and the registry holds
+    /// only caches that can be read again. Engine caches are `static let`
+    /// properties of the module that owns them, created on first use. Tests
+    /// create their own registry.
     final class CacheRegistry: @unchecked Sendable {
         /// The registry ``Engine/resetCaches()`` empties.
         static let shared = CacheRegistry()
 
-        // See BoundedCache for the choice of NSLock. `caches` is only touched
-        // while `lock` is held.
-        private let lock = NSLock()
-        private var caches: [any ResettableCache] = []
-
-        func register(_ cache: any ResettableCache) {
-            lock.withLock { caches.append(cache) }
+        private struct Entry {
+            weak var cache: (any ResettableCache)?
         }
 
-        /// Empties every registered cache.
+        // See BoundedCache for the choice of NSLock. `entries` is only touched
+        // while `lock` is held.
+        private let lock = NSLock()
+        private var entries: [Entry] = []
+
+        /// Adds `cache` and drops the entries of caches that no longer exist,
+        /// so the list never outgrows the most caches alive at once.
+        func register(_ cache: any ResettableCache) {
+            lock.withLock {
+                entries.removeAll { $0.cache == nil }
+                entries.append(Entry(cache: cache))
+            }
+        }
+
+        /// Empties every registered cache that still exists.
         func removeAll() {
             // Take the list first so no cache lock is taken under this one.
-            for cache in lock.withLock({ caches }) {
+            for cache in lock.withLock({ entries.compactMap(\.cache) }) {
                 cache.removeAll()
             }
         }
 
-        var count: Int { lock.withLock { caches.count } }
+        /// The number of registered caches that still exist.
+        var count: Int { lock.withLock { entries.count { $0.cache != nil } } }
     }
 
     /// Empties every engine cache. Results do not change; the next calls that
