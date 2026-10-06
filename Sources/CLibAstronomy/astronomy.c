@@ -128,6 +128,9 @@
         during the 32 days exterior to the 1900-through-2130 TT interval.
         GeoMoonState uses the position at the requested instant, and Pluto
         states include the legacy interpolant's blend derivative throughout.
+      - Ascending search validation: both success paths in Astronomy_Search
+        require callback endpoint signs that establish an ascending bracket;
+        quadratic acceptance also requires a positive fitted derivative.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -7817,12 +7820,19 @@ astro_search_result_t Astronomy_Search(
 
     for(;;)
     {
+        /* AstronomyKit local patch: callback signs establish direction;
+         * an interpolant's slope alone does not establish an ascending event.
+         * Include a zero endpoint only when the other endpoint supplies direction. */
+        int forward = (t1.ut <= t2.ut);
+        double earlier = forward ? f1 : f2;
+        double later = forward ? f2 : f1;
+        int ascending_bracket = (earlier <= 0.0 && later >= 0.0 && (earlier < 0.0 || later > 0.0));
         if (++iter > iter_limit)
             return SearchError(ASTRO_NO_CONVERGE);
 
         dt = (t2.tt - t1.tt) / 2.0;
         tmid = Astronomy_AddDays(t1, dt);
-        if (fabs(dt) < dt_days)
+        if (ascending_bracket && fabs(dt) < dt_days)
         {
             /* We are close enough to the event to stop the search. */
             result.time = tmid;
@@ -7843,7 +7853,7 @@ astro_search_result_t Astronomy_Search(
         {
             tq = TimeFromDaysLike(q_ut, t1);    /* AstronomyKit local patch (captured Delta T) */
             CALLFUNC(fq, tq);
-            if (q_df_dt != 0.0)
+            if (ascending_bracket && q_df_dt > 0.0)
             {
                 dt_guess = fabs(fq / q_df_dt);
                 if (dt_guess < dt_days)
@@ -7885,14 +7895,14 @@ astro_search_result_t Astronomy_Search(
 
         /* After quadratic interpolation attempt. */
         /* Now just divide the region in two parts and pick whichever one appears to contain a root. */
-        if (f1 < 0.0 && fmid >= 0.0)
+        if ((forward && f1 < 0.0 && fmid >= 0.0) || (!forward && fmid < 0.0 && f1 >= 0.0))
         {
             t2 = tmid;
             f2 = fmid;
             continue;
         }
 
-        if (fmid < 0.0 && f2 >= 0.0)
+        if ((forward && fmid < 0.0 && f2 >= 0.0) || (!forward && f2 < 0.0 && fmid >= 0.0))
         {
             t1 = tmid;
             f1 = fmid;

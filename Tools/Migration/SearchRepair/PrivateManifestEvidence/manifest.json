@@ -1,0 +1,22 @@
+{
+  "classification": "separate-private-manifest-current-seasonal-proof",
+  "command": "/opt/homebrew/bin/python3 Scripts/reference-data/check-current-seasonal-search.py",
+  "currentValidatorProvenancePath": "Documentation/Migration/seasonal-root-current-validator-provenance.json",
+  "currentValidatorProvenanceSHA256": "b4ca766ef896db61d7a8aafc5f51f8ba235c72529e0798636bb1cb16e6f69304",
+  "executionRevision": "31b7c00bdb47d901740709852e59fdd4de9db38a",
+  "filesSHA256": {
+    "assessment.json.gz": "485cba9e201ef8addfa09daf95cb33a7443b6e896b72b3271063d51e8a2a41e1",
+    "build-receipt.json": "492e647d113195fa99a072b3a1847208fe0cd17ce5f285ec208d4b04eb79689c",
+    "build.log.gz": "00ba80d9bb038a9db82976125f7dcdf9c2d86ff6b67b52b8cf958e8d0b8bd30d",
+    "execution-receipt.json": "fc2616cd38a9fa27cf39f9439264777d04dafb0440be4540ad1927c26105509d",
+    "isolation-after.json": "247fdad71e0cb930a1f3f5a2c461451e1c3bba7f2196d0612f42c24f1579a7f0",
+    "isolation-before.json": "b69ab257a682645d383ce6f8b04dc48e1b6768366a408a74a15c9affdbcb5af2"
+  },
+  "legacyRunnerPackageAbsentBeforeAndAfter": true,
+  "limitations": [
+    "Finite current regression; original scientific uncertainty and frozen targets unchanged.",
+    "A setup command initially used the wrong working directory; absent reference dependencies rejected before any build or scientific execution. The failure log is .context/fixer-145-global-fresh.log.",
+    "The 5ac125b8 proof and all prior original measurement/build/tool receipts remain unchanged; this proof is separate."
+  ],
+  "seasonalComparisons": 3696
+}

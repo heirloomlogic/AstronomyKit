@@ -1,0 +1,22 @@
+{
+  "classification": "task-scoped-measurement-evidence-not-standing-gate",
+  "completeInputMapAmendmentRevision": "6bcd82eae5ac8c031910ae90b5280203b8045aef",
+  "failedAttemptBoundary": "Initial current callback assessment rejected reversed-window behavior; this is failed evidence, not qualified current behavior. The first failed seasonal payload had correct scientific events but different actual-source hashes; full payload/log retained locally. Original #84 first-attempt raw loss remains unchanged. The initial callback validator file was edited while that failed trial ran; its recorded validator-file hash does not prove executed validator code identity. Retain its raw packets and receipt as failed observations only.",
+  "filesSHA256": {
+    "callback-assessment.json": "121d8816cf805548cd7fa502454e34ed97989329cfcb8840c8ff5f678a99fd77",
+    "callback-build-receipt.json": "ce3933488910e2996e735f92b673c25f433e00eec8ed05a5083e09d53ddd5f11",
+    "callback-raw-runs.json.gz": "cb233279a0ddd7028a8e6298ecfaf0228504053f228a940b2212d1b9418b2e0a",
+    "current-seasonal-summary.json": "c99efc3571800b10f5f94a3c1eb585a5ffde072fd9ef6cedf40c1d33b3e31660",
+    "failed-callback-build-receipt.json": "9bde947471fd253ea56d460e860fba1a483bd4f2be25f09d87e4f315319ad2a8",
+    "failed-callback-raw-runs.json.gz": "603c5fc6fe9401b07c245d49d4a2736c14058cb46e5f5f2372e7a1ec34dd6edd",
+    "migration-base.json.gz": "e9ea42d4d5ad16d4ebb79da3b139026bc6c53973dc781db9b34f9dd92a41b83d",
+    "migration-current.json.gz": "81b229b50d2f1bbad2177070ef175ee81620d7183b8bb2c850fe2d66b5bcf27f",
+    "narrow-map-callback-assessment.json": "f311641220bb19ba142f4f9c2f4504592a0de0b85487ea1e64bf16d89a9bde06",
+    "narrow-map-callback-build-receipt.json": "27e3b192af57b052c47eeeaded7360abfd678e0e98aed7737f8a6c29d88ac4e5",
+    "narrow-map-callback-raw-runs.json.gz": "cb233279a0ddd7028a8e6298ecfaf0228504053f228a940b2212d1b9418b2e0a"
+  },
+  "narrowMapBoundary": "Prior 106-process measurements validated the same seven corrections but omitted generated .inc files from source maps. They remain separately named narrower-map evidence. The repeated official source population includes all 72 files under both compiled source trees, including four coefficient .inc files.",
+  "prospectiveRevision": "ae52585219e6c5e64bdc75debdb179bfe3bbe46e",
+  "repairSourceRevision": "c688978e9317c2653a1825dc7257351541f66df5",
+  "solverSourceRevision": "575d7c3ee12d708b043f075146123ea22db2f097"
+}

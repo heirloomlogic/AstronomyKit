@@ -10,6 +10,104 @@ import Testing
 
 @Suite("AstroSearch Tests")
 struct SearchTests {
+    @Test(
+        "Descending and constant callbacks have no ascending event",
+        arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func rejectsFalseRoots(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        for days in [1.0, 1e-10, 0.0] {
+            for tolerance in [0.001, 1.0, -0.001, Double.infinity] {
+                let end = start.addingDays(days)
+                let descending = try AstroSearch.find(from: start, to: end, toleranceSeconds: tolerance) { time in
+                    20000 + days / 2 - time.universalTime
+                }
+                #expect(descending == nil, "Descending window \(days), tolerance \(tolerance)")
+                for value in [-1.0, 0.0, 1.0, -Double.greatestFiniteMagnitude, Double.greatestFiniteMagnitude] {
+                    let constant = try AstroSearch.find(from: start, to: end, toleranceSeconds: tolerance) { _ in value
+                    }
+                    #expect(constant == nil, "Constant \(value), window \(days), tolerance \(tolerance)")
+                }
+            }
+        }
+    }
+
+    @Test("Reported false-positive reproductions return nil", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func reportedFalsePositives(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        let descending = try AstroSearch.find(from: start, to: start.addingDays(1), toleranceSeconds: 0.001) {
+            20000.375 - $0.universalTime
+        }
+        let absent = try AstroSearch.find(from: start, to: start.addingDays(1e-10), toleranceSeconds: 0.001) { _ in 1 }
+        #expect(descending == nil)
+        #expect(absent == nil)
+    }
+
+    @Test(
+        "Ascending interpolation and short brackets still succeed", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func ascendingSuccessPaths(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        for days in [1.0, 1e-10] {
+            let target = start.universalTime + days / 2
+            let root = try #require(
+                try AstroSearch.find(from: start, to: start.addingDays(days), toleranceSeconds: 0.001) {
+                    $0.universalTime - target
+                })
+            #expect(abs(root.universalTime - target) * 86400 < 0.001)
+            #expect(root.deltaTModel == model)
+        }
+        let quadratic = try #require(
+            try AstroSearch.find(from: start, to: start.addingDays(1), toleranceSeconds: 0.001) { time in
+                let u = time.universalTime - 20000
+                return u * u - 0.140625
+            })
+        #expect(abs(quadratic.universalTime - 20000.375) * 86400 < 0.001)
+    }
+
+    @Test("Reversed ordinary windows retain ascending direction", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func reversedWindow(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        let end = start.addingDays(1)
+        let ascending = try #require(
+            try AstroSearch.find(from: end, to: start, toleranceSeconds: 0.001) {
+                $0.universalTime - 20000.375
+            })
+        #expect(abs(ascending.universalTime - 20000.375) * 86400 < 0.001)
+        let descending = try AstroSearch.find(from: end, to: start, toleranceSeconds: 0.001) {
+            20000.375 - $0.universalTime
+        }
+        #expect(descending == nil)
+    }
+
+    @Test("An internal ascending bracket remains discoverable", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func internalAscendingBracket(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        // The equal-sign outer endpoints must not cause an immediate rejection.
+        // This finite example observes existing subdivision, not completeness for multiple roots.
+        let result = try #require(
+            try AstroSearch.find(from: start, to: start.addingDays(1), toleranceSeconds: 0.001) { time in
+                let u = time.universalTime - 20000
+                return (u - 0.25) * (u - 0.75)
+            })
+        #expect(abs(result.universalTime - 20000.75) * 86400 < 0.001)
+    }
+
+    @Test(
+        "Observed ordinary endpoint searches retain their results", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
+    func ordinaryEndpoints(model: DeltaTModel) throws {
+        let start = AstroTime(ut: 20000, deltaTModel: model)
+        let end = start.addingDays(1)
+        let lower = try AstroSearch.find(from: start, to: end, toleranceSeconds: 0.001) { $0.universalTime - 20000 }
+        // Retain the reviewed legacy model-sensitive observation without imposing a new endpoint policy.
+        if model == .espenakMeeus {
+            #expect(lower == nil)
+        } else {
+            #expect(abs(try #require(lower).universalTime - 20000) * 86400 < 0.001)
+        }
+        let upper = try #require(
+            try AstroSearch.find(from: start, to: end, toleranceSeconds: 0.001) { $0.universalTime - 20001 })
+        #expect(abs(upper.universalTime - 20001) * 86400 < 0.001)
+    }
+
     @Test("Sun.searchLongitude finds March equinox near Seasons result")
     func sunLongitudeMatchesSeasons() throws {
         let start = AstroTime(year: 2025, month: 1, day: 1)

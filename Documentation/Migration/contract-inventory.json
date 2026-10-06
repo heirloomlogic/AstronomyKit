@@ -2852,10 +2852,10 @@
     "cDependencies": 334,
     "crossCuttingContracts": 5,
     "generatedArtifacts": 118,
-    "localPatches": 19,
+    "localPatches": 20,
     "publicSwiftAPI": 577,
-    "testOwners": 95,
-    "tests": 1069
+    "testOwners": 98,
+    "tests": 1093
   },
   "crossCuttingContracts": [
     {
@@ -3738,13 +3738,15 @@
     }
   ],
   "inputHashes": {
-    "MAINTAINING.md": "b862ad5eaf3b679d43f991ff1f021934a413a2881d38df0d33030d24bc4679d1",
+    "MAINTAINING.md": "28a67aca0354362551cbcf171bb64a59b21bbfb0e8bbea5fd220ea03fcd7726a",
     "Scripts/ephemeris/test_lunar_bundle.py": "a1eb8f4eca38531eab3d952f159a607675bee57bfec3aa9905b4640d9ea556df",
     "Scripts/ephemeris/test_pluto_artifacts.py": "859628cd2ce553caa630b54faebf57047cdab2cfc4a1f4296331e964bcd610ed",
     "Scripts/migration/test_compare_sun_pilot_allocations.py": "a8773e1da23b23b8d1ddcb3b86d858aa36002a68e466bf5edd2b98b2f883acad",
     "Scripts/migration/test_comparison.py": "64772ae05b99400ded4377c96d9a159ef3e1e589aa03f83c24f18ca24e658883",
     "Scripts/migration/test_constellation_corpus.py": "334ec2d7b24468d5dd467ddaea0576416019e40614ec17d20f4426a5e90555e2",
-    "Scripts/migration/test_foundation.py": "bb9225d194aa3037e9d24a86144a7da708edb9f933d96752b852b9c5a8c26a0f",
+    "Scripts/migration/test_current_search.py": "0207424330238554246e6b2831f1e5da2345653101f4049985ac8be2d1c99111",
+    "Scripts/migration/test_foundation.py": "d7a459d712fd1c2cf5195132d499b916bd823a5f2410dad64c177c454b937c8c",
+    "Scripts/migration/test_historical_research.py": "e7c7e01c3b3b1db85d03ff70cc5965952e1c7e6ac17f2a29eebed937dff76294",
     "Scripts/migration/test_performance.py": "5083792dd3b917052e1dd547d20cc71454a57f0431dd394db022f7c105689f0b",
     "Scripts/migration/test_performance_candidate.py": "89841bef8defc3124450ad379d32f21810cedc8ee954ff8ffd83b0e133ae0a91",
     "Scripts/migration/test_search_callback_corpus.py": "823992036d73516ded4b21de38b55127ea4bf1f27882a141eb046c5a2f0532ff",
@@ -3760,6 +3762,7 @@
     "Scripts/reference-data/test_approved_distance.py": "0cfe3e0563b080192d355f48460ca80d320e96d6c03493afc440be74cb85c81f",
     "Scripts/reference-data/test_build_fixtures.py": "8346519e0e597d806770e1d266a3b79ad83e1f3a6914d4a3b747b88187346874",
     "Scripts/reference-data/test_bundled_public_api.py": "bcec34528023c0bd233da5b7b8bed7c33ed689ff513e726c4b006832f78ef474",
+    "Scripts/reference-data/test_current_seasonal_search.py": "b11fb2f7134cea6ff4084dd79560bafe366d4bae53acbcdc5070dbeaa19bb778",
     "Scripts/reference-data/test_diagnose_polar_sunrise.py": "96688a62ad6a72a8a53fc1b2e53b854ea124711ac0600086ee1b6d0ec554bac1",
     "Scripts/reference-data/test_distance_accuracy.py": "fa53ef7abe30aa093c3c17c896f6ca2584bb185155b9b6a312794c57e271389b",
     "Scripts/reference-data/test_geometric_events.py": "480595a0f3df2c26ec1f35f0c7be8d83de8d752479fd64df7793c02d31c48f20",
@@ -3777,7 +3780,7 @@
     "Scripts/reference-data/test_range_rate_investigation.py": "55ae0d261f180376a93926e91c3b7cbfec16ed59c3b95c0def7caba057855d9a",
     "Scripts/reference-data/test_saturn_apsis.py": "6d3a30301b5383862a818d459bed069869e3db3d657cd3001d20974d93818581",
     "Scripts/reference-data/test_season_phase_events.py": "b07bef22399cdc29e866141ac5528f7d14b9a964d5515b4401be29cf8e5312ea",
-    "Scripts/reference-data/test_seasonal_roots.py": "4064cf7d9e840e1eb06902cdff2f0d292e12c9a1bdfc25d35c65e143e4091732",
+    "Scripts/reference-data/test_seasonal_roots.py": "0b899c0a5b14080643a0400e3192d2ced65fb0b5b4ca5dceee6c15d45c8c44a8",
     "Scripts/reference-data/test_source_archive.py": "949b8d3d319553221bbf22034fc033806d41a4ddd76191a57ae859b8b6c52a91",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
@@ -3843,7 +3846,7 @@
     "Tests/AstronomyKitTests/LagrangePointTests.swift": "9b3e2e1ff4f51ce1ddee7fdb26d4fb6309b67935c8d0a0bf9ce8367f44099333",
     "Tests/AstronomyKitTests/LibrationTests.swift": "abc9b822412bcd4125cacba5edaa334c6f10ebc6c0abb7e239d6ed43a6431f60",
     "Tests/AstronomyKitTests/LightTravelTests.swift": "1385ab10ab09d65878b8e25c2498ccc52746ed9aee1e4e64abed3db7892122b4",
-    "Tests/AstronomyKitTests/LocalSolarEclipseTests.swift": "41bca77eac24c36117fbf93eebdfc35a4decd729aaf0d02a04b4134ca0837002",
+    "Tests/AstronomyKitTests/LocalSolarEclipseTests.swift": "cf46f9bbd07bdf989193cf3de3736fa027819b75a885ccc006f3d1c75394b443",
     "Tests/AstronomyKitTests/LunarNodeTests.swift": "286e6feaca80a53580392ea5c907c588426814f6f7503e4b35b817bca64e4896",
     "Tests/AstronomyKitTests/MoonCacheTests.swift": "96fb0a2176215f8d996ab3af85ac53a763659a6d72ce831bde32199cd74338c8",
     "Tests/AstronomyKitTests/MoonTests.swift": "1734dc8b9e4ef85ca3bf555ac1527ee60f4483900bfaa28209909934d472a99b",
@@ -3859,7 +3862,7 @@
     "Tests/AstronomyKitTests/RiseSetTests.swift": "487c09fca1ab25bb8f8730f19f2aa2f9f40086bbc0cdfc826de94881c61dc702",
     "Tests/AstronomyKitTests/RotationAxisTests.swift": "84cc314524057f277df2b99fc435de6ccee4a2cd2fca52c2a440f04fd74e6874",
     "Tests/AstronomyKitTests/RotationTests.swift": "149dadf52e2b1c0fed31f397c7285264d7dfb4eb156cbe031f9c92fbe37d8bdc",
-    "Tests/AstronomyKitTests/SearchTests.swift": "3a6fb97fcc988ed8255106677211b3cf24a4ccfee73f0766a79267ed0d00916e",
+    "Tests/AstronomyKitTests/SearchTests.swift": "4da24a1b7fc0414781b62ea50c738363f54e990a90e9a041aab02e957bda9114",
     "Tests/AstronomyKitTests/SeasonsTests.swift": "8e65101e01f19505e3eb9776edce382f754a1f48b30161ecc4ae385807391411",
     "Tests/AstronomyKitTests/SolarAltitudeObservationTests.swift": "60a3fd8b30e486ef9f1d0d2230501dfd51ed8fba00710947c4f0ba46c490ac49",
     "Tests/AstronomyKitTests/StateVectorExtensionTests.swift": "bf125387607cdd5f9eb4ea779ef3c3d158ded46450ec4712422b467c4e1308ec",
@@ -3982,6 +3985,12 @@
       "migrationIssue": 81,
       "patch": 19,
       "title": "Bundled Moon and Pluto ephemerides"
+    },
+    {
+      "id": "patch-20",
+      "migrationIssue": 84,
+      "patch": 20,
+      "title": "Ascending search validation"
     }
   ],
   "publicSwiftAPI": [
@@ -13257,11 +13266,25 @@
       "testCount": 17
     },
     {
+      "classification": "invariant",
+      "id": "Scripts/migration/test_current_search.py",
+      "migrationIssue": 84,
+      "path": "Scripts/migration/test_current_search.py",
+      "testCount": 8
+    },
+    {
       "classification": "smoke",
       "id": "Scripts/migration/test_foundation.py",
       "migrationIssue": 80,
       "path": "Scripts/migration/test_foundation.py",
       "testCount": 20
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/migration/test_historical_research.py",
+      "migrationIssue": 80,
+      "path": "Scripts/migration/test_historical_research.py",
+      "testCount": 3
     },
     {
       "classification": "invariant",
@@ -13367,6 +13390,13 @@
       "migrationIssue": 81,
       "path": "Scripts/reference-data/test_bundled_public_api.py",
       "testCount": 5
+    },
+    {
+      "classification": "invariant",
+      "id": "Scripts/reference-data/test_current_seasonal_search.py",
+      "migrationIssue": 81,
+      "path": "Scripts/reference-data/test_current_seasonal_search.py",
+      "testCount": 7
     },
     {
       "classification": "invariant",
@@ -13835,7 +13865,7 @@
       "id": "Tests/AstronomyKitTests/SearchTests.swift",
       "migrationIssue": 84,
       "path": "Tests/AstronomyKitTests/SearchTests.swift",
-      "testCount": 11
+      "testCount": 17
     },
     {
       "classification": "invariant",

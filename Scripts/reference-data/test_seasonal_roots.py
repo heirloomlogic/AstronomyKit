@@ -139,6 +139,8 @@ class SeasonalControls(unittest.TestCase):
 
     def test_replay_provenance_binds_original_and_current_inputs(self):
         saved=json.loads(S.REPORT.read_bytes());current=copy.deepcopy(saved);current['inputSHA256']=S.source_hashes()
+        # This control isolates validator replay binding; current repair sources are checked separately.
+        current['inputSHA256']['Sources/CLibAstronomy/astronomy.c']=saved['inputSHA256']['Sources/CLibAstronomy/astronomy.c']
         receipt={'originalAssessmentSHA256':S.Q.digest(S.REPORT.read_bytes()),'replayInputSHA256':current['inputSHA256'],'originalValidatorSHA256':saved['inputSHA256']['Scripts/reference-data/qualify-seasonal-roots.py'],'changedValidatorPaths':['Scripts/reference-data/qualify-seasonal-roots.py'],'planSHA256':S.Q.digest(S.PLAN.read_bytes())}
         S.validate_source_provenance(saved,current,receipt)
         for edit in ['report','raw','plan','validator']:
