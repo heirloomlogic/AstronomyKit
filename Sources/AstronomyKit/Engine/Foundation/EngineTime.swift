@@ -82,8 +82,8 @@ extension Engine.Time {
     /// `deltaTModel`. The result's TT is exactly `tt`.
     ///
     /// Fixed-point iteration starts from `ut = tt` and accepts a UT whose
-    /// model TT is within `max(1e-12, 2 ulp(|tt|))` days, so a large TT
-    /// converges at the precision a double can hold. Where a positive
+    /// model TT is within `max(1e-12, 2ε|tt|)` days, where ε = 2.22e-16, so a
+    /// large TT converges at the precision a double can hold. Where a positive
     /// Delta T jump leaves TT values that no UT reaches, the iteration
     /// brackets the jump and bisection returns the first representable UT
     /// after it. Where a negative jump gives two solutions, the result is
@@ -156,8 +156,8 @@ extension Engine.Time {
     }
 
     /// How close, in days, the model TT of a UT must come to `tt` for
-    /// ``init(tt:deltaTModel:)`` to accept it: 1e-12 days, or two ulps of
-    /// `tt` where that is larger.
+    /// ``init(tt:deltaTModel:)`` to accept it: 1e-12 days, or twice the
+    /// double epsilon times |`tt`| where that is larger.
     static func inverseTolerance(tt: Double) -> Double {
         max(1.0e-12, 2.0 * Double.ulpOfOne * abs(tt))
     }

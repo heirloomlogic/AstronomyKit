@@ -80,7 +80,7 @@ extension Engine.DeltaT {
 - `fromPair(ut:tt:deltaTModel:)` rebuilds a time from recorded scales, as `AstroTime(tt:ut:deltaTModel:)` does, and returns `Engine.Time.invalid` (NaN scales, no model) when either scale is not finite.
 - `isValid` is true when both scales are finite.
 - `init(ut:deltaTModel:)` sets `tt = ut + ΔT(ut) / 86400`. With Espenak-Meeus, TT overflows from about |ut| = 1e158 days and the time is invalid with its UT kept.
-- `init(tt:deltaTModel:)` is the bounded inverse of local patch 10 in MAINTAINING.md. It returns exactly the requested TT. It starts from `ut = tt`, iterates at most 128 times, and accepts a UT whose model TT is within `max(1e-12, 2 ulp(|tt|))` days, so a large TT converges at the precision a double holds. In the TT gap left by a positive Delta T jump it bisects to the first representable UT after the jump. In the overlap of a negative jump it returns the solution iteration reaches first: the later one where Delta T is positive and the earlier one where it is negative (1900). A TT that is not finite, an iterate that is not finite, or no convergence gives `invalid`.
+- `init(tt:deltaTModel:)` is the bounded inverse of local patch 10 in MAINTAINING.md. It returns exactly the requested TT. It starts from `ut = tt`, iterates at most 128 times, and accepts a UT whose model TT is within `max(1e-12, 2ε|tt|)` days, where ε = 2.22e-16 is the double epsilon, so a large TT converges at the precision a double holds. In the TT gap left by a positive Delta T jump it bisects to the first representable UT after the jump. In the overlap of a negative jump it returns the solution iteration reaches first: the later one where Delta T is positive and the earlier one where it is negative (1900). A TT that is not finite, an iterate that is not finite, or no convergence gives `invalid`.
 - `civil(utcDays:deltaTModel:)` and `utcDays` convert civil UTC with the existing generated table in `UTCOffsetTable.swift` (`CivilTime`), from 1961 on. Before 1961 the civil day count is taken as UT1. A TT inside a positive leap second maps to the following midnight, and where a negative historical step repeats civil times the later occurrence wins.
 - `days(year:month:day:hour:minute:second:)` is the proleptic Gregorian day count from 2000-01-01 12:00, with every integer component clamped to `Int32`.
 - `Engine.DeltaT.seconds(ut:model:)` evaluates `espenakMeeus(ut:)` or `jplHorizons(ut:)`, which holds UT at 17 tropical years after J2000.
@@ -97,7 +97,7 @@ The process default moves from the C atomic to a `Synchronization.Atomic` in the
 
 ### Differences from the C engine
 
-- `days(year:...)` normalizes the month with floor division before counting days. `Astronomy_MakeTime`'s Fliegel and Van Flandern formula truncates instead. The two agree for months 1 to 14 from year −999,999 on, where every division in that formula has a non-negative numerator. Elsewhere the C formula drifts from the Gregorian calendar: month 15 of 2001 gives 2002-03-03 instead of March 1, and years before −1,000,000 can be a day off.
+- `days(year:...)` normalizes the month with floor division before counting days. `Astronomy_MakeTime`'s Fliegel and Van Flandern formula truncates instead. The two agree for months 1 to 14 from year −999,999 on, where every division in that formula has a non-negative numerator. From month 15 on, the C formula drifts from the Gregorian calendar: month 15 of 2001 gives 2002-03-03 instead of March 1. Years before −1,000,000 can also be a day off.
 - Espenak-Meeus keeps the C engine's decimal year, `2000 + (ut − 14) / 365.24217`, which puts 2000.0 at 2000-01-15 12:00 UT. NASA defines the year of a month as `year + (month − 0.5) / 12`, which puts 2000.0 at the start of January, so the engine reaches each decimal year about 14.5 days (0.04 years) later than NASA's definition. Delta T differs by its rate of change times 0.04 years: about 0.02 s in 2026, 0.3 s in 3000 and 0.7 s at −500. The published definition is month-resolution, and a continuous replacement needs a choice of year length and calendar; that choice is open.
 
 ### Published-value checks
@@ -111,13 +111,15 @@ Tests under `Tests/AstronomyKitTests/Engine/Foundation/` check the time code aga
 
 The JPL Horizons model is a reverse-engineered approximation with no published values; its tests check that it equals Espenak-Meeus before the hold and is constant after it.
 
-### Tests that call the C engine directly
+### Time tests that depend on the C engine
+
+Issue #96 requires a recorded disposition for each test that imports `CLibAstronomy` or pins C output. Two of the suites it lists are time tests and appear here; this part leaves the others (cache, ephemeris, polynomial, ecliptic-state and reproducibility tests) unchanged.
 
 | Test | Disposition |
 |---|---|
-| `CivilTimeTests` | Uses only the public API and does not import `CLibAstronomy`. "Search results use the same civil inverse" runs a public search and moves to the Swift engine with #96; the engine's own civil checks are in `EngineCivilTimeTests`. |
-| `DeltaTThreadSafetyTests` "A calculation keeps its time's model when the default changes mid-calculation" | Kept while the C engine ships: it checks local patch 18 through a C Delta T function that changes the process default. The engine has no process default; `EngineTimeConversionTests` checks that derived times keep their model whatever fallback is passed. Retired by #96, which replaces the C stand-ins with the public layer's `Atomic` default and its own test. |
-| `DeltaTThreadSafetyTests` "Concurrent model swaps never corrupt time construction" | Kept while the C engine ships: it checks local patch 2, the atomic C function pointer, under ThreadSanitizer. Retired by #96 with the same replacement. |
+| `CivilTimeTests` | Kept while the C engine ships; this part only drops an unused `import CLibAstronomy` and renames one test. The suite uses `@testable` access to the internal `CivilTime.terrestrialTime` and `CivilTime.segments`, which the engine shares, and reaches C through `AstroTime` construction, `Sun.searchLongitude` and `Sun.position`, and the C-backed `AstronomyConfig.deltaTEspenakMeeus` in the Delta T jump tests. When #96 switches the public layer over, the same assertions run on the Swift engine. `EngineCivilTimeTests` and `EngineTimeConversionTests` hold the engine's own civil and TT-inverse checks. |
+| `DeltaTThreadSafetyTests` "A calculation keeps its time's model when the default changes mid-calculation" | Kept while the C engine ships: it checks local patch 18 through a C Delta T function that changes the process default. The engine has no process default; `EngineTimeConversionTests` checks that derived times keep their model whatever fallback is passed. Planned for #96: retire it and replace the C stand-ins with the public layer's `Atomic` default and its own test. |
+| `DeltaTThreadSafetyTests` "Concurrent model swaps never corrupt time construction" | Kept while the C engine ships: it checks local patch 2, the atomic C function pointer, under ThreadSanitizer. Planned for #96: retire it with the same replacement. |
 
 ## Errors
 

@@ -31,7 +31,7 @@ struct EngineCivilTimeTests {
     /// The archived USNO table, read here independently of the generator.
     static func usnoRows() throws -> [Row] {
         let text = try String(contentsOf: timeData.appendingPathComponent("tai-utc.dat"), encoding: .utf8)
-        let pattern = /=JD\s+([\d.]+)\s+TAI-UTC=\s+([\d.]+)\s*S\s*\+\s*\(MJD\s*-\s*([\d.]+)\)\s*X\s*([\d.]+)\s*S/
+        let pattern = #/=JD\s+([\d.]+)\s+TAI-UTC=\s+([\d.]+)\s*S\s*\+\s*\(MJD\s*-\s*([\d.]+)\)\s*X\s*([\d.]+)\s*S/#
         return try text.split(separator: "\n").map { line in
             let match = try #require(line.firstMatch(of: pattern), "\(line)")
             return Row(
