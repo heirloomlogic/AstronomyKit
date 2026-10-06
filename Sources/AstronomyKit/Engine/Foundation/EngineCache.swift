@@ -117,10 +117,12 @@ extension Engine {
 
     /// The caches that one reset empties.
     ///
-    /// A cache registers when it is created. The registry holds it weakly, so
-    /// a cache nobody references leaves the registry, and the registry holds
-    /// only caches that can be read again. Engine caches are `static let`
-    /// properties of the module that owns them, created on first use. Tests
+    /// A cache registers when it is created. The registry holds it weakly:
+    /// once nobody references a cache, ``removeAll()`` and ``count`` skip it,
+    /// and the next registration drops its entry. Engine caches are
+    /// `static let` properties of the module that owns them, created on first
+    /// use. That is a convention, not something the registry checks: a cache
+    /// made on every call would give correct results but never a hit. Tests
     /// create their own registry.
     final class CacheRegistry: @unchecked Sendable {
         /// The registry ``Engine/resetCaches()`` empties.
@@ -154,6 +156,10 @@ extension Engine {
 
         /// The number of registered caches that still exist.
         var count: Int { lock.withLock { entries.count { $0.cache != nil } } }
+
+        /// The number of stored entries, including those of caches that no
+        /// longer exist and have not been pruned yet.
+        var entryCount: Int { lock.withLock { entries.count } }
     }
 
     /// Empties every engine cache. Results do not change; the next calls that

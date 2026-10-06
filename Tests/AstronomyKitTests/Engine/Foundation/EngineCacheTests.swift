@@ -339,7 +339,9 @@ struct EngineCacheRegistryTests {
         }
     }
 
-    @Test("A cache nobody references leaves the registry")
+    /// Each registration prunes the entry of the cache dropped before it, so
+    /// only the last dropped cache's entry remains beside the kept one.
+    @Test("A cache nobody references is skipped, and the next registration drops its entry")
     func droppedCacheLeaves() {
         let registry = Engine.CacheRegistry()
         let kept = Engine.BoundedCache<Int, Int>(capacity: 1, registry: registry)
@@ -351,6 +353,7 @@ struct EngineCacheRegistryTests {
 
         withExtendedLifetime(kept) {
             #expect(registry.count == 1)
+            #expect(registry.entryCount == 2)
             registry.removeAll()
             #expect(kept.count == 0)
         }
