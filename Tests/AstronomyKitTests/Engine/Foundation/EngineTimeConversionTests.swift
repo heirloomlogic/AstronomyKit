@@ -196,14 +196,19 @@ struct EngineTimeConversionTests {
     @Test("A time derived from an invalid time is invalid")
     func addingFromInvalid() {
         // Espenak-Meeus TT overflows at this UT. Subtracting it gives a finite
-        // UT, but there is no model to derive its TT with.
+        // UT, which is kept, but there is no model to derive its TT with.
         let huge = Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus)
         #expect(!huge.isValid)
-        for derived in [huge.adding(days: -1e160), huge.derived(ut: 0), Engine.Time.invalid.adding(days: 1)] {
-            #expect(!derived.isValid)
-            #expect(derived.ut.isNaN)
+        for derived in [huge.adding(days: -1e160), huge.derived(ut: 0)] {
+            #expect(derived.ut == 0)
+            #expect(derived.tt.isNaN)
             #expect(derived.deltaTModel == nil)
         }
+        #expect(huge.adding(days: 1).ut == 1e160)
+
+        let nan = Engine.Time.invalid.adding(days: 1)
+        #expect(nan.ut.isNaN)
+        #expect(nan.deltaTModel == nil)
     }
 
     @Test("Adding days at a huge UT stalls at the same UT and keeps the model")

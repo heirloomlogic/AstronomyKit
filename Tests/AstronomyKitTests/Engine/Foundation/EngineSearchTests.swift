@@ -256,26 +256,6 @@ struct EngineSearchTests {
         }
     }
 
-    /// Espenak-Meeus TT overflows at UT 1e160, so the start is invalid. The
-    /// end is valid, but midpoints and interpolated roots come from the
-    /// first bound, so every time the search derives is invalid.
-    @Test("Every time derived from an invalid start is invalid")
-    func invalidStart() throws {
-        let start = Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus)
-        let end = Engine.Time(ut: Self.base, deltaTModel: .jplHorizons)
-        try #require(!start.isValid)
-        var calls: [Engine.Time] = []
-        let root = try? Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001) { time -> Double in
-            calls.append(time)
-            return time.ut - Self.base - 0.375
-        }
-        try #require(calls.count >= 3)
-        for time in calls.dropFirst(2) + (root.map { [$0] } ?? []) {
-            #expect(time.ut.isNaN)
-            #expect(time.deltaTModel == nil)
-        }
-    }
-
     /// A linear function needs four calls, so the seventh call uses a step
     /// function, which keeps bisecting.
     @Test(

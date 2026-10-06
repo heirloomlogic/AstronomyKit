@@ -104,7 +104,8 @@ struct EngineLightTravelTests {
         }
         #expect(calls.count == Engine.LightTravel.iterationLimit)
         for time in calls.dropFirst() {
-            #expect(time.ut.isNaN)
+            #expect(time.ut == observation.ut)
+            #expect(time.tt.isNaN)
             #expect(time.deltaTModel == nil)
         }
     }

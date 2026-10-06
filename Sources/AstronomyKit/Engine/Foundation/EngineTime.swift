@@ -162,10 +162,11 @@ extension Engine.Time {
     }
 
     /// The time `days` UT days after this one, with TT derived by this
-    /// time's model, or ``invalid`` when this time is invalid.
+    /// time's model.
     ///
     /// An invalid time has no model to derive a TT with, so a time derived
-    /// from it is invalid even where its UT plus `days` is finite. Under
+    /// from it is invalid, with its UT kept and a NaN TT, even where its UT
+    /// plus `days` is finite. Under
     /// local patch 18 the C engine's `Astronomy_AddDays` uses the process
     /// default instead, so a huge UT whose TT overflowed can come back to a
     /// valid time there.
@@ -173,10 +174,13 @@ extension Engine.Time {
         derived(ut: ut + days)
     }
 
-    /// The time at `ut` with TT derived by this time's model, or ``invalid``
-    /// when this time is invalid.
+    /// The time at `ut` with TT derived by this time's model. When this time
+    /// is invalid, the result is invalid too, with `ut` kept and a NaN TT.
     func derived(ut: Double) -> Engine.Time {
-        guard let deltaTModel else { return .invalid }
+        guard let deltaTModel else {
+            // A NaN TT drops the model, as in ``invalid``.
+            return Engine.Time(ut: ut, tt: .nan, deltaTModel: .espenakMeeus)
+        }
         return Engine.Time(ut: ut, deltaTModel: deltaTModel)
     }
 }
