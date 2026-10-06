@@ -150,7 +150,7 @@ extension Engine {
             year <= 1582 ? Julian.start(year: year) : Gregorian.start(year: year)
         }
 
-        private enum Gregorian {
+        enum Gregorian {
             static let meanYear = 365.2425
             /// The first year that uses the mean year: 1,000,000 years, 2,500
             /// whole cycles, after year 1.
@@ -165,7 +165,7 @@ extension Engine {
             }
         }
 
-        private enum Julian {
+        enum Julian {
             static let meanYear = 365.25
             /// The first year the calendar covers; earlier UTs use the mean
             /// year. It is 1,000,000 years, 250,000 whole cycles, before year 1.

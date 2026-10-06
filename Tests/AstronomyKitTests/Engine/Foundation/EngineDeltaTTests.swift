@@ -281,7 +281,12 @@ struct EngineDeltaTTests {
 
     @Test("The decimal year is continuous at the reform and where the mean year takes over")
     func decimalYearJoins() {
-        for join in [1583.0, 1_000_001, -999_999] {
+        // The mean years meet the calendar only at the start of a whole cycle.
+        let gregorian = Engine.DeltaT.Gregorian.firstMeanYear
+        let julian = Engine.DeltaT.Julian.firstCalendarYear
+        #expect((gregorian - 1).truncatingRemainder(dividingBy: 400) == 0)
+        #expect((julian - 1).truncatingRemainder(dividingBy: 4) == 0)
+        for join in [1583.0, gregorian, julian] {
             let start = Engine.DeltaT.yearStart(join)
             let before = Self.year(ut: start.nextDown)
             #expect(Self.year(ut: start) == join)
@@ -292,7 +297,7 @@ struct EngineDeltaTTests {
         // the decimal year grows, by no more than a tenth of a day in a
         // 354-day year (1582, the shortest, has 355). A join where the
         // calendar and the mean year disagree jumps one way or the other.
-        for join in [1583.0, 1_000_001, -999_999] {
+        for join in [1583.0, gregorian, julian] {
             let start = Engine.DeltaT.yearStart(join)
             var previous = Self.year(ut: start - 800.1)
             for step in -8_000...8_000 {
@@ -302,10 +307,10 @@ struct EngineDeltaTTests {
             }
         }
         // Past the joins, one mean year moves the decimal year by one.
-        let late = Engine.DeltaT.yearStart(1_000_001)
-        #expect(Self.year(ut: late + 365.2425 * 1_000) == 1_001_001)
-        let early = Engine.DeltaT.yearStart(-999_999)
-        #expect(Self.year(ut: early - 365.25 * 1_000) == -1_000_999)
+        let late = Engine.DeltaT.yearStart(gregorian)
+        #expect(Self.year(ut: late + 365.2425 * 1_000) == gregorian + 1_000)
+        let early = Engine.DeltaT.yearStart(julian)
+        #expect(Self.year(ut: early - 365.25 * 1_000) == julian - 1_000)
     }
 
     @Test("JPL Horizons follows Espenak-Meeus until 17 tropical years after J2000, then holds")
