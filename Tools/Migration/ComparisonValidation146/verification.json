@@ -1,0 +1,27 @@
+{
+  "changedProtectedArtifacts": [],
+  "classification": "fix-pending-independent-review",
+  "currentFailures": [
+    "pluto-position-em",
+    "pluto-state-jpl"
+  ],
+  "currentScientificComparisonPassed": false,
+  "exactOldAndNewRehashedTriggersRejected": true,
+  "findings": [
+    "comparison-rehashed-compiler-identity",
+    "comparison-rehashed-request-model-detachment"
+  ],
+  "hostedChecks": "pending at new-head submission",
+  "inventoryPassed": true,
+  "offlineNewCurrentPassed": true,
+  "offlineNewHistoricalPassed": true,
+  "oraclePassed": true,
+  "originalReproductionPassed": false,
+  "priorArtifactsUnchanged": 1363,
+  "requestClassControls": "all18 frozen requests, both invalid-request model controls, and environment capture/claim tests",
+  "requiredUnitTestsPassed": 49,
+  "strictExitCodes": {
+    "current": 1,
+    "historical": 1
+  }
+}

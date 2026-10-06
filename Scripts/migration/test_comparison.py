@@ -132,13 +132,11 @@ class ComparisonProtocolTests(unittest.TestCase):
             set(manifest["files"]),
         )
 
-    def test_archive_names_the_exact_candidate_sources(self):
-        metadata = json.loads((ARTIFACTS / "metadata.json").read_text())
-        spec = importlib.util.spec_from_file_location('migration_source_archive', ROOT / 'Scripts/reference-data/source_archive.py')
-        archive = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(archive)
-        historical = archive.migration_source_hashes(ROOT, self.comparison.source_hashes())
-        self.assertEqual(historical, metadata["sourceHashes"])
+    def test_selected_historical_tree_matches_recorded_partial_inputs(self):
+        protocol = json.loads((ROOT / "Documentation/Migration/comparison-replay-protocol.json").read_text())
+        recorded = json.loads((ARTIFACTS / "metadata.json").read_text())["sourceHashes"]
+        actual = {path: self.comparison.sha256_bytes(self.comparison.git_blob(protocol["historicalSelection"], path)) for path in recorded}
+        self.assertEqual(recorded, actual)
 
     def test_executable_fingerprint_ignores_build_paths_but_detects_code_changes(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -188,6 +186,31 @@ class ComparisonProtocolTests(unittest.TestCase):
             manifest = json.loads(destination.joinpath("manifest.json").read_text())
             with self.assertRaisesRegex(ValueError, "inputs.json"):
                 self.comparison.validate_archive(destination, manifest)
+
+    def test_archive_check_routes_to_historical_execution_not_live_candidate(self):
+        with mock.patch.object(self.comparison, 'generate_archive', create=True, side_effect=AssertionError('live candidate must not be acquired for archive replay')), mock.patch.object(self.comparison, 'historical_replay', create=True, return_value={'classification': 'historical-executable-replay', 'executionCompleted': True, 'originalReproductionPassed': True}), mock.patch('sys.argv', ['run-comparison.py', '--check']):
+            result = self.comparison.main()
+        self.assertEqual(result['classification'], 'historical-executable-replay')
+
+    def test_sampled_replay_does_not_pass_incomplete_original_identity(self):
+        report = {'executionCompleted': True, 'historicalSampledReplayPassed': True, 'candidateFingerprintMatchesOriginal': False, 'originalCompleteClosureRecorded': False, 'originalReproductionPassed': False}
+        with mock.patch.object(self.comparison, 'historical_replay', return_value=report), mock.patch('sys.argv', ['run-comparison.py', '--check']):
+            with self.assertRaises(SystemExit) as error:
+                self.comparison.main()
+        self.assertEqual(error.exception.code, 1)
+
+    def test_current_mode_keeps_scientific_failure_distinct_from_execution_health(self):
+        report = {'executionCompleted': True, 'scientificComparisonPassed': False, 'failed': ['pluto-position-em', 'pluto-state-jpl']}
+        with mock.patch.object(self.comparison, 'current_comparison', create=True, return_value=report), mock.patch('sys.argv', ['run-comparison.py', '--current']):
+            with self.assertRaises(SystemExit) as error:
+                self.comparison.main()
+        self.assertEqual(error.exception.code, 1)
+
+    def test_original_archive_write_rejected_before_acquisition(self):
+        with mock.patch.object(self.comparison, 'generate_archive', create=True, side_effect=AssertionError('protected original archive acquisition attempted')), mock.patch('sys.argv', ['run-comparison.py', '--write']):
+            with self.assertRaises(SystemExit) as error:
+                self.comparison.main()
+        self.assertEqual(error.exception.code, 2)
 
 
 if __name__ == "__main__":
