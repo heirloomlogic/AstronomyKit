@@ -1,0 +1,99 @@
+{
+  "acquisitionRevision": "478fea15da86a4df5869fdb4230bd0fcfc1a37b1",
+  "caseIDs": [
+    "root-ascending",
+    "root-descending",
+    "root-absent-positive",
+    "root-absent-negative",
+    "root-lower-endpoint",
+    "root-upper-endpoint",
+    "root-quadratic-interpolation",
+    "root-two-roots",
+    "root-flat-cubic",
+    "root-step-bisection",
+    "root-nan-function",
+    "root-positive-infinity-function",
+    "root-negative-infinity-function",
+    "root-extreme-function",
+    "root-step-coarse-tolerance",
+    "root-tolerance-zero",
+    "root-tolerance-negative",
+    "root-tolerance-nan",
+    "root-tolerance-infinity",
+    "root-reversed-window",
+    "root-equal-window",
+    "root-short-absent-window",
+    "root-representational-stall",
+    "root-nan-time",
+    "root-infinity-time",
+    "root-extreme-time",
+    "root-error-1",
+    "root-error-2",
+    "root-error-3",
+    "root-error-4",
+    "root-late-error",
+    "root-research-cap",
+    "light-constant",
+    "light-moving",
+    "light-nonconvergent",
+    "light-zero-vector",
+    "light-negative-vector",
+    "light-nan-vector",
+    "light-infinity-vector",
+    "light-extreme-vector",
+    "light-supplied-vector-stamp",
+    "light-below-light-day",
+    "light-one-light-day",
+    "light-above-light-day",
+    "light-representational-stall",
+    "light-invalid-time",
+    "light-error-1",
+    "light-error-2",
+    "light-error-3",
+    "light-error-7",
+    "light-research-cap"
+  ],
+  "classification": "prospective-finite-source-bound-callback-transcripts-not-native-implementation-or-independent-accuracy",
+  "filesSHA256": {
+    "LICENSE": "dd9d8769d9c8b113c0db57cfe8b23cb0658d53e399e2d78a99a3638db4df1909",
+    "THIRD_PARTY_NOTICES": "37af8987614407605a32b9eba09910585f85866da9188e1d3476c056ee1a6e36",
+    "assessment.json": "3ff4fb3c575ba4f88f60e5e81b9f836be088ba593d2cca5a65de1e5704cc1479",
+    "build-receipt.json": "1e1690698f618c9043b046c336bebaae8e97fbab5f497b91549b52e987adb994",
+    "locked-solver-source.c.txt": "e07520e1d559e9a49e1d2d3269e1dbc7a2f0918999959019c59ed473f15a39b6",
+    "mutation-runs.json.gz": "a528f876b3d073ba9baeee24d9912ab571126125ccc4a1973e47e5c91933d961",
+    "protocol.json": "b5c6788075b8b4b52ea8e220d2ca4556172ee41efaabc541713bbc5b063eed6e",
+    "public-solver-source.c.txt": "e07520e1d559e9a49e1d2d3269e1dbc7a2f0918999959019c59ed473f15a39b6",
+    "raw-runs.json.gz": "a4f3700339f3ad962d3d87ddd3192ab2d29513bd068e8b7900a1dc583df6888f",
+    "tools/0.txt": "751e8b1bcc83adc71aeaf4a4293d63dfa8f6d1b0a167e8d8ee1a28f82a662669",
+    "tools/1.txt": "d161afc827210ae6e123fce4abdeaf77e16bca65cd0d4bed7fbaead210516549",
+    "tools/2.txt": "99945291e7ac046308db4caf562c5e730eb0dfc5f17839b934493cae2d34860c"
+  },
+  "models": [
+    "espenak-meeus",
+    "jpl-horizons"
+  ],
+  "prospectiveRevision": "fb6593186068564da917d0a5cafd9a91035198b3",
+  "schemaVersion": 1,
+  "sourceExcerpts": {
+    "locked": {
+      "excerptSHA256": "e07520e1d559e9a49e1d2d3269e1dbc7a2f0918999959019c59ed473f15a39b6",
+      "revision": "cdb533dbe85c76b39a958ca92f9155d8bd55b392",
+      "wholeSourceSHA256": "7c72cc428a50fd848ece72904ad6c4421236534da39914b1d3d484deefd4f388"
+    },
+    "public": {
+      "excerptSHA256": "e07520e1d559e9a49e1d2d3269e1dbc7a2f0918999959019c59ed473f15a39b6",
+      "revision": "97fc275f6fd455ed73063a6961698569783dddb8",
+      "wholeSourceSHA256": "ad59caf513ce813fd1cbdb8b1bbc5e57bf19958b8c9768f0fd8be1ad69330843"
+    }
+  },
+  "toolSHA256": {
+    "Scripts/migration/search_callback_corpus.py": "99945291e7ac046308db4caf562c5e730eb0dfc5f17839b934493cae2d34860c",
+    "Tools/Migration/SearchResearch/main.swift": "d161afc827210ae6e123fce4abdeaf77e16bca65cd0d4bed7fbaead210516549",
+    "Tools/Migration/SearchResearch/search-main.c": "751e8b1bcc83adc71aeaf4a4293d63dfa8f6d1b0a167e8d8ee1a28f82a662669"
+  },
+  "toolSnapshots": {
+    "Scripts/migration/search_callback_corpus.py": "tools/2.txt",
+    "Tools/Migration/SearchResearch/main.swift": "tools/1.txt",
+    "Tools/Migration/SearchResearch/search-main.c": "tools/0.txt"
+  }
+}

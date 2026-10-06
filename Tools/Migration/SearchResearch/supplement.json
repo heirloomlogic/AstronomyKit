@@ -1,0 +1,64 @@
+{
+  "analyticSelection": "x = 1 + 100*(callbackUT-baseUT), y=z=0 AU. The source fixed-point map has approximate absolute derivative 100/C_AUDAY ~0.578; its finite alternating iterates remain below 2 AU. This parameter is chosen prospectively, not fit to measured traces.",
+  "caseCount": 2,
+  "cases": [
+    {
+      "baseUT": "20000",
+      "callbackCap": 128,
+      "endOffsetDays": "1",
+      "errorVisit": 0,
+      "function": "moving",
+      "id": "supplement-light-finite-nonconvergence",
+      "operation": "light",
+      "parameters": [
+        "1",
+        "100",
+        "0",
+        "0"
+      ],
+      "startOffsetDays": "0",
+      "toleranceSeconds": "0.001",
+      "vectorStampOffsetDays": "0"
+    },
+    {
+      "baseUT": "20000",
+      "callbackCap": 2,
+      "endOffsetDays": "1",
+      "errorVisit": 0,
+      "function": "moving",
+      "id": "supplement-light-finite-cap",
+      "operation": "light",
+      "parameters": [
+        "1",
+        "100",
+        "0",
+        "0"
+      ],
+      "startOffsetDays": "0",
+      "toleranceSeconds": "0.001",
+      "vectorStampOffsetDays": "0"
+    }
+  ],
+  "classification": "separate-prospective-bounded-light-termination-supplement",
+  "expectedBranches": {
+    "supplement-light-finite-cap": "research callback cap at attempted third visit, distinct from algorithm termination",
+    "supplement-light-finite-nonconvergence": "ten-iteration no-convergence with finite callback vectors inside one light-day range"
+  },
+  "models": [
+    "espenak-meeus",
+    "jpl-horizons"
+  ],
+  "observableAndNormalizationDefinition": "Unchanged original protocol, models, source hashes, scalar packets, error normalization, complete ordered traces and final result. Existing moving fixture and unchanged original C/Swift adapters.",
+  "originalAcquisitionRevision": "478fea15da86a4df5869fdb4230bd0fcfc1a37b1",
+  "originalLimits": "The original 51 cases and conclusions remain unchanged; supplement is 2 cases x 2 captured models x 2 backends = 8 fresh processes. No native behavior requirement or product budget.",
+  "originalProspectiveRevision": "fb6593186068564da917d0a5cafd9a91035198b3",
+  "reason": "Original alternating fixture starts at zero distance and terminates successfully; preserve those original observations and add two separately identified requests.",
+  "researchBounds": {
+    "callbackCapClass": "research-callback-cap, not algorithm success or product budget",
+    "nonfiniteEncoding": "nan/+inf/-inf tags; finite binary64 bits serialized exactly; no JSON NaN numeric tokens",
+    "normalCallbackCap": 128,
+    "subprocessTimeoutSeconds": 5,
+    "wallTimeoutClass": "research-timeout with retained partial output, distinct from algorithm termination"
+  },
+  "schemaVersion": 1
+}

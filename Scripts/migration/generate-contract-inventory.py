@@ -107,6 +107,7 @@ TEST_ISSUES = {
 }
 
 SCRIPT_TEST_ISSUES = {
+    "Scripts/migration/test_search_callback_corpus.py": 84,
     "Scripts/migration/test_constellation_corpus.py": 91,
     "Scripts/reference-data/test_source_archive.py": 81,
     "Scripts/ephemeris/test_pluto_artifacts.py": 81,

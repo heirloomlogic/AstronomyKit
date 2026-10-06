@@ -1,0 +1,18 @@
+{
+  "amendment": "Bind the existing raw public error descriptions and persist raw/receipt/control streams before assessment; no inputs, formula, cap, tolerance, source or normalization rule changed.",
+  "amendmentRevision": "478fea15da86a4df5869fdb4230bd0fcfc1a37b1",
+  "attemptToolRevision": "5805e024861454b173bdbeb627320c63b2956054",
+  "completedProcesses": 204,
+  "error": "public AstronomyError descriptions were incorrectly validated against enum spellings",
+  "filesSHA256": {
+    "assessment-failure.log": "73a12d6d768d183a240f81baeb42e88c42a16a27cce7b87f525d9db7a81af5b7",
+    "tool-0.txt": "751e8b1bcc83adc71aeaf4a4293d63dfa8f6d1b0a167e8d8ee1a28f82a662669",
+    "tool-1.txt": "d161afc827210ae6e123fce4abdeaf77e16bca65cd0d4bed7fbaead210516549",
+    "tool-2.txt": "985a3a4ab5eb99482785a48f3adcae77f01d004671bf58119656218c94a8635d"
+  },
+  "limit": "completed raw runs existed only in memory and were lost before persistence; the failed log is not numerical evidence",
+  "prospectiveRevision": "fb6593186068564da917d0a5cafd9a91035198b3",
+  "rawPacketsRetained": false,
+  "schemaVersion": 1,
+  "status": "assessment-failed-tooling-error"
+}

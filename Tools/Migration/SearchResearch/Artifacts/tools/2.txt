@@ -1,0 +1,849 @@
+#!/usr/bin/env python3
+"""Collect and authenticate a frozen finite legacy callback experiment."""
+
+import argparse
+import gzip
+import hashlib
+import json
+import math
+import platform
+import re
+import shutil
+import struct
+import subprocess
+import tempfile
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+HOME = ROOT / "Tools/Migration/SearchResearch"
+ARCHIVE = HOME / "Artifacts"
+LOCK = ROOT / "Tools/Migration/Oracle/oracle-lock.json"
+PROSPECTIVE = "fb6593186068564da917d0a5cafd9a91035198b3"
+ACQUISITION_REVISION = (
+    None  # Fixed to the committed adapters before archived acquisition.
+)
+TOOLS = [
+    "Tools/Migration/SearchResearch/search-main.c",
+    "Tools/Migration/SearchResearch/main.swift",
+    "Scripts/migration/search_callback_corpus.py",
+]
+MANIFEST = """// swift-tools-version: 6.0
+import PackageDescription
+let package = Package(name: "SearchResearch", platforms: [.macOS(.v15)], products: [.executable(name: "SearchResearch", targets: ["SearchResearch"])], targets: [.target(name: "CLibAstronomy", path: "Sources/CLibAstronomy", publicHeadersPath: "include", cSettings: [.headerSearchPath("include")]), .target(name: "AstronomyKit", dependencies: ["CLibAstronomy"], path: "Sources/AstronomyKit"), .executableTarget(name: "SearchResearch", dependencies: ["AstronomyKit"], path: "Sources/SearchResearch")])
+"""
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def dumps(value):
+    return json.dumps(value, sort_keys=True, indent=2, allow_nan=False) + "\n"
+
+
+def git_bytes(revision, path):
+    return subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=ROOT)
+
+
+def protocol():
+    data = (HOME / "protocol.json").read_bytes()
+    if data != git_bytes(PROSPECTIVE, "Tools/Migration/SearchResearch/protocol.json"):
+        raise ValueError("prospective protocol changed")
+    return json.loads(data)
+
+
+def packet(value):
+    if math.isnan(value):
+        return "nan"
+    if math.isinf(value):
+        return "+inf" if value > 0 else "-inf"
+    return "f64:" + struct.pack(">d", value).hex()
+
+
+def number(value):
+    if value in ("nan", "+inf", "-inf"):
+        return float(value.replace("+", ""))
+    if not isinstance(value, str) or not re.fullmatch(r"f64:[0-9a-f]{16}", value):
+        raise ValueError("invalid binary64 packet")
+    result = struct.unpack(">d", bytes.fromhex(value[4:]))[0]
+    if not math.isfinite(result):
+        raise ValueError("nonfinite value must use explicit tag")
+    return result
+
+
+def require_population(actual, expected):
+    if actual != expected:
+        raise ValueError("missing, duplicate, extra or reordered population")
+
+
+def tool_map(revision=None):
+    return {
+        path: sha(git_bytes(revision, path) if revision else (ROOT / path).read_bytes())
+        for path in TOOLS
+    }
+
+
+def validate_tools(actual, expected=None):
+    if actual != (expected if expected is not None else tool_map()):
+        raise ValueError("mandatory tool population or content changed")
+
+
+def expected_receipt_fields(revision=None):
+    lock = json.loads(LOCK.read_text())
+    tools = tool_map(revision)
+    return {
+        "schemaVersion": 1,
+        "oracleRevision": protocol()["oracleRevision"],
+        "flags": lock["build"]["flags"],
+        "swiftAddedCFlags": lock["build"]["flags"],
+        "adapterSHA256": tools[TOOLS[0]],
+        "swiftSHA256": tools[TOOLS[1]],
+        "manifestSHA256": sha(MANIFEST.encode()),
+        "sourceFilesSHA256": protocol()["currentSourceFilesSHA256"],
+        "oracleFilesSHA256": lock["files"],
+        "fastMath": False,
+        "fpContract": "off",
+    }
+
+
+def validate_receipt(receipt, revision=None):
+    for key, expected in expected_receipt_fields(revision).items():
+        if receipt.get(key) != expected:
+            raise ValueError(f"false build receipt field: {key}")
+    if "environment" not in receipt or "binarySHA256" not in receipt:
+        raise ValueError("missing required build environment/binary identity")
+    if "environment" in receipt:
+        if set(receipt["environment"]) != {
+            "os",
+            "architecture",
+            "cCompiler",
+            "swiftCompiler",
+        } or any(
+            not isinstance(v, str) or not v for v in receipt["environment"].values()
+        ):
+            raise ValueError("invalid compiler environment receipt")
+        if set(receipt.get("binarySHA256", {})) != {"c", "swift"} or any(
+            not re.fullmatch("[0-9a-f]{64}", v)
+            for v in receipt["binarySHA256"].values()
+        ):
+            raise ValueError("invalid binary identity receipt")
+
+
+def build(work):
+    p = protocol()
+    lock = json.loads(LOCK.read_text())
+    if sha(LOCK.read_bytes()) != p["oracleLockSHA256"]:
+        raise ValueError("oracle lock changed")
+    actual = {
+        str(path.relative_to(ROOT)): sha(path.read_bytes())
+        for source in [ROOT / "Sources/AstronomyKit", ROOT / "Sources/CLibAstronomy"]
+        for path in sorted(source.rglob("*"))
+        if path.is_file() and path.suffix in (".swift", ".c", ".h", ".modulemap")
+    }
+    if actual != p["currentSourceFilesSHA256"]:
+        raise ValueError("current source population detached from protocol")
+    oracle = work / "oracle"
+    oracle.mkdir()
+    archive = subprocess.check_output(
+        ["git", "archive", p["oracleRevision"], *lock["files"]], cwd=ROOT
+    )
+    subprocess.run(["tar", "-x", "-C", str(oracle)], input=archive, check=True)
+    for path, digest in lock["files"].items():
+        if sha((oracle / path).read_bytes()) != digest:
+            raise ValueError("oracle source authentication failed")
+    c_binary = work / "search-c"
+    c_source = oracle / "Sources/CLibAstronomy"
+    subprocess.run(
+        [
+            lock["build"]["compiler"],
+            *lock["build"]["flags"],
+            "-I",
+            str(c_source),
+            "-I",
+            str(c_source / "include"),
+            str(HOME / "search-main.c"),
+            "-o",
+            str(c_binary),
+            "-lm",
+            "-lpthread",
+        ],
+        check=True,
+    )
+    package = work / "package"
+    (package / "Sources").mkdir(parents=True)
+    for name in ("AstronomyKit", "CLibAstronomy"):
+        (package / "Sources" / name).symlink_to(
+            ROOT / "Sources" / name, target_is_directory=True
+        )
+    (package / "Sources/SearchResearch").mkdir()
+    shutil.copyfile(HOME / "main.swift", package / "Sources/SearchResearch/main.swift")
+    (package / "Package.swift").write_text(MANIFEST)
+    flags = [v for flag in lock["build"]["flags"] for v in ("-Xcc", flag)]
+    subprocess.run(
+        [
+            "swift",
+            "build",
+            "--package-path",
+            str(package),
+            "--scratch-path",
+            str(work / "swift-build"),
+            "--product",
+            "SearchResearch",
+            *flags,
+        ],
+        cwd=ROOT,
+        check=True,
+    )
+    binpath = subprocess.check_output(
+        [
+            "swift",
+            "build",
+            "--package-path",
+            str(package),
+            "--scratch-path",
+            str(work / "swift-build"),
+            "--show-bin-path",
+            *flags,
+        ],
+        text=True,
+    ).strip()
+    binaries = {"c": c_binary, "swift": Path(binpath) / "SearchResearch"}
+    receipt = expected_receipt_fields()
+    receipt["environment"] = {
+        "os": platform.system(),
+        "architecture": platform.machine(),
+        "cCompiler": subprocess.check_output(
+            [lock["build"]["compiler"], "--version"], text=True
+        ).splitlines()[0],
+        "swiftCompiler": subprocess.check_output(
+            ["swift", "--version"], text=True
+        ).splitlines()[0],
+    }
+    receipt["binarySHA256"] = {k: sha(v.read_bytes()) for k, v in binaries.items()}
+    validate_receipt(receipt)
+    return binaries, receipt
+
+
+def arguments(case, model, mutation="none"):
+    params = (case["parameters"] + ["0"] * 4)[:4]
+    return [
+        model,
+        case["operation"],
+        case["function"],
+        case["baseUT"],
+        case["startOffsetDays"],
+        case["endOffsetDays"],
+        case["toleranceSeconds"],
+        str(case["errorVisit"]),
+        case["vectorStampOffsetDays"],
+        str(case["callbackCap"]),
+        mutation,
+        *params,
+    ]
+
+
+def run_command(command, timeout):
+    try:
+        result = subprocess.run(command, capture_output=True, timeout=timeout)
+        stdout, stderr, code = result.stdout, result.stderr, result.returncode
+        termination = (
+            "research-callback-cap"
+            if code == 75
+            else "algorithm" if code == 0 else "process-error"
+        )
+    except subprocess.TimeoutExpired as error:
+        stdout, stderr, code, termination = (
+            error.stdout or b"",
+            error.stderr or b"",
+            None,
+            "research-timeout",
+        )
+    return {
+        "stdout": stdout.decode(),
+        "stderr": stderr.decode(),
+        "stdoutSHA256": sha(stdout),
+        "stderrSHA256": sha(stderr),
+        "exitCode": code,
+        "termination": termination,
+    }
+
+
+def fixture(case, u, visit):
+    p = [float(x) for x in (case["parameters"] + ["0"] * 4)[:4]]
+    name = case["function"]
+    if name == "linear":
+        return u - p[0]
+    if name == "descending":
+        return p[0] - u
+    if name == "constant":
+        return p[0]
+    if name == "quadratic":
+        return u * u - p[0]
+    if name == "two-roots":
+        return (u - p[0]) * (u - p[1])
+    if name == "cubic":
+        return ((u - p[0]) * (u - p[0])) * (u - p[0])
+    if name == "step":
+        return -1.0 if u < p[0] else 1.0
+    if name == "scaled":
+        return (u - p[0]) * p[1]
+    if name == "moving":
+        return [p[0] + p[1] * u, p[2], p[3]]
+    if name == "alternating":
+        return [0.0 if visit % 2 else 1.0, 0.0, 0.0]
+    if name == "vector":
+        return p[:3]
+    raise ValueError("unsupported frozen fixture")
+
+
+def close_packets(actual, expected, tolerance=0.0):
+    a, b = number(actual), number(expected)
+    if not math.isfinite(a) or not math.isfinite(b):
+        return actual == expected
+    return actual == expected or abs(a - b) <= tolerance
+
+
+def validate_time(time, model):
+    if set(time) != {"ut", "tt", "model", "expectedCapturedTT"}:
+        raise ValueError("time payload fields detached")
+    ut, tt = number(time["ut"]), number(time["tt"])
+    number(time["expectedCapturedTT"])
+    if math.isfinite(ut) and math.isfinite(tt):
+        if time["model"] != model or time["tt"] != time["expectedCapturedTT"]:
+            raise ValueError("captured model/time propagation changed")
+    elif time["model"] != "unidentified":
+        raise ValueError("invalid time model identity")
+
+
+def validate_run(run, case, model, backend):
+    if (
+        sha(run["stdout"].encode()) != run["stdoutSHA256"]
+        or sha(run["stderr"].encode()) != run["stderrSHA256"]
+    ):
+        raise ValueError("raw stream detached from digest")
+    events = [json.loads(line) for line in run["stdout"].splitlines()]
+    if (
+        not events
+        or events[0]["event"] != "begin"
+        or events[0]["initialModel"] != model
+    ):
+        raise ValueError("missing begin")
+    for key in ("start", "end"):
+        validate_time(events[0][key], model)
+    callbacks = [e for e in events if e["event"] == "callback"]
+    require_population(
+        [e["visit"] for e in callbacks], list(range(1, len(callbacks) + 1))
+    )
+    if [e["event"] for e in events] != [
+        "begin",
+        *(["callback"] * len(callbacks)),
+        events[-1]["event"],
+    ] or len(events) != len(callbacks) + 2:
+        raise ValueError("event selection/order changed")
+    opposite = next(m for m in protocol()["models"] if m != model)
+    for e in callbacks:
+        visit = e["visit"]
+        validate_time(e["time"], model)
+        if e["defaultBefore"] != (model if visit % 2 else opposite) or e[
+            "defaultAfter"
+        ] != (opposite if visit % 2 else model):
+            raise ValueError("callback default transition changed")
+        result = e["result"]
+        if visit == case["errorVisit"]:
+            if result != {"kind": "raise", "visit": visit}:
+                raise ValueError("callback error payload changed")
+        elif case["operation"] == "root":
+            expected = packet(
+                fixture(case, number(e["time"]["ut"]) - float(case["baseUT"]), visit)
+            )
+            if result != {"kind": "scalar", "value": expected}:
+                raise ValueError("callback scalar/event selection changed")
+        else:
+            expected = [
+                packet(v)
+                for v in fixture(
+                    case, number(e["time"]["ut"]) - float(case["baseUT"]), visit
+                )
+            ]
+            if (
+                set(result) != {"kind", "xyz", "suppliedTime"}
+                or result["kind"] != "vector"
+                or result["xyz"] != expected
+            ):
+                raise ValueError("callback vector changed")
+            validate_time(result["suppliedTime"], model)
+            supplied = number(result["suppliedTime"]["ut"])
+            expected_ut = number(e["time"]["ut"]) + float(case["vectorStampOffsetDays"])
+            if packet(supplied) != packet(expected_ut):
+                raise ValueError("vector stamp changed")
+    last = events[-1]
+    if callbacks:
+        if callbacks[0]["time"] != events[0]["start"]:
+            raise ValueError("first callback does not use start time")
+        if (
+            case["operation"] == "root"
+            and len(callbacks) >= 2
+            and callbacks[1]["time"] != events[0]["end"]
+        ):
+            raise ValueError("second callback does not use end time")
+    if run["termination"] == "research-callback-cap":
+        if (
+            run["exitCode"] != 75
+            or len(callbacks) != case["callbackCap"]
+            or last != {"event": "research-cap", "visit": case["callbackCap"] + 1}
+        ):
+            raise ValueError("false callback cap")
+    elif run["termination"] == "algorithm":
+        if (
+            run["exitCode"] != 0
+            or last["event"] != "terminal"
+            or last["visits"] != len(callbacks)
+        ):
+            raise ValueError("false algorithm termination")
+        error_visit = (
+            case["errorVisit"]
+            if case["errorVisit"] and len(callbacks) >= case["errorVisit"]
+            else 0
+        )
+        if last["firstErrorVisit"] != error_visit:
+            raise ValueError("first error changed")
+        if error_visit and (
+            len(callbacks) != error_visit or last["outcome"] != "callback-error"
+        ):
+            raise ValueError("chosen callback error swallowed")
+        if "time" in last:
+            validate_time(last["time"], model)
+        if "xyz" in last:
+            if len(last["xyz"]) != 3:
+                raise ValueError("invalid final vector")
+            for value in last["xyz"]:
+                number(value)
+        expected_status = {
+            "c": {
+                "value": 0,
+                "absent": 6,
+                "callback-error": 10,
+                "algorithm-error": None,
+            },
+            "swift": {
+                "value": "value",
+                "absent": "nil",
+                "callback-error": "CallbackFailure",
+            },
+        }
+        if last["outcome"] == "algorithm-error":
+            if backend == "c" and last["rawStatus"] not in (3, 4, 5, 11):
+                raise ValueError("unknown source algorithm error")
+            if backend == "swift" and last["rawStatus"] not in (
+                "Numeric solver failed to converge",
+                "Date/time outside allowed range",
+                "Vector magnitude too small to normalize",
+                "Invalid parameter value",
+            ):
+                raise ValueError("unknown public algorithm error")
+        elif (
+            last["outcome"] in expected_status[backend]
+            and last["rawStatus"] != expected_status[backend][last["outcome"]]
+        ):
+            raise ValueError("raw outcome/status normalization changed")
+    else:
+        raise ValueError(
+            "normal experiment produced process error or timeout; retain as failed observation"
+        )
+    return events
+
+
+def normalized(events, case):
+    events = json.loads(json.dumps(events))
+    terminal = events[-1]
+    terminal.pop("rawStatus", None)
+    terminal.pop("errorVisit", None)
+    if case["operation"] == "light" and terminal.get("outcome") == "value":
+        # Only declared C-versus-wrapper supplied-vector timestamp difference.
+        terminal["time"] = events[-2]["time"]
+    return events
+
+
+def assessment(runs):
+    p = protocol()
+    summary = {
+        "processes": 0,
+        "caseCount": p["caseCount"],
+        "perModel": {},
+        "differences": [],
+    }
+    for model in p["models"]:
+        counters = {backend: Counter() for backend in ("c", "swift")}
+        for backend in ("c", "swift"):
+            require_population(
+                [r["id"] for r in runs[model][backend]], [c["id"] for c in p["cases"]]
+            )
+        for case, c_run, swift_run in zip(
+            p["cases"], runs[model]["c"], runs[model]["swift"]
+        ):
+            parsed = {}
+            for backend, run in [("c", c_run), ("swift", swift_run)]:
+                parsed[backend] = validate_run(run, case, model, backend)
+                last = parsed[backend][-1]
+                counters[backend][last.get("outcome", "research-callback-cap")] += 1
+                summary["processes"] += 1
+            if normalized(parsed["c"], case) != normalized(parsed["swift"], case):
+                summary["differences"].append(
+                    {
+                        "model": model,
+                        "id": case["id"],
+                        "classification": "retained normalized trace difference",
+                    }
+                )
+        summary["perModel"][model] = {
+            backend: dict(counter) for backend, counter in counters.items()
+        }
+    return summary
+
+
+def collect_runs(binaries):
+    return {
+        model: {
+            backend: [
+                {
+                    "id": case["id"],
+                    **run_command(
+                        [str(binary), *arguments(case, model)],
+                        protocol()["bounds"]["subprocessTimeoutSeconds"],
+                    ),
+                }
+                for case in protocol()["cases"]
+            ]
+            for backend, binary in binaries.items()
+        }
+        for model in protocol()["models"]
+    }
+
+
+def executable_controls(binaries):
+    result = []
+    selected = {c["id"]: c for c in protocol()["cases"]}
+    for backend, binary in binaries.items():
+        for mutation, case_id in [
+            ("time-default", "root-step-bisection"),
+            ("swallow-error", "root-error-2"),
+            ("event-selection", "root-ascending"),
+        ]:
+            case = selected[case_id]
+            run = {
+                "id": case_id,
+                **run_command(
+                    [str(binary), *arguments(case, "espenak-meeus", mutation)], 5
+                ),
+            }
+            try:
+                validate_run(run, case, "espenak-meeus", backend)
+            except ValueError as error:
+                result.append(
+                    {
+                        "backend": backend,
+                        "mutation": mutation,
+                        "rejected": True,
+                        "reason": str(error),
+                        "run": run,
+                    }
+                )
+            else:
+                raise ValueError(f"actual mutation accepted: {backend}/{mutation}")
+    return result
+
+
+def write_gzip(path, value):
+    with path.open("wb") as out:
+        with gzip.GzipFile(fileobj=out, mode="wb", mtime=0) as compressed:
+            compressed.write(dumps(value).encode())
+
+
+def source_excerpt(content):
+    chunks = []
+    for signature in (
+        "static int QuadInterp(",
+        "astro_search_result_t Astronomy_Search(",
+        "astro_vector_t Astronomy_CorrectLightTravel(",
+    ):
+        start = content.rindex(signature)
+        end = content.index("\n}", start) + 2
+        chunks.append(content[start:end])
+    return "\n\n".join(chunks) + "\n"
+
+
+def acquire(binaries, receipt):
+    if ARCHIVE.exists():
+        raise ValueError(
+            "archive already exists; never overwrite historical acquisition"
+        )
+    if subprocess.check_output(
+        ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT
+    ):
+        raise ValueError("commit acquisition tools before collecting")
+    revision = subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+    ).strip()
+    runs, controls = collect_runs(binaries), executable_controls(binaries)
+    attempt = ROOT / ".context" / f"search-collection-{revision}"
+    attempt.mkdir(exist_ok=False)
+    write_gzip(attempt / "raw-runs.json.gz", runs)
+    write_gzip(attempt / "mutation-runs.json.gz", controls)
+    (attempt / "build-receipt.json").write_text(dumps(receipt))
+    derived = assessment(runs)
+    ARCHIVE.mkdir()
+    (ARCHIVE / "protocol.json").write_bytes((HOME / "protocol.json").read_bytes())
+    (ARCHIVE / "build-receipt.json").write_text(dumps(receipt))
+    (ARCHIVE / "assessment.json").write_text(dumps(derived))
+    write_gzip(ARCHIVE / "raw-runs.json.gz", runs)
+    write_gzip(ARCHIVE / "mutation-runs.json.gz", controls)
+    (ARCHIVE / "tools").mkdir()
+    for index, path in enumerate(TOOLS):
+        (ARCHIVE / "tools" / f"{index}.txt").write_bytes((ROOT / path).read_bytes())
+    sources = {}
+    for label, source_revision in [
+        ("locked", protocol()["oracleRevision"]),
+        ("public", protocol()["baseRevision"]),
+    ]:
+        content = git_bytes(
+            source_revision, "Sources/CLibAstronomy/astronomy.c"
+        ).decode()
+        excerpts = source_excerpt(content)
+        path = f"{label}-solver-source.c.txt"
+        (ARCHIVE / path).write_text(excerpts)
+        sources[label] = {
+            "revision": source_revision,
+            "wholeSourceSHA256": sha(content.encode()),
+            "excerptSHA256": sha((ARCHIVE / path).read_bytes()),
+        }
+    for path in ["LICENSE", "THIRD_PARTY_NOTICES"]:
+        (ARCHIVE / path).write_bytes((ROOT / path).read_bytes())
+    files = {
+        str(path.relative_to(ARCHIVE)): sha(path.read_bytes())
+        for path in sorted(ARCHIVE.rglob("*"))
+        if path.is_file()
+    }
+    manifest = {
+        "schemaVersion": 1,
+        "prospectiveRevision": PROSPECTIVE,
+        "acquisitionRevision": revision,
+        "toolSHA256": tool_map(),
+        "toolSnapshots": {path: f"tools/{i}.txt" for i, path in enumerate(TOOLS)},
+        "sourceExcerpts": sources,
+        "filesSHA256": files,
+        "caseIDs": [c["id"] for c in protocol()["cases"]],
+        "models": protocol()["models"],
+        "classification": protocol()["classification"],
+    }
+    (ARCHIVE / "manifest.json").write_text(dumps(manifest))
+    print(dumps(derived))
+
+
+def load_archive():
+    manifest = json.loads((ARCHIVE / "manifest.json").read_text())
+    if (
+        ACQUISITION_REVISION is None
+        or manifest["acquisitionRevision"] != ACQUISITION_REVISION
+        or manifest["prospectiveRevision"] != PROSPECTIVE
+    ):
+        raise ValueError("historical acquisition revision detached")
+    p = protocol()
+    if (
+        manifest["models"] != p["models"]
+        or manifest["caseIDs"] != [c["id"] for c in p["cases"]]
+        or manifest["classification"] != p["classification"]
+    ):
+        raise ValueError("historical case/model/definition detached")
+    expected_tools = tool_map(ACQUISITION_REVISION)
+    validate_tools(manifest["toolSHA256"], expected_tools)
+    if manifest["toolSnapshots"] != {
+        path: f"tools/{i}.txt" for i, path in enumerate(TOOLS)
+    }:
+        raise ValueError("mandatory tool snapshot population changed")
+    expected_files = {
+        "protocol.json",
+        "build-receipt.json",
+        "assessment.json",
+        "raw-runs.json.gz",
+        "mutation-runs.json.gz",
+        "locked-solver-source.c.txt",
+        "public-solver-source.c.txt",
+        "LICENSE",
+        "THIRD_PARTY_NOTICES",
+        "tools/0.txt",
+        "tools/1.txt",
+        "tools/2.txt",
+    }
+    if set(manifest["filesSHA256"]) != expected_files or {
+        str(f.relative_to(ARCHIVE)) for f in ARCHIVE.rglob("*") if f.is_file()
+    } != expected_files | {"manifest.json"}:
+        raise ValueError("historical artifact population changed")
+    for path, digest in manifest["filesSHA256"].items():
+        if sha((ARCHIVE / path).read_bytes()) != digest:
+            raise ValueError("detached historical artifact")
+    for path, snapshot in manifest["toolSnapshots"].items():
+        if sha((ARCHIVE / snapshot).read_bytes()) != expected_tools[path]:
+            raise ValueError("historical tool source mismatch")
+    if (ARCHIVE / "protocol.json").read_bytes() != (
+        HOME / "protocol.json"
+    ).read_bytes():
+        raise ValueError("archived protocol changed")
+    for label, revision in [
+        ("locked", p["oracleRevision"]),
+        ("public", p["baseRevision"]),
+    ]:
+        expected = {
+            "revision": revision,
+            "wholeSourceSHA256": sha(
+                git_bytes(revision, "Sources/CLibAstronomy/astronomy.c")
+            ),
+            "excerptSHA256": sha(
+                source_excerpt(
+                    git_bytes(revision, "Sources/CLibAstronomy/astronomy.c").decode()
+                ).encode()
+            ),
+        }
+        if manifest["sourceExcerpts"].get(label) != expected:
+            raise ValueError("source provenance detached")
+    for path in ("LICENSE", "THIRD_PARTY_NOTICES"):
+        if (ARCHIVE / path).read_bytes() != git_bytes(p["baseRevision"], path):
+            raise ValueError("source notice changed")
+    receipt = json.loads((ARCHIVE / "build-receipt.json").read_text())
+    validate_receipt(receipt, ACQUISITION_REVISION)
+    runs = json.loads(gzip.decompress((ARCHIVE / "raw-runs.json.gz").read_bytes()))
+    if set(runs) != set(p["models"]) or any(
+        set(runs[m]) != {"c", "swift"} for m in runs
+    ):
+        raise ValueError("raw backend/model population changed")
+    derived = assessment(runs)
+    if derived != json.loads((ARCHIVE / "assessment.json").read_text()):
+        raise ValueError("saved assessment disagrees with recomputed raw semantics")
+    controls = json.loads(
+        gzip.decompress((ARCHIVE / "mutation-runs.json.gz").read_bytes())
+    )
+    if [(c["backend"], c["mutation"]) for c in controls] != [
+        (b, m)
+        for b in ("c", "swift")
+        for m in ("time-default", "swallow-error", "event-selection")
+    ]:
+        raise ValueError("mutation population changed")
+    cases = {c["id"]: c for c in p["cases"]}
+    for control in controls:
+        try:
+            validate_run(
+                control["run"],
+                cases[control["run"]["id"]],
+                "espenak-meeus",
+                control["backend"],
+            )
+        except ValueError as error:
+            if control["rejected"] is not True or control["reason"] != str(error):
+                raise ValueError("saved mutation verdict false")
+        else:
+            raise ValueError("saved executable mutation not detected")
+    return runs, receipt, derived
+
+
+def compare_replay(saved, current):
+    differences = []
+
+    def compare(a, b, path):
+        if isinstance(a, str) and (
+            a.startswith("f64:") or a in ("nan", "+inf", "-inf")
+        ):
+            tolerance = (
+                1e-8
+                if any(x in path for x in ("ut", "tt", "expectedCapturedTT"))
+                else 1e-12
+            )
+            if not close_packets(a, b, tolerance):
+                differences.append(path)
+        elif isinstance(a, dict):
+            if not isinstance(b, dict) or set(a) != set(b):
+                differences.append(path)
+            else:
+                for key in a:
+                    compare(a[key], b[key], f"{path}/{key}")
+        elif isinstance(a, list):
+            if not isinstance(b, list) or len(a) != len(b):
+                differences.append(path)
+            else:
+                for i, (x, y) in enumerate(zip(a, b)):
+                    compare(x, y, f"{path}/{i}")
+        elif a != b:
+            differences.append(path)
+
+    for model in protocol()["models"]:
+        for backend in ("c", "swift"):
+            for case, a, b in zip(
+                protocol()["cases"], saved[model][backend], current[model][backend]
+            ):
+                for key in ("id", "exitCode", "termination"):
+                    compare(a[key], b[key], f"{model}/{backend}/{case['id']}/{key}")
+                compare(
+                    [json.loads(s) for s in a["stdout"].splitlines()],
+                    [json.loads(s) for s in b["stdout"].splitlines()],
+                    f"{model}/{backend}/{case['id']}/events",
+                )
+    if differences:
+        raise ValueError(f"replay differs outside frozen envelope: {differences[:12]}")
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("mode", choices=["build-controls", "acquire", "check"])
+    args = parser.parse_args()
+    with tempfile.TemporaryDirectory(prefix="search-research-") as directory:
+        binaries, receipt = build(Path(directory))
+        if args.mode == "build-controls":
+            controls = executable_controls(binaries)
+            print(
+                dumps(
+                    {
+                        "executableMutationsRejected": len(controls),
+                        "buildReceipt": receipt,
+                    }
+                )
+            )
+        elif args.mode == "acquire":
+            acquire(binaries, receipt)
+        else:
+            saved, historical, derived = load_archive()
+            for field in expected_receipt_fields():
+                if receipt[field] != historical[field]:
+                    raise ValueError(
+                        f"rebuilt condition differs from historical experiment: {field}"
+                    )
+            current = collect_runs(binaries)
+            current_derived = assessment(current)
+            compare_replay(saved, current)
+            controls = executable_controls(binaries)
+            report = {
+                "status": "finite-authenticated-replay",
+                "historicalAssessment": derived,
+                "currentAssessment": current_derived,
+                "currentBuildReceipt": receipt,
+                "historicalBuildReceiptSHA256": sha(
+                    (ARCHIVE / "build-receipt.json").read_bytes()
+                ),
+                "currentValidatorSHA256": sha(Path(__file__).read_bytes()),
+                "currentExecutableMutationRejections": len(controls),
+            }
+            out = ROOT / ".context/search-replay.json"
+            out.parent.mkdir(exist_ok=True)
+            out.write_text(dumps(report))
+            print(
+                dumps(
+                    {
+                        "status": report["status"],
+                        "processes": derived["processes"],
+                        "differences": derived["differences"],
+                        "executableMutationsRejected": len(controls),
+                    }
+                )
+            )
+
+
+if __name__ == "__main__":
+    main()
