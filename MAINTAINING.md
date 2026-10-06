@@ -1,6 +1,6 @@
 # Maintaining AstronomyKit
 
-This document is for maintainers. It describes the vendored [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library, the local patches it carries, and the checks that cover it. The project does not sync with upstream Astronomy Engine; the vendored engine is being replaced by a Swift implementation. Day-to-day contribution guidance lives in [CONTRIBUTING.md](CONTRIBUTING.md).
+This document is for maintainers. It describes the vendored [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library, the local patches it carries, and the checks that cover it. The project does not sync with upstream Astronomy Engine; the vendored engine is being replaced by a Swift implementation, whose internal contract is [NATIVE_ENGINE.md](NATIVE_ENGINE.md). Day-to-day contribution guidance lives in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## What is vendored
 
