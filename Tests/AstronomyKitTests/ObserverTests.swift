@@ -197,6 +197,51 @@ struct ObserverTests {
 
             #expect(abs(gravity - expected) < Self.somiglianaTolerance, "\(gravity) m/s², expected \(expected)")
         }
+
+        /// WGS 84 defining parameters, NIMA TR8350.2, 3rd edition (2000),
+        /// Table 3.1: semi-major axis, reciprocal flattening, angular velocity
+        /// and geocentric gravitational constant.
+        static let semiMajorAxis = 6_378_137.0
+        static let flattening = 1 / 298.257_223_563
+        static let angularVelocity = 7_292_115e-11
+        static let gravitationalConstant = 3_986_004.418e8
+
+        /// m = ω²a²b/GM, which TR8350.2 lists among its derived constants as
+        /// 0.00344978650684.
+        static let gravityRatio =
+            angularVelocity * angularVelocity * semiMajorAxis * semiMajorAxis * (semiMajorAxis * (1 - flattening))
+            / gravitationalConstant
+
+        /// Normal gravity at height h above the ellipsoid, TR8350.2 eq. 4-3:
+        /// γh = γ [1 − (2/a)(1 + f + m − 2f sin²φ) h + (3/a²) h²].
+        static func normalGravity(latitude: Double, height: Double) -> Double {
+            let s2 = pow(sin(latitude * .pi / 180), 2)
+            let a = semiMajorAxis
+            let f = flattening
+            let linear = 2 / a * (1 + f + gravityRatio - 2 * f * s2) * height
+            let quadratic = 3 / (a * a) * height * height
+            return somigliana(latitude: latitude) * (1 - linear + quadratic)
+        }
+
+        /// 5e-12 m/s² per metre of height, on top of the sea-level tolerance.
+        /// The engine stores the eq. 4-3 coefficients rounded to six digits;
+        /// the linear one, 3.15704e-7 against 3.157042871e-7, leaves
+        /// 2.8e-12 m/s² per metre (2.8e-7 m/s² at 100 km), and the other two
+        /// add under 4e-9 m/s² there. A change in the sixth digit of the linear
+        /// coefficient moves gravity at 100 km by 9.8e-7 m/s².
+        static let heightToleranceRate = 5e-12
+
+        @Test(
+            "Gravity above sea level follows the WGS 84 free-air expansion",
+            arguments: [(0.0, 10_000.0), (45.0, 50_000.0), (90.0, 100_000.0), (-30.0, 100_000.0)]
+        )
+        func gravityAboveSeaLevel(latitude: Double, height: Double) {
+            let gravity = Observer(latitude: latitude, longitude: 0, height: height).gravity
+            let expected = Self.normalGravity(latitude: latitude, height: height)
+            let tolerance = Self.somiglianaTolerance + Self.heightToleranceRate * height
+
+            #expect(abs(gravity - expected) < tolerance, "\(gravity) m/s², expected \(expected)")
+        }
     }
 
     // MARK: - Protocol Conformances
