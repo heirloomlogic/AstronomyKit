@@ -37,7 +37,8 @@ extension Engine {
     /// Entries must not depend on anything outside the key, such as the
     /// process Delta T default or a caller's time metadata. Then a hit returns
     /// exactly what recomputing would, and emptying the cache at any moment
-    /// cannot change a result.
+    /// cannot change a result. ``removeAll()`` does not wait for computations
+    /// in progress: one that missed before it stores its value after it.
     final class BoundedCache<Key: Hashable & Sendable, Value: Sendable>: ResettableCache, @unchecked Sendable {
         /// Lookup counts since the cache was created; ``removeAll()`` keeps them.
         struct Statistics: Equatable, Sendable {

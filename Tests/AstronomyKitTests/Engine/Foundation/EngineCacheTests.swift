@@ -37,7 +37,29 @@ struct EngineBoundedCacheTests {
         var count: Int { lock.withLock { calls } }
     }
 
+    /// A value written on one thread and read on another.
+    final class Box: @unchecked Sendable {
+        private let lock = NSLock()
+        private var stored: Int?
+        func set(_ value: Int) { lock.withLock { stored = value } }
+        var value: Int? { lock.withLock { stored } }
+    }
+
     struct Failure: Error, Equatable {}
+
+    /// Fills `cache` with `capacity` keys it has not seen and checks that it
+    /// then holds exactly those, which it does only when its entries and its
+    /// eviction slots agree.
+    static func expectConsistent(_ cache: Engine.BoundedCache<Int, Int>, freshKeys: Range<Int>) {
+        let keys = freshKeys.prefix(cache.capacity)
+        for key in keys {
+            _ = cache.value(for: key) { key }
+        }
+        #expect(cache.count == cache.capacity)
+        for key in keys {
+            #expect(cache.value(for: key) { -1 } == key, "key \(key)")
+        }
+    }
 
     @Test("A miss computes and stores; a hit returns the stored value")
     func hitAndMiss() {
@@ -160,6 +182,113 @@ struct EngineBoundedCacheTests {
         #expect(statistics.hits + statistics.misses == lookups)
         #expect(statistics.misses >= 12)
     }
+
+    /// 64 keys contend for 4 slots. Each computation also reads the count,
+    /// so the bound is checked while other threads insert and evict.
+    @Test("Eviction under contention keeps the bound and every value")
+    func evictionUnderContention() {
+        let cache = Engine.BoundedCache<Int, Int>(capacity: 4, registry: Engine.CacheRegistry())
+        let lookups = 8_000
+        let mismatches = Counter()
+        let overfull = Counter()
+        DispatchQueue.concurrentPerform(iterations: lookups) { index in
+            let key = (index * 37) % 64
+            let value = cache.value(for: key) {
+                if cache.count > 4 { overfull.record() }
+                return key + 1_000
+            }
+            if value != key + 1_000 { mismatches.record() }
+        }
+        #expect(mismatches.count == 0)
+        #expect(overfull.count == 0)
+        #expect(cache.count <= 4)
+        let statistics = cache.statistics
+        #expect(statistics.hits + statistics.misses == lookups)
+        Self.expectConsistent(cache, freshKeys: 10_000..<10_004)
+    }
+
+    @Test("A reset from inside a computation empties the cache; the computed value is stored after it")
+    func resetInsideComputation() {
+        let registry = Engine.CacheRegistry()
+        let cache = Engine.BoundedCache<Int, Int>(capacity: 2, registry: registry)
+        _ = cache.value(for: 1) { 10 }
+        let value = cache.value(for: 2) {
+            registry.removeAll()
+            return 20
+        }
+        #expect(value == 20)
+        #expect(cache.count == 1)
+        #expect(cache.value(for: 2) { -1 } == 20)
+        #expect(cache.value(for: 1) { 11 } == 11)
+        Self.expectConsistent(cache, freshKeys: 100..<102)
+    }
+
+    /// The computation waits on another thread while this one resets the
+    /// registry, so the reset lands between the miss and the store.
+    @Test("A reset while another thread computes does not change its result")
+    func resetDuringComputation() {
+        let registry = Engine.CacheRegistry()
+        let cache = Engine.BoundedCache<Int, Int>(capacity: 2, registry: registry)
+        _ = cache.value(for: 1) { 10 }
+        let computing = DispatchSemaphore(value: 0)
+        let resume = DispatchSemaphore(value: 0)
+        let finished = DispatchSemaphore(value: 0)
+        let result = Box()
+        DispatchQueue.global().async {
+            let value = cache.value(for: 2) {
+                computing.signal()
+                resume.wait()
+                return 20
+            }
+            result.set(value)
+            finished.signal()
+        }
+        computing.wait()
+        registry.removeAll()
+        #expect(cache.count == 0)
+        resume.signal()
+        finished.wait()
+
+        #expect(result.value == 20)
+        // The entry from before the reset is gone; the one computed across it is stored.
+        #expect(cache.count == 1)
+        #expect(cache.value(for: 2) { -1 } == 20)
+        #expect(cache.value(for: 1) { 11 } == 11)
+        #expect(cache.statistics == .init(hits: 1, misses: 3))
+    }
+
+    /// Two caches in one registry, the outer computing through the inner,
+    /// while one lookup in sixteen resets the registry.
+    @Test("Resets during concurrent nested lookups keep every cache bounded and every value")
+    func resetDuringConcurrentLookups() {
+        let registry = Engine.CacheRegistry()
+        let inner = Engine.BoundedCache<Int, Int>(capacity: 8, registry: registry)
+        let outer = Engine.BoundedCache<Int, Int>(capacity: 4, registry: registry)
+        let lookups = 8_000
+        let mismatches = Counter()
+        let overfull = Counter()
+        DispatchQueue.concurrentPerform(iterations: lookups) { index in
+            if index.isMultiple(of: 16) {
+                registry.removeAll()
+                return
+            }
+            let key = (index * 13) % 32
+            let value = outer.value(for: key) {
+                let square = inner.value(for: key) { key * key }
+                if inner.count > 8 || outer.count > 4 { overfull.record() }
+                return square + 1
+            }
+            if value != key * key + 1 { mismatches.record() }
+        }
+        #expect(mismatches.count == 0)
+        #expect(overfull.count == 0)
+        #expect(inner.count <= 8)
+        #expect(outer.count <= 4)
+        let statistics = outer.statistics
+        #expect(statistics.hits + statistics.misses == lookups - lookups / 16)
+        Self.expectConsistent(inner, freshKeys: 1_000..<1_008)
+        Self.expectConsistent(outer, freshKeys: 1_000..<1_004)
+    }
 }
 
 @Suite("Engine.CacheRegistry")
@@ -195,5 +324,16 @@ struct EngineCacheRegistryTests {
             }
         }
         #expect(registry.count == 56)
+    }
+
+    /// A cache in the shared registry, made once like an engine cache.
+    static let sharedCache = Engine.BoundedCache<Int, Int>(capacity: 1, registry: .shared)
+
+    @Test("Engine.resetCaches empties the caches in the shared registry")
+    func resetCachesReachesShared() {
+        _ = Self.sharedCache.value(for: 1) { 1 }
+        #expect(Self.sharedCache.count == 1)
+        Engine.resetCaches()
+        #expect(Self.sharedCache.count == 0)
     }
 }

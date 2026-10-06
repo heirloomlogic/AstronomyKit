@@ -21,7 +21,7 @@ Engine code is internal and lives in the `Engine` namespace (`enum Engine` in `S
 | `Events/` | #92 | Rise/set, altitude and hour-angle searches, seasons, lunar phases, nodes and apsides, planetary event searches |
 | `Eclipses/` | #93 | Lunar and solar eclipses, transits |
 
-Files under `Engine/` never import `CLibAstronomy` or use `Mutex` (see [Caches and reset](#caches-and-reset)); `EngineContractTests` checks both. Generated tables live in a `Generated/` subdirectory of the module that reads them, with a generator under `Scripts/` that has a `--check` mode. Model data is compiled in; nothing is loaded at runtime.
+Files under `Engine/` never import `CLibAstronomy` or use `Mutex` (see [Caches and reset](#caches-and-reset)); `EngineContractTests` checks every line that is not a comment for both, in any import form. Generated tables live in a `Generated/` subdirectory of the module that reads them, with a generator under `Scripts/` that has a `--check` mode. Model data is compiled in; nothing is loaded at runtime.
 
 ## Conventions
 
@@ -130,7 +130,7 @@ The process default moves from the C atomic to a `Synchronization.Atomic` in the
 
 ### Differences from the C engine
 
-- `days(year:...)` normalizes the month with floor division before counting days. `Astronomy_MakeTime`'s Fliegel and Van Flandern formula truncates instead. The two agree for months 1 to 14 from year −999,999 on, where every division in that formula has a non-negative numerator. From month 15 on, the C formula drifts from the Gregorian calendar: month 15 of 2001 gives 2002-03-03 instead of March 1. Years before −1,000,000 can also be a day off.
+- `days(year:...)` normalizes the month with floor division before counting days. `Astronomy_MakeTime`'s Fliegel and Van Flandern formula truncates instead. The two agree for months 1 to 14 from year −999,999 on, where every division in that formula has a non-negative numerator. Outside that range the C formula can miss the Gregorian date by a day or two, though not every such month does: month 15 of 2001 gives 2002-03-03 instead of March 1, while months 26 and 38 of 2001 land on the right day.
 - Espenak-Meeus keeps the C engine's decimal year, `2000 + (ut − 14) / 365.24217`, which puts 2000.0 at 2000-01-15 12:00 UT. NASA defines the year of a month as `year + (month − 0.5) / 12`, which puts 2000.0 at the start of January, so the engine reaches each decimal year about 14.5 days (0.04 years) later than NASA's definition. Delta T differs by its rate of change times 0.04 years: about 0.02 s in 2026, 0.3 s in 3000 and 0.7 s at −500. The published definition is month-resolution, and a continuous replacement needs a choice of year length and calendar; that choice is open.
 
 ### Published-value checks
@@ -210,8 +210,9 @@ In the tree: `EngineCache.swift`.
 - `Engine.ExactKey` is the bit pattern of a finite `Double`. `0.0` and `-0.0` are different keys. A value that is not finite has no key and bypasses the cache.
 - `Engine.BoundedCache<Key, Value>` holds at most `capacity` entries and replaces the oldest insertion when full, as the C caches do. All threads share the entries. The computation runs outside the lock, so it may use any cache, including the one it fills. A computation that throws stores nothing. `statistics` counts hits and misses for work-count tests.
 - A cached value is a pure function of its key: never the process Delta T default, never a caller's time metadata. Then a hit returns what recomputing would, and a reset at any moment cannot change a result.
-- Each module creates its caches as `static let` properties, registered with `Engine.CacheRegistry.shared`. A cache that has never been used does not exist yet, so the registry holds every cache that can contain entries.
+- Each module creates its caches as `static let` properties, registered with `Engine.CacheRegistry.shared`. A cache that has never been used does not exist yet, so the registry holds every cache that can contain entries. The registry keeps its caches for the life of the process, so a cache made anywhere else would grow it on every call; `EngineContractTests` fails on a `BoundedCache` created outside a `static let`.
 - `Engine.resetCaches()` empties every registered cache. It does not touch the Delta T default, fixed star definitions or gravity simulations, which are not caches. #96 makes `AstronomyConfig.reset()` call it and updates that method's documentation.
+- A reset does not wait for computations in progress. A lookup that missed before a reset stores its value after it, and a computation can itself reset. Either way the stored value is the one its key gives, so the next hit returns what recomputing would.
 - Shared mutable state uses `NSLock` or `Synchronization.Atomic`, not `Synchronization.Mutex`. ThreadSanitizer on Linux does not model `Mutex`, and suppressing its reports would also hide races in any computation called through a cache (see `.github/tsan-suppressions.txt`).
 - Tests that count work make their own `CacheRegistry` and cache, because the shared caches are process-wide.
 
