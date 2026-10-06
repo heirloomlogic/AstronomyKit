@@ -27,10 +27,10 @@ struct EngineLightTravelTests {
         at time: Engine.Time, fallback: DeltaTModel = .espenakMeeus, _ position: (Double) throws -> [Double]
     ) throws -> (vector: Engine.Vector<Engine.EQJ>, calls: [Engine.Time]) {
         var calls: [Engine.Time] = []
-        let vector = try Engine.LightTravel.correct(at: time, fallback: fallback) { time in
+        let vector = try Engine.LightTravel.correct(at: time, fallback: fallback) { time -> Engine.Vector<Engine.EQJ> in
             calls.append(time)
             let xyz = try position(time.ut - base)
-            return vector(xyz[0], xyz[1], xyz[2], at: time)
+            return Self.vector(xyz[0], xyz[1], xyz[2], at: time)
         }
         return (vector, calls)
     }

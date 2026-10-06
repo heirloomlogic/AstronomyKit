@@ -12,13 +12,14 @@ import Testing
 
 @Suite("Engine constants")
 struct EngineConstantsTests {
-    /// π to 40 decimal places; `Decimal` keeps 38 significant digits.
-    static let pi = Decimal(string: "3.1415926535897932384626433832795028841971")!
+    /// π to 40 decimal places; `Decimal` keeps 38 significant digits. NaN,
+    /// which fails every comparison, if the literal ever stops parsing.
+    static let pi = Decimal(string: "3.1415926535897932384626433832795028841971") ?? .nan
 
     /// The double nearest `value`, through Swift's correctly rounded parse
     /// of its decimal digits.
-    static func nearest(_ value: Decimal) -> Double {
-        Double("\(value)")!
+    static func nearest(_ value: Decimal) throws -> Double {
+        try #require(Double("\(value)"))
     }
 
     @Test("A day is 86,400 seconds")
@@ -28,15 +29,15 @@ struct EngineConstantsTests {
 
     /// IAU 2012 Resolution B2.
     @Test("The au is exactly 149,597,870,700 m")
-    func astronomicalUnit() {
-        #expect(Engine.kilometersPerAU == Self.nearest(Decimal(149_597_870_700) / 1_000))
+    func astronomicalUnit() throws {
+        #expect(try Engine.kilometersPerAU == Self.nearest(Decimal(149_597_870_700) / 1_000))
     }
 
     /// 299,792,458 m/s is exact in the SI.
     @Test("The speed of light is 299,792,458 m/s times 86,400 s over the au")
-    func speedOfLight() {
+    func speedOfLight() throws {
         let exact = Decimal(299_792_458) * 86_400 / Decimal(149_597_870_700)
-        #expect(Engine.speedOfLightAUPerDay == Self.nearest(exact))
+        #expect(try Engine.speedOfLightAUPerDay == Self.nearest(exact))
     }
 
     /// The IAU 2009 System of Astronomical Constants gives the light time for
@@ -56,8 +57,8 @@ struct EngineConstantsTests {
             ("12/π", Engine.hoursPerRadian, 12 / pi),
             ("π/648000", Engine.radiansPerArcsecond, pi / 648_000),
         ])
-    func angleFactor(name: String, value: Double, exact: Decimal) {
-        #expect(value == Self.nearest(exact), "\(name)")
+    func angleFactor(name: String, value: Double, exact: Decimal) throws {
+        #expect(try value == Self.nearest(exact), "\(name)")
     }
 
     @Test("The angle factors invert each other to within one rounding")
