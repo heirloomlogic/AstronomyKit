@@ -29,7 +29,7 @@ Files under `Engine/` never import `CLibAstronomy` or use `Mutex` (see [Caches a
 - Failures are thrown as `AstronomyError` (see [Errors](#errors)). An error thrown by a caller's closure propagates unchanged.
 - Units: distances in AU, velocities in AU per TT day, angles in degrees, right ascension and sidereal time in sidereal hours, times in days since 2000-01-01 12:00 on the named scale. A name says so when it departs from this, for example `radians`.
 - Bodies are the public `CelestialBody` enum. A function that does not support a body throws `invalidBody` where the C function returns `ASTRO_INVALID_BODY`.
-- Constants shared by more than one module live in `Foundation/`, with the published source of each value. A constant used by one module stays in that module.
+- Constants shared by more than one module live in `Foundation/`, with the published source of each value (see [Constants](#constants)). A constant used by one module stays in that module.
 
 ## Frames, vectors and rotations
 
@@ -52,7 +52,40 @@ A module that needs another frame, such as Jupiter's equator for its moons, decl
 - `Engine.State<F>`: position `x`, `y`, `z` in AU, velocity `vx`, `vy`, `vz` in AU per TT day, and `time`.
 - `Engine.Rotation<From, To>`: `rot` in the C engine's index order, which the public `RotationMatrix[row:col:]` exposes unchanged. Applied to a vector `v`, component `j` of the result is `rot[0][j]·v.x + rot[1][j]·v.y + rot[2][j]·v.z`. `identity` exists only where `From == To`.
 
-**Planned (#84, part 3).** Applying a rotation to a vector or state, vector length, the angle between two vectors (`badVector` when the product of their lengths is below 1e-8 or not finite, as in `Astronomy_AngleBetween`), and the other vector and state arithmetic that more than one module uses. Combining, inverting and pivoting rotations, and the rotations between frames, belong to #86.
+```swift
+extension Engine.Vector {
+    var length: Double { get }
+    func angle(to other: Self) throws -> Double
+}
+extension Engine.State {
+    var position: Engine.Vector<F> { get }
+}
+extension Engine.Rotation {
+    func apply(to vector: Engine.Vector<From>) -> Engine.Vector<To>
+    func apply(to state: Engine.State<From>) -> Engine.State<To>
+}
+```
+
+- `length` is `sqrt(x² + y² + z²)` with no scaling, as in `Astronomy_VectorLength`, so a component above about 1e154 gives an infinite length.
+- `angle(to:)` returns degrees from 0 through 180, as `Astronomy_AngleBetween` does. It throws `badVector` when the product of the two lengths is below 1e-8 or not finite, and returns exactly 0 or 180 when the cosine rounds to 1 or −1 or beyond.
+- `apply(to:)` uses the formula above, and for a state applies it to the position and to the velocity. The result keeps the input's time. It cannot fail: `Astronomy_RotateVector` and `Astronomy_RotateState` return `ASTRO_INVALID_PARAMETER` only for an input that carries an error status, and Swift values have no status.
+
+Combining, inverting and pivoting rotations, and the rotations between frames, belong to #86. Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here through #84.
+
+## Constants
+
+In the tree: `EngineConstants.swift`. Each constant is the double nearest its definition. `EngineConstantsTests` derives each one from its definition, not from the C engine.
+
+| Constant | Definition |
+|---|---|
+| `Engine.secondsPerDay` | 86,400 SI seconds |
+| `Engine.kilometersPerAU` | 149,597,870.7 km: IAU 2012 Resolution B2 defines the au as exactly 149,597,870,700 m |
+| `Engine.speedOfLightAUPerDay` | 173.144 632 674 240 33 AU per day: the SI speed of light, exactly 299,792,458 m/s, times 86,400 s, over the au. Light crosses one au in 499.004 783 836 s, the IAU 2009 value |
+| `Engine.radiansPerDegree`, `Engine.degreesPerRadian` | π/180 and 180/π |
+| `Engine.radiansPerHour`, `Engine.hoursPerRadian` | π/12 and 12/π |
+| `Engine.radiansPerArcsecond` | π/648,000 |
+
+The C engine's `C_AUDAY`, 173.1446326846693, is 86,400 s over 499.0047838061 s, the DE405 light time for one au, and its `KM_PER_AU`, 149,597,870.69098932, is derived from `C_AUDAY`. Both differ from the published values by 6.0e-11 of their size: about 3e-8 s of light time and 9 m per au. The C angle factors (`DEG2RAD`, `RAD2DEG`, `HOUR2RAD`, `RAD2HOUR`, `ASEC2RAD`) are the same doubles as the engine's. `SearchCallbackContractTests` "Fixed positions within one light-day" and "Positions beyond one light-day" test the public API against the C light-day; #96 moves them to the published one. Both are tracked in #166.
 
 ## Time and the Delta T model
 
@@ -146,25 +179,29 @@ Engine code throws the public `AstronomyError`; there is no status enum. Each C 
 
 ## Root search and light travel
 
-**Planned (#84, part 3).** The final names are recorded here when the code lands.
+In the tree: `EngineSearch.swift`.
 
 ```swift
-extension Engine {
-    enum Search {
-        static func ascendingRoot(
-            from start: Engine.Time, to end: Engine.Time, toleranceSeconds: Double, fallback: DeltaTModel,
-            _ function: (Engine.Time) throws -> Double
-        ) throws -> Engine.Time?
-    }
-    enum LightTravel {
-        static func correct<F: Engine.Frame>(
-            at time: Engine.Time, fallback: DeltaTModel, _ position: (Engine.Time) throws -> Engine.Vector<F>
-        ) throws -> Engine.Vector<F>
-    }
+extension Engine.Search {
+    static let iterationLimit: Int  // 20
+    static func ascendingRoot(
+        from start: Engine.Time, to end: Engine.Time, toleranceSeconds: Double, fallback: DeltaTModel,
+        _ function: (Engine.Time) throws -> Double
+    ) throws -> Engine.Time?
+}
+extension Engine.LightTravel {
+    static let iterationLimit: Int  // 10
+    static func correct<F: Engine.Frame>(
+        at time: Engine.Time, fallback: DeltaTModel, _ position: (Engine.Time) throws -> Engine.Vector<F>
+    ) throws -> Engine.Vector<F>
 }
 ```
 
-The closures are synchronous and non-escaping, and replace the C callback trampolines. `ascendingRoot` keeps `Astronomy_Search`'s expressions, branch order and 20-iteration limit (then `noConvergence`), with local patch 20's ascending-bracket checks, and every time it derives uses the start time's model, or `fallback` when the start time is invalid. It returns `nil` when the window has no ascending root, and an error from `function` stops the search and propagates. `correct` keeps `Astronomy_CorrectLightTravel`: at most 10 iterations, backdating with `time.adding(days: -distance / C_AUDAY, fallback: fallback)` (a UT offset, so the model is the observation time's), stopping when TT moves less than 1e-9 days, `invalidParameter` beyond one light-day, and `noConvergence` after the last iteration. It returns the last vector the closure produced, whose time is the last backdated time.
+The closures are synchronous and non-escaping. They take the place of the C callbacks, which the public `Search.swift` reaches through trampolines. An error a closure throws ends the call and propagates unchanged, and the closure is not called again.
+
+`ascendingRoot` keeps `Astronomy_Search`'s expressions, branch order and 20-pass limit, after which it throws `noConvergence`. It includes local patch 20's ascending-bracket checks, so it does not report the descending root or the short constant window of #142. It returns `nil` where the C function returns `ASTRO_SEARCH_FAILURE`: for a single descending root, a function that never changes sign in the window, or any window it cannot bracket. Each time it derives takes the model of the time it comes from, or `fallback` when that time is invalid. Midpoints and interpolated roots come from the window's first bound in argument order, which begins as `start`.
+
+`correct` keeps `Astronomy_CorrectLightTravel`. It calls `position` at most 10 times. Each backdate is `time.adding(days: -distance / Engine.speedOfLightAUPerDay, fallback: fallback)`, a UT offset whose TT comes from the observation time's model, and the iteration stops when TT moves less than 1e-9 days. A distance beyond one light-day throws `invalidParameter`, and a tenth call without convergence throws `noConvergence`. The result is the last vector `position` returned, with its time set to the time that call received, as the public `AstroSearch.correctLightTravel` reports it. The light-day is the published one (see [Constants](#constants)).
 
 ## Caches and reset
 
