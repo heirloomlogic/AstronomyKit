@@ -73,6 +73,70 @@ struct EngineTimeTests {
         #expect(time.deltaTModel == nil)
     }
 
+    /// A TT inside every gap a positive Delta T jump leaves under `model`.
+    static func gapTimes(_ model: DeltaTModel) -> [Engine.Time] {
+        EngineTimeConversionTests.jumps.filter { $0.model == model && $0.isGap }.map { jump in
+            Engine.Time(tt: jump.beforeTT + (jump.afterTT - jump.beforeTT) / 2, deltaTModel: model)
+        }
+    }
+
+    /// Valid times from each way the engine makes one.
+    static func madeTimes(_ model: DeltaTModel) -> [Engine.Time] {
+        [
+            Engine.Time(ut: 9_131.25, deltaTModel: model),
+            Engine.Time(ut: -0.0, deltaTModel: model),
+            Engine.Time(tt: 9_131.25, deltaTModel: model),
+            Engine.Time(tt: -1e6, deltaTModel: model),
+            Engine.Time.civil(utcDays: 6_208.5, deltaTModel: model).time,
+            Engine.Time(ut: 1e15, deltaTModel: model).adding(days: 0.25, fallback: model),
+            Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus).adding(days: -1e160, fallback: model),
+        ] + gapTimes(model)
+    }
+
+    @Test("Pair reconstruction gives back every kind of engine time bit for bit", arguments: DeltaTModel.allCases)
+    func pairRoundTrip(model: DeltaTModel) throws {
+        let other: DeltaTModel = model == .espenakMeeus ? .jplHorizons : .espenakMeeus
+        for time in Self.madeTimes(model) {
+            let recorded = try #require(time.deltaTModel)
+            let rebuilt = Engine.Time.fromPair(ut: time.ut, tt: time.tt, deltaTModel: recorded)
+            #expect(rebuilt.ut.bitPattern == time.ut.bitPattern, "\(time.ut)")
+            #expect(rebuilt.tt.bitPattern == time.tt.bitPattern, "\(time.ut)")
+            #expect(rebuilt.deltaTModel == model)
+            // Times derived from the rebuilt value match those from the original.
+            let derived = time.adding(days: 0.5, fallback: other)
+            let rebuiltDerived = rebuilt.adding(days: 0.5, fallback: other)
+            #expect(rebuiltDerived.ut.bitPattern == derived.ut.bitPattern)
+            #expect(rebuiltDerived.tt.bitPattern == derived.tt.bitPattern)
+        }
+    }
+
+    /// UT alone, which is what `AstroTime`'s `Codable` form records, cannot
+    /// rebuild a time whose TT lies in a Delta T gap: no UT gives that TT.
+    @Test("Only the pair rebuilds a time in a Delta T gap", arguments: DeltaTModel.allCases)
+    func gapNeedsPair(model: DeltaTModel) throws {
+        let times = Self.gapTimes(model)
+        try #require(!times.isEmpty)
+        for time in times {
+            let fromUT = Engine.Time(ut: time.ut, deltaTModel: model)
+            #expect(fromUT.ut.bitPattern == time.ut.bitPattern)
+            #expect(abs(fromUT.tt - time.tt) > Engine.Time.inverseTolerance(tt: time.tt), "\(time.tt)")
+            let fromPair = Engine.Time.fromPair(ut: time.ut, tt: time.tt, deltaTModel: model)
+            #expect(fromPair.tt.bitPattern == time.tt.bitPattern)
+        }
+    }
+
+    /// The pair of an invalid time has a scale that is not finite, and
+    /// reconstruction gives the invalid time, as `AstroTime(tt:ut:)` does.
+    @Test("Pair reconstruction does not keep the finite UT of an invalid time")
+    func pairOfInvalidTime() {
+        let overflowed = Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus)
+        #expect(overflowed.ut == 1e160)
+        let rebuilt = Engine.Time.fromPair(ut: overflowed.ut, tt: overflowed.tt, deltaTModel: .espenakMeeus)
+        #expect(rebuilt.ut.isNaN)
+        #expect(rebuilt.tt.isNaN)
+        #expect(rebuilt.deltaTModel == nil)
+    }
+
     @Test("The invalid time has NaN scales and no model")
     func invalidTime() {
         #expect(Engine.Time.invalid.ut.isNaN)

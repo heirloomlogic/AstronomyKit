@@ -344,6 +344,33 @@ struct AstroTimeTests {
             #expect(set.count == 2)
         }
 
+        @Test("Equality, ordering and hashing use UT alone")
+        func universalTimeOnly() {
+            let pair = AstroTime(tt: 5, ut: 10, deltaTModel: .jplHorizons)
+            let otherTT = AstroTime(tt: 7, ut: 10, deltaTModel: .espenakMeeus)
+            let derived = AstroTime(ut: 10, deltaTModel: .jplHorizons)
+            #expect(pair == otherTT)
+            #expect(pair == derived)
+            #expect(pair.hashValue == otherTT.hashValue)
+            #expect(pair.hashValue == derived.hashValue)
+            #expect(Set([pair, otherTT, derived]).count == 1)
+
+            let nextUT = AstroTime(tt: 5, ut: 10.0.nextUp, deltaTModel: .jplHorizons)
+            #expect(pair != nextUT)
+            #expect(pair < nextUT)
+            // A later TT does not make a time later.
+            #expect(AstroTime(tt: 100, ut: 1) < AstroTime(tt: 0, ut: 2))
+        }
+
+        @Test("Signed zero UTs are equal and hash alike")
+        func signedZero() {
+            let positive = AstroTime(tt: 0.000_7, ut: 0.0)
+            let negative = AstroTime(tt: 0.000_7, ut: -0.0)
+            #expect(negative.universalTime.sign == .minus)
+            #expect(positive == negative)
+            #expect(positive.hashValue == negative.hashValue)
+        }
+
         @Test("CustomStringConvertible - ISO8601 format")
         func description() {
             let time = AstroTime(year: 2_025, month: 6, day: 21, hour: 12, minute: 0, second: 0)
@@ -384,6 +411,21 @@ struct AstroTimeTests {
             // Should be a simple number, not an object
             #expect(!jsonString.contains("{"))
             #expect(!jsonString.contains("}"))
+        }
+
+        /// TT one day after UT is not what either Delta T model gives, so a
+        /// decoded time cannot have it.
+        @Test("The encoded form is exactly the UT; decoding derives TT again")
+        func encodesUniversalTimeOnly() throws {
+            for ut in [9_131.25, 0.1 + 0.2, -36_525.123_456_789_012, 1e15 + 0.5, 5e-324] {
+                let original = AstroTime(tt: ut + 1, ut: ut, deltaTModel: .jplHorizons)
+                let data = try JSONEncoder().encode(original)
+                #expect(try JSONDecoder().decode(Double.self, from: data).bitPattern == ut.bitPattern)
+                let decoded = try JSONDecoder().decode(AstroTime.self, from: data)
+                #expect(decoded.universalTime.bitPattern == ut.bitPattern)
+                #expect(decoded == original)
+                #expect(decoded.terrestrialTime != original.terrestrialTime)
+            }
         }
 
         @Test("Decode from raw UT value")
