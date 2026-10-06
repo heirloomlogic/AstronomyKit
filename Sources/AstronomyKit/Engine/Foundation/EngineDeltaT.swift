@@ -8,8 +8,8 @@
 extension Engine {
     /// Delta T, the difference TT − UT in seconds, under each ``DeltaTModel``.
     enum DeltaT {
-        /// Days per tropical year, used to turn UT days into the decimal year
-        /// the Espenak-Meeus polynomials take.
+        /// Days per tropical year, used for the UT at which the JPL Horizons
+        /// approximation holds Delta T.
         static let daysPerTropicalYear = 365.24217
 
         /// TT − UT in seconds at modeled UT1 `ut` days since J2000.
@@ -24,13 +24,11 @@ extension Engine {
         /// Canon of Solar Eclipses" (NASA/TP-2006-214141), as published at
         /// https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html.
         ///
-        /// The decimal year is `2000 + (ut - 14) / daysPerTropicalYear`, so
-        /// year 2000.0 falls on 2000-01-15 12:00 UT. NASA defines the year of
-        /// a month as `year + (month - 0.5) / 12`, which puts 2000.0 at the
-        /// start of January; see `NATIVE_ENGINE.md`. Each piece covers its
-        /// years from the lower bound up to, not including, the next.
+        /// The polynomials take the decimal year ``decimalYear(ut:)``. Each
+        /// piece covers its years from the lower bound up to, not including,
+        /// the next.
         static func espenakMeeus(ut: Double) -> Double {
-            let y = 2000 + (ut - 14) / daysPerTropicalYear
+            let y = decimalYear(ut: ut)
 
             if y < -500 {
                 let u = (y - 1820) / 100
@@ -106,6 +104,79 @@ extension Engine {
             // After 2150, and for a NaN year, which fails every comparison.
             let u = (y - 1820) / 100
             return -20 + (32 * u * u)
+        }
+
+        /// The decimal year of modeled UT1 `ut` days since J2000, in the
+        /// calendar the Canon's dates use: Julian through 1582 and Gregorian
+        /// from 1583. Year `Y` begins at 1 January 0:00 UT, where the decimal
+        /// year is exactly `Y`, and the decimal year grows evenly through the
+        /// days of that calendar year. Year 1582 runs from 1 January (Julian)
+        /// to 1 January 1583 (Gregorian), 355 days, so the decimal year has no
+        /// jump at the reform. Years are numbered astronomically: year 0 is
+        /// 1 BC.
+        ///
+        /// NASA defines the decimal year of a month as `year + (month - 0.5) / 12`,
+        /// its middle. This meets that within two days at the middle of every
+        /// month outside 1582, and is continuous between them.
+        ///
+        /// Before year -999,999 and from year 1,000,001, the decimal year
+        /// grows by one every mean Julian or Gregorian year. Those years begin
+        /// a 4-year Julian and a 400-year Gregorian cycle, where the mean year
+        /// and the calendar give the same decimal year, so the two meet there.
+        static func decimalYear(ut: Double) -> Double {
+            let estimate: Double
+            if ut >= Gregorian.start(year: 1583) {
+                estimate = 1 + (ut - Gregorian.start(year: 1)) / Gregorian.meanYear
+                guard ut < Gregorian.start(year: Gregorian.firstMeanYear) else { return estimate }
+            } else {
+                estimate = 1 + (ut - Julian.start(year: 1)) / Julian.meanYear
+                // A NaN UT fails this comparison too, and gives a NaN year.
+                guard ut >= Julian.start(year: Julian.firstCalendarYear) else { return estimate }
+            }
+            // The mean-year estimate is within two days of the calendar.
+            var year = estimate.rounded(.down)
+            while yearStart(year) > ut { year -= 1 }
+            while yearStart(year + 1) <= ut { year += 1 }
+            let start = yearStart(year)
+            let decimal = year + (ut - start) / (yearStart(year + 1) - start)
+            // Rounding can reach the next year in the last moments of this one;
+            // the next year, and its polynomial, start exactly at its first UT.
+            return min(decimal, (year + 1).nextDown)
+        }
+
+        /// UT days since J2000 at 1 January 0:00 of `year` in the Canon's
+        /// calendar: Julian through 1582, Gregorian from 1583.
+        static func yearStart(_ year: Double) -> Double {
+            year <= 1582 ? Julian.start(year: year) : Gregorian.start(year: year)
+        }
+
+        private enum Gregorian {
+            static let meanYear = 365.2425
+            /// The first year that uses the mean year: 1,000,000 years, 2,500
+            /// whole cycles, after year 1.
+            static let firstMeanYear = 1_000_001.0
+
+            /// UT days since J2000 at 1 January 0:00 of `year`.
+            static func start(year: Double) -> Double {
+                let y = year - 1
+                let leapDays = (y / 4).rounded(.down) - (y / 100).rounded(.down) + (y / 400).rounded(.down)
+                // JD 1721425.5 is 1 January of year 1, Gregorian; J2000 is JD 2451545.
+                return 365 * y + leapDays - 730_119.5
+            }
+        }
+
+        private enum Julian {
+            static let meanYear = 365.25
+            /// The first year the calendar covers; earlier UTs use the mean
+            /// year. It is 1,000,000 years, 250,000 whole cycles, before year 1.
+            static let firstCalendarYear = -999_999.0
+
+            /// UT days since J2000 at 1 January 0:00 of `year`.
+            static func start(year: Double) -> Double {
+                let y = year - 1
+                // JD 1721423.5 is 1 January of year 1, Julian; J2000 is JD 2451545.
+                return 365 * y + (y / 4).rounded(.down) - 730_121.5
+            }
         }
 
         /// Powers of `u`, each built from lower powers as `astronomy.c` builds them.

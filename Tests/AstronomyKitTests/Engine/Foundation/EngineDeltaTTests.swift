@@ -128,24 +128,65 @@ enum PublishedDeltaT {
     ].map { TableValue(year: $0.0, seconds: $0.1, bound: 0.1) }
 }
 
+/// Foundation's Gregorian calendar in UTC, which is Julian before
+/// 1582-10-15 as the Canon's dates are. It checks
+/// `Engine.DeltaT.decimalYear(ut:)` independently of the engine's calendar
+/// arithmetic.
+enum CanonCalendar {
+    static let calendar: Calendar = {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .gmt
+        return calendar
+    }()
+
+    /// J2000, 2000-01-01 12:00 UT, 365.5 days before Foundation's reference date.
+    static let j2000 = Date(timeIntervalSinceReferenceDate: -365.5 * 86_400)
+
+    /// UT days since J2000 at 0:00 on a date with an astronomical year; NaN
+    /// when Foundation cannot make the date.
+    static func ut(year: Int, month: Int = 1, day: Int = 1) -> Double {
+        let components = DateComponents(era: year > 0 ? 1 : 0, year: year > 0 ? year : 1 - year, month: month, day: day)
+        return calendar.date(from: components).map { $0.timeIntervalSince(j2000) / 86_400 } ?? .nan
+    }
+
+    /// The decimal year of `ut`: its calendar year plus the fraction of that
+    /// year's days elapsed.
+    static func decimalYear(ut: Double) -> Double {
+        let parts = calendar.dateComponents([.era, .year], from: j2000.addingTimeInterval(ut * 86_400))
+        guard let era = parts.era, let named = parts.year else { return .nan }
+        let year = era == 0 ? 1 - named : named
+        let start = Self.ut(year: year)
+        return Double(year) + (ut - start) / (Self.ut(year: year + 1) - start)
+    }
+}
+
 @Suite("Engine Delta T")
 struct EngineDeltaTTests {
-    /// The engine's decimal year of UT `ut` (see `Engine.DeltaT.espenakMeeus`).
+    /// The engine's decimal year of UT `ut`, which `decimalYearMatchesCalendar`
+    /// checks against Foundation's calendar.
     static func year(ut: Double) -> Double {
-        2000 + (ut - 14) / Engine.DeltaT.daysPerTropicalYear
+        Engine.DeltaT.decimalYear(ut: ut)
     }
 
-    /// A UT whose decimal year is `year`, to within rounding.
+    /// A UT whose decimal year is `year`, to within rounding, from
+    /// Foundation's calendar.
     static func ut(year: Double) -> Double {
-        14 + (year - 2000) * Engine.DeltaT.daysPerTropicalYear
+        let whole = year.rounded(.down)
+        let start = CanonCalendar.ut(year: Int(whole))
+        return start + (year - whole) * (CanonCalendar.ut(year: Int(whole) + 1) - start)
     }
 
-    /// The last UT before decimal year `boundary` and the first UT at or after it.
+    /// The last UT before decimal year `boundary` and the first UT at or after
+    /// it, bisected within 40 days of the boundary's calendar date, so a
+    /// misplaced year start fails the caller's checks instead of hanging.
     static func straddle(_ boundary: Double) -> (before: Double, after: Double) {
-        var after = ut(year: boundary)
-        while year(ut: after) >= boundary { after = after.nextDown }
-        while year(ut: after) < boundary { after = after.nextUp }
-        return (after.nextDown, after)
+        var before = ut(year: boundary) - 40
+        var after = ut(year: boundary) + 40
+        while before.nextUp < after {
+            let middle = before + (after - before) / 2
+            if year(ut: middle) >= boundary { after = middle } else { before = middle }
+        }
+        return (before, after)
     }
 
     /// The piece boundaries, where the published polynomials meet.
@@ -193,11 +234,65 @@ struct EngineDeltaTTests {
         #expect(abs(deltaT - value.seconds) <= value.bound, "\(deltaT)")
     }
 
-    @Test("Decimal year 2000.0 is 2000-01-15 12:00 UT")
-    func decimalYearOrigin() {
-        let ut = EngineCalendarTests.days(2000, 1, 15, hour: 12)
-        #expect(ut == 14)
-        #expect(Self.year(ut: ut) == 2000)
+    @Test("Each decimal year begins at 1 January 0:00 UT in the Canon's calendar")
+    func decimalYearStarts() {
+        #expect(EngineCalendarTests.days(2000, 1, 1) == -0.5)
+        #expect(Self.year(ut: -0.5) == 2000)
+        for year in [-9999, -2000, -1999, -500, -1, 0, 1, 500, 1000, 1582, 1583, 1600, 1900, 2000, 2026, 3000, 9999] {
+            let start = CanonCalendar.ut(year: year)
+            #expect(Engine.DeltaT.yearStart(Double(year)) == start, "\(year)")
+            #expect(Self.year(ut: start) == Double(year), "\(year)")
+            #expect(Self.year(ut: start.nextDown) < Double(year), "\(year)")
+        }
+        // 1582 is 355 days long: Julian 1 January to Gregorian 1 January 1583.
+        #expect(CanonCalendar.ut(year: 1583) - CanonCalendar.ut(year: 1582) == 355)
+    }
+
+    @Test("The decimal year matches Foundation's calendar from year -2999 to 4000")
+    func decimalYearMatchesCalendar() {
+        // Steps of 9.7 years plus 37.3 days reach every day of the year and
+        // both calendars, including the 1582 reform.
+        var ut = CanonCalendar.ut(year: -2999)
+        let end = CanonCalendar.ut(year: 4000)
+        var previous = -Double.infinity
+        while ut < end {
+            let year = Self.year(ut: ut)
+            #expect(abs(year - CanonCalendar.decimalYear(ut: ut)) <= 1e-9, "ut \(ut)")
+            #expect(year > previous, "ut \(ut)")
+            previous = year
+            ut += 9.7 * 365.25 + 37.3
+        }
+    }
+
+    /// NASA defines the decimal year of a month as `year + (month - 0.5) / 12`.
+    @Test("The decimal year at the middle of each month is within two days of NASA's definition")
+    func decimalYearMidMonth() {
+        for year in [-1999, -500, 0, 1000, 1500, 1581, 1583, 1600, 1900, 2000, 2026, 3000] {
+            for month in 1...12 {
+                let start = CanonCalendar.ut(year: year, month: month)
+                let next =
+                    month == 12 ? CanonCalendar.ut(year: year + 1) : CanonCalendar.ut(year: year, month: month + 1)
+                let nasa = Double(year) + (Double(month) - 0.5) / 12
+                let difference = abs(Self.year(ut: (start + next) / 2) - nasa)
+                #expect(difference <= 2 / 365.25, "\(year)-\(month): \(difference * 365.25) days")
+            }
+        }
+    }
+
+    @Test("The decimal year is continuous at the reform and where the mean year takes over")
+    func decimalYearJoins() {
+        for join in [1583.0, 1_000_001, -999_999] {
+            let start = Engine.DeltaT.yearStart(join)
+            let before = Self.year(ut: start.nextDown)
+            #expect(Self.year(ut: start) == join)
+            #expect(before < join)
+            #expect(join - before <= 1e-9, "\(join)")
+        }
+        // Past the joins, one mean year moves the decimal year by one.
+        let late = Engine.DeltaT.yearStart(1_000_001)
+        #expect(Self.year(ut: late + 365.2425 * 1_000) == 1_001_001)
+        let early = Engine.DeltaT.yearStart(-999_999)
+        #expect(Self.year(ut: early - 365.25 * 1_000) == -1_000_999)
     }
 
     @Test("JPL Horizons follows Espenak-Meeus until 17 tropical years after J2000, then holds")

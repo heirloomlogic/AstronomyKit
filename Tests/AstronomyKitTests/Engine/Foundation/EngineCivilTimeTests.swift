@@ -139,19 +139,28 @@ struct EngineCivilTimeTests {
         #expect(time.utcDays.isNaN)
     }
 
-    @Test("Civil TT stays invertible across positive Delta T jumps")
+    @Test("Civil TT stays invertible across the 1986 Delta T jump")
     func civilAcrossDeltaTGaps() throws {
-        // Civil dates whose table TT falls in the 1986 and 1961 gaps. The
-        // inverse returns the first UT after each jump.
-        let gapEnds = [EngineDeltaTTests.straddle(1986).after, EngineDeltaTTests.straddle(1961).after]
-        for unixSeconds in [506_140_670.85679626, -282_782_416.0919621] {
-            let utc = (unixSeconds - AstroTime.j2000UnixOffset) / 86_400
-            let tt = try #require(CivilTime.terrestrialTime(utcDays: utc))
-            let time = Self.civil(utcDays: utc).time
-            #expect(time.isValid)
-            #expect(time.tt == tt)
-            #expect(gapEnds.contains(time.ut))
-            #expect(abs(time.utcDays - utc) * 86_400 < 2e-6)
+        // A civil date whose table TT falls in the middle of the 1986 gap. The
+        // inverse returns the first UT after the jump. The 1961 gap's TT comes
+        // from a UTC just before the table's first row, 1961-01-01, so only
+        // 1986 has a civil date in a gap.
+        let (before, after) = EngineDeltaTTests.straddle(1986)
+        let gap = (
+            Engine.Time(ut: before, deltaTModel: .espenakMeeus).tt,
+            Engine.Time(ut: after, deltaTModel: .espenakMeeus).tt
+        )
+        let middle = (gap.0 + gap.1) / 2
+        var utc = middle
+        for _ in 0..<4 {
+            utc -= try #require(CivilTime.terrestrialTime(utcDays: utc)) - middle
         }
+        let tt = try #require(CivilTime.terrestrialTime(utcDays: utc))
+        try #require(gap.0 < tt && tt < gap.1)
+        let time = Self.civil(utcDays: utc).time
+        #expect(time.isValid)
+        #expect(time.tt == tt)
+        #expect(time.ut == after)
+        #expect(abs(time.utcDays - utc) * 86_400 < 2e-6)
     }
 }
