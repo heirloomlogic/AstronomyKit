@@ -22,6 +22,7 @@ struct AuditValidationTests {
 
     let archive = IndependentReferenceArchive.shared
 
+    /// Fixture integrity only: provenance fields and row counts, not accuracy evidence.
     @Test("Archived references declare reproducible provenance")
     func provenanceIsComplete() {
         #expect(archive.schemaVersion == 3)
@@ -79,8 +80,10 @@ struct AuditValidationTests {
                 <= reference.angularToleranceArcminutes)
     }
 
+    /// Named sanity check: the apparent range is positive and the difference is finite. No published tolerance applies
+    /// to this light-time and aberration quantity, so it is not accuracy evidence.
     @Test(
-        "JPL apparent range diagnostics",
+        "JPL apparent range sanity check (finite only)",
         arguments: IndependentReferenceArchive.shared.observations)
     func jplApparentRangeDiagnostic(reference: IndependentReferenceArchive.Observation) throws {
         let time = IndependentReferenceDate.universal(
@@ -127,8 +130,9 @@ struct AuditValidationTests {
         #expect(engineMotions[0] * engineMotions[1] < 0)
     }
 
+    /// Named sanity check: the 0.01 AU `sanityToleranceAU` is a plausibility bound, not a published accuracy limit.
     @Test(
-        "JPL Chiron heliocentric positions",
+        "JPL Chiron heliocentric positions sanity check (0.01 AU)",
         arguments: IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron" })
     func chironPosition(reference: IndependentReferenceArchive.Vector) throws {
         let position = try Chiron.heliocentricPosition(
@@ -140,8 +144,10 @@ struct AuditValidationTests {
             "actual ICRF AU vector: [\(position.x), \(position.y), \(position.z)]")
     }
 
+    /// Named sanity check: only finiteness is asserted at epochs without a sourced tolerance, so it is not accuracy
+    /// evidence.
     @Test(
-        "JPL Galilean moon state observations",
+        "JPL Galilean moon state sanity check (finite only)",
         arguments: IndependentReferenceArchive.shared.vectors.filter { $0.origin == "jupiter" })
     func galileanMoonStateObservation(reference: IndependentReferenceArchive.Vector) throws {
         let errors = try galileanMoonErrors(reference: reference)
@@ -216,6 +222,7 @@ struct AuditValidationTests {
         #expect(error <= reference.toleranceSeconds)
         if reference.sourceTime == "2100-01-18T12:35:00.000Z" {
             let civilTime = IndependentReferenceDate.civil(reference.sourceTime)
+            // Named sanity check: finite only, not an accuracy comparison.
             #expect(IndependentReferenceDate.seconds(actual.time, civilTime).isFinite)
         }
     }
@@ -304,6 +311,7 @@ struct AuditValidationTests {
         #expect(peakError <= reference.toleranceSeconds)
         if reference.universalTime == "2099-04-05T08:27Z" {
             let civilTime = IndependentReferenceDate.civil(reference.universalTime)
+            // Named sanity check: finite only, not an accuracy comparison.
             #expect(IndependentReferenceDate.seconds(actual.peak, civilTime).isFinite)
         }
         #expect(
