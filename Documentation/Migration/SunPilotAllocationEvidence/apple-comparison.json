@@ -1,0 +1,93 @@
+{
+  "allCandidateReleaseTrialsBelowEveryBaselineTrial": true,
+  "baselineWithinOriginalCeiling": true,
+  "candidateWithinOriginalCeiling": true,
+  "environment": {
+    "machine": "arm64",
+    "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "swift": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+    "system": "Darwin"
+  },
+  "matchingUncompressedSHA256": {
+    "debug-perturbed.jsonl.gz": "f025b7ea87ffd39649439abe7bb448de70af9788a1d4a9548595acb38205c06d",
+    "debug.jsonl.gz": "b3cfa7c61e1b9ea656c97e08e62e23188f323414162d1ccc59b8b032caa4333c",
+    "inputs.json.gz": "fc06f7f6a21aeac9dd360d2900042224d9ecdf62931d7ab40b86161e9aa499f0",
+    "oracle.jsonl.gz": "4b6344a79287d1dd95ce9c88ded954cfb16eac893a57c5b06e48980be0ede0c9",
+    "release-perturbed.jsonl.gz": "f025b7ea87ffd39649439abe7bb448de70af9788a1d4a9548595acb38205c06d",
+    "release.jsonl.gz": "4fbd3085b96289945189d125de65aaf8c1736e02bc0a96b8040ce2f04fa568df"
+  },
+  "originalCeilingBytes": 11182080,
+  "protocolSHA256": "b826a14c082d168b1694fdd022b8a0c4fb6b3817f052527feaa980fe9e022c57",
+  "qualified": false,
+  "releaseMedianReductionBytes": 131072,
+  "reports": {
+    "baseline": {
+      "reportSHA256": "261a36054dda32e2eeeffc42975088a53ec799bee4a15b80022942c84a535a8f",
+      "revision": "2376ee3df52f141f6394cb442243feb7cdbd6b86"
+    },
+    "candidate": {
+      "reportSHA256": "d9c5f7fc96076326f18abb21da72b47af6a2454bb342ef34654ee0f56e3757f6",
+      "revision": "f93fc8dee058790fbf4b97f4e8a57f20cc9bd4e6"
+    }
+  },
+  "rssRetentionConditionPassed": false,
+  "schemaVersion": 3,
+  "status": "complete-paired-evidence",
+  "trialPeakResidentBytes": {
+    "baseline-debug": [
+      7684096,
+      7684096,
+      7684096,
+      7684096,
+      7667712
+    ],
+    "baseline-release": [
+      7208960,
+      7208960,
+      7208960,
+      7208960,
+      7208960
+    ],
+    "candidate-debug": [
+      7569408,
+      7569408,
+      7569408,
+      7569408,
+      7569408
+    ],
+    "candidate-release": [
+      7077888,
+      7077888,
+      7077888,
+      7077888,
+      7077888
+    ]
+  },
+  "validatedArtifactSHA256": {
+    "baseline": {
+      "debug-perturbed.jsonl.gz": "a9ffa66cdd03026e8f3898686b34da44271c0776814a3719f37dbfca4fc8ccae",
+      "debug.jsonl.gz": "994c501a1956555d0c4a0bc40a1c341e890f8005b8b40eaf181bca231565599f",
+      "inputs.json.gz": "ebc3a613ee8daa1246b252e8278923754bfe3e335746d2ad6a9d0e10eca1e1c2",
+      "oracle.jsonl.gz": "c3073eafa7b9ec1ffe59c5ef27f0d476fd3b4dd44723591e35d03fce7a4422e7",
+      "release-perturbed.jsonl.gz": "a9ffa66cdd03026e8f3898686b34da44271c0776814a3719f37dbfca4fc8ccae",
+      "release.jsonl.gz": "9195d5398f411b2ac112d31ff68662ebbcb20e5f2ef2a7f8bf1d2135be56ad33"
+    },
+    "candidate": {
+      "debug-perturbed.jsonl.gz": "a9ffa66cdd03026e8f3898686b34da44271c0776814a3719f37dbfca4fc8ccae",
+      "debug.jsonl.gz": "994c501a1956555d0c4a0bc40a1c341e890f8005b8b40eaf181bca231565599f",
+      "inputs.json.gz": "ebc3a613ee8daa1246b252e8278923754bfe3e335746d2ad6a9d0e10eca1e1c2",
+      "oracle.jsonl.gz": "c3073eafa7b9ec1ffe59c5ef27f0d476fd3b4dd44723591e35d03fce7a4422e7",
+      "release-perturbed.jsonl.gz": "a9ffa66cdd03026e8f3898686b34da44271c0776814a3719f37dbfca4fc8ccae",
+      "release.jsonl.gz": "9195d5398f411b2ac112d31ff68662ebbcb20e5f2ef2a7f8bf1d2135be56ad33"
+    }
+  },
+  "validatedRawRecordCounts": {
+    "debug-perturbed.jsonl.gz": 8,
+    "debug.jsonl.gz": 67240,
+    "inputs.json.gz": 67240,
+    "oracle.jsonl.gz": 67240,
+    "release-perturbed.jsonl.gz": 8,
+    "release.jsonl.gz": 67240
+  },
+  "validatorSHA256": "f7bff0c7420c3bea891ead1b7add5dcc3bdb0a887f00f74595d6756963352ed4"
+}
