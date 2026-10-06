@@ -5,6 +5,7 @@
 //  The native ascending-root search.
 //
 
+import Foundation
 import Testing
 
 @testable import AstronomyKit
@@ -206,6 +207,23 @@ struct EngineSearchTests {
         #expect(abs(root.ut - end.ut) * 86_400 < 0.001)
     }
 
+    /// The function never changes sign, but it rises through zero at the
+    /// later end. The root is a tangent, so the tolerance is 1 s: at 1 ms the
+    /// error estimate misses by up to 0.4 ms, and under JPL Horizons the
+    /// search runs out of passes.
+    @Test(
+        "A function negative up to the later end and zero there has a root at that end",
+        arguments: DeltaTModel.allCases)
+    func touchesZeroAtLaterEnd(model: DeltaTModel) throws {
+        let (start, end) = Self.window(model)
+        let span = end.ut - Self.base
+        for (first, second) in [(start, end), (end, start)] {
+            let result = try Self.search(from: first, to: second, tolerance: 1) { -($0 - span) * ($0 - span) }
+            let root = try #require(result.root)
+            #expect(abs(root.ut - end.ut) * 86_400 < 1)
+        }
+    }
+
     // MARK: - Calls
 
     @Test("The first two calls receive the start and the end unchanged", arguments: DeltaTModel.allCases)
@@ -292,13 +310,23 @@ struct EngineSearchTests {
     }
 
     /// Twenty halvings of one day leave 0.08 s, and interpolation cannot
-    /// narrow a step.
+    /// narrow a step. Each pass calls the function at the midpoint and at
+    /// the interpolated root, so the search makes 2 + 20 × 2 = 42 calls and
+    /// throws before a 21st pass. A limit of 19 or 21 passes gives 40 or 44.
     @Test("A step cannot meet a 1 ms tolerance in 20 passes", arguments: DeltaTModel.allCases)
     func stepNonconvergence(model: DeltaTModel) {
         let (start, end) = Self.window(model)
-        #expect(throws: AstronomyError.noConvergence) {
-            try Self.search(from: start, to: end, Self.step)
+        for (first, second) in [(start, end), (end, start)] {
+            var calls = 0
+            #expect(throws: AstronomyError.noConvergence) {
+                try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.001, fallback: model) {
+                    calls += 1
+                    return Self.step($0.ut - Self.base)
+                }
+            }
+            #expect(calls == 42)
         }
+        #expect(Engine.Search.iterationLimit == 20)
     }
 
     @Test("A zero or NaN tolerance never converges", arguments: DeltaTModel.allCases, [0, Double.nan])
@@ -315,6 +343,88 @@ struct EngineSearchTests {
         let cubic = try Self.search(from: start, to: end) { ($0 - 0.375) * ($0 - 0.375) * ($0 - 0.375) }
         let root = try #require(cubic.root)
         #expect(abs(root.ut - Self.base - 0.375) * 86_400 < 0.01)
+    }
+
+    // MARK: - Narrowed window
+
+    /// Rises through zero at 0.375, steeply enough that the interpolated
+    /// root's estimated error falls below a tenth of the half-window.
+    static func rising(_ u: Double) -> Double { exp(5 * (u - 0.375)) - 1 }
+
+    /// Whether `left` and `right` are a window centered on `center`, as the
+    /// search builds around an interpolated root.
+    static func isWindow(around center: Engine.Time, left: Engine.Time, right: Engine.Time) -> Bool {
+        left.ut < center.ut && center.ut < right.ut
+            && abs((center.ut - left.ut) - (right.ut - center.ut)) < 1e-12
+    }
+
+    /// The calls of a forward search for the root of ``rising(_:)``, by
+    /// number from 1:
+    ///
+    /// - 1 and 2 are the bounds, 3 the midpoint 0.5, 4 the interpolated root.
+    /// - 5 and 6 are a narrower window around 4. Both values are positive,
+    ///   so the window is not taken and the search bisects: 7 is the
+    ///   midpoint of 0 and 0.5, and 8 its interpolated root.
+    /// - 9 and 10 are a window around 8 that brackets the root. It replaces
+    ///   the search window, and 8's value stands in for its midpoint, so the
+    ///   next pass makes no midpoint call: 11 is the interpolated root.
+    /// - 12 and 13 narrow the window around 11 again, and 14, the next
+    ///   interpolated root, is close enough to return.
+    @Test("A narrower window around an interpolated root replaces the window", arguments: DeltaTModel.allCases)
+    func narrowedWindow(model: DeltaTModel) throws {
+        let (start, end) = Self.window(model)
+        let result = try Self.search(from: start, to: end, Self.rising)
+        let calls = result.calls
+        try #require(calls.count == 14)
+        func call(_ number: Int) -> Engine.Time { calls[number - 1] }
+
+        for (center, left, right) in [(4, 5, 6), (8, 9, 10), (11, 12, 13)] {
+            let window = Self.isWindow(around: call(center), left: call(left), right: call(right))
+            #expect(window, "calls \(left), \(right)")
+        }
+        // The rejected window: the search bisects the half from 0 to 0.5.
+        #expect(Self.rising(call(5).ut - Self.base) > 0)
+        let bisected = start.adding(days: (call(3).tt - start.tt) / 2, fallback: model)
+        #expect(call(7).ut.bitPattern == bisected.ut.bitPattern)
+        // Each later call lies inside the window that replaced the search's.
+        for number in 11...14 {
+            #expect(call(9).ut < call(number).ut && call(number).ut < call(10).ut, "call \(number)")
+        }
+        #expect(call(12).ut < call(14).ut && call(14).ut < call(13).ut)
+
+        let root = try #require(result.root)
+        #expect(root.ut.bitPattern == call(14).ut.bitPattern)
+        #expect(abs(root.ut - Self.base - 0.375) * 86_400 < 0.001)
+    }
+
+    /// The narrower window needs its estimated error below a tenth of the
+    /// half-window, which is negative when the window runs backward.
+    @Test("A window given end first is never narrowed", arguments: DeltaTModel.allCases)
+    func reversedWindowNotNarrowed(model: DeltaTModel) throws {
+        let (start, end) = Self.window(model)
+        let result = try Self.search(from: end, to: start, Self.rising)
+        let calls = result.calls
+        for index in calls.indices.dropLast(2) {
+            #expect(!Self.isWindow(around: calls[index], left: calls[index + 1], right: calls[index + 2]))
+        }
+        let root = try #require(result.root)
+        #expect(abs(root.ut - Self.base - 0.375) * 86_400 < 0.001)
+    }
+
+    @Test(
+        "An error from a call at a narrower window's end propagates unchanged",
+        arguments: DeltaTModel.allCases, [5, 6, 9, 10, 12, 13])
+    func throwingNarrowedWindow(model: DeltaTModel, failingCall: Int) {
+        let (start, end) = Self.window(model)
+        var calls = 0
+        #expect(throws: CallbackFailure(call: failingCall)) {
+            try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.001, fallback: model) { time in
+                calls += 1
+                if calls == failingCall { throw CallbackFailure(call: failingCall) }
+                return Self.rising(time.ut - Self.base)
+            }
+        }
+        #expect(calls == failingCall)
     }
 
     // MARK: - Interpolation

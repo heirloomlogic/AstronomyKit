@@ -24,7 +24,10 @@ extension Engine {
         /// midpoint once half the window is shorter than the tolerance, or an
         /// interpolated root where the fitted slope is positive and the
         /// estimated error is below the tolerance. A single descending root,
-        /// or a function that never changes sign in the window, gives `nil`.
+        /// or a function that never rises through zero in the window, gives
+        /// `nil`. A function that is negative up to the later end and zero at
+        /// it does rise through zero there, so the search does not give `nil`
+        /// for it.
         /// `end` may come before `start`.
         ///
         /// `function` first receives `start`, then `end`. Each time the search
@@ -32,8 +35,9 @@ extension Engine {
         /// when that time is invalid. Midpoints and interpolated roots come
         /// from the window's first bound in argument order, which begins as
         /// `start`; the narrower window tried around an interpolated root
-        /// comes from that root. A midpoint adds half the window's TT span to
-        /// the first bound's UT.
+        /// comes from that root, and is tried only while the first bound is
+        /// the earlier one. A midpoint adds half the window's TT span to the
+        /// first bound's UT.
         ///
         /// - Parameters:
         ///   - start: The first bound of the window.

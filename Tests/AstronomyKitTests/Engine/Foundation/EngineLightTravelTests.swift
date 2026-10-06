@@ -167,7 +167,7 @@ struct EngineLightTravelTests {
                     return Self.vector(x, 0, 0, at: time)
                 }
             }
-            #expect(calls == Engine.LightTravel.iterationLimit)
+            #expect(calls == 10)
         }
     }
 
@@ -182,8 +182,23 @@ struct EngineLightTravelTests {
                 return Self.vector(1 + 100 * ($0.ut - Self.base), 0, 0, at: $0)
             }
         }
-        #expect(calls.count == Engine.LightTravel.iterationLimit)
+        #expect(calls.count == 10)
         #expect(calls.allSatisfy { $0.ut.isFinite })
+    }
+
+    /// The distance changes by 0.01 AU, about 5.8e-5 light-days, on each of
+    /// the first nine calls and repeats on the tenth, so only the tenth call's
+    /// backdate lands on the time it received.
+    @Test("A position that settles on the tenth call is returned", arguments: DeltaTModel.allCases)
+    func convergesOnLastCall(model: DeltaTModel) throws {
+        let observation = Engine.Time(ut: Self.base, deltaTModel: model)
+        var calls = 0
+        let vector = try Engine.LightTravel.correct(at: observation, fallback: model) { time in
+            calls += 1
+            return Self.vector(1 + 0.01 * Double(min(calls, 9)), 0, 0, at: time)
+        }
+        #expect(calls == 10)
+        #expect(vector.x == 1.09)
     }
 
     @Test(
