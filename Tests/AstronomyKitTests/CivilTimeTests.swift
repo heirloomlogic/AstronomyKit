@@ -1,4 +1,3 @@
-import CLibAstronomy
 import Foundation
 import Testing
 
@@ -84,7 +83,7 @@ struct CivilTimeTests {
         #expect(abs(restored.date.timeIntervalSince(time.date)) < 0.000002)
     }
 
-    @Test("C-returned times use the same civil inverse")
+    @Test("Search results use the same civil inverse")
     func returnedTimes() throws {
         let start = AstroTime(year: 2_041, month: 1, day: 1)
         let event = try #require(try Sun.searchLongitude(315, after: start, limitDays: 60))
