@@ -31,7 +31,32 @@ class CurrentSearchTests(unittest.TestCase):
     def test_live_source_change_population(self):
         actual = R.source_identity()
         original = R.baseline_sources()
-        self.assertEqual([p for p in actual if actual[p] != original[p]], ["Sources/AstronomyKit/Coordinates.swift", "Sources/CLibAstronomy/astronomy.c"])
+        self.assertEqual([p for p in actual if actual[p] != original[p]], ["Sources/AstronomyKit/Coordinates.swift", "Sources/AstronomyKit/Documentation.docc/CoordinateSystems.md", "Sources/CLibAstronomy/astronomy.c"])
+
+    def test_documentation_correction_accepts_only_registered_article_bytes(self):
+        article = R.ROOT / "Sources/AstronomyKit/Documentation.docc/CoordinateSystems.md"
+        name = str(article.relative_to(R.ROOT))
+        before = "0b560b86bb7bbe92d7e60571e2b3bb13bf74066ea5a97cbdeb8a1a3282762354"
+        after = "2e1ffedad9047136400eb37dbb61338e075e4d05319a87650cb9f17d26c82e58"
+        self.assertEqual(R.baseline_sources()[name], before)
+        self.assertEqual(R.source_identity()[name], after)
+        read, is_file = Path.read_bytes, Path.is_file
+        def edited(target, change):
+            return mock.patch.object(Path, "read_bytes", lambda path: change(read(path)) if path == target else read(path))
+        with edited(article, lambda data: data.replace(b"5.0 + inverse", b"5.0 - inverse")), self.assertRaisesRegex(ValueError, "registered documentation correction"):
+            R.source_identity()
+        with edited(article, lambda data: data + b"\nAnother sentence.\n"), self.assertRaisesRegex(ValueError, "registered documentation correction"):
+            R.source_identity()
+        with mock.patch.object(Path, "is_file", lambda path: path != article and is_file(path)), self.assertRaisesRegex(ValueError, "registered documentation correction"):
+            R.source_identity()
+        with mock.patch.object(R, "baseline_sources", return_value={**R.baseline_sources(), name: R.M.sha(b"other archived article")}), self.assertRaisesRegex(ValueError, "registered documentation correction"):
+            R.source_identity()
+        other_article = R.ROOT / "Sources/AstronomyKit/Documentation.docc/SolarAltitudeNumerics.md"
+        with edited(other_article, lambda data: data + b"\nAnother sentence.\n"), self.assertRaisesRegex(ValueError, "source changes"):
+            R.source_identity()
+        executable = R.ROOT / "Sources/AstronomyKit/Search.swift"
+        with edited(executable, lambda data: data + b"\nfunc unexpectedExecutableChange() {}\n"), self.assertRaisesRegex(ValueError, "source changes"):
+            R.source_identity()
 
     def test_coordinate_api_comments_do_not_allow_implementation_changes(self):
         before = b"/// old description\nfunc inverse() { return 0 }\n"

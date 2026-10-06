@@ -195,8 +195,9 @@ let offset = Refraction.normal.refractionAngle(at: 5.0)
 print("Refraction at 5°: +\(offset)°")
 
 // Given an apparent altitude of 5°, what was the geometric altitude?
+// The inverse is a signed offset to add to the apparent altitude.
 let inverse = Refraction.normal.inverseRefractionAngle(at: 5.0)
-let geometric = 5.0 - inverse
+let geometric = 5.0 + inverse  // about 4.835°
 ```
 
 ### Aberration
