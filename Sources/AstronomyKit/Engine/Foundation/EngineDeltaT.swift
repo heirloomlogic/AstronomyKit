@@ -200,7 +200,7 @@ extension Engine {
 
         /// The library's approximation of the Delta T that JPL Horizons used:
         /// Espenak-Meeus with UT held at 17 tropical years after J2000, so
-        /// Delta T stops growing after early 2017.
+        /// Delta T stops growing at 2016-12-31 14:48 UT.
         ///
         /// It is not a published model, and it is not the civil UTC
         /// leap-second table.

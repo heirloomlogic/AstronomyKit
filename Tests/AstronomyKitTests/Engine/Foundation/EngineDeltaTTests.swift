@@ -288,6 +288,19 @@ struct EngineDeltaTTests {
             #expect(before < join)
             #expect(join - before <= 1e-9, "\(join)")
         }
+        // A tenth of a day at a time for 800 days either side of each join,
+        // the decimal year grows, by no more than a tenth of a day in a
+        // 354-day year (1582, the shortest, has 355). A join where the
+        // calendar and the mean year disagree jumps one way or the other.
+        for join in [1583.0, 1_000_001, -999_999] {
+            let start = Engine.DeltaT.yearStart(join)
+            var previous = Self.year(ut: start - 800.1)
+            for step in -8_000...8_000 {
+                let year = Self.year(ut: start + Double(step) / 10)
+                #expect(year > previous && year - previous <= 0.1 / 354, "\(join) step \(step)")
+                previous = year
+            }
+        }
         // Past the joins, one mean year moves the decimal year by one.
         let late = Engine.DeltaT.yearStart(1_000_001)
         #expect(Self.year(ut: late + 365.2425 * 1_000) == 1_001_001)
