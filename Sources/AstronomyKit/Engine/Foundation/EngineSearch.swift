@@ -9,7 +9,7 @@
 extension Engine {
     /// The generic root search.
     enum Search {
-        /// The most passes ``ascendingRoot(from:to:toleranceSeconds:fallback:_:)``
+        /// The most passes ``ascendingRoot(from:to:toleranceSeconds:_:)``
         /// makes before it throws `noConvergence`.
         static let iterationLimit = 20
 
@@ -24,23 +24,26 @@ extension Engine {
         /// midpoint once half the window is shorter than the tolerance, or an
         /// interpolated root where the fitted slope is positive and the
         /// estimated error is below the tolerance. A single descending root,
-        /// or a function that never changes sign in the window, gives `nil`.
+        /// or a function that never rises through zero in the window, gives
+        /// `nil`. A function that is negative up to the later end and zero at
+        /// it does rise through zero there, so the search does not give `nil`
+        /// for it.
         /// `end` may come before `start`.
         ///
         /// `function` first receives `start`, then `end`. Each time the search
-        /// derives takes the model of the time it comes from, or `fallback`
-        /// when that time is invalid. Midpoints and interpolated roots come
+        /// derives takes the model of the time it comes from, and is invalid
+        /// when that time is. Midpoints and interpolated roots come
         /// from the window's first bound in argument order, which begins as
         /// `start`; the narrower window tried around an interpolated root
-        /// comes from that root. A midpoint adds half the window's TT span to
-        /// the first bound's UT.
+        /// comes from that root, and is tried only while the first bound is
+        /// the earlier one. A midpoint adds half the window's TT span to the
+        /// first bound's UT.
         ///
         /// - Parameters:
         ///   - start: The first bound of the window.
         ///   - end: The second bound of the window.
         ///   - toleranceSeconds: How close to the root the result must be.
         ///     Its sign is ignored. Zero or NaN never stops the search.
-        ///   - fallback: The model for times derived from an invalid time.
         ///   - function: Called synchronously, on this thread, one call at a
         ///     time.
         /// - Returns: The root, or `nil` when the window has no ascending root
@@ -49,7 +52,7 @@ extension Engine {
         ///   not called again; `AstronomyError.noConvergence` after
         ///   ``iterationLimit`` passes.
         static func ascendingRoot(
-            from start: Engine.Time, to end: Engine.Time, toleranceSeconds: Double, fallback: DeltaTModel,
+            from start: Engine.Time, to end: Engine.Time, toleranceSeconds: Double,
             _ function: (Engine.Time) throws -> Double
         ) throws -> Engine.Time? {
             var t1 = start
@@ -76,7 +79,7 @@ extension Engine {
                 }
 
                 let dt = (t2.tt - t1.tt) / 2
-                let tmid = t1.adding(days: dt, fallback: fallback)
+                let tmid = t1.adding(days: dt)
                 if ascendingBracket && abs(dt) < toleranceDays {
                     return tmid
                 }
@@ -88,7 +91,7 @@ extension Engine {
                 }
 
                 if let fit = quadraticRoot(tm: tmid.ut, dt: t2.ut - tmid.ut, fa: f1, fm: fmid, fb: f2) {
-                    let tq = Engine.Time(ut: fit.ut, deltaTModel: t1.deltaTModel ?? fallback)
+                    let tq = t1.derived(ut: fit.ut)
                     let fq = try function(tq)
                     if ascendingBracket && fit.slope > 0 {
                         var guess = abs(fq / fit.slope)
@@ -99,8 +102,8 @@ extension Engine {
                         // Try a narrower window centered on the interpolated root.
                         guess *= 1.2
                         if guess < dt / 10 {
-                            let tleft = tq.adding(days: -guess, fallback: fallback)
-                            let tright = tq.adding(days: guess, fallback: fallback)
+                            let tleft = tq.adding(days: -guess)
+                            let tright = tq.adding(days: guess)
                             if (tleft.ut - t1.ut) * (tleft.ut - t2.ut) < 0,
                                 (tright.ut - t1.ut) * (tright.ut - t2.ut) < 0
                             {
@@ -174,7 +177,7 @@ extension Engine {
 
     /// Correction for the time light takes to reach an observer.
     enum LightTravel {
-        /// The most positions ``correct(at:fallback:_:)`` requests before it
+        /// The most positions ``correct(at:_:)`` requests before it
         /// throws `noConvergence`.
         static let iterationLimit = 10
 
@@ -185,12 +188,11 @@ extension Engine {
         /// The first call receives `time`. After each call the light time is
         /// the vector's length over ``Engine/speedOfLightAUPerDay``, and the
         /// next time is `time` backdated by it in UT, with TT from `time`'s
-        /// model, or `fallback` when `time` is invalid. The iteration stops
+        /// model; every backdate of an invalid `time` is invalid. The iteration stops
         /// when the next time's TT is less than 1e-9 days from the last.
         ///
         /// - Parameters:
         ///   - time: The time light reaches the observer.
-        ///   - fallback: The model for backdated times when `time` is invalid.
         ///   - position: Called synchronously, on this thread, one call at a
         ///     time.
         /// - Returns: The last vector `position` returned, with its time set
@@ -200,7 +202,7 @@ extension Engine {
         ///   distance greater than one light-day; `AstronomyError.noConvergence`
         ///   after ``iterationLimit`` calls.
         static func correct<F: Frame>(
-            at time: Engine.Time, fallback: DeltaTModel, _ position: (Engine.Time) throws -> Engine.Vector<F>
+            at time: Engine.Time, _ position: (Engine.Time) throws -> Engine.Vector<F>
         ) throws -> Engine.Vector<F> {
             var backdated = time
             for _ in 0..<iterationLimit {
@@ -211,7 +213,7 @@ extension Engine {
                 if distance > Engine.speedOfLightAUPerDay {
                     throw AstronomyError.invalidParameter
                 }
-                let next = time.adding(days: -distance / Engine.speedOfLightAUPerDay, fallback: fallback)
+                let next = time.adding(days: -distance / Engine.speedOfLightAUPerDay)
                 if abs(next.tt - backdated.tt) < 1.0e-9 {
                     return vector
                 }

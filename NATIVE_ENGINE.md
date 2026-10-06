@@ -99,7 +99,8 @@ extension Engine.Time {
     static func fromPair(ut: Double, tt: Double, deltaTModel: DeltaTModel) -> Engine.Time
     init(ut: Double, deltaTModel: DeltaTModel)
     init(tt: Double, deltaTModel: DeltaTModel)
-    func adding(days: Double, fallback: DeltaTModel) -> Engine.Time
+    func adding(days: Double) -> Engine.Time
+    func derived(ut: Double) -> Engine.Time
     static func civil(utcDays: Double, deltaTModel: DeltaTModel) -> (time: Engine.Time, fromTable: Bool)
     var utcDays: Double { get }
     static func days(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Double) -> Double
@@ -120,18 +121,19 @@ extension Engine.DeltaT {
 
 Every time derived from another (adding days, a search step, a light-time backdate) derives TT with the source time's model, so one calculation uses one model from its input to its result. The process default belongs to the public layer, not to `Engine`: engine functions take a model or a time that carries one, and the public layer reads the default once per call, when the caller passes no model.
 
-A time derived from an invalid time, which has no model, uses the `fallback` the caller passes. The public layer passes the default it read for the call. This is what C patch 18 does: `Astronomy_AddDays` on a time with no Delta T function uses the process-wide one, so `AstroTime(ut: 1e160).addingDays(-1e160)` is a valid time at J2000 under the current default. A function that derives times from a caller's time takes the same `fallback` argument.
+A time derived from an invalid time, which has no model, is invalid too, even where its UT is finite: it keeps that UT and has a NaN TT. Engine code that derives a time from another uses `adding(days:)` or `derived(ut:)`, which apply this rule, so no engine function takes a fallback model.
 
 There is no separate calculation-context object. The C engine kept per-call state in two places: the Delta T function captured in `astro_time_t`, which `Engine.Time` now carries, and the nutation and sidereal-time memo fields (`psi`, `eps`, `st`). The engine recomputes those values, reading nutation from the shared nutation cache (#86). Everything else a calculation needs is an argument or immutable model data.
 
-`Engine.Time` is not `Equatable`. The public `AstroTime` keeps UT-only equality, hashing and `Codable`; engine code compares the scale it means.
+`Engine.Time` is not `Equatable`. The public `AstroTime` keeps UT-only equality, ordering, hashing and `Codable`; engine code compares the scale it means. `AstroTimeTests` pins the public contract: two times with the same UT are equal and hash alike whatever their TT and model, signed zero UTs included, and the encoded form is exactly the UT, so decoding derives TT again. That loses a TT the model cannot give from the UT, such as a TT in the gap of a positive Delta T jump, which no UT reaches. Such a time is rebuilt from both scales: `fromPair` and `AstroTime(tt:ut:deltaTModel:)` give back every valid time bit for bit, and the times derived from it too (`EngineTimeTests`, `DeltaTModelCaptureTests`). A time whose recorded scales are not both finite is invalid, so it rebuilds as `invalid` with NaN scales and loses a finite UT it held, such as `Engine.Time(ut: 1e160)`.
 
 The process default moves from the C atomic to a `Synchronization.Atomic` in the public layer (`AstronomyConfig`) when #96 switches the API over.
 
 ### Differences from the C engine
 
-- `days(year:...)` normalizes the month with floor division before counting days. `Astronomy_MakeTime`'s Fliegel and Van Flandern formula truncates instead. The two agree for months 1 to 14 from year −999,999 on, where every division in that formula has a non-negative numerator. From month 15 on, the C formula drifts from the Gregorian calendar: month 15 of 2001 gives 2002-03-03 instead of March 1. Years before −1,000,000 can also be a day off.
+- `days(year:...)` normalizes the month with floor division before counting days. `Astronomy_MakeTime`'s Fliegel and Van Flandern formula truncates instead. The two agree for months 1 to 14 from year −999,999 on, where every division in that formula has a non-negative numerator. Outside that range the C formula can miss the Gregorian date by a day or two, though not every such month does: month 15 of 2001 gives 2002-03-03 instead of March 1, while months 26 and 38 of 2001 land on the right day.
 - Espenak-Meeus keeps the C engine's decimal year, `2000 + (ut − 14) / 365.24217`, which puts 2000.0 at 2000-01-15 12:00 UT. NASA defines the year of a month as `year + (month − 0.5) / 12`, which puts 2000.0 at the start of January, so the engine reaches each decimal year about 14.5 days (0.04 years) later than NASA's definition. Delta T differs by its rate of change times 0.04 years: about 0.02 s in 2026, 0.3 s in 3000 and 0.7 s at −500. The published definition is month-resolution, and a continuous replacement needs a choice of year length and calendar; that choice is open.
+- A time derived from an invalid time is invalid. Under local patch 18, `Astronomy_AddDays` on a time with no Delta T function uses the process-wide one, so `AstroTime(ut: 1e160).addingDays(-1e160)` is a valid time at J2000 under the current default. This needs a time whose UT is finite and whose TT is not: with Espenak-Meeus, |ut| above about 8.7e157 days, which a caller passes or a search step at such magnitudes produces. The public result in 3.1.0 is valid, so this is a public difference the owner chose on #168, which #96 tracks as a release decision.
 
 ### Published-value checks
 
@@ -146,12 +148,12 @@ The JPL Horizons model is a reverse-engineered approximation with no published v
 
 ### Time tests that depend on the C engine
 
-Issue #96 requires a recorded disposition for each test that imports `CLibAstronomy` or pins C output. Two of the suites it lists are time tests and appear here; this part leaves the others (cache, ephemeris, polynomial, ecliptic-state and reproducibility tests) unchanged.
+Issue #96 requires a recorded disposition for each test that imports `CLibAstronomy` or pins C output. Two of the suites it lists are time tests and appear here; #84 leaves the others (cache, ephemeris, polynomial, ecliptic-state and reproducibility tests) unchanged.
 
 | Test | Disposition |
 |---|---|
-| `CivilTimeTests` | Kept while the C engine ships; this part only drops an unused `import CLibAstronomy` and renames one test. The suite uses `@testable` access to the internal `CivilTime.terrestrialTime` and `CivilTime.segments`, which the engine shares, and reaches C through `AstroTime` construction, `Sun.searchLongitude` and `Sun.position`, and the C-backed `AstronomyConfig.deltaTEspenakMeeus` in the Delta T jump tests. When #96 switches the public layer over, the same assertions run on the Swift engine. `EngineCivilTimeTests` and `EngineTimeConversionTests` hold the engine's own civil and TT-inverse checks. |
-| `DeltaTThreadSafetyTests` "A calculation keeps its time's model when the default changes mid-calculation" | Kept while the C engine ships: it checks local patch 18 through a C Delta T function that changes the process default. The engine has no process default; `EngineTimeConversionTests` checks that derived times keep their model whatever fallback is passed. Planned for #96: retire it and replace the C stand-ins with the public layer's `Atomic` default and its own test. |
+| `CivilTimeTests` | Kept while the C engine ships; #84 only drops an unused `import CLibAstronomy` and renames one test. The suite uses `@testable` access to the internal `CivilTime.terrestrialTime` and `CivilTime.segments`, which the engine shares, and reaches C through `AstroTime` construction, `Sun.searchLongitude` and `Sun.position`, and the C-backed `AstronomyConfig.deltaTEspenakMeeus` in the Delta T jump tests. When #96 switches the public layer over, the same assertions run on the Swift engine. `EngineCivilTimeTests` and `EngineTimeConversionTests` hold the engine's own civil and TT-inverse checks. |
+| `DeltaTThreadSafetyTests` "A calculation keeps its time's model when the default changes mid-calculation" | Kept while the C engine ships: it checks local patch 18 through a C Delta T function that changes the process default. The engine has no process default; `EngineTimeConversionTests` checks that derived times keep their model. Planned for #96: retire it and replace the C stand-ins with the public layer's `Atomic` default and its own test. |
 | `DeltaTThreadSafetyTests` "Concurrent model swaps never corrupt time construction" | Kept while the C engine ships: it checks local patch 2, the atomic C function pointer, under ThreadSanitizer. Planned for #96: retire it with the same replacement. |
 
 ## Errors
@@ -185,23 +187,23 @@ In the tree: `EngineSearch.swift`.
 extension Engine.Search {
     static let iterationLimit: Int  // 20
     static func ascendingRoot(
-        from start: Engine.Time, to end: Engine.Time, toleranceSeconds: Double, fallback: DeltaTModel,
+        from start: Engine.Time, to end: Engine.Time, toleranceSeconds: Double,
         _ function: (Engine.Time) throws -> Double
     ) throws -> Engine.Time?
 }
 extension Engine.LightTravel {
     static let iterationLimit: Int  // 10
     static func correct<F: Engine.Frame>(
-        at time: Engine.Time, fallback: DeltaTModel, _ position: (Engine.Time) throws -> Engine.Vector<F>
+        at time: Engine.Time, _ position: (Engine.Time) throws -> Engine.Vector<F>
     ) throws -> Engine.Vector<F>
 }
 ```
 
 The closures are synchronous and non-escaping. They take the place of the C callbacks, which the public `Search.swift` reaches through trampolines. An error a closure throws ends the call and propagates unchanged, and the closure is not called again.
 
-`ascendingRoot` keeps `Astronomy_Search`'s expressions, branch order and 20-pass limit, after which it throws `noConvergence`. It includes local patch 20's ascending-bracket checks, so it does not report the descending root or the short constant window of #142. It returns `nil` where the C function returns `ASTRO_SEARCH_FAILURE`: for a single descending root, a function that never changes sign in the window, or any window it cannot bracket. Each time it derives takes the model of the time it comes from, or `fallback` when that time is invalid. Midpoints and interpolated roots come from the window's first bound in argument order, which begins as `start`.
+`ascendingRoot` keeps `Astronomy_Search`'s expressions, branch order and 20-pass limit, after which it throws `noConvergence`. It includes local patch 20's ascending-bracket checks, so it does not report the descending root or the short constant window of #142. It returns `nil` where the C function returns `ASTRO_SEARCH_FAILURE`: for a single descending root, a function that never rises through zero in the window, or any window it cannot bracket. A function that is negative up to the later end and zero at it does rise through zero there, so the search does not return `nil` for it. Each time it derives takes the model of the time it comes from, and is invalid when that time is. Midpoints and interpolated roots come from the window's first bound in argument order, which begins as `start`.
 
-`correct` keeps `Astronomy_CorrectLightTravel`. It calls `position` at most 10 times. Each backdate is `time.adding(days: -distance / Engine.speedOfLightAUPerDay, fallback: fallback)`, a UT offset whose TT comes from the observation time's model, and the iteration stops when TT moves less than 1e-9 days. A distance beyond one light-day throws `invalidParameter`, and a tenth call without convergence throws `noConvergence`. The result is the last vector `position` returned, with its time set to the time that call received, as the public `AstroSearch.correctLightTravel` reports it. The light-day is the published one (see [Constants](#constants)).
+`correct` keeps `Astronomy_CorrectLightTravel`. It calls `position` at most 10 times. Each backdate is `time.adding(days: -distance / Engine.speedOfLightAUPerDay)`, a UT offset whose TT comes from the observation time's model, and the iteration stops when TT moves less than 1e-9 days. A distance beyond one light-day throws `invalidParameter`, and a tenth call without convergence throws `noConvergence`. The result is the last vector `position` returned, with its time set to the time that call received, as the public `AstroSearch.correctLightTravel` reports it. The light-day is the published one (see [Constants](#constants)).
 
 ## Caches and reset
 
@@ -210,8 +212,9 @@ In the tree: `EngineCache.swift`.
 - `Engine.ExactKey` is the bit pattern of a finite `Double`. `0.0` and `-0.0` are different keys. A value that is not finite has no key and bypasses the cache.
 - `Engine.BoundedCache<Key, Value>` holds at most `capacity` entries and replaces the oldest insertion when full, as the C caches do. All threads share the entries. The computation runs outside the lock, so it may use any cache, including the one it fills. A computation that throws stores nothing. `statistics` counts hits and misses for work-count tests.
 - A cached value is a pure function of its key: never the process Delta T default, never a caller's time metadata. Then a hit returns what recomputing would, and a reset at any moment cannot change a result.
-- Each module creates its caches as `static let` properties, registered with `Engine.CacheRegistry.shared`. A cache that has never been used does not exist yet, so the registry holds every cache that can contain entries.
+- Each module creates its caches as `static let` properties, registered with `Engine.CacheRegistry.shared`, so a cache that has never been used does not exist yet. That is a convention, not a checked rule: a cache made on every call gives correct results but never a hit. The registry holds its caches weakly. Once nobody references a cache, a reset skips it, and the next registration drops its entry, so after each registration the registry holds no more entries than there are caches alive.
 - `Engine.resetCaches()` empties every registered cache. It does not touch the Delta T default, fixed star definitions or gravity simulations, which are not caches. #96 makes `AstronomyConfig.reset()` call it and updates that method's documentation.
+- A reset does not wait for computations in progress. A lookup that missed before a reset stores its value after it, and a computation can itself reset. Either way the stored value is the one its key gives, so the next hit returns what recomputing would.
 - Shared mutable state uses `NSLock` or `Synchronization.Atomic`, not `Synchronization.Mutex`. ThreadSanitizer on Linux does not model `Mutex`, and suppressing its reports would also hide races in any computation called through a cache (see `.github/tsan-suppressions.txt`).
 - Tests that count work make their own `CacheRegistry` and cache, because the shared caches are process-wide.
 

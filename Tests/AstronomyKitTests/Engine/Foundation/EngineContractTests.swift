@@ -25,15 +25,29 @@ struct EngineContractTests {
         return enumerator.compactMap { $0 as? URL }.filter { $0.pathExtension == "swift" }
     }
 
+    /// The lines of `file` that are not comments, numbered from 1.
+    static func codeLines(of file: URL) throws -> [(number: Int, text: Substring)] {
+        let text = try String(contentsOf: file, encoding: .utf8)
+        return text.split(separator: "\n", omittingEmptySubsequences: false).enumerated()
+            .map { (number: $0.offset + 1, text: $0.element) }
+            .filter { line in !line.text.drop { $0 == " " }.hasPrefix("//") }
+    }
+
     @Test("Engine sources neither import the C engine nor use Mutex")
     func engineIsNative() throws {
+        // Simple word boundaries, so `CLibAstronomy.x` and `Synchronization.Mutex`
+        // still match; Unicode boundaries do not break at a period between letters.
+        let cImport = #/\bimport\b.*\bCLibAstronomy\b/#.wordBoundaryKind(.simple)
+        let mutex = #/\bMutex\b/#.wordBoundaryKind(.simple)
         let files = try Self.swiftFiles(under: Self.sources.appendingPathComponent("Engine"))
         #expect(!files.isEmpty)
         for file in files {
-            let text = try String(contentsOf: file, encoding: .utf8)
-            #expect(!text.contains("import CLibAstronomy"), "\(file.lastPathComponent)")
-            // Linux ThreadSanitizer does not model Mutex; see NATIVE_ENGINE.md.
-            #expect(!text.contains("Mutex<"), "\(file.lastPathComponent)")
+            for line in try Self.codeLines(of: file) {
+                let location = "\(file.lastPathComponent):\(line.number)"
+                #expect(line.text.firstMatch(of: cImport) == nil, "\(location)")
+                // Linux ThreadSanitizer does not model Mutex; see NATIVE_ENGINE.md.
+                #expect(line.text.firstMatch(of: mutex) == nil, "\(location)")
+            }
         }
     }
 
@@ -44,14 +58,14 @@ struct EngineContractTests {
         var owners: [String: [String]] = [:]
         for line in contract.split(separator: "\n") {
             guard line.hasPrefix("- #"), let owner = line.dropFirst(2).split(separator: ":").first else { continue }
-            for name in line.matches(of: /`(Astronomy_\w+)`/) {
+            for name in line.matches(of: #/`(Astronomy_\w+)`/#) {
                 owners[String(name.1), default: []].append(String(owner))
             }
         }
         var named = Set<String>()
         for file in try Self.swiftFiles(under: Self.sources) {
             let text = try String(contentsOf: file, encoding: .utf8)
-            named.formUnion(text.matches(of: /\bAstronomy_\w+/).map { String($0.0) })
+            named.formUnion(text.matches(of: #/\bAstronomy_\w+/#).map { String($0.0) })
         }
         #expect(!named.isEmpty)
         for name in named.sorted() {

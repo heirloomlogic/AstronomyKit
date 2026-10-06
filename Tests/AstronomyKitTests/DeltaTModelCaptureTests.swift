@@ -100,6 +100,34 @@ struct DeltaTModelCaptureTests {
         #expect(plain.addingDays(1).terrestrialTime == Self.tt(ut: ut + 1, under: .espenakMeeus))
     }
 
+    /// A TT in a Delta T gap is a time no UT reaches, so its UT alone, which
+    /// is what `Codable` records, rebuilds a different TT.
+    @Test("A recorded pair rebuilds a time bit for bit, including a TT in a Delta T gap")
+    func pairRebuildsTime() throws {
+        let gapTT = try #require(EngineTimeTests.gapTimes(.espenakMeeus).first).tt
+        let gapTime = AstroTime(tt: gapTT, deltaTModel: .espenakMeeus)
+        let times = [
+            gapTime,
+            AstroTime(ut: 9_131.25, deltaTModel: .jplHorizons),
+            AstroTime(tt: 9_131.25, deltaTModel: .espenakMeeus),
+            AstroTime(year: 2_016, month: 12, day: 31, hour: 23, minute: 59, second: 59.5, deltaTModel: .jplHorizons),
+            AstroTime(ut: 9_131.25, deltaTModel: .espenakMeeus).addingDays(0.5),
+        ]
+        for time in times {
+            let rebuilt = AstroTime(tt: time.terrestrialTime, ut: time.universalTime, deltaTModel: time.deltaTModel)
+            #expect(rebuilt.universalTime.bitPattern == time.universalTime.bitPattern)
+            #expect(rebuilt.terrestrialTime.bitPattern == time.terrestrialTime.bitPattern)
+            #expect(rebuilt.deltaTModel == time.deltaTModel)
+            #expect(rebuilt.addingDays(1).terrestrialTime.bitPattern == time.addingDays(1).terrestrialTime.bitPattern)
+        }
+
+        #expect(gapTime.terrestrialTime == gapTT)
+        #expect(AstroTime(ut: gapTime.universalTime, deltaTModel: .espenakMeeus).terrestrialTime != gapTT)
+        let decoded = try JSONDecoder().decode(AstroTime.self, from: JSONEncoder().encode(gapTime))
+        #expect(decoded == gapTime)
+        #expect(decoded.terrestrialTime != gapTT)
+    }
+
     @Test("A non-finite scale makes an invalid time that calculations reject")
     func pairInitRejectsNonFinite() {
         let pairs: [(tt: Double, ut: Double)] = [(.nan, 0), (0, .nan), (.infinity, 0), (0, -.infinity)]

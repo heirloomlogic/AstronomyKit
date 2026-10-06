@@ -181,33 +181,32 @@ struct EngineTimeConversionTests {
 
     // MARK: - Derived times
 
-    @Test("Adding days keeps the time's model and ignores the fallback", arguments: DeltaTModel.allCases)
+    @Test("Adding days keeps the time's model", arguments: DeltaTModel.allCases)
     func addingKeepsModel(model: DeltaTModel) {
         let time = Engine.Time(ut: 18_000, deltaTModel: model)
-        for fallback in DeltaTModel.allCases {
-            let later = time.adding(days: 1_000.5, fallback: fallback)
-            #expect(later.ut == 19_000.5)
-            #expect(later.tt == Self.modelTT(ut: 19_000.5, model))
-            #expect(later.deltaTModel == model)
-        }
+        let later = time.adding(days: 1_000.5)
+        #expect(later.ut == 19_000.5)
+        #expect(later.tt == Self.modelTT(ut: 19_000.5, model))
+        #expect(later.deltaTModel == model)
         // A model from a reconstructed pair carries through too.
         let pair = Engine.Time.fromPair(ut: 10, tt: 5, deltaTModel: model)
-        #expect(pair.adding(days: 1, fallback: .espenakMeeus).deltaTModel == model)
-        #expect(pair.adding(days: 1, fallback: .jplHorizons).deltaTModel == model)
+        #expect(pair.adding(days: 1).deltaTModel == model)
     }
 
-    @Test("A time derived from a time with no model uses the fallback", arguments: DeltaTModel.allCases)
-    func addingFromInvalid(fallback: DeltaTModel) {
-        // Espenak-Meeus TT overflows at this UT; subtracting it comes back to J2000.
+    @Test("A time derived from an invalid time is invalid")
+    func addingFromInvalid() {
+        // Espenak-Meeus TT overflows at this UT. Subtracting it gives a finite
+        // UT, which is kept, but there is no model to derive its TT with.
         let huge = Engine.Time(ut: 1e160, deltaTModel: .espenakMeeus)
         #expect(!huge.isValid)
-        let back = huge.adding(days: -1e160, fallback: fallback)
-        #expect(back.ut == 0)
-        #expect(back.tt == Self.modelTT(ut: 0, fallback))
-        #expect(back.deltaTModel == fallback)
+        for derived in [huge.adding(days: -1e160), huge.derived(ut: 0)] {
+            #expect(derived.ut == 0)
+            #expect(derived.tt.isNaN)
+            #expect(derived.deltaTModel == nil)
+        }
+        #expect(huge.adding(days: 1).ut == 1e160)
 
-        // A NaN UT stays invalid whatever the fallback.
-        let nan = Engine.Time.invalid.adding(days: 1, fallback: fallback)
+        let nan = Engine.Time.invalid.adding(days: 1)
         #expect(nan.ut.isNaN)
         #expect(nan.deltaTModel == nil)
     }
@@ -215,7 +214,7 @@ struct EngineTimeConversionTests {
     @Test("Adding days at a huge UT stalls at the same UT and keeps the model")
     func addingStall() {
         let time = Engine.Time(ut: 1e20, deltaTModel: .jplHorizons)
-        let later = time.adding(days: 1, fallback: .espenakMeeus)
+        let later = time.adding(days: 1)
         #expect(later.ut == time.ut)
         #expect(later.deltaTModel == .jplHorizons)
     }

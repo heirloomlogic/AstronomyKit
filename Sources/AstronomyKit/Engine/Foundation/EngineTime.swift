@@ -18,8 +18,7 @@ extension Engine {
     /// A time whose `ut` or `tt` is not finite is invalid and carries no model.
     /// Its scales are kept as given: a huge finite UT can give an infinite TT,
     /// and the public API still reports that UT. A time derived from an
-    /// invalid one uses the fallback model its caller passes; see
-    /// ``adding(days:fallback:)``.
+    /// invalid one is invalid too; see ``adding(days:)``.
     ///
     /// There is no `Equatable` conformance. Public `AstroTime` equality,
     /// hashing and `Codable` use UT only; engine code compares the scale it
@@ -163,15 +162,26 @@ extension Engine.Time {
     }
 
     /// The time `days` UT days after this one, with TT derived by this
-    /// time's model. `fallback` derives it instead when this time is invalid
-    /// and has no model.
+    /// time's model.
     ///
-    /// The public layer passes, as `fallback`, the process default it read
-    /// for the call, which is what the C engine's `Astronomy_AddDays` does
-    /// with a time that carries no Delta T function. A huge UT whose TT
-    /// overflowed can therefore come back to a valid time.
-    func adding(days: Double, fallback: DeltaTModel) -> Engine.Time {
-        Engine.Time(ut: ut + days, deltaTModel: deltaTModel ?? fallback)
+    /// An invalid time has no model to derive a TT with, so a time derived
+    /// from it is invalid, with its UT kept and a NaN TT, even where its UT
+    /// plus `days` is finite. Under
+    /// local patch 18 the C engine's `Astronomy_AddDays` uses the process
+    /// default instead, so a huge UT whose TT overflowed can come back to a
+    /// valid time there.
+    func adding(days: Double) -> Engine.Time {
+        derived(ut: ut + days)
+    }
+
+    /// The time at `ut` with TT derived by this time's model. When this time
+    /// is invalid, the result is invalid too, with `ut` kept and a NaN TT.
+    func derived(ut: Double) -> Engine.Time {
+        guard let deltaTModel else {
+            // A NaN TT drops the model, as in ``invalid``.
+            return Engine.Time(ut: ut, tt: .nan, deltaTModel: .espenakMeeus)
+        }
+        return Engine.Time(ut: ut, deltaTModel: deltaTModel)
     }
 }
 
