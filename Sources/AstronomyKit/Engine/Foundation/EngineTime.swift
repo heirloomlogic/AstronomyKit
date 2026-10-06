@@ -73,7 +73,7 @@ extension Engine.Time {
     init(ut: Double, deltaTModel: DeltaTModel) {
         self.init(
             ut: ut,
-            tt: ut + Engine.DeltaT.seconds(ut: ut, model: deltaTModel) / 86_400,
+            tt: ut + Engine.DeltaT.seconds(ut: ut, model: deltaTModel) / Engine.secondsPerDay,
             deltaTModel: deltaTModel
         )
     }
