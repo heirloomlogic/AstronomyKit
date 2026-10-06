@@ -36,6 +36,11 @@ jobs:
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
         with:
           swift-version: "6.2"
+      - name: Materialize recorded Git selections
+        run: |
+          for revision in e1cb1fdf147e5b4e2777f38f16e843087e68b21c ea24af7f27df4c0f4d5b37de39b8b9c98bfbe169 1ecff3a233206362e2c47b2b86114a2d28f15cdb ca7b075b50962eae4fbdb7101bd0913bcb4e3569 af2f3da7343f2e2145c942e51bd3a0bd13c48180 dc27db16b28493d7c321746a158df3008b8a0b37; do
+            git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
+          done
       - name: Verify bounded custody and payload controls
         run: python3 -m unittest Scripts/migration/test_inverse_refraction.py -v
       - name: Run isolated baseline and current public probes
@@ -375,7 +380,7 @@ jobs:
           swift-version: "6.2"
       - name: Materialize recorded Git selections
         run: |
-          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 1add73ec6c117e9b6f3d26e745a3487262ff4c75 d32812388b63b384d03939be0af245152df618b6; do
+          for revision in cdb533dbe85c76b39a958ca92f9155d8bd55b392 1add73ec6c117e9b6f3d26e745a3487262ff4c75 d32812388b63b384d03939be0af245152df618b6 2bddd2de1bb21d23ce70d8f2f88eea7693c04c57 38f946082a9a1a898eb8f7c6291f1bc85157e61e; do
             git cat-file -e "$revision^{commit}" || git fetch --no-tags --depth=1 origin "$revision"
           done
       - name: Execute and authenticate separate observations
