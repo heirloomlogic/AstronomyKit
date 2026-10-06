@@ -115,6 +115,7 @@ extension Vector3D {
     }
 
     /// Creates a Cartesian vector from horizontal coordinates.
+    /// Uses the supplied altitude without refraction correction when the inverse iteration cannot converge.
     public static func from(
         horizon: Spherical,
         at time: AstroTime,
@@ -506,18 +507,17 @@ public enum Refraction: Sendable {
     /// observer through the atmosphere.
     ///
     /// - Parameter altitude: The geometric altitude in degrees above the horizon.
-    /// - Returns: The refraction offset in degrees (always >= 0).
+    /// - Returns: The signed refraction offset in degrees.
     public func refractionAngle(at altitude: Double) -> Double {
         Astronomy_Refraction(raw, altitude)
     }
 
     /// Calculates the inverse atmospheric refraction for a given apparent altitude.
     ///
-    /// Given an apparent (refracted) altitude, returns the angular adjustment
-    /// to subtract to recover the geometric (airless) altitude.
+    /// Given an apparent (refracted) altitude, returns the signed angular adjustment to add to recover the geometric (airless) altitude.
     ///
     /// - Parameter bentAltitude: The apparent altitude in degrees (after refraction).
-    /// - Returns: The inverse refraction offset in degrees.
+    /// - Returns: The inverse refraction offset in degrees, or zero for a nonfinite or out-of-range altitude or an inversion that cannot converge.
     public func inverseRefractionAngle(at bentAltitude: Double) -> Double {
         Astronomy_InverseRefraction(raw, bentAltitude)
     }

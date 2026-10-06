@@ -1,0 +1,7 @@
+swift-driver version: 1.168.6 swift-driver version: 1.168.6 Traceback (most recent call last):
+  File "/Users/sessions/conductor/workspaces/AstronomyKit/stuttgart/Scripts/migration/check_inverse_refraction.py", line 375, in <module>
+    print(dumps(assess_straddle(arguments.current.resolve(), arguments.baseline.resolve())))
+                ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sessions/conductor/workspaces/AstronomyKit/stuttgart/Scripts/migration/check_inverse_refraction.py", line 343, in assess_straddle
+    raise ValueError("straddle correction is not an adjacent converged inverse")
+ValueError: straddle correction is not an adjacent converged inverse

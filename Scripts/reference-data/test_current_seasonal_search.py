@@ -10,6 +10,18 @@ SPEC.loader.exec_module(C)
 
 
 class CurrentSeasonalInputs(unittest.TestCase):
+    def test_api_comment_classification_rejects_actual_coordinate_code_change(self):
+        from unittest import mock
+        saved = json.loads(C.S.REPORT.read_text())
+        read = Path.read_bytes
+        coordinate = C.ROOT / 'Sources/AstronomyKit/Coordinates.swift'
+        def changed(path):
+            return read(path) + b'\nfunc unexpectedExecutableChange() {}\n' if path == coordinate else read(path)
+        with mock.patch.object(Path, 'read_bytes', changed):
+            current = {'inputSHA256': C.S.source_hashes()}
+            with self.assertRaisesRegex(ValueError, 'coordinate implementation'):
+                C.validate_inputs(saved, current)
+
     def test_actual_inputs_and_tampered_population_hashes(self):
         saved = json.loads(C.S.REPORT.read_text())
         current = {'inputSHA256': C.S.source_hashes()}

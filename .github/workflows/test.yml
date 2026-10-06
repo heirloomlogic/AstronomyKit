@@ -19,6 +19,42 @@ permissions:
   contents: read
 
 jobs:
+  inverse-refraction-regression:
+    strategy:
+      matrix:
+        os: [macos-26, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Checkout complete source history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Swift on Linux
+        if: runner.os == 'Linux'
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+      - name: Verify bounded custody and payload controls
+        run: python3 -m unittest Scripts/migration/test_inverse_refraction.py -v
+      - name: Run isolated baseline and current public probes
+        run: |
+          python3 Scripts/migration/check_inverse_refraction.py --acquire .context/inverse-refraction-hosted/baseline --revision e1cb1fdf147e5b4e2777f38f16e843087e68b21c
+          python3 Scripts/migration/check_inverse_refraction.py --acquire .context/inverse-refraction-hosted/current
+          python3 Scripts/migration/check_inverse_refraction.py --current .context/inverse-refraction-hosted/current --baseline .context/inverse-refraction-hosted/baseline
+      - name: Retain raw process and build receipts
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: inverse-refraction-${{ matrix.os }}-${{ github.run_id }}
+          path: |
+            .context/inverse-refraction-hosted/**/build-process.json.gz
+            .context/inverse-refraction-hosted/**/build-receipt.json.gz
+            .context/inverse-refraction-hosted/**/raw-processes.json.gz
+            .context/inverse-refraction-hosted/**/assessment.json
+          include-hidden-files: true
+          if-no-files-found: error
   test-macos:
     runs-on: macos-26
     timeout-minutes: 15

@@ -131,6 +131,10 @@
       - Ascending search validation: both success paths in Astronomy_Search
         require callback endpoint signs that establish an ascending bracket;
         quadratic acceptance also requires a positive fitted derivative.
+      - Bounded inverse refraction: invalid input, nonfinite iteration, stall,
+        a two-state cycle wider than adjacent doubles or exhausted iteration
+        returns zero correction. A cycle between adjacent doubles returns the
+        correction to the lower one.
       - Platform-native transcendentals with FP contraction disabled. Native
         libm results may differ across OSes, architectures, and toolchains.
 
@@ -10992,7 +10996,7 @@ double Astronomy_Refraction(astro_refraction_t refraction, double altitude)
  *      Calculates the inverse of an atmospheric refraction angle.
  *
  * Given an observed altitude angle that includes atmospheric refraction,
- * calculates the negative angular correction to obtain the unrefracted
+ * calculates the signed angular correction to obtain the unrefracted
  * altitude. This is useful for cases where observed horizontal
  * coordinates are to be converted to another orientation system,
  * but refraction first must be removed from the observed position.
@@ -11007,26 +11011,52 @@ double Astronomy_Refraction(astro_refraction_t refraction, double altitude)
  * @return
  *      The angular adjustment in degrees to be added to the
  *      altitude angle to correct for atmospheric lensing.
- *      This will be less than or equal to zero.
+ *      When the iteration alternates between adjacent doubles, returns the correction to the lower one.
+ *      Returns zero for a nonfinite or out-of-range altitude, or when the inverse iteration cannot converge.
  */
 double Astronomy_InverseRefraction(astro_refraction_t refraction, double bent_altitude)
 {
-    double altitude, diff;
+    double altitude, diff, next, previous = NAN;
+    int iter;
 
-    if (bent_altitude < -90.0 || bent_altitude > +90.0)
+    if (!isfinite(bent_altitude) || bent_altitude < -90.0 || bent_altitude > +90.0)
         return 0.0;     /* no attempt to correct an invalid altitude */
 
     /* Find the pre-adjusted altitude whose refraction correction leads to 'altitude'. */
     altitude = bent_altitude - Astronomy_Refraction(refraction, bent_altitude);
-    for(;;)
+    for (iter = 0; iter < 1000; ++iter)
     {
         /* See how close we got. */
         diff = (altitude + Astronomy_Refraction(refraction, altitude)) - bent_altitude;
+        if (!isfinite(diff))
+            return 0.0;
         if (fabs(diff) < 1.0e-14)
             return altitude - bent_altitude;
 
-        altitude -= diff;
+        next = altitude - diff;
+        if (next == previous)
+        {
+            /*
+                The iteration alternates between two altitudes that bracket
+                the inverse. Below -1 degree, altitude plus normal-mode
+                refraction rises faster than altitude, so its rounded value
+                skips some doubles. From magnitude 64 the spacing of doubles
+                exceeds the tolerance, and the two neighbors of a skipped
+                bent altitude alternate, each refracting to one ulp from it.
+                Return the lower neighbor. A wider cycle spans the jump at
+                the model's range boundary, where no altitude in range
+                refracts to bent_altitude.
+            */
+            if (nextafter(previous, altitude) == altitude)
+                return fmin(previous, altitude) - bent_altitude;
+            return 0.0;
+        }
+        if (!isfinite(next) || next == altitude)
+            return 0.0;
+        previous = altitude;
+        altitude = next;
     }
+    return 0.0;
 }
 
 /**

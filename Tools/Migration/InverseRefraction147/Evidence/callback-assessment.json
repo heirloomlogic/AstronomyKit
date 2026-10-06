@@ -1,0 +1,23 @@
+{
+  "actualBuildReceiptSHA256": "c4e0b6374604855d93c7afd64fdc59f2faae89b53b57bcdbf22b118a7aa1c561",
+  "classification": "current-public-finite-repair-regression",
+  "namedChanges": {
+    "espenak-meeus": [
+      "root-descending",
+      "root-equal-window",
+      "root-short-absent-window"
+    ],
+    "jpl-horizons": [
+      "root-descending",
+      "root-equal-window",
+      "root-short-absent-window",
+      "root-extreme-time"
+    ]
+  },
+  "partitions": {
+    "original": 51,
+    "supplement": 2
+  },
+  "processes": 106,
+  "rawSHA256": "cb233279a0ddd7028a8e6298ecfaf0228504053f228a940b2212d1b9418b2e0a"
+}
