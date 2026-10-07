@@ -63,6 +63,14 @@ public struct RotationMatrix: Sendable {
 
     /// The internal C representation.
     var raw: astro_rotation_t { storage }
+
+    /// Creates a rotation matrix with the elements of a native engine rotation.
+    init<From, To>(_ rotation: Engine.Rotation<From, To>) {
+        var raw = astro_rotation_t()
+        raw.status = ASTRO_SUCCESS
+        raw.rot = rotation.rot
+        self.storage = raw
+    }
 }
 
 // MARK: - Matrix Operations
@@ -192,15 +200,19 @@ extension RotationMatrix {
     }
 
     /// Creates a rotation from J2000 equatorial to galactic coordinates.
+    ///
+    /// The galactic axes are the J2000 axes of the Hipparcos Catalogue (ESA
+    /// 1997, Vol. 1, §1.5.3; Murray 1989): north galactic pole at right
+    /// ascension 192.85948° and declination +27.12825°, with the north
+    /// celestial pole at galactic longitude 122.93192°. Never throws.
     public static func equatorialJ2000ToGalactic() throws -> RotationMatrix {
-        let result = Astronomy_Rotation_EQJ_GAL()
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqjToGal)
     }
 
-    /// Creates a rotation from galactic to J2000 equatorial coordinates.
+    /// Creates a rotation from galactic to J2000 equatorial coordinates: the
+    /// inverse of ``equatorialJ2000ToGalactic()``. Never throws.
     public static func galacticToEquatorialJ2000() throws -> RotationMatrix {
-        let result = Astronomy_Rotation_GAL_EQJ()
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.galToEqj)
     }
 
     // MARK: Ecliptic (ECL) conversions

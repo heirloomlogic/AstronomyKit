@@ -22,7 +22,7 @@ extension Engine.EarthRotation {
     /// keeps the fraction's precision at any date.
     static func angle(ut: Double) -> Double {
         let turns = 0.779_057_273_264_0 + 0.002_737_811_911_354_48 * ut + fmod(ut, 1.0)
-        return normalized(360 * fmod(turns, 1.0), period: 360)
+        return Engine.normalized(360 * fmod(turns, 1.0), period: 360)
     }
 
     /// Greenwich mean sidereal time in sidereal hours, from 0 up to 24
@@ -51,14 +51,6 @@ extension Engine.EarthRotation {
             0.014_506
             + ((((-0.000_000_036_8 * t - 0.000_029_956) * t - 0.000_000_44) * t + 1.391_581_7) * t + 4_612.156_534) * t
         let degrees = equationOfEquinoxes + precession / 3600 + angle(ut: time.ut)
-        return normalized(fmod(degrees, 360) / 15, period: 24)
-    }
-
-    /// `value`, which lies in (−period, period), moved into [0, period).
-    private static func normalized(_ value: Double, period: Double) -> Double {
-        guard value < 0 else { return value }
-        let shifted = value + period
-        // A tiny negative value rounds up to the period itself.
-        return shifted < period ? shifted : 0
+        return Engine.normalized(fmod(degrees, 360) / 15, period: 24)
     }
 }
