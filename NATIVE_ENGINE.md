@@ -87,6 +87,20 @@ In the tree: `EngineConstants.swift`. Each constant is the double nearest its de
 
 The C engine's `C_AUDAY`, 173.1446326846693, is 86,400 s over 499.0047838061 s, the DE405 light time for one au, and its `KM_PER_AU`, 149,597,870.69098932, is derived from `C_AUDAY`. Both differ from the published values by 6.0e-11 of their size: about 3e-8 s of light time and 9 m per au. The C angle factors (`DEG2RAD`, `RAD2DEG`, `HOUR2RAD`, `RAD2HOUR`, `ASEC2RAD`) are the same doubles as the engine's. `SearchCallbackContractTests` "Fixed positions within one light-day" and "Positions beyond one light-day" test the public API against the C light-day; #96 moves them to the published one. Both are tracked in #166.
 
+## Compiled-in tables and the accepted range
+
+In the tree: `EngineTables.swift`. Both moved here from `Planets/` when the Moon became their second user.
+
+```swift
+extension Engine {
+    static let acceptedTTDays: Double  // 1,461,000
+    static func unpackDoubles(count: Int, _ text: StaticString) -> [Double]
+}
+```
+
+- `acceptedTTDays` is 4,000 Julian years, the C engine's `EPHEMERIS_MAX_TT_DAYS`. The planet and Moon functions throw `badTime` for a TT beyond it either way, or not finite.
+- `unpackDoubles` decodes a generated table: a base64 string literal of the doubles' little-endian bit patterns, skipping characters outside the base64 alphabet. It traps when the text does not hold exactly `count` doubles, which only a damaged generated file can cause.
+
 ## Time and the Delta T model
 
 In the tree: `EngineTime.swift`, `EngineDeltaT.swift`, `EngineCalendar.swift`.
@@ -335,7 +349,6 @@ In the tree: `Planets/EnginePlanets.swift`, `Planets/EnginePlanetPolynomial.swif
 extension Engine {
     enum Planet: Int, CaseIterable { case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune }
     // init?(_ body: CelestialBody): nil for every other body
-    static func unpackDoubles(count: Int, _ text: StaticString) -> [Double]
 }
 extension Engine.VSOP87B {
     struct Model { let termCounts: [[Int]]; let terms: [Double] }   // A, B, C of each term
@@ -350,7 +363,6 @@ extension Engine.VSOP87B {
     static let toEquatorial: Engine.Rotation<Engine.VSOP87Ecliptic, Engine.EQJ>
 }
 extension Engine.Planet {
-    static let acceptedTTDays: Double  // 1,461,000
     func heliocentricEclipticPosition(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Engine.Vector<Engine.VSOP87Ecliptic>
     func heliocentricEclipticState(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Engine.State<Engine.VSOP87Ecliptic>
     func heliocentricPosition(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Engine.Vector<Engine.EQJ>   // and heliocentricState
@@ -374,13 +386,13 @@ extension Engine.PlanetPolynomial {
 ```
 
 - `Scripts/generate-planet-tables.py` writes the tables from the C engine's `vsop87b_full.h` and `polynomial-data.h`, whose SHA-256 hashes `Scripts/planet-data/manifest.json` pins, and `--check` runs in CI on macOS and Linux. The headers stay where the C engine reads them; when #96 removes the C target, it moves them to `Scripts/planet-data` and updates the manifest. `--published DIR` also compares the VSOP87B table with the eight files IMCCE publishes, whose URLs and hashes are in the manifest: all 35,080 terms in 135 series match in order and value.
-- Each table is a base64 string literal of the doubles' little-endian bit patterns, decoded once per planet on first use. Array literals do not scale: a 100,002-element `[Double]` literal took 390 s and 1.66 GB to compile in Debug, and the polynomial tables hold 1,431,768 doubles. The data is still compiled in; nothing is read from a file. `unpackDoubles` moves to `Foundation/` through #84 when a second module needs it. Decoded, the polynomial tables take 11.5 MB and the VSOP87B terms 0.8 MB, kept for the life of the process.
+- Each table is a base64 string literal of the doubles' little-endian bit patterns, decoded once per planet on first use. Array literals do not scale: a 100,002-element `[Double]` literal took 390 s and 1.66 GB to compile in Debug, and the polynomial tables hold 1,431,768 doubles. The data is still compiled in; nothing is read from a file. `Engine.unpackDoubles` decodes them (see [Compiled-in tables and the accepted range](#compiled-in-tables-and-the-accepted-range)). Decoded, the polynomial tables take 11.5 MB and the VSOP87B terms 0.8 MB, kept for the life of the process.
 - VSOP87B gives heliocentric ecliptic longitude and latitude in radians and radius in AU, referred to the dynamical ecliptic and equinox of J2000, as Poisson series in Julian millennia of TT. The tables keep the published term order. `coordinates` and `derivatives` port `VsopCoords` and `VsopDeriv`: every term in table order, with Neumaier compensation inside each power of t and, for the coordinates, across the powers; each longitude power's contribution is reduced modulo 2π. At the four t the tests use, the compensated coordinates equal an exactly rounded sum of the same terms bit for bit, and plain addition is off by 1.4e-12 to 2.2e-10 rad in Mercury's longitude. A t that is not finite gives NaN.
 - `Engine.VSOP87Ecliptic` is the frame of VSOP87, declared in `Planets/` with its rotation to EQJ, since only this module uses it. It is not ECL: `toEquatorial`, the rotation to FK5 J2000 that `vsop87.doc` prints, tilts by an obliquity 0.003″ larger than IAU 2006's and adds rotations of up to 0.1″. The engine takes FK5 J2000 as EQJ, as the C engine does.
 - The polynomials are AstronomyKit's degree-12 Chebyshev fits of the compensated VSOP87B position in the same frame, in segments of 8 days (Mercury, Earth), 16 (Saturn, Neptune) or 32 (the others), from `start` up to `stop`. 413 segments that did not meet the 1e-12 AU fit budget are excluded: 409 of Mercury's and 4 of Venus's.
 - Segment `k` holds `start + k·width ≤ tt < start + (k + 1)·width`, as in `polynomial.h`: the index is `Int((tt − start) / width)`, moved back one where the subtraction rounded the double below a boundary up to the boundary's offset. Every width is a power of two, so the division is exact. Outside the span, including a TT that is not finite, and in an excluded segment, the functions return `nil` and the caller uses the full series. The static functions check the span before they decode a table.
 - Clenshaw's recurrence gives the position and its derivative together; velocity is in AU per TT day. A state's position is the same double as the position.
-- The `Engine.Planet` functions give the heliocentric position, state and distance in the VSOP87 frame or in EQJ. They throw `badTime` when |TT| is above `acceptedTTDays`, 1,461,000 days as the C engine's `EPHEMERIS_MAX_TT_DAYS`, or is not finite, before touching the cache, and when a result component is not finite. `acceptedTTDays` moves to `Foundation/` through #84 when another module needs it. Inside the polynomial span and outside excluded segments they use the polynomials and never the series or the cache. Elsewhere the position is the series coordinates in rectangular form, the state adds the chain-rule velocity from the derivatives, scaled from per millennium to per day, and the distance is the series radius. The EQJ results are the VSOP87 ones rotated.
+- The `Engine.Planet` functions give the heliocentric position, state and distance in the VSOP87 frame or in EQJ. They throw `badTime` when |TT| is above `Engine.acceptedTTDays` or is not finite, before touching the cache, and when a result component is not finite. Inside the polynomial span and outside excluded segments they use the polynomials and never the series or the cache. Elsewhere the position is the series coordinates in rectangular form, the state adds the chain-rule velocity from the derivatives, scaled from per millennium to per day, and the distance is the series radius. The EQJ results are the VSOP87 ones rotated.
 - `VSOP87B.cache` keeps, for each planet, 32 coordinate and 32 derivative results, keyed by the exact bits of t, in two `BoundedCache`s registered with `CacheRegistry.shared`. A position, a state and a distance at one instant share one evaluation of each series they need; the distance reads the coordinates entry. A t that is not finite bypasses it. The C engine keeps the radius separately so a distance alone sums only the radius series; here a distance alone sums all three coordinates.
 
 ### Published-value checks
@@ -406,6 +418,83 @@ Tests under `Tests/AstronomyKitTests/Engine/Planets/`:
 | `ReproducibilityTests` planetary cases | Kept while the C engine ships, as recorded under [Earth orientation](#earth-orientation): they pin public results, not published values. The planet series parts they reach are checked against IMCCE and Horizons here. Retired by #96. |
 | `DistanceAccuracyTests` and the `JPLValidationTests` planet suites | Published-value checks of the public API, which runs on the C engine until #96. `EnginePlanetPositionsTests` and `EnginePlanetHorizonsTests` apply the same fixtures and allowances to the Swift planet functions. `EnginePlanetHorizonsTests` composes the geocentric vector itself; when #89 adds the engine's geocentric functions, the check moves onto them. |
 
+## Moon
+
+In the tree: `Moon/EngineMoon.swift`, `Moon/EngineMoonEphemeris.swift`, `Moon/EngineLunarSeries.swift`, `Moon/EngineTDB.swift`, `Moon/EngineFrameBias.swift` and the generated `Moon/Generated/MoonDE440Coefficients.swift` and `Moon/Generated/TDBTerms.swift`. `Astronomy_GeoMoon` and `Astronomy_EclipticGeoMoon` have native counterparts. The Moon's states, the Earth-Moon barycenter, the lunar cache and libration are **Planned** for parts 2 and 3 of #87.
+
+```swift
+extension Engine {
+    enum ECM: Frame {}    // mean ecliptic and equinox of date
+    enum ICRS: Frame {}
+}
+extension Engine.Moon {
+    static func coordinates(centuries t: Double) -> SIMD3<Double>   // longitude, latitude (radians, ECM), distance (AU)
+    static func meanEclipticPosition(tt: Double) -> SIMD3<Double>?  // DE440 alone, ECM
+    static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double>
+    static func meanEquatorToEcliptic(tt: Double) -> Engine.Rotation<Engine.EQM, Engine.ECM>
+    static func geocentricPosition(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ>
+    static func eclipticPosition(at time: Engine.Time) throws -> Engine.Spherical       // ECT, degrees, AU
+}
+extension Engine.MoonEphemeris {
+    static let start, recordDays: Double              // −36,560.5 TDB days, 4
+    static let recordCount, degreeCount: Int          // 21,111, 13
+    static let coefficients: [Double]
+    static let fullWeightStart, fullWeightEnd, blendDays: Double   // −36,524.5, 47,846.5, 32
+    static func weight(tt: Double) -> (weight: Double, rate: Double)
+    static func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)?   // ICRS, per TDB day
+    static func state(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)?       // EQJ, per TT day
+}
+extension Engine.LunarSeries {
+    static func coordinates(centuries t: Double) -> SIMD3<Double>
+}
+extension Engine.TDB {
+    static func offsetSeconds(tt: Double) -> Double
+    static func rate(tt: Double) -> Double
+    static func offsetSeconds(date1: Double, date2: Double, ut: Double, longitude: Double, u: Double, v: Double) -> Double
+}
+extension Engine.FrameBias {
+    static func fukushimaWilliams(gamma: Double, phi: Double, psi: Double, epsilon: Double) -> [[Double]]
+    static let icrsToEqj: Engine.Rotation<Engine.ICRS, Engine.EQJ>
+    static func toEqj(_ vector: SIMD3<Double>) -> SIMD3<Double>
+}
+```
+
+- The lunar model is the C engine's `CalcMoon` with local patch 19. From 1900-01-01 00:00 TT (`fullWeightStart`) up to 2131-01-01 00:00 TT (`fullWeightEnd`) it is the Moon of JPL DE440. Beyond the 32 days outside each end it is the lunar series. Inside those 32 days the two positions are blended with the quintic smoothstep x³(10 − 15x + 6x²), so the weight and its first two derivatives are continuous. `coordinates(centuries:)` reads DE440 at TT = t · 36,525, as `CalcMoon` does, and returns the series alone where the weight is 0 or the records do not reach.
+- `MoonDE440Coefficients.swift` holds DE440's Chebyshev records for the Moon minus those for Earth, both relative to the Earth-Moon barycenter, divided by the au: 21,111 four-day records of 13 coefficients per axis on ICRS axes, from 1899-11-26 to 2131-02-07 TDB. `Scripts/generate-moon-tables.py` writes it from the C engine's `moon_data.inc`, whose SHA-256 `Scripts/moon-data/manifest.json` pins, and `--check` runs in CI on macOS and Linux. `--published DIR` reads `de440s.bsp` as NAIF publishes it (URL and SHA-256 in the manifest) and checks all 823,329 coefficients against the DE440 records bit for bit. The table uses the encoding of [Compiled-in tables and the accepted range](#compiled-in-tables-and-the-accepted-range); decoded, it takes 6.6 MB for the life of the process.
+- `evaluate(tdb:)` ports the C engine's Chebyshev evaluator: record `k` holds `start + 4k ≤ tdb < start + 4(k + 1)`, and Clenshaw's recurrence gives the position and its derivative together. It returns `nil` before the first record, from the end on, and for a time that is not finite. As in C, the last doubles before the end can round up to it when the start is subtracted and fall outside.
+- `state(tt:)` reads the records at TDB = TT + `Engine.TDB.offsetSeconds(tt:)`, scales the velocity by `Engine.TDB.rate(tt:)`, and rotates both by `Engine.FrameBias.icrsToEqj`.
+- `Engine.TDB` is SOFA's `iauDtdb`: Fairhead and Bretagnon's 787 terms, JPL's planetary mass adjustments and the topocentric terms. `TDBTerms.swift` is generated by the same script from ERFA 2.0.1's `dtdb.c`, which the C engine already vendors and the manifest pins with its URL; that file equals ERFA's at the commit `THIRD_PARTY_NOTICES` pins. The Moon reads the geocentric offset at TT, as the C engine does. The rate is one plus the offset's change across ±0.01 day, the C engine's step.
+- `Engine.FrameBias.icrsToEqj` is SOFA's `iauPmat06` at J2000: `iauFw2m` at the Fukushima-Williams angles of `iauPfw06` and `iauObl06` for t = 0, where precession is the identity. It is about 23 mas.
+- `Engine.LunarSeries` is the C engine's `CalcMoonRaw`: Montenbruck and Pfleger's series from the Improved Lunar Ephemeris of 1954, with the same 104 solar terms, the series N, and the long-period and planetary terms, in the same order. The distance comes from the parallax and Earth's equatorial radius, 6,378.1366 km, converted with the published au.
+- DE440 positions reach the mean ecliptic of date as in the C engine: precession to the mean equator of date, then the mean obliquity. `geocentricPosition(at:)` takes the model's coordinates back through the mean obliquity and the inverse precession. `eclipticPosition(at:)` takes them through the mean obliquity, nutation and the true obliquity, and reports the model's distance. Both throw `badTime` for a TT beyond `Engine.acceptedTTDays` or not finite, and for a result that is not finite. The ecliptic longitude is in [0, 360) and 0 where the vector has no component in the ecliptic plane.
+- `TDB`, `FrameBias` and the Chebyshev evaluator are used only by the Moon until #88 needs them for Pluto; then they move to `Foundation/` through #84.
+
+### Differences from published values
+
+- Outside 1900 to 2130 the Moon comes from the series, which is up to 52′ from DE441 within the accepted range. Of the Horizons samples below, those from 1499 to 2500 are within 1′, and those up to 999 and from 3000 on are not (#184). The C engine uses the same series, and the epic keeps it.
+
+### Differences from the C engine
+
+- The series' distance converts Earth's radius with the published au, not the C engine's `KM_PER_AU`; the two differ by 6.0e-11 of the distance, about 2e-5 km (see [Constants](#constants)).
+- An ecliptic longitude that rounds up to 360 when moved into range is 0; `Astronomy_EclipticGeoMoon` can return 360.
+
+### Published-value checks
+
+Tests under `Tests/AstronomyKitTests/Engine/Moon/`:
+
+- The table against DE440 coefficient for coefficient, through the generator's `--published` mode, which needs `de440s.bsp` and does not run in CI. The tests check the table's shape and dates, and that its records reach past both blends with TDB − TT at its largest.
+- ERFA's `t_dtdb` within its 1e-15 s, and pyerfa 2.0.1.5's geocentric `dtdb` at eleven dates from −4,000 to +4,000 years within 1e-14 s; the rate against a five-point difference of the offset.
+- ERFA's `t_fw2m`, pyerfa's `pmat06` at J2000 within 1e-16, and the IERS Conventions (2010) frame bias offsets ξ0, η0 and dα0 to their printed precision.
+- Clenshaw's recurrence against the Chebyshev sums and their derivatives; every record boundary, where adjacent records meet within 1e-12 AU and 1e-12 AU per day; the ends and the inputs that are not finite; velocity against five-point differences.
+- The weight: 1 and 0 where it should be, monotonic across each blend, its rate against differences, and its value and rate near each blend end.
+- The `JPLValidationTests` geocentric and Asheville Moon suites within their 1′, as astrometric directions through `Engine.LightTravel` and, for Asheville, `Engine.Observers`; the 134 Moon records of `distance-fixtures.json` within their 28.689 km; and the Horizons observer rows of 1900, 2000 and 2100 in `reference-fixtures.json` within 1′, in J2000 equatorial and true ecliptic of date coordinates.
+- Horizons geometric vectors at 30 dates from 2002 BCE to 6000 CE (`Scripts/reference-data/sources/horizons/moon-vector.json`), eleven of them within 40 days of the two blends: the 17 from 1499 to 2500 within 1′ and 28.689 km, the other 13 recorded as known issues of #184. Inside the DE440 span the samples measure within 15 m of Horizons, which uses DE441; the tests do not assert that.
+- Routing between DE440, the blend and the series; no jump at the blends' ends; longitudes across the wrap; the ecliptic position against the J2000 position seen on the true ecliptic of date; the accepted range's ends and the doubles beyond; and NaN and infinite times.
+
+### Moon tests that depend on the C engine
+
+**Planned** for part 3 of #87, which records a disposition for each of `MoonCacheTests`, `BundledEphemerisTests`, the `ReproducibilityTests` Moon cases, `moon_cache_probe.c`, `moon_output_probe.c` and `test-moon-cache.sh`. `MoonTests`, `LibrationTests`, `EclipticStateTests` and the public Moon suites in `JPLValidationTests`, `DistanceAccuracyTests` and `AuditValidationTests` keep testing the public API on the C engine until #96.
+
 ## Caches and reset
 
 In the tree: `EngineCache.swift`.
@@ -423,7 +512,7 @@ In the tree: `EngineCache.swift`.
 |---|---|---|---|
 | VSOP87B series results | #85 | `Engine.VSOP87B.cache`: per planet, a 32-entry `BoundedCache` of coordinates and one of derivatives, `ExactKey` of the scaled TT the series read | Thread-local, 32 per body (local patch 8) |
 | Nutation angles and rates | #86 | `Engine.Nutation.cache`: `BoundedCache`, 32 entries, `ExactKey` of TT in Julian centuries, shared by angle, rate, tilt and sidereal-time callers | Thread-local, 32 entries (local patch 13) |
-| Moon longitude, latitude, distance | #87 | `BoundedCache`, 32 entries, `ExactKey` of the scaled TT | Thread-local, 32 entries (local patch 14) |
+| Moon longitude, latitude, distance | #87 | **Planned** for part 2 of #87: `BoundedCache`, 32 entries, `ExactKey` of the scaled TT | Thread-local, 32 entries (local patch 14) |
 | Pluto segments | #88 | `BoundedCache` keyed by segment index, one entry per table segment | Allocated segments behind a mutex, freed by `Astronomy_Reset` (local patch 1) |
 | Delta T default | #96 | `Atomic` in the public layer | `_Atomic` function pointer (local patch 2) |
 | Gravity simulation | #88 | Owned by each `GravitySimulation`, with its own lock | Caller-owned handle |
