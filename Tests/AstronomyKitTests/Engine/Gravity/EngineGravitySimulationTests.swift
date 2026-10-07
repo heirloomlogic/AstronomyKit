@@ -23,18 +23,30 @@ struct EngineGravitySimulationTests {
             time: time(tt: tt))
     }
 
+    // Built step by step: one long chained expression here took the Linux
+    // Swift 6.2 compiler longer than its type-checking limit.
     static func bits(_ states: [Engine.State<Engine.EQJ>]) -> [UInt64] {
-        states.flatMap { [$0.x, $0.y, $0.z, $0.vx, $0.vy, $0.vz].map(\.bitPattern) }
+        var values: [Double] = []
+        for state in states {
+            values += [state.x, state.y, state.z, state.vx, state.vy, state.vz]
+        }
+        return values.map(\.bitPattern)
     }
 
     static func bits(_ moment: Simulation.Moment) -> [UInt64] {
-        [moment.time.ut, moment.time.tt].map(\.bitPattern)
-            + moment.bodies.flatMap { step in
-                [step.tt] + [step.position, step.velocity, step.acceleration].flatMap { [$0.x, $0.y, $0.z] }
-            }.map(\.bitPattern)
-            + ([moment.solarSystem.sun] + moment.solarSystem.planets).flatMap {
-                [$0.position.x, $0.position.y, $0.position.z, $0.velocity.x, $0.velocity.y, $0.velocity.z]
-            }.map(\.bitPattern)
+        var values: [Double] = [moment.time.ut, moment.time.tt]
+        for step in moment.bodies {
+            values.append(step.tt)
+            for vector in [step.position, step.velocity, step.acceleration] {
+                values += [vector.x, vector.y, vector.z]
+            }
+        }
+        for body in [moment.solarSystem.sun] + moment.solarSystem.planets {
+            for vector in [body.position, body.velocity] {
+                values += [vector.x, vector.y, vector.z]
+            }
+        }
+        return values.map(\.bitPattern)
     }
 
     static func length(_ v: SIMD3<Double>) -> Double { EngineGravityTests.length(v) }
@@ -115,7 +127,7 @@ struct EngineGravitySimulationTests {
         #expect(simulation.bodyCount == 0)
         #expect(try simulation.update(to: Self.time(tt: 100)).isEmpty)
         let earth = try simulation.state(of: .earth)
-        #expect([earth.x, earth.y, earth.z, earth.vx, earth.vy, earth.vz] == [0, 0, 0, 0, 0, 0])
+        #expect(earth.positionVector == .zero && earth.velocityVector == .zero)
         #expect(earth.time.tt == 100)
     }
 
@@ -187,23 +199,28 @@ struct EngineGravitySimulationTests {
 
     /// The integrator is not exactly reversible: 100 one-day steps out and
     /// back leave the inner body about 2e-9 AU and 5e-11 AU per day from its
-    /// start. The gap shrinks at least as the square of the step: half-day steps
-    /// leave a quarter of it or less.
+    /// start. The gap is third order in the step: half-day steps leave an
+    /// eighth of it (measured 8.00 in position and in velocity).
     @Test("Stepping forward and then back returns to the start, closer with shorter steps")
     func forwardAndBack() throws {
         func roundTrip(steps: Int) throws -> (position: Double, velocity: Double) {
             let simulation = try Simulation(origin: .sun, time: Self.time(tt: Self.t0), states: Self.bodies)
             try Self.step(simulation, to: Self.t0 + 100, count: steps)
             let back = try Self.step(simulation, to: Self.t0, count: steps)
-            let gaps = zip(back, Self.bodies).map {
-                (Self.length($0.positionVector - $1.positionVector), Self.length($0.velocityVector - $1.velocityVector))
+            var positions: [Double] = []
+            var velocities: [Double] = []
+            for (state, body) in zip(back, Self.bodies) {
+                positions.append(Self.length(state.positionVector - body.positionVector))
+                velocities.append(Self.length(state.velocityVector - body.velocityVector))
             }
-            return (gaps.map(\.0).max() ?? .nan, gaps.map(\.1).max() ?? .nan)
+            // NaN-aware, unlike max(_:_:).
+            return (EngineMoonEphemerisTests.largest(positions), EngineMoonEphemerisTests.largest(velocities))
         }
         let daily = try roundTrip(steps: 100)
         let halfDaily = try roundTrip(steps: 200)
         #expect(daily.position <= 1e-8 && daily.velocity <= 2e-10)
-        #expect(halfDaily.position * 3.5 < daily.position, "\(daily.position / halfDaily.position)")
+        let ratios = (position: daily.position / halfDaily.position, velocity: daily.velocity / halfDaily.velocity)
+        #expect(abs(ratios.position - 8) < 0.5 && abs(ratios.velocity - 8) < 0.5, "\(ratios)")
     }
 
     @Test("An update to the current TT steps nothing, copies the current moment and keeps its time")
@@ -308,7 +325,7 @@ struct EngineGravitySimulationTests {
             #expect(state.velocityVector == expected.velocity - venus.velocity, "\(body)")
         }
         let own = try simulation.state(of: .venus)
-        #expect([own.x, own.vx] == [0, 0])
+        #expect(own.positionVector == .zero && own.velocityVector == .zero)
         for body in [CelestialBody.solarSystemBarycenter, .pluto, .moon, .earthMoonBarycenter, .io] {
             #expect(throws: AstronomyError.invalidBody, "\(body)") { _ = try simulation.state(of: body) }
         }
