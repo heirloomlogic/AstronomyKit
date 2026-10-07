@@ -102809,10 +102809,10 @@
     },
     "jplVectors": {
       "aberration": "none (VEC_CORR=NONE)",
-      "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01",
+      "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center",
       "frame": "geometric ICRF/J2000 vectors",
       "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
-      "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon",
+      "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon",
       "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256",
       "refraction": "not applicable to geometric vectors",
       "serviceVersion": "recorded in every archived response",
@@ -156997,6 +156997,798 @@
         0.0003803175919288461,
         -0.0003681532082637702,
         -0.0001823316167748803
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2393144.0,
+      "origin": "sun",
+      "positionAU": [
+        42.93624176726073,
+        20.34001586588814,
+        -6.58957556945581
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1840-Feb-08 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.000510155122104749,
+        0.001988274551312059,
+        0.0007871049679314559
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2393145.0,
+      "origin": "sun",
+      "positionAU": [
+        42.93573640144492,
+        20.34200872442772,
+        -6.588787839842773
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1840-Feb-09 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0005005310954384731,
+        0.001997157382564238,
+        0.0007861657378277435
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2393146.0,
+      "origin": "sun",
+      "positionAU": [
+        42.9352392875354,
+        20.34400831741094,
+        -6.588006855040407
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1840-Feb-10 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0004950216798350016,
+        0.002000631674566479,
+        0.000774726133218415
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2407744.0,
+      "origin": "sun",
+      "positionAU": [
+        24.98270627561272,
+        41.6801908250856,
+        5.479673587430287
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1880-Jan-29 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001834521476980851,
+        0.0008021656098863856,
+        0.000803483201108744
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2407745.0,
+      "origin": "sun",
+      "positionAU": [
+        24.98087273000213,
+        41.68099483437782,
+        5.480483422474761
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1880-Jan-30 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001831057974893836,
+        0.0008071132955058062,
+        0.000815187580116283
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2407746.0,
+      "origin": "sun",
+      "positionAU": [
+        24.97904621727877,
+        41.68180644358446,
+        5.481300440922635
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1880-Jan-31 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001821621583030446,
+        0.0008161014126004714,
+        0.0008166689982138199
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2407818.0,
+      "origin": "sun",
+      "positionAU": [
+        24.84750815898396,
+        41.73998016984375,
+        5.539141174251632
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1880-Apr-12 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001820397463568036,
+        0.0008117374959413535,
+        0.0007958530225983663
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2414980.5,
+      "origin": "sun",
+      "positionAU": [
+        10.38357253269133,
+        44.53042494469896,
+        10.76329764794783
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Nov-22 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002169708508611608,
+        -5.319816131143526e-05,
+        0.0006353908915925489
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2414988.5,
+      "origin": "sun",
+      "positionAU": [
+        10.36627838910721,
+        44.53006106432385,
+        10.76841681299823
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Nov-30 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002163462424517768,
+        -4.561322648822771e-05,
+        0.0006520488940793393
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2414996.5,
+      "origin": "sun",
+      "positionAU": [
+        10.34900282309109,
+        44.52970932334546,
+        10.77354055871079
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-08 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002150570999716106,
+        -3.596663449737866e-05,
+        0.000641086435904218
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2415004.5,
+      "origin": "sun",
+      "positionAU": [
+        10.33173209611392,
+        44.52935171972997,
+        10.77863437590407
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-16 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002157627441721083,
+        -4.579230197004666e-05,
+        0.0006243358068929506
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2415012.5,
+      "origin": "sun",
+      "positionAU": [
+        10.31443941055791,
+        44.52896664972108,
+        10.78372097994865
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-24 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002170700747060412,
+        -5.707194172000145e-05,
+        0.0006353684983280833
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2415020.5,
+      "origin": "sun",
+      "positionAU": [
+        10.29713934174942,
+        44.52857276555964,
+        10.78883415667843
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1900-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002163636692319108,
+        -4.883301618036697e-05,
+        0.0006513330381382125
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2415021.5,
+      "origin": "sun",
+      "positionAU": [
+        10.29498061571483,
+        44.52852829730593,
+        10.78948436178941
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1900-Jan-02 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002154188508182362,
+        -4.076174934280502e-05,
+        0.0006470036412448571
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2451536.5,
+      "origin": "sun",
+      "positionAU": [
+        -9.901103554855224,
+        -27.96928258698191,
+        -5.742934457780545
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1999-Dec-24 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.00302778582311148,
+        -0.00112812793625316,
+        -0.001251746443556931
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2451544.5,
+      "origin": "sun",
+      "positionAU": [
+        -9.876866563865008,
+        -27.97830215005046,
+        -5.75304476120638
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2000-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003039003425722539,
+        -0.001118347188934008,
+        -0.001266602575336054
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2451545.0,
+      "origin": "sun",
+      "positionAU": [
+        -9.875347258580963,
+        -27.97886172723672,
+        -5.753679695965755
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2000-Jan-01 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.003037817729580538,
+        -0.001120305982409104,
+        -0.001272945037707539
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2456292.5,
+      "origin": "sun",
+      "positionAU": [
+        5.105911546317015,
+        -30.03381255892284,
+        -10.91032213879903
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2012-Dec-31 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003146724696405614,
+        0.0002315028563224374,
+        -0.0008868410001922031
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2456293.5,
+      "origin": "sun",
+      "positionAU": [
+        5.109055644835958,
+        -30.03358246077481,
+        -10.91120294156248
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2013-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003142971675003234,
+        0.000230185833325639,
+        -0.0008741372503349338
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2456294.5,
+      "origin": "sun",
+      "positionAU": [
+        5.112200640554181,
+        -30.03334937676076,
+        -10.91207127250625
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2013-Jan-02 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003148365379948349,
+        0.0002370273284251827,
+        -0.0008639282605801505
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2499391.5,
+      "origin": "sun",
+      "positionAU": [
+        22.99185883420077,
+        42.48775125774374,
+        6.332697112099795
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001885068416625839,
+        0.0006988145252953406,
+        0.0007797351276329277
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2499399.5,
+      "origin": "sun",
+      "positionAU": [
+        22.97670459721773,
+        42.49327509017804,
+        6.338960683227818
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Jan-09 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001898720572220171,
+        0.0006845621028757336,
+        0.0007725839545136748
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2499407.5,
+      "origin": "sun",
+      "positionAU": [
+        22.96152621718726,
+        42.4987744472426,
+        6.345235058176205
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Jan-17 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001905551103516402,
+        0.0006805178184447708,
+        0.0007911177601069225
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2499415.5,
+      "origin": "sun",
+      "positionAU": [
+        22.94635106680532,
+        42.50427694099533,
+        6.351534087846988
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Jan-25 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001892701787035471,
+        0.0006929945971891363,
+        0.0007973661123771214
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2499423.5,
+      "origin": "sun",
+      "positionAU": [
+        22.93119178261034,
+        42.50978855832048,
+        6.357818954360253
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Feb-02 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001887302367766124,
+        0.0006947358713068716,
+        0.0007783126557424729
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2499431.5,
+      "origin": "sun",
+      "positionAU": [
+        22.91602060173379,
+        42.51528152474106,
+        6.364077055326722
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Feb-10 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0019013357811968,
+        0.0006803084672569792,
+        0.0007723449613673022
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2509944.0,
+      "origin": "sun",
+      "positionAU": [
+        0.6768734709057299,
+        43.09347651802739,
+        13.24332333333379
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2159-Nov-22 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.00223130006938885,
+        -0.0006301027629504413,
+        0.0004635856938130484
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2509945.0,
+      "origin": "sun",
+      "positionAU": [
+        0.6746372867981101,
+        43.0928417565727,
+        13.24378669392615
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2159-Nov-23 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002241014364370459,
+        -0.0006390448850906066,
+        0.0004653078824118382
+      ]
+    },
+    {
+      "body": "pluto",
+      "julianDateTDB": 2509946.0,
+      "origin": "sun",
+      "positionAU": [
+        0.6723930281223335,
+        43.09220042688731,
+        13.24425741798299
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2159-Nov-24 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.002246124118612528,
+        -0.0006421844812932677,
+        0.0004771002245445942
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 1685020.5,
+      "origin": "sun",
+      "positionAU": [
+        23.93955688906332,
+        41.97640970188978,
+        5.859358930383379
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 0100-May-03 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001865113956104014,
+        0.0007566500394082731,
+        0.000795493443077257
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 1721544.0,
+      "origin": "sun",
+      "positionAU": [
+        -26.14057940522533,
+        -14.33798668556286,
+        3.403017013116506
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0001-May-01 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.001630004728824482,
+        -0.002788322673332871,
+        -0.00135807246151472
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 1721545.0,
+      "origin": "sun",
+      "positionAU": [
+        -26.13894925268746,
+        -14.34077492656171,
+        3.40165892316557
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0001-May-02 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.001630300337381736,
+        -0.002788159310487626,
+        -0.001358107433730543
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 1721546.0,
+      "origin": "sun",
+      "positionAU": [
+        -26.13731880457041,
+        -14.34356300415647,
+        3.400300798262189
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0001-May-03 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.001630595886438444,
+        -0.002787995865559801,
+        -0.001358142366523111
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2013544.0,
+      "origin": "sun",
+      "positionAU": [
+        30.75536740107185,
+        -18.25466004134253,
+        -14.94530306012929
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0800-Oct-13 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.002012800286260353,
+        0.00193453526419545,
+        -2.802087832387177e-06
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2013545.0,
+      "origin": "sun",
+      "positionAU": [
+        30.75738011753889,
+        -18.25272546061452,
+        -14.94530582449191
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0800-Oct-14 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.002012632654052625,
+        0.001934626185030749,
+        -2.72664013370127e-06
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2013546.0,
+      "origin": "sun",
+      "positionAU": [
+        30.75939266639244,
+        -18.25079078898586,
+        -14.94530851341497
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0800-Oct-15 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.00201246505932963,
+        0.001934717065663654,
+        -2.651208665472901e-06
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2028144.0,
+      "origin": "sun",
+      "positionAU": [
+        43.88049963749482,
+        13.81430768846544,
+        -8.9069228927293
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0840-Oct-03 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0001364098871107279,
+        0.002143636846763645,
+        0.0007074256158870337
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2028145.0,
+      "origin": "sun",
+      "positionAU": [
+        43.880363167567,
+        13.81645130206216,
+        -8.906215455826432
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0840-Oct-04 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0001365299607129017,
+        0.002143590344826322,
+        0.0007074481887569082
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2028146.0,
+      "origin": "sun",
+      "positionAU": [
+        43.88022657758908,
+        13.81859486915153,
+        -8.905507996353917
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0840-Oct-05 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0001366499872237548,
+        0.00214354383221975,
+        0.0007074707552385374
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 2028218.0,
+      "origin": "sun",
+      "positionAU": [
+        43.87007976323393,
+        13.97280959114961,
+        -8.854511701819211
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0840-Dec-16 12:00:00.0000",
+      "velocityAUPerDay": [
+        -0.000145159826673486,
+        0.002140213875940547,
+        0.0007090970240696859
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 3181544.0,
+      "origin": "sun",
+      "positionAU": [
+        4.282755281334165,
+        -30.11609500945582,
+        -10.71875684978504
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "3998-Sep-02 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.003172089206784132,
+        0.0001643251837415834,
+        -0.0009055335337012552
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 3181545.0,
+      "origin": "sun",
+      "positionAU": [
+        4.28592735487948,
+        -30.11593054932913,
+        -10.71966233523382
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "3998-Sep-03 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.003172057880820599,
+        0.0001645950637795801,
+        -0.0009054373653313305
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 3181546.0,
+      "origin": "sun",
+      "positionAU": [
+        4.289099397090029,
+        -30.11576581934024,
+        -10.72056772451883
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "3998-Sep-04 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.003172026537541009,
+        0.0001648649078527512,
+        -0.0009053412063351398
+      ]
+    },
+    {
+      "body": "pluto-barycenter",
+      "julianDateTDB": 3218069.5,
+      "origin": "sun",
+      "positionAU": [
+        34.51559625764335,
+        35.33365256455065,
+        0.6403809479006743
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "4098-Sep-03 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.001388524565254747,
+        0.00137070087372064,
+        0.0008484839317803566
       ]
     }
   ]

@@ -40,6 +40,9 @@ jobs:
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
 
+      - name: Verify generated Pluto tables
+        run: python3 Scripts/generate-pluto-tables.py --check
+
       - name: Verify independent reference fixtures
         run: |
           python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
@@ -73,6 +76,9 @@ jobs:
 
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
+
+      - name: Verify generated Pluto tables
+        run: python3 Scripts/generate-pluto-tables.py --check
 
       - name: Verify work-avoidance paths
         run: |

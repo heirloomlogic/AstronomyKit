@@ -1,0 +1,35 @@
+{
+  "files": {
+    "Sources/CLibAstronomy/EphemerisData/pluto_barycenter.inc": {
+      "content": "The Pluto system barycenter from the solar system barycenter, from JPL DE440 as plu060.bsp carries it, as Chebyshev coefficients on ICRS axes, 1899-11-02 to 2131-02-19 TDB",
+      "sha256": "64f0737837ce5a36c17ad4b7fa930b97fb6daa0f1fc6f9386b4df5a493dd85b0"
+    },
+    "Sources/CLibAstronomy/EphemerisData/pluto_negative_sun.inc": {
+      "content": "The solar system barycenter from the Sun, the negated DE440 Sun of plu060.bsp, as Chebyshev coefficients on ICRS axes, 1899-11-18 to 2131-02-19 TDB",
+      "sha256": "946a72288ea6a1cedcff12d5d14b5fc65e8d50f796ba2b86429f2a003c7bab3d"
+    },
+    "Sources/CLibAstronomy/EphemerisData/pluto_center_offset.inc": {
+      "content": "Pluto's center from the Pluto system barycenter, from the PLU060 satellite ephemeris, as Chebyshev coefficients on ICRS axes, 1899-11-22 to 2131-02-12 TDB",
+      "sha256": "212cf708f8cb408fce4965564af0d3ae8e7d325cf3c84b92355f874c89d7da07"
+    }
+  },
+  "stateTable": {
+    "path": "Sources/CLibAstronomy/astronomy.c",
+    "content": "Astronomy Engine's heliocentric Pluto states every 29,200 days from 0001 to 3998, the PlutoStateTable of astronomy.c at revision 826e26ff3a6dc03ee46658b1138fef582d96c5d9",
+    "sha256": "c24c44a0f0ff04d2665601518804a0828744a79bf7f7e97ec71fb3773260b3a6"
+  },
+  "published": {
+    "retrieved": "2026-10-07",
+    "note": "Not checked in. --published DIR compares every coefficient with plu060.bsp as NAIF publishes it, and the state table with Astronomy Engine's astronomy.c at the pinned revision.",
+    "files": {
+      "plu060.bsp": {
+        "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp",
+        "sha256": "dfbb102491a26ed41ae08ca3f8963f22f0219df1d8f265ab87b9ad825a826fc6"
+      },
+      "astronomy.c": {
+        "url": "https://raw.githubusercontent.com/cosinekitty/astronomy/826e26ff3a6dc03ee46658b1138fef582d96c5d9/source/c/astronomy.c",
+        "sha256": "3ef243a3ee4c10fc05a5cb460d753e4e17eb2f57dad7892690e12599088717ac"
+      }
+    }
+  }
+}
