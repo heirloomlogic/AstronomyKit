@@ -102759,7 +102759,7 @@
       "aberration": "none (geometric states)",
       "domain": "JPL Horizons (DE441) states every 8 days from 1970-01-01 to 2040-01-01 TDB, all of them; the harness's relative limits cover exactly this domain",
       "frame": "geometric ICRF/J2000 vectors",
-      "license": "Upstream transformation files retain the Astronomy Engine MIT license archived with these fixtures",
+      "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement; the copied files also retain the archived Astronomy Engine MIT license",
       "origin": "Earth center 500@399; the Moon (301) and the Earth-Moon barycenter (3)",
       "recipe": "Pinned GeoMoon.txt and GeoEMB.txt are parsed directly; each carries its own Horizons header, and ctest.c VerifyStateBody supplies the limits",
       "refraction": "not applicable to geometric vectors",

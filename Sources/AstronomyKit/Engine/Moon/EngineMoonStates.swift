@@ -156,7 +156,7 @@ extension Engine.Moon {
         let trueEquator = tilt.nutationRotation.apply(to: equator, rate: tilt.nutationRate)
         let (trueTilt, trueTiltRate) = tiltAndRate(
             by: tilt.trueObliquity, rate: tilt.trueObliquityRate, from: Engine.EQD.self, to: Engine.ECT.self)
-        let state = trueTilt.apply(to: trueEquator, rate: trueTiltRate)
+        let state = try checked(trueTilt.apply(to: trueEquator, rate: trueTiltRate))
         let (x, y, z) = (state.x, state.y, state.z)
         let rho2 = x * x + y * y
         guard rho2 > 0 else { throw AstronomyError.badVector }
@@ -172,8 +172,8 @@ extension Engine.Moon {
             latitudeRate: Engine.degreesPerRadian * (rho * state.vz - z * rhoRate) / (rho2 + z * z),
             distanceRate: distanceRate)
         try checkFinite(
-            state.x, state.y, state.z, state.vx, state.vy, state.vz, result.longitude, result.latitude,
-            result.distance, result.longitudeRate, result.latitudeRate, result.distanceRate)
+            result.longitude, result.latitude, result.distance, result.longitudeRate, result.latitudeRate,
+            result.distanceRate)
         return result
     }
 

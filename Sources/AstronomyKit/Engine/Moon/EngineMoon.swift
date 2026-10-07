@@ -134,7 +134,7 @@ extension Engine.Moon {
     /// [0, 360), and 0 where the vector has no component in the ecliptic
     /// plane.
     ///
-    /// - Throws: As ``geocentricPosition(at:)``.
+    /// - Throws: As ``geocentricPosition(at:cache:)``.
     static func eclipticPosition(
         at time: Engine.Time, cache: Cache = cache
     ) throws -> Engine.Spherical {
