@@ -548,28 +548,48 @@ Tests under `Tests/AstronomyKitTests/Engine/Moon/`:
 |---|---|
 | `MoonCacheTests` | Kept while the C engine ships: it checks the C thread-local lunar cache (local patch 14) through the public API: replayed bits, shared clients, non-finite propagation and threads. `EngineMoonCacheTests` holds the engine's work counts for the same properties. Retired when #96 removes the C engine. |
 | `Scripts/performance/test-moon-cache.sh`, `moon_cache_probe.c` and `moon_output_probe.c` | Kept while the C engine ships, for the same reason, and retired with it. `EngineMoonCacheTests` has the Swift negative control, a cache with no capacity. |
-| `BundledEphemerisTests` | Kept while the C engine ships: it checks the C evaluator, the blend and Pluto's bundled data through the C entry points, and pins legacy Moon and Pluto values. `EngineMoonEphemerisTests` and `EngineMoonTests` check the Swift evaluator, blend and routing, and `EngineMoonStatesTests` the velocities across the blends. Its Horizons check of the public apsis and node searches calls the C entry points, so #96 must move it; #92 ports the searches and does not track that check. Its Pluto cases are recorded under [Pluto](#pluto-and-the-gravity-integrator). Retired when #96 removes the C engine. |
+| `BundledEphemerisTests` | Kept while the C engine ships: it checks the C evaluator, the blend and Pluto's bundled data through the C entry points, and pins legacy Moon and Pluto values. `EngineMoonEphemerisTests` and `EngineMoonTests` check the Swift evaluator, blend and routing, and `EngineMoonStatesTests` the velocities across the blends. Its Horizons check of the public apsis and node searches calls the C entry points, so #96 must move it; #92 ports the searches and does not track that check. Its Pluto cases are recorded under [Pluto](#pluto-and-the-gravity-simulation). Retired when #96 removes the C engine. |
 | `ReproducibilityTests` Moon cases | Kept while the C engine ships, as recorded under [Earth orientation](#earth-orientation): they pin public results, not published values. The lunar model they reach is checked against DE440, Horizons and NASA here. Retired by #96. |
 | `EclipticStateTests` | Kept while the C engine ships: it imports `CLibAstronomy` and calls the C ecliptic-state and rotation entry points directly, and #96 lists it for a disposition. `EngineMoonStatesTests` checks the Swift Moon's ecliptic state. Retired, or moved onto the engine, by #96. |
 | `MoonTests`, `LibrationTests` and the Moon suites of `JPLValidationTests`, `DistanceAccuracyTests` and `AuditValidationTests` | Public-API checks, run on the C engine until #96. `EngineMoonHorizonsTests`, `EngineMoonStatesTests` and `EngineLibrationTests` apply the published ones, at the same tolerances, to the Swift functions. `LibrationTests` and the illumination checks in `MoonTests` are named sanity checks. |
 
-## Pluto and the gravity integrator
+## Pluto and the gravity simulation
 
-In the tree: `Gravity/EngineGravity.swift`, `Gravity/EnginePluto.swift`, `Gravity/EnginePlutoEphemeris.swift` and the generated `Gravity/Generated/PlutoBarycenterCoefficients.swift`, `PlutoSunCoefficients.swift`, `PlutoCenterCoefficients.swift` and `PlutoStateTable.swift`. They port the C engine's `CalcPluto` and the integrator step the gravity simulation shares. The simulation itself (`Astronomy_GravSim*`) and Chiron are still to come in #88.
+In the tree: `Gravity/EngineGravity.swift`, `Gravity/EngineGravitySimulation.swift`, `Gravity/EnginePluto.swift`, `Gravity/EnginePlutoEphemeris.swift` and the generated `Gravity/Generated/PlutoBarycenterCoefficients.swift`, `PlutoSunCoefficients.swift`, `PlutoCenterCoefficients.swift` and `PlutoStateTable.swift`. They port the C engine's `CalcPluto`, the integrator step it shares with the gravity simulation, and the simulation (`Astronomy_GravSimInit`, `Astronomy_GravSimUpdate`, `Astronomy_GravSimSwap`, `Astronomy_GravSimBodyState`, `Astronomy_GravSimTime`, `Astronomy_GravSimNumBodies` and `Astronomy_GravSimFree`). Chiron is still to come in #88.
 
 ```swift
 extension Engine.Gravity {
-    static let sunGM, jupiterGM, saturnGM, uranusGM, neptuneGM: Double   // AU³/day², DE405
+    static let sunGM, mercuryGM, venusGM, earthGM, marsGM, jupiterGM, saturnGM, uranusGM, neptuneGM: Double   // AU³/day², DE405
+    static let seriesCache: Engine.VSOP87B.Cache   // no capacity
     struct BodyState { var position, velocity: SIMD3<Double> }
     struct MajorBodies {               // sun, jupiter, saturn, uranus, neptune, barycentric
         init(tt: Double) throws
         func acceleration(at position: SIMD3<Double>) -> SIMD3<Double>
     }
+    struct SolarSystem {               // sun and planets[Engine.Planet.rawValue], barycentric
+        static let planetGM: [Double]  // Earth's includes the Moon's
+        init(tt: Double) throws
+        func state(of body: CelestialBody) -> BodyState?
+        func acceleration(at position: SIMD3<Double>) -> SIMD3<Double>
+    }
+    static func pull(of gm: Double, at body: SIMD3<Double>, on position: SIMD3<Double>) -> SIMD3<Double>
     struct Step { var tt: Double; var position, velocity, acceleration: SIMD3<Double> }
     static func start(heliocentric position: SIMD3<Double>, velocity: SIMD3<Double>, tt: Double) throws -> (step: Step, bodies: MajorBodies)
     static func start(_ state: Engine.Pluto.TableState) throws -> (step: Step, bodies: MajorBodies)
     static func advance(_ step: Step, to tt: Double) throws -> (step: Step, bodies: MajorBodies)
     static func advance(_ step: Step, to tt: Double, bodies: MajorBodies) -> Step
+    static func advance(_ step: Step, to tt: Double, acceleration: (SIMD3<Double>) -> SIMD3<Double>) -> Step
+}
+extension Engine {
+    final class GravitySimulation {
+        init(origin: CelestialBody, time: Engine.Time, states: [Engine.State<Engine.EQJ>]) throws
+        let origin: CelestialBody
+        let bodyCount: Int
+        var time: Engine.Time { get }
+        func update(to time: Engine.Time) throws -> [Engine.State<Engine.EQJ>]
+        func state(of body: CelestialBody) throws -> Engine.State<Engine.EQJ>
+        func swap()
+    }
 }
 extension Engine.PlutoEphemeris {
     static let barycenter, barycenterFromSun, center: Engine.ChebyshevTable
@@ -586,7 +606,10 @@ extension Engine.Pluto {
 }
 ```
 
-- `Engine.Gravity` is the C engine's integrator for a body of negligible mass. `MajorBodies(tt:)` is `MajorBodyBary`: Jupiter to Neptune from `Engine.Planet.heliocentricState`, the barycenter offset from the Sun by Σ GM/(GM + GM☉) times each planet's position and velocity, summed from Jupiter to Neptune, and the Sun at minus that offset. `acceleration(at:)` is `SmallBodyAcceleration`: GM·d/|d|³ from the Sun to Neptune. `start` is `GravFromState`, and `advance` is `GravSim`, given the major bodies at the new time or finding them: a trial position under the old acceleration, then the position and velocity under the mean of the old acceleration and the one at the trial position. A step's error is third order in its length. The GM values are DE405's (Standish 1998, JPL IOM 312.F-98-048): the Sun's is k² with the Gaussian constant, and each planet's is the Sun's over DE405's mass ratio. They stay in `Gravity/` until a second module needs them.
+- `Engine.Gravity` is the C engine's integrator for a body of negligible mass. `MajorBodies(tt:)` is `MajorBodyBary`: Jupiter to Neptune from `Engine.Planet.heliocentricState`, the barycenter offset from the Sun by Σ GM/(GM + GM☉) times each planet's position and velocity, summed from Jupiter to Neptune, and the Sun at minus that offset. `acceleration(at:)` is `SmallBodyAcceleration`: GM·d/|d|³ from the Sun to Neptune. `start` is `GravFromState`, and `advance` is `GravSim`, given the major bodies at the new time or finding them: a trial position under the old acceleration, then the position and velocity under the mean of the old acceleration and the one at the trial position. A step's error is third order in its length. The GM values are DE405's (Standish 1998, JPL IOM 312.F-98-048): the Sun's is k² with the Gaussian constant, and each planet's is the Sun's over DE405's mass ratio. They stay in `Gravity/` until a second module needs them. Both `MajorBodies` and `SolarSystem` read the planets through `seriesCache`, which stores nothing: a step's planets are at a new TT almost every time, and storing them would only push other callers' entries out of the shared VSOP87B cache. The C engine reads them through its thread-local cache.
+- `SolarSystem(tt:)` is `CalcSolarSystem`: the same construction with all eight planets, Mercury first, and Earth pulling with Earth's GM plus the Moon's, Earth's over `Engine.Moon.earthMoonMassRatio`. Its `acceleration(at:)` is `CalcBodyAccelerations`, from the Sun outward. `state(of:)` gives the Sun, a planet, or zero for the barycenter, and `nil` for any other body.
+- `Engine.GravitySimulation` holds two moments, current and previous, each a time, a `SolarSystem` and the small bodies' `Step`s. The initializer checks, in the C engine's order: an origin outside Mercury through the barycenter in `CelestialBody`'s numbering (`invalidBody`), the time against `Engine.acceptedTTDays` (`badTime`), each state's TT against the time's, compared exactly (`inconsistentTimes`), and then whether the solar system models the origin: Pluto, the Moon and the Earth-Moon barycenter pass the first check and throw `invalidBody` here. States are moved from the origin to the barycenter, and both moments start equal. `update(to:)` checks the time first, as the C engine does, and stores nothing until the new moment is complete, so a rejected update changes nothing. At the current TT it integrates nothing: the previous moment becomes a copy of the current one, which keeps its own time, as `GravSimDuplicate` does. Otherwise the current moment becomes the previous one and each body takes one `advance` step under the new `SolarSystem`. It returns the bodies relative to the origin, with the caller's time. `state(of:)` gives the Sun or a planet relative to the origin at the current moment's time, and throws `invalidBody` for anything else, the barycenter included, as `Astronomy_GravSimBodyState` does. `swap()` exchanges the moments. The object owns its storage; there is no free call. Like the C engine, an update that produces a non-finite state does not throw.
+- One `NSLock` guards the moments. An update reads them under the lock, computes outside it, and stores its result only if no swap or other update came in between; otherwise it starts again from the newer moments. So concurrent calls take effect one at a time, no lock is held while the planets are computed, and an update that throws stores nothing. At 302 updates with two bodies, a swap and a repeated time, from four origins, the results equal the C simulation's bit for bit.
 - `Engine.PlutoEphemeris` holds three tables of `plu060.bsp` as NAIF publishes it (3 April 2024), each in km converted to AU on ICRS axes: the Pluto system barycenter from the solar system barycenter (DE440, 32-day records of 6 coefficients), the solar system barycenter from the Sun (DE440's Sun negated, 16 days, 11 coefficients), and Pluto's center from the Pluto system barycenter (PLU060, 3 days, 16 coefficients). `heliocentricState(tt:)` is `Astronomy_BundledPluto`'s sum: each table read at TDB = TT + `Engine.TDB.offsetSeconds(tt:)`, its velocity scaled by `Engine.TDB.rate(tt:)`, each rotated by `Engine.FrameBias.icrsToEqj`, and the three added in that order. It returns `nil` where a table has no record or for a TT that is not finite. The records start between 1899-11-02 and 1899-11-22 TDB and end between 2131-02-12 and 2131-02-19, past both blends.
 - `Scripts/generate-pluto-tables.py` writes the tables from `pluto_barycenter.inc`, `pluto_negative_sun.inc` and `pluto_center_offset.inc`, whose SHA-256 hashes `Scripts/pluto-data/manifest.json` pins, and `PlutoStateTable.swift` from the `PlutoStateTable` block of `astronomy.c`, whose own SHA-256 the manifest pins so local patches elsewhere in the file do not touch it. `--check` runs in CI on macOS and Linux. `--published DIR` reads `plu060.bsp` (URL and SHA-256 in the manifest), joins PLU060's two segments for Pluto's center at 2013, and checks all 1,572,975 coefficients bit for bit; it also checks the state table against Astronomy Engine's `astronomy.c` at revision 826e26ff. Decoded, the tables take 12.6 MB for the life of the process. The `.inc` files stay where the C engine reads them until #96 moves them to `Scripts/pluto-data`.
 - `Engine.Pluto` is `CalcPluto`. Where `Engine.MoonEphemeris.weight(tt:)` is 1, from 1900-01-01 00:00 TT to 2131-01-01 00:00 TT, the heliocentric state is `PlutoEphemeris`'s, bit for bit; the barycentric one adds the Sun's barycentric state from `MajorBodies`. Where the weight is 0, it is the integrated model's. In the 32-day blends the position is model + w·(DE440 − model) and the velocity is model + w·(DE440 − model) + w′·(DE440 position − model position), the C engine's arithmetic.
@@ -600,14 +623,17 @@ extension Engine.Pluto {
 
 ### Differences from the C engine
 
-- None in the arithmetic. At the 44 Horizons epochs below, the heliocentric and barycentric positions are within 2e-15 AU of the C engine's and the velocities within 5e-19 AU per day; 59 of the 88 states are the same bits.
+- The operations follow the C engine's, in its order, but the results are not all the same bits. At Pluto's 44 Horizons epochs below, the heliocentric and barycentric positions are within 2e-15 AU of the C engine's and the velocities within 5e-19 AU per day; 59 of the 88 states match to the bit, and the other 29 differ in the last bits.
+- The simulation and Pluto's model read the planets through no cache (see above), and concurrent updates are linearized without holding a lock during the computation. Neither changes a result.
 
 ### Published-value checks
 
 Tests under `Tests/AstronomyKitTests/Engine/Gravity/`:
 
 - The tables against `plu060.bsp` coefficient for coefficient, through the generator's `--published` mode, which needs the kernel and does not run in CI. The tests check each table's shape and dates, that the records cover both blends with TDB − TT at its largest, Clenshaw's recurrence against the Chebyshev sums and their derivatives, and that adjacent records meet within 1e-13 AU and 1e-15 AU per day.
-- The GM values against k² and DE405's mass ratios; the acceleration against Newton's law; the third-order local error of a step.
+- The GM values against k² and DE405's mass ratios, Earth's with the Moon's against DE405's Earth-Moon ratio; the accelerations against Newton's law; the third-order local error of a step; the major bodies and the solar system against the planet functions.
+- The simulation against Horizons states of the Pluto system barycenter on 1990, 2000, 2001 and 2010-01-01 (`Scripts/reference-data/sources/horizons/pluto-barycenter-decade.json`): from the 2000 state, one-day steps forward and backward land within 10,000 km, 0.5″ and 5e-6 of the speed (measured: 2,700 km, 0.12″ and 1.5e-6 after ten years; 4- and 16-day steps land as close, so the gap is the force model's).
+- The simulation's behavior: both moments at the start, no bodies, unsupported origins and the order of errors, bodies independent of each other, origins that only shift the states, the gap after stepping out and back shrinking as the square of the step, a repeated TT, the caller's time and model, swaps after an update and before any, the light-time pattern of trial and swap, rejected updates leaving every bit of both moments unchanged, the bodies' states relative to the origin, and simultaneous updates to one time stepping once with the serial result.
 - The `JPLValidationTests` geocentric (1′) and Asheville (1.5′) Pluto suites as astrometric directions through `Engine.LightTravel` and `Engine.Observers`; the `pluto-observer` rows of 1900, 2000 and 2100 in J2000 and true ecliptic of date coordinates within 1.5′; and the 268 Pluto records of `distance-fixtures.json` within their allowances.
 - Horizons vectors of Pluto's center at 29 dates from 1840 to 2159 (`Scripts/reference-data/sources/horizons/pluto-vector.json`): through both blends, across DE440 and PLU060 record seams, and across the model's segment seams on 1840-02-09 and 2159-11-23 and a step seam in 1880, with samples a day apart. The 9 in the DE440 span are within 1 km and 1e-8 of the speed (measured: 0.005″, under 0.05 km and 4e-10); the other 20 are within 1′ (16.6″ at most, in 2159).
 - Horizons vectors of the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE (`pluto-barycenter-vector.json`), where Horizons has no Pluto center: the first and last tabulated states with a day either side, a segment seam in 800 and a step seam in 840, and both ends of the extrapolation. All 15 miss 1′ and are recorded as known issues of #190.
@@ -615,13 +641,14 @@ Tests under `Tests/AstronomyKitTests/Engine/Gravity/`:
 - Routing, blend arithmetic and continuity at the blend ends, segment and step seams, the step past the last state, both crawl limits, NaN and infinite times.
 - Cache work counts with private registries: one integration per segment, reuse within it, no lookups in the DE440 span or the extrapolation, eviction, a registry reset, a cache with no capacity, and simultaneous callers, with resets in progress, getting the serial bits and staying within 1′ of the Horizons vectors in segments 24 and 25.
 
-### Pluto tests that depend on the C engine
+### Pluto and simulation tests that depend on the C engine
 
 | Test | Disposition |
 |---|---|
 | `BundledEphemerisTests` Pluto cases | Kept while the C engine ships: they call `CLibAstronomy` for the C evaluator, the blend weight, velocities at the seams, concurrent first calls, and pin legacy Pluto values captured from the C engine. `EnginePlutoEphemerisTests` and `EnginePlutoTests` check the Swift evaluator, weight routing and velocities, and `EnginePlutoCacheTests` concurrent calls. The pinned legacy values are not published values; the Horizons vectors above replace them as evidence. Retired when #96 removes the C engine. |
 | `ReproducibilityTests` Pluto rows | Kept while the C engine ships, as recorded under [Earth orientation](#earth-orientation): they pin public results, not published values. The Pluto model they reach is checked against Horizons here. Retired by #96. |
 | `PlutoRangeTests`, `PlutoThreadSafetyTests` | Public-API checks that run on the C engine until #96: the crawl limits and NaN guard, and concurrent calls with `AstronomyConfig.reset()` against seven longitudes the file attributes to the Swiss Ephemeris. `EnginePlutoTests` and `EnginePlutoCacheTests` check the same properties of the Swift functions against Horizons. |
+| `GravitySimulationTests` | Public-API checks that run on the C engine until #96: construction, updates, swaps and errors, with named sanity bounds, not published values. `EngineGravitySimulationTests` checks the Swift simulation against Horizons and the C engine's behavior. Moves onto the engine when #96 switches the public `GravitySimulation` over. |
 | The Pluto suites of `JPLValidationTests`, `DistanceAccuracyTests` and `AuditValidationTests` | Published-value checks of the public API, which runs on the C engine until #96. `EnginePlutoHorizonsTests` applies the same references and allowances to the Swift functions and composes the geocentric vector itself; when #89 adds the engine's geocentric functions, the check moves onto them. |
 
 ## Caches and reset
@@ -644,7 +671,7 @@ In the tree: `EngineCache.swift`.
 | Moon longitude, latitude, distance | #87 | `Engine.Moon.cache`: `BoundedCache`, 32 entries, `ExactKey` of TT in Julian centuries, shared by positions and states | Thread-local, 32 entries (local patch 14) |
 | Pluto segments | #88 | `Engine.Pluto.cache`: `BoundedCache` of 50 entries, one per segment, keyed by segment index | Allocated segments behind a mutex, freed by `Astronomy_Reset` (local patch 1) |
 | Delta T default | #96 | `Atomic` in the public layer | `_Atomic` function pointer (local patch 2) |
-| Gravity simulation | #88 | Owned by each `GravitySimulation`, with its own lock | Caller-owned handle |
+| Gravity simulation | #88 | `Engine.GravitySimulation`: two moments behind its own `NSLock`, updated optimistically | Caller-owned handle |
 | Fixed star definitions | #91 | Passed by value | Eight shared slots |
 | Constellation B1875 rotation | #91 | `static let` | `pthread_once` (local patch 4) |
 

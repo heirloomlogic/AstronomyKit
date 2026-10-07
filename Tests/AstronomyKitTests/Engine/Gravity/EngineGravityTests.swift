@@ -33,6 +33,69 @@ struct EngineGravityTests {
         }
     }
 
+    /// DE405 gives Earth and the Earth-Moon system separately; the
+    /// simulation pulls with the system, Earth's GM times 1 + 1/81.30056.
+    @Test("The inner planets' GM against DE405's mass ratios, Earth's with the Moon's")
+    func innerMasses() {
+        for (gm, ratio) in [
+            (Gravity.mercuryGM, 6_023_600.0), (Gravity.venusGM, 408_523.71),
+            (Gravity.SolarSystem.planetGM[2], 328_900.5614), (Gravity.marsGM, 3_098_708),
+        ] {
+            #expect(abs(Gravity.sunGM / gm / ratio - 1) <= 1e-10, "ratio \(ratio)")
+        }
+        for (planet, gm) in [
+            (Engine.Planet.mercury, Gravity.mercuryGM), (.venus, Gravity.venusGM), (.mars, Gravity.marsGM),
+            (.jupiter, Gravity.jupiterGM), (.saturn, Gravity.saturnGM), (.uranus, Gravity.uranusGM),
+            (.neptune, Gravity.neptuneGM),
+        ] {
+            #expect(Gravity.SolarSystem.planetGM[planet.rawValue] == gm, "\(planet)")
+        }
+    }
+
+    @Test("The solar system: the Sun opposes all eight planets' offset, and each planet keeps its heliocentric state")
+    func solarSystem() throws {
+        for tt in [0.0, -400_000.25] {
+            let system = try Gravity.SolarSystem(tt: tt)
+            let time = PlanetTestSupport.time(tt: tt)
+            var offset = SIMD3<Double>.zero
+            for planet in Engine.Planet.allCases {
+                let state = try planet.heliocentricState(at: time)
+                let position = SIMD3(state.x, state.y, state.z)
+                let celestial = try #require(CelestialBody(rawValue: Int32(planet.rawValue)))
+                let body = try #require(system.state(of: celestial))
+                #expect(Self.length(body.position - system.sun.position - position) <= 1e-14, "\(planet) at \(tt)")
+                let gm = Gravity.SolarSystem.planetGM[planet.rawValue]
+                offset += gm / (gm + Gravity.sunGM) * position
+            }
+            #expect(Self.length(system.sun.position + offset) <= 1e-17)
+            let barycenter = try #require(system.state(of: .solarSystemBarycenter))
+            #expect(barycenter.position == .zero && barycenter.velocity == .zero)
+            #expect(system.state(of: .sun)?.position == system.sun.position)
+            for body in [CelestialBody.pluto, .moon, .earthMoonBarycenter, .io] {
+                #expect(system.state(of: body) == nil)
+            }
+            // The pull of all nine bodies, from the Sun outward.
+            let at = SIMD3(3.0, -4, 1)
+            var expected = SIMD3<Double>.zero
+            for (gm, body) in zip([Gravity.sunGM] + Gravity.SolarSystem.planetGM, [system.sun] + system.planets) {
+                let d = body.position - at
+                expected += gm * d / pow(Self.length(d), 3)
+            }
+            #expect(Self.length(system.acceleration(at: at) - expected) <= 1e-15 * Self.length(expected))
+        }
+    }
+
+    @Test("The integrator reads the planets without storing them")
+    func seriesCache() throws {
+        let stores = Gravity.seriesCache.coordinates + Gravity.seriesCache.derivatives
+        #expect(stores.allSatisfy { $0.capacity == 0 })
+        let jupiter = Gravity.seriesCache.coordinates[Engine.Planet.jupiter.rawValue]
+        let before = jupiter.statistics.misses
+        _ = try Gravity.MajorBodies(tt: -400_000.25)
+        #expect(jupiter.statistics.misses > before)
+        #expect(stores.allSatisfy { $0.count == 0 })
+    }
+
     @Test(
         "The major bodies: the Sun opposes the planets' mass-weighted offset, and each planet keeps its heliocentric state"
     )

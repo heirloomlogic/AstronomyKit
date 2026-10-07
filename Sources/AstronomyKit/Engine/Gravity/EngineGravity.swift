@@ -2,33 +2,46 @@
 //  EngineGravity.swift
 //  AstronomyKit
 //
-//  Newtonian motion of a small body under the Sun and the giant planets:
-//  the integrator step that Pluto's legacy model and the gravity simulation
-//  share.
+//  Newtonian motion of a small body under the Sun and the planets: the
+//  masses, the planets' barycentric states and the integrator step that
+//  Pluto's model and the gravity simulation share.
 //
 
 import Foundation
 
 extension Engine {
-    /// The pull of the Sun and the giant planets on a body of negligible mass,
-    /// and one step of the C engine's integrator.
+    /// The pull of the Sun and the planets on a body of negligible mass, and
+    /// one step of the C engine's integrator.
     ///
     /// Positions and velocities are relative to the solar system barycenter
     /// on EQJ axes, in AU and AU per TT day; accelerations are in AU per TT
-    /// day². The barycenter is the one the Sun and Jupiter to Neptune define
-    /// with the VSOP87B planets and the masses below.
+    /// day². The barycenter is the one the Sun and the planets in use define
+    /// with the VSOP87B planets and the masses below: Jupiter to Neptune for
+    /// Pluto's model (``MajorBodies``), all eight for the simulation
+    /// (``SolarSystem``).
     enum Gravity {}
 }
 
 extension Engine.Gravity {
-    // GM of the Sun and the giant planets in AU³/day², from the constants of
-    // JPL DE405 (Standish 1998, JPL IOM 312.F-98-048). The Sun's is k², with
-    // k the Gaussian gravitational constant 0.01720209895.
+    // GM of the Sun and the planets in AU³/day², from the constants of JPL
+    // DE405 (Standish 1998, JPL IOM 312.F-98-048). The Sun's is k², with k
+    // the Gaussian gravitational constant 0.01720209895. Earth's is Earth's
+    // alone; the simulation adds the Moon's, Earth's over
+    // ``Engine/Moon/earthMoonMassRatio``.
     static let sunGM = 0.2959122082855911e-03
+    static let mercuryGM = 0.4912547451450812e-10
+    static let venusGM = 0.7243452486162703e-09
+    static let earthGM = 0.8887692390113509e-09
+    static let marsGM = 0.9549535105779258e-10
     static let jupiterGM = 0.2825345909524226e-06
     static let saturnGM = 0.8459715185680659e-07
     static let uranusGM = 0.1292024916781969e-07
     static let neptuneGM = 0.1524358900784276e-07
+
+    /// The VSOP87B cache the integrator reads the planets through: none. A
+    /// step's planets are at a new TT almost every time, so storing them
+    /// would only push out the shared cache's entries.
+    static let seriesCache = Engine.VSOP87B.Cache(capacity: 0, registry: Engine.CacheRegistry())
 
     /// A barycentric position and velocity.
     struct BodyState: Sendable {
@@ -39,6 +52,11 @@ extension Engine.Gravity {
     /// The Sun and Jupiter to Neptune relative to the solar system
     /// barycenter at one TT, the C engine's `MajorBodyBary`.
     struct MajorBodies: Sendable {
+        /// Jupiter to Neptune with their GM, in the order they are added.
+        static let planets: [(Engine.Planet, Double)] = [
+            (.jupiter, jupiterGM), (.saturn, saturnGM), (.uranus, uranusGM), (.neptune, neptuneGM),
+        ]
+
         var sun: BodyState
         var jupiter: BodyState
         var saturn: BodyState
@@ -56,30 +74,9 @@ extension Engine.Gravity {
         /// - Throws: As the planet functions do: `AstronomyError.badTime`
         ///   for |TT| above ``Engine/acceptedTTDays`` or not finite.
         init(tt: Double) throws {
-            // The planet functions read only the TT of their time.
-            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-            var offset = BodyState(position: .zero, velocity: .zero)
-            func heliocentric(_ planet: Engine.Planet, gm: Double) throws -> BodyState {
-                let state = try planet.heliocentricState(at: time)
-                let position = SIMD3(state.x, state.y, state.z)
-                let velocity = SIMD3(state.vx, state.vy, state.vz)
-                let shift = gm / (gm + sunGM)
-                offset.position += shift * position
-                offset.velocity += shift * velocity
-                return BodyState(position: position, velocity: velocity)
-            }
-            let jupiter = try heliocentric(.jupiter, gm: jupiterGM)
-            let saturn = try heliocentric(.saturn, gm: saturnGM)
-            let uranus = try heliocentric(.uranus, gm: uranusGM)
-            let neptune = try heliocentric(.neptune, gm: neptuneGM)
-            func barycentric(_ body: BodyState) -> BodyState {
-                BodyState(position: body.position - offset.position, velocity: body.velocity - offset.velocity)
-            }
-            self.jupiter = barycentric(jupiter)
-            self.saturn = barycentric(saturn)
-            self.uranus = barycentric(uranus)
-            self.neptune = barycentric(neptune)
-            sun = BodyState(position: -offset.position, velocity: -offset.velocity)
+            let (sun, planets) = try barycentricStates(Self.planets, tt: tt)
+            self.sun = sun
+            (jupiter, saturn, uranus, neptune) = (planets[0], planets[1], planets[2], planets[3])
         }
 
         /// The acceleration of a body of negligible mass at barycentric
@@ -87,18 +84,96 @@ extension Engine.Gravity {
         /// the small body to it, added from the Sun to Neptune.
         func acceleration(at position: SIMD3<Double>) -> SIMD3<Double> {
             var acceleration = SIMD3<Double>.zero
-            func pull(_ gm: Double, _ body: BodyState) {
-                let d = body.position - position
-                let r2 = d.x * d.x + d.y * d.y + d.z * d.z
-                acceleration += d * (gm / (r2 * r2.squareRoot()))
-            }
-            pull(sunGM, sun)
-            pull(jupiterGM, jupiter)
-            pull(saturnGM, saturn)
-            pull(uranusGM, uranus)
-            pull(neptuneGM, neptune)
+            acceleration += pull(of: sunGM, at: sun.position, on: position)
+            acceleration += pull(of: jupiterGM, at: jupiter.position, on: position)
+            acceleration += pull(of: saturnGM, at: saturn.position, on: position)
+            acceleration += pull(of: uranusGM, at: uranus.position, on: position)
+            acceleration += pull(of: neptuneGM, at: neptune.position, on: position)
             return acceleration
         }
+    }
+
+    /// The Sun and the eight planets relative to the solar system barycenter
+    /// at one TT, the C engine's `CalcSolarSystem`, which the simulation
+    /// reads.
+    struct SolarSystem: Sendable {
+        var sun: BodyState
+        /// Mercury to Neptune, indexed by ``Engine/Planet/rawValue``.
+        var planets: [BodyState]
+
+        /// The GM each planet pulls with, in table order. Earth's includes
+        /// the Moon's.
+        static let planetGM = [
+            mercuryGM, venusGM, earthGM + earthGM / Engine.Moon.earthMoonMassRatio, marsGM, jupiterGM, saturnGM,
+            uranusGM, neptuneGM,
+        ]
+
+        /// The planets with their GM, Mercury first.
+        static let planetsWithGM = Array(zip(Engine.Planet.allCases, planetGM))
+
+        /// The bodies at `tt` days of TT from J2000, built as
+        /// ``MajorBodies`` builds its own, from Mercury to Neptune.
+        ///
+        /// - Throws: As ``MajorBodies/init(tt:)``.
+        init(tt: Double) throws {
+            (sun, planets) = try barycentricStates(Self.planetsWithGM, tt: tt)
+        }
+
+        /// The barycentric state of `body`: the Sun, a planet, or the
+        /// barycenter itself, which is zero. `nil` for any other body.
+        func state(of body: CelestialBody) -> BodyState? {
+            if body == .solarSystemBarycenter { return BodyState(position: .zero, velocity: .zero) }
+            if body == .sun { return sun }
+            return Engine.Planet(body).map { planets[$0.rawValue] }
+        }
+
+        /// The acceleration of a body of negligible mass at barycentric
+        /// `position`: GM·d/|d|³ from the Sun, then Mercury to Neptune, the
+        /// C engine's `CalcBodyAccelerations`.
+        func acceleration(at position: SIMD3<Double>) -> SIMD3<Double> {
+            var acceleration = SIMD3<Double>.zero
+            acceleration += pull(of: sunGM, at: sun.position, on: position)
+            for (planet, gm) in zip(planets, Self.planetGM) {
+                acceleration += pull(of: gm, at: planet.position, on: position)
+            }
+            return acceleration
+        }
+    }
+
+    /// GM·d/|d|³, the C engine's `AddAcceleration` term for one body at
+    /// `body`, with `d` from `position` to it.
+    static func pull(of gm: Double, at body: SIMD3<Double>, on position: SIMD3<Double>) -> SIMD3<Double> {
+        let d = body - position
+        let r2 = d.x * d.x + d.y * d.y + d.z * d.z
+        return d * (gm / (r2 * r2.squareRoot()))
+    }
+
+    /// The Sun's barycentric state and the planets' at `tt`, the C engine's
+    /// `AdjustBarycenterPosVel` loop: each planet's heliocentric state from
+    /// ``Engine/Planet/heliocentricState(at:cache:)``, the barycenter offset
+    /// from the Sun by Σ GM/(GM + GM☉) times each position and velocity, in
+    /// the order given, then every planet moved to the barycenter and the
+    /// Sun put at minus the offset.
+    private static func barycentricStates(
+        _ planets: [(Engine.Planet, Double)], tt: Double
+    ) throws -> (sun: BodyState, planets: [BodyState]) {
+        // The planet functions read only the TT of their time.
+        let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+        var offset = BodyState(position: .zero, velocity: .zero)
+        var heliocentric: [BodyState] = []
+        heliocentric.reserveCapacity(planets.count)
+        for (planet, gm) in planets {
+            let state = try planet.heliocentricState(at: time, cache: seriesCache)
+            let (position, velocity) = (state.positionVector, state.velocityVector)
+            let shift = gm / (gm + sunGM)
+            offset.position += shift * position
+            offset.velocity += shift * velocity
+            heliocentric.append(BodyState(position: position, velocity: velocity))
+        }
+        let barycentric = heliocentric.map {
+            BodyState(position: $0.position - offset.position, velocity: $0.velocity - offset.velocity)
+        }
+        return (BodyState(position: -offset.position, velocity: -offset.velocity), barycentric)
     }
 
     /// A small body's barycentric position, velocity and acceleration at a
@@ -134,18 +209,25 @@ extension Engine.Gravity {
     }
 
     /// One step from `step` to `tt` with `bodies`, the major bodies at `tt`.
+    static func advance(_ step: Step, to tt: Double, bodies: MajorBodies) -> Step {
+        advance(step, to: tt, acceleration: bodies.acceleration(at:))
+    }
+
+    /// One step from `step` to `tt` under `acceleration`, the field at `tt`.
     ///
     /// A trial position carries `step`'s acceleration across the interval;
     /// the mean of that acceleration and the one at the trial position then
     /// gives the new position and velocity, and the acceleration there.
-    static func advance(_ step: Step, to tt: Double, bodies: MajorBodies) -> Step {
+    static func advance(
+        _ step: Step, to tt: Double, acceleration: (SIMD3<Double>) -> SIMD3<Double>
+    ) -> Step {
         let dt = tt - step.tt
         let trial = position(after: dt, from: step.position, velocity: step.velocity, acceleration: step.acceleration)
-        let mean = (bodies.acceleration(at: trial) + step.acceleration) / 2
+        let mean = (step.acceleration + acceleration(trial)) / 2
         let position = position(after: dt, from: step.position, velocity: step.velocity, acceleration: mean)
         return Step(
             tt: tt, position: position, velocity: velocity(after: dt, from: step.velocity, acceleration: mean),
-            acceleration: bodies.acceleration(at: position))
+            acceleration: acceleration(position))
     }
 
     /// `r + (v + a·dt/2)·dt`, the C engine's `UpdatePosition`.
