@@ -522,10 +522,10 @@
     },
     "jplVectors": {
       "aberration": "none (VEC_CORR=NONE)",
-      "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0",
+      "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01",
       "frame": "geometric ICRF/J2000 vectors",
       "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
-      "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons",
+      "origin": "Sun center 500@10 for Chiron; Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon",
       "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256",
       "refraction": "not applicable to geometric vectors",
       "serviceVersion": "recorded in every archived response",
@@ -54170,6 +54170,546 @@
         0.004707075390089204,
         9.240865373960726e-05,
         0.0001137793282640469
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 990546.0,
+      "origin": "earth",
+      "positionAU": [
+        -0.002180594275442842,
+        -0.001461904512704398,
+        -0.0004037652111556537
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 2002-Dec-20 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.0002986918756889022,
+        -0.0004505328274378274,
+        -0.0001753180125154003
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 990910.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002311509289056193,
+        -0.001251141581745503,
+        -0.0006486932687400477
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 2001-Dec-19 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0002818678042457468,
+        0.0004624756248419671,
+        0.0001520697900949911
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 1173170.5,
+      "origin": "earth",
+      "positionAU": [
+        0.001116078165278073,
+        -0.002029270231328,
+        -0.0006793890096446567
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 1502-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0005639769539025427,
+        0.0002633958918022943,
+        9.8765612677122e-05
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 1355795.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002349961103889719,
+        0.0008235721551667734,
+        0.0004912380439602509
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 1002-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0002496054932872668,
+        0.0005116088124715428,
+        0.0001754766002876554
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 1538420.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001287046467057682,
+        0.002199303258886512,
+        0.0008627529538141877
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 0502-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0004886547518517283,
+        -0.000240774346090246,
+        -0.000157610965067473
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 1721045.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.002034982654453118,
+        -0.001472646702590435,
+        -0.000912684391984014
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "B.C. 0002-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0003450544139927345,
+        -0.0004068405147820759,
+        -0.0001861478094076255
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 1903670.5,
+      "origin": "earth",
+      "positionAU": [
+        0.001612769431724077,
+        -0.001591169917971762,
+        -0.0008619335006641075
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0499-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0004860443185539239,
+        0.0003466747855030224,
+        0.0001921142129335984
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2086295.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002088162359272462,
+        0.001264645194708938,
+        0.0005163838554793741
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "0999-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0003595907104734241,
+        0.0004231621281821964,
+        0.0002428491463245239
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2268920.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001655300018896338,
+        0.001861003500445101,
+        0.0009970198002372502
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1499-Dec-20 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0004338002826471399,
+        -0.0003484745751485454,
+        -0.0001123027786268716
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2341970.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002471771040049318,
+        0.0007671857805394634,
+        0.0002184792009848165
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1699-Dec-30 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0002149667007775012,
+        0.0005117213232437119,
+        0.0001741683904300128
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2378495.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002402025756157357,
+        -0.0007896144614895561,
+        -0.0005557620030713082
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1799-Dec-31 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.000250915327615288,
+        0.0004751201893928107,
+        0.0002324214841023403
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2396758.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001754382415202724,
+        0.001542252983487386,
+        0.0006274742208668307
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1850-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0004513300216451119,
+        -0.0004187212307813377,
+        -0.0001217058831038856
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2414980.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001125798243158948,
+        0.002265058626088246,
+        0.000836149446845654
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Nov-22 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0005223737466586833,
+        -0.0001842523925657078,
+        -0.0001286537796993619
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2414996.5,
+      "origin": "earth",
+      "positionAU": [
+        0.001943868126745573,
+        -0.001457543906970339,
+        -0.0004163098425766065
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-08 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0003762144711344131,
+        0.0004332187908909479,
+        0.0002184278154630841
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2415004.5,
+      "origin": "earth",
+      "positionAU": [
+        0.0007722858113795674,
+        0.00224649103648477,
+        0.001015728108280693
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-16 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0005534262608621906,
+        0.0002033778988044792,
+        3.009954228514088e-05
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2415012.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.002654924733820907,
+        0.0004992515811726382,
+        -5.418105401309879e-05
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-24 00:00:00.0000",
+      "velocityAUPerDay": [
+        -8.17587578035055e-05,
+        -0.0005066428916539734,
+        -0.0002197979081647877
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2415019.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.000447355154200343,
+        -0.002246164644119206,
+        -0.0009832010388755644
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1899-Dec-31 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0006034846706973229,
+        -9.252876399853965e-05,
+        2.089198080068915e-05
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2415021.5,
+      "origin": "earth",
+      "positionAU": [
+        0.0007648447100901416,
+        -0.002164346981539527,
+        -0.0008294774420117109
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1900-Jan-02 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0005840358509439496,
+        0.0001755042012228814,
+        0.0001308788161318039
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2499390.5,
+      "origin": "earth",
+      "positionAU": [
+        0.0005714426856984874,
+        -0.00228860534036624,
+        -0.0009644829148241429
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2130-Dec-31 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0005750033660007826,
+        0.0001659297543050299,
+        1.204333768837405e-05
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2499392.5,
+      "origin": "earth",
+      "positionAU": [
+        0.001617076762746507,
+        -0.001723064853538597,
+        -0.0008376805784957558
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Jan-02 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0004500023559736565,
+        0.0003909722396810192,
+        0.0001132645482386885
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2499407.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.002407332854945314,
+        0.0009545362457685497,
+        0.000606174236771477
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Jan-17 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0002587024179773516,
+        -0.0004809525656775468,
+        -0.000167046610581429
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2499422.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002388759532879562,
+        -0.0003785798387776683,
+        -0.000373927843288621
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Feb-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0001223639304477696,
+        0.000568827132001592,
+        0.0002151414231652658
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2499430.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.0004456608085193639,
+        0.002336687611829574,
+        0.0009726631734682248
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2131-Feb-09 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0005837990257053468,
+        -9.43112115079908e-05,
+        1.679072325483359e-05
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2524595.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001251206244357164,
+        0.002295255586380439,
+        0.0007364200905940669
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2200-Jan-03 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0004980819805322797,
+        -0.0002340610529966748,
+        -0.000108554196816362
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2634170.5,
+      "origin": "earth",
+      "positionAU": [
+        0.002001012756208497,
+        -0.001364060991343647,
+        -0.0004998299572168354
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2500-Jan-05 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0003914446231363137,
+        0.0004506162395078905,
+        0.0001417496092146504
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 2816795.5,
+      "origin": "earth",
+      "positionAU": [
+        0.001745046707033411,
+        0.001583579977516524,
+        0.0006284814545269747
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "3000-Jan-09 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0004550369798816793,
+        0.0004064800050105149,
+        0.0001176800240046482
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 3182045.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001507060219201551,
+        -0.001984970103224446,
+        -0.001076235928684391
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "4000-Jan-17 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.0004607268064541657,
+        -0.0003020176397971386,
+        -0.0001005672407489344
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 3547295.5,
+      "origin": "earth",
+      "positionAU": [
+        0.001348142053322159,
+        0.001775731155668899,
+        0.0008818011285105046
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "5000-Jan-24 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0005307114009857936,
+        0.0002966929402766251,
+        0.0001772599584183173
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 3912180.5,
+      "origin": "earth",
+      "positionAU": [
+        -0.001220626565060151,
+        0.002100558666321988,
+        0.0008652596024658774
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "5999-Feb-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        -0.0005332002981495535,
+        -0.0002458639768848967,
+        -4.638898156062156e-05
+      ]
+    },
+    {
+      "body": "moon",
+      "julianDateTDB": 3912544.0,
+      "origin": "earth",
+      "positionAU": [
+        -0.001974721472227807,
+        -0.001791540955887273,
+        -0.0005174446906523833
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "6000-Jan-30 12:00:00.0000",
+      "velocityAUPerDay": [
+        0.0003803175919288461,
+        -0.0003681532082637702,
+        -0.0001823316167748803
       ]
     }
   ]

@@ -55,7 +55,11 @@ Scripts/orientation-data. The complementary terms of the equation of the
 equinoxes in
 Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift
 are generated from eect00.c of the same commit, kept there unmodified too. The
-ERFA license follows.
+TDB - TT series in
+Sources/AstronomyKit/Engine/Moon/Generated/TDBTerms.swift is generated from
+the dtdb.c above, and Sources/AstronomyKit/Engine/Moon/EngineTDB.swift and
+EngineFrameBias.swift port eraDtdb, eraFw2m, eraRx and eraRz. The ERFA
+license follows.
 
 Copyright (C) 2013-2021, NumFOCUS Foundation.
 All rights reserved.
@@ -117,7 +121,9 @@ NASA/JPL DE440 and PLU060 ephemeris data
 
 The Moon and Pluto coefficient arrays in Sources/CLibAstronomy/EphemerisData
 were derived by Heirloom Logic from NASA/JPL planetary and satellite
-ephemerides obtained from the official NAIF distribution:
+ephemerides obtained from the official NAIF distribution. The Swift table
+Sources/AstronomyKit/Engine/Moon/Generated/MoonDE440Coefficients.swift is
+generated from moon_data.inc and holds the same Moon coefficients:
 
   de440s.bsp, JPL planetary and lunar ephemeris DE440, integrated 25 June 2020
   https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp

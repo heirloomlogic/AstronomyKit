@@ -32,11 +32,6 @@ extension Engine.VSOP87B {
 }
 
 extension Engine.Planet {
-    /// The largest |TT| in days that the planet functions accept: 4,000
-    /// Julian years either side of J2000, the span over which VSOP87 states
-    /// 1″ precision for Mercury to Mars.
-    static let acceptedTTDays = 1_461_000.0
-
     /// The position in AU relative to the Sun's center, on the VSOP87 axes.
     ///
     /// From 1900 through 2100 TT, outside the excluded segments, it comes
@@ -44,12 +39,12 @@ extension Engine.Planet {
     /// it comes from the series coordinates, read through `cache`.
     ///
     /// - Throws: `AstronomyError.badTime` when |TT| is above
-    ///   ``acceptedTTDays`` or is not finite, or when a component of the
+    ///   ``Engine/acceptedTTDays`` or is not finite, or when a component of the
     ///   result is not finite.
     func heliocentricEclipticPosition(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.Vector<Engine.VSOP87Ecliptic> {
-        try Self.checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let position =
             Engine.PlanetPolynomial.position(self, tt: time.tt)
             ?? Engine.VSOP87B.rectangular(
@@ -71,7 +66,7 @@ extension Engine.Planet {
     func heliocentricEclipticState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
-        try Self.checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let (position, velocity) =
             Engine.PlanetPolynomial.state(self, tt: time.tt)
             ?? seriesState(millennia: Self.millennia(time), cache: cache)
@@ -105,7 +100,7 @@ extension Engine.Planet {
     func heliocentricDistance(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Double {
-        try Self.checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let distance: Double
         if let position = Engine.PlanetPolynomial.position(self, tt: time.tt) {
             distance = (position.x * position.x + position.y * position.y + position.z * position.z).squareRoot()
@@ -117,10 +112,6 @@ extension Engine.Planet {
     }
 
     // MARK: - Helpers
-
-    private static func checkTime(_ time: Engine.Time) throws {
-        guard abs(time.tt) <= acceptedTTDays else { throw AstronomyError.badTime }
-    }
 
     private static func millennia(_ time: Engine.Time) -> Double {
         time.tt / Engine.VSOP87B.daysPerMillennium
