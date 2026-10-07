@@ -342,7 +342,7 @@ extension Engine.VSOP87B {
     static func derivatives(_ model: Model, millennia t: Double) -> SIMD3<Double>   // per Julian millennium
     static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double>
     static func velocity(_ sphere: SIMD3<Double>, rates: SIMD3<Double>) -> SIMD3<Double>   // AU per day
-    final class Cache { init(capacity: Int = 32, registry: Engine.CacheRegistry) }
+    final class Cache { init(capacity: Int = 32, registry: Engine.CacheRegistry); let registry: Engine.CacheRegistry }
     static let cache: Cache
     static func coordinates(_ planet: Engine.Planet, millennia t: Double, cache: Cache = cache) -> SIMD3<Double>   // and derivatives
     static let toEquatorial: Engine.Rotation<Engine.VSOP87Ecliptic, Engine.EQJ>

@@ -126,8 +126,11 @@ extension Engine.VSOP87B {
         /// One store per planet, in ``Engine/Planet`` order.
         let coordinates: [Store]
         let derivatives: [Store]
+        /// The registry whose reset empties every store.
+        let registry: Engine.CacheRegistry
 
         init(capacity: Int = 32, registry: Engine.CacheRegistry) {
+            self.registry = registry
             coordinates = Engine.Planet.allCases.map { _ in Store(capacity: capacity, registry: registry) }
             derivatives = Engine.Planet.allCases.map { _ in Store(capacity: capacity, registry: registry) }
         }
