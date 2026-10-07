@@ -41,6 +41,10 @@ UPSTREAM_SOURCES = {
     "lunar_2001.html": ("generate/eclipse/le2001.html", "cf12604099d2ed7766180139a4e79633ae361dd9030e2bd618f8b3eadaefde72"),
     "geo_moon_states.txt": ("generate/barystate/GeoMoon.txt", "e08885fca5fa56d6e89576dd71ff02fa0d96b8b100c6e692d17bebc88da860d0"),
     "geo_emb_states.txt": ("generate/barystate/GeoEMB.txt", "2e2fed5dac2fa94266660376b063659a46778606b4abf1b2e6003b69a87b0e9f"),
+    # NASA SVS Moon Phase and Libration tables. EngineLibrationTests reads them directly; no fixture is built from them.
+    "mooninfo_2020.txt": ("generate/libration/mooninfo_2020.txt", "e487d4f934724e477d4247b60b09c4da0b39d6d61a5fa92b4ac60a76a8adf1b1"),
+    "mooninfo_2021.txt": ("generate/libration/mooninfo_2021.txt", "8e0e187f5993d4ba377da27f4f4fb524a1ad7b7324977f26e3adb01e5da28873"),
+    "mooninfo_2022.txt": ("generate/libration/mooninfo_2022.txt", "2ab619bf7104b861c7205b52c4f22bcea2b64ce79631031b3726e508abffc4a2"),
     "astronomy-engine-license.txt": ("LICENSE", "a76df666a7db8a06f599d08e07c3ff74c4b250b50b49c43353af2bd5bb34604e"),
 }
 
