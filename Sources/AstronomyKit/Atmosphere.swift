@@ -61,8 +61,9 @@ extension Atmosphere {
     ///
     /// Uses the 1976 U.S. Standard Atmosphere (NOAA-S/T 76-1562), computed
     /// from its defining constants. Below 32 km it agrees with the ISO 2533
-    /// standard atmosphere, whose constants differ slightly, to about 1e-6 in
-    /// pressure. Above 32 km the model keeps the 20 to 32 km layer
+    /// standard atmosphere, whose molar mass is 28.96442 kg/kmol rather than
+    /// 28.9644, to within 3.3e-6 in pressure; the difference grows with
+    /// height, from 1.0e-6 at 11 km. Above 32 km the model keeps the 20 to 32 km layer
     /// (+1 K/km), where the standard changes layer.
     ///
     /// - Parameter elevation: The geopotential height above sea level in

@@ -61,10 +61,10 @@ struct AtmosphereTests {
 
     // MARK: - Standard Atmosphere Values
 
-    /// The 1976 U.S. Standard Atmosphere, which is the ISO 2533 (ICAO)
-    /// standard atmosphere below 32 km: 101,325 Pa and 288.15 K at sea level,
-    /// −6.5 K/km to 11 km, 216.65 K to 20 km, then +1 K/km to 32 km, with
-    /// geopotential heights.
+    /// The 1976 U.S. Standard Atmosphere, which agrees with the ISO 2533
+    /// (ICAO) standard atmosphere below 32 km to within 3.3e-6 in pressure:
+    /// 101,325 Pa and 288.15 K at sea level, −6.5 K/km to 11 km, 216.65 K to
+    /// 20 km, then +1 K/km to 32 km, with geopotential heights.
     ///
     /// 1e-9: pressure and temperature here are exact in the standard, so the
     /// only error is converting Pa to mbar and K to °C (about 1e-13). A Kelvin
