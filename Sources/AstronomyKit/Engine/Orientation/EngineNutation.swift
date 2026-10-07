@@ -130,6 +130,10 @@ extension Engine {
     /// The orientation of Earth's equator at one TT instant: nutation and
     /// the IAU 2006 mean obliquity, with their rates.
     struct EarthTilt: Sendable {
+        /// The instant, in days of TT from J2000. Only
+        /// ``equationOfEquinoxes`` reads it.
+        var tt: Double
+
         var nutation: Nutation.Angles
 
         /// The mean obliquity of the ecliptic, εA, in degrees.
@@ -144,13 +148,16 @@ extension Engine {
         /// The rate of ``trueObliquity`` in degrees per TT day.
         var trueObliquityRate: Double { meanObliquityRate + nutation.obliquityRate }
 
-        /// The equation of the equinoxes, Δψ·cos εA, in degrees.
+        /// The equation of the equinoxes in degrees: Δψ·cos εA plus the
+        /// complementary terms of IAU 1994 Resolution C7 (SOFA `iauEe00`).
         ///
-        /// This leaves out the complementary terms of the published definition
-        /// (SOFA `iauEect00`), as the C engine does. They stay below 3
-        /// milliarcseconds; #170 tracks adding them.
+        /// The complementary series is evaluated at each access, not stored
+        /// with the cached nutation, so the rotations that never read this
+        /// property do not pay for it.
         var equationOfEquinoxes: Double {
-            nutation.longitude * cos(meanObliquity * Engine.radiansPerDegree)
+            let complementary = Nutation.complementaryEquationOfEquinoxes(centuries: tt / 36525)
+            return nutation.longitude * cos(meanObliquity * Engine.radiansPerDegree)
+                + complementary * Engine.degreesPerRadian
         }
 
         /// The nutation matrix N = R1(−εA − Δε)·R3(−Δψ)·R1(εA), from the mean
@@ -228,6 +235,7 @@ extension Engine.EarthTilt {
         cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache
     ) {
         self.init(
+            tt: tt,
             nutation: Engine.Nutation.angles(tt: tt, cache: cache),
             meanObliquity: Engine.Precession.meanObliquity(tt: tt),
             meanObliquityRate: Engine.Precession.meanObliquityRate(tt: tt)
