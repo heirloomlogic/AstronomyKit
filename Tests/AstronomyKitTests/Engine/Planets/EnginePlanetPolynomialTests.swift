@@ -20,13 +20,16 @@ struct EnginePlanetPolynomialTests {
 
     // MARK: - Clenshaw's recurrence
 
-    /// A one-segment model at the start of the span whose x axis is T_k, whose
-    /// y axis is zero, and whose z axis is Σ T_j / (j + 1).
+    /// A model of 8-day segments over the span, each with the same
+    /// polynomials: T_k on the x axis, zero on y, and Σ T_j / (j + 1) on z.
     static func syntheticModel(k: Int) -> Polynomial.Model {
-        var coefficients = [Double](repeating: 0, count: 39)
-        coefficients[k] = 1
-        for j in 0...12 { coefficients[26 + j] = 1 / Double(j + 1) }
-        return Polynomial.Model(degree: 12, width: 8, excludedSegments: [], coefficients: coefficients)
+        var segment = [Double](repeating: 0, count: 39)
+        segment[k] = 1
+        for j in 0...12 { segment[26 + j] = 1 / Double(j + 1) }
+        let count = Int(((stop - start) / 8).rounded(.up))
+        return Polynomial.Model(
+            degree: 12, width: 8, excludedSegments: [],
+            coefficients: Array([[Double]](repeating: segment, count: count).joined()))
     }
 
     /// dT_k/dx = k·U_{k−1}(x), with U from its own recurrence.
@@ -44,9 +47,11 @@ struct EnginePlanetPolynomialTests {
     @Test("Each Chebyshev polynomial and its derivative", arguments: 0...12)
     func chebyshev(k: Int) throws {
         let model = Self.syntheticModel(k: k)
-        // x = j/8 − 1 is exact at these binary-fraction epochs; half a width is 4 days.
+        // x = j/8 − 1 is exact at these binary-fraction epochs in the first
+        // segment and in one near J2000; half a width is 4 days.
+        let half = 4.0
         for j in 0..<16 {
-            let tt = Self.start + 0.5 * Double(j)
+            let tt = Self.start + 8 * (j.isMultiple(of: 2) ? 0 : 4_565) + 0.5 * Double(j)
             let x = Double(j) / 8 - 1
             let theta = acos(x)
             let state = try #require(model.state(tt: tt))
@@ -54,8 +59,9 @@ struct EnginePlanetPolynomialTests {
             #expect(state.position.y == 0)
             let z = (0...12).reduce(0.0) { $0 + cos(Double($1) * theta) / Double($1 + 1) }
             #expect(abs(state.position.z - z) <= 1e-14, "x \(x)")
-            let derivative = Self.chebyshevDerivative(k, x) / 4
-            #expect(abs(state.velocity.x - derivative) <= 1e-14 * max(1, abs(derivative)), "k \(k), x \(x)")
+            // Velocity is per day; times half the width it is per unit of x, exactly.
+            let derivative = Self.chebyshevDerivative(k, x)
+            #expect(abs(state.velocity.x * half - derivative) <= 1e-14 * max(1, abs(derivative)), "k \(k), x \(x)")
             #expect(state.velocity.y == 0)
         }
     }
@@ -73,7 +79,7 @@ struct EnginePlanetPolynomialTests {
                 if model.segment(containing: boundary) != k || model.segment(containing: boundary.nextDown) != k - 1 {
                     wrong.append(k)
                 }
-                // The division rounds the predecessor up to the boundary.
+                // The subtraction rounds the predecessor up to the boundary's offset.
                 if Int((boundary.nextDown - Self.start) / model.width) == k { roundedUp += 1 }
             }
             #expect(wrong.isEmpty, "\(planet): \(wrong.prefix(5))")
@@ -171,7 +177,8 @@ struct EnginePlanetPolynomialTests {
                 let step = boundary - boundary.nextDown
                 for axis in 0..<3 {
                     let jump = abs(after[axis] - before.position[axis]) - abs(before.velocity[axis]) * step
-                    worst = max(worst, jump)
+                    // Unlike max(_:_:), this keeps a NaN, which then fails the check.
+                    if !(jump <= worst) { worst = jump }
                 }
             }
             #expect(worst <= 2e-12, "\(planet): \(worst) AU")
