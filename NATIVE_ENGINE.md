@@ -207,7 +207,7 @@ The closures are synchronous and non-escaping. They take the place of the C call
 
 ## Earth orientation
 
-In the tree: `Orientation/EngineNutation.swift`, `Orientation/EnginePrecession.swift`, `Orientation/EngineEarthRotation.swift`, `Orientation/EngineRotations.swift`, `Orientation/EngineFrameRotations.swift`, `Orientation/EngineCoordinates.swift` and the generated `Orientation/Generated/IAU2000BTerms.swift`. Observers, the atmosphere, refraction and the horizon conversions that apply refraction (`Astronomy_Horizon`, `Astronomy_HorizonFromVector`, `Astronomy_VectorFromHorizon`) come in part 3 of #86.
+In the tree: `Orientation/EngineNutation.swift`, `Orientation/EnginePrecession.swift`, `Orientation/EngineEarthRotation.swift`, `Orientation/EngineRotations.swift`, `Orientation/EngineFrameRotations.swift`, `Orientation/EngineCoordinates.swift`, `Orientation/EngineObserver.swift`, `Orientation/EngineAtmosphere.swift`, `Orientation/EngineRefraction.swift`, `Orientation/EngineHorizon.swift` and the generated `Orientation/Generated/IAU2000BTerms.swift`. Every C entry point listed for #86 under [C entry points by owner](#c-entry-points-by-owner) has a native counterpart here.
 
 ```swift
 extension Engine.Nutation {
@@ -256,10 +256,28 @@ extension Engine.Spherical { init<F>(_ vector: Engine.Vector<F>) throws }      /
 extension Engine.Vector { init(_ sphere: Engine.Spherical, time: Engine.Time) }
 extension Engine.Equatorial { init<F>(_ vector: Engine.Vector<F>) throws }     // rightAscension, declination, distance
 extension Engine.Ecliptic { init(_ vector: Engine.Vector<Engine.EQJ>) }        // vector in ECT, latitude, longitude
+extension Engine.Observers {
+    static func vectorOfDate(_ observer: Observer, at time: Engine.Time) -> Engine.Vector<Engine.EQD>  // and vector, J2000
+    static func stateOfDate(_ observer: Observer, at time: Engine.Time) -> Engine.State<Engine.EQD>    // and state, J2000
+    static func observer(atVectorOfDate vector: Engine.Vector<Engine.EQD>) -> Observer          // and atVector:, J2000
+    static func gravity(latitude: Double, height: Double) -> Double
+}
+extension Engine.Atmosphere { init(elevation: Double) throws }               // pressure (Pa), temperature (K), density
+extension Engine.AtmosphericRefraction {
+    static func angle(_ refraction: Refraction, altitude: Double) -> Double
+    static func inverseAngle(_ refraction: Refraction, altitude: Double) -> Double
+}
+extension Engine.Horizontal {   // azimuth, altitude, rightAscension, declination
+    init(time: Engine.Time, observer: Observer, rightAscension: Double, declination: Double, refraction: Refraction)
+}
+extension Engine.Spherical { init(horizon vector: Engine.Vector<Engine.HOR>, refraction: Refraction) throws }
+extension Engine.Vector where F == Engine.HOR {
+    init(horizon sphere: Engine.Spherical, time: Engine.Time, refraction: Refraction)
+}
 ```
 
 - Nutation is IAU 2000B as SOFA's `iauNut00b` evaluates it: the 77 luni-solar terms, summed smallest first with each argument reduced to one turn, plus fixed offsets of −0.135 and +0.388 mas for the planetary terms. `Scripts/generate-nutation-table.py` writes the table from ERFA 2.0.1's `nut00b.c`, pinned in `Scripts/orientation-data` with its SHA-256, and `--check` runs in CI. The rates are the derivatives of the same terms. Angles are in degrees and rates in degrees per TT day.
-- `angles(tt:)` reads the shared cache, keyed by the exact TT in Julian centuries (`tt / 36525`), the value the series reads. One evaluation gives the angles and the rates, so an angle caller warms the entry a rate caller reads. The C engine's `psi` and `eps` time memo has no counterpart: callers at one instant share the cache entry instead.
+- `angles(tt:)` reads the shared cache, keyed by the exact TT in Julian centuries (`tt / 36525`), the value the series reads. One evaluation gives the angles and the rates, so an angle caller warms the entry a rate caller reads. `Engine.Time` carries no counterpart of the C engine's `psi`, `eps` and `st` memo fields, and reading the cache leaves a time's scales and model untouched. In C a caller could pre-fill those fields and have them used, but no public API does: `AstroTime` gets its `astro_time_t` from the C time constructors, which set them to NaN, or from a C result, which holds only values the C engine computed for that TT, and each public call works on a local copy. So the memo only saved recomputing within one call, and the shared cache now does that with the same values. `EngineNutationCacheTests` counts the evaluations.
 - The mean obliquity and the precession angles ψA, ωA and χA are the IAU 2006 polynomials (Capitaine, Wallace and Chapront 2003; SOFA `iauObl06` and `iauP06e`). The precession matrix is P = R3(χA)·R1(−ωA)·R3(−ψA)·R1(ε0), IERS Conventions (2010) equation 5.39, from the mean equator and equinox of J2000 to those of date. There is no frame bias: EQJ is the mean J2000 frame, as in the C engine.
 - The nutation matrix is R1(−εA − Δε)·R3(−Δψ)·R1(εA), SOFA's `iauNumat`, from EQM to EQD.
 - `Engine.RotationRate` holds the derivative of a rotation per TT day in the rotation's own slots, so it cannot be applied as a rotation. `apply(to:rate:)` takes a state through a rotation that moves with time: the position is rotated, and the velocity is rotated plus the rate applied to the position. They port local patch 12's `precession_rot_rate` and `nutation_rot_rate`.
@@ -267,11 +285,21 @@ extension Engine.Ecliptic { init(_ vector: Engine.Vector<Engine.EQJ>) }        /
 - `Engine.FrameRotation` has one rotation for each C frame pair, built the way the C engine builds it: EQJ to EQD is precession then nutation, EQD and ECT differ by R1(εA + Δε), EQJ and ECL by R1(ε0), and the horizon rotations turn the observer's zenith, north and west by apparent sidereal time. Each reverse rotation is the transpose. The horizon rotations read only the observer's latitude and longitude; the public layer validates the observer. Rotations at a time read nutation through the shared cache.
 - The galactic rotation is the J2000 frame of the Hipparcos Catalogue (Vol. 1, §1.5.3; Murray 1989), built from its defining angles: north galactic pole at αG = 192.85948°, δG = +27.12825°, and the ascending node at galactic longitude lΩ = 32.93192°. This replaces the C engine's matrix, which converts the IAU 1958 B1950 constants through the true equator of B1950 and is 8.77″ from those axes (#152). The public `RotationMatrix.equatorialJ2000ToGalactic()` and `galacticToEquatorialJ2000()` already return it, ahead of #96.
 - `Engine.Spherical(_:)` is `Astronomy_SphereFromVector`: longitude counterclockwise from x seen from +z, in [0, 360), and latitude in degrees. A vector on the z axis has longitude 0 and latitude ±90; one where x² + y² and z are both zero throws `invalidParameter`. `Engine.Equatorial(_:)` is the same with the longitude in hours. `Engine.Ecliptic(_:)` is `Astronomy_Ecliptic`: the J2000 vector rotated to the true ecliptic of date, with longitude 0 on the ecliptic pole. Longitudes that round up to 360 when moved into range are returned as 0.
+- Observer positions use the ellipsoid of the IERS Conventions (2010), Table 1.1: equatorial radius 6,378.1366 km and flattening 1/298.25642, in SOFA's `iauGd2gce` form, turned by apparent sidereal time. The velocity of date is the IERS nominal angular velocity 7.292115e-5 rad/s crossed into the position; the J2000 state rotates position and velocity without the rotation rate, as the C engine does. Distances convert with the published au (see [Constants](#constants)), not the C engine's. The inverse runs the C engine's Newton iteration on the ellipsoid, at most 11 steps with tolerance 2e-8 km, and puts a point within 1 mm of the axis at latitude ±90 and longitude 0. A component that is not finite, or too large to convert to kilometres, and an iteration that does not converge give NaN latitude, longitude and height; off the axis the C engine ends the process in both cases (#174), and for an of-date vector on the axis it returns ±90 for a non-finite z (a J2000 one leaves the axis under precession, so C exits). Gravity is the WGS 84 normal gravity of NIMA TR8350.2 (equations 4-1 and 4-3).
+- `Observer.geocentric` is at latitude 0 and height −6,378,136.6 m, the ellipsoid's equatorial radius, so its vector is exactly zero (#154). The public constant changed with #86, so the C engine also puts it at the centre.
+- `Engine.Atmosphere(elevation:)` is the 1976 U.S. Standard Atmosphere (NOAA-S/T 76-1562) with every layer computed from the defining constants g0, M0, R*, sea-level pressure and temperature and the lapse rates, so the troposphere exponent is g0·M0/(R*·L) = 5.2558761 and the 11 km and 20 km base pressures are 22,632.064 and 5,474.889 Pa (#153). Like the C engine it accepts −500 to 100,000 m, throws `invalidParameter` outside that or for a value that is not finite, and keeps the +1 K/km layer above 32 km, where the standard changes layer (#175). The public `Atmosphere.at(elevation:)` already uses it; rise/set searches still read the C engine's atmosphere for horizon refraction until #96, a difference of at most about 3e-5 relative in density.
+- `AtmosphericRefraction.angle` is `Astronomy_Refraction`: Sæmundsson's formula as Meeus gives it (Astronomical Algorithms, 2nd ed., eq. 16.4) with the altitude held at −1° below that, as JPL Horizons does. `.normal` scales the result below −1° linearly to zero at −90°; `.jplHorizons` does not. `.none` gives 0 for any altitude; the other models give 0 outside −90 to 90 and NaN for NaN, as in C. `inverseAngle` is `Astronomy_InverseRefraction`, with the same 1,000-step iteration, 1e-14 tolerance, two-cycle rule and zero results. Sæmundsson's formula is slightly negative at the zenith (−0.0019′); the engine keeps it, as C does, without Meeus's +0.0019279′ correction.
+- `Engine.Horizontal` is `Astronomy_Horizon`: azimuth east of north in [0, 360), 0 where the direction has no horizontal component, and azimuth 0 with a NaN altitude for a right ascension or declination that is not finite; with refraction, the altitude rises by the refraction at the geometric altitude and the right ascension and declination turn toward the zenith by the same amount unless the refraction is not positive or the result is within 3e-4° of the zenith. `Engine.Spherical(horizon:refraction:)` and `Engine.Vector(horizon:time:refraction:)` are `Astronomy_HorizonFromVector` and `Astronomy_VectorFromHorizon`.
 - The Earth rotation angle is SOFA's `iauEra00`, in degrees from 0 up to 360. Mean sidereal time is `iauGmst06`: the angle at `time.ut` plus the IAU 2006 polynomial at `time.tt`. Apparent sidereal time adds the equation of the equinoxes Δψ·cos εA. Both are in sidereal hours from 0 up to 24; a value that rounds up to the period is returned as 0. A time or day count that is not finite gives NaN, and nutation for it is computed without touching the cache.
 
 ### Differences from published definitions
 
 - The equation of the equinoxes leaves out the complementary terms of IAU 1994 Resolution C7 (SOFA `iauEect00`), as `Astronomy_SiderealTime` does. They reach about 2.65 mas between 1950 and 2050. #170 tracks whether to add them.
+- The atmosphere keeps the 20 to 32 km layer up to 100 km (#175).
+
+### Differences from the C engine
+
+- The galactic rotation (#152), the atmosphere's constants (#153) and the observer inverse's non-convergence (#174), as described above.
 
 ### Published-value checks
 
@@ -281,6 +309,9 @@ Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA thr
 - pyerfa 2.0.1.5 at eight epochs from 1600 to 2500, with UT1 and TT apart: nutation to 1e-15 rad, mean obliquity and the precession angles to 1e-15 rad, the precession matrix against equation 5.39 built from the SOFA angles to 1e-15, and the Earth rotation angle and mean sidereal time to 1e-12 rad.
 - `t_rx`, `t_ry` and `t_rz` for pivoting, `t_c2s`, `t_p2s`, `t_s2c` and `t_s2p` for the spherical conversions, `t_hd2ae` through the horizon rotation, and `t_icrs2g` through the galactic rotation. The galactic matrix matches `eraIcrs2g`'s to 1e-15 and the Hipparcos Catalogue's printed A_G to its ten decimals.
 - At the eight pyerfa epochs, the frame rotations against N·P, R1(εA + Δε) and R1(ε0) built from the SOFA angles, to 2e-15, and the ecliptic of date against the same rotation followed by SOFA's `eraC2s` definition.
+- Observer positions against pyerfa `gd2gce` on the IERS 2010 ellipsoid at seven latitudes and heights, including both poles, 2,000 km up and 500 m down, to 1e-6 m; the inverse against `gc2gde` to 1 mm in height; gravity against TR8350.2's equations; and the geocentric observer's zero vector.
+- The atmosphere's layer base pressures and temperatures as the 1976 standard prints them, to half a unit in the seventh figure, and the closed form at 1e-12 at thirteen heights, including both sides of the 11 km and 20 km layer boundaries.
+- Refraction against Sæmundsson's formula as Meeus prints it, at the horizon (28.98′), across both branches, at −90°, 90° and outside the range; the inverse on both models and on every double from −80° for 2,000 ulps; `t_hd2ae` through `Engine.Horizontal`.
 - Rates against five-point differences of the values on exact binary-fraction stencils, and the moving-rotation state against the derivative of the rotated position.
 - The nutation cache's work counts with a private registry: one evaluation per instant across angle, rate, tilt and sidereal-time callers, signed-zero keys, nonfinite bypass, eviction of the oldest of 32, reset, and simultaneous callers.
 
@@ -290,6 +321,9 @@ Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA thr
 |---|---|
 | `NutationCacheTests` | Kept while the C engine ships: it pins the C nutation cache (local patch 13) through `_Astronomy_Iau2000bRates`. `EngineNutationCacheTests` holds the engine's work counts. Retired when #96 removes the C engine. |
 | `Scripts/performance/test-nutation-cache.sh`, `nutation_cache_probe.c` and `nutation_output_probe.c` | Kept while the C engine ships, for the same reason, and retired with it. |
+| `InverseRefractionTests` | Kept while the C engine ships: it checks termination of `Astronomy_InverseRefraction` and pins its bits through the public API. `EngineRefractionTests` checks the native inverse against Sæmundsson's formula. Retired, or moved to the engine's values, when #96 switches the public refraction over. |
+| `ReproducibilityTests` | Kept while the C engine ships: it pins public results across modules (positions, rates, events), not published values. The orientation parts it reaches are checked against SOFA here. Retired by #96 with the C engine. The 2026 geocentric equatorial entries were re-recorded with `Observer.geocentric` at the centre (#154). |
+| `RotationTests`, `AtmosphereTests`, `ObserverVectorTests` | Public-API checks against published values, as normal assertions for #152, #153 and #154; they need no C. |
 
 ## Caches and reset
 
@@ -317,7 +351,7 @@ In the tree: `EngineCache.swift`.
 
 ## Public layer integration (#96)
 
-The galactic rotations already run on the engine (see [Earth orientation](#earth-orientation), #152).
+The galactic rotations (#152) and `Atmosphere.at(elevation:)` (#153) already run on the engine, and `Observer.geocentric` is at the centre (#154); see [Earth orientation](#earth-orientation).
 
 `AstroTime` will store an `Engine.Time`, `setDeltaTModel` will write the public layer's atomic default, a `nil` model argument resolves to that default once per public call, and `AstronomyConfig.reset()` will call `Engine.resetCaches()`. `AstroTime(year:...)` and `AstroTime.civil(days:deltaTModel:)` will call `Engine.Time.days` and `Engine.Time.civil(utcDays:deltaTModel:)`, so the civil rules live in one place. Public names, signatures, conformances, `Codable` shape, units, frames and error cases do not change.
 

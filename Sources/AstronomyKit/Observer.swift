@@ -54,9 +54,10 @@ public struct Observer: Sendable, Equatable, Hashable {
 
     /// A geocentric observer at Earth's center.
     ///
-    /// Uses height of -6,378,137 m to place the observer at Earth's center
-    /// rather than on the surface.
-    public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
+    /// Latitude 0, longitude 0 and a height of -6,378,136.6 m: the observer
+    /// model's equatorial radius (IERS Conventions 2010, Table 1.1) below the
+    /// surface, which puts the observer exactly at the center.
+    public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_136.6)
 
     /// The underlying C observer structure. Callers go through ``validatedRaw()``.
     private var raw: astro_observer_t {
