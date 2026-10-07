@@ -107,10 +107,36 @@ struct EngineCoordinatesTests {
         #expect(ecliptic.longitude >= 0 && ecliptic.longitude < 360)
     }
 
-    @Test("On the ecliptic pole the ecliptic longitude is 0")
+    @Test("The ecliptic pole is at latitude 90")
     func eclipticPole() {
         let pole = Engine.FrameRotation.ectToEqj(Self.time).apply(to: Self.vector(0, 0, 1) as Engine.Vector<Engine.ECT>)
         let ecliptic = Engine.Ecliptic(pole)
         #expect(abs(ecliptic.latitude - 90) <= 1e-6)
+    }
+
+    @Test("With no projection on the ecliptic plane the longitude is 0 and nothing throws")
+    func eclipticNoProjection() {
+        let zero = Engine.Ecliptic(Self.vector(0, 0, 0) as Engine.Vector<Engine.EQJ>)
+        #expect(zero.longitude == 0)
+        #expect(zero.latitude == 0)
+        let nan = Engine.Ecliptic(Self.vector(.nan, 0, 0) as Engine.Vector<Engine.EQJ>)
+        #expect(nan.longitude == 0)
+        #expect(nan.latitude.isNaN)
+    }
+
+    /// The conversion does not check its input, as the C engine does not;
+    /// only the distance shows that it was not finite.
+    @Test("Components that are not finite give a distance that is not finite")
+    func nonfiniteComponents() throws {
+        let nanOnAxis = try Engine.Spherical(Self.vector(0, 0, .nan) as Engine.Vector<Engine.EQJ>)
+        #expect(nanOnAxis.distance.isNaN)
+        #expect(nanOnAxis.latitude == 90)
+        #expect(nanOnAxis.longitude == 0)
+        let infinite = try Engine.Spherical(Self.vector(.infinity, 0, 0) as Engine.Vector<Engine.EQJ>)
+        #expect(infinite.distance == .infinity)
+        #expect(infinite.latitude == 0)
+        #expect(infinite.longitude == 0)
+        let mixed = try Engine.Spherical(Self.vector(1, .nan, 2) as Engine.Vector<Engine.EQJ>)
+        #expect(!mixed.distance.isFinite)
     }
 }

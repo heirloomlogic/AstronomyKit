@@ -37,10 +37,16 @@ extension Engine.Spherical {
     ///
     /// Longitude runs from 0 up to 360 degrees, counterclockwise from the x
     /// axis seen from +z. A vector on the z axis has longitude 0 and latitude
-    /// ±90. Components that are not finite give NaN, as in the C engine.
+    /// ±90.
     ///
-    /// - Throws: `AstronomyError.invalidParameter` for a vector whose
-    ///   squared components sum to zero.
+    /// Input is not checked for finiteness, as in the C engine. A component
+    /// that is not finite, or a vector longer than about 1e154 AU, gives a
+    /// distance that is not finite, but the angles can still look valid:
+    /// (0, 0, NaN) gives latitude 90 and (+∞, 0, 0) gives latitude and
+    /// longitude 0. Check `distance` before using the angles.
+    ///
+    /// - Throws: `AstronomyError.invalidParameter` when x² + y² and z are
+    ///   both zero.
     init<F>(_ vector: Engine.Vector<F>) throws {
         let xy = vector.x * vector.x + vector.y * vector.y
         distance = (xy + vector.z * vector.z).squareRoot()
@@ -89,7 +95,10 @@ extension Engine.Ecliptic {
     /// `vector` in the true ecliptic and equinox of its time
     /// (`Astronomy_Ecliptic`).
     ///
-    /// Longitude runs from 0 up to 360 degrees; on the ecliptic pole it is 0.
+    /// Longitude runs from 0 up to 360 degrees. Where the vector's projection
+    /// on the ecliptic plane is zero or NaN (on the ecliptic pole, for a zero
+    /// vector, or for a NaN component) the longitude is 0, as in the C
+    /// engine; this never throws.
     init(_ vector: Engine.Vector<Engine.EQJ>) {
         let time = vector.time
         let ecliptic = Engine.FrameRotation.eqjToEct(time).apply(to: vector)
