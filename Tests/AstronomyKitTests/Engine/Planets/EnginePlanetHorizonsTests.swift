@@ -131,6 +131,57 @@ struct EnginePlanetHorizonsTests {
         }
     }
 
+    /// Planetary parallax from Asheville is at most about 13″ on these dates,
+    /// far inside the 1′ tolerance, so the check above cannot tell a missing
+    /// or misplaced observer. This one compares the shift itself: the
+    /// Asheville row minus the geocentric row on the same date against the
+    /// engine's topocentric minus geocentric direction. Rows are printed to
+    /// 0.01 s of RA and 0.1″ of Dec, so the two differences agree within
+    /// 0.15″ and 0.1″; the allowance is 0.2″. Dates the geocentric suite
+    /// lacks, and its two wrong rows (#180), are skipped.
+    @Test("The Asheville rows' offset from the geocentric rows is the observer's parallax", arguments: ashevilleCases)
+    func parallax(testCase: Case) throws {
+        let geocentricRows = try #require(
+            Self.geocentricCases.first { $0.testDescription == testCase.testDescription }
+        ).references
+        var compared = 0
+        for topocentricRow in testCase.references {
+            guard
+                let geocentricRow = geocentricRows.first(where: {
+                    $0.month == topocentricRow.month && $0.day == topocentricRow.day
+                }),
+                !(topocentricRow.month == 1 && topocentricRow.day == 22
+                    && ["uranus", "neptune"].contains(testCase.testDescription))
+            else { continue }
+            let time = Self.time(topocentricRow)
+            let geocentric = try Self.geocentric(testCase.body, at: time)
+            let observer = Engine.Observers.vector(ashevilleObserver, at: time)
+            let topocentric = Engine.Vector<Engine.EQJ>(
+                x: geocentric.x - observer.x, y: geocentric.y - observer.y, z: geocentric.z - observer.z,
+                time: geocentric.time)
+            let fromEngine = try Self.shift(Engine.Equatorial(geocentric), Engine.Equatorial(topocentric))
+            let published = Self.shift(
+                Engine.Equatorial(
+                    rightAscension: geocentricRow.rightAscension, declination: geocentricRow.declination, distance: 1),
+                Engine.Equatorial(
+                    rightAscension: topocentricRow.rightAscension, declination: topocentricRow.declination, distance: 1)
+            )
+            let date = "\(topocentricRow.month)-\(topocentricRow.day)"
+            #expect(abs(fromEngine.ra - published.ra) <= 0.2, "\(date) RA: \(fromEngine.ra)″ vs \(published.ra)″")
+            #expect(abs(fromEngine.dec - published.dec) <= 0.2, "\(date) Dec: \(fromEngine.dec)″ vs \(published.dec)″")
+            compared += 1
+        }
+        #expect(compared >= 2)
+    }
+
+    /// The shift from `from` to `to` in arcseconds: RA times cos Dec, and Dec.
+    static func shift(_ from: Engine.Equatorial, _ to: Engine.Equatorial) -> (ra: Double, dec: Double) {
+        let ra: Double = remainder((to.rightAscension - from.rightAscension) * 15, 360) * 3_600
+        let cosDec: Double = cos(from.declination * Engine.radiansPerDegree)
+        let dec: Double = (to.declination - from.declination) * 3_600
+        return (ra * cosDec, dec)
+    }
+
     /// Horizons' geocentric ranges are light-time corrected with no
     /// aberration, as `geocentric(_:at:)` is.
     @Test("Geocentric distances within the DistanceAccuracyTests allowances")
