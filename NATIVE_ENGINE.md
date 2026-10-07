@@ -70,7 +70,7 @@ extension Engine.Rotation {
 - `angle(to:)` returns degrees from 0 through 180, as `Astronomy_AngleBetween` does. It throws `badVector` when the product of the two lengths is below 1e-8 or not finite, and returns exactly 0 or 180 when the cosine rounds to 1 or −1 or beyond.
 - `apply(to:)` uses the formula above, and for a state applies it to the position and to the velocity. The result keeps the input's time. It cannot fail: `Astronomy_RotateVector` and `Astronomy_RotateState` return `ASTRO_INVALID_PARAMETER` only for an input that carries an error status, and Swift values have no status.
 
-Combining, inverting and pivoting rotations, and the rotations between frames, are in `Orientation/` (see [Earth orientation](#earth-orientation)). Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here with the contract updated in the same PR, since #84, which owned this directory, is closed.
+Combining, inverting and pivoting rotations, and the rotations between frames, are in `Orientation/` (see [Earth orientation](#earth-orientation)). Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here (see [Changing this contract](#changing-this-contract)).
 
 ## Constants
 
@@ -421,13 +421,16 @@ Tests under `Tests/AstronomyKitTests/Engine/Planets/`:
 
 ## Moon
 
-In the tree: `Moon/EngineMoon.swift`, `Moon/EngineMoonStates.swift`, `Moon/EngineMoonEphemeris.swift`, `Moon/EngineLunarSeries.swift`, `Moon/EngineTDB.swift`, `Moon/EngineFrameBias.swift` and the generated `Moon/Generated/MoonDE440Coefficients.swift` and `Moon/Generated/TDBTerms.swift`. `Astronomy_GeoMoon`, `Astronomy_EclipticGeoMoon`, `Astronomy_GeoMoonState`, `Astronomy_GeoEmbState` and `Astronomy_MoonEclipticState` have native counterparts. Libration is **Planned** for part 3 of #87.
+In the tree: `Moon/EngineMoon.swift`, `Moon/EngineMoonStates.swift`, `Moon/EngineLibration.swift`, `Moon/EngineMoonEphemeris.swift`, `Moon/EngineLunarSeries.swift`, `Moon/EngineTDB.swift`, `Moon/EngineFrameBias.swift` and the generated `Moon/Generated/MoonDE440Coefficients.swift` and `Moon/Generated/TDBTerms.swift`. Every C entry point listed for #87 under [C entry points by owner](#c-entry-points-by-owner) has a native counterpart here: `Astronomy_GeoMoon`, `Astronomy_EclipticGeoMoon`, `Astronomy_GeoMoonState`, `Astronomy_GeoEmbState`, `Astronomy_MoonEclipticState` and `Astronomy_Libration`.
 
 ```swift
 extension Engine {
     enum ECM: Frame {}    // mean ecliptic and equinox of date
     enum ICRS: Frame {}
     struct EclipticState { var state: State<ECT>; var longitude, latitude, distance, longitudeRate, latitudeRate, distanceRate: Double }
+    struct Libration { var latitude, longitude, moonLatitude, moonLongitude, distanceKilometers, diameter: Double }
+    static func normalizedLongitude(_ longitude: Double) -> Double    // [0, 360), the C engine's NormalizeLongitude
+    static func longitudeOffset(_ difference: Double) -> Double       // (−180, 180], the C engine's LongitudeOffset
 }
 extension Engine.Moon {
     typealias Cache = Engine.BoundedCache<Engine.ExactKey, SIMD3<Double>>
@@ -449,6 +452,11 @@ extension Engine.Moon {
     static func eclipticState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.EclipticState
     static let stateStepDays: Double      // 5e-4
     static let earthMoonMassRatio: Double // 81.30056
+    static func libration(at time: Engine.Time, cache: Cache = cache) -> Engine.Libration
+    static func eclipticLongitude(at time: Engine.Time, cache: Cache = cache) throws -> Double   // degrees, true ecliptic of date
+    static func distance(at time: Engine.Time, cache: Cache = cache) throws -> Double            // AU
+    static let meanRadiusKilometers: Double   // 1,737.4
+    static let equatorInclination: Double     // 1°32′32.7″
 }
 extension Engine.MoonEphemeris {
     static let start, recordDays: Double              // −36,560.5 TDB days, 4
@@ -489,20 +497,25 @@ extension Engine.RotationRate {
 - `Engine.FrameBias.icrsToEqj` is SOFA's `iauPmat06` at J2000: `iauFw2m` at the Fukushima-Williams angles of `iauPfw06` and `iauObl06` for t = 0, where precession is the identity. It is about 23 mas.
 - `Engine.LunarSeries` is the C engine's `CalcMoonRaw`: Montenbruck and Pfleger's series from the Improved Lunar Ephemeris of 1954, with the same 104 solar terms, the series N, and the long-period and planetary terms, in the same order. The distance comes from the parallax and Earth's equatorial radius, 6,378.1366 km, converted with the published au.
 - DE440 positions reach the mean ecliptic of date as in the C engine: precession to the mean equator of date, then the mean obliquity. `geocentricPosition(at:)` takes the model's coordinates back through the mean obliquity and the inverse precession. `eclipticPosition(at:)` takes them through the mean obliquity, nutation and the true obliquity, and reports the model's distance. Both throw `badTime` for a TT beyond `Engine.acceptedTTDays` or not finite, and for a result that is not finite. The ecliptic longitude is in [0, 360) and 0 where the vector has no component in the ecliptic plane.
-- `TDB`, `FrameBias`, the Chebyshev evaluator, `EclipticState`, `tilted(by:)`, `tiltRate(by:rate:)`, `eclipticAngles(_:)` and the SIMD and rotation-rate helpers are used only by the Moon until #88 or #89 needs them. `tilted(by:)` and `eclipticAngles(_:)` repeat the arithmetic of `Engine.FrameRotation`'s private ecliptic rotation and of `Engine.Ecliptic`, which belong to the closed #86. When another module needs them, they move to `Foundation/`, with the contract updated in the same PR, since #84, which owned that directory, is closed. The evaluator is not the planet polynomials' Clenshaw recurrence: each keeps its C original's order of operations, so the two are not interchangeable bit for bit.
+- `TDB`, `FrameBias`, the Chebyshev evaluator, `EclipticState`, `tilted(by:)`, `tiltRate(by:rate:)`, `eclipticAngles(_:)` and the SIMD and rotation-rate helpers are used only by the Moon until #88 or #89 needs them. `tilted(by:)` and `eclipticAngles(_:)` repeat the arithmetic of `Engine.FrameRotation`'s private ecliptic rotation and of `Engine.Ecliptic`, which belong to the closed #86. When another module needs them, they move to `Foundation/` (see [Changing this contract](#changing-this-contract)). The evaluator is not the planet polynomials' Clenshaw recurrence: each keeps its C original's order of operations, so the two are not interchangeable bit for bit.
 - `Engine.Moon.cache` is the lunar cache of local patch 14: 32 entries of longitude, latitude and distance, keyed by the exact bits of the Julian centuries `coordinates(centuries:cache:)` reads, registered with `CacheRegistry.shared`. `0.0` and `-0.0` are different keys, and centuries that are not finite bypass it. It holds only model values, so a hit returns the caller's own time.
 - `meanEclipticState(at:cache:)` is the C engine's `MoonEcmState`, with its sample offsets. The position is the cached coordinates at `time`. Where DE440 has weight, the velocity is DE440's analytic derivative carried through precession and the mean obliquity and their rates, at TT = (`time.tt` / 36,525) · 36,525. In a blend it is mixed with a central difference of the series over ±`stateStepDays`, 5e-4 day, plus the weight's rate times the difference of the two positions; those three series samples bypass the cache, as `CalcMoonRaw` does in C. Elsewhere velocity and distance rate are central differences of the cached model at `(time.tt ± 5e-4) / 36,525`, so a repeated state reads three cached epochs.
 - `geocentricState(at:cache:)` is `Astronomy_GeoMoonState`: that state through the mean obliquity and precession with their rates. Its position is the same double for double as `geocentricPosition(at:cache:)`. `barycenterState(at:cache:)` is `Astronomy_GeoEmbState`, the Moon's state divided by 1 + 81.30056, the C engine's Earth/Moon mass ratio. `eclipticState(at:cache:)` is `Astronomy_MoonEclipticState`: through the mean obliquity, nutation and the true obliquity with their rates; its longitude, latitude and distance are `eclipticPosition(at:cache:)`'s, the distance and its rate are the model's, and it throws `badVector` when the position has no component in the ecliptic plane. All three throw `badTime` as the positions do, including for a rate that is not finite.
+- `libration(at:cache:)` is `Astronomy_Libration`: Meeus, Astronomical Algorithms, chapter 53, the optical libration from the model's mean ecliptic coordinates at `time.tt` / 36,525 centuries and the physical libration from the series ρ, σ and τ, with the C engine's sums in its order and its `NormalizeLongitude` and `LongitudeOffset` reductions (`Engine.normalizedLongitude(_:)`, `Engine.longitudeOffset(_:)`, declared in `Moon/` for the phase and search code of #92 to share). The longitude is in (−180, 180]. The Moon's latitude and longitude are on the mean ecliptic of date, in degrees. The distance is the model's in km with the published au, and the diameter is 2·atan(R / √(d² − R²)) with R = 1,737.4 km. Like the C function it does not check the time: a time that is not finite gives NaN in every field.
+- The Moon's inputs to the phase and event searches of #92: `eclipticLongitude(at:cache:)` is the Moon's side of `Astronomy_MoonPhase`, the true-ecliptic longitude of `geocentricPosition(at:cache:)`, from which the search subtracts the Sun's; `distance(at:cache:)` is the C engine's `MoonDistance`, with the accepted-range check that `moon_distance_slope` applies; the node search reads the latitude of `eclipticPosition(at:cache:)`.
 - `moon_data.inc` and `dtdb.c` stay where the C engine reads them; when #96 removes the C target, it moves them to `Scripts/moon-data` and updates the manifest.
 
 ### Differences from published values
 
 - Outside 1900 to 2130 the Moon comes from the series, which is up to 52′ from DE441 within the accepted range. Of the Horizons samples below, those from 1499 to 2500 are within 1′, and those up to 999 and from 3000 on are not (#184). The C engine uses the same series, and the epic keeps it.
+- Libration latitude is about 1.40′ above NASA SVS's on average, from Meeus's formulas, and at most 1.6692′ from it, at 2020-01-12 08:00 UT.
 
 ### Differences from the C engine
 
 - The series' distance converts Earth's radius with the published au, not the C engine's `KM_PER_AU`; the two differ by 6.0e-11 of the distance, about 2e-5 km (see [Constants](#constants)).
 - An ecliptic longitude that rounds up to 360 when moved into range is 0; `Astronomy_EclipticGeoMoon` can return 360.
+- The libration distance converts the model's distance with the published au, a difference of 6.0e-11 of it.
+- `equatorInclination` is the 1°32′32.7″ Meeus prints for I in the chapter 53 model, not the C engine's 1.543°, for which Astronomy Engine cites no source. The libration latitude moves by up to 0.035′, the difference between the two.
 
 ### Published-value checks
 
@@ -519,11 +532,21 @@ Tests under `Tests/AstronomyKitTests/Engine/Moon/`:
 - Rates against five-point differences of the same positions on 1/64-day stencils at thirteen instants in the series, both blends and DE440: the EQJ velocity within (1 + |t|) · 1e-8 of the speed, t in Julian centuries from J2000, and the ecliptic longitude, latitude and distance rates within the same fraction of the Moon's largest motion, 15° and 6e-4 AU per day. That covers the series' central difference and the rounding of its arguments, which grow with t.
 - The state's position against the position, the barycenter against the Moon scaled, and the ecliptic state against the ecliptic position, all double for double.
 - Cache work counts with a private registry: three epochs for the first state in the series and three hits for the next, one epoch where DE440 has weight with the blend's series samples uncached, positions sharing the states' entries, a cache with no capacity that evaluates every time, signed-zero keys, non-finite bypass, eviction of the oldest of 32, a registry reset, a hit returning the caller's own time, and simultaneous callers.
+- Libration against all 26,305 hourly rows of NASA's Scientific Visualization Studio Moon Phase and Libration tables for 2020, 2021 and 2022 (`Scripts/reference-data/sources/mooninfo_2020.txt` to `mooninfo_2022.txt`, as Astronomy Engine pins them), within the limits of its harness of 0.1304′ in longitude, 54.377 km in distance and 0.00009° in diameter, and within 1.67′ in latitude. The harness's 1.6476′ was set for upstream's lunar series; with the DE440 Moon the C engine's 1.543° already reaches 1.6507′. 1.67′ is the largest difference on the three tables, 1.6692′, rounded up: a measured bound, not a published accuracy.
+- The phase input: at USNO's twelve quarter times in `reference-fixtures.json`, the Moon's longitude less the Sun's is within 1′ of the quarter, the limit Astronomy Engine's harness sets for those times. The Sun's longitude comes from `Engine.Planet.earth` as the C engine finds it, at the heliocentric origin with no aberration.
+- The apsis input: the model's distance at the six published lunar apsides within their 25 km. The node input: the ecliptic latitude at Espenak's six node times within the latitude's rate times the 220.86 s time limit, and its direction matching the node's.
 - Routing between DE440, the blend and the series; no jump at the blends' ends; longitudes across the wrap; the ecliptic position against the J2000 position seen on the true ecliptic of date; the accepted range's ends and the doubles beyond; and NaN and infinite times.
 
 ### Moon tests that depend on the C engine
 
-**Planned** for part 3 of #87, which records a disposition for each of `MoonCacheTests`, `BundledEphemerisTests`, the `ReproducibilityTests` Moon cases, `moon_cache_probe.c`, `moon_output_probe.c` and `test-moon-cache.sh`. `MoonTests`, `LibrationTests`, `EclipticStateTests` and the public Moon suites in `JPLValidationTests`, `DistanceAccuracyTests` and `AuditValidationTests` keep testing the public API on the C engine until #96.
+| Test | Disposition |
+|---|---|
+| `MoonCacheTests` | Kept while the C engine ships: it checks the C thread-local lunar cache (local patch 14) through the public API: replayed bits, shared clients, non-finite propagation and threads. `EngineMoonCacheTests` holds the engine's work counts for the same properties. Retired when #96 removes the C engine. |
+| `Scripts/performance/test-moon-cache.sh`, `moon_cache_probe.c` and `moon_output_probe.c` | Kept while the C engine ships, for the same reason, and retired with it. `EngineMoonCacheTests` has the Swift negative control, a cache with no capacity. |
+| `BundledEphemerisTests` | Kept while the C engine ships: it checks the C evaluator, the blend and Pluto's bundled data through the C entry points, and pins legacy Moon and Pluto values. `EngineMoonEphemerisTests` and `EngineMoonTests` check the Swift evaluator, blend and routing, and `EngineMoonStatesTests` the velocities across the blends. Its Horizons check of the public apsis and node searches calls the C entry points, so #96 must move it; #92 ports the searches and does not track that check. Its Pluto cases belong to #88. Retired when #96 removes the C engine. |
+| `ReproducibilityTests` Moon cases | Kept while the C engine ships, as recorded under [Earth orientation](#earth-orientation): they pin public results, not published values. The lunar model they reach is checked against DE440, Horizons and NASA here. Retired by #96. |
+| `EclipticStateTests` | Kept while the C engine ships: it imports `CLibAstronomy` and calls the C ecliptic-state and rotation entry points directly, and #96 lists it for a disposition. `EngineMoonStatesTests` checks the Swift Moon's ecliptic state. Retired, or moved onto the engine, by #96. |
+| `MoonTests`, `LibrationTests` and the Moon suites of `JPLValidationTests`, `DistanceAccuracyTests` and `AuditValidationTests` | Public-API checks, run on the C engine until #96. `EngineMoonHorizonsTests`, `EngineMoonStatesTests` and `EngineLibrationTests` apply the published ones, at the same tolerances, to the Swift functions. `LibrationTests` and the illumination checks in `MoonTests` are named sanity checks. |
 
 ## Caches and reset
 
@@ -575,4 +598,4 @@ Where two issues' wording overlaps, this list decides: `Astronomy_MoonPhase` bel
 
 ## Changing this contract
 
-A module records the signatures it provides here, in the PR that adds them, before a dependent module starts. A change to `Foundation/` or to another module's provided signatures goes through that owner's issue. Each change to this file updates the sections it affects rather than appending history.
+A module records the signatures it provides here, in the PR that adds them, before a dependent module starts. A change to another module's provided signatures goes through that owner's issue. `Foundation/`'s owner, #84, is closed: the #87 PRs moved `unpackDoubles` and `acceptedTTDays` into it and recorded that here in the same PRs, and no other rule has been set for it. Each change to this file updates the sections it affects rather than appending history.
