@@ -18,13 +18,10 @@ extension PlutoSegmentSuites {
         typealias Pluto = Engine.Pluto
 
         /// The astrometric geocentric EQJ vector, Horizons' definition: Pluto at
-        /// the time light left it, minus Earth at `time`, with no aberration.
+        /// the time light left it, minus Earth at `time`, with no aberration,
+        /// from `Engine.Positions`.
         static func geocentric(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
-            let earth = try Engine.Planet.earth.heliocentricPosition(at: time)
-            return try Engine.LightTravel.correct(at: time) { backdated in
-                let pluto = try Pluto.heliocentricPosition(at: backdated)
-                return Engine.Vector(x: pluto.x - earth.x, y: pluto.y - earth.y, z: pluto.z - earth.z, time: backdated)
-            }
+            try Engine.Positions.geocentricPosition(of: .pluto, at: time, aberration: .none)
         }
 
         static func topocentric(from observer: Observer, at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {

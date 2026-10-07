@@ -28,18 +28,15 @@ struct EnginePlanetHorizonsTests {
     }
 
     /// The astrometric geocentric EQJ vector, Horizons' definition: the body
-    /// at the time light left it, minus Earth at `time`, with no aberration.
-    /// The light time comes from `Engine.LightTravel`.
+    /// at the time light left it, minus Earth at `time`, with no aberration,
+    /// from `Engine.Positions`.
     static func geocentric(_ body: Body, at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
-        let earth = try Engine.Planet.earth.heliocentricPosition(at: time)
-        return try Engine.LightTravel.correct(at: time) { backdated in
-            var target = Engine.Vector<Engine.EQJ>(x: 0, y: 0, z: 0, time: backdated)
-            if case .planet(let planet) = body {
-                target = try planet.heliocentricPosition(at: backdated)
-            }
-            return Engine.Vector(
-                x: target.x - earth.x, y: target.y - earth.y, z: target.z - earth.z, time: backdated)
+        let celestial: CelestialBody
+        switch body {
+        case .sun: celestial = .sun
+        case .planet(let planet): celestial = try #require(CelestialBody.allCases.first { Engine.Planet($0) == planet })
         }
+        return try Engine.Positions.geocentricPosition(of: celestial, at: time, aberration: .none)
     }
 
     /// 00:00 UT on the reference's date, with the Espenak-Meeus Delta T.
