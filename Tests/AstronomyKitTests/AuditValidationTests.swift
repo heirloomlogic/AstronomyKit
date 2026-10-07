@@ -42,7 +42,7 @@ struct AuditValidationTests {
             #expect(fields.allSatisfy { !$0.isEmpty })
         }
         #expect(archive.observations.count == 12)
-        #expect(archive.vectors.count == 93)
+        #expect(archive.vectors.count == 112)
         #expect(archive.geocentricStates.count == 6_392)
         #expect(archive.localSolarEclipses.count == 3)
         #expect(archive.riseSet.count == 5_909)

@@ -66,8 +66,9 @@ public enum Chiron {
     /// Data source: JPL HORIZONS, heliocentric ICRF/J2000, AU and AU/day.
     ///
     /// The Horizons states are tabulated at 00:00 TDB while the epochs below
-    /// are constructed as 00:00 UTC, an offset of ~64-69 seconds. At Chiron's
-    /// orbital speed this is below a milliarcsecond and is ignored.
+    /// are constructed as 00:00 UTC, an offset of ~64-69 seconds. Chiron moves
+    /// up to about 0.14″ around the Sun in that time, at perihelion; the
+    /// offset is ignored here.
     private static let referenceEpochs: [(time: AstroTime, state: StateVector)] = {
         // 2000-01-01 00:00:00 TDB (JD 2451544.5)
         let epoch2000 = AstroTime(year: 2_000, month: 1, day: 1)
