@@ -402,7 +402,7 @@ Tests under `Tests/AstronomyKitTests/Engine/Planets/`:
 | `VsopCacheTests` | Kept while the C engine ships: it checks the C thread-local cache (local patch 8): caller time metadata, signed zeros, replay, eviction and threads. `EngineVSOP87BCacheTests` checks the same properties of `VSOP87B.cache` by work counts. Retired when #96 removes the C engine. |
 | `Scripts/performance/test-vsop-cache.sh` and `vsop_cache_probe.c` | Kept while the C engine ships, for the same reason, and retired with it. `EngineVSOP87BCacheTests` has the Swift negative control, a cache with no capacity. |
 | `ReproducibilityTests` planetary cases | Kept while the C engine ships, as recorded under [Earth orientation](#earth-orientation): they pin public results, not published values. The planet series parts they reach are checked against IMCCE and Horizons here. Retired by #96. |
-| `DistanceAccuracyTests` and the `JPLValidationTests` planet suites | Published-value checks of the public API, which runs on the C engine until #96. `EnginePlanetPositionsTests` and `EnginePlanetHorizonsTests` apply the same fixtures and allowances to the Swift planet functions. |
+| `DistanceAccuracyTests` and the `JPLValidationTests` planet suites | Published-value checks of the public API, which runs on the C engine until #96. `EnginePlanetPositionsTests` and `EnginePlanetHorizonsTests` apply the same fixtures and allowances to the Swift planet functions. `EnginePlanetHorizonsTests` composes the geocentric vector itself; when #89 adds the engine's geocentric functions, the check moves onto them. |
 
 ## Caches and reset
 

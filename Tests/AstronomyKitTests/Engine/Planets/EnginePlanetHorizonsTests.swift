@@ -52,60 +52,50 @@ struct EnginePlanetHorizonsTests {
     struct Case: Sendable, CustomTestStringConvertible {
         let body: Body
         let references: [JPLReferencePoint]
-        let toleranceArcminutes: Double
         var testDescription: String { body.testDescription }
+
+        /// The suite's tolerance: 1.5′ for Neptune and 1′ for the others.
+        var toleranceArcminutes: Double {
+            if case .planet(.neptune) = body { return outerPlanetToleranceArcminutes }
+            return AstronomyKitTests.toleranceArcminutes
+        }
     }
 
-    /// The geocentric suites of `JPLValidationTests`, with their tolerances.
+    /// The geocentric suites of `JPLValidationTests`.
     static let geocentricCases: [Case] = [
-        Case(body: .sun, references: SunValidationTests.referenceData, toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.mercury), references: MercuryValidationTests.referenceData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.venus), references: VenusValidationTests.referenceData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.mars), references: MarsValidationTests.referenceData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.jupiter), references: JupiterValidationTests.referenceData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.saturn), references: SaturnValidationTests.referenceData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.uranus), references: UranusValidationTests.referenceData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.neptune), references: NeptuneValidationTests.referenceData,
-            toleranceArcminutes: outerPlanetToleranceArcminutes),
+        Case(body: .sun, references: SunValidationTests.referenceData),
+        Case(body: .planet(.mercury), references: MercuryValidationTests.referenceData),
+        Case(body: .planet(.venus), references: VenusValidationTests.referenceData),
+        Case(body: .planet(.mars), references: MarsValidationTests.referenceData),
+        Case(body: .planet(.jupiter), references: JupiterValidationTests.referenceData),
+        Case(body: .planet(.saturn), references: SaturnValidationTests.referenceData),
+        Case(body: .planet(.uranus), references: UranusValidationTests.referenceData),
+        Case(body: .planet(.neptune), references: NeptuneValidationTests.referenceData),
     ]
 
-    /// The planet suites of `AshevilleValidationTests`, with their tolerances.
+    /// The planet suites of `AshevilleValidationTests`.
     static let ashevilleCases: [Case] = [
-        Case(
-            body: .planet(.mercury), references: AshevilleValidationTests.mercuryData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.venus), references: AshevilleValidationTests.venusData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.mars), references: AshevilleValidationTests.marsData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.jupiter), references: AshevilleValidationTests.jupiterData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.saturn), references: AshevilleValidationTests.saturnData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.uranus), references: AshevilleValidationTests.uranusData,
-            toleranceArcminutes: toleranceArcminutes),
-        Case(
-            body: .planet(.neptune), references: AshevilleValidationTests.neptuneData,
-            toleranceArcminutes: outerPlanetToleranceArcminutes),
+        Case(body: .planet(.mercury), references: AshevilleValidationTests.mercuryData),
+        Case(body: .planet(.venus), references: AshevilleValidationTests.venusData),
+        Case(body: .planet(.mars), references: AshevilleValidationTests.marsData),
+        Case(body: .planet(.jupiter), references: AshevilleValidationTests.jupiterData),
+        Case(body: .planet(.saturn), references: AshevilleValidationTests.saturnData),
+        Case(body: .planet(.uranus), references: AshevilleValidationTests.uranusData),
+        Case(body: .planet(.neptune), references: AshevilleValidationTests.neptuneData),
     ]
+
+    /// The geocentric records of `distance-fixtures.json` for the Sun and the
+    /// planets the functions cover, with their times on the fixture's TT.
+    static let geocentricRecords: [(body: Body, time: Engine.Time, reference: DistanceReferenceArchive.Reference)] =
+        DistanceReferenceArchive.shared.references.compactMap { reference in
+            guard reference.mode == "geocentric" else { return nil }
+            let time = Engine.Time(tt: reference.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
+            if reference.body == "Sun" { return (.sun, time, reference) }
+            guard let celestial = CelestialBody.allCases.first(where: { $0.name == reference.body }),
+                let planet = Engine.Planet(celestial)
+            else { return nil }
+            return (.planet(planet), time, reference)
+        }
 
     static func separation(_ vector: Engine.Vector<Engine.EQJ>, _ reference: JPLReferencePoint) throws -> Double {
         let equatorial = try Engine.Equatorial(vector)
@@ -145,29 +135,16 @@ struct EnginePlanetHorizonsTests {
     /// aberration, as `geocentric(_:at:)` is.
     @Test("Geocentric distances within the DistanceAccuracyTests allowances")
     func geocentricDistances() throws {
-        var checked = 0
-        for reference in DistanceReferenceArchive.shared.references where reference.mode == "geocentric" {
-            let body: Body
-            if reference.body == "Sun" {
-                body = .sun
-            } else if let celestial = CelestialBody.allCases.first(where: { $0.name == reference.body }),
-                let planet = Engine.Planet(celestial)
-            {
-                body = .planet(planet)
-            } else {
-                continue
-            }
-            let time = Engine.Time(tt: reference.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
+        // Sun, Mercury, Venus, Mars, Jupiter, Saturn, Uranus and Neptune, 134 each.
+        #expect(Self.geocentricRecords.count == 8 * 134)
+        for (body, time, reference) in Self.geocentricRecords {
             let range = try Self.geocentric(body, at: time).length
             let errorKm = abs(range - reference.referenceRangeAU) * Engine.kilometersPerAU
             #expect(
                 errorKm <= reference.allowedErrorKm,
                 "\(reference.body) JD TT \(reference.julianDateTT): \(errorKm) km, allowance \(reference.allowedErrorKm) km"
             )
-            checked += 1
         }
-        // Sun, Mercury, Venus, Mars, Jupiter, Saturn, Uranus and Neptune, 134 each.
-        #expect(checked == 8 * 134)
     }
 
     @Test("The checks fail for the wrong body, a day's error or the heliocentric range")
@@ -178,9 +155,7 @@ struct EnginePlanetHorizonsTests {
         #expect(
             try Self.separation(Self.geocentric(.planet(.mars), at: time.adding(days: 1)), reference)
                 > toleranceArcminutes)
-        let record = try #require(
-            DistanceReferenceArchive.shared.references.first { $0.body == "Mars" && $0.mode == "geocentric" })
-        let recordTime = Engine.Time(tt: record.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
+        let (_, recordTime, record) = try #require(Self.geocentricRecords.first { $0.reference.body == "Mars" })
         let heliocentric = try Engine.Planet.mars.heliocentricDistance(at: recordTime)
         #expect(abs(heliocentric - record.referenceRangeAU) * Engine.kilometersPerAU > record.allowedErrorKm)
     }
