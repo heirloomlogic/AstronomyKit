@@ -70,7 +70,7 @@ extension Engine.Rotation {
 - `angle(to:)` returns degrees from 0 through 180, as `Astronomy_AngleBetween` does. It throws `badVector` when the product of the two lengths is below 1e-8 or not finite, and returns exactly 0 or 180 when the cosine rounds to 1 or −1 or beyond.
 - `apply(to:)` uses the formula above, and for a state applies it to the position and to the velocity. The result keeps the input's time. It cannot fail: `Astronomy_RotateVector` and `Astronomy_RotateState` return `ASTRO_INVALID_PARAMETER` only for an input that carries an error status, and Swift values have no status.
 
-Combining, inverting and pivoting rotations, and the rotations between frames, are in `Orientation/` (see [Earth orientation](#earth-orientation)). Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here through #84.
+Combining, inverting and pivoting rotations, and the rotations between frames, are in `Orientation/` (see [Earth orientation](#earth-orientation)). Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here with the contract updated in the same PR, since #84, which owned this directory, is closed.
 
 ## Constants
 
@@ -421,20 +421,34 @@ Tests under `Tests/AstronomyKitTests/Engine/Planets/`:
 
 ## Moon
 
-In the tree: `Moon/EngineMoon.swift`, `Moon/EngineMoonEphemeris.swift`, `Moon/EngineLunarSeries.swift`, `Moon/EngineTDB.swift`, `Moon/EngineFrameBias.swift` and the generated `Moon/Generated/MoonDE440Coefficients.swift` and `Moon/Generated/TDBTerms.swift`. `Astronomy_GeoMoon` and `Astronomy_EclipticGeoMoon` have native counterparts. The Moon's states, the Earth-Moon barycenter, the lunar cache and libration are **Planned** for parts 2 and 3 of #87.
+In the tree: `Moon/EngineMoon.swift`, `Moon/EngineMoonStates.swift`, `Moon/EngineMoonEphemeris.swift`, `Moon/EngineLunarSeries.swift`, `Moon/EngineTDB.swift`, `Moon/EngineFrameBias.swift` and the generated `Moon/Generated/MoonDE440Coefficients.swift` and `Moon/Generated/TDBTerms.swift`. `Astronomy_GeoMoon`, `Astronomy_EclipticGeoMoon`, `Astronomy_GeoMoonState`, `Astronomy_GeoEmbState` and `Astronomy_MoonEclipticState` have native counterparts. Libration is **Planned** for part 3 of #87.
 
 ```swift
 extension Engine {
     enum ECM: Frame {}    // mean ecliptic and equinox of date
     enum ICRS: Frame {}
+    struct EclipticState { var state: State<ECT>; var longitude, latitude, distance, longitudeRate, latitudeRate, distanceRate: Double }
 }
 extension Engine.Moon {
-    static func coordinates(centuries t: Double) -> SIMD3<Double>   // longitude, latitude (radians, ECM), distance (AU)
+    typealias Cache = Engine.BoundedCache<Engine.ExactKey, SIMD3<Double>>
+    static let cache: Cache
+    static func coordinates(centuries t: Double, cache: Cache = cache) -> SIMD3<Double>   // longitude, latitude (radians, ECM), distance (AU)
+    static func evaluate(centuries t: Double) -> SIMD3<Double>      // the same, without the cache
     static func meanEclipticPosition(tt: Double) -> SIMD3<Double>?  // DE440 alone, ECM
+    static func meanEclipticSourceState(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)?
+    static func meanEclipticState(at time: Engine.Time, cache: Cache = cache) -> (state: Engine.State<Engine.ECM>, distance: Double, distanceRate: Double)
     static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double>
+    static func eclipticAngles(_ vector: Engine.Vector<Engine.ECT>) -> (longitude: Double, latitude: Double)   // degrees, longitude in [0, 360)
     static func meanEquatorToEcliptic(tt: Double) -> Engine.Rotation<Engine.EQM, Engine.ECM>
-    static func geocentricPosition(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ>
-    static func eclipticPosition(at time: Engine.Time) throws -> Engine.Spherical       // ECT, degrees, AU
+    static func tilted<From, To>(by obliquity: Double) -> Engine.Rotation<From, To>
+    static func tiltRate<From, To>(by obliquity: Double, rate: Double) -> Engine.RotationRate<From, To>
+    static func geocentricPosition(at time: Engine.Time, cache: Cache = cache) throws -> Engine.Vector<Engine.EQJ>
+    static func eclipticPosition(at time: Engine.Time, cache: Cache = cache) throws -> Engine.Spherical       // ECT, degrees, AU
+    static func geocentricState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.State<Engine.EQJ>
+    static func barycenterState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.State<Engine.EQJ>
+    static func eclipticState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.EclipticState
+    static let stateStepDays: Double      // 5e-4
+    static let earthMoonMassRatio: Double // 81.30056
 }
 extension Engine.MoonEphemeris {
     static let start, recordDays: Double              // −36,560.5 TDB days, 4
@@ -461,17 +475,24 @@ extension Engine.FrameBias {
 extension Engine.Rotation {
     func apply(to vector: SIMD3<Double>) -> SIMD3<Double>   // as apply(to: Vector), for values with no time
 }
+extension Engine.RotationRate {
+    func apply(to vector: SIMD3<Double>) -> SIMD3<Double>
+    var inverse: Engine.RotationRate<To, From> { get }        // the transpose
+}
 ```
 
-- The lunar model is the C engine's `CalcMoon` with local patch 19. From 1900-01-01 00:00 TT (`fullWeightStart`) up to 2131-01-01 00:00 TT (`fullWeightEnd`) it is the Moon of JPL DE440. Beyond the 32 days outside each end it is the lunar series. Inside those 32 days the two positions are blended with the quintic smoothstep x³(10 − 15x + 6x²), so the weight and its first two derivatives are continuous. `coordinates(centuries:)` reads DE440 at TT = t · 36,525, as `CalcMoon` does, and returns the series alone where the weight is 0 or the records do not reach.
+- The lunar model is the C engine's `CalcMoon` with local patch 19. From 1900-01-01 00:00 TT (`fullWeightStart`) up to 2131-01-01 00:00 TT (`fullWeightEnd`) it is the Moon of JPL DE440. Beyond the 32 days outside each end it is the lunar series. Inside those 32 days the two positions are blended with the quintic smoothstep x³(10 − 15x + 6x²), so the weight and its first two derivatives are continuous. `evaluate(centuries:)` reads DE440 at TT = t · 36,525, as `CalcMoon` does, and returns the series alone where the weight is 0 or the records do not reach. `coordinates(centuries:cache:)` is `evaluate(centuries:)` read through `cache`, and every position and state reads it.
 - `MoonDE440Coefficients.swift` holds DE440's Chebyshev records for the Moon minus those for Earth, both relative to the Earth-Moon barycenter, divided by the au: 21,111 four-day records of 13 coefficients per axis on ICRS axes, from 1899-11-26 to 2131-02-07 TDB. `Scripts/generate-moon-tables.py` writes it from the C engine's `moon_data.inc`, whose SHA-256 `Scripts/moon-data/manifest.json` pins, and `--check` runs in CI on macOS and Linux. `--published DIR` reads `de440s.bsp` as NAIF publishes it (URL and SHA-256 in the manifest) and checks all 823,329 coefficients against the DE440 records bit for bit. The table uses the encoding of [Compiled-in tables and the accepted range](#compiled-in-tables-and-the-accepted-range); decoded, it takes 6.6 MB for the life of the process.
 - `evaluate(tdb:)` ports the C engine's Chebyshev evaluator: record `k` holds `start + 4k ≤ tdb < start + 4(k + 1)`, and Clenshaw's recurrence gives the position and its derivative together. It returns `nil` before the first record, from the end on, and for a time that is not finite. As in C, the last doubles before the end can round up to it when the start is subtracted and fall outside.
-- `state(tt:)` reads the records at TDB = TT + `Engine.TDB.offsetSeconds(tt:)`, scales the velocity by `Engine.TDB.rate(tt:)`, and rotates both by `Engine.FrameBias.icrsToEqj`. `position(tt:)` is its position without the rate, which is all `coordinates(centuries:)` reads.
+- `state(tt:)` reads the records at TDB = TT + `Engine.TDB.offsetSeconds(tt:)`, scales the velocity by `Engine.TDB.rate(tt:)`, and rotates both by `Engine.FrameBias.icrsToEqj`. `position(tt:)` is its position without the rate, which is all `evaluate(centuries:)` reads.
 - `Engine.TDB` is SOFA's `iauDtdb`: Fairhead and Bretagnon's 787 terms, JPL's planetary mass adjustments and the topocentric terms. `TDBTerms.swift` is generated by the same script from ERFA 2.0.1's `dtdb.c`, which the C engine already vendors and the manifest pins with its URL; that file equals ERFA's at the commit `THIRD_PARTY_NOTICES` pins. The Moon reads the geocentric offset at TT, as the C engine does. The rate is one plus the offset's change across ±0.01 day, the C engine's step.
 - `Engine.FrameBias.icrsToEqj` is SOFA's `iauPmat06` at J2000: `iauFw2m` at the Fukushima-Williams angles of `iauPfw06` and `iauObl06` for t = 0, where precession is the identity. It is about 23 mas.
 - `Engine.LunarSeries` is the C engine's `CalcMoonRaw`: Montenbruck and Pfleger's series from the Improved Lunar Ephemeris of 1954, with the same 104 solar terms, the series N, and the long-period and planetary terms, in the same order. The distance comes from the parallax and Earth's equatorial radius, 6,378.1366 km, converted with the published au.
 - DE440 positions reach the mean ecliptic of date as in the C engine: precession to the mean equator of date, then the mean obliquity. `geocentricPosition(at:)` takes the model's coordinates back through the mean obliquity and the inverse precession. `eclipticPosition(at:)` takes them through the mean obliquity, nutation and the true obliquity, and reports the model's distance. Both throw `badTime` for a TT beyond `Engine.acceptedTTDays` or not finite, and for a result that is not finite. The ecliptic longitude is in [0, 360) and 0 where the vector has no component in the ecliptic plane.
-- `TDB`, `FrameBias`, the Chebyshev evaluator and the SIMD `apply(to:)` are used only by the Moon until #88 needs them for Pluto; then they move to `Foundation/` through #84. The evaluator is not the planet polynomials' Clenshaw recurrence: each keeps its C original's order of operations, so the two are not interchangeable bit for bit.
+- `TDB`, `FrameBias`, the Chebyshev evaluator, `EclipticState`, `tilted(by:)`, `tiltRate(by:rate:)`, `eclipticAngles(_:)` and the SIMD and rotation-rate helpers are used only by the Moon until #88 or #89 needs them. `tilted(by:)` and `eclipticAngles(_:)` repeat the arithmetic of `Engine.FrameRotation`'s private ecliptic rotation and of `Engine.Ecliptic`, which belong to the closed #86. When another module needs them, they move to `Foundation/`, with the contract updated in the same PR, since #84, which owned that directory, is closed. The evaluator is not the planet polynomials' Clenshaw recurrence: each keeps its C original's order of operations, so the two are not interchangeable bit for bit.
+- `Engine.Moon.cache` is the lunar cache of local patch 14: 32 entries of longitude, latitude and distance, keyed by the exact bits of the Julian centuries `coordinates(centuries:cache:)` reads, registered with `CacheRegistry.shared`. `0.0` and `-0.0` are different keys, and centuries that are not finite bypass it. It holds only model values, so a hit returns the caller's own time.
+- `meanEclipticState(at:cache:)` is the C engine's `MoonEcmState`, with its sample offsets. The position is the cached coordinates at `time`. Where DE440 has weight, the velocity is DE440's analytic derivative carried through precession and the mean obliquity and their rates, at TT = (`time.tt` / 36,525) · 36,525. In a blend it is mixed with a central difference of the series over ±`stateStepDays`, 5e-4 day, plus the weight's rate times the difference of the two positions; those three series samples bypass the cache, as `CalcMoonRaw` does in C. Elsewhere velocity and distance rate are central differences of the cached model at `(time.tt ± 5e-4) / 36,525`, so a repeated state reads three cached epochs.
+- `geocentricState(at:cache:)` is `Astronomy_GeoMoonState`: that state through the mean obliquity and precession with their rates. Its position is the same double for double as `geocentricPosition(at:cache:)`. `barycenterState(at:cache:)` is `Astronomy_GeoEmbState`, the Moon's state divided by 1 + 81.30056, the C engine's Earth/Moon mass ratio. `eclipticState(at:cache:)` is `Astronomy_MoonEclipticState`: through the mean obliquity, nutation and the true obliquity with their rates; its longitude, latitude and distance are `eclipticPosition(at:cache:)`'s, the distance and its rate are the model's, and it throws `badVector` when the position has no component in the ecliptic plane. All three throw `badTime` as the positions do, including for a rate that is not finite.
 - `moon_data.inc` and `dtdb.c` stay where the C engine reads them; when #96 removes the C target, it moves them to `Scripts/moon-data` and updates the manifest.
 
 ### Differences from published values
@@ -494,6 +515,10 @@ Tests under `Tests/AstronomyKitTests/Engine/Moon/`:
 - The weight: 1 and 0 where it should be, monotonic across each blend, its rate against differences, and its value and rate near each blend end.
 - The `JPLValidationTests` geocentric and Asheville Moon suites within their 1′, as astrometric directions through `Engine.LightTravel` and, for Asheville, `Engine.Observers`; the 134 Moon records of `distance-fixtures.json` within their 28.689 km; and the Horizons observer rows of 1900, 2000 and 2100 in `reference-fixtures.json` within 1′, in J2000 equatorial and true ecliptic of date coordinates.
 - Horizons geometric vectors at 30 dates from 2002 BCE to 6000 CE (`Scripts/reference-data/sources/horizons/moon-vector.json`), eleven of them within 40 days of the two blends: the 17 from 1499 to 2500 within 1′ and 28.689 km, the other 13 recorded as known issues of #184. Inside the DE440 span the samples measure within 15 m of Horizons, which uses DE441; the tests do not assert that.
+- Every Horizons state in Astronomy Engine's `barystate/GeoMoon.txt` and `GeoEMB.txt` at the pinned revision, 3,196 each every 8 days from 1970 to 2040, within the relative limits its `ctest.c` applies to them: Moon position 4.086e-5 and velocity 5.347e-5, barycenter 4.076e-5 and 5.335e-5. `build-fixtures.py` copies them into `reference-fixtures.json`.
+- Rates against five-point differences of the same positions on 1/64-day stencils at thirteen instants in the series, both blends and DE440: the EQJ velocity within (1 + |t|) · 1e-8 of the speed, t in Julian centuries from J2000, and the ecliptic longitude, latitude and distance rates within the same fraction of the Moon's largest motion, 15° and 6e-4 AU per day. That covers the series' central difference and the rounding of its arguments, which grow with t.
+- The state's position against the position, the barycenter against the Moon scaled, and the ecliptic state against the ecliptic position, all double for double.
+- Cache work counts with a private registry: three epochs for the first state in the series and three hits for the next, one epoch where DE440 has weight with the blend's series samples uncached, positions sharing the states' entries, a cache with no capacity that evaluates every time, signed-zero keys, non-finite bypass, eviction of the oldest of 32, a registry reset, a hit returning the caller's own time, and simultaneous callers.
 - Routing between DE440, the blend and the series; no jump at the blends' ends; longitudes across the wrap; the ecliptic position against the J2000 position seen on the true ecliptic of date; the accepted range's ends and the doubles beyond; and NaN and infinite times.
 
 ### Moon tests that depend on the C engine
@@ -517,7 +542,7 @@ In the tree: `EngineCache.swift`.
 |---|---|---|---|
 | VSOP87B series results | #85 | `Engine.VSOP87B.cache`: per planet, a 32-entry `BoundedCache` of coordinates and one of derivatives, `ExactKey` of the scaled TT the series read | Thread-local, 32 per body (local patch 8) |
 | Nutation angles and rates | #86 | `Engine.Nutation.cache`: `BoundedCache`, 32 entries, `ExactKey` of TT in Julian centuries, shared by angle, rate, tilt and sidereal-time callers | Thread-local, 32 entries (local patch 13) |
-| Moon longitude, latitude, distance | #87 | **Planned** for part 2 of #87: `BoundedCache`, 32 entries, `ExactKey` of the scaled TT | Thread-local, 32 entries (local patch 14) |
+| Moon longitude, latitude, distance | #87 | `Engine.Moon.cache`: `BoundedCache`, 32 entries, `ExactKey` of TT in Julian centuries, shared by positions and states | Thread-local, 32 entries (local patch 14) |
 | Pluto segments | #88 | `BoundedCache` keyed by segment index, one entry per table segment | Allocated segments behind a mutex, freed by `Astronomy_Reset` (local patch 1) |
 | Delta T default | #96 | `Atomic` in the public layer | `_Atomic` function pointer (local patch 2) |
 | Gravity simulation | #88 | Owned by each `GravitySimulation`, with its own lock | Caller-owned handle |

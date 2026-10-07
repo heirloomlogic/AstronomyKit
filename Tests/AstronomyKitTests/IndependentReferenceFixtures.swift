@@ -8,6 +8,7 @@ struct IndependentReferenceArchive: Decodable {
     let provenance: [String: Provenance]
     let observations: [Observation]
     let vectors: [Vector]
+    let geocentricStates: [GeocentricState]
     let seasons: [Season]
     let lunarPhases: [LunarPhase]
     let lunarNodes: [LunarNode]
@@ -58,6 +59,17 @@ struct IndependentReferenceArchive: Decodable {
         let velocityAUPerDay: [Double]
         let relativeTolerance: Double?
         let sanityToleranceAU: Double?
+    }
+
+    /// A Horizons state of the Moon or the Earth-Moon barycenter from
+    /// Earth's center, with Astronomy Engine's relative limits.
+    struct GeocentricState: Decodable {
+        let body: String
+        let julianDateTDB: Double
+        let positionAU: [Double]
+        let velocityAUPerDay: [Double]
+        let relativePositionTolerance: Double
+        let relativeVelocityTolerance: Double
     }
 
     struct Season: Decodable {
