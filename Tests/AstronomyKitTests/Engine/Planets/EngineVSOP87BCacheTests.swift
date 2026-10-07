@@ -72,6 +72,21 @@ struct EngineVSOP87BCacheTests {
         #expect(cache.coordinates[Engine.Planet.mercury.rawValue].statistics == Statistics(hits: 1, misses: 1))
     }
 
+    /// The cache holds only series values, so a hit carries nothing of the
+    /// call that stored it.
+    @Test("A hit returns the caller's own time, scales and model")
+    func callerTime() throws {
+        let (cache, _) = Self.makeCache()
+        let first = Engine.Time(ut: Self.fallback - 0.001, tt: Self.fallback, deltaTModel: .espenakMeeus)
+        let second = Engine.Time(ut: Self.fallback + 0.002, tt: Self.fallback, deltaTModel: .jplHorizons)
+        let a = try Engine.Planet.mars.heliocentricState(at: first, cache: cache)
+        let b = try Engine.Planet.mars.heliocentricState(at: second, cache: cache)
+        #expect(cache.coordinates[Engine.Planet.mars.rawValue].statistics == Statistics(hits: 1, misses: 1))
+        #expect(a.x == b.x && a.vz == b.vz)
+        #expect(b.time.ut == second.ut && b.time.tt == second.tt && b.time.deltaTModel == .jplHorizons)
+        #expect(a.time.ut == first.ut && a.time.deltaTModel == .espenakMeeus)
+    }
+
     @Test("A cached result is the series result")
     func cachedEqualsSeries() throws {
         let (cache, _) = Self.makeCache()
