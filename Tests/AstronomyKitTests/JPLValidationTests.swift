@@ -616,7 +616,7 @@ struct NeptuneValidationTests {
     // JPL Horizons data for Neptune (ICRF column). Every row matches the
     // recorded query in Scripts/reference-data/sources/jpl-validation.
     static let referenceData: [JPLReferencePoint] = [
-        // Line 61: 2026-Jan-02: 23 59 01.31 -01 33 27.9
+        // 2026-Jan-02: 23 59 01.31 -01 33 27.9
         JPLReferencePoint(
             year: 2_026,
             month: 1,
@@ -640,7 +640,7 @@ struct NeptuneValidationTests {
             decMinutes: 24,
             decSeconds: 05.3
         ),
-        // Line 101: 2026-Feb-11: 00 02 21.20 -01 10 28.0
+        // 2026-Feb-11: 00 02 21.20 -01 10 28.0
         JPLReferencePoint(
             year: 2_026,
             month: 2,
@@ -652,7 +652,7 @@ struct NeptuneValidationTests {
             decMinutes: 10,
             decSeconds: 28.0
         ),
-        // Line 121: 2026-Mar-03: 00 04 50.78 -00 53 56.6
+        // 2026-Mar-03: 00 04 50.78 -00 53 56.6
         JPLReferencePoint(
             year: 2_026,
             month: 3,

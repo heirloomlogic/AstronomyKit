@@ -187,3 +187,30 @@ class RiseSetFixtureTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RecordedQueryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_recorded_queries_match_their_responses(self):
+        self.builder.verify_recorded_queries()
+
+    def test_a_changed_response_fails_its_recipe_hash(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            (directory / "body.json").write_bytes(b"response")
+            recipe = {"COMMAND": "'899'", "_responseSHA256": self.builder.sha256(b"response")}
+            (directory / "body.query.json").write_bytes(self.builder.encoded(recipe))
+            self.builder.verify_recorded_queries(directory)
+            (directory / "body.json").write_bytes(b"edited response")
+            with self.assertRaises(RuntimeError):
+                self.builder.verify_recorded_queries(directory)
+
+    def test_a_response_without_a_recipe_fails(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            (directory / "body.json").write_bytes(b"response")
+            with self.assertRaises(RuntimeError):
+                self.builder.verify_recorded_queries(directory)

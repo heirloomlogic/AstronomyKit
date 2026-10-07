@@ -84,8 +84,8 @@ struct EnginePlanetPositionsTests {
 
     // MARK: - JPL Horizons
 
-    /// 1 arcminute is the accuracy `JPLValidationTests` applies to the
-    /// geocentric planets (1.5′ for Neptune). The largest angle here is 2.4″, for Neptune; VSOP87 was fitted
+    /// 1 arcminute is the accuracy `JPLValidationTests` applies to every
+    /// geocentric planet. The largest angle here is 2.4″, for Neptune; VSOP87 was fitted
     /// to DE200, and Horizons uses DE441 in the ICRF. A wrong frame or a swapped
     /// axis moves the direction by degrees.
     @Test("EQJ direction and distance against the JPL Horizons held-out vectors, on both paths")
