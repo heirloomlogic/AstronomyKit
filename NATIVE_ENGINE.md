@@ -301,7 +301,7 @@ extension Engine.Vector where F == Engine.HOR {
 ### Differences from the C engine
 
 - The galactic rotation (#152), the atmosphere's constants (#153) and the observer inverse's non-convergence (#174), as described above.
-- Apparent sidereal time includes the complementary terms of the equation of the equinoxes (#170); `Astronomy_SiderealTime` leaves them out. The two differ by up to about 2.65 mas of rotation angle between 1950 and 2050 (about 8 cm of position at the equator), and every native result that turns by apparent sidereal time follows: the observer's J2000 and of-date vectors and the horizon rotations. The nutation matrix, the precession matrix and the ecliptic rotations do not read it.
+- Apparent sidereal time includes the complementary terms of the equation of the equinoxes (#170); `Astronomy_SiderealTime` leaves them out. The two differ by up to about 2.65 mas of rotation angle between 1950 and 2050 (about 8 cm of position at the equator). Every native function that reads `Engine.EarthRotation.apparentSiderealTime` inherits the difference: the observer's position and state, of date and J2000 (`Engine.Observer.vectorOfDate`, `vector`, `stateOfDate`, `state`); the observer recovered from a vector, of date and J2000 (`observer(atVectorOfDate:)`, `observer(atVector:)`), where it shifts the longitude by the same angle; the horizon rotations from and to the equator of date, J2000 and the ecliptic (`Engine.FrameRotation.eqdToHor`, `eqjToHor`, `eclToHor` and their inverses); and `Engine.Horizontal(time:observer:rightAscension:declination:refraction:)`. The nutation matrix, the precession matrix and the ecliptic rotations do not read it.
 
 ### Published-value checks
 

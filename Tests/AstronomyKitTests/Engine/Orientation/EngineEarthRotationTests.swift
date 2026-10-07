@@ -70,8 +70,9 @@ struct EngineEarthRotationTests {
         let days = Published.days(mjd: Published.ee00b.mjd)
         let time = Self.time(ut: days, tt: days)
         let difference = (Self.apparent(time) - Engine.EarthRotation.meanSiderealTime(time)) * Engine.radiansPerHour
-        // SOFA's ee00b uses the IAU 1980 obliquity and the engine the IAU 2006 one,
-        // which differ by 2.1e-7 rad here and move the product by about 8e-13.
+        // SOFA's ee00b takes the IAU 1980 obliquity plus the IAU 2000 precession
+        // correction and the engine takes the IAU 2006 one. They differ by 2.03e-7
+        // rad here, which moves the product by about 7.8e-13.
         #expect(abs(Published.wrapped(difference - Published.ee00b.value)) <= 1e-12)
     }
 
