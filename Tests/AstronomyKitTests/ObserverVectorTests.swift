@@ -153,6 +153,34 @@ struct ObserverVectorTests {
         }
     }
 
+    // MARK: - Geocentric Observer
+
+    /// `Observer.geocentric` sits the observer model's equatorial radius
+    /// below the surface at latitude 0, so it is at Earth's centre (#154).
+    @Test("The geocentric observer's vector has zero length", arguments: [EquatorDate.j2000, .ofDate])
+    func geocentricObserverAtCentre(equator: EquatorDate) throws {
+        let time = AstroTime(year: 2_025, month: 1, day: 1)
+        #expect(try Observer.geocentric.vector(at: time, equator: equator).magnitude == 0)
+    }
+
+    /// With the observer at the centre, the default-observer equatorial
+    /// position is the geocentric vector's. 1e-12 degrees and 1e-15 AU allow
+    /// for the two paths converting the same vector to angles separately.
+    @Test(
+        "Default-observer equatorial coordinates are the geocentric vector's",
+        arguments: [CelestialBody.moon, .mars]
+    )
+    func defaultObserverIsGeocentric(body: CelestialBody) throws {
+        for hour in [0, 6] {
+            let time = AstroTime(year: 2_025, month: 1, day: 1, hour: hour)
+            let fromObserver = try body.equatorial(at: time)
+            let fromVector = try body.geocentricPosition(at: time).toEquatorial()
+            #expect(abs(fromObserver.rightAscension - fromVector.rightAscension) * 15 <= 1e-12, "\(body) \(hour)h")
+            #expect(abs(fromObserver.declination - fromVector.declination) <= 1e-12, "\(body) \(hour)h")
+            #expect(abs(fromObserver.distance - fromVector.distance) <= 1e-15, "\(body) \(hour)h")
+        }
+    }
+
     // MARK: - Reverse Observer from Vector
 
     @Test("Vector-to-observer roundtrip preserves location")

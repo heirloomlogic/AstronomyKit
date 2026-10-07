@@ -145,45 +145,23 @@ struct AtmosphereTests {
 
     static let pressureHeights = [1_000.0, 5_000, 8_848.86, 11_000, 15_000, 20_000, 26_000, 32_000]
 
-    /// 4e-5 relative. The engine's documented deviations from the standard
-    /// (#153) peak at 3.03e-5 at 11 km, so this bound holds today and still
-    /// fails a troposphere exponent of 5.3 (5e-3 at 5 km), a 22,000 Pa base
-    /// at 11 km (2.8 %), a 20 km base off by 0.1 % and a density that leaves
-    /// out temperature (13 % at 5 km).
-    static let issue153Bound = 4e-5
-
     /// 1e-7 relative. The exponent is usually published to seven figures as
     /// 5.255876, which is 1.1e-7 below the closed form and moves pressure by
-    /// at most 3.2e-8 (at 11 km), so either value passes. The engine's
+    /// at most 3.2e-8 (at 11 km), so either value passes. The C engine's
     /// 5.25577 is 3.0e-5 off at 11 km, its rounded stratosphere base
     /// pressures 2e-6 to 3.3e-6, and the ICAO exponent 5.2558798 1.0e-6.
     static let closedFormTolerance = 1e-7
 
-    @Test("Pressure and density are within #153's deviation of the 1976 standard", arguments: pressureHeights)
-    func pressureAndDensityNearStandard(geopotentialHeight: Double) throws {
-        let atm = try Atmosphere.at(elevation: geopotentialHeight)
-        let pressure = atm.pressure / (Standard1976.pressure(at: geopotentialHeight) / 100) - 1
-        let density = atm.density / Standard1976.relativeDensity(at: geopotentialHeight) - 1
-
-        #expect(abs(pressure) < Self.issue153Bound, "\(atm.pressure) mbar, relative error \(pressure)")
-        #expect(abs(density) < Self.issue153Bound, "density \(atm.density), relative error \(density)")
-    }
-
-    /// Fails today because of #153: the troposphere exponent is 5.25577, not
-    /// 5.2558761, and the stratosphere starts from the rounded 22,632.0 Pa and
-    /// 5,474.87 Pa. When the port implements the standard's closed form, the
-    /// known issue stops recording and this test fails until the
-    /// `withKnownIssue` wrapper is removed.
+    /// The native engine computes every layer from the defining constants
+    /// (#153).
     @Test("Pressure and density are the 1976 standard's closed form", arguments: pressureHeights)
     func pressureAndDensityAreStandard(geopotentialHeight: Double) throws {
         let atm = try Atmosphere.at(elevation: geopotentialHeight)
         let pressure = atm.pressure / (Standard1976.pressure(at: geopotentialHeight) / 100) - 1
         let density = atm.density / Standard1976.relativeDensity(at: geopotentialHeight) - 1
 
-        withKnownIssue("#153: pressure uses exponent 5.25577 and rounded stratosphere base pressures") {
-            #expect(abs(pressure) < Self.closedFormTolerance, "\(atm.pressure) mbar, relative error \(pressure)")
-            #expect(abs(density) < Self.closedFormTolerance, "density \(atm.density), relative error \(density)")
-        }
+        #expect(abs(pressure) < Self.closedFormTolerance, "\(atm.pressure) mbar, relative error \(pressure)")
+        #expect(abs(density) < Self.closedFormTolerance, "density \(atm.density), relative error \(density)")
     }
 
     @Test("Atmosphere is Equatable")

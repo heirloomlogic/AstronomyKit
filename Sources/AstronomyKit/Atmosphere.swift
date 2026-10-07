@@ -5,8 +5,6 @@
 //  Atmospheric model calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Atmosphere
 
 /// Atmospheric properties at a given elevation.
@@ -28,8 +26,6 @@ public struct Atmosphere: Sendable, Equatable {
     public let pressure: Double
 
     /// The temperature in degrees Celsius.
-    ///
-    /// Based on the International Standard Atmosphere model.
     public let temperature: Double
 
     /// The atmospheric density relative to sea level.
@@ -38,16 +34,11 @@ public struct Atmosphere: Sendable, Equatable {
     /// Higher elevations have lower density.
     public let density: Double
 
-    /// Creates an atmosphere from the C structure.
-    init(_ raw: astro_atmosphere_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        // Convert from Pascals to millibars (1 mbar = 100 Pa)
-        self.pressure = raw.pressure / 100.0
-        // Convert from Kelvins to Celsius
-        self.temperature = raw.temperature - 273.15
-        self.density = raw.density
+    /// Creates an atmosphere from the native engine's values.
+    init(_ engine: Engine.Atmosphere) {
+        self.pressure = engine.pressure / 100.0
+        self.temperature = engine.temperature - 273.15
+        self.density = engine.density
     }
 }
 
@@ -68,11 +59,16 @@ extension Atmosphere: CustomStringConvertible {
 extension Atmosphere {
     /// Calculates atmospheric properties at a given elevation.
     ///
-    /// Uses the International Standard Atmosphere model.
+    /// Uses the 1976 U.S. Standard Atmosphere (NOAA-S/T 76-1562), which below
+    /// 32 km is also the ISO 2533 standard atmosphere, computed from its
+    /// defining constants. Above 32 km the model keeps the 20 to 32 km layer
+    /// (+1 K/km), where the standard changes layer.
     ///
-    /// - Parameter elevation: The elevation above sea level in meters.
+    /// - Parameter elevation: The geopotential height above sea level in
+    ///   meters, from -500 to 100,000.
     /// - Returns: The atmospheric properties.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: ``AstronomyError/invalidParameter`` for an elevation outside
+    ///   -500 to 100,000 meters or one that is not finite.
     ///
     /// ## Example
     ///
@@ -82,8 +78,7 @@ extension Atmosphere {
     /// print("Pressure: \(everest.pressure) mbar") // ~314 mbar
     /// ```
     public static func at(elevation: Double) throws -> Atmosphere {
-        let result = Astronomy_Atmosphere(elevation)
-        return try Atmosphere(result)
+        try Atmosphere(Engine.Atmosphere(elevation: elevation))
     }
 }
 
@@ -92,7 +87,8 @@ extension Atmosphere {
 extension Observer {
     /// The atmospheric properties at this observer's elevation.
     ///
-    /// Uses the International Standard Atmosphere model based on
+    /// Uses the 1976 U.S. Standard Atmosphere model (see
+    /// ``Atmosphere/at(elevation:)``) based on
     /// the observer's height above sea level.
     public var atmosphere: Atmosphere {
         get throws {

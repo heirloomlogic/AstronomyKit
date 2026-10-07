@@ -325,27 +325,28 @@ struct ReproducibilityTests {
 
     // MARK: - 2. Equatorial Positions (Geocentric & Topocentric)
 
+    /// Recorded with `Observer.geocentric` at Earth's centre (#154).
     @Test("Geocentric equatorial (RA/Dec/dist, J2000) at 2026-07-24T00:00Z")
     func equatorialGeocentric2026() throws {
         let t = Self.t2026
         expectEquatorial(
             try CelestialBody.sun.equatorial(at: t, from: .geocentric, equatorDate: .j2000),
-            ra: 0x4020_65d1_56d7_8f5a, dec: 0x4033_fb72_64fc_81e7, dist: 0x3ff0_40cc_0033_3460,
+            ra: 0x4020_65d1_56d7_902a, dec: 0x4033_fb72_64fc_4726, dist: 0x3ff0_40cc_0033_6090,
             "Sun (geo) 2026"
         )
         expectEquatorial(
             try CelestialBody.moon.equatorial(at: t, from: .geocentric, equatorDate: .j2000),
-            ra: 0x402f_6a07_0658_e339, dec: 0xc039_0710_3139_a096, dist: 0x3f66_2035_de2c_0818,
+            ra: 0x402f_6a07_0638_332a, dec: 0xc039_0710_3163_a5bf, dist: 0x3f66_2035_de08_fb4b,
             "Moon (geo) 2026"
         )
         expectEquatorial(
             try CelestialBody.mars.equatorial(at: t, from: .geocentric, equatorDate: .j2000),
-            ra: 0x4014_4e71_2596_ec73, dec: 0x4036_cfcc_ced7_41b1, dist: 0x4000_3ba0_4de2_953c,
+            ra: 0x4014_4e71_2597_00b7, dec: 0x4036_cfcc_ced7_2c32, dist: 0x4000_3ba0_4de2_a42a,
             "Mars (geo) 2026"
         )
         expectEquatorial(
             try CelestialBody.jupiter.equatorial(at: t, from: .geocentric, equatorDate: .j2000),
-            ra: 0x4020_f87f_7a11_1824, dec: 0x4033_82a2_fb08_fd07, dist: 0x4019_2fdd_02f7_6f19,
+            ra: 0x4020_f87f_7a11_17da, dec: 0x4033_82a2_fb08_f3ff, dist: 0x4019_2fdd_02f7_7a29,
             "Jupiter (geo) 2026"
         )
     }
