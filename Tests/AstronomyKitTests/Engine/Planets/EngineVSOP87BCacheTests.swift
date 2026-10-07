@@ -158,6 +158,23 @@ struct EngineVSOP87BCacheTests {
         #expect(cache.coordinates[Engine.Planet.uranus.rawValue].statistics == Statistics(hits: 0, misses: 2))
     }
 
+    /// The shared cache's counts can include other suites' lookups, so
+    /// this checks only the changes its own calls make, at an instant no
+    /// other test uses.
+    @Test("Engine.resetCaches empties the shared cache")
+    func sharedReset() throws {
+        let store = Engine.VSOP87B.cache.coordinates[Engine.Planet.jupiter.rawValue]
+        let time = Self.time(tt: -77_777.25)
+        _ = try Engine.Planet.jupiter.heliocentricDistance(at: time)
+        let before = store.statistics
+        _ = try Engine.Planet.jupiter.heliocentricDistance(at: time)
+        Engine.resetCaches()
+        _ = try Engine.Planet.jupiter.heliocentricDistance(at: time)
+        let after = store.statistics
+        #expect(after.hits - before.hits == 1)
+        #expect(after.misses - before.misses == 1)
+    }
+
     @Test("Simultaneous callers get the series result")
     func simultaneous() throws {
         let (cache, _) = Self.makeCache()

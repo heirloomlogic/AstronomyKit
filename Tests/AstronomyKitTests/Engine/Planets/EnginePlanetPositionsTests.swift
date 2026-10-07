@@ -25,11 +25,14 @@ struct EnginePlanetPositionsTests {
         let (l, b, r) = (record.longitude, record.latitude, record.radius)
         let position = SIMD3(r * cos(b) * cos(l), r * cos(b) * sin(l), r * sin(b))
         let (dl, db, dr) = (record.longitudeRate, record.latitudeRate, record.radiusRate)
-        let velocity = SIMD3(
-            dr * cos(b) * cos(l) - r * sin(b) * cos(l) * db - r * cos(b) * sin(l) * dl,
-            dr * cos(b) * sin(l) - r * sin(b) * sin(l) * db + r * cos(b) * cos(l) * dl,
-            dr * sin(b) + r * cos(b) * db)
-        return (position, velocity)
+        // One product per line, so Swift 6.2 on Linux type-checks it in time.
+        let radial: Double = dr * cos(b)
+        let tangential: Double = r * cos(b) * dl
+        let meridional: Double = r * sin(b) * db
+        let vx: Double = radial * cos(l) - meridional * cos(l) - tangential * sin(l)
+        let vy: Double = radial * sin(l) - meridional * sin(l) + tangential * cos(l)
+        let vz: Double = dr * sin(b) + r * cos(b) * db
+        return (position, SIMD3(vx, vy, vz))
     }
 
     /// The printed angles and radius are each within 5e-11 of the series, and
@@ -130,7 +133,15 @@ struct EnginePlanetPositionsTests {
                 [equatorial.x, equatorial.y, equatorial.z].map(\.bitPattern)
                     == [rotated.x, rotated.y, rotated.z].map(\.bitPattern))
             let equatorialState = try planet.heliocentricState(at: time, cache: Self.cache())
-            #expect(equatorialState.vx == Engine.VSOP87B.toEquatorial.apply(to: state).vx)
+            let rotatedState = Engine.VSOP87B.toEquatorial.apply(to: state)
+            let equatorialBits = [
+                equatorialState.x, equatorialState.y, equatorialState.z,
+                equatorialState.vx, equatorialState.vy, equatorialState.vz,
+            ].map(\.bitPattern)
+            let rotatedBits = [
+                rotatedState.x, rotatedState.y, rotatedState.z, rotatedState.vx, rotatedState.vy, rotatedState.vz,
+            ].map(\.bitPattern)
+            #expect(equatorialBits == rotatedBits)
             #expect(equatorial.time.tt == tt && state.time.tt == tt)
             let distance = try planet.heliocentricDistance(at: time, cache: Self.cache())
             #expect(abs(distance - position.length) <= 4e-16 * distance, "\(planet) \(tt)")

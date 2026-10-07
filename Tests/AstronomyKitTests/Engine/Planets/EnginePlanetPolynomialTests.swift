@@ -169,20 +169,34 @@ struct EnginePlanetPolynomialTests {
     func continuity() throws {
         for planet in Engine.Planet.allCases {
             let model = Polynomial.model(planet)
-            var worst = 0.0
+            var jumps: [Double] = []
             for k in 1..<model.segmentCount where model.included[k - 1] && model.included[k] {
                 let boundary = model.start(ofSegment: k)
                 let before = try #require(model.state(tt: boundary.nextDown))
                 let after = try #require(model.position(tt: boundary))
                 let step = boundary - boundary.nextDown
                 for axis in 0..<3 {
-                    let jump = abs(after[axis] - before.position[axis]) - abs(before.velocity[axis]) * step
-                    // Unlike max(_:_:), this keeps a NaN, which then fails the check.
-                    if !(jump <= worst) { worst = jump }
+                    jumps.append(abs(after[axis] - before.position[axis]) - abs(before.velocity[axis]) * step)
                 }
             }
+            let worst = Self.largest(jumps)
             #expect(worst <= 2e-12, "\(planet): \(worst) AU")
         }
+    }
+
+    /// The largest of `values`, or NaN when any of them is NaN, so a NaN
+    /// anywhere fails a `<=` check.
+    static func largest(_ values: [Double]) -> Double {
+        if values.contains(where: \.isNaN) { return .nan }
+        return values.max() ?? -.infinity
+    }
+
+    @Test("A NaN at any seam fails the continuity check", arguments: [0, 1, 2])
+    func largestKeepsNaN(position: Int) {
+        var values = [1e-13, 2e-13, 1e-14]
+        values[position] = .nan
+        #expect(Self.largest(values).isNaN)
+        #expect(Self.largest([1e-13, 3e-13, 2e-13]) == 3e-13)
     }
 
     // MARK: - Published values

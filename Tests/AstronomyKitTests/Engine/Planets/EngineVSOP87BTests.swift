@@ -95,8 +95,13 @@ struct EngineVSOP87BTests {
             var increments: [Double] = []
             var power = 1.0
             for count in model.termCounts[coordinate] {
-                let values = (term..<term + count).map { i in
-                    model.terms[3 * i] * cos(model.terms[3 * i + 1] + t * model.terms[3 * i + 2])
+                // Split up so Swift 6.2 on Linux type-checks it in time.
+                var values: [Double] = []
+                for i in term..<term + count {
+                    let amplitude: Double = model.terms[3 * i]
+                    let phase: Double = model.terms[3 * i + 1]
+                    let frequency: Double = model.terms[3 * i + 2]
+                    values.append(amplitude * cos(phase + t * frequency))
                 }
                 term += count
                 var increment = power * sum(values)
