@@ -131,7 +131,7 @@ func angularSeparation(
 /// Standard tolerance in arcminutes (1 arcminute = Astronomy Engine stated accuracy).
 let toleranceArcminutes = 1.0
 
-/// Looser tolerance, asserted for Neptune (geocentric and Asheville) and Asheville Pluto.
+/// Looser tolerance, asserted for Asheville Neptune and Asheville Pluto.
 let outerPlanetToleranceArcminutes = 1.5
 
 // MARK: - Sun Validation
@@ -613,7 +613,8 @@ struct JupiterValidationTests {
 
 @Suite("Neptune Validation vs JPL Horizons")
 struct NeptuneValidationTests {
-    // JPL Horizons data for Neptune (ICRF column)
+    // JPL Horizons data for Neptune (ICRF column). Every row matches the
+    // recorded query in Scripts/reference-data/sources/jpl-validation.
     static let referenceData: [JPLReferencePoint] = [
         // Line 61: 2026-Jan-02: 23 59 01.31 -01 33 27.9
         JPLReferencePoint(
@@ -627,17 +628,17 @@ struct NeptuneValidationTests {
             decMinutes: 33,
             decSeconds: 27.9
         ),
-        // Line 81: 2026-Jan-22: 00 00 15.75 -01 24 40.1
+        // 2026-Jan-22: 00 00 20.79 -01 24 05.3
         JPLReferencePoint(
             year: 2_026,
             month: 1,
             day: 22,
             raHours: 00,
             raMinutes: 00,
-            raSeconds: 15.75,
+            raSeconds: 20.79,
             decDegrees: -01,
             decMinutes: 24,
-            decSeconds: 40.1
+            decSeconds: 05.3
         ),
         // Line 101: 2026-Feb-11: 00 02 21.20 -01 10 28.0
         JPLReferencePoint(
@@ -666,7 +667,7 @@ struct NeptuneValidationTests {
         ),
     ]
 
-    @Test("Neptune position matches JPL reference within 1.5 arcminutes")
+    @Test("Neptune position matches JPL reference within 1 arcminute")
     func neptunePositionAccuracy() throws {
         for ref in Self.referenceData {
             let computed = try CelestialBody.neptune.equatorial(
@@ -683,11 +684,8 @@ struct NeptuneValidationTests {
             )
 
             #expect(
-                separation <= outerPlanetToleranceArcminutes,
-                """
-                Neptune position on \(ref.year)-\(ref.month)-\(ref.day) exceeds tolerance: \
-                \(separation) arcmin (limit: \(outerPlanetToleranceArcminutes))
-                """
+                separation <= toleranceArcminutes,
+                "Neptune position on \(ref.year)-\(ref.month)-\(ref.day) exceeds tolerance: \(separation) arcmin"
             )
         }
     }
@@ -697,7 +695,8 @@ struct NeptuneValidationTests {
 
 @Suite("Uranus Validation vs JPL Horizons")
 struct UranusValidationTests {
-    // JPL Horizons data for Uranus (verified correct from earlier)
+    // JPL Horizons data for Uranus (ICRF column). Every row matches the
+    // recorded query in Scripts/reference-data/sources/jpl-validation.
     static let referenceData: [JPLReferencePoint] = [
         JPLReferencePoint(
             year: 2_026,
@@ -716,10 +715,10 @@ struct UranusValidationTests {
             day: 22,
             raHours: 03,
             raMinutes: 39,
-            raSeconds: 45.44,
+            raSeconds: 42.51,
             decDegrees: 19,
             decMinutes: 20,
-            decSeconds: 20.0
+            decSeconds: 11.4
         ),
         JPLReferencePoint(
             year: 2_026,
@@ -765,6 +764,61 @@ struct UranusValidationTests {
                 separation <= toleranceArcminutes,
                 "Uranus position on \(ref.year)-\(ref.month)-\(ref.day) exceeds tolerance: \(separation) arcmin"
             )
+        }
+    }
+}
+
+// MARK: - Recorded Horizons tables
+
+/// The geocentric Uranus and Neptune rows against the Horizons observer
+/// tables recorded in Scripts/reference-data/sources/jpl-validation, whose
+/// adjacent .query.json files hold the query and the response's SHA-256.
+@Suite("Recorded Horizons tables for the Uranus and Neptune rows")
+struct RecordedHorizonsTableTests {
+    static let directory = URL(fileURLWithPath: #filePath)
+        .deletingLastPathComponent()  // AstronomyKitTests
+        .deletingLastPathComponent()  // Tests
+        .deletingLastPathComponent()
+        .appendingPathComponent("Scripts/reference-data/sources/jpl-validation")
+
+    /// The text of the recorded response `name`.
+    static func table(_ name: String) throws -> String {
+        struct Response: Decodable { let result: String }
+        let data = try Data(contentsOf: directory.appendingPathComponent("\(name).json"))
+        return try JSONDecoder().decode(Response.self, from: data).result
+    }
+
+    /// The RA and Dec on `table`'s row for `reference`'s date, which starts "2026-Jan-22 00:00".
+    static func row(for reference: JPLReferencePoint, in table: String) throws -> String {
+        let months = ["Jan", "Feb", "Mar"]
+        let day = String(format: "%02d", reference.day)
+        let date = "\(reference.year)-\(months[reference.month - 1])-\(day) 00:00"
+        let line = try #require(table.split(separator: "\n").first { $0.hasPrefix(" \(date)") })
+        return line.dropFirst(date.count + 1).trimmingCharacters(in: .whitespaces)
+    }
+
+    /// `reference` printed as Horizons prints it: "hh mm ss.ss sdd mm ss.s".
+    static func printed(_ reference: JPLReferencePoint) -> String {
+        let ra = String(format: "%02d %02d %05.2f", reference.raHours, reference.raMinutes, reference.raSeconds)
+        let sign = reference.decNegative ? "-" : "+"
+        let dec =
+            sign + String(format: "%02d %02d %04.1f", reference.decDegrees, reference.decMinutes, reference.decSeconds)
+        return "\(ra) \(dec)"
+    }
+
+    @Test("Every geocentric Uranus and Neptune row is the recorded Horizons row for its date")
+    func rowsMatch() throws {
+        for (name, references) in [
+            ("uranus-geocentric-2026", UranusValidationTests.referenceData),
+            ("neptune-geocentric-2026", NeptuneValidationTests.referenceData),
+        ] {
+            #expect(references.count == 4)
+            let table = try Self.table(name)
+            for reference in references {
+                #expect(
+                    try Self.row(for: reference, in: table) == Self.printed(reference),
+                    "\(name) \(reference.month)-\(reference.day)")
+            }
         }
     }
 }

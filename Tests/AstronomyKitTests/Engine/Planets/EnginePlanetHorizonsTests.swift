@@ -52,13 +52,9 @@ struct EnginePlanetHorizonsTests {
     struct Case: Sendable, CustomTestStringConvertible {
         let body: Body
         let references: [JPLReferencePoint]
+        /// The public suite's tolerance: 1′, or 1.5′ for Asheville Neptune.
+        var toleranceArcminutes = AstronomyKitTests.toleranceArcminutes
         var testDescription: String { body.testDescription }
-
-        /// The suite's tolerance: 1.5′ for Neptune and 1′ for the others.
-        var toleranceArcminutes: Double {
-            if case .planet(.neptune) = body { return outerPlanetToleranceArcminutes }
-            return AstronomyKitTests.toleranceArcminutes
-        }
     }
 
     /// The geocentric suites of `JPLValidationTests`.
@@ -81,7 +77,9 @@ struct EnginePlanetHorizonsTests {
         Case(body: .planet(.jupiter), references: AshevilleValidationTests.jupiterData),
         Case(body: .planet(.saturn), references: AshevilleValidationTests.saturnData),
         Case(body: .planet(.uranus), references: AshevilleValidationTests.uranusData),
-        Case(body: .planet(.neptune), references: AshevilleValidationTests.neptuneData),
+        Case(
+            body: .planet(.neptune), references: AshevilleValidationTests.neptuneData,
+            toleranceArcminutes: outerPlanetToleranceArcminutes),
     ]
 
     /// The geocentric records of `distance-fixtures.json` for the Sun and the
@@ -137,8 +135,8 @@ struct EnginePlanetHorizonsTests {
     /// Asheville row minus the geocentric row on the same date against the
     /// engine's topocentric minus geocentric direction. Rows are printed to
     /// 0.01 s of RA and 0.1″ of Dec, so the two differences agree within
-    /// 0.15″ and 0.1″; the allowance is 0.2″. Dates the geocentric suite
-    /// lacks, and its two wrong rows (#180), are skipped.
+    /// 0.15″ and 0.1″; the allowance is 0.2″. Mercury's 02-11 row has no
+    /// geocentric row on that date and is skipped.
     @Test("The Asheville rows' offset from the geocentric rows is the observer's parallax", arguments: ashevilleCases)
     func parallax(testCase: Case) throws {
         let geocentricRows = try #require(
@@ -149,9 +147,7 @@ struct EnginePlanetHorizonsTests {
             guard
                 let geocentricRow = geocentricRows.first(where: {
                     $0.month == topocentricRow.month && $0.day == topocentricRow.day
-                }),
-                !(topocentricRow.month == 1 && topocentricRow.day == 22
-                    && ["uranus", "neptune"].contains(testCase.testDescription))
+                })
             else { continue }
             let time = Self.time(topocentricRow)
             let geocentric = try Self.geocentric(testCase.body, at: time)
@@ -171,7 +167,9 @@ struct EnginePlanetHorizonsTests {
             #expect(abs(fromEngine.dec - published.dec) <= 0.2, "\(date) Dec: \(fromEngine.dec)″ vs \(published.dec)″")
             compared += 1
         }
-        #expect(compared >= 2)
+        var skipped = 0
+        if case .planet(.mercury) = testCase.body { skipped = 1 }
+        #expect(compared == testCase.references.count - skipped)
     }
 
     /// The shift from `from` to `to` in arcseconds: RA times cos Dec, and Dec.
