@@ -47,7 +47,10 @@ unmodified subset of ERFA 2.0.1, commit
 9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3, https://github.com/liberfa/erfa.
 Each file retains its original notice. The AstronomyKit wrapper
 (ephemeris_time.c and include/ephemeris_time.h) is separate from the official
-routines. The ERFA license follows.
+routines. The IAU 2000B nutation coefficients in
+Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift are
+generated from nut00b.c of the same ERFA commit, kept unmodified in
+Scripts/orientation-data. The ERFA license follows.
 
 Copyright (C) 2013-2021, NumFOCUS Foundation.
 All rights reserved.
