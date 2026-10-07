@@ -46,7 +46,7 @@ A frame is a type parameter, so a vector moves between frames only through a rot
 | `Engine.HOR` | Observer's horizon: x north, y west, z zenith | HOR |
 | `Engine.GAL` | Galactic | GAL |
 
-A module that needs another frame, such as Jupiter's equator for its moons, declares it in its own directory.
+A module that needs another frame, such as Jupiter's equator for its moons, declares it in its own directory. `Engine.EQM`, the mean equator and equinox of date, is declared in `Orientation/` (see [Earth orientation](#earth-orientation)).
 
 - `Engine.Vector<F>`: `x`, `y`, `z` in AU and the `time` it is valid at.
 - `Engine.State<F>`: position `x`, `y`, `z` in AU, velocity `vx`, `vy`, `vz` in AU per TT day, and `time`.
@@ -205,6 +205,72 @@ The closures are synchronous and non-escaping. They take the place of the C call
 
 `correct` keeps `Astronomy_CorrectLightTravel`. It calls `position` at most 10 times. Each backdate is `time.adding(days: -distance / Engine.speedOfLightAUPerDay)`, a UT offset whose TT comes from the observation time's model, and the iteration stops when TT moves less than 1e-9 days. A distance beyond one light-day throws `invalidParameter`, and a tenth call without convergence throws `noConvergence`. The result is the last vector `position` returned, with its time set to the time that call received, as the public `AstroSearch.correctLightTravel` reports it. The light-day is the published one (see [Constants](#constants)).
 
+## Earth orientation
+
+In the tree: `Orientation/EngineNutation.swift`, `Orientation/EnginePrecession.swift`, `Orientation/EngineEarthRotation.swift`, `Orientation/EngineRotations.swift` and the generated `Orientation/Generated/IAU2000BTerms.swift`. Rotations between the public frames, coordinate conversions, observers and the atmosphere come in later parts of #86.
+
+```swift
+extension Engine.Nutation {
+    struct Angles { var longitude, obliquity, longitudeRate, obliquityRate: Double }
+    static func evaluate(centuries t: Double) -> Angles
+    static let cache: Engine.BoundedCache<Engine.ExactKey, Angles>
+    static func angles(tt: Double, cache: Engine.BoundedCache<Engine.ExactKey, Angles> = cache) -> Angles
+}
+extension Engine.EarthTilt {
+    init(tt: Double, cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache)
+    var nutation: Engine.Nutation.Angles
+    var meanObliquity, meanObliquityRate: Double
+    var trueObliquity, trueObliquityRate, equationOfEquinoxes: Double { get }
+    var nutationRotation: Engine.Rotation<Engine.EQM, Engine.EQD> { get }
+    var nutationRate: Engine.RotationRate<Engine.EQM, Engine.EQD> { get }
+}
+extension Engine.Precession {
+    static func meanObliquity(tt: Double) -> Double
+    static func meanObliquityRate(tt: Double) -> Double
+    static func angles(tt: Double) -> Angles  // ψA, ωA, χA and their rates
+    static func rotation(tt: Double) -> Engine.Rotation<Engine.EQJ, Engine.EQM>
+    static func rate(tt: Double) -> Engine.RotationRate<Engine.EQJ, Engine.EQM>
+}
+extension Engine.EarthRotation {
+    static func angle(ut: Double) -> Double
+    static func meanSiderealTime(_ time: Engine.Time) -> Double
+    static func apparentSiderealTime(
+        _ time: Engine.Time,
+        cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache
+    ) -> Double
+}
+extension Engine.Rotation {
+    func apply(to state: Engine.State<From>, rate: Engine.RotationRate<From, To>) -> Engine.State<To>
+}
+```
+
+- Nutation is IAU 2000B as SOFA's `iauNut00b` evaluates it: the 77 luni-solar terms, summed smallest first with each argument reduced to one turn, plus fixed offsets of −0.135 and +0.388 mas for the planetary terms. `Scripts/generate-nutation-table.py` writes the table from ERFA 2.0.1's `nut00b.c`, pinned in `Scripts/orientation-data` with its SHA-256, and `--check` runs in CI. The rates are the derivatives of the same terms. Angles are in degrees and rates in degrees per TT day.
+- `angles(tt:)` reads the shared cache, keyed by the exact TT in Julian centuries (`tt / 36525`), the value the series reads. One evaluation gives the angles and the rates, so an angle caller warms the entry a rate caller reads. The C engine's `psi` and `eps` time memo has no counterpart: callers at one instant share the cache entry instead.
+- The mean obliquity and the precession angles ψA, ωA and χA are the IAU 2006 polynomials (Capitaine, Wallace and Chapront 2003; SOFA `iauObl06` and `iauP06e`). The precession matrix is P = R3(χA)·R1(−ωA)·R3(−ψA)·R1(ε0), IERS Conventions (2010) equation 5.39, from the mean equator and equinox of J2000 to those of date. There is no frame bias: EQJ is the mean J2000 frame, as in the C engine.
+- The nutation matrix is R1(−εA − Δε)·R3(−Δψ)·R1(εA), SOFA's `iauNumat`, from EQM to EQD.
+- `Engine.RotationRate` holds the derivative of a rotation per TT day in the rotation's own slots, so it cannot be applied as a rotation. `apply(to:rate:)` takes a state through a rotation that moves with time: the position is rotated, and the velocity is rotated plus the rate applied to the position. They port local patch 12's `precession_rot_rate` and `nutation_rot_rate`.
+- The Earth rotation angle is SOFA's `iauEra00`, in degrees from 0 up to 360. Mean sidereal time is `iauGmst06`: the angle at `time.ut` plus the IAU 2006 polynomial at `time.tt`. Apparent sidereal time adds the equation of the equinoxes Δψ·cos εA. Both are in sidereal hours from 0 up to 24; a value that rounds up to the period is returned as 0. A time or day count that is not finite gives NaN, and nutation for it is computed without touching the cache.
+
+### Differences from published definitions
+
+- The equation of the equinoxes leaves out the complementary terms of IAU 1994 Resolution C7 (SOFA `iauEect00`), as `Astronomy_SiderealTime` does. They reach about 2.65 mas between 1950 and 2050. #170 tracks whether to add them.
+
+### Published-value checks
+
+Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA through ERFA 2.0.1 (the commit `THIRD_PARTY_NOTICES` pins), not against C output:
+
+- The values in ERFA's own test program, `t_erfa_c.c`: `t_nut00b`, `t_obl06`, `t_p06e`, `t_numat`, `t_era00` and `t_gmst06`, each within SOFA's tolerance or tighter; `t_bp06` within 1e-13, because SOFA builds that matrix from the Fukushima-Williams angles, which agree with equation 5.39 to 3e-14 there; and `t_gst06a` within the 4 mas that IAU 2000B (1 mas of 2000A from 1995 to 2050) and #170 allow.
+- pyerfa 2.0.1.5 at eight epochs from 1600 to 2500, with UT1 and TT apart: nutation to 1e-15 rad, mean obliquity and the precession angles to 1e-15 rad, the precession matrix against equation 5.39 built from the SOFA angles to 1e-15, and the Earth rotation angle and mean sidereal time to 1e-12 rad.
+- Rates against five-point differences of the values on exact binary-fraction stencils, and the moving-rotation state against the derivative of the rotated position.
+- The nutation cache's work counts with a private registry: one evaluation per instant across angle, rate, tilt and sidereal-time callers, signed-zero keys, nonfinite bypass, eviction of the oldest of 32, reset, and simultaneous callers.
+
+### Orientation tests that depend on the C engine
+
+| Test | Disposition |
+|---|---|
+| `NutationCacheTests` | Kept while the C engine ships: it pins the C nutation cache (local patch 13) through `_Astronomy_Iau2000bRates`. `EngineNutationCacheTests` holds the engine's work counts. Retired when #96 removes the C engine. |
+| `Scripts/performance/test-nutation-cache.sh`, `nutation_cache_probe.c` and `nutation_output_probe.c` | Kept while the C engine ships, for the same reason, and retired with it. |
+
 ## Caches and reset
 
 In the tree: `EngineCache.swift`.
@@ -221,7 +287,7 @@ In the tree: `EngineCache.swift`.
 | State | Owner | Native form | C counterpart |
 |---|---|---|---|
 | VSOP87B series results | #85 | `BoundedCache`, 32 entries per body, `ExactKey` of the scaled TT the series reads | Thread-local, 32 per body (local patch 8) |
-| Nutation angles and rates | #86 | `BoundedCache`, 32 entries, `ExactKey` of the scaled TT | Thread-local, 32 entries (local patch 13) |
+| Nutation angles and rates | #86 | `Engine.Nutation.cache`: `BoundedCache`, 32 entries, `ExactKey` of TT in Julian centuries, shared by angle, rate, tilt and sidereal-time callers | Thread-local, 32 entries (local patch 13) |
 | Moon longitude, latitude, distance | #87 | `BoundedCache`, 32 entries, `ExactKey` of the scaled TT | Thread-local, 32 entries (local patch 14) |
 | Pluto segments | #88 | `BoundedCache` keyed by segment index, one entry per table segment | Allocated segments behind a mutex, freed by `Astronomy_Reset` (local patch 1) |
 | Delta T default | #96 | `Atomic` in the public layer | `_Atomic` function pointer (local patch 2) |
