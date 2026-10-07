@@ -59,9 +59,10 @@ extension Atmosphere: CustomStringConvertible {
 extension Atmosphere {
     /// Calculates atmospheric properties at a given elevation.
     ///
-    /// Uses the 1976 U.S. Standard Atmosphere (NOAA-S/T 76-1562), which below
-    /// 32 km is also the ISO 2533 standard atmosphere, computed from its
-    /// defining constants. Above 32 km the model keeps the 20 to 32 km layer
+    /// Uses the 1976 U.S. Standard Atmosphere (NOAA-S/T 76-1562), computed
+    /// from its defining constants. Below 32 km it agrees with the ISO 2533
+    /// standard atmosphere, whose constants differ slightly, to about 1e-6 in
+    /// pressure. Above 32 km the model keeps the 20 to 32 km layer
     /// (+1 K/km), where the standard changes layer.
     ///
     /// - Parameter elevation: The geopotential height above sea level in
@@ -88,8 +89,9 @@ extension Observer {
     /// The atmospheric properties at this observer's elevation.
     ///
     /// Uses the 1976 U.S. Standard Atmosphere model (see
-    /// ``Atmosphere/at(elevation:)``) based on
-    /// the observer's height above sea level.
+    /// ``Atmosphere/at(elevation:)``), passing the observer's height above
+    /// sea level unchanged as the geopotential height. The two differ by
+    /// h²/r: about 12 m at 8,849 m, which lowers the pressure by about 0.2 %.
     public var atmosphere: Atmosphere {
         get throws {
             try Atmosphere.at(elevation: height)

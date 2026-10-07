@@ -21,8 +21,9 @@ extension Engine.AtmosphericRefraction {
     /// gives it (Astronomical Algorithms, 2nd ed., eq. 16.4):
     /// R = 1.02′ / tan(h + 10.3°/(h + 5.11)), with h held at −1° below that
     /// altitude, as JPL Horizons does. `.normal` then scales the refraction
-    /// below −1° down linearly to zero at −90°. `.none`, and an altitude
-    /// outside −90 to 90, give 0; a NaN altitude gives NaN.
+    /// below −1° down linearly to zero at −90°. `.none` gives 0 for any
+    /// altitude; the other models give 0 outside −90 to 90, including ±∞,
+    /// and NaN for a NaN altitude.
     static func angle(_ refraction: Refraction, altitude: Double) -> Double {
         guard refraction != .none, !(altitude < -90 || altitude > 90) else { return 0 }
         let h = altitude < -1 ? -1 : altitude
@@ -39,11 +40,13 @@ extension Engine.AtmosphericRefraction {
     /// adding it to `altitude` gives an altitude whose refraction leads back
     /// to `altitude` within 1e-14 degrees.
     ///
-    /// Returns 0 for an altitude that is not finite or is outside −90 to 90,
-    /// for `.none`, and where the iteration finds no such altitude within
-    /// 1,000 steps. Below −1° with `.normal`, where refracted altitudes skip
-    /// some doubles, an iteration that alternates between the two neighbors
-    /// of `altitude` returns the lower one.
+    /// Returns 0 for `.none`, for an altitude that is not finite or is
+    /// outside −90 to 90, and when the iteration stalls, leaves the finite
+    /// numbers or does not converge in 1,000 steps, which happens where no
+    /// altitude in range refracts to `altitude`. Below −1° with `.normal`,
+    /// where refracted altitudes skip some doubles, an iteration that
+    /// alternates between two adjacent doubles returns the correction to the
+    /// lower of them.
     static func inverseAngle(_ refraction: Refraction, altitude bent: Double) -> Double {
         guard (-90...90).contains(bent) else { return 0 }
         var altitude = bent - angle(refraction, altitude: bent)

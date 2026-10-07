@@ -92,7 +92,7 @@ def seed(
     return out
 
 
-GEOCENTER = (0.0, 0.0, -6378137.0)      # Observer.geocentric
+GEOCENTER = (0.0, 0.0, -6378136.6)      # Observer.geocentric
 PRIME = (0.0, 0.0, 0.0)                 # Observer.primeMeridian, so rise/set runs
 ASHEVILLE = (35.595, -82.5572, 0.0)     # JPLValidationTests
 AUDIT = (35.5951, -82.5515, 0.0)        # AuditValidationTests

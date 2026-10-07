@@ -47,7 +47,10 @@ struct EngineRefractionTests {
 
     @Test(
         "No refraction, and altitudes outside -90 to 90, give 0",
-        arguments: [(Refraction.none, 10.0), (.normal, 90.000_1), (.normal, -90.000_1), (.jplHorizons, 1e300)]
+        arguments: [
+            (Refraction.none, 10.0), (.normal, 90.000_1), (.normal, -90.000_1), (.jplHorizons, 1e300),
+            (.normal, .infinity), (.jplHorizons, -.infinity),
+        ]
     )
     func zero(refraction: Refraction, altitude: Double) {
         #expect(Model.angle(refraction, altitude: altitude) == 0)

@@ -39,7 +39,10 @@ struct EngineAtmosphereTests {
     /// `AtmosphereTests.Standard1976`.
     @Test(
         "Pressure, temperature and density follow the closed form",
-        arguments: [-500.0, 0, 1_000, 8_848.86, 10_999.999, 11_000, 11_000.001, 15_000, 20_000, 26_000, 32_000]
+        arguments: [
+            -500.0, 0, 1_000, 8_848.86, 10_999.999, 11_000, 11_000.001, 15_000, 19_999.999, 20_000, 20_000.001, 26_000,
+            32_000,
+        ]
     )
     func closedForm(height: Double) throws {
         let atmosphere = try Engine.Atmosphere(elevation: height)

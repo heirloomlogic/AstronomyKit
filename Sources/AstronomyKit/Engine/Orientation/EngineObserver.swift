@@ -91,12 +91,16 @@ extension Engine.Observers {
     ///
     /// Within 1 mm of the axis, latitude is ±90 and longitude 0. Elsewhere,
     /// longitude is in (−180, 180] and latitude comes from Newton's method on
-    /// the ellipsoid, as in the C engine. Where that does not converge in 11
-    /// steps, which a component that is not finite causes, all three fields
-    /// are NaN; the C engine ends the process there (#174).
+    /// the ellipsoid, as in the C engine.
+    ///
+    /// All three fields are NaN when a component is not finite, or is too
+    /// large to convert to kilometres, and when Newton's method does not
+    /// converge in 11 steps. The C engine ends the process when the method
+    /// fails (#174), and on the axis gives ±90 for a NaN or infinite z.
     static func observer(atVectorOfDate vector: Engine.Vector<Engine.EQD>) -> Observer {
         let km = Engine.kilometersPerAU
         let (x, y, z) = (vector.x * km, vector.y * km, vector.z * km)
+        guard x.isFinite, y.isFinite, z.isFinite else { return Self.undefined }
         let p = hypot(x, y)
         if p < 1e-6 {
             return Observer(
@@ -132,8 +136,11 @@ extension Engine.Observers {
                 factor * ((c * c - s * s) / denominator - s * s * c * c * (f - 1) / (factor * radicand)) + z * s + p * c
             latitude -= w / d
         }
-        return Observer(latitude: .nan, longitude: .nan, height: .nan)
+        return Self.undefined
     }
+
+    /// The observer with every field NaN.
+    private static let undefined = Observer(latitude: .nan, longitude: .nan, height: .nan)
 
     /// The observer at geocentric J2000 position `vector`
     /// (`Astronomy_VectorObserver` with `EQUATOR_J2000`).

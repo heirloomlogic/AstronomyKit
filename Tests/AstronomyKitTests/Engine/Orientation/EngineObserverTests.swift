@@ -157,12 +157,23 @@ struct EngineObserverTests {
         #expect(abs(observer.height - 2_000) <= 1e-6)
     }
 
-    @Test("A vector that is not finite gives a NaN observer instead of stopping", arguments: [Double.nan, .infinity])
-    func nonfinite(value: Double) {
-        let observer = Observers.observer(atVectorOfDate: Engine.Vector(x: value, y: 0, z: 0, time: Self.time))
-        #expect(observer.latitude.isNaN)
-        #expect(observer.longitude.isNaN)
-        #expect(observer.height.isNaN)
+    /// The non-finite value goes in each component in turn, with the others
+    /// zero (on the axis, for z) or at a surface point.
+    @Test(
+        "A vector that is not finite gives a NaN observer instead of stopping",
+        arguments: [Double.nan, .infinity, -.infinity], 0..<3
+    )
+    func nonfinite(value: Double, axis: Int) {
+        let surface = 6_378_136.6e-3 / Engine.kilometersPerAU
+        for base in [[0.0, 0, 0], [surface, 0, 0]] {
+            var c = base
+            c[axis] = value
+            let vector = Engine.Vector<Engine.EQD>(x: c[0], y: c[1], z: c[2], time: Self.time)
+            let observer = Observers.observer(atVectorOfDate: vector)
+            #expect(observer.latitude.isNaN, "\(c)")
+            #expect(observer.longitude.isNaN, "\(c)")
+            #expect(observer.height.isNaN, "\(c)")
+        }
     }
 
     /// `Observer.geocentric` is the ellipsoid's equatorial radius below the

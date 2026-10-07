@@ -89,6 +89,24 @@ struct EngineHorizontalTests {
         #expect(horizontal.rightAscension == ra && horizontal.declination == 0)
     }
 
+    @Test("A right ascension or declination that is not finite gives azimuth 0 and a NaN altitude")
+    func nonfinite() {
+        let observer = Observer(latitude: 35.6, longitude: -82.55)
+        for (ra, dec) in [(Double.nan, 10.0), (5, .infinity)] {
+            for refraction in [Refraction.none, .normal] {
+                let horizontal = Engine.Horizontal(
+                    time: Self.time,
+                    observer: observer,
+                    rightAscension: ra,
+                    declination: dec,
+                    refraction: refraction
+                )
+                #expect(horizontal.azimuth == 0)
+                #expect(horizontal.altitude.isNaN)
+            }
+        }
+    }
+
     @Test(
         "Horizon vectors convert to azimuth east of north and back",
         arguments: [Refraction.none, .normal, .jplHorizons]

@@ -24,8 +24,10 @@ extension Engine.Horizontal {
     /// `declination` degrees on the true equator of `time`, seen from
     /// `observer` (`Astronomy_Horizon`).
     ///
-    /// Azimuth runs from 0 up to 360 degrees east from north and is 0 at the
-    /// zenith and nadir. With refraction, the altitude is raised by
+    /// Azimuth runs from 0 up to 360 degrees east from north and is 0 where
+    /// the direction has no horizontal component. A right ascension or
+    /// declination that is not finite gives azimuth 0 and a NaN altitude, as
+    /// in the C engine. With refraction, the altitude is raised by
     /// ``Engine/AtmosphericRefraction/angle(_:altitude:)``, and, unless the
     /// result is within 3e-4 degrees of the zenith or the refraction is not
     /// positive, the returned right ascension and declination move with it.
