@@ -429,6 +429,8 @@ extension Engine {
     enum ICRS: Frame {}
     struct EclipticState { var state: State<ECT>; var longitude, latitude, distance, longitudeRate, latitudeRate, distanceRate: Double }
     struct Libration { var latitude, longitude, moonLatitude, moonLongitude, distanceKilometers, diameter: Double }
+    static func normalizedLongitude(_ longitude: Double) -> Double    // [0, 360), the C engine's NormalizeLongitude
+    static func longitudeOffset(_ difference: Double) -> Double       // (−180, 180], the C engine's LongitudeOffset
 }
 extension Engine.Moon {
     typealias Cache = Engine.BoundedCache<Engine.ExactKey, SIMD3<Double>>
@@ -453,8 +455,6 @@ extension Engine.Moon {
     static func libration(at time: Engine.Time, cache: Cache = cache) -> Engine.Libration
     static func eclipticLongitude(at time: Engine.Time, cache: Cache = cache) throws -> Double   // degrees, true ecliptic of date
     static func distance(at time: Engine.Time, cache: Cache = cache) throws -> Double            // AU
-    static func normalizedLongitude(_ longitude: Double) -> Double    // [0, 360)
-    static func longitudeOffset(_ difference: Double) -> Double       // (−180, 180]
     static let meanRadiusKilometers: Double   // 1,737.4
     static let equatorInclination: Double     // 1.543
 }
@@ -501,7 +501,7 @@ extension Engine.RotationRate {
 - `Engine.Moon.cache` is the lunar cache of local patch 14: 32 entries of longitude, latitude and distance, keyed by the exact bits of the Julian centuries `coordinates(centuries:cache:)` reads, registered with `CacheRegistry.shared`. `0.0` and `-0.0` are different keys, and centuries that are not finite bypass it. It holds only model values, so a hit returns the caller's own time.
 - `meanEclipticState(at:cache:)` is the C engine's `MoonEcmState`, with its sample offsets. The position is the cached coordinates at `time`. Where DE440 has weight, the velocity is DE440's analytic derivative carried through precession and the mean obliquity and their rates, at TT = (`time.tt` / 36,525) · 36,525. In a blend it is mixed with a central difference of the series over ±`stateStepDays`, 5e-4 day, plus the weight's rate times the difference of the two positions; those three series samples bypass the cache, as `CalcMoonRaw` does in C. Elsewhere velocity and distance rate are central differences of the cached model at `(time.tt ± 5e-4) / 36,525`, so a repeated state reads three cached epochs.
 - `geocentricState(at:cache:)` is `Astronomy_GeoMoonState`: that state through the mean obliquity and precession with their rates. Its position is the same double for double as `geocentricPosition(at:cache:)`. `barycenterState(at:cache:)` is `Astronomy_GeoEmbState`, the Moon's state divided by 1 + 81.30056, the C engine's Earth/Moon mass ratio. `eclipticState(at:cache:)` is `Astronomy_MoonEclipticState`: through the mean obliquity, nutation and the true obliquity with their rates; its longitude, latitude and distance are `eclipticPosition(at:cache:)`'s, the distance and its rate are the model's, and it throws `badVector` when the position has no component in the ecliptic plane. All three throw `badTime` as the positions do, including for a rate that is not finite.
-- `libration(at:cache:)` is `Astronomy_Libration`: Meeus, Astronomical Algorithms, chapter 53, the optical libration from the model's mean ecliptic coordinates at `time.tt` / 36,525 centuries and the physical libration from the series ρ, σ and τ, with the C engine's sums in its order and its `NormalizeLongitude` and `LongitudeOffset` reductions (`normalizedLongitude(_:)`, `longitudeOffset(_:)`). The longitude is in (−180, 180]. The Moon's latitude and longitude are on the mean ecliptic of date, in degrees. The distance is the model's in km with the published au, and the diameter is 2·atan(R / √(d² − R²)) with R = 1,737.4 km. Like the C function it does not check the time: a time that is not finite gives NaN in every field.
+- `libration(at:cache:)` is `Astronomy_Libration`: Meeus, Astronomical Algorithms, chapter 53, the optical libration from the model's mean ecliptic coordinates at `time.tt` / 36,525 centuries and the physical libration from the series ρ, σ and τ, with the C engine's sums in its order and its `NormalizeLongitude` and `LongitudeOffset` reductions (`Engine.normalizedLongitude(_:)`, `Engine.longitudeOffset(_:)`, declared in `Moon/` for the phase and search code of #92 to share). The longitude is in (−180, 180]. The Moon's latitude and longitude are on the mean ecliptic of date, in degrees. The distance is the model's in km with the published au, and the diameter is 2·atan(R / √(d² − R²)) with R = 1,737.4 km. Like the C function it does not check the time: a time that is not finite gives NaN in every field.
 - The Moon's inputs to the phase and event searches of #92: `eclipticLongitude(at:cache:)` is the Moon's side of `Astronomy_MoonPhase`, the true-ecliptic longitude of `geocentricPosition(at:cache:)`, from which the search subtracts the Sun's; `distance(at:cache:)` is the C engine's `MoonDistance`, with the accepted-range check that `moon_distance_slope` applies; the node search reads the latitude of `eclipticPosition(at:cache:)`.
 - `moon_data.inc` and `dtdb.c` stay where the C engine reads them; when #96 removes the C target, it moves them to `Scripts/moon-data` and updates the manifest.
 

@@ -17,14 +17,15 @@ struct EngineLibrationTests {
     /// and Libration" table.
     struct Row: Sendable, CustomTestStringConvertible {
         let line: Int
-        let text: String
+        /// The row's date and time, as the table prints them.
+        let stamp: String
         let ut: Double
         let diameterArcseconds: Double
         let distanceKilometers: Double
         let longitude: Double
         let latitude: Double
 
-        var testDescription: String { "line \(line): \(text.prefix(17))" }
+        var testDescription: String { "line \(line): \(stamp)" }
     }
 
     /// `mooninfo_2020.txt` to `mooninfo_2022.txt`, copied unchanged from
@@ -46,13 +47,13 @@ struct EngineLibrationTests {
             let url = directory.appendingPathComponent("mooninfo_\(year).txt")
             guard let text = try? String(contentsOf: url, encoding: .utf8) else { fatalError("Missing \(url.path)") }
             tables[year] = text.split(separator: "\n").enumerated().dropFirst().map { index, line in
-                let f = line.split(separator: " ").map(String.init)
+                let f = line.split(separator: " ")
                 let clock = f[3].split(separator: ":").compactMap { Int($0) }
                 let ut = Engine.Time.days(
-                    year: Int(f[2])!, month: months.firstIndex(of: f[1])! + 1, day: Int(f[0])!, hour: clock[0],
-                    minute: clock[1], second: 0)
+                    year: Int(f[2])!, month: months.firstIndex(of: String(f[1]))! + 1, day: Int(f[0])!,
+                    hour: clock[0], minute: clock[1], second: 0)
                 return Row(
-                    line: index + 1, text: String(line), ut: ut, diameterArcseconds: Double(f[7])!,
+                    line: index + 1, stamp: String(line.prefix(17)), ut: ut, diameterArcseconds: Double(f[7])!,
                     distanceKilometers: Double(f[8])!, longitude: Double(f[13])!, latitude: Double(f[14])!)
             }
         }
@@ -75,9 +76,12 @@ struct EngineLibrationTests {
     func againstNASA(year: Int) throws {
         let rows = try #require(Self.rows[year])
         #expect(rows.count == (year == 2020 ? 8_785 : 8_760))
+        // Every row is a new instant, so a private cache keeps them out of the shared one.
+        let (cache, _) = EngineMoonCacheTests.makeCache()
         for row in rows {
             // The tables give UT; the harness takes Espenak-Meeus Delta T.
-            let libration = Engine.Moon.libration(at: Engine.Time(ut: row.ut, deltaTModel: .espenakMeeus))
+            let time = Engine.Time(ut: row.ut, deltaTModel: .espenakMeeus)
+            let libration = Engine.Moon.libration(at: time, cache: cache)
             #expect(abs(libration.longitude - row.longitude) * 60 <= Self.longitudeArcminutes, "\(row.testDescription)")
             #expect(abs(libration.distanceKilometers - row.distanceKilometers) <= Self.distanceKilometers)
             #expect(abs(libration.diameter - row.diameterArcseconds / 3_600) <= Self.diameterDegrees)
@@ -139,15 +143,15 @@ struct EngineLibrationTests {
 
     @Test("Longitudes move into range as the C engine's helpers move them")
     func longitudeHelpers() {
-        #expect(Engine.Moon.normalizedLongitude(-30) == 330)
-        #expect(Engine.Moon.normalizedLongitude(720.25) == 0.25)
-        #expect(Engine.Moon.normalizedLongitude(-720) == 0 && Engine.Moon.normalizedLongitude(-720).sign == .plus)
-        #expect(Engine.Moon.normalizedLongitude(-0.0).sign == .minus)
-        #expect(Engine.Moon.longitudeOffset(190) == -170)
-        #expect(Engine.Moon.longitudeOffset(-180) == 180)
-        #expect(Engine.Moon.longitudeOffset(180) == 180)
-        #expect(Engine.Moon.longitudeOffset(1e17).isFinite)
-        #expect(Engine.Moon.normalizedLongitude(.infinity).isNaN && Engine.Moon.longitudeOffset(.nan).isNaN)
+        #expect(Engine.normalizedLongitude(-30) == 330)
+        #expect(Engine.normalizedLongitude(720.25) == 0.25)
+        #expect(Engine.normalizedLongitude(-720) == 0 && Engine.normalizedLongitude(-720).sign == .plus)
+        #expect(Engine.normalizedLongitude(-0.0).sign == .minus)
+        #expect(Engine.longitudeOffset(190) == -170)
+        #expect(Engine.longitudeOffset(-180) == 180)
+        #expect(Engine.longitudeOffset(180) == 180)
+        #expect(Engine.longitudeOffset(1e17).isFinite)
+        #expect(Engine.normalizedLongitude(.infinity).isNaN && Engine.longitudeOffset(.nan).isNaN)
     }
 
     // MARK: - Event inputs
@@ -175,9 +179,9 @@ struct EngineLibrationTests {
         let quarters = ["new": 0.0, "firstQuarter": 90, "full": 180, "lastQuarter": 270]
         for phase in phases {
             let time = Self.time(phase.sourceTime)
-            let angle = Engine.Moon.normalizedLongitude(
+            let angle = Engine.normalizedLongitude(
                 try Engine.Moon.eclipticLongitude(at: time) - Self.sunLongitude(at: time))
-            let error = abs(Engine.Moon.longitudeOffset(angle - (try #require(quarters[phase.phase])))) * 60
+            let error = abs(Engine.longitudeOffset(angle - (try #require(quarters[phase.phase])))) * 60
             #expect(error <= 1, "\(phase.sourceTime) \(phase.phase): \(error)′")
         }
     }

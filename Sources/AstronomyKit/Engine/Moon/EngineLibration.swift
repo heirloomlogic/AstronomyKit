@@ -67,11 +67,11 @@ extension Engine.Moon {
         let mDegrees = 357.5291092 + 35_999.0502909 * t - 0.0001536 * t2 + t3 / 24_490_000
         let mdashDegrees = 134.9633964 + 477_198.8675055 * t + 0.0087414 * t2 + t3 / 69_699 - t4 / 14_712_000
         let dDegrees = 297.8501921 + 445_267.1114034 * t - 0.0018819 * t2 + t3 / 545_868 - t4 / 113_065_000
-        let f = degrees * normalizedLongitude(fDegrees)
-        let omega = degrees * normalizedLongitude(omegaDegrees)
-        let m = degrees * normalizedLongitude(mDegrees)
-        let mdash = degrees * normalizedLongitude(mdashDegrees)
-        let d = degrees * normalizedLongitude(dDegrees)
+        let f = degrees * Engine.normalizedLongitude(fDegrees)
+        let omega = degrees * Engine.normalizedLongitude(omegaDegrees)
+        let m = degrees * Engine.normalizedLongitude(mDegrees)
+        let mdash = degrees * Engine.normalizedLongitude(mdashDegrees)
+        let d = degrees * Engine.normalizedLongitude(dDegrees)
         // The eccentricity of Earth's orbit.
         let e = 1 - 0.002516 * t - 0.0000074 * t2
 
@@ -80,24 +80,24 @@ extension Engine.Moon {
         let cosI = cos(equatorInclination * degrees)
         let w = mlon - omega
         let a = atan2(sin(w) * cos(mlat) * cosI - sin(mlat) * sinI, cos(w) * cos(mlat))
-        let ldash = longitudeOffset(Engine.degreesPerRadian * (a - f))
+        let ldash = Engine.longitudeOffset(Engine.degreesPerRadian * (a - f))
         let bdash = asin(-sin(w) * cos(mlat) * sinI - sin(mlat) * cosI)
 
         // Physical libration.
         let k1 = degrees * (119.75 + 131.849 * t)
         let k2 = degrees * (72.56 + 20.186 * t)
-        let rho = sum([
+        let rho = sumInOrder([
             -0.02752 * cos(mdash), -0.02245 * sin(f), 0.00684 * cos(mdash - 2 * f), -0.00293 * cos(2 * f),
             -0.00085 * cos(2 * f - 2 * d), -0.00054 * cos(mdash - 2 * d), -0.00020 * sin(mdash + f),
             -0.00020 * cos(mdash + 2 * f), -0.00020 * cos(mdash - f), 0.00014 * cos(mdash + 2 * f - 2 * d),
         ])
-        let sigma = sum([
+        let sigma = sumInOrder([
             -0.02816 * sin(mdash), 0.02244 * cos(f), -0.00682 * sin(mdash - 2 * f), -0.00279 * sin(2 * f),
             -0.00083 * sin(2 * f - 2 * d), 0.00069 * sin(mdash - 2 * d), 0.00040 * cos(mdash + f),
             -0.00025 * sin(2 * mdash), -0.00023 * sin(mdash + 2 * f), 0.00020 * cos(mdash - f),
             0.00019 * sin(mdash - f), 0.00013 * sin(mdash + 2 * f - 2 * d), -0.00010 * cos(mdash - 3 * f),
         ])
-        let tau = sum([
+        let tau = sumInOrder([
             0.02520 * e * sin(m), 0.00473 * sin(2 * mdash - 2 * f), -0.00467 * sin(mdash), 0.00396 * sin(k1),
             0.00276 * sin(2 * mdash - 2 * d), 0.00196 * sin(omega), -0.00183 * cos(mdash - f),
             0.00115 * sin(mdash - 2 * d), -0.00096 * sin(mdash - d), 0.00046 * sin(2 * f - 2 * d),
@@ -146,16 +146,18 @@ extension Engine.Moon {
 
     // MARK: - Helpers
 
-    /// `values` added from first to last, as the C engine's sums are.
-    private static func sum(_ values: [Double]) -> Double {
-        values.dropFirst().reduce(values[0], +)
+    /// `values` added from first to last, as the C engine's sums are. Starting
+    /// from −0.0 changes no sum, not even the sign of a zero.
+    private static func sumInOrder(_ values: [Double]) -> Double {
+        values.reduce(-0.0, +)
     }
+}
 
+extension Engine {
     /// `longitude` in degrees moved into [0, 360), as the C engine's
     /// `NormalizeLongitude` does it: a remainder, then whole turns.
     static func normalizedLongitude(_ longitude: Double) -> Double {
-        var value = longitude
-        if value != 0 { value = value.truncatingRemainder(dividingBy: 360) + 0 }
+        var value = reducedTurns(longitude)
         while value < 0 { value += 360 }
         while value >= 360 { value -= 360 }
         return value
@@ -164,10 +166,15 @@ extension Engine.Moon {
     /// `difference` in degrees moved into (−180, 180], as the C engine's
     /// `LongitudeOffset` does it.
     static func longitudeOffset(_ difference: Double) -> Double {
-        var value = difference
-        if value != 0 { value = value.truncatingRemainder(dividingBy: 360) + 0 }
+        var value = reducedTurns(difference)
         while value <= -180 { value += 360 }
         while value > 180 { value -= 360 }
         return value
+    }
+
+    /// The remainder after whole turns, with the C helpers' `+ 0.0` that
+    /// turns a −0 remainder into +0; zero itself keeps its sign.
+    private static func reducedTurns(_ degrees: Double) -> Double {
+        degrees != 0 ? degrees.truncatingRemainder(dividingBy: 360) + 0 : degrees
     }
 }
