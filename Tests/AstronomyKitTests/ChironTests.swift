@@ -41,6 +41,11 @@ struct ChironTests {
                 #expect(throws: AstronomyError.badTime) {
                     try Chiron.checkSupported(AstroTime(tt: earliest.terrestrialTime.nextDown, deltaTModel: model))
                 }
+                // The C engine's Delta T has no drop at 1900-01-01, unlike the
+                // engine's (EngineChironTests), so a UT just before is outside.
+                #expect(throws: AstronomyError.badTime) {
+                    try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.001 / 86_400, deltaTModel: model))
+                }
                 #expect(throws: AstronomyError.badTime) {
                     try Chiron.checkSupported(AstroTime(tt: Self.latestTT.nextUp, deltaTModel: model))
                 }

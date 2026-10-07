@@ -94,8 +94,8 @@ struct EngineChironTests {
         #expect(Chiron.earliestUT == -36_524.5)
         // 2150-01-01 00:00 UTC is 69.184 s later in TT, the last announced offset.
         #expect(abs(Chiron.latestTT - (54_786.5 + 69.184 / 86_400)) < 1e-9)
-        // The span is checked on TT: the TT of a UT just before the start can
-        // round to the start's own.
+        // The span is checked on TT, so the start is stepped back in TT; see
+        // `startAfterDeltaTDrop` for UTs just before it.
         let outside = [
             Self.time(tt: Self.earliestTT.nextDown), Self.time(tt: Chiron.latestTT.nextUp), Engine.Time.invalid,
             Engine.Time(ut: Chiron.earliestUT, tt: .nan, deltaTModel: .espenakMeeus),
@@ -106,6 +106,20 @@ struct EngineChironTests {
         }
         try Chiron.checkSupported(Engine.Time(ut: Chiron.earliestUT, deltaTModel: .jplHorizons))
         try Chiron.checkSupported(Self.time(tt: Chiron.latestTT))
+    }
+
+    /// Espenak-Meeus Delta T is -2.7016 s just before 1900.0, from the
+    /// 1860-1900 polynomial, and -2.79 s at it, from the 1900-1920 one. Both
+    /// models use those pieces there. A UT up to 88.4 ms before 1900-01-01
+    /// 00:00 therefore has a TT after the start's, and is accepted.
+    @Test("UTs up to 88 ms before the start are accepted, after Delta T drops at 1900.0")
+    func startAfterDeltaTDrop() throws {
+        for model in DeltaTModel.allCases {
+            let inside = Engine.Time(ut: Chiron.earliestUT - 0.088 / 86_400, deltaTModel: model)
+            let outside = Engine.Time(ut: Chiron.earliestUT - 0.089 / 86_400, deltaTModel: model)
+            try Chiron.checkSupported(inside)
+            #expect(throws: AstronomyError.badTime) { try Chiron.checkSupported(outside) }
+        }
     }
 
     /// A pair rebuilt from recorded scales need not agree with its model.
