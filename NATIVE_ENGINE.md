@@ -325,6 +325,50 @@ Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA thr
 | `ReproducibilityTests` | Kept while the C engine ships: it pins public results across modules (positions, rates, events), not published values. The orientation parts it reaches are checked against SOFA here. Retired by #96 with the C engine. The 2026 geocentric equatorial entries were re-recorded with `Observer.geocentric` at the centre (#154). |
 | `RotationTests`, `AtmosphereTests`, `ObserverVectorTests` | Public-API checks against published values, as normal assertions for #152, #153 and #154; they need no C. |
 
+## Planetary series
+
+In the tree: `Planets/EnginePlanets.swift`, `Planets/EnginePlanetPolynomial.swift` and the generated tables in `Planets/Generated/`.
+
+```swift
+extension Engine {
+    enum Planet: Int, CaseIterable { case mercury, venus, earth, mars, jupiter, saturn, uranus, neptune }
+    // init?(_ body: CelestialBody): nil for every other body
+    static func unpackDoubles(count: Int, _ text: StaticString) -> [Double]
+}
+extension Engine.VSOP87B {
+    struct Model { let termCounts: [[Int]]; let terms: [Double] }   // A, B, C of each term
+    static func model(_ planet: Engine.Planet) -> Model
+}
+extension Engine.PlanetPolynomial {
+    static let start: Double  // −36,524.5: 1900-01-01 00:00 TT
+    static let stop: Double   // 36,889.5: 2101-01-01 00:00 TT
+    struct Model {
+        let degree: Int, width: Double, excludedSegments: [Int], coefficients: [Double], included: [Bool]
+        func segment(containing tt: Double) -> Int?
+        func position(tt: Double) -> SIMD3<Double>?
+        func state(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)?
+    }
+    static func model(_ planet: Engine.Planet) -> Model
+    static func position(_ planet: Engine.Planet, tt: Double) -> SIMD3<Double>?   // and state
+}
+```
+
+- `Scripts/generate-planet-tables.py` writes the tables from the C engine's `vsop87b_full.h` and `polynomial-data.h`, whose SHA-256 hashes `Scripts/planet-data/manifest.json` pins, and `--check` runs in CI on macOS and Linux. The headers stay where the C engine reads them; when #96 removes the C target, it moves them to `Scripts/planet-data` and updates the manifest. `--published DIR` also compares the VSOP87B table with the eight files IMCCE publishes, whose URLs and hashes are in the manifest: all 35,080 terms in 135 series match in order and value.
+- Each table is a base64 string literal of the doubles' little-endian bit patterns, decoded once per planet on first use. Array literals do not scale: a 100,002-element `[Double]` literal took 390 s and 1.66 GB to compile in Debug, and the polynomial tables hold 1,431,768 doubles. The data is still compiled in; nothing is read from a file. Decoded, the polynomial tables take 11.5 MB and the VSOP87B terms 0.8 MB, kept for the life of the process.
+- VSOP87B gives heliocentric ecliptic longitude and latitude in radians and radius in AU, referred to the dynamical ecliptic and equinox of J2000, as Poisson series in Julian millennia of TT. The tables keep the published term order.
+- The polynomials are AstronomyKit's degree-12 Chebyshev fits of the compensated VSOP87B position in the same frame, in segments of 8 days (Mercury, Earth), 16 (Saturn, Neptune) or 32 (the others), from `start` up to `stop`. 413 segments that did not meet the 1e-12 AU fit budget are excluded: 409 of Mercury's and 4 of Venus's.
+- Segment `k` holds `start + k·width ≤ tt < start + (k + 1)·width`, as in `polynomial.h`: the index is `Int((tt − start) / width)`, moved back one where the division rounded the double below a boundary up to it. Outside the span, including a TT that is not finite, and in an excluded segment, the functions return `nil` and the caller uses the full series. The static functions check the span before they decode a table.
+- Clenshaw's recurrence gives the position and its derivative together; velocity is in AU per TT day. A state's position is the same double as the position.
+- **Planned** for the next parts of #85: the full VSOP87B series with Neumaier compensation in the published term order, the rotation from the VSOP87B frame to EQJ, heliocentric vectors, states and distances that use the polynomials where they apply and the series elsewhere, with the accepted TT range and failures for non-finite results, the VSOP cache with its work counters, and the dispositions of `PolynomialTests`, `VsopCacheTests`, the planetary `ReproducibilityTests` cases and the VSOP cache probes.
+
+### Published-value checks
+
+Tests under `Tests/AstronomyKitTests/Engine/Planets/`:
+
+- VSOP87B terms as IMCCE prints them in `VSOP87B.mer`, `VSOP87B.ear` and `VSOP87B.nep`, and the term count of every series.
+- The heliocentric distance from the polynomials against the JPL Horizons vectors in `Scripts/reference-data/sources/distance/heldout`, within the allowances `DistanceAccuracyTests` applies to the public distance: 1,067 of the 1,072 planet records. The other 5 fall in excluded segments and wait for the series.
+- Clenshaw's recurrence against T_k(cos θ) = cos kθ and dT_k/dx = k·U_{k−1}(x) for every degree; every boundary of every planet and the double below it; every segment at its first, middle and last double, excluded or not; velocity against five-point differences of the position; and adjacent segments, which meet within 2e-12 AU (2.0e-13 at most).
+
 ## Caches and reset
 
 In the tree: `EngineCache.swift`.
