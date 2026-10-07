@@ -1,0 +1,16 @@
+{
+  "ANG_FORMAT": "'HMS'",
+  "CAL_FORMAT": "'CAL'",
+  "CENTER": "'500@399'",
+  "COMMAND": "'899'",
+  "EPHEM_TYPE": "'OBSERVER'",
+  "MAKE_EPHEM": "'YES'",
+  "OBJ_DATA": "'NO'",
+  "QUANTITIES": "'1'",
+  "REF_SYSTEM": "'ICRF'",
+  "START_TIME": "'2026-01-01'",
+  "STEP_SIZE": "'1 d'",
+  "STOP_TIME": "'2026-03-04'",
+  "TIME_DIGITS": "'MINUTES'",
+  "_responseSHA256": "46cbb04f6b3ffd737879460f3723df5efc2497a6640767b308d0fd91f60ae615"
+}

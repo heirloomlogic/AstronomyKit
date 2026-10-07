@@ -174,6 +174,23 @@ def refresh_sources() -> None:
         path.write_bytes(data)
 
 
+def verify_recorded_queries(directory: Path | None = None) -> None:
+    """Check each recorded Horizons response in sources/jpl-validation against its recipe's SHA-256.
+
+    Tests read these tables directly; no fixture is built from them.
+    """
+    directory = directory or SOURCE_DIR / "jpl-validation"
+    for response_path in sorted(directory.glob("*.json")):
+        if response_path.name.endswith(".query.json"):
+            continue
+        recipe_path = response_path.with_name(response_path.stem + ".query.json")
+        if not recipe_path.exists():
+            raise RuntimeError(f"recorded Horizons response without a recipe: {response_path}")
+        expected = json.loads(recipe_path.read_text()).get("_responseSHA256")
+        if sha256(response_path.read_bytes()) != expected:
+            raise RuntimeError(f"recorded Horizons response hash mismatch: {response_path}")
+
+
 def verify_sources() -> list[dict[str, str]]:
     records = []
     for local_name, (remote_path, expected_hash) in UPSTREAM_SOURCES.items():
@@ -488,6 +505,7 @@ def main() -> int:
     if args.refresh:
         refresh_sources()
     sources = verify_sources()
+    verify_recorded_queries()
     archive_data = encoded(build_archive())
     write_or_check(OUTPUT_DIR / "reference-fixtures.json", archive_data, args.check)
     print(f"verified {len(sources)} source artifacts and archive {sha256(archive_data)}")
