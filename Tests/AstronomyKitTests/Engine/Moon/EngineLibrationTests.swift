@@ -82,9 +82,10 @@ struct EngineLibrationTests {
     static let distanceKilometers = 54.377
     static let diameterDegrees = 0.00009
     /// The largest latitude difference over the three tables, 1.6692′ at
-    /// 2020-01-12 08:00 UT, rounded up. About 1.40′ of it is a steady offset
-    /// of Meeus's formulas from NASA's. Astronomy Engine's 1.6476′ was set
-    /// for its lunar series and its 1.543° inclination.
+    /// 2020-01-12 08:00 UT, rounded up: a measured bound, not a published
+    /// accuracy. About 1.40′ of it is a steady offset of Meeus's formulas
+    /// from NASA's. Astronomy Engine's 1.6476′ was set for upstream's lunar
+    /// series; with this Moon the C engine's 1.543° already reaches 1.6507′.
     static let latitudeArcminutes = 1.67
 
     @Test(
@@ -112,6 +113,7 @@ struct EngineLibrationTests {
         let row = try #require(try Self.rows.get()[2021]?[100])
         let late = Engine.Moon.libration(at: Engine.Time(ut: row.ut + 1.0 / 24, deltaTModel: .espenakMeeus))
         #expect(abs(late.longitude - row.longitude) * 60 > Self.longitudeArcminutes)
+        #expect(abs(late.latitude - row.latitude) * 60 > Self.latitudeArcminutes)
         let libration = Engine.Moon.libration(at: Engine.Time(ut: row.ut, deltaTModel: .espenakMeeus))
         #expect(abs(libration.latitude - row.longitude) * 60 > Self.latitudeArcminutes)
         let au = libration.distanceKilometers / Engine.kilometersPerAU
