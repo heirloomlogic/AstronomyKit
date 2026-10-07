@@ -102809,7 +102809,7 @@
     },
     "jplVectors": {
       "aberration": "none (VEC_CORR=NONE)",
-      "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center",
+      "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center, and at 4 dates from 1990 to 2010 for the gravity simulation",
       "frame": "geometric ICRF/J2000 vectors",
       "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
       "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon",
@@ -157789,6 +157789,78 @@
         -0.001388524565254747,
         0.00137070087372064,
         0.0008484839317803566
+      ]
+    },
+    {
+      "body": "pluto-barycenter-decade",
+      "julianDateTDB": 2447892.5,
+      "origin": "sun",
+      "positionAU": [
+        -19.97281514168627,
+        -21.90676393654267,
+        -0.8185490985149126
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "1990-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.002411589584320002,
+        -0.00216077351221165,
+        -0.001402469655255097
+      ]
+    },
+    {
+      "body": "pluto-barycenter-decade",
+      "julianDateTDB": 2451544.5,
+      "origin": "sun",
+      "positionAU": [
+        -9.876866593144783,
+        -27.97830428594223,
+        -5.753058849743303
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2000-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003028702037963417,
+        -0.001127739604927056,
+        -0.001265158711034525
+      ]
+    },
+    {
+      "body": "pluto-barycenter-decade",
+      "julianDateTDB": 2451910.5,
+      "origin": "sun",
+      "positionAU": [
+        -8.762089754880478,
+        -28.37146954379852,
+        -6.212094022700945
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2001-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003062372455481533,
+        -0.001020901124901879,
+        -0.001243086958986871
+      ]
+    },
+    {
+      "body": "pluto-barycenter-decade",
+      "julianDateTDB": 2455197.5,
+      "origin": "sun",
+      "positionAU": [
+        1.627769616934736,
+        -30.13846018629739,
+        -9.89492697953903
+      ],
+      "relativeTolerance": null,
+      "sanityToleranceAU": null,
+      "tdb": "2010-Jan-01 00:00:00.0000",
+      "velocityAUPerDay": [
+        0.003195411591263806,
+        -5.360646354723861e-05,
+        -0.0009780496867789349
       ]
     }
   ]
