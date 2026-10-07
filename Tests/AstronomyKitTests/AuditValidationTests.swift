@@ -28,7 +28,8 @@ struct AuditValidationTests {
         #expect(archive.schemaVersion == 3)
         #expect(
             Set(archive.provenance.keys) == [
-                "astronomyEngineApsides", "eclipseWiseLocalSolar", "espenakMoonNodes",
+                "astronomyEngineApsides", "astronomyEngineGeocentricStates",
+                "eclipseWiseLocalSolar", "espenakMoonNodes",
                 "jplObserver", "jplVectors", "nasaGlobalSolarEclipses", "nasaLunarEclipses",
                 "nasaPlanetaryTransits", "usnoRiseSet", "usnoSeasonsAndPhases",
             ])
@@ -42,6 +43,7 @@ struct AuditValidationTests {
         }
         #expect(archive.observations.count == 12)
         #expect(archive.vectors.count == 45)
+        #expect(archive.geocentricStates.count == 6_392)
         #expect(archive.localSolarEclipses.count == 3)
         #expect(archive.riseSet.count == 5_909)
         #expect(archive.riseSet.map(\.sourceLine) == Array(1...5_909))
