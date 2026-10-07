@@ -59,7 +59,6 @@ AstronomyKit fails these published values today. Each has an open issue and a te
 | Issue | Deviation | Recorded by | Owner |
 | --- | --- | --- | --- |
 | #124 | The 2022 South Pole sunrise is 75.985957542 s TT from the USNO coordinate against the 70.8 s allowance | `withKnownIssue` on source line 2,923 in `AuditValidationTests.riseSet` | #92 |
-| #170 | Apparent sidereal time leaves out the complementary terms of the equation of the equinoxes, up to about 2.65 mas | `EngineEarthRotationTests`, "ERFA t_gst06a reference, within the model difference", bounds it for the Swift engine | Owner decision on #170 |
 | #175 | Above 32 km the atmosphere keeps the 20 to 32 km layer (+1 K/km), where the 1976 standard changes layer; at 47 km it gives 243.65 K against 270.65 K | No test; `AtmosphereTests` covers 0 to 32 km | Owner decision on #175 |
 
 ## Regenerate and check

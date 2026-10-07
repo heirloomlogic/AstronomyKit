@@ -46,24 +46,34 @@ struct EngineEarthRotationTests {
         #expect(abs(Published.wrapped(hours * Engine.radiansPerHour - reference.gmst06)) <= Self.tolerance)
     }
 
-    @Test("Apparent sidereal time is mean sidereal time plus Δψ·cos εA", arguments: Published.references)
+    @Test("Apparent sidereal time adds Δψ·cos εA and the complementary terms", arguments: Published.references)
     func equationOfEquinoxes(reference: Published.Reference) {
         let time = Self.time(ut: reference.ut, tt: reference.tt)
         let difference = (Self.apparent(time) - Engine.EarthRotation.meanSiderealTime(time)) * Engine.radiansPerHour
-        let expected = reference.dpsi * cos(reference.obl06)
+        let expected = reference.dpsi * cos(reference.obl06) + reference.eect00
         #expect(abs(Published.wrapped(difference - expected)) <= Self.tolerance)
     }
 
-    /// The engine's apparent sidereal time leaves out the complementary
-    /// terms of the equation of the equinoxes (below 3 mas, #170) and uses IAU
-    /// 2000B, which McCarthy and Luzum (2003) give as within 1 mas of IAU
-    /// 2000A from 1995 to 2050. Together that is under 4 mas, 1.94e-8 rad.
-    /// The difference at this date is 0.73 mas.
-    @Test("ERFA t_gst06a reference, within the model difference")
+    /// The engine evaluates `iauEe00` with IAU 2000B nutation. McCarthy and
+    /// Luzum (2003) give IAU 2000B as within 1 mas of IAU 2000A from 1995 to
+    /// 2050, and that is the bound here: 1 mas, 4.85e-9 rad.
+    @Test("ERFA t_gst06a reference, within the nutation-model difference")
     func erfaApparentSiderealTime() {
         let days = Published.days(mjd: Published.gst06a.mjd)
         let hours = Self.apparent(Self.time(ut: days, tt: days))
-        #expect(abs(Published.wrapped(hours * Engine.radiansPerHour - Published.gst06a.value)) <= 1.94e-8)
+        let difference = abs(Published.wrapped(hours * Engine.radiansPerHour - Published.gst06a.value))
+        #expect(difference <= Published.radiansPerMilliarcsecond)
+    }
+
+    @Test("ERFA t_ee00b reference for the equation of the equinoxes")
+    func erfaEquationOfEquinoxes() {
+        let days = Published.days(mjd: Published.ee00b.mjd)
+        let time = Self.time(ut: days, tt: days)
+        let difference = (Self.apparent(time) - Engine.EarthRotation.meanSiderealTime(time)) * Engine.radiansPerHour
+        // SOFA's ee00b takes the IAU 1980 obliquity plus the IAU 2000 precession
+        // correction and the engine takes the IAU 2006 one. They differ by 2.03e-7
+        // rad here, which moves the product by about 7.8e-13.
+        #expect(abs(Published.wrapped(difference - Published.ee00b.value)) <= 1e-12)
     }
 
     @Test(

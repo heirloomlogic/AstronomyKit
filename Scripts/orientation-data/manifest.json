@@ -4,6 +4,10 @@
     "nut00b.c": {
       "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/nut00b.c",
       "sha256": "a5246d525e987eb587bbe786b2846160e01be85b5d12af573870b89235695f49"
+    },
+    "eect00.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/eect00.c",
+      "sha256": "771d6e118a12b8fdc80894ea0a6c55f63ce2c9a407c75fd176aafb80b43ed4a2"
     }
   }
 }

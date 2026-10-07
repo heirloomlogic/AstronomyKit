@@ -12,6 +12,7 @@ Sources/CLibAstronomy/EphemerisTime/pmat06.c -whitespace
 Sources/CLibAstronomy/EphemerisTime/rx.c -whitespace
 Sources/CLibAstronomy/EphemerisTime/rz.c -whitespace
 Scripts/orientation-data/nut00b.c -whitespace
+Scripts/orientation-data/eect00.c -whitespace
 
 # Checked-in generated coefficient tables.
 Sources/CLibAstronomy/EphemerisData/*.inc linguist-generated=true

@@ -51,7 +51,11 @@ Each file retains its original notice. The AstronomyKit wrapper
 routines. The IAU 2000B nutation coefficients in
 Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift are
 generated from nut00b.c of the same ERFA commit, kept unmodified in
-Scripts/orientation-data. The ERFA license follows.
+Scripts/orientation-data. The complementary terms of the equation of the
+equinoxes in
+Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift
+are generated from eect00.c of the same commit, kept there unmodified too. The
+ERFA license follows.
 
 Copyright (C) 2013-2021, NumFOCUS Foundation.
 All rights reserved.
