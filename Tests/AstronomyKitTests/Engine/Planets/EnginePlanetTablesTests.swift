@@ -118,8 +118,6 @@ struct EnginePlanetTablesTests {
             #expect(model.coefficients.count == model.segmentCount * 3 * 13)
             #expect(model.coefficients.allSatisfy { $0.isFinite })
             #expect(model.excludedSegments.count == excluded[planet, default: 0])
-            #expect(model.excludedSegments == model.excludedSegments.sorted())
-            #expect(model.included.indices.filter { !model.included[$0] } == model.excludedSegments)
         }
         #expect(Engine.PlanetPolynomial.mercury.coefficients[0] == -0x1.66ea79037f001p-2)
         #expect(Engine.PlanetPolynomial.venus.excludedSegments == [17, 2_219, 2_291, 2_292])

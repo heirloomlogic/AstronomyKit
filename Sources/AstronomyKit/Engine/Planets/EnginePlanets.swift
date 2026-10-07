@@ -34,13 +34,20 @@ extension Engine {
     /// IEEE 754 bit patterns. Characters outside the base64 alphabet, such as
     /// line breaks, are skipped.
     ///
-    /// The generated tables are string literals because a Swift array literal
-    /// of a million doubles takes the compiler hours. Each table calls this
+    /// The generated tables are string literals because array literals do
+    /// not scale: one of 100,002 doubles took the compiler six minutes in a
+    /// Debug build, and the tables hold 1.5 million. Each table calls this
     /// from a `static let` initializer, so it is decoded once, on first use.
     /// Traps when `text` does not hold exactly `count` doubles, which only a
     /// damaged generated file can cause.
     static func unpackDoubles(count: Int, _ text: StaticString) -> [Double] {
-        let data = text.withUTF8Buffer { Data(base64Encoded: Data($0), options: .ignoreUnknownCharacters) }
+        // A string literal lives for the whole process, so its bytes need no copy.
+        let data = text.withUTF8Buffer { utf8 -> Data? in
+            guard let base = utf8.baseAddress else { return Data() }
+            let literal = Data(
+                bytesNoCopy: UnsafeMutableRawPointer(mutating: base), count: utf8.count, deallocator: .none)
+            return Data(base64Encoded: literal, options: .ignoreUnknownCharacters)
+        }
         guard let data, data.count == count * 8 else {
             preconditionFailure("A generated table does not hold \(count) doubles")
         }

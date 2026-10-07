@@ -18,11 +18,6 @@ struct EnginePlanetPolynomialTests {
     static let start = Polynomial.start
     static let stop = Polynomial.stop
 
-    /// The first TT of segment `k`.
-    static func boundary(_ model: Polynomial.Model, _ k: Int) -> Double {
-        start + Double(k) * model.width
-    }
-
     // MARK: - Clenshaw's recurrence
 
     /// A one-segment model at the start of the span whose x axis is T_k, whose
@@ -74,7 +69,7 @@ struct EnginePlanetPolynomialTests {
             var wrong: [Int] = []
             var roundedUp = 0
             for k in 1..<model.segmentCount {
-                let boundary = Self.boundary(model, k)
+                let boundary = model.start(ofSegment: k)
                 if model.segment(containing: boundary) != k || model.segment(containing: boundary.nextDown) != k - 1 {
                     wrong.append(k)
                 }
@@ -107,8 +102,8 @@ struct EnginePlanetPolynomialTests {
             let model = Polynomial.model(planet)
             var wrong: [Int] = []
             for k in 0..<model.segmentCount {
-                let first = Self.boundary(model, k)
-                let last = min(Self.boundary(model, k + 1), Self.stop).nextDown
+                let first = model.start(ofSegment: k)
+                let last = min(model.start(ofSegment: k + 1), Self.stop).nextDown
                 for tt in [first, (first + last) / 2, last] {
                     let position = Polynomial.position(planet, tt: tt)
                     let state = Polynomial.state(planet, tt: tt)
@@ -126,7 +121,7 @@ struct EnginePlanetPolynomialTests {
         for planet in Engine.Planet.allCases {
             let model = Polynomial.model(planet)
             for k in stride(from: 0, to: model.segmentCount, by: 7) where model.included[k] {
-                for tt in [Self.boundary(model, k), Self.boundary(model, k) + model.width / 3] {
+                for tt in [model.start(ofSegment: k), model.start(ofSegment: k) + model.width / 3] {
                     let position = try #require(model.position(tt: tt))
                     let state = try #require(model.state(tt: tt))
                     #expect(
@@ -148,7 +143,7 @@ struct EnginePlanetPolynomialTests {
             let model = Polynomial.model(planet)
             for k in stride(from: 0, to: model.segmentCount, by: model.segmentCount / 40) where model.included[k] {
                 // The stencil stays inside the segment.
-                let tt = Self.boundary(model, k) + model.width / 2
+                let tt = model.start(ofSegment: k) + model.width / 2
                 let state = try #require(model.state(tt: tt))
                 for axis in 0..<3 {
                     let difference = PublishedOrientation.derivative(at: tt, step: step) {
@@ -170,7 +165,7 @@ struct EnginePlanetPolynomialTests {
             let model = Polynomial.model(planet)
             var worst = 0.0
             for k in 1..<model.segmentCount where model.included[k - 1] && model.included[k] {
-                let boundary = Self.boundary(model, k)
+                let boundary = model.start(ofSegment: k)
                 let before = try #require(model.state(tt: boundary.nextDown))
                 let after = try #require(model.position(tt: boundary))
                 let step = boundary - boundary.nextDown
@@ -185,37 +180,19 @@ struct EnginePlanetPolynomialTests {
 
     // MARK: - Published values
 
-    struct DistanceReference: Decodable, Sendable {
-        let body: String
-        let mode: String
-        let julianDateTT: Double
-        let referenceRangeAU: Double
-        let allowedErrorKm: Double
-    }
+    typealias DistanceReference = DistanceReferenceArchive.Reference
 
     /// The heliocentric ranges of the planets in `distance-fixtures.json`,
     /// from the JPL Horizons vectors in
     /// `Scripts/reference-data/sources/distance/heldout`.
-    static let heliocentric: [(planet: Engine.Planet, reference: DistanceReference)] = {
-        struct Archive: Decodable { let references: [DistanceReference] }
-        let url = URL(fileURLWithPath: #filePath)
-            .deletingLastPathComponent()  // Planets
-            .deletingLastPathComponent()  // Engine
-            .deletingLastPathComponent()  // AstronomyKitTests
-            .appendingPathComponent("Fixtures/IndependentReferences/distance-fixtures.json")
-        do {
-            let archive = try JSONDecoder().decode(Archive.self, from: Data(contentsOf: url))
-            return archive.references.compactMap { reference in
-                guard reference.mode == "heliocentric",
-                    let body = CelestialBody.allCases.first(where: { $0.name == reference.body }),
-                    let planet = Engine.Planet(body)
-                else { return nil }
-                return (planet, reference)
-            }
-        } catch {
-            fatalError("Invalid distance fixture: \(error)")
+    static let heliocentric: [(planet: Engine.Planet, reference: DistanceReference)] =
+        DistanceReferenceArchive.shared.references.compactMap { reference in
+            guard reference.mode == "heliocentric",
+                let body = CelestialBody.allCases.first(where: { $0.name == reference.body }),
+                let planet = Engine.Planet(body)
+            else { return nil }
+            return (planet, reference)
         }
-    }()
 
     static func errorKm(_ planet: Engine.Planet, _ reference: DistanceReference, offset: Double = 0) -> Double? {
         guard let position = Polynomial.position(planet, tt: reference.julianDateTT - 2_451_545 + offset) else {

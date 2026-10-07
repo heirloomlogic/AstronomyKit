@@ -3,7 +3,8 @@ import Testing
 
 @testable import AstronomyKit
 
-private struct DistanceReferenceArchive: Decodable {
+/// The held-out distance fixture, shared with the engine planet tests.
+struct DistanceReferenceArchive: Decodable {
     let references: [Reference]
 
     struct Reference: Decodable, Sendable {

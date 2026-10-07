@@ -22,8 +22,6 @@ extension Engine {
             let degree: Int
             /// The width of every segment in days.
             let width: Double
-            /// Segments with no usable polynomial, in increasing order.
-            let excludedSegments: [Int]
             /// For each segment, for each of x, y and z, the coefficients of
             /// the Chebyshev polynomials T₀ to T_degree, in AU.
             let coefficients: [Double]
@@ -37,13 +35,20 @@ extension Engine {
                 for segment in excludedSegments { included[segment] = false }
                 self.degree = degree
                 self.width = width
-                self.excludedSegments = excludedSegments
                 self.coefficients = coefficients
                 self.included = included
             }
 
             /// The number of segments.
             var segmentCount: Int { included.count }
+
+            /// Segments with no usable polynomial, in increasing order.
+            var excludedSegments: [Int] { included.indices.filter { !included[$0] } }
+
+            /// The first TT of segment `k`, an exact double.
+            func start(ofSegment k: Int) -> Double {
+                PlanetPolynomial.start + Double(k) * width
+            }
 
             /// The segment whose interval holds `tt`, or `nil` when `tt` is
             /// not from ``PlanetPolynomial/start`` up to
@@ -54,10 +59,9 @@ extension Engine {
             /// width can round the double just below a boundary up to it, so
             /// such a `tt` is moved back to the segment below.
             func segment(containing tt: Double) -> Int? {
-                let start = PlanetPolynomial.start
-                guard tt >= start, tt < PlanetPolynomial.stop else { return nil }
-                var segment = Int((tt - start) / width)
-                if segment > 0, start + Double(segment) * width > tt { segment -= 1 }
+                guard PlanetPolynomial.covers(tt) else { return nil }
+                var segment = Int((tt - PlanetPolynomial.start) / width)
+                if segment > 0, start(ofSegment: segment) > tt { segment -= 1 }
                 return segment
             }
 
@@ -80,7 +84,7 @@ extension Engine {
             private func evaluate(tt: Double, velocity: Bool) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
                 guard let segment = segment(containing: tt), included[segment] else { return nil }
                 let half = width / 2
-                let x = (tt - (PlanetPolynomial.start + Double(segment) * width)) / half - 1
+                let x = (tt - start(ofSegment: segment)) / half - 1
                 let n = degree + 1
                 var position = SIMD3<Double>()
                 var rate = SIMD3<Double>()
@@ -107,6 +111,12 @@ extension Engine {
             }
         }
 
+        /// Whether `tt` is from ``start`` up to ``stop``; false when it is not
+        /// finite.
+        static func covers(_ tt: Double) -> Bool {
+            tt >= start && tt < stop
+        }
+
         /// The fits for `planet`. The first call for a planet decodes its
         /// table.
         static func model(_ planet: Planet) -> Model {
@@ -125,7 +135,7 @@ extension Engine {
         /// The position of `planet` in AU at `tt`, or `nil` where the fits do
         /// not apply. A `tt` outside the span does not decode the table.
         static func position(_ planet: Planet, tt: Double) -> SIMD3<Double>? {
-            guard tt >= start, tt < stop else { return nil }
+            guard covers(tt) else { return nil }
             return model(planet).position(tt: tt)
         }
 
@@ -133,7 +143,7 @@ extension Engine {
         /// `tt`, or `nil` where the fits do not apply. A `tt` outside the span
         /// does not decode the table.
         static func state(_ planet: Planet, tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-            guard tt >= start, tt < stop else { return nil }
+            guard covers(tt) else { return nil }
             return model(planet).state(tt: tt)
         }
     }
