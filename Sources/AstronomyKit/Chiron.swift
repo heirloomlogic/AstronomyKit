@@ -34,7 +34,10 @@ import Foundation
 ///
 /// Calculations are supported for years 1900 through 2150. Integration error
 /// grows with distance from the reference epochs, so times outside this range
-/// throw ``AstronomyError/badTime``.
+/// throw ``AstronomyError/badTime``. The range is checked on the time's
+/// ``AstroTime/terrestrialTime``, which the simulation steps in: from
+/// 1900-01-01 00:00 UT, as TT with the time's Delta T model, through
+/// 2150-01-01 00:00 UTC.
 ///
 /// ## Example
 ///
@@ -58,6 +61,22 @@ public enum Chiron {
 
     /// The latest time Chiron calculations support.
     private static let latestSupportedTime = AstroTime(year: 2_150, month: 1, day: 1)
+
+    /// Throws unless `time`'s TT is from 1900-01-01 00:00 UT, as TT with
+    /// `time`'s Delta T model, through 2150-01-01 00:00 UTC.
+    ///
+    /// The simulation steps in TT, so `time`'s UT is not checked. For a time
+    /// made with ``AstroTime/init(tt:ut:deltaTModel:)`` it need not agree
+    /// with the TT.
+    ///
+    /// - Throws: ``AstronomyError/badTime`` outside that span, including for
+    ///   a time that is not valid.
+    static func checkSupported(_ time: AstroTime) throws {
+        let earliest = AstroTime(ut: earliestSupportedTime.universalTime, deltaTModel: time.deltaTModel)
+        guard time.terrestrialTime >= earliest.terrestrialTime,
+            time.terrestrialTime <= latestSupportedTime.terrestrialTime
+        else { throw AstronomyError.badTime }
+    }
 
     // MARK: - Reference Epoch Data
 
@@ -319,17 +338,14 @@ public enum Chiron {
     /// and serially on the calling thread, so the instance is never touched
     /// concurrently.
     final class ReusableSimulation: @unchecked Sendable {
-        private var epochIndex: Int?
+        private(set) var epochIndex: Int?
         private var simulation: GravitySimulation?
-        private var lastTerrestrialTime = 0.0
-        private var pathDays = 0.0
+        private(set) var pathDays = 0.0
 
         /// Simulates Chiron's heliocentric state at the target time, reusing
         /// the anchored simulation when the error budget allows.
         func state(at time: AstroTime) throws -> StateVector {
-            guard time >= earliestSupportedTime, time <= latestSupportedTime else {
-                throw AstronomyError.badTime
-            }
+            try checkSupported(time)
 
             // Find the closest reference epoch.
             guard
@@ -347,12 +363,12 @@ public enum Chiron {
             // Reuse the anchored simulation when it sits at the same epoch and
             // stepping it stays within the error budget.
             if let simulation, let epochIndex, epochIndex == index {
-                let step = abs(targetTT - lastTerrestrialTime)
-                if pathDays + step <= max(2 * freshPath, 365) {
-                    let state = try advance(simulation, to: time)
-                    lastTerrestrialTime = targetTT
-                    pathDays += step
-                    return state
+                let startTT = simulation.time.terrestrialTime
+                if pathDays + abs(targetTT - startTT) <= max(2 * freshPath, 365) {
+                    // Counts the days the simulation moved, which a failure
+                    // partway leaves short of the request.
+                    defer { pathDays += abs(simulation.time.terrestrialTime - startTT) }
+                    return try advance(simulation, to: time)
                 }
             }
 
@@ -365,7 +381,6 @@ public enum Chiron {
             let state = try advance(simulation, to: time)
             self.simulation = simulation
             epochIndex = index
-            lastTerrestrialTime = targetTT
             pathDays = freshPath
             return state
         }
