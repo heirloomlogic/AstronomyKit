@@ -11,9 +11,10 @@ Astronomy Engine
 AstronomyKit also includes the complete VSOP87B data and the 77 IAU2000B
 nutation coefficient rows from Astronomy Engine revision
 826e26ff3a6dc03ee46658b1138fef582d96c5d9, checked in as the C tables
-Sources/CLibAstronomy/generated/vsop87b_full.h and iau2000b_full.h. VSOP87 is
-the planetary theory of Pierre Bretagnon and Gerard Francou (Bureau des
-Longitudes).
+Sources/CLibAstronomy/generated/vsop87b_full.h and iau2000b_full.h. The Swift
+table Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift is
+generated from vsop87b_full.h. VSOP87 is the planetary theory of Pierre
+Bretagnon and Gerard Francou (Bureau des Longitudes).
 
 MIT License
 
