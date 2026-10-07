@@ -33,10 +33,9 @@ extension Engine.Moon {
     static let meanRadiusKilometers = 1_737.4
 
     /// The inclination of the Moon's mean equator to the ecliptic in
-    /// degrees: the C engine's 1.543°. Meeus (Astronomical Algorithms,
-    /// chapter 53) prints I = 1°32′32.7″, 1.54242°, which moves the
-    /// libration latitude further from NASA's published values (#188).
-    static let equatorInclination = 1.543
+    /// degrees: I = 1°32′32.7″ (Meeus, Astronomical Algorithms, chapter 53).
+    /// The C engine uses 1.543°, for which it cites no source.
+    static let equatorInclination = 1 + 32.0 / 60 + 32.7 / 3_600
 
     /// The Moon's libration at `time` (`Astronomy_Libration`).
     ///

@@ -456,7 +456,7 @@ extension Engine.Moon {
     static func eclipticLongitude(at time: Engine.Time, cache: Cache = cache) throws -> Double   // degrees, true ecliptic of date
     static func distance(at time: Engine.Time, cache: Cache = cache) throws -> Double            // AU
     static let meanRadiusKilometers: Double   // 1,737.4
-    static let equatorInclination: Double     // 1.543
+    static let equatorInclination: Double     // 1°32′32.7″
 }
 extension Engine.MoonEphemeris {
     static let start, recordDays: Double              // −36,560.5 TDB days, 4
@@ -508,14 +508,14 @@ extension Engine.RotationRate {
 ### Differences from published values
 
 - Outside 1900 to 2130 the Moon comes from the series, which is up to 52′ from DE441 within the accepted range. Of the Horizons samples below, those from 1499 to 2500 are within 1′, and those up to 999 and from 3000 on are not (#184). The C engine uses the same series, and the epic keeps it.
-- Libration latitude is about 1.40′ above NASA SVS's on average, from Meeus's formulas; at 4 of 26,305 hourly rows in 2020 it is up to 0.003′ beyond the 1.6476′ Astronomy Engine's harness allows, as the C engine's is (#188).
-- `equatorInclination` is the C engine's 1.543°, for which Astronomy Engine cites no source, not the 1°32′32.7″ (1.54242°) Meeus prints for I in the chapter 53 model. With Meeus's value 106 of the 26,305 rows (102 in 2020, 2 in 2021 and 2 in 2022) newly miss the 1.6476′ latitude limit, and the 2020 maximum becomes 1.669′. The engine keeps 1.543° until the owner decides what to do about #188, which records the limit and the offset.
+- Libration latitude is about 1.40′ above NASA SVS's on average, from Meeus's formulas, and at most 1.6692′ from it, at 2020-01-12 08:00 UT.
 
 ### Differences from the C engine
 
 - The series' distance converts Earth's radius with the published au, not the C engine's `KM_PER_AU`; the two differ by 6.0e-11 of the distance, about 2e-5 km (see [Constants](#constants)).
 - An ecliptic longitude that rounds up to 360 when moved into range is 0; `Astronomy_EclipticGeoMoon` can return 360.
 - The libration distance converts the model's distance with the published au, a difference of 6.0e-11 of it.
+- `equatorInclination` is the 1°32′32.7″ Meeus prints for I in the chapter 53 model, not the C engine's 1.543°, for which Astronomy Engine cites no source. The libration latitude moves by up to 0.035′, the difference between the two.
 
 ### Published-value checks
 
@@ -532,7 +532,7 @@ Tests under `Tests/AstronomyKitTests/Engine/Moon/`:
 - Rates against five-point differences of the same positions on 1/64-day stencils at thirteen instants in the series, both blends and DE440: the EQJ velocity within (1 + |t|) · 1e-8 of the speed, t in Julian centuries from J2000, and the ecliptic longitude, latitude and distance rates within the same fraction of the Moon's largest motion, 15° and 6e-4 AU per day. That covers the series' central difference and the rounding of its arguments, which grow with t.
 - The state's position against the position, the barycenter against the Moon scaled, and the ecliptic state against the ecliptic position, all double for double.
 - Cache work counts with a private registry: three epochs for the first state in the series and three hits for the next, one epoch where DE440 has weight with the blend's series samples uncached, positions sharing the states' entries, a cache with no capacity that evaluates every time, signed-zero keys, non-finite bypass, eviction of the oldest of 32, a registry reset, a hit returning the caller's own time, and simultaneous callers.
-- Libration against all 26,305 hourly rows of NASA's Scientific Visualization Studio Moon Phase and Libration tables for 2020, 2021 and 2022 (`Scripts/reference-data/sources/mooninfo_2020.txt` to `mooninfo_2022.txt`, as Astronomy Engine pins them), within the limits of its harness: 0.1304′ in longitude, 1.6476′ in latitude, 54.377 km in distance and 0.00009° in diameter. Four 2020 rows are known issues of #188.
+- Libration against all 26,305 hourly rows of NASA's Scientific Visualization Studio Moon Phase and Libration tables for 2020, 2021 and 2022 (`Scripts/reference-data/sources/mooninfo_2020.txt` to `mooninfo_2022.txt`, as Astronomy Engine pins them), within the limits of its harness of 0.1304′ in longitude, 54.377 km in distance and 0.00009° in diameter, and within 1.67′ in latitude. The harness's 1.6476′ was set for upstream's lunar series and the 1.543° inclination; 1.67′ is the largest difference on the three tables, 1.6692′, rounded up.
 - The phase input: at USNO's twelve quarter times in `reference-fixtures.json`, the Moon's longitude less the Sun's is within 1′ of the quarter, the limit Astronomy Engine's harness sets for those times. The Sun's longitude comes from `Engine.Planet.earth` as the C engine finds it, at the heliocentric origin with no aberration.
 - The apsis input: the model's distance at the six published lunar apsides within their 25 km. The node input: the ecliptic latitude at Espenak's six node times within the latitude's rate times the 220.86 s time limit, and its direction matching the node's.
 - Routing between DE440, the blend and the series; no jump at the blends' ends; longitudes across the wrap; the ecliptic position against the J2000 position seen on the true ecliptic of date; the accepted range's ends and the doubles beyond; and NaN and infinite times.

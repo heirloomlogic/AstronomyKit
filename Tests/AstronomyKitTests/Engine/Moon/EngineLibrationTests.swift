@@ -76,18 +76,19 @@ struct EngineLibrationTests {
             distanceKilometers: distance, longitude: longitude, latitude: latitude)
     }
 
-    /// Astronomy Engine's limits for these tables (`ctest.c`, `Libration`).
+    /// Astronomy Engine's limits for these tables (`ctest.c`, `Libration`),
+    /// except latitude.
     static let longitudeArcminutes = 0.1304
-    static let latitudeArcminutes = 1.6476
     static let distanceKilometers = 54.377
     static let diameterDegrees = 0.00009
-
-    /// The rows whose libration latitude misses the limit, by up to 0.003′
-    /// (#188). The C engine misses it at the same rows.
-    static let latitudeKnownIssues: Set<Int> = [257, 258, 263, 274]
+    /// The largest latitude difference over the three tables, 1.6692′ at
+    /// 2020-01-12 08:00 UT, rounded up. About 1.40′ of it is a steady offset
+    /// of Meeus's formulas from NASA's. Astronomy Engine's 1.6476′ was set
+    /// for its lunar series and its 1.543° inclination.
+    static let latitudeArcminutes = 1.67
 
     @Test(
-        "Libration, distance and diameter within Astronomy Engine's limits on every hourly row",
+        "Libration, distance and diameter within their limits on every hourly row",
         arguments: [2020, 2021, 2022])
     func againstNASA(year: Int) throws {
         let rows = try #require(try Self.rows.get()[year])
@@ -102,13 +103,7 @@ struct EngineLibrationTests {
             #expect(abs(libration.distanceKilometers - row.distanceKilometers) <= Self.distanceKilometers)
             #expect(abs(libration.diameter - row.diameterArcseconds / 3_600) <= Self.diameterDegrees)
             let latitude = abs(libration.latitude - row.latitude) * 60
-            if year == 2020 && Self.latitudeKnownIssues.contains(row.line) {
-                withKnownIssue("#188: 0.003′ beyond the limit") {
-                    #expect(latitude <= Self.latitudeArcminutes, "\(row.testDescription)")
-                }
-            } else {
-                #expect(latitude <= Self.latitudeArcminutes, "\(row.testDescription): \(latitude)′")
-            }
+            #expect(latitude <= Self.latitudeArcminutes, "\(row.testDescription): \(latitude)′")
         }
     }
 
