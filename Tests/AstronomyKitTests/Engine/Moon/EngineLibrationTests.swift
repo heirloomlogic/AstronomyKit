@@ -28,12 +28,18 @@ struct EngineLibrationTests {
         var testDescription: String { "line \(line): \(stamp)" }
     }
 
+    /// A row or file of the tables that does not read as expected.
+    struct TableError: Error, CustomStringConvertible {
+        let description: String
+    }
+
     /// `mooninfo_2020.txt` to `mooninfo_2022.txt`, copied unchanged from
     /// Astronomy Engine at the revision `build-fixtures.py` pins, which
     /// checks their SHA-256. Columns: date, time, phase, age, diameter (″),
     /// distance (km), RA, Dec, sub-solar longitude and latitude, sub-Earth
     /// longitude and latitude (the libration, in degrees), axis angle.
-    static let rows: [Int: [Row]] = {
+    /// A file or row that does not parse fails the tests that read it.
+    static let rows = Result { () throws -> [Int: [Row]] in
         let directory = URL(fileURLWithPath: #filePath)
             .deletingLastPathComponent()  // Moon
             .deletingLastPathComponent()  // Engine
@@ -41,24 +47,34 @@ struct EngineLibrationTests {
             .deletingLastPathComponent()  // Tests
             .deletingLastPathComponent()
             .appendingPathComponent("Scripts/reference-data/sources")
-        let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         var tables: [Int: [Row]] = [:]
         for year in 2020...2022 {
             let url = directory.appendingPathComponent("mooninfo_\(year).txt")
-            guard let text = try? String(contentsOf: url, encoding: .utf8) else { fatalError("Missing \(url.path)") }
-            tables[year] = text.split(separator: "\n").enumerated().dropFirst().map { index, line in
-                let f = line.split(separator: " ")
-                let clock = f[3].split(separator: ":").compactMap { Int($0) }
-                let ut = Engine.Time.days(
-                    year: Int(f[2])!, month: months.firstIndex(of: String(f[1]))! + 1, day: Int(f[0])!,
-                    hour: clock[0], minute: clock[1], second: 0)
-                return Row(
-                    line: index + 1, stamp: String(line.prefix(17)), ut: ut, diameterArcseconds: Double(f[7])!,
-                    distanceKilometers: Double(f[8])!, longitude: Double(f[13])!, latitude: Double(f[14])!)
+            let text = try String(contentsOf: url, encoding: .utf8)
+            tables[year] = try text.split(separator: "\n").enumerated().dropFirst().map { index, line in
+                try row(line: index + 1, text: line)
             }
         }
         return tables
-    }()
+    }
+
+    static let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    /// One row of a table: `line` is its 1-based line in the file.
+    static func row(line: Int, text: Substring) throws -> Row {
+        let f = text.split(separator: " ")
+        guard f.count > 14 else { throw TableError(description: "line \(line): \(f.count) fields") }
+        let clock = f[3].split(separator: ":").compactMap { Int($0) }
+        guard let day = Int(f[0]), let month = months.firstIndex(of: String(f[1])), let year = Int(f[2]),
+            clock.count >= 2,
+            let diameter = Double(f[7]), let distance = Double(f[8]), let longitude = Double(f[13]),
+            let latitude = Double(f[14])
+        else { throw TableError(description: "line \(line): unreadable row \"\(text)\"") }
+        let ut = Engine.Time.days(year: year, month: month + 1, day: day, hour: clock[0], minute: clock[1], second: 0)
+        return Row(
+            line: line, stamp: String(text.prefix(17)), ut: ut, diameterArcseconds: diameter,
+            distanceKilometers: distance, longitude: longitude, latitude: latitude)
+    }
 
     /// Astronomy Engine's limits for these tables (`ctest.c`, `Libration`).
     static let longitudeArcminutes = 0.1304
@@ -74,7 +90,7 @@ struct EngineLibrationTests {
         "Libration, distance and diameter within Astronomy Engine's limits on every hourly row",
         arguments: [2020, 2021, 2022])
     func againstNASA(year: Int) throws {
-        let rows = try #require(Self.rows[year])
+        let rows = try #require(try Self.rows.get()[year])
         #expect(rows.count == (year == 2020 ? 8_785 : 8_760))
         // Every row is a new instant, so a private cache keeps them out of the shared one.
         let (cache, _) = EngineMoonCacheTests.makeCache()
@@ -98,7 +114,7 @@ struct EngineLibrationTests {
 
     @Test("The checks fail an hour off, with longitude and latitude swapped, or in AU")
     func negativeControls() throws {
-        let row = try #require(Self.rows[2021]?[100])
+        let row = try #require(try Self.rows.get()[2021]?[100])
         let late = Engine.Moon.libration(at: Engine.Time(ut: row.ut + 1.0 / 24, deltaTModel: .espenakMeeus))
         #expect(abs(late.longitude - row.longitude) * 60 > Self.longitudeArcminutes)
         let libration = Engine.Moon.libration(at: Engine.Time(ut: row.ut, deltaTModel: .espenakMeeus))
