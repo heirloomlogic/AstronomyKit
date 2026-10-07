@@ -327,7 +327,7 @@ Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA thr
 
 ## Planetary series
 
-In the tree: `Planets/EnginePlanets.swift`, `Planets/EnginePlanetPolynomial.swift` and the generated tables in `Planets/Generated/`.
+In the tree: `Planets/EnginePlanets.swift`, `Planets/EnginePlanetPolynomial.swift`, `Planets/EngineVSOP87B.swift`, `Planets/EnginePlanetPositions.swift` and the generated tables in `Planets/Generated/`.
 
 ```swift
 extension Engine {
@@ -338,6 +338,21 @@ extension Engine {
 extension Engine.VSOP87B {
     struct Model { let termCounts: [[Int]]; let terms: [Double] }   // A, B, C of each term
     static func model(_ planet: Engine.Planet) -> Model
+    static func coordinates(_ model: Model, millennia t: Double) -> SIMD3<Double>   // longitude, latitude, radius
+    static func derivatives(_ model: Model, millennia t: Double) -> SIMD3<Double>   // per Julian millennium
+    static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double>
+    static func velocity(_ sphere: SIMD3<Double>, rates: SIMD3<Double>) -> SIMD3<Double>   // AU per day
+    final class Cache { init(capacity: Int = 32, registry: Engine.CacheRegistry); let registry: Engine.CacheRegistry }
+    static let cache: Cache
+    static func coordinates(_ planet: Engine.Planet, millennia t: Double, cache: Cache = cache) -> SIMD3<Double>   // and derivatives
+    static let toEquatorial: Engine.Rotation<Engine.VSOP87Ecliptic, Engine.EQJ>
+}
+extension Engine.Planet {
+    static let acceptedTTDays: Double  // 1,461,000
+    func heliocentricEclipticPosition(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Engine.Vector<Engine.VSOP87Ecliptic>
+    func heliocentricEclipticState(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Engine.State<Engine.VSOP87Ecliptic>
+    func heliocentricPosition(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Engine.Vector<Engine.EQJ>   // and heliocentricState
+    func heliocentricDistance(at time: Engine.Time, cache: Engine.VSOP87B.Cache = VSOP87B.cache) throws -> Double
 }
 extension Engine.PlanetPolynomial {
     static let start: Double  // −36,524.5: 1900-01-01 00:00 TT
@@ -358,18 +373,25 @@ extension Engine.PlanetPolynomial {
 
 - `Scripts/generate-planet-tables.py` writes the tables from the C engine's `vsop87b_full.h` and `polynomial-data.h`, whose SHA-256 hashes `Scripts/planet-data/manifest.json` pins, and `--check` runs in CI on macOS and Linux. The headers stay where the C engine reads them; when #96 removes the C target, it moves them to `Scripts/planet-data` and updates the manifest. `--published DIR` also compares the VSOP87B table with the eight files IMCCE publishes, whose URLs and hashes are in the manifest: all 35,080 terms in 135 series match in order and value.
 - Each table is a base64 string literal of the doubles' little-endian bit patterns, decoded once per planet on first use. Array literals do not scale: a 100,002-element `[Double]` literal took 390 s and 1.66 GB to compile in Debug, and the polynomial tables hold 1,431,768 doubles. The data is still compiled in; nothing is read from a file. `unpackDoubles` moves to `Foundation/` through #84 when a second module needs it. Decoded, the polynomial tables take 11.5 MB and the VSOP87B terms 0.8 MB, kept for the life of the process.
-- VSOP87B gives heliocentric ecliptic longitude and latitude in radians and radius in AU, referred to the dynamical ecliptic and equinox of J2000, as Poisson series in Julian millennia of TT. The tables keep the published term order.
+- VSOP87B gives heliocentric ecliptic longitude and latitude in radians and radius in AU, referred to the dynamical ecliptic and equinox of J2000, as Poisson series in Julian millennia of TT. The tables keep the published term order. `coordinates` and `derivatives` port `VsopCoords` and `VsopDeriv`: every term in table order, with Neumaier compensation inside each power of t and, for the coordinates, across the powers; each longitude power's contribution is reduced modulo 2π. At the four t the tests use, the compensated coordinates equal an exactly rounded sum of the same terms bit for bit, and plain addition is off by 1.4e-12 to 2.2e-10 rad in Mercury's longitude. A t that is not finite gives NaN.
+- `Engine.VSOP87Ecliptic` is the frame of VSOP87, declared in `Planets/` with its rotation to EQJ, since only this module uses it. It is not ECL: `toEquatorial`, the rotation to FK5 J2000 that `vsop87.doc` prints, tilts by an obliquity 0.003″ larger than IAU 2006's and adds rotations of up to 0.1″. The engine takes FK5 J2000 as EQJ, as the C engine does.
 - The polynomials are AstronomyKit's degree-12 Chebyshev fits of the compensated VSOP87B position in the same frame, in segments of 8 days (Mercury, Earth), 16 (Saturn, Neptune) or 32 (the others), from `start` up to `stop`. 413 segments that did not meet the 1e-12 AU fit budget are excluded: 409 of Mercury's and 4 of Venus's.
-- Segment `k` holds `start + k·width ≤ tt < start + (k + 1)·width`, as in `polynomial.h`: the index is `Int((tt − start) / width)`, moved back one where the division rounded the double below a boundary up to it. Outside the span, including a TT that is not finite, and in an excluded segment, the functions return `nil` and the caller uses the full series. The static functions check the span before they decode a table.
+- Segment `k` holds `start + k·width ≤ tt < start + (k + 1)·width`, as in `polynomial.h`: the index is `Int((tt − start) / width)`, moved back one where the subtraction rounded the double below a boundary up to the boundary's offset. Every width is a power of two, so the division is exact. Outside the span, including a TT that is not finite, and in an excluded segment, the functions return `nil` and the caller uses the full series. The static functions check the span before they decode a table.
 - Clenshaw's recurrence gives the position and its derivative together; velocity is in AU per TT day. A state's position is the same double as the position.
-- **Planned** for the next parts of #85: the full VSOP87B series with Neumaier compensation in the published term order, the rotation from the VSOP87B frame to EQJ, heliocentric vectors, states and distances that use the polynomials where they apply and the series elsewhere, with the accepted TT range and failures for non-finite results, the VSOP cache with its work counters, and the dispositions of `PolynomialTests`, `VsopCacheTests`, the planetary `ReproducibilityTests` cases and the VSOP cache probes.
+- The `Engine.Planet` functions give the heliocentric position, state and distance in the VSOP87 frame or in EQJ. They throw `badTime` when |TT| is above `acceptedTTDays`, 1,461,000 days as the C engine's `EPHEMERIS_MAX_TT_DAYS`, or is not finite, before touching the cache, and when a result component is not finite. `acceptedTTDays` moves to `Foundation/` through #84 when another module needs it. Inside the polynomial span and outside excluded segments they use the polynomials and never the series or the cache. Elsewhere the position is the series coordinates in rectangular form, the state adds the chain-rule velocity from the derivatives, scaled from per millennium to per day, and the distance is the series radius. The EQJ results are the VSOP87 ones rotated.
+- `VSOP87B.cache` keeps, for each planet, 32 coordinate and 32 derivative results, keyed by the exact bits of t, in two `BoundedCache`s registered with `CacheRegistry.shared`. A position, a state and a distance at one instant share one evaluation of each series they need; the distance reads the coordinates entry. A t that is not finite bypasses it. The C engine keeps the radius separately so a distance alone sums only the radius series; here a distance alone sums all three coordinates.
+- **Planned** for part 3 of #85: the engine-level `DistanceAccuracyTests` and `JPLValidationTests` planet checks, Release measurements, and the dispositions of `PolynomialTests`, `VsopCacheTests`, the planetary `ReproducibilityTests` cases and the VSOP cache probes.
 
 ### Published-value checks
 
 Tests under `Tests/AstronomyKitTests/Engine/Planets/`:
 
 - VSOP87B terms as IMCCE prints them in `VSOP87B.mer`, `VSOP87B.ear` and `VSOP87B.nep`, the 135 series and 35,080 terms in all, and the term counts of Mercury's series. The comparison of every term is the generator's `--published` mode, which needs the IMCCE files and does not run in CI.
-- The heliocentric distance from the polynomials against the JPL Horizons vectors in `Scripts/reference-data/sources/distance/heldout`, within the allowances `DistanceAccuracyTests` applies to the public distance: 1,067 of the 1,072 planet records. The other 5 fall in excluded segments and wait for the series.
+- The IMCCE check values in `vsop87.chk` (VSOP87B, every planet at ten dates from 1100 to 2000, SHA-256 in `PublishedVSOP87.swift`): the series coordinates and their rates within 1e-10, and the ecliptic position and velocity from the planet functions against the rectangular form of the published values, through the polynomials at J2000 and the series at the other nine dates. This pins the axis order and the frame. The rotation's entries equal `vsop87.doc`'s.
+- The heliocentric distance from the polynomials alone against the JPL Horizons vectors in `Scripts/reference-data/sources/distance/heldout`, within the allowances `DistanceAccuracyTests` applies to the public distance: 1,067 of the 1,072 planet records. The other 5 fall in excluded segments.
+- All 1,072 records through the planet functions, the 5 on the series path included: the distance within the same allowances, and the EQJ direction within 1′ of Horizons' ICRF vector, the accuracy `JPLValidationTests` applies. The largest angle is 2.4″, for Neptune.
+- Cache work counts with private registries: no lookups inside the polynomial span; one evaluation per series shared by position, state and distance; reuse in an excluded segment; separate entries per planet; signed-zero keys; non-finite bypass; eviction of the oldest of 32; reset; simultaneous callers; and a cache with no capacity, which evaluates every time.
+- Compensated summation against exact summation, and the accepted range's ends, NaN, infinities and an invalid time on every planet function.
 - Clenshaw's recurrence against T_k(cos θ) = cos kθ and dT_k/dx = k·U_{k−1}(x) for every degree; every boundary of every planet and the double below it; every segment at its first, middle and last double, excluded or not; velocity against five-point differences of the position; and adjacent segments, which meet within 2e-12 AU (2.0e-13 at most).
 
 ## Caches and reset
@@ -387,7 +409,7 @@ In the tree: `EngineCache.swift`.
 
 | State | Owner | Native form | C counterpart |
 |---|---|---|---|
-| VSOP87B series results | #85 | `BoundedCache`, 32 entries per body, `ExactKey` of the scaled TT the series reads | Thread-local, 32 per body (local patch 8) |
+| VSOP87B series results | #85 | `Engine.VSOP87B.cache`: per planet, a 32-entry `BoundedCache` of coordinates and one of derivatives, `ExactKey` of the scaled TT the series read | Thread-local, 32 per body (local patch 8) |
 | Nutation angles and rates | #86 | `Engine.Nutation.cache`: `BoundedCache`, 32 entries, `ExactKey` of TT in Julian centuries, shared by angle, rate, tilt and sidereal-time callers | Thread-local, 32 entries (local patch 13) |
 | Moon longitude, latitude, distance | #87 | `BoundedCache`, 32 entries, `ExactKey` of the scaled TT | Thread-local, 32 entries (local patch 14) |
 | Pluto segments | #88 | `BoundedCache` keyed by segment index, one entry per table segment | Allocated segments behind a mutex, freed by `Astronomy_Reset` (local patch 1) |
@@ -407,7 +429,7 @@ The galactic rotations (#152) and `Atmosphere.at(elevation:)` (#153) already run
 Every C function the Swift layer calls or names has exactly one owner. `EngineContractTests` fails when a Swift source mentions an `Astronomy_` function that is missing from this list or listed under two owners.
 
 - #84: `Astronomy_MakeTime`, `Astronomy_AddDays`, `Astronomy_TimeFromDaysWithDeltaT`, `Astronomy_TerrestrialTimeWithDeltaT`, `Astronomy_TimeFromPair`, `Astronomy_DeltaT_EspenakMeeus`, `Astronomy_DeltaT_JplHorizons`, `Astronomy_Search`, `Astronomy_CorrectLightTravel`, `Astronomy_AngleBetween`, `Astronomy_RotateVector`, `Astronomy_RotateState`, `Astronomy_Reset`
-- #85: none directly; #89 composes the planetary series into the position functions.
+- #85: none directly. It provides the planet-level heliocentric functions on `Engine.Planet`; #89 composes them with the other bodies into the heliocentric position, state and distance functions it owns.
 - #86: `Astronomy_Rotation_EQJ_ECL`, `Astronomy_Rotation_ECL_EQJ`, `Astronomy_Rotation_EQJ_EQD`, `Astronomy_Rotation_EQD_EQJ`, `Astronomy_Rotation_EQJ_HOR`, `Astronomy_Rotation_HOR_EQJ`, `Astronomy_Rotation_EQJ_GAL`, `Astronomy_Rotation_GAL_EQJ`, `Astronomy_Rotation_ECL_HOR`, `Astronomy_Rotation_HOR_ECL`, `Astronomy_Rotation_EQD_HOR`, `Astronomy_Rotation_HOR_EQD`, `Astronomy_Rotation_EQD_ECL`, `Astronomy_Rotation_ECL_EQD`, `Astronomy_Rotation_EQJ_ECT`, `Astronomy_Rotation_ECT_EQJ`, `Astronomy_Rotation_EQD_ECT`, `Astronomy_Rotation_ECT_EQD`, `Astronomy_InverseRotation`, `Astronomy_CombineRotation`, `Astronomy_Pivot`, `Astronomy_SiderealTime`, `Astronomy_Ecliptic`, `Astronomy_Horizon`, `Astronomy_SphereFromVector`, `Astronomy_VectorFromSphere`, `Astronomy_EquatorFromVector`, `Astronomy_HorizonFromVector`, `Astronomy_VectorFromHorizon`, `Astronomy_ObserverVector`, `Astronomy_ObserverState`, `Astronomy_ObserverGravity`, `Astronomy_VectorObserver`, `Astronomy_Atmosphere`, `Astronomy_Refraction`, `Astronomy_InverseRefraction`
 - #87: `Astronomy_GeoMoon`, `Astronomy_GeoMoonState`, `Astronomy_EclipticGeoMoon`, `Astronomy_GeoEmbState`, `Astronomy_MoonEclipticState`, `Astronomy_Libration`
 - #88: `Astronomy_GravSimInit`, `Astronomy_GravSimUpdate`, `Astronomy_GravSimSwap`, `Astronomy_GravSimFree`, `Astronomy_GravSimBodyState`, `Astronomy_GravSimTime`, `Astronomy_GravSimNumBodies`

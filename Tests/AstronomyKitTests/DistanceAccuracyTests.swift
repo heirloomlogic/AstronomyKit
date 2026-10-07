@@ -12,6 +12,7 @@ struct DistanceReferenceArchive: Decodable {
         let mode: String
         let julianDateTT: Double
         let referenceRangeAU: Double
+        let referencePositionAU: [Double]
         let allowedErrorKm: Double
     }
 

@@ -28,9 +28,14 @@ extension Engine {
             /// Whether each segment has a usable polynomial.
             let included: [Bool]
 
+            /// Traps unless the coefficients fill whole segments that reach
+            /// ``PlanetPolynomial/stop``.
             init(degree: Int, width: Double, excludedSegments: [Int], coefficients: [Double]) {
                 let count = coefficients.count / (3 * (degree + 1))
                 precondition(count * 3 * (degree + 1) == coefficients.count, "Partial polynomial segment")
+                precondition(
+                    Double(count) * width >= PlanetPolynomial.stop - PlanetPolynomial.start,
+                    "Polynomial segments end before the span does")
                 var included = [Bool](repeating: true, count: count)
                 for segment in excludedSegments { included[segment] = false }
                 self.degree = degree
@@ -55,9 +60,10 @@ extension Engine {
             /// ``PlanetPolynomial/stop``, including when it is not finite.
             ///
             /// Segment `k` holds `start + k·width ≤ tt < start + (k + 1)·width`.
-            /// Every boundary is an exact double. Dividing `tt − start` by the
-            /// width can round the double just below a boundary up to it, so
-            /// such a `tt` is moved back to the segment below.
+            /// Every boundary is an exact double. The subtraction `tt − start`
+            /// can round the double just below a boundary up to the boundary's
+            /// offset (dividing by a power-of-two width is exact), so such a
+            /// `tt` is moved back to the segment below.
             func segment(containing tt: Double) -> Int? {
                 guard PlanetPolynomial.covers(tt) else { return nil }
                 var segment = Int((tt - PlanetPolynomial.start) / width)

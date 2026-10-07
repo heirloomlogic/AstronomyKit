@@ -35,8 +35,8 @@ extension Engine {
     /// line breaks, are skipped.
     ///
     /// The generated tables are string literals because array literals do
-    /// not scale: one of 100,002 doubles took the compiler six minutes in a
-    /// Debug build, and the tables hold 1.5 million. Each table calls this
+    /// not scale: one of 100,002 doubles took the compiler 390 s in a Debug
+    /// build, and the tables hold 1.5 million. Each table calls this
     /// from a `static let` initializer, so it is decoded once, on first use.
     /// Traps when `text` does not hold exactly `count` doubles, which only a
     /// damaged generated file can cause.
