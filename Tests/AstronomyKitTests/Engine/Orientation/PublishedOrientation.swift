@@ -193,9 +193,12 @@ enum PublishedOrientation {
         #expect(abs(determinant - 1) <= 1e-15, "determinant", sourceLocation: sourceLocation)
     }
 
-    /// The largest absolute element difference of two 3×3 matrices.
+    /// The largest absolute element difference of two 3×3 matrices, or NaN
+    /// when any difference is NaN, so a comparison with it fails.
     static func maximumDifference(_ a: [[Double]], _ b: [[Double]]) -> Double {
-        zip(a, b).flatMap { zip($0, $1).map { abs($0 - $1) } }.max() ?? .infinity
+        let differences = zip(a, b).flatMap { zip($0, $1).map { abs($0 - $1) } }
+        if differences.contains(where: \.isNaN) { return .nan }
+        return differences.max() ?? .infinity
     }
 
     /// The derivative of `f` at `x` from the five-point stencil with step `h`.

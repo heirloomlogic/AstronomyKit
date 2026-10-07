@@ -77,6 +77,18 @@ struct EnginePrecessionTests {
         #expect(Published.maximumDifference(matrix, Published.bp06.rp) <= 1e-13)
     }
 
+    @Test("A NaN element fails the matrix comparison wherever it sits")
+    func nanFailsComparison() {
+        let identity: [[Double]] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+        for i in 0..<3 {
+            for j in 0..<3 {
+                var damaged = identity
+                damaged[i][j] = .nan
+                #expect(!(Published.maximumDifference(damaged, identity) <= 1), "element \(i), \(j)")
+            }
+        }
+    }
+
     @Test("The matrix is the identity at J2000")
     func identityAtJ2000() {
         let matrix = Published.matrix(Engine.Precession.rotation(tt: 0))

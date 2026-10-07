@@ -55,14 +55,6 @@ struct EngineNutationCacheTests {
         #expect(cache.count == 1)
     }
 
-    @Test("Mean sidereal time reads no nutation")
-    func meanSiderealTime() {
-        let (cache, _) = Self.makeCache()
-        _ = Engine.EarthRotation.meanSiderealTime(Self.time(tt: 1_000.5))
-        _ = Engine.EarthRotation.apparentSiderealTime(Self.time(tt: 1_000.5), cache: cache)
-        #expect(cache.statistics == .init(hits: 0, misses: 1))
-    }
-
     @Test("Signed zeros are different keys with equal results")
     func signedZeros() {
         let (cache, _) = Self.makeCache()

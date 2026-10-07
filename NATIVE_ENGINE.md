@@ -259,7 +259,7 @@ extension Engine.Rotation {
 
 Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA through ERFA 2.0.1 (the commit `THIRD_PARTY_NOTICES` pins), not against C output:
 
-- The values in ERFA's own test program, `t_erfa_c.c`: `t_nut00b`, `t_obl06`, `t_p06e`, `t_bp06`, `t_numat`, `t_era00` and `t_gmst06`, each within SOFA's tolerance or tighter, and `t_gst06a` within the 4 mas that IAU 2000B (1 mas of 2000A from 1995 to 2050) and #170 allow.
+- The values in ERFA's own test program, `t_erfa_c.c`: `t_nut00b`, `t_obl06`, `t_p06e`, `t_numat`, `t_era00` and `t_gmst06`, each within SOFA's tolerance or tighter; `t_bp06` within 1e-13, because SOFA builds that matrix from the Fukushima-Williams angles, which agree with equation 5.39 to 3e-14 there; and `t_gst06a` within the 4 mas that IAU 2000B (1 mas of 2000A from 1995 to 2050) and #170 allow.
 - pyerfa 2.0.1.5 at eight epochs from 1600 to 2500, with UT1 and TT apart: nutation to 1e-15 rad, mean obliquity and the precession angles to 1e-15 rad, the precession matrix against equation 5.39 built from the SOFA angles to 1e-15, and the Earth rotation angle and mean sidereal time to 1e-12 rad.
 - Rates against five-point differences of the values on exact binary-fraction stencils, and the moving-rotation state against the derivative of the rotated position.
 - The nutation cache's work counts with a private registry: one evaluation per instant across angle, rate, tilt and sidereal-time callers, signed-zero keys, nonfinite bypass, eviction of the oldest of 32, reset, and simultaneous callers.
