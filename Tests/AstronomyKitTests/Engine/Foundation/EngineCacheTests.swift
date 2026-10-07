@@ -234,7 +234,9 @@ struct EngineBoundedCacheTests {
         let resume = DispatchSemaphore(value: 0)
         let finished = DispatchSemaphore(value: 0)
         let result = Box()
-        DispatchQueue.global().async {
+        // A thread of its own: a global queue can wait for a worker while
+        // other suites keep every core busy.
+        Thread {
             let found = cache.value(for: 2) { () -> Int in
                 computing.signal()
                 _ = resume.wait(timeout: .now() + 20)
@@ -242,7 +244,7 @@ struct EngineBoundedCacheTests {
             }
             result.set(found)
             finished.signal()
-        }
+        }.start()
         let started = computing.wait(timeout: .now() + 20) == .success
         try #require(started, "The computation did not start within 20 seconds")
         registry.removeAll()

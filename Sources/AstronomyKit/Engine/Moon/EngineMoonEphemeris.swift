@@ -55,33 +55,17 @@ extension Engine.MoonEphemeris {
         return (x * x * x * (10 + x * (-15 + 6 * x)), rate)
     }
 
+    /// The records as an ``Engine/ChebyshevTable``.
+    static let table = Engine.ChebyshevTable(
+        start: start, recordDays: recordDays, recordCount: recordCount, degreeCount: degreeCount,
+        coefficients: coefficients)
+
     /// The position in AU and velocity in AU per TDB day, on ICRS axes, at
     /// `tdb` days of TDB from J2000, or `nil` outside the records or for a
-    /// time that is not finite.
-    ///
-    /// Record `k` holds `start + 4k ≤ tdb < start + 4(k + 1)`. Clenshaw's
-    /// recurrence gives the series and its derivative together.
+    /// time that is not finite: ``table`` evaluated at `tdb`. Record `k`
+    /// holds `start + 4k ≤ tdb < start + 4(k + 1)`.
     static func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-        guard tdb.isFinite, tdb >= start else { return nil }
-        let interval = (tdb - start) / recordDays
-        guard interval >= 0, interval < Double(recordCount) else { return nil }
-        let record = Int(interval.rounded(.down))
-        let x = 2 * ((tdb - start) - Double(record) * recordDays) / recordDays - 1
-        var position = SIMD3<Double>()
-        var velocity = SIMD3<Double>()
-        for axis in 0..<3 {
-            let base = (3 * record + axis) * degreeCount
-            var (b1, b2, d1, d2) = (0.0, 0.0, 0.0, 0.0)
-            for k in stride(from: degreeCount - 1, to: 0, by: -1) {
-                let b = 2 * x * b1 - b2 + coefficients[base + k]
-                let d = 2 * b1 + 2 * x * d1 - d2
-                (b2, b1) = (b1, b)
-                (d2, d1) = (d1, d)
-            }
-            position[axis] = coefficients[base] + x * b1 - b2
-            velocity[axis] = (b1 + x * d1 - d2) * (2 / recordDays)
-        }
-        return (position, velocity)
+        table.evaluate(tdb: tdb)
     }
 
     /// The Moon's position in AU and velocity in AU per TT day relative to

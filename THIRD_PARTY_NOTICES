@@ -123,7 +123,11 @@ The Moon and Pluto coefficient arrays in Sources/CLibAstronomy/EphemerisData
 were derived by Heirloom Logic from NASA/JPL planetary and satellite
 ephemerides obtained from the official NAIF distribution. The Swift table
 Sources/AstronomyKit/Engine/Moon/Generated/MoonDE440Coefficients.swift is
-generated from moon_data.inc and holds the same Moon coefficients:
+generated from moon_data.inc and holds the same Moon coefficients, and the
+Swift tables PlutoBarycenterCoefficients.swift, PlutoSunCoefficients.swift
+and PlutoCenterCoefficients.swift in Sources/AstronomyKit/Engine/Gravity/Generated
+are generated from the three pluto_*.inc files and hold the same Pluto
+coefficients:
 
   de440s.bsp, JPL planetary and lunar ephemeris DE440, integrated 25 June 2020
   https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp
