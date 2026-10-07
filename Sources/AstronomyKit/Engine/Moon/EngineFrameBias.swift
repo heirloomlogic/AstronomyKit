@@ -49,15 +49,6 @@ extension Engine.FrameBias {
         )
     }()
 
-    /// `vector` on ICRS axes rotated to EQJ, as ``icrsToEqj`` rotates a vector.
-    static func toEqj(_ vector: SIMD3<Double>) -> SIMD3<Double> {
-        let r = icrsToEqj.rot
-        return SIMD3(
-            r.0.0 * vector.x + r.1.0 * vector.y + r.2.0 * vector.z,
-            r.0.1 * vector.x + r.1.1 * vector.y + r.2.1 * vector.z,
-            r.0.2 * vector.x + r.1.2 * vector.y + r.2.2 * vector.z)
-    }
-
     /// SOFA's `iauRx`: rotates `r` by `angle` radians about the x axis.
     private static func rotateX(_ angle: Double, _ r: inout [[Double]]) {
         let s = sin(angle)

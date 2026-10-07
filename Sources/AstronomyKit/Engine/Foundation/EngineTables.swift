@@ -14,6 +14,12 @@ extension Engine {
     /// states 1″ precision for Mercury to Mars.
     static let acceptedTTDays = 1_461_000.0
 
+    /// Throws `AstronomyError.badTime` when |TT| of `time` is above
+    /// ``acceptedTTDays`` or is not finite.
+    static func checkAcceptedTime(_ time: Engine.Time) throws {
+        guard abs(time.tt) <= acceptedTTDays else { throw AstronomyError.badTime }
+    }
+
     /// Decodes `count` doubles from `text`, the base64 of their little-endian
     /// IEEE 754 bit patterns. Characters outside the base64 alphabet, such as
     /// line breaks, are skipped.

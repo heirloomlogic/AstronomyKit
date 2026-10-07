@@ -57,8 +57,8 @@ struct EngineTDBTests {
         let h = 1.0 / 64
         for (tt, _) in Self.geocentric {
             let tt = tt.rounded()
-            let offset = { (k: Double) in Engine.TDB.offsetSeconds(tt: tt + k * h) }
-            let derivative = (offset(-2) - 8 * offset(-1) + 8 * offset(1) - offset(2)) / (12 * h * 86_400)
+            let derivative =
+                PublishedOrientation.derivative(at: tt, step: h) { Engine.TDB.offsetSeconds(tt: $0) } / 86_400
             let rate = Engine.TDB.rate(tt: tt)
             #expect(abs(rate - 1) < 3.5e-10, "tt \(tt)")
             #expect(abs((rate - 1) - derivative) <= 1e-16, "tt \(tt): \(rate - 1) vs \(derivative)")

@@ -13,12 +13,7 @@ import Testing
 
 @Suite("Engine Moon against JPL Horizons")
 struct EngineMoonHorizonsTests {
-    /// 00:00 UT on the reference's date, with the Espenak-Meeus Delta T.
-    static func time(_ reference: JPLReferencePoint) -> Engine.Time {
-        let ut = Engine.Time.days(
-            year: reference.year, month: reference.month, day: reference.day, hour: 0, minute: 0, second: 0)
-        return Engine.Time(ut: ut, deltaTModel: .espenakMeeus)
-    }
+    static func time(_ reference: JPLReferencePoint) -> Engine.Time { EnginePlanetHorizonsTests.time(reference) }
 
     /// The astrometric J2000 direction from `observer`, Horizons'
     /// definition: the Moon at the time light left it, less the observer at
@@ -33,10 +28,7 @@ struct EngineMoonHorizonsTests {
     }
 
     static func separation(_ vector: Engine.Vector<Engine.EQJ>, _ reference: JPLReferencePoint) throws -> Double {
-        let equatorial = try Engine.Equatorial(vector)
-        return angularSeparation(
-            ra1: reference.rightAscension, dec1: reference.declination,
-            ra2: equatorial.rightAscension, dec2: equatorial.declination)
+        try EnginePlanetHorizonsTests.separation(vector, reference)
     }
 
     @Test("The JPLValidationTests geocentric Moon suite within its 1′")
@@ -128,10 +120,10 @@ struct EngineMoonHorizonsTests {
     static func errors(_ reference: IndependentReferenceArchive.Vector) throws -> (arcminutes: Double, km: Double) {
         let tdb = reference.julianDateTDB - 2_451_545
         let tt = tdb - Engine.TDB.offsetSeconds(tt: tdb) / 86_400
-        let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+        let time = PlanetTestSupport.time(tt: tt)
         let moon = try Engine.Moon.geocentricPosition(at: time)
         let icrs = reference.positionAU
-        let published = Engine.FrameBias.toEqj(SIMD3(icrs[0], icrs[1], icrs[2]))
+        let published = Engine.FrameBias.icrsToEqj.apply(to: SIMD3(icrs[0], icrs[1], icrs[2]))
         let expected = Engine.Vector<Engine.EQJ>(x: published.x, y: published.y, z: published.z, time: time)
         return (try moon.angle(to: expected) * 60, abs(moon.length - expected.length) * Engine.kilometersPerAU)
     }

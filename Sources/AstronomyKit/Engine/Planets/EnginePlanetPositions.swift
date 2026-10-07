@@ -44,7 +44,7 @@ extension Engine.Planet {
     func heliocentricEclipticPosition(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.Vector<Engine.VSOP87Ecliptic> {
-        try Self.checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let position =
             Engine.PlanetPolynomial.position(self, tt: time.tt)
             ?? Engine.VSOP87B.rectangular(
@@ -66,7 +66,7 @@ extension Engine.Planet {
     func heliocentricEclipticState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
-        try Self.checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let (position, velocity) =
             Engine.PlanetPolynomial.state(self, tt: time.tt)
             ?? seriesState(millennia: Self.millennia(time), cache: cache)
@@ -100,7 +100,7 @@ extension Engine.Planet {
     func heliocentricDistance(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Double {
-        try Self.checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let distance: Double
         if let position = Engine.PlanetPolynomial.position(self, tt: time.tt) {
             distance = (position.x * position.x + position.y * position.y + position.z * position.z).squareRoot()
@@ -112,10 +112,6 @@ extension Engine.Planet {
     }
 
     // MARK: - Helpers
-
-    private static func checkTime(_ time: Engine.Time) throws {
-        guard abs(time.tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
-    }
 
     private static func millennia(_ time: Engine.Time) -> Double {
         time.tt / Engine.VSOP87B.daysPerMillennium

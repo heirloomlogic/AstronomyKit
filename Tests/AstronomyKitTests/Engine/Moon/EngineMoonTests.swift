@@ -15,10 +15,6 @@ import Testing
 struct EngineMoonTests {
     typealias Ephemeris = Engine.MoonEphemeris
 
-    static func time(tt: Double) -> Engine.Time {
-        Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-    }
-
     /// The DE440 Moon alone at `tt`, as longitude, latitude and distance.
     static func ephemerisCoordinates(tt: Double) throws -> SIMD3<Double> {
         let p = try #require(Engine.Moon.meanEclipticPosition(tt: tt))
@@ -55,7 +51,7 @@ struct EngineMoonTests {
             let series = Engine.Moon.rectangular(Engine.LunarSeries.coordinates(centuries: t))
             let ephemeris = Engine.Moon.rectangular(try Self.ephemerisCoordinates(tt: t * 36_525))
             let expected = series + weight * (ephemeris - series)
-            let error = max((blended - expected).max(), (expected - blended).max())
+            let error = EngineMoonEphemerisTests.largest(blended - expected)
             #expect(error <= 1e-17, "tt \(tt)")
         }
     }
@@ -70,7 +66,7 @@ struct EngineMoonTests {
             let above = Engine.Moon.rectangular(Engine.Moon.coordinates(centuries: (tt + 1e-7) / 36_525))
             // The Moon moves under 1.4e-10 AU in 2e-7 day; a jump would be
             // the series' error, about 1e-7 AU.
-            let step = max((above - below).max(), (below - above).max())
+            let step = EngineMoonEphemerisTests.largest(above - below)
             #expect(step < 2e-10, "tt \(tt): \(step) AU")
         }
     }
@@ -83,7 +79,7 @@ struct EngineMoonTests {
             let tt = -40_000 + Double(step) * 0.75
             let longitude = Engine.Moon.coordinates(centuries: tt / 36_525).x
             #expect(longitude >= 0 && longitude <= 2 * .pi, "tt \(tt)")
-            let ecliptic = try Engine.Moon.eclipticPosition(at: Self.time(tt: tt)).longitude
+            let ecliptic = try Engine.Moon.eclipticPosition(at: PlanetTestSupport.time(tt: tt)).longitude
             #expect(ecliptic >= 0 && ecliptic < 360, "tt \(tt)")
             if longitude < previous { wrapped += 1 }
             previous = longitude
@@ -95,7 +91,7 @@ struct EngineMoonTests {
     @Test("The ecliptic position is the J2000 position seen on the true ecliptic of date, with the model's distance")
     func eclipticMatchesEquatorial() throws {
         for tt in [-1_000_000.0, -36_540.0, 0, 9_497.375, 47_860.0, 700_000.0] {
-            let time = Self.time(tt: tt)
+            let time = PlanetTestSupport.time(tt: tt)
             let ecliptic = try Engine.Moon.eclipticPosition(at: time)
             let fromEquator = Engine.Ecliptic(try Engine.Moon.geocentricPosition(at: time))
             #expect(abs(remainder(ecliptic.longitude - fromEquator.longitude, 360)) <= 1e-12, "tt \(tt)")
@@ -110,12 +106,13 @@ struct EngineMoonTests {
     func acceptedRange() throws {
         let limit = Engine.acceptedTTDays
         for tt in [-limit, limit] {
-            _ = try Engine.Moon.geocentricPosition(at: Self.time(tt: tt))
-            _ = try Engine.Moon.eclipticPosition(at: Self.time(tt: tt))
+            _ = try Engine.Moon.geocentricPosition(at: PlanetTestSupport.time(tt: tt))
+            _ = try Engine.Moon.eclipticPosition(at: PlanetTestSupport.time(tt: tt))
         }
         for tt in [(-limit).nextDown, limit.nextUp] {
-            #expect(throws: AstronomyError.badTime) { try Engine.Moon.geocentricPosition(at: Self.time(tt: tt)) }
-            #expect(throws: AstronomyError.badTime) { try Engine.Moon.eclipticPosition(at: Self.time(tt: tt)) }
+            let time = PlanetTestSupport.time(tt: tt)
+            #expect(throws: AstronomyError.badTime) { try Engine.Moon.geocentricPosition(at: time) }
+            #expect(throws: AstronomyError.badTime) { try Engine.Moon.eclipticPosition(at: time) }
         }
     }
 

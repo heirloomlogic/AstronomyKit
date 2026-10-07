@@ -50,7 +50,7 @@ extension Engine.TDB {
     /// the rate to truncation.
     static func rate(tt: Double) -> Double {
         let step = 0.01
-        return 1 + (offsetSeconds(tt: tt + step) - offsetSeconds(tt: tt - step)) / (2 * step * 86_400)
+        return 1 + (offsetSeconds(tt: tt + step) - offsetSeconds(tt: tt - step)) / (2 * step * Engine.secondsPerDay)
     }
 
     /// TDB − TT in seconds, `iauDtdb` in full.
@@ -108,7 +108,7 @@ extension Engine.TDB {
         return wt + wf + wj
     }
 
-    // ERFA's constants, which equal 2π and π/180 as doubles.
+    // ERFA's 2π, the same double as 2 * Double.pi.
     private static let twoPi = 6.283185307179586476925287
-    private static let radiansPerDegree = 1.745329251994329576923691e-2
+    private static let radiansPerDegree = Engine.radiansPerDegree
 }

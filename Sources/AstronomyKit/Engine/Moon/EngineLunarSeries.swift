@@ -48,9 +48,9 @@ extension Engine.LunarSeries {
 
     private static let twoPi = 2 * Double.pi
 
-    /// Earth's equatorial radius in AU: 6,378.1366 km, IERS Conventions
-    /// (2010) Table 1.1, the radius the parallax refers to.
-    static let earthEquatorialRadius = 6_378.1366 / Engine.kilometersPerAU
+    /// Earth's equatorial radius in AU, the radius the parallax refers to:
+    /// 6,378.1366 km, IERS Conventions (2010) Table 1.1.
+    static let earthEquatorialRadius = Engine.Observers.equatorialRadiusKilometers / Engine.kilometersPerAU
 
     private static func fraction(_ x: Double) -> Double {
         x - x.rounded(.down)
@@ -153,9 +153,10 @@ extension Engine.LunarSeries {
         /// cos and sin of p·l + q·l′ + r·F + s·D.
         func term(_ p: Int, _ q: Int, _ r: Int, _ s: Int) -> (x: Double, y: Double) {
             var (x, y) = (1.0, 0.0)
-            for (k, multiple) in [p, q, r, s].enumerated() where multiple != 0 {
-                (x, y) = Self.addThe(x, y, co[Self.index(multiple, k + 1)], si[Self.index(multiple, k + 1)])
-            }
+            if p != 0 { (x, y) = Self.addThe(x, y, co[Self.index(p, 1)], si[Self.index(p, 1)]) }
+            if q != 0 { (x, y) = Self.addThe(x, y, co[Self.index(q, 2)], si[Self.index(q, 2)]) }
+            if r != 0 { (x, y) = Self.addThe(x, y, co[Self.index(r, 3)], si[Self.index(r, 3)]) }
+            if s != 0 { (x, y) = Self.addThe(x, y, co[Self.index(s, 4)], si[Self.index(s, 4)]) }
             return (x, y)
         }
 

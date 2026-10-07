@@ -69,12 +69,12 @@ struct EngineFrameBiasTests {
         #expect(abs(bias[1, 2] - -6.819 * mas) <= 0.0005 * mas)
     }
 
-    @Test("The SIMD form rotates as the rotation does")
+    @Test("A rotation applied to SIMD components gives the vector's result")
     func simdForm() {
         let vector = SIMD3(0.002_674_037, -0.000_153_161, -0.000_315_016)
         let rotated = Engine.FrameBias.icrsToEqj.apply(
             to: Engine.Vector<Engine.ICRS>(x: vector.x, y: vector.y, z: vector.z, time: .invalid))
-        let simd = Engine.FrameBias.toEqj(vector)
+        let simd = Engine.FrameBias.icrsToEqj.apply(to: vector)
         #expect([simd.x, simd.y, simd.z] == [rotated.x, rotated.y, rotated.z])
     }
 }

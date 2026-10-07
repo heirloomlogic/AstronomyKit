@@ -47,13 +47,6 @@ struct EngineMoonEphemerisTests {
 
     static func chebyshev(_ k: Int, _ x: Double) -> Double { cos(Double(k) * acos(x)) }
 
-    /// dT_k/dx = k·U_{k−1}(x), with U_{k−1}(cos θ) = sin kθ / sin θ.
-    static func chebyshevDerivative(_ k: Int, _ x: Double) -> Double {
-        guard k > 0 else { return 0 }
-        let theta = acos(x)
-        return Double(k) * sin(Double(k) * theta) / sin(theta)
-    }
-
     @Test("Clenshaw's recurrence equals the Chebyshev sums of the record, and its derivative")
     func clenshaw() throws {
         for record in [0, 1, 7_777, 15_000, Ephemeris.recordCount - 1] {
@@ -65,7 +58,9 @@ struct EngineMoonEphemerisTests {
                     let base = (3 * record + axis) * Ephemeris.degreeCount
                     let c = Ephemeris.coefficients[base..<base + Ephemeris.degreeCount]
                     let value = c.indices.reduce(0.0) { $0 + c[$1] * Self.chebyshev($1 - base, x) }
-                    let slope = c.indices.reduce(0.0) { $0 + c[$1] * Self.chebyshevDerivative($1 - base, x) }
+                    let slope = c.indices.reduce(0.0) {
+                        $0 + c[$1] * EnginePlanetPolynomialTests.chebyshevDerivative($1 - base, x)
+                    }
                     #expect(abs(position[axis] - value) <= 1e-17, "record \(record), x \(x), axis \(axis)")
                     // Per TDB day: dx/dt is 2 over the record length.
                     let rate = slope * 2 / Ephemeris.recordDays
@@ -85,10 +80,8 @@ struct EngineMoonEphemerisTests {
             let boundary = Ephemeris.start + Double(record) * Ephemeris.recordDays
             let above = try #require(Ephemeris.evaluate(tdb: boundary))
             let below = try #require(Ephemeris.evaluate(tdb: boundary.nextDown))
-            largestStep = max(
-                largestStep, (above.position - below.position).max(), (below.position - above.position).max())
-            largestVelocityStep = max(
-                largestVelocityStep, (above.velocity - below.velocity).max(), (below.velocity - above.velocity).max())
+            largestStep = Self.largest([largestStep, Self.largest(above.position - below.position)])
+            largestVelocityStep = Self.largest([largestVelocityStep, Self.largest(above.velocity - below.velocity)])
         }
         // 1e-12 AU is 15 cm; 1e-12 AU per day is under 2 µm/s.
         #expect(largestStep < 1e-12, "\(largestStep) AU")
@@ -122,10 +115,17 @@ struct EngineMoonEphemerisTests {
             }
             let difference = try (position(-2) - 8 * position(-1) + 8 * position(1) - position(2)) / (12 * h)
             let velocity = try #require(Ephemeris.evaluate(tdb: tdb)).velocity
-            let error = max((velocity - difference).max(), (difference - velocity).max())
+            let error = Self.largest(velocity - difference)
             #expect(error <= 1e-13, "tdb \(tdb): \(error) AU/day")
         }
     }
+
+    /// The largest absolute component, or NaN if any is NaN.
+    static func largest(_ difference: SIMD3<Double>) -> Double {
+        EnginePlanetPolynomialTests.largest([abs(difference.x), abs(difference.y), abs(difference.z)])
+    }
+
+    static func largest(_ values: [Double]) -> Double { EnginePlanetPolynomialTests.largest(values) }
 
     // MARK: - Weight
 
@@ -157,8 +157,7 @@ struct EngineMoonEphemerisTests {
                 let (weight, rate) = Ephemeris.weight(tt: tt)
                 #expect(weight > previous && weight < 1, "tt \(tt)")
                 previous = weight
-                let w = { (k: Double) in Ephemeris.weight(tt: tt + k * h).weight }
-                let derivative = (w(-2) - 8 * w(-1) + 8 * w(1) - w(2)) / (12 * h)
+                let derivative = PublishedOrientation.derivative(at: tt, step: h) { Ephemeris.weight(tt: $0).weight }
                 #expect(abs(rate - derivative) <= 1e-12, "tt \(tt)")
             }
             // A thousandth of a day inside each end, weight and rate are
@@ -180,8 +179,9 @@ struct EngineMoonEphemerisTests {
             let source = try #require(Ephemeris.evaluate(tdb: tdb))
             let state = try #require(Ephemeris.state(tt: tt))
             let rate = Engine.TDB.rate(tt: tt)
-            #expect(state.position == Engine.FrameBias.toEqj(source.position))
-            #expect(state.velocity == Engine.FrameBias.toEqj(source.velocity * rate))
+            #expect(state.position == Engine.FrameBias.icrsToEqj.apply(to: source.position))
+            #expect(Ephemeris.position(tt: tt) == state.position)
+            #expect(state.velocity == Engine.FrameBias.icrsToEqj.apply(to: source.velocity * rate))
         }
     }
 }

@@ -50,13 +50,8 @@ extension Engine.Moon {
     /// The DE440 Moon at `tt` on the mean ecliptic and equinox of date, in
     /// AU, or `nil` outside its records.
     static func meanEclipticPosition(tt: Double) -> SIMD3<Double>? {
-        guard let source = Engine.MoonEphemeris.state(tt: tt) else { return nil }
-        // The rotations do not read a vector's time.
-        let equator = Engine.Precession.rotation(tt: tt).apply(
-            to: Engine.Vector<Engine.EQJ>(
-                x: source.position.x, y: source.position.y, z: source.position.z, time: .invalid))
-        let ecliptic = meanEquatorToEcliptic(tt: tt).apply(to: equator)
-        return SIMD3(ecliptic.x, ecliptic.y, ecliptic.z)
+        guard let source = Engine.MoonEphemeris.position(tt: tt) else { return nil }
+        return meanEquatorToEcliptic(tt: tt).apply(to: Engine.Precession.rotation(tt: tt).apply(to: source))
     }
 
     /// Rectangular coordinates from longitude and latitude in radians and
@@ -86,8 +81,8 @@ extension Engine.Moon {
     ///   ``Engine/acceptedTTDays`` or is not finite, or when a component of
     ///   the result is not finite.
     static func geocentricPosition(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
-        try checkTime(time)
-        let ecliptic = meanEclipticVector(at: time)
+        try Engine.checkAcceptedTime(time)
+        let ecliptic = vector(coordinates(centuries: time.tt / 36_525), time: time)
         let equator = meanEquatorToEcliptic(tt: time.tt).inverse.apply(to: ecliptic)
         let vector = Engine.Precession.rotation(tt: time.tt).inverse.apply(to: equator)
         guard vector.x.isFinite, vector.y.isFinite, vector.z.isFinite else { throw AstronomyError.badTime }
@@ -105,7 +100,7 @@ extension Engine.Moon {
     ///
     /// - Throws: As ``geocentricPosition(at:)``.
     static func eclipticPosition(at time: Engine.Time) throws -> Engine.Spherical {
-        try checkTime(time)
+        try Engine.checkAcceptedTime(time)
         let coordinates = coordinates(centuries: time.tt / 36_525)
         let ecliptic = vector(coordinates, time: time)
         let tilt = Engine.EarthTilt(tt: time.tt)
@@ -127,17 +122,19 @@ extension Engine.Moon {
 
     // MARK: - Helpers
 
-    private static func checkTime(_ time: Engine.Time) throws {
-        guard abs(time.tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
-    }
-
-    /// The model's position at `time` as a mean ecliptic vector.
-    private static func meanEclipticVector(at time: Engine.Time) -> Engine.Vector<Engine.ECM> {
-        vector(coordinates(centuries: time.tt / 36_525), time: time)
-    }
-
     private static func vector(_ coordinates: SIMD3<Double>, time: Engine.Time) -> Engine.Vector<Engine.ECM> {
         let position = rectangular(coordinates)
         return Engine.Vector(x: position.x, y: position.y, z: position.z, time: time)
+    }
+}
+
+extension Engine.Rotation {
+    /// `vector`'s components rotated into frame `To`, with the arithmetic of
+    /// ``apply(to:)-(Engine.Vector<From>)`` for values that carry no time.
+    func apply(to vector: SIMD3<Double>) -> SIMD3<Double> {
+        SIMD3(
+            rot.0.0 * vector.x + rot.1.0 * vector.y + rot.2.0 * vector.z,
+            rot.0.1 * vector.x + rot.1.1 * vector.y + rot.2.1 * vector.z,
+            rot.0.2 * vector.x + rot.1.2 * vector.y + rot.2.2 * vector.z)
     }
 }
