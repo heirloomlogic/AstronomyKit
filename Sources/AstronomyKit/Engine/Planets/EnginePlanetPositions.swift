@@ -52,7 +52,8 @@ extension Engine.Planet {
         try Self.checkTime(time)
         let position =
             Engine.PlanetPolynomial.position(self, tt: time.tt)
-            ?? Self.rectangular(Engine.VSOP87B.coordinates(self, millennia: Self.millennia(time), cache: cache))
+            ?? Engine.VSOP87B.rectangular(
+                Engine.VSOP87B.coordinates(self, millennia: Self.millennia(time), cache: cache))
         return try Self.checked(Engine.Vector(x: position.x, y: position.y, z: position.z, time: time))
     }
 
@@ -71,27 +72,9 @@ extension Engine.Planet {
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
         try Self.checkTime(time)
-        let position: SIMD3<Double>
-        let velocity: SIMD3<Double>
-        if let state = Engine.PlanetPolynomial.state(self, tt: time.tt) {
-            (position, velocity) = (state.position, state.velocity)
-        } else {
-            let t = Self.millennia(time)
-            let sphere = Engine.VSOP87B.coordinates(self, millennia: t, cache: cache)
-            let rates = Engine.VSOP87B.derivatives(self, millennia: t, cache: cache)
-            position = Self.rectangular(sphere)
-            let (cosLongitude, sinLongitude) = (cos(sphere[0]), sin(sphere[0]))
-            let (cosLatitude, sinLatitude) = (cos(sphere[1]), sin(sphere[1]))
-            let r = sphere[2]
-            let perMillennium = SIMD3(
-                rates[2] * cosLatitude * cosLongitude - r * sinLatitude * cosLongitude * rates[1]
-                    - r * cosLatitude * sinLongitude * rates[0],
-                rates[2] * cosLatitude * sinLongitude - r * sinLatitude * sinLongitude * rates[1]
-                    + r * cosLatitude * cosLongitude * rates[0],
-                rates[2] * sinLatitude + r * cosLatitude * rates[1]
-            )
-            velocity = perMillennium * (1 / Engine.VSOP87B.daysPerMillennium)
-        }
+        let (position, velocity) =
+            Engine.PlanetPolynomial.state(self, tt: time.tt)
+            ?? seriesState(millennia: Self.millennia(time), cache: cache)
         return try Self.checked(
             Engine.State(
                 x: position.x, y: position.y, z: position.z,
@@ -143,10 +126,12 @@ extension Engine.Planet {
         time.tt / Engine.VSOP87B.daysPerMillennium
     }
 
-    /// Rectangular coordinates from longitude, latitude and radius.
-    static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double> {
-        let radialProjection = sphere[2] * cos(sphere[1])
-        return SIMD3(radialProjection * cos(sphere[0]), radialProjection * sin(sphere[0]), sphere[2] * sin(sphere[1]))
+    private func seriesState(
+        millennia t: Double, cache: Engine.VSOP87B.Cache
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>) {
+        let sphere = Engine.VSOP87B.coordinates(self, millennia: t, cache: cache)
+        let rates = Engine.VSOP87B.derivatives(self, millennia: t, cache: cache)
+        return (Engine.VSOP87B.rectangular(sphere), Engine.VSOP87B.velocity(sphere, rates: rates))
     }
 
     private static func checked<F>(_ vector: Engine.Vector<F>) throws -> Engine.Vector<F> {

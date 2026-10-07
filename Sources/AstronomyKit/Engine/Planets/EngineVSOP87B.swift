@@ -11,14 +11,19 @@ extension Engine.VSOP87B {
     /// Julian days in a Julian millennium, the series' unit of time.
     static let daysPerMillennium = 365_250.0
 
-    /// Adds `value` to `sum` and keeps the rounding error in `compensation`
-    /// (Neumaier's improvement of Kahan summation). The caller adds
-    /// `compensation` to `sum` once every term is in.
-    @inline(__always)
-    static func add(_ value: Double, to sum: inout Double, compensation: inout Double) {
-        let next = sum + value
-        compensation += abs(sum) >= abs(value) ? (sum - next) + value : (value - next) + sum
-        sum = next
+    /// A running sum that keeps its rounding error (Neumaier's improvement of
+    /// Kahan summation) and adds it back in ``value``.
+    struct CompensatedSum {
+        private var sum = 0.0
+        private var compensation = 0.0
+
+        mutating func add(_ term: Double) {
+            let next = sum + term
+            compensation += abs(sum) >= abs(term) ? (sum - next) + term : (term - next) + sum
+            sum = next
+        }
+
+        var value: Double { sum + compensation }
     }
 
     /// Longitude and latitude in radians and radius in AU at `t` Julian
@@ -33,32 +38,28 @@ extension Engine.VSOP87B {
         var result = SIMD3<Double>()
         var term = 0
         for coordinate in 0..<3 {
-            var total = 0.0
-            var totalCompensation = 0.0
+            var total = CompensatedSum()
             var power = 1.0
             for count in model.termCounts[coordinate] {
-                var sum = 0.0
-                var compensation = 0.0
+                var series = CompensatedSum()
                 for _ in 0..<count {
-                    let a = model.terms[3 * term]
-                    let b = model.terms[3 * term + 1]
-                    let c = model.terms[3 * term + 2]
-                    add(a * cos(b + t * c), to: &sum, compensation: &compensation)
+                    let (a, b, c) = (model.terms[3 * term], model.terms[3 * term + 1], model.terms[3 * term + 2])
+                    series.add(a * cos(b + t * c))
                     term += 1
                 }
-                sum += compensation
-                var increment = power * sum
+                var increment = power * series.value
                 if coordinate == 0 { increment = increment.truncatingRemainder(dividingBy: 2 * .pi) }
-                add(increment, to: &total, compensation: &totalCompensation)
+                total.add(increment)
                 power *= t
             }
-            result[coordinate] = total + totalCompensation
+            result[coordinate] = total.value
         }
         return result
     }
 
     /// The derivatives of ``coordinates(_:millennia:)`` with respect to `t`:
-    /// radians and AU per Julian millennium. Summed the same way.
+    /// radians and AU per Julian millennium. Each power's sums are
+    /// compensated; the powers' contributions are added plainly.
     static func derivatives(_ model: Model, millennia t: Double) -> SIMD3<Double> {
         var result = SIMD3<Double>()
         var term = 0
@@ -67,26 +68,45 @@ extension Engine.VSOP87B {
             var power = 1.0  // t^α
             var lowerPower = 0.0  // t^(α−1)
             for (alpha, count) in model.termCounts[coordinate].enumerated() {
-                var sinSum = 0.0
-                var sinCompensation = 0.0
-                var cosSum = 0.0
-                var cosCompensation = 0.0
+                var sines = CompensatedSum()
+                var cosines = CompensatedSum()
                 for _ in 0..<count {
-                    let a = model.terms[3 * term]
-                    let angle = model.terms[3 * term + 1] + t * model.terms[3 * term + 2]
-                    add(a * model.terms[3 * term + 2] * sin(angle), to: &sinSum, compensation: &sinCompensation)
-                    if alpha > 0 { add(a * cos(angle), to: &cosSum, compensation: &cosCompensation) }
+                    let (a, b, c) = (model.terms[3 * term], model.terms[3 * term + 1], model.terms[3 * term + 2])
+                    let angle = b + t * c
+                    sines.add(a * c * sin(angle))
+                    if alpha > 0 { cosines.add(a * cos(angle)) }
                     term += 1
                 }
-                sinSum += sinCompensation
-                cosSum += cosCompensation
-                total += Double(alpha) * lowerPower * cosSum - power * sinSum
+                total += Double(alpha) * lowerPower * cosines.value - power * sines.value
                 lowerPower = power
                 power *= t
             }
             result[coordinate] = total
         }
         return result
+    }
+
+    /// Rectangular coordinates from longitude, latitude and radius.
+    static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double> {
+        let radialProjection = sphere[2] * cos(sphere[1])
+        return SIMD3(radialProjection * cos(sphere[0]), radialProjection * sin(sphere[0]), sphere[2] * sin(sphere[1]))
+    }
+
+    /// The rectangular velocity in AU per day from longitude, latitude and
+    /// radius and their ``derivatives(_:millennia:)``, by the chain rule.
+    static func velocity(_ sphere: SIMD3<Double>, rates: SIMD3<Double>) -> SIMD3<Double> {
+        let (cosLongitude, sinLongitude) = (cos(sphere[0]), sin(sphere[0]))
+        let (cosLatitude, sinLatitude) = (cos(sphere[1]), sin(sphere[1]))
+        let r = sphere[2]
+        let perMillennium = SIMD3(
+            rates[2] * cosLatitude * cosLongitude - r * sinLatitude * cosLongitude * rates[1]
+                - r * cosLatitude * sinLongitude * rates[0],
+            rates[2] * cosLatitude * sinLongitude - r * sinLatitude * sinLongitude * rates[1]
+                + r * cosLatitude * cosLongitude * rates[0],
+            rates[2] * sinLatitude + r * cosLatitude * rates[1]
+        )
+        // The C engine scales by the reciprocal too.
+        return perMillennium * (1 / daysPerMillennium)
     }
 }
 
@@ -119,13 +139,19 @@ extension Engine.VSOP87B {
 
     /// ``coordinates(_:millennia:)`` for `planet`, through `cache`.
     static func coordinates(_ planet: Engine.Planet, millennia t: Double, cache: Cache = cache) -> SIMD3<Double> {
-        guard let key = Engine.ExactKey(t) else { return coordinates(model(planet), millennia: t) }
-        return cache.coordinates[planet.rawValue].value(for: key) { coordinates(model(planet), millennia: t) }
+        cached(cache.coordinates[planet.rawValue], t) { coordinates(model(planet), millennia: t) }
     }
 
     /// ``derivatives(_:millennia:)`` for `planet`, through `cache`.
     static func derivatives(_ planet: Engine.Planet, millennia t: Double, cache: Cache = cache) -> SIMD3<Double> {
-        guard let key = Engine.ExactKey(t) else { return derivatives(model(planet), millennia: t) }
-        return cache.derivatives[planet.rawValue].value(for: key) { derivatives(model(planet), millennia: t) }
+        cached(cache.derivatives[planet.rawValue], t) { derivatives(model(planet), millennia: t) }
+    }
+
+    /// `compute()` through `store`, or directly when `t` has no key.
+    private static func cached(
+        _ store: Cache.Store, _ t: Double, compute: () -> SIMD3<Double>
+    ) -> SIMD3<Double> {
+        guard let key = Engine.ExactKey(t) else { return compute() }
+        return store.value(for: key, compute: compute)
     }
 }

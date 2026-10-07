@@ -13,14 +13,9 @@ import Testing
 
 @Suite("Engine planet positions")
 struct EnginePlanetPositionsTests {
-    static func time(tt: Double) -> Engine.Time {
-        Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-    }
+    static func time(tt: Double) -> Engine.Time { PlanetTestSupport.time(tt: tt) }
 
-    /// A private cache, so counts and entries do not depend on other suites.
-    static func cache() -> Engine.VSOP87B.Cache {
-        Engine.VSOP87B.Cache(registry: Engine.CacheRegistry())
-    }
+    static func cache() -> Engine.VSOP87B.Cache { PlanetTestSupport.makeCache().0 }
 
     // MARK: - IMCCE check values
 
@@ -86,35 +81,25 @@ struct EnginePlanetPositionsTests {
 
     // MARK: - JPL Horizons
 
-    typealias DistanceReference = DistanceReferenceArchive.Reference
-
-    static let heliocentric: [(planet: Engine.Planet, reference: DistanceReference)] =
-        DistanceReferenceArchive.shared.references.compactMap { reference in
-            guard reference.mode == "heliocentric",
-                let body = CelestialBody.allCases.first(where: { $0.name == reference.body }),
-                let planet = Engine.Planet(body)
-            else { return nil }
-            return (planet, reference)
-        }
-
     /// 1 arcminute is the accuracy `JPLValidationTests` applies to the
     /// geocentric planets (1.5′ for Neptune). The largest angle here is 2.4″, for Neptune; VSOP87 was fitted
     /// to DE200, and Horizons uses DE441 in the ICRF. A wrong frame or a swapped
     /// axis moves the direction by degrees.
     @Test("EQJ direction and distance against the JPL Horizons held-out vectors, on both paths")
     func horizons() throws {
-        #expect(Self.heliocentric.count == 1_072)
+        #expect(PlanetTestSupport.heliocentric.count == 1_072)
+        let cache = Self.cache()
         var seriesRecords = 0
-        for (planet, reference) in Self.heliocentric {
+        for (planet, reference) in PlanetTestSupport.heliocentric {
             let tt = reference.julianDateTT - 2_451_545
             if Engine.PlanetPolynomial.position(planet, tt: tt) == nil { seriesRecords += 1 }
             let time = Self.time(tt: tt)
-            let position = try planet.heliocentricPosition(at: time, cache: Self.cache())
+            let position = try planet.heliocentricPosition(at: time, cache: cache)
             let published = reference.referencePositionAU
             let horizons = Engine.Vector<Engine.EQJ>(x: published[0], y: published[1], z: published[2], time: time)
             let arcseconds = try position.angle(to: horizons) * 3_600
             #expect(arcseconds <= 60, "\(planet) JD TT \(reference.julianDateTT): \(arcseconds)″")
-            let distance = try planet.heliocentricDistance(at: time, cache: Self.cache())
+            let distance = try planet.heliocentricDistance(at: time, cache: cache)
             let errorKm = abs(distance - reference.referenceRangeAU) * Engine.kilometersPerAU
             #expect(errorKm <= reference.allowedErrorKm, "\(planet) JD TT \(reference.julianDateTT): \(errorKm) km")
         }
@@ -158,10 +143,10 @@ struct EnginePlanetPositionsTests {
     func rangeEnds() throws {
         for tt in [-1_461_000.0, 1_461_000.0] {
             for planet in Engine.Planet.allCases {
-                let time = Self.time(tt: tt)
-                _ = try planet.heliocentricPosition(at: time, cache: Self.cache())
-                _ = try planet.heliocentricState(at: time, cache: Self.cache())
-                #expect(try planet.heliocentricDistance(at: time, cache: Self.cache()) > 0)
+                let (time, cache) = (Self.time(tt: tt), Self.cache())
+                _ = try planet.heliocentricPosition(at: time, cache: cache)
+                _ = try planet.heliocentricState(at: time, cache: cache)
+                #expect(try planet.heliocentricDistance(at: time, cache: cache) > 0)
             }
         }
     }

@@ -189,17 +189,7 @@ struct EnginePlanetPolynomialTests {
 
     typealias DistanceReference = DistanceReferenceArchive.Reference
 
-    /// The heliocentric ranges of the planets in `distance-fixtures.json`,
-    /// from the JPL Horizons vectors in
-    /// `Scripts/reference-data/sources/distance/heldout`.
-    static let heliocentric: [(planet: Engine.Planet, reference: DistanceReference)] =
-        DistanceReferenceArchive.shared.references.compactMap { reference in
-            guard reference.mode == "heliocentric",
-                let body = CelestialBody.allCases.first(where: { $0.name == reference.body }),
-                let planet = Engine.Planet(body)
-            else { return nil }
-            return (planet, reference)
-        }
+    static let heliocentric = PlanetTestSupport.heliocentric
 
     static func errorKm(_ planet: Engine.Planet, _ reference: DistanceReference, offset: Double = 0) -> Double? {
         guard let position = Polynomial.position(planet, tt: reference.julianDateTT - 2_451_545 + offset) else {

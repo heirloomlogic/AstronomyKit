@@ -15,15 +15,10 @@ import Testing
 struct EngineVSOP87BCacheTests {
     typealias Statistics = Engine.VSOP87B.Cache.Store.Statistics
 
-    static func time(tt: Double) -> Engine.Time {
-        Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-    }
+    static func time(tt: Double) -> Engine.Time { PlanetTestSupport.time(tt: tt) }
 
-    /// A cache with its own registry, so its counts are not disturbed by
-    /// other suites.
     static func makeCache(capacity: Int = 32) -> (Engine.VSOP87B.Cache, Engine.CacheRegistry) {
-        let registry = Engine.CacheRegistry()
-        return (Engine.VSOP87B.Cache(capacity: capacity, registry: registry), registry)
+        PlanetTestSupport.makeCache(capacity: capacity)
     }
 
     /// A TT outside the polynomial span, where the series apply.
@@ -74,7 +69,7 @@ struct EngineVSOP87BCacheTests {
         #expect(Engine.PlanetPolynomial.position(.mercury, tt: tt) == nil)
         _ = try Engine.Planet.mercury.heliocentricPosition(at: Self.time(tt: tt), cache: cache)
         _ = try Engine.Planet.mercury.heliocentricPosition(at: Self.time(tt: tt), cache: cache)
-        #expect(cache.coordinates[0].statistics == Statistics(hits: 1, misses: 1))
+        #expect(cache.coordinates[Engine.Planet.mercury.rawValue].statistics == Statistics(hits: 1, misses: 1))
     }
 
     @Test("A cached result is the series result")
@@ -105,9 +100,9 @@ struct EngineVSOP87BCacheTests {
         let first = try Engine.Planet.venus.heliocentricState(at: time, cache: cache)
         let second = try Engine.Planet.venus.heliocentricState(at: time, cache: cache)
         #expect(first.x == second.x && first.vz == second.vz)
-        #expect(cache.coordinates[1].statistics == Statistics(hits: 0, misses: 2))
-        #expect(cache.derivatives[1].statistics == Statistics(hits: 0, misses: 2))
-        #expect(cache.coordinates[1].count == 0)
+        #expect(cache.coordinates[Engine.Planet.venus.rawValue].statistics == Statistics(hits: 0, misses: 2))
+        #expect(cache.derivatives[Engine.Planet.venus.rawValue].statistics == Statistics(hits: 0, misses: 2))
+        #expect(cache.coordinates[Engine.Planet.venus.rawValue].count == 0)
     }
 
     @Test("Each planet has its own entries")
@@ -125,8 +120,8 @@ struct EngineVSOP87BCacheTests {
         let positive = Engine.VSOP87B.coordinates(.earth, millennia: 0.0, cache: cache)
         let negative = Engine.VSOP87B.coordinates(.earth, millennia: -0.0, cache: cache)
         #expect(positive == negative)
-        #expect(cache.coordinates[2].statistics == Statistics(hits: 0, misses: 2))
-        #expect(cache.coordinates[2].count == 2)
+        #expect(cache.coordinates[Engine.Planet.earth.rawValue].statistics == Statistics(hits: 0, misses: 2))
+        #expect(cache.coordinates[Engine.Planet.earth.rawValue].count == 2)
     }
 
     @Test("A t that is not finite bypasses the cache", arguments: [Double.nan, .infinity, -.infinity])
@@ -134,8 +129,8 @@ struct EngineVSOP87BCacheTests {
         let (cache, _) = Self.makeCache()
         #expect(Engine.VSOP87B.coordinates(.jupiter, millennia: t, cache: cache)[0].isNaN)
         #expect(Engine.VSOP87B.derivatives(.jupiter, millennia: t, cache: cache)[0].isNaN)
-        #expect(cache.coordinates[4].statistics == Statistics())
-        #expect(cache.derivatives[4].statistics == Statistics())
+        #expect(cache.coordinates[Engine.Planet.jupiter.rawValue].statistics == Statistics())
+        #expect(cache.derivatives[Engine.Planet.jupiter.rawValue].statistics == Statistics())
     }
 
     @Test("The 33rd instant replaces the oldest")
@@ -145,7 +140,7 @@ struct EngineVSOP87BCacheTests {
         for tt in instants {
             _ = try Engine.Planet.saturn.heliocentricDistance(at: Self.time(tt: tt), cache: cache)
         }
-        let store = cache.coordinates[5]
+        let store = cache.coordinates[Engine.Planet.saturn.rawValue]
         #expect(store.count == 32)
         _ = try Engine.Planet.saturn.heliocentricDistance(at: Self.time(tt: instants[32]), cache: cache)
         _ = try Engine.Planet.saturn.heliocentricDistance(at: Self.time(tt: instants[0]), cache: cache)
@@ -160,7 +155,7 @@ struct EngineVSOP87BCacheTests {
         registry.removeAll()
         #expect((cache.coordinates + cache.derivatives).allSatisfy { $0.count == 0 })
         _ = try Engine.Planet.uranus.heliocentricState(at: time, cache: cache)
-        #expect(cache.coordinates[6].statistics == Statistics(hits: 0, misses: 2))
+        #expect(cache.coordinates[Engine.Planet.uranus.rawValue].statistics == Statistics(hits: 0, misses: 2))
     }
 
     @Test("Simultaneous callers get the series result")
@@ -170,20 +165,13 @@ struct EngineVSOP87BCacheTests {
         let expected = try instants.map {
             try Engine.Planet.neptune.heliocentricState(at: Self.time(tt: $0), cache: Self.makeCache().0)
         }
-        let mismatches = Mismatches()
+        let mismatches = EngineBoundedCacheTests.Counter()
         DispatchQueue.concurrentPerform(iterations: 2_048) { index in
             let i = index % instants.count
             let state = try? Engine.Planet.neptune.heliocentricState(at: Self.time(tt: instants[i]), cache: cache)
-            if state?.x != expected[i].x || state?.vy != expected[i].vy { mismatches.increment() }
+            if state?.x != expected[i].x || state?.vy != expected[i].vy { mismatches.record() }
         }
-        #expect(mismatches.value == 0)
-        #expect(cache.coordinates[7].count == instants.count)
-    }
-
-    final class Mismatches: @unchecked Sendable {
-        private let lock = NSLock()
-        private var count = 0
-        func increment() { lock.withLock { count += 1 } }
-        var value: Int { lock.withLock { count } }
+        #expect(mismatches.count == 0)
+        #expect(cache.coordinates[Engine.Planet.neptune.rawValue].count == instants.count)
     }
 }
