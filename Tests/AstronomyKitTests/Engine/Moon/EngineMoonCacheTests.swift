@@ -130,22 +130,11 @@ struct EngineMoonCacheTests {
         let (cache, _) = Self.makeCache(capacity: 8)
         let instants = (0..<64).map { Self.series + Double($0 % 16) * 0.25 }
         let serial = try instants.map { try Engine.Moon.eclipticState(at: Self.time(tt: $0)).longitudeRate }
-        let results = Results(count: instants.count)
+        let mismatches = EngineBoundedCacheTests.Counter()
         DispatchQueue.concurrentPerform(iterations: instants.count) { index in
             let rate = try? Engine.Moon.eclipticState(at: Self.time(tt: instants[index]), cache: cache).longitudeRate
-            results.set(index, rate ?? .nan)
+            if rate != serial[index] { mismatches.record() }
         }
-        #expect(results.values == serial)
-    }
-
-    final class Results: @unchecked Sendable {
-        private let lock = NSLock()
-        private var storage: [Double]
-
-        init(count: Int) { storage = Array(repeating: .nan, count: count) }
-
-        func set(_ index: Int, _ value: Double) { lock.withLock { storage[index] = value } }
-
-        var values: [Double] { lock.withLock { storage } }
+        #expect(mismatches.count == 0)
     }
 }

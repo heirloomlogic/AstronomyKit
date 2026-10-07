@@ -41,41 +41,40 @@ struct EngineMoonStatesTests {
     @Test("Moon and barycenter states within Astronomy Engine's relative limits for 1970 to 2040")
     func againstHorizons() throws {
         #expect(Self.published.count == 6_392)
-        var largest: [String: (position: Double, velocity: Double)] = [:]
+        var bodies = Set<String>()
         for reference in Self.published {
             let tdb = reference.julianDateTDB - 2_451_545
             let time = Self.time(tt: tdb - Engine.TDB.offsetSeconds(tt: tdb) / Engine.secondsPerDay)
             let state =
                 reference.body == "moon"
                 ? try Engine.Moon.geocentricState(at: time) : try Engine.Moon.barycenterState(at: time)
-            // Horizons' vectors are on ICRF axes; the engine's on EQJ.
-            let bias = Engine.FrameBias.icrsToEqj
-            let p = reference.positionAU
-            let v = reference.velocityAUPerDay
-            let position = Self.relativeError(
-                SIMD3(state.x, state.y, state.z), bias.apply(to: SIMD3(p[0], p[1], p[2])))
-            let velocity = Self.relativeError(
-                SIMD3(state.vx, state.vy, state.vz), bias.apply(to: SIMD3(v[0], v[1], v[2])))
+            let position = Self.relativeError(Self.position(state), Self.eqj(reference.positionAU))
+            let velocity = Self.relativeError(Self.velocity(state), Self.eqj(reference.velocityAUPerDay))
             #expect(position <= reference.relativePositionTolerance, "\(reference.body) JD \(reference.julianDateTDB)")
             #expect(velocity <= reference.relativeVelocityTolerance, "\(reference.body) JD \(reference.julianDateTDB)")
-            let previous = largest[reference.body] ?? (0, 0)
-            largest[reference.body] = (max(previous.position, position), max(previous.velocity, velocity))
+            bodies.insert(reference.body)
         }
-        #expect(Set(largest.keys) == ["moon", "emb"])
+        #expect(bodies == ["moon", "emb"])
     }
+
+    /// A Horizons vector on ICRF axes rotated to the engine's EQJ.
+    static func eqj(_ icrf: [Double]) -> SIMD3<Double> {
+        Engine.FrameBias.icrsToEqj.apply(to: SIMD3(icrf[0], icrf[1], icrf[2]))
+    }
+
+    static func position<F>(_ state: Engine.State<F>) -> SIMD3<Double> { SIMD3(state.x, state.y, state.z) }
+
+    static func velocity<F>(_ state: Engine.State<F>) -> SIMD3<Double> { SIMD3(state.vx, state.vy, state.vz) }
 
     @Test("The checks fail for the barycenter given as the Moon, or a day off")
     func negativeControls() throws {
         let reference = try #require(Self.published.first { $0.body == "moon" })
         let tdb = reference.julianDateTDB - 2_451_545
-        let p = reference.positionAU
-        let expected = Engine.FrameBias.icrsToEqj.apply(to: SIMD3(p[0], p[1], p[2]))
+        let expected = Self.eqj(reference.positionAU)
         let barycenter = try Engine.Moon.barycenterState(at: Self.time(tt: tdb))
-        #expect(
-            Self.relativeError(SIMD3(barycenter.x, barycenter.y, barycenter.z), expected)
-                > reference.relativePositionTolerance)
+        #expect(Self.relativeError(Self.position(barycenter), expected) > reference.relativePositionTolerance)
         let late = try Engine.Moon.geocentricState(at: Self.time(tt: tdb + 1))
-        #expect(Self.relativeError(SIMD3(late.x, late.y, late.z), expected) > reference.relativePositionTolerance)
+        #expect(Self.relativeError(Self.position(late), expected) > reference.relativePositionTolerance)
     }
 
     // MARK: - Identities
@@ -121,15 +120,13 @@ struct EngineMoonStatesTests {
 
     @Test("The EQJ velocity is the derivative of the position", arguments: instants)
     func velocity(tt: Double) throws {
-        let state = try Engine.Moon.geocentricState(at: Self.time(tt: tt))
-        let velocity = SIMD3(state.vx, state.vy, state.vz)
-        let component = { (axis: Int) in
-            PublishedOrientation.derivative(at: tt, step: Self.step) { t in
-                guard let p = try? Engine.Moon.geocentricPosition(at: Self.time(tt: t)) else { return .nan }
-                return [p.x, p.y, p.z][axis]
-            }
+        let velocity = try Self.velocity(Engine.Moon.geocentricState(at: Self.time(tt: tt)))
+        // PublishedOrientation.derivative's stencil, on all three components at once.
+        let p = { (k: Double) throws -> SIMD3<Double> in
+            let vector = try Engine.Moon.geocentricPosition(at: Self.time(tt: tt + k * Self.step))
+            return SIMD3(vector.x, vector.y, vector.z)
         }
-        let difference = SIMD3(component(0), component(1), component(2))
+        let difference = try (p(-2) - 8 * p(-1) + 8 * p(1) - p(2)) / (12 * Self.step)
         let speed = (velocity * velocity).sum().squareRoot()
         let error = EngineMoonEphemerisTests.largest(velocity - difference)
         #expect(error <= Self.allowance(tt: tt) * speed, "tt \(tt): \(error / speed) of the speed")

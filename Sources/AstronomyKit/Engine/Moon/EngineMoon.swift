@@ -165,7 +165,7 @@ extension Engine.Moon {
         return (longitude, Engine.degreesPerRadian * atan2(vector.z, projected))
     }
 
-    static func vector(_ coordinates: SIMD3<Double>, time: Engine.Time) -> Engine.Vector<Engine.ECM> {
+    private static func vector(_ coordinates: SIMD3<Double>, time: Engine.Time) -> Engine.Vector<Engine.ECM> {
         let position = rectangular(coordinates)
         return Engine.Vector(x: position.x, y: position.y, z: position.z, time: time)
     }
