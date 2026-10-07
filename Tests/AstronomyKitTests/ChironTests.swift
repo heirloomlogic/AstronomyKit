@@ -28,6 +28,53 @@ struct ChironTests {
             let time = AstroTime(year: year, month: 1, day: 1)
             _ = try Chiron.heliocentricPosition(at: time)
         }
+
+        static let earliestTT = AstroTime(ut: -36_524.5, deltaTModel: .espenakMeeus).terrestrialTime
+        static let latestTT = AstroTime(year: 2_150, month: 1, day: 1).terrestrialTime
+
+        @Test("The span ends at 1900-01-01 00:00 UT and 2150-01-01 00:00 UTC, as TT in the time's model")
+        func spanEnds() throws {
+            for model in DeltaTModel.allCases {
+                let earliest = AstroTime(ut: -36_524.5, deltaTModel: model)
+                try Chiron.checkSupported(earliest)
+                try Chiron.checkSupported(AstroTime(tt: Self.latestTT, deltaTModel: model))
+                #expect(throws: AstronomyError.badTime) {
+                    try Chiron.checkSupported(AstroTime(tt: earliest.terrestrialTime.nextDown, deltaTModel: model))
+                }
+                // The C engine's Delta T has no drop at 1900-01-01, unlike the
+                // engine's (EngineChironTests), so a UT just before is outside.
+                #expect(throws: AstronomyError.badTime) {
+                    try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.001 / 86_400, deltaTModel: model))
+                }
+                #expect(throws: AstronomyError.badTime) {
+                    try Chiron.checkSupported(AstroTime(tt: Self.latestTT.nextUp, deltaTModel: model))
+                }
+            }
+        }
+
+        /// A pair rebuilt from recorded scales need not agree with its model.
+        /// The simulation steps in TT, so the span is checked on TT alone.
+        @Test("A time is checked by its TT; its UT neither passes nor blocks it")
+        func checkedByTerrestrialTime() throws {
+            // 2000-01-01 UT with a TT 2,700 years earlier, then each end.
+            let outside = [
+                AstroTime(tt: -1_000_000, ut: 0),
+                AstroTime(tt: Self.earliestTT.nextDown, ut: 0),
+                AstroTime(tt: Self.latestTT.nextUp, ut: 0),
+            ]
+            for time in outside {
+                #expect(throws: AstronomyError.badTime) { _ = try Chiron.heliocentricPosition(at: time) }
+                #expect(throws: AstronomyError.badTime) { _ = try Chiron.geoState(at: time) }
+            }
+            try Chiron.checkSupported(AstroTime(tt: Self.earliestTT, ut: 0))
+            try Chiron.checkSupported(AstroTime(tt: Self.latestTT, ut: 1_000_000))
+
+            let pair = try Chiron.heliocentricPosition(at: AstroTime(tt: 0, ut: -1_000_000))
+            let consistent = try Chiron.heliocentricPosition(at: AstroTime(tt: 0))
+            #expect(abs(pair.x - consistent.x) < 1e-12)
+            #expect(abs(pair.y - consistent.y) < 1e-12)
+            #expect(abs(pair.z - consistent.z) < 1e-12)
+        }
     }
 
     // MARK: - Basic Position Tests
@@ -263,6 +310,20 @@ struct ChironTests {
             let fresh = try Chiron.heliocentricPosition(at: target)
 
             #expect(maximumComponentError(reused, fresh) < 1e-8)
+        }
+
+        @Test("A rejected time leaves the reuse state as it was")
+        func rejectedKeepsReuseState() throws {
+            let reusable = Chiron.ReusableSimulation()
+            let start = AstroTime(year: 2_020, month: 4, day: 10)
+            _ = try reusable.state(at: start)
+            let path = reusable.pathDays
+            #expect(throws: AstronomyError.badTime) {
+                _ = try reusable.state(at: AstroTime(tt: -1_000_000, ut: start.universalTime))
+            }
+            #expect(reusable.epochIndex == 2 && reusable.pathDays == path)
+            _ = try reusable.state(at: start.addingDays(-30))
+            #expect(reusable.epochIndex == 2 && abs(reusable.pathDays - (path + 30)) < 1e-6)
         }
 
         @Test("Light-time correction remains physically bounded after long-span propagation")

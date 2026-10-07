@@ -235,7 +235,7 @@ let observer = Observer(latitude: 40.7, longitude: -74.0)
 let horizon = try Chiron.horizon(at: .now, from: observer)
 ```
 
-Accuracy is highest near the reference epochs and degrades with distance from them. Within ±5 years of an epoch, error is expected to be less than 1 arcminute. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``.
+Accuracy is highest near the reference epochs and degrades with distance from them. Within ±5 years of an epoch, error is expected to be less than 1 arcminute. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``. The range is checked on the time's Terrestrial Time, which the simulation steps in.
 
 ## Observer Gravity
 

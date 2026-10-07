@@ -80,16 +80,21 @@ extension Engine.Chiron {
             deltaTModel: .espenakMeeus
         ).time.tt
 
-    /// The Delta T model of `time` if it is from 1900-01-01 00:00 UT through
-    /// 2150-01-01 00:00 UTC.
+    /// The Delta T model of `time` if its TT is from 1900-01-01 00:00 UT,
+    /// as TT with that model, through 2150-01-01 00:00 UTC.
+    ///
+    /// The state depends on TT alone, so `time`'s UT is not checked. For a
+    /// pair rebuilt with ``Engine/Time/fromPair(ut:tt:deltaTModel:)`` it
+    /// need not agree with the TT.
     ///
     /// - Throws: `AstronomyError.badTime` otherwise, including for a time
     ///   that is not valid.
     @discardableResult
     static func checkSupported(_ time: Engine.Time) throws -> DeltaTModel {
-        guard let model = time.deltaTModel, time.ut >= earliestUT, time.tt <= latestTT else {
-            throw AstronomyError.badTime
-        }
+        guard let model = time.deltaTModel,
+            time.tt >= Engine.Time(ut: earliestUT, deltaTModel: model).tt,
+            time.tt <= latestTT
+        else { throw AstronomyError.badTime }
         return model
     }
 
@@ -137,7 +142,8 @@ extension Engine.Chiron {
         /// Delta T model.
         ///
         /// - Throws: `AstronomyError.badTime` outside the supported span
-        ///   (see ``checkSupported(_:)``), and the simulation's errors.
+        ///   (see ``checkSupported(_:)``), before any stepping, and the
+        ///   simulation's errors.
         func heliocentricState(at time: Engine.Time) throws -> Engine.State<Engine.EQJ> {
             let model = try Engine.Chiron.checkSupported(time)
             let index = Engine.Chiron.nearestAnchor(tt: time.tt)
@@ -145,11 +151,12 @@ extension Engine.Chiron {
             let freshPath = abs(time.tt - anchor.tt)
 
             if let simulation, anchorIndex == index {
-                let step = abs(time.tt - simulation.time.tt)
-                if pathDays + step <= max(2 * freshPath, 365) {
-                    let state = try Self.advance(simulation, to: time, model: model)
-                    pathDays += step
-                    return state
+                let startTT = simulation.time.tt
+                if pathDays + abs(time.tt - startTT) <= max(2 * freshPath, 365) {
+                    // Counts the days the simulation moved, which a failure
+                    // partway leaves short of the request.
+                    defer { pathDays += abs(simulation.time.tt - startTT) }
+                    return try Self.advance(simulation, to: time, model: model)
                 }
             }
 

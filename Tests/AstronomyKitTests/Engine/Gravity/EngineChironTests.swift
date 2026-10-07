@@ -20,6 +20,14 @@ struct EngineChironTests {
 
     static func time(tt: Double) -> Engine.Time { Engine.Time(tt: tt, deltaTModel: .espenakMeeus) }
 
+    /// A time with both scales as given, which need not agree with the model.
+    static func pair(ut: Double, tt: Double) -> Engine.Time {
+        Engine.Time.fromPair(ut: ut, tt: tt, deltaTModel: .espenakMeeus)
+    }
+
+    /// The start of the span, 1900-01-01 00:00 UT, as TT.
+    static let earliestTT = Engine.Time(ut: Chiron.earliestUT, deltaTModel: .espenakMeeus).tt
+
     /// Horizons' Chiron from `sources/horizons/chiron-anchor-vector.json`.
     static let vectors = IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron-anchor" }
 
@@ -86,9 +94,10 @@ struct EngineChironTests {
         #expect(Chiron.earliestUT == -36_524.5)
         // 2150-01-01 00:00 UTC is 69.184 s later in TT, the last announced offset.
         #expect(abs(Chiron.latestTT - (54_786.5 + 69.184 / 86_400)) < 1e-9)
+        // The span is checked on TT, so the start is stepped back in TT; see
+        // `startAfterDeltaTDrop` for UTs just before it.
         let outside = [
-            Engine.Time(ut: Chiron.earliestUT.nextDown, deltaTModel: .espenakMeeus),
-            Self.time(tt: Chiron.latestTT.nextUp), Engine.Time.invalid,
+            Self.time(tt: Self.earliestTT.nextDown), Self.time(tt: Chiron.latestTT.nextUp), Engine.Time.invalid,
             Engine.Time(ut: Chiron.earliestUT, tt: .nan, deltaTModel: .espenakMeeus),
         ]
         for time in outside {
@@ -97,6 +106,43 @@ struct EngineChironTests {
         }
         try Chiron.checkSupported(Engine.Time(ut: Chiron.earliestUT, deltaTModel: .jplHorizons))
         try Chiron.checkSupported(Self.time(tt: Chiron.latestTT))
+    }
+
+    /// Espenak-Meeus Delta T is -2.7016 s just before 1900.0, from the
+    /// 1860-1900 polynomial, and -2.79 s at it, from the 1900-1920 one. Both
+    /// models use those pieces there. A UT up to 88.4 ms before 1900-01-01
+    /// 00:00 therefore has a TT after the start's, and is accepted.
+    @Test("UTs up to 88 ms before the start are accepted, after Delta T drops at 1900.0")
+    func startAfterDeltaTDrop() throws {
+        for model in DeltaTModel.allCases {
+            let inside = Engine.Time(ut: Chiron.earliestUT - 0.088 / 86_400, deltaTModel: model)
+            let outside = Engine.Time(ut: Chiron.earliestUT - 0.089 / 86_400, deltaTModel: model)
+            try Chiron.checkSupported(inside)
+            #expect(throws: AstronomyError.badTime) { try Chiron.checkSupported(outside) }
+        }
+    }
+
+    /// A pair rebuilt from recorded scales need not agree with its model.
+    /// The simulation steps in TT, so the span is checked on TT alone.
+    @Test("A time is checked by its TT; its UT neither passes nor blocks it")
+    func spanChecksTT() throws {
+        // 2000-01-01 UT with a TT 2,700 years earlier, then each end.
+        let outside = [
+            Self.pair(ut: 0, tt: -1_000_000),
+            Self.pair(ut: 0, tt: Self.earliestTT.nextDown),
+            Self.pair(ut: 0, tt: Chiron.latestTT.nextUp),
+        ]
+        for time in outside {
+            #expect(throws: AstronomyError.badTime) { try Chiron.checkSupported(time) }
+            #expect(throws: AstronomyError.badTime) { _ = try Chiron.heliocentricState(at: time) }
+        }
+        try Chiron.checkSupported(Self.pair(ut: 0, tt: Self.earliestTT))
+        try Chiron.checkSupported(Self.pair(ut: 1_000_000, tt: Chiron.latestTT))
+
+        let anchor = Chiron.anchors[0]
+        let state = try Chiron.heliocentricState(at: Self.pair(ut: -1_000_000, tt: anchor.tt))
+        #expect(Self.length(state.positionVector - anchor.position) <= 1e-14)
+        #expect(state.time.ut == -1_000_000)
     }
 
     @Test("The nearest anchor is chosen, the earlier one on an exact tie")
@@ -196,6 +242,20 @@ struct EngineChironTests {
         let next = Chiron.anchors[2].tt
         _ = try sequence.heliocentricState(at: Self.time(tt: next - 1_000))
         #expect(sequence.anchorIndex == 2 && path(1_000))
+    }
+
+    @Test("A rejected time leaves the reuse state as it was")
+    func rejectedKeepsReuseState() throws {
+        let sequence = Chiron.ReusableSimulation()
+        let anchor = Chiron.anchors[1].tt
+        func path(_ expected: Double) -> Bool { abs(sequence.pathDays - expected) < 1e-6 }
+        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 100))
+        #expect(throws: AstronomyError.badTime) {
+            _ = try sequence.heliocentricState(at: Self.pair(ut: anchor + 100, tt: -1_000_000))
+        }
+        #expect(sequence.anchorIndex == 1 && path(100))
+        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 70))
+        #expect(sequence.anchorIndex == 1 && path(130))
     }
 
     /// Light-time correction asks for times a few hours apart. A reused
