@@ -16,24 +16,14 @@ struct EnginePrecessionTests {
 
     static let radians = Engine.radiansPerDegree
 
-    /// R1(φ) and R3(φ) as SOFA's `iauRx` and `iauRz` apply them.
-    static func r1(_ phi: Double) -> [[Double]] {
-        [[1, 0, 0], [0, cos(phi), sin(phi)], [0, -sin(phi), cos(phi)]]
-    }
-
-    static func r3(_ phi: Double) -> [[Double]] {
-        [[cos(phi), sin(phi), 0], [-sin(phi), cos(phi), 0], [0, 0, 1]]
-    }
-
-    static func product(_ a: [[Double]], _ b: [[Double]]) -> [[Double]] {
-        (0..<3).map { i in (0..<3).map { j in (0..<3).reduce(0.0) { $0 + a[i][$1] * b[$1][j] } } }
-    }
-
     /// IERS Conventions (2010) equation 5.39, P = R3(χA)·R1(−ωA)·R3(−ψA)·R1(ε0),
     /// built from the given angles independently of the engine's expansion.
     static func equation539(psia: Double, oma: Double, chia: Double) -> [[Double]] {
         let eps0 = 84_381.406 * Engine.radiansPerArcsecond
-        return product(r3(chia), product(r1(-oma), product(r3(-psia), r1(eps0))))
+        return Published.product(
+            Published.r3(chia),
+            Published.product(Published.r1(-oma), Published.product(Published.r3(-psia), Published.r1(eps0)))
+        )
     }
 
     @Test("ERFA t_obl06 reference")
@@ -79,7 +69,7 @@ struct EnginePrecessionTests {
 
     @Test("A NaN element fails the matrix comparison wherever it sits")
     func nanFailsComparison() {
-        let identity: [[Double]] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+        let identity = Published.identity
         for i in 0..<3 {
             for j in 0..<3 {
                 var damaged = identity
@@ -92,7 +82,7 @@ struct EnginePrecessionTests {
     @Test("The matrix is the identity at J2000")
     func identityAtJ2000() {
         let matrix = Published.matrix(Engine.Precession.rotation(tt: 0))
-        #expect(Published.maximumDifference(matrix, [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) <= 1e-15)
+        #expect(Published.maximumDifference(matrix, Published.identity) <= 1e-15)
     }
 
     @Test("The matrix is a rotation", arguments: Published.references)

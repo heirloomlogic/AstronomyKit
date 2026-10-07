@@ -73,6 +73,95 @@ enum PublishedOrientation {
     /// apparent sidereal time of IAU 2006/2000A with the complementary terms.
     static let gst06a = (mjd: 53_736.0, value: 1.754_166_137_675_019_159)
 
+    /// The matrix `t_rx`, `t_ry` and `t_rz` rotate, row by row.
+    static let rotationInput: [[Double]] = [[2, 3, 2], [3, 2, 3], [3, 4, 5]]
+
+    /// `t_rx`, `t_ry` and `t_rz`: `eraRx`, `eraRy` and `eraRz` by 0.3456789
+    /// rad applied to ``rotationInput``, tolerance 1e-12. Index 0, 1 and 2
+    /// are the x, y and z axes.
+    static let axisRotations = (
+        angle: 0.345_678_9,
+        results: [
+            [
+                [2, 3, 2],
+                [3.839_043_388_235_612_460, 3.237_033_249_594_111_899, 4.516_714_379_005_982_719],
+                [1.806_030_415_924_501_684, 3.085_711_545_336_372_503, 3.687_721_683_977_873_065],
+            ],
+            [
+                [0.865_184_781_897_815_993_0, 1.467_194_920_539_316_554, 0.187_513_791_127_445_734_2],
+                [3, 2, 3],
+                [3.500_207_892_850_427_330, 4.779_889_022_262_298_150, 5.381_899_160_903_798_712],
+            ],
+            [
+                [2.898_197_754_208_926_769, 3.500_207_892_850_427_330, 2.898_197_754_208_926_769],
+                [2.144_865_911_309_686_813, 0.865_184_781_897_815_993, 2.144_865_911_309_686_813],
+                [3, 4, 5],
+            ],
+        ] as [[[Double]]]
+    )
+
+    /// `t_c2s` and `t_p2s`: the direction of (100, −50, 25), tolerance 1e-14
+    /// on the angles and 1e-9 on the length.
+    static let p2s = (
+        vector: (x: 100.0, y: -50.0, z: 25.0),
+        theta: -0.463_647_609_000_806_116_2,
+        phi: 0.219_987_977_395_459_446_3,
+        r: 114.564_392_373_896_000_2
+    )
+
+    /// `t_s2c`: the unit vector at θ = 3.0123, φ = −0.999, tolerance 1e-12.
+    static let s2c = (
+        theta: 3.012_3,
+        phi: -0.999,
+        vector: [-0.536_626_766_726_052_390_6, 0.069_771_110_976_514_536_5, -0.840_930_261_856_621_404_1]
+    )
+
+    /// `t_s2p`: the vector at θ = −3.21, φ = 0.123, r = 0.456, tolerance 1e-12.
+    static let s2p = (
+        theta: -3.21, phi: 0.123, r: 0.456,
+        vector: [-0.451_496_467_388_016_522_8, 0.030_933_942_773_425_868_8, 0.055_946_681_051_087_793_3]
+    )
+
+    /// `t_hd2ae`: hour angle 1.1 and declination 1.2 seen from latitude 0.3
+    /// are at azimuth 5.916889243730066194 (tolerance 1e-13) and elevation
+    /// 0.4472186304990486228 (tolerance 1e-14).
+    static let hd2ae = (
+        ha: 1.1,
+        dec: 1.2,
+        latitude: 0.3,
+        azimuth: 5.916_889_243_730_066_194,
+        elevation: 0.447_218_630_499_048_622_8
+    )
+
+    /// `t_icrs2g`: right ascension 5.9338074302227188048671087 and
+    /// declination −1.1784870613579944551540570 are at galactic longitude
+    /// 5.5850536063818546461558 and latitude −0.7853981633974483096157,
+    /// tolerance 1e-14.
+    static let icrs2g = (
+        ra: 5.933_807_430_222_718_804_867_108_7, dec: -1.178_487_061_357_994_455_154_057_0,
+        longitude: 5.585_053_606_381_854_646_155_8, latitude: -0.785_398_163_397_448_309_615_7
+    )
+
+    /// The equatorial-to-galactic matrix of `eraIcrs2g`, row by row: row i is
+    /// galactic axis i in J2000 equatorial coordinates, to 30 digits.
+    static let galacticMatrix: [[Double]] = [
+        [
+            -0.054_875_560_416_215_368_492_398_900_454,
+            -0.873_437_090_234_885_048_760_383_168_409,
+            -0.483_835_015_548_713_226_831_774_175_116,
+        ],
+        [
+            0.494_109_427_875_583_673_525_222_371_358,
+            -0.444_829_629_960_011_178_146_614_061_616,
+            0.746_982_244_497_218_890_527_388_004_556,
+        ],
+        [
+            -0.867_666_149_019_004_701_181_616_534_570,
+            -0.198_076_373_431_201_528_180_486_091_412,
+            0.455_983_776_175_066_922_272_100_478_348,
+        ],
+    ]
+
     // MARK: - Other epochs
 
     /// One epoch of `references`.
@@ -191,6 +280,30 @@ enum PublishedOrientation {
             - m[0][1] * (m[1][0] * m[2][2] - m[1][2] * m[2][0])
             + m[0][2] * (m[1][0] * m[2][1] - m[1][1] * m[2][0])
         #expect(abs(determinant - 1) <= 1e-15, "determinant", sourceLocation: sourceLocation)
+    }
+
+    /// R1(φ) and R3(φ) as SOFA's `iauRx` and `iauRz` apply them.
+    static func r1(_ phi: Double) -> [[Double]] {
+        [[1, 0, 0], [0, cos(phi), sin(phi)], [0, -sin(phi), cos(phi)]]
+    }
+
+    static func r3(_ phi: Double) -> [[Double]] {
+        [[cos(phi), sin(phi), 0], [-sin(phi), cos(phi), 0], [0, 0, 1]]
+    }
+
+    static func product(_ a: [[Double]], _ b: [[Double]]) -> [[Double]] {
+        (0..<3).map { i in (0..<3).map { j in (0..<3).reduce(0.0) { $0 + a[i][$1] * b[$1][j] } } }
+    }
+
+    static func transposed(_ m: [[Double]]) -> [[Double]] {
+        (0..<3).map { i in (0..<3).map { m[$0][i] } }
+    }
+
+    static let identity: [[Double]] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+
+    /// The engine rotation whose SOFA matrix (see ``matrix(_:)``) is `m`.
+    static func rotation<From, To>(_ m: [[Double]]) -> Engine.Rotation<From, To> {
+        Engine.Rotation(rot: ((m[0][0], m[1][0], m[2][0]), (m[0][1], m[1][1], m[2][1]), (m[0][2], m[1][2], m[2][2])))
     }
 
     /// The largest absolute element difference of two 3×3 matrices, or NaN

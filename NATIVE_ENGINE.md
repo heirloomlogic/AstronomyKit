@@ -70,7 +70,7 @@ extension Engine.Rotation {
 - `angle(to:)` returns degrees from 0 through 180, as `Astronomy_AngleBetween` does. It throws `badVector` when the product of the two lengths is below 1e-8 or not finite, and returns exactly 0 or 180 when the cosine rounds to 1 or −1 or beyond.
 - `apply(to:)` uses the formula above, and for a state applies it to the position and to the velocity. The result keeps the input's time. It cannot fail: `Astronomy_RotateVector` and `Astronomy_RotateState` return `ASTRO_INVALID_PARAMETER` only for an input that carries an error status, and Swift values have no status.
 
-Combining, inverting and pivoting rotations, and the rotations between frames, belong to #86. Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here through #84.
+Combining, inverting and pivoting rotations, and the rotations between frames, are in `Orientation/` (see [Earth orientation](#earth-orientation)). Other vector arithmetic stays in the module that uses it until a second module needs it, and then moves here through #84.
 
 ## Constants
 
@@ -207,7 +207,7 @@ The closures are synchronous and non-escaping. They take the place of the C call
 
 ## Earth orientation
 
-In the tree: `Orientation/EngineNutation.swift`, `Orientation/EnginePrecession.swift`, `Orientation/EngineEarthRotation.swift`, `Orientation/EngineRotations.swift` and the generated `Orientation/Generated/IAU2000BTerms.swift`. Rotations between the public frames, coordinate conversions, observers and the atmosphere come in later parts of #86.
+In the tree: `Orientation/EngineNutation.swift`, `Orientation/EnginePrecession.swift`, `Orientation/EngineEarthRotation.swift`, `Orientation/EngineRotations.swift`, `Orientation/EngineFrameRotations.swift`, `Orientation/EngineCoordinates.swift` and the generated `Orientation/Generated/IAU2000BTerms.swift`. Observers, the atmosphere, refraction and the horizon conversions that apply refraction (`Astronomy_Horizon`, `Astronomy_HorizonFromVector`, `Astronomy_VectorFromHorizon`) come in part 3 of #86.
 
 ```swift
 extension Engine.Nutation {
@@ -241,7 +241,21 @@ extension Engine.EarthRotation {
 }
 extension Engine.Rotation {
     func apply(to state: Engine.State<From>, rate: Engine.RotationRate<From, To>) -> Engine.State<To>
+    var inverse: Engine.Rotation<To, From> { get }
+    func then<Next>(_ next: Engine.Rotation<To, Next>) -> Engine.Rotation<From, Next>
+    func pivoted(axis: Int, angle: Double) throws -> Self
 }
+extension Engine.FrameRotation {
+    static let eqjToEcl: Engine.Rotation<Engine.EQJ, Engine.ECL>      // and eclToEqj
+    static let eqjToGal: Engine.Rotation<Engine.EQJ, Engine.GAL>      // and galToEqj
+    static func eqjToEqd(_ time: Engine.Time) -> Engine.Rotation<Engine.EQJ, Engine.EQD>
+    // eqdToEqj, eqjToEct, ectToEqj, eqdToEct, ectToEqd, eqdToEcl, eclToEqd take a time;
+    // eqdToHor, horToEqd, eqjToHor, horToEqj, eclToHor, horToEcl take a time and an Observer.
+}
+extension Engine.Spherical { init<F>(_ vector: Engine.Vector<F>) throws }      // latitude, longitude, distance
+extension Engine.Vector { init(_ sphere: Engine.Spherical, time: Engine.Time) }
+extension Engine.Equatorial { init<F>(_ vector: Engine.Vector<F>) throws }     // rightAscension, declination, distance
+extension Engine.Ecliptic { init(_ vector: Engine.Vector<Engine.EQJ>) }        // vector in ECT, latitude, longitude
 ```
 
 - Nutation is IAU 2000B as SOFA's `iauNut00b` evaluates it: the 77 luni-solar terms, summed smallest first with each argument reduced to one turn, plus fixed offsets of −0.135 and +0.388 mas for the planetary terms. `Scripts/generate-nutation-table.py` writes the table from ERFA 2.0.1's `nut00b.c`, pinned in `Scripts/orientation-data` with its SHA-256, and `--check` runs in CI. The rates are the derivatives of the same terms. Angles are in degrees and rates in degrees per TT day.
@@ -249,6 +263,10 @@ extension Engine.Rotation {
 - The mean obliquity and the precession angles ψA, ωA and χA are the IAU 2006 polynomials (Capitaine, Wallace and Chapront 2003; SOFA `iauObl06` and `iauP06e`). The precession matrix is P = R3(χA)·R1(−ωA)·R3(−ψA)·R1(ε0), IERS Conventions (2010) equation 5.39, from the mean equator and equinox of J2000 to those of date. There is no frame bias: EQJ is the mean J2000 frame, as in the C engine.
 - The nutation matrix is R1(−εA − Δε)·R3(−Δψ)·R1(εA), SOFA's `iauNumat`, from EQM to EQD.
 - `Engine.RotationRate` holds the derivative of a rotation per TT day in the rotation's own slots, so it cannot be applied as a rotation. `apply(to:rate:)` takes a state through a rotation that moves with time: the position is rotated, and the velocity is rotated plus the rate applied to the position. They port local patch 12's `precession_rot_rate` and `nutation_rot_rate`.
+- `inverse` is the transpose. `then(_:)` is `Astronomy_CombineRotation`: the first rotation, then the second. `pivoted(axis:angle:)` is `Astronomy_Pivot`: after the rotation, it turns vectors `angle` degrees counterclockwise about axis 0, 1 or 2, seen from the axis's positive end. It throws `invalidParameter` for another axis or an angle that is not finite.
+- `Engine.FrameRotation` has one rotation for each C frame pair, built the way the C engine builds it: EQJ to EQD is precession then nutation, EQD and ECT differ by R1(εA + Δε), EQJ and ECL by R1(ε0), and the horizon rotations turn the observer's zenith, north and west by apparent sidereal time. Each reverse rotation is the transpose. The horizon rotations read only the observer's latitude and longitude; the public layer validates the observer. Rotations at a time read nutation through the shared cache.
+- The galactic rotation is the J2000 frame of the Hipparcos Catalogue (Vol. 1, §1.5.3; Murray 1989), built from its defining angles: north galactic pole at αG = 192.85948°, δG = +27.12825°, and the ascending node at galactic longitude lΩ = 32.93192°. This replaces the C engine's matrix, which converts the IAU 1958 B1950 constants through the true equator of B1950 and is 8.77″ from those axes (#152). The public `RotationMatrix.equatorialJ2000ToGalactic()` and `galacticToEquatorialJ2000()` already return it, ahead of #96.
+- `Engine.Spherical(_:)` is `Astronomy_SphereFromVector`: longitude counterclockwise from x seen from +z, in [0, 360), and latitude in degrees. A vector on the z axis has longitude 0 and latitude ±90; one where x² + y² and z are both zero throws `invalidParameter`. `Engine.Equatorial(_:)` is the same with the longitude in hours. `Engine.Ecliptic(_:)` is `Astronomy_Ecliptic`: the J2000 vector rotated to the true ecliptic of date, with longitude 0 on the ecliptic pole. Longitudes that round up to 360 when moved into range are returned as 0.
 - The Earth rotation angle is SOFA's `iauEra00`, in degrees from 0 up to 360. Mean sidereal time is `iauGmst06`: the angle at `time.ut` plus the IAU 2006 polynomial at `time.tt`. Apparent sidereal time adds the equation of the equinoxes Δψ·cos εA. Both are in sidereal hours from 0 up to 24; a value that rounds up to the period is returned as 0. A time or day count that is not finite gives NaN, and nutation for it is computed without touching the cache.
 
 ### Differences from published definitions
@@ -261,6 +279,8 @@ Tests under `Tests/AstronomyKitTests/Engine/Orientation/` check against SOFA thr
 
 - The values in ERFA's own test program, `t_erfa_c.c`: `t_nut00b`, `t_obl06`, `t_p06e`, `t_numat`, `t_era00` and `t_gmst06`, each within SOFA's tolerance or tighter; `t_bp06` within 1e-13, because SOFA builds that matrix from the Fukushima-Williams angles, which agree with equation 5.39 to 3e-14 there; and `t_gst06a` within the 4 mas that IAU 2000B (1 mas of 2000A from 1995 to 2050) and #170 allow.
 - pyerfa 2.0.1.5 at eight epochs from 1600 to 2500, with UT1 and TT apart: nutation to 1e-15 rad, mean obliquity and the precession angles to 1e-15 rad, the precession matrix against equation 5.39 built from the SOFA angles to 1e-15, and the Earth rotation angle and mean sidereal time to 1e-12 rad.
+- `t_rx`, `t_ry` and `t_rz` for pivoting, `t_c2s`, `t_p2s`, `t_s2c` and `t_s2p` for the spherical conversions, `t_hd2ae` through the horizon rotation, and `t_icrs2g` through the galactic rotation. The galactic matrix matches `eraIcrs2g`'s to 1e-15 and the Hipparcos Catalogue's printed A_G to its ten decimals.
+- At the eight pyerfa epochs, the frame rotations against N·P, R1(εA + Δε) and R1(ε0) built from the SOFA angles, to 2e-15, and the ecliptic of date against the same rotation followed by SOFA's `eraC2s` definition.
 - Rates against five-point differences of the values on exact binary-fraction stencils, and the moving-rotation state against the derivative of the rotated position.
 - The nutation cache's work counts with a private registry: one evaluation per instant across angle, rate, tilt and sidereal-time callers, signed-zero keys, nonfinite bypass, eviction of the oldest of 32, reset, and simultaneous callers.
 
@@ -296,6 +316,8 @@ In the tree: `EngineCache.swift`.
 | Constellation B1875 rotation | #91 | `static let` | `pthread_once` (local patch 4) |
 
 ## Public layer integration (#96)
+
+The galactic rotations already run on the engine (see [Earth orientation](#earth-orientation), #152).
 
 `AstroTime` will store an `Engine.Time`, `setDeltaTModel` will write the public layer's atomic default, a `nil` model argument resolves to that default once per public call, and `AstronomyConfig.reset()` will call `Engine.resetCaches()`. `AstroTime(year:...)` and `AstroTime.civil(days:deltaTModel:)` will call `Engine.Time.days` and `Engine.Time.civil(utcDays:deltaTModel:)`, so the civil rules live in one place. Public names, signatures, conformances, `Codable` shape, units, frames and error cases do not change.
 

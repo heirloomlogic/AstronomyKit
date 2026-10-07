@@ -70,6 +70,7 @@ print("Alt: \(hor.altitude)°, Az: \(hor.azimuth)°")
 Referenced to the Milky Way:
 - Fundamental plane: Galactic plane
 - Primary direction: Galactic center
+- Axes: the J2000 galactic axes of the Hipparcos Catalogue (Murray 1989), with the north galactic pole at right ascension 192.85948° and declination +27.12825°
 
 Available via rotation matrices (see below).
 

@@ -354,86 +354,40 @@ struct RotationTests {
             }
         }
 
-        /// 10″. The engine's galactic axes sit 8.75″, 8.59″ and 1.84″ from the
-        /// Hipparcos axes (#152), so this bound holds today. Transposing the
-        /// matrix or turning it 180° about the galactic pole moves an axis by
-        /// more than 90°.
-        static let issue152Bound = 10.0 / 3_600 * .pi / 180
-
-        /// Angle in radians between column `axis` of `matrix` and of `expected`
-        /// (the chord, which equals the angle to 1e-15 at this size).
-        static func axisOffset(_ matrix: (Int, Int) -> Double, _ expected: [[Double]], axis: Int) -> Double {
-            let dx = matrix(0, axis) - expected[0][axis]
-            let dy = matrix(1, axis) - expected[1][axis]
-            let dz = matrix(2, axis) - expected[2][axis]
-            return (dx * dx + dy * dy + dz * dz).squareRoot()
-        }
-
-        @Test("Galactic axes are within #152's offset of the Hipparcos axes")
-        func galacticAxesNearHipparcos() throws {
-            let expected = Self.hipparcosGalacticRotation()
-            let toGalactic = try RotationMatrix.equatorialJ2000ToGalactic()
-            let toEquatorial = try RotationMatrix.galacticToEquatorialJ2000()
-
-            for axis in 0..<3 {
-                let forward = Self.axisOffset({ toGalactic[$0, $1] }, expected, axis: axis)
-                let inverse = Self.axisOffset({ toEquatorial[$1, $0] }, expected, axis: axis)
-                #expect(forward < Self.issue152Bound, "EQJ to GAL axis \(axis): \(forward * 206_264.806)″")
-                #expect(inverse < Self.issue152Bound, "GAL to EQJ axis \(axis): \(inverse * 206_264.806)″")
-            }
-        }
-
-        /// 1e-12: the construction evaluated in double precision. The engine's
-        /// elements are up to 3.6e-5 off.
+        /// 1e-12: the construction evaluated in double precision.
         static let galacticTolerance = 1e-12
 
-        /// Fails today because of #152: the engine's matrix converts the IAU
-        /// 1958 B1950 constants through the true equator of B1950, so it is
-        /// 8.77″ from the J2000 axes. When the port implements the Hipparcos
-        /// axes, the known issue stops recording and this test fails until the
-        /// `withKnownIssue` wrapper is removed.
+        /// The galactic rotations follow the Hipparcos axes, not the C engine's
+        /// IAU 1958 matrix, which was 8.77″ off (#152).
         @Test("EQJ to GAL and GAL to EQJ are the Hipparcos J2000 galactic axes")
         func galacticMatchesHipparcos() throws {
             let expected = Self.hipparcosGalacticRotation()
             let toGalactic = try RotationMatrix.equatorialJ2000ToGalactic()
             let toEquatorial = try RotationMatrix.galacticToEquatorialJ2000()
 
-            withKnownIssue("#152: the galactic matrix is 8.77″ from the Hipparcos J2000 galactic axes") {
-                for row in 0..<3 {
-                    for col in 0..<3 {
-                        let forward = toGalactic[row, col] - expected[row][col]
-                        let inverse = toEquatorial[col, row] - expected[row][col]
-                        #expect(abs(forward) < Self.galacticTolerance, "EQJ to GAL [\(row), \(col)] off by \(forward)")
-                        #expect(abs(inverse) < Self.galacticTolerance, "GAL to EQJ [\(col), \(row)] off by \(inverse)")
-                    }
+            for row in 0..<3 {
+                for col in 0..<3 {
+                    let forward = toGalactic[row, col] - expected[row][col]
+                    let inverse = toEquatorial[col, row] - expected[row][col]
+                    #expect(abs(forward) < Self.galacticTolerance, "EQJ to GAL [\(row), \(col)] off by \(forward)")
+                    #expect(abs(inverse) < Self.galacticTolerance, "GAL to EQJ [\(col), \(row)] off by \(inverse)")
                 }
             }
         }
 
-        /// ENGINE REGRESSION, NOT TRUTH. The nine EQJ to GAL literals the
-        /// engine ships today, copied from `Astronomy_Rotation_EQJ_GAL` and
-        /// compared exactly. They are 8.77″ from the published axes (#152), so
-        /// they pin the current engine only, closing what the bounds above
-        /// leave open: a digit changed in the 14th decimal place, which keeps
-        /// the matrix orthonormal to 1e-15. With the transpose check, they pin
-        /// GAL to EQJ too. Replace them with the corrected matrix when #152 is
-        /// resolved.
-        static let engineGalacticLiterals = [
-            [-0.054_862_477_971_134_4, 0.494_109_594_638_876_5, -0.867_666_881_352_902_5],
-            [-0.873_457_278_424_678_2, -0.444_793_811_229_683_1, -0.198_067_787_029_409_7],
-            [-0.483_800_052_994_852_0, 0.747_003_463_163_042_3, 0.455_986_112_447_079_4],
-        ]
-
-        @Test("Engine regression (#152): EQJ to GAL keeps today's literals exactly")
-        func galacticEngineRegression() throws {
+        /// Against the equatorial-to-galactic matrix of ERFA 2.0.1's
+        /// `eraIcrs2g`, printed to 30 digits, at 1e-15: that catches a change
+        /// in the 14th decimal place that keeps the matrix orthonormal, which
+        /// the 1e-12 construction check above would miss.
+        @Test("EQJ to GAL is ERFA's galactic matrix")
+        func galacticMatchesErfa() throws {
             let toGalactic = try RotationMatrix.equatorialJ2000ToGalactic()
 
+            // ERFA's row i is galactic axis i, which is column i here.
             for row in 0..<3 {
                 for col in 0..<3 {
-                    #expect(
-                        toGalactic[row, col] == Self.engineGalacticLiterals[row][col],
-                        "[\(row), \(col)] = \(toGalactic[row, col]), frozen \(Self.engineGalacticLiterals[row][col])"
-                    )
+                    let expected = PublishedOrientation.galacticMatrix[col][row]
+                    #expect(abs(toGalactic[row, col] - expected) <= 1e-15, "[\(row), \(col)]")
                 }
             }
         }
