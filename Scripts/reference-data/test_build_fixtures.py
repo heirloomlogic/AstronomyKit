@@ -158,6 +158,34 @@ class SofaFixedStarTests(unittest.TestCase):
                     self.builder.parse_sofa_fixed_stars()
 
 
+class ConstellationFixtureTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_published_table_covers_every_name_boundary_and_tie(self):
+        fixture = self.builder.parse_constellations()
+        names = fixture["names"]
+        boundaries = fixture["boundaries"]
+        self.assertEqual(88, len(names))
+        self.assertEqual(88, len({item["symbol"] for item in names}))
+        self.assertEqual("Antlia", next(item["name"] for item in names if item["symbol"] == "Ant"))
+        self.assertEqual("Boötes", next(item["name"] for item in names if item["symbol"] == "Boo"))
+        self.assertEqual("Chamaeleon", next(item["name"] for item in names if item["symbol"] == "Cha"))
+        self.assertEqual("Ophiuchus", next(item["name"] for item in names if item["symbol"] == "Oph"))
+        self.assertEqual(357, len(boundaries))
+        self.assertEqual({item["symbol"] for item in names}, {item["symbol"] for item in boundaries})
+        self.assertEqual(3 * len(boundaries), len(fixture["boundaryTies"]))
+        self.assertEqual(len(boundaries), len(fixture["nearBoundaryStars"]))
+        self.assertEqual(8, len(fixture["publishedExamples"]))
+
+    def test_generated_swift_table_contains_every_published_row(self):
+        fixture = self.builder.parse_constellations()
+        generated = self.builder.generate_constellation_swift(fixture)
+        self.assertEqual(88, generated.count("Info(symbol:"))
+        self.assertEqual(357, generated.count("Boundary(infoIndex:"))
+
+
 class ApparentRangeFixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
