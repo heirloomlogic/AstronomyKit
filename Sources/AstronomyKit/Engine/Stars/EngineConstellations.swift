@@ -76,9 +76,11 @@ extension Engine {
             let movedZ = b1875Rotation[0, 2] * x + b1875Rotation[1, 2] * y + b1875Rotation[2, 2] * z
             var resultRightAscension = atan2(movedY, movedX)
             if resultRightAscension < 0 { resultRightAscension += 2 * .pi }
+            let resultDeclination =
+                min(90, max(-90, asin(min(1, max(-1, movedZ))) / radiansPerDegree))
             return try findB1875(
                 rightAscension: resultRightAscension / radiansPerHour,
-                declination: asin(movedZ) / radiansPerDegree
+                declination: resultDeclination
             )
         }
 
@@ -107,7 +109,9 @@ extension Engine {
 
         private static func normalizedHours(_ rightAscension: Double) -> Double {
             let remainder = rightAscension.truncatingRemainder(dividingBy: 24)
-            return remainder < 0 ? remainder + 24 : remainder
+            guard remainder < 0 else { return remainder }
+            let wrapped = remainder + 24
+            return wrapped == 24 ? 0 : wrapped
         }
     }
 }

@@ -85,6 +85,37 @@ struct EngineConstellationTests {
         }
     }
 
+    @Test("Valid directions that rotate onto either B1875 pole remain valid")
+    func polarRounding() throws {
+        let directions = [
+            (rightAscension: 12.053_363_452_449_263, declination: 89.304_062_550_348_75, symbol: "UMi"),
+            (rightAscension: 0.053_363_452_449_263, declination: -89.304_062_550_348_75, symbol: "Oct"),
+        ]
+        for direction in directions {
+            for offset in [-1e-7, 0, 1e-7] {
+                let result = try Engine.Constellations.find(
+                    rightAscension: direction.rightAscension,
+                    declination: direction.declination + offset
+                )
+                #expect(result.symbol == direction.symbol)
+                #expect((-90...90).contains(result.declination1875))
+            }
+        }
+    }
+
+    @Test("Tiny negative right ascensions round through zero instead of 24 hours")
+    func negativeRightAscensionRounding() throws {
+        let zero = try Engine.Constellations.findB1875(rightAscension: 0, declination: 0)
+        for rightAscension in [-Double.leastNonzeroMagnitude, -1e-16, -24, 24, 48] {
+            let result = try Engine.Constellations.findB1875(
+                rightAscension: rightAscension,
+                declination: 0
+            )
+            #expect(result.symbol == zero.symbol)
+            #expect(result.rightAscension1875 == 0)
+        }
+    }
+
     @Test("Published B1875 rotation is independent of the old first-call Delta T and nutation path")
     func fixedPublishedRotation() {
         let universalTime = -45_655.741_412_610_17
