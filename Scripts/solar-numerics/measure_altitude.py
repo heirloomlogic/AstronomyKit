@@ -52,12 +52,15 @@ def validate_requests(requests):
         raise ValueError('Recorded requests differ from the complete canonical request grid')
 
 
-def comparisons(records, requests):
+def comparisons(records, requests, native_records=None):
     if len(records) != len(requests) or len({r['request']['id'] for r in records}) != len(records):
         raise ValueError('Missing or duplicate native output rows')
     for row, request in zip(records, requests):
         if row['request'] != request:
             raise ValueError('Native result is associated with the wrong request')
+    if native_records is None:
+        raise ValueError('Fresh native public outcomes are required for comparison')
+    validate_public_outcomes(records, requests, native_records)
     model = solar.Solar()
     rows = []
     for record, request in zip(records, requests):
@@ -66,8 +69,6 @@ def comparisons(records, requests):
             raise ValueError('Native supplied time-scale bits changed')
         if not all(math.isfinite(value) for value in values.values()):
             raise ValueError('Nonfinite native result')
-        if 'observation' in record and record['observation']['altitude'] != record['values']['altitude']:
-            raise ValueError('Public observation is not bit-identical to the native geometric altitude')
         ut, tt = solar.ref.exact(values['ut']), solar.ref.exact(values['tt'])
         result = model.altitude(ut, tt, request['model'], request['observer'])
         expected = {'altitude': result['altitude'], 'azimuth': result['azimuth'],
@@ -96,6 +97,55 @@ def input_maximum(rows):
     return mp.nstr(max(abs(mp.mpf(row['inputReference']['signedAltitudeErrorDegrees'])) for row in rows if row['inputReference']),25)
 
 
+def native_export(requests, configuration, purpose):
+    """Run the current Swift public API; saved outcomes are never the oracle."""
+    if configuration not in ['debug', 'release']:
+        raise ValueError('Unknown native measurement configuration')
+    workspace = ROOT / '.context' / f'altitude-numerics-{configuration}-{purpose}'
+    workspace.mkdir(parents=True, exist_ok=True)
+    input_path, output_path = workspace / 'input.json', workspace / 'native.json'
+    input_path.write_text(json.dumps(requests, indent=2) + '\n')
+    output_path.unlink(missing_ok=True)
+    command = ['swift', 'test', '-c', configuration, '--filter', 'NativeAltitudeProbe.export']
+    with (workspace / 'build.log').open('w') as log:
+        subprocess.run(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, check=True)
+    environment = dict(os.environ, ASTRONOMYKIT_ALTITUDE_INPUT=str(input_path), ASTRONOMYKIT_ALTITUDE_OUTPUT=str(output_path))
+    begin = time.perf_counter()
+    with (workspace / 'run.log').open('w') as log:
+        subprocess.run(['/usr/bin/time', '-l' if platform.system() == 'Darwin' else '-v', *command, '--skip-build'], cwd=ROOT, env=environment,
+                       stdout=log, stderr=subprocess.STDOUT, check=True)
+    elapsed = time.perf_counter() - begin
+    return json.loads(output_path.read_text()), elapsed, (workspace / 'run.log').read_text()
+
+
+def validate_public_outcomes(records, requests, native_records):
+    """Compare every outcome/budget against a fresh replay of the same requests.
+
+    Historical altitude bits are checked within their recorded calculation;
+    cross-compiler altitude equality is not a numerical acceptance condition.
+    """
+    for label, rows in [('saved', records), ('fresh', native_records)]:
+        if len(rows) != len(requests) or [row['request'] for row in rows] != requests:
+            raise ValueError(f'{label} public outcome request coverage differs')
+    def outcome(row):
+        supported, rejected = 'observation' in row, 'unsupported' in row
+        if supported == rejected:
+            raise ValueError('A public outcome must contain exactly one observation or rejection')
+        if rejected:
+            if not isinstance(row['unsupported'], str) or not row['unsupported']:
+                raise ValueError('Invalid public outcome rejection')
+            return ('unsupported', row['unsupported'])
+        observed = row['observation']
+        if not isinstance(observed, dict) or set(observed) != {'altitude','civil','scale','light','era','total'}:
+            raise ValueError('Invalid public outcome budget fields')
+        if observed['altitude'] != row['values']['altitude']:
+            raise ValueError('Public outcome altitude differs from its native calculation')
+        return ('observation', {key:value for key,value in observed.items() if key != 'altitude'})
+    for saved, fresh in zip(records, native_records):
+        if outcome(saved) != outcome(fresh):
+            raise ValueError(f"Recorded public outcome differs from fresh Swift replay: {saved['request']['id']}")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--configuration', choices=['debug', 'release'], default='debug')
@@ -113,33 +163,21 @@ def main():
         measure.verify_summary(saved)
         if input_maximum(saved['rows']) != saved['sampledMaximumInputAltitudeErrorDegrees']:
             raise ValueError('Recorded input-reference maximum differs from its rows')
-        if comparisons(saved['rows'], grid()) != saved['rows']:
+        native_records, _, _ = native_export(grid(), saved['configuration'], 'recheck')
+        if comparisons(saved['rows'], grid(), native_records) != saved['rows']:
             raise ValueError('Recorded reference is not the current evaluator output')
         print(f"Re-executed {len(saved['rows'])} altitude rows")
         return
     requests = grid()
-    workspace = ROOT / '.context' / f'altitude-numerics-{args.configuration}'
-    workspace.mkdir(parents=True, exist_ok=True)
-    input_path, output_path = workspace / 'input.json', workspace / 'native.json'
-    input_path.write_text(json.dumps(requests, indent=2) + '\n')
-    output_path.unlink(missing_ok=True)
-    command = ['swift', 'test', '-c', args.configuration, '--filter', 'NativeAltitudeProbe.export']
-    with (workspace / 'build.log').open('w') as log:
-        subprocess.run(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, check=True)
-    environment = dict(os.environ, ASTRONOMYKIT_ALTITUDE_INPUT=str(input_path), ASTRONOMYKIT_ALTITUDE_OUTPUT=str(output_path))
-    begin = time.perf_counter()
-    with (workspace / 'run.log').open('w') as log:
-        subprocess.run(['/usr/bin/time', '-l' if platform.system() == 'Darwin' else '-v', *command, '--skip-build'], cwd=ROOT, env=environment,
-                       stdout=log, stderr=subprocess.STDOUT, check=True)
-    elapsed = time.perf_counter() - begin
-    rows = comparisons(json.loads(output_path.read_text()), requests)
+    records, elapsed, process_log = native_export(requests, args.configuration, 'generation')
+    rows = comparisons(records, requests, records)
     report = {'schemaVersion': 1, 'status': 'sampled-native-altitude-at-recorded-pair-and-exact-public-input-not-a-certificate',
               'configuration': args.configuration, 'precisionDecimalDigits': mp.mp.dps, 'referenceLibrary': 'mpmath 1.3.0',
               'pythonVersion': platform.python_version(), 'platform': platform.platform(), 'architecture': platform.machine(),
               'swiftVersion': subprocess.check_output(['swift', '--version'], text=True, stderr=subprocess.STDOUT).strip(),
               'gitHead': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
               'sourceSHA256': source_hashes(ROOT, PATHS), 'nativeProcessSecondsIncludingRunner': elapsed,
-              'nativeProcessLog': (workspace / 'run.log').read_text(), 'requests': requests, 'rows': rows,
+              'nativeProcessLog': process_log, 'requests': requests, 'rows': rows,
               'sampledMaximumAbsoluteError': measure.summary(rows),
               'sampledMaximumInputAltitudeErrorDegrees':input_maximum(rows),
               'excluded': ['continuous arithmetic or libm bounds', 'other compilers or architectures']}
