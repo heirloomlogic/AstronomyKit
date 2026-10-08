@@ -760,6 +760,67 @@ Tests under `Tests/AstronomyKitTests/Engine/Positions/`:
 | `ChironTests` geocentric, equatorial, ecliptic and horizon cases, and `AuditValidationTests.chironPosition` | Public-API checks on the C engine until #96 (see [Pluto, the gravity simulation and Chiron](#pluto-the-gravity-simulation-and-chiron) for the heliocentric cases). `EngineChironPositionsTests` checks the engine's composition against Horizons' observer rows; `ChironTests` checks the public `horizon` against the same rows. |
 | `LightTravelTests` | Named sanity checks of the public light-time solver and backdated positions, on the C engine until #96. `EngineLightTravelTests` checks the engine's solver, and `EnginePositionsTests` its backdated positions against the light-time equation. |
 
+## Jupiter's moons
+
+In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. The rest of #90, rotation axes and Lagrange points, is not in the tree yet.
+
+```swift
+extension Engine {
+    enum JUP: Frame {}   // L1.2's jovicentric frame
+}
+extension Engine.JupiterMoons {
+    enum Moon: Int, CaseIterable { case io, europa, ganymede, callisto }
+    struct States { var io, europa, ganymede, callisto: Engine.State<Engine.EQJ> }
+    struct Term { let amplitude, phase, frequency: Double }
+    struct Model { let mu: Double; let meanLongitude: (phase: Double, rate: Double); let a, l, z, zeta: [Term] }
+    struct Elements { var a, meanLongitude, k, h, q, p: Double }
+    static let models: [Model]                // generated, in Moon order
+    static let epochTT: Double                // generated, −18,262.5, 1950-01-01 00:00 TT
+    static let psi, inclination: Double       // generated, radians
+    static let jupiterToEQJ: Engine.Rotation<Engine.JUP, Engine.EQJ>
+    static let keplerIterationLimit: Int      // 10
+    static func states(at time: Engine.Time) throws -> States
+    static func state(of moon: Moon, at time: Engine.Time) throws -> Engine.State<Engine.EQJ>
+    static func state(_ model: Model, at time: Engine.Time) throws -> Engine.State<Engine.EQJ>
+    static func elements(of model: Model, tt: Double) -> Elements
+    static func eccentricAnomaly(meanLongitude: Double, k: Double, h: Double) throws -> Double
+    static func jovicentricState(_ elements: Elements, mu: Double, time: Engine.Time) throws -> Engine.State<Engine.JUP>
+}
+```
+
+- The model is the L1.2 theory of Lainey, Duriez and Vienne (2006, A&A 456, 783), as IMCCE publishes it in `BisL1.2.dat`. Each moon has a semi-major axis (a cosine series), a mean longitude (a linear term plus a sine series), z = k + ih = e·exp(iϖ) and ζ = q + ip = sin(i/2)·exp(iΩ), with t in TT days from 1950-01-01 00:00 TT (JD 2433282.5). The engine keeps the leading terms of each series, as the C engine does: 75 of the 490 published (Io 10, Europa 21, Ganymede 22, Callisto 22). It leaves out the theory's Chebyshev corrections for long-period effects, which the theory applies only from about 1130 to 2763.
+- `elements(of:tt:)` sums each series in its published order and reduces the mean longitude into [0, 2π), with `Engine.normalized` for a tiny negative remainder that would round up to 2π. `jovicentricState` is L1.2's `ELEM2PV`: Kepler's equation in the eccentric longitude, then the position and the Keplerian velocity of those elements in the `JUP` frame. The velocity is the theory's definition, not the derivative of the position.
+- `eccentricAnomaly` is Newton's method from L1.2, stopping once a step is below 1e-12 radians. The series keep each eccentricity below 0.0104, the sum of Europa's z amplitudes, and from there the third step is below 1e-22. After `keplerIterationLimit` steps it throws `noConvergence`. A step that is not a number ends the iteration, as in `ELEM2PV`, and the state that follows throws `badTime`.
+- `jupiterToEQJ` is built from L1.2's published angles Ψ and I with `L1.2.f`'s formula. L1.2 calls the result the mean equator and equinox of J2000; it was fitted with DE406, whose axes are the ICRF's, so the engine takes it as EQJ, as the C engine does. The 23 mas frame bias between them is at most 0.2 km at Callisto's distance.
+- `states(at:)` and `state(of:at:)` check the time against `Engine.acceptedTTDays` first and throw `badTime`. `state(_:at:)` throws `badTime` for a state that is not finite, through `Engine.Positions.checked`. Results carry the time they were given.
+- `Scripts/generate-jupiter-moon-series.py` writes `JupiterMoonSeries.swift`: the models from the `jm_*` term arrays and `JupiterMoonModel` of `astronomy.c`, a block whose SHA-256 `Scripts/jupiter-moon-data/manifest.json` pins, and the time origin, Ψ and I, which the C engine does not hold and the generator transcribes from `BisL1.2.dat`. `--check` runs in CI on macOS and Linux. `--published DIR` reads `BisL1.2.dat` (URL and SHA-256 in the manifest; not checked in) and checks every kept term bit for bit as the leading terms of its series, each moon's G × mass and mean longitude, and the transcribed time origin, Ψ and I.
+
+### Differences from published values
+
+- The kept terms and the missing Chebyshev corrections leave the engine short of the full theory. Against Horizons, inside JD 2426545.0 to 2476545.0 (1931-07-22 to 2068-06-12), where Astronomy Engine set its 9e-4 limit, the largest error is Io's: 8.34e-4 of its distance and of its speed. Outside, at 1900-01-01 and 2100-01-01, Io is 1.08e-3 off and the others at most 3.2e-4; no limit applies there. In a one-off comparison during development, with a harness that was not committed, the full theory with its corrections was no closer for Io over 1900 to 2100 (1.11e-3 against 1.14e-3 on a 37-day grid) and closer for Callisto (1.9e-4 against 4.3e-4).
+
+### Differences from the C engine
+
+- The rotation is built from Ψ and I. The C engine's `Rotation_JUP_EQJ`, printed to 15 digits, agrees within 4.5e-16.
+- Newton's method stops after 10 steps; the C engine's loop has no limit. By the bound above, the series need three.
+
+### Published-value checks
+
+Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
+
+- Horizons states of each moon from Jupiter's center (jup365): 22 per moon inside the domain where the 9e-4 limit applies, at both ends, every 2,500 days between and 2000-01-01 (`sources/horizons/<moon>-domain-vector.json` and `<moon>-vector.json`), all within 9e-4 in position and velocity, the `ctest.c` limit. The checks assert that the samples reach both ends of the domain, and fail for the wrong moon and an hour off. Outside the domain, a day beyond each end, 1900 and 2100, the states are finite.
+- The time origin, Ψ and I as `BisL1.2.dat` prints them; the number of kept terms of each series and two of the terms. The generator's `--published` mode checks all 75 terms, the masses and the mean longitudes.
+- Each moon's mean motion √(μ/a³) against `TestL1.2.res` within 1e-15.
+- The rotation against `L1.2.f`'s formula, and its orthonormality.
+- Mathematical bounds: Kepler's equation solved within 1e-14, and the mean longitude in [0, 2π), at 401 times per moon across the accepted range; the eccentricity bound the iteration limit rests on; `noConvergence` near e = 1; the accepted range at both ends, beyond them and for times that are not finite; `badTime` for a state that is not finite; `states(at:)` equal to each `state(of:at:)`.
+
+### Jupiter moon tests that depend on the C engine
+
+| Test | Disposition |
+|---|---|
+| `AuditValidationTests.boundedGalileanMoonState` and `galileanMoonStateObservation` | Published-value check and named sanity check of the public API on the C engine until #96. They read the 88 rows inside the domain and the 16 outside it. `EngineJupiterMoonsTests` applies the same rows and limit to the engine. |
+| `JupiterMoonsTests`, and the Jupiter moon cases of `AcceptedTimeRangeTests` and `HugeTimeTests` | Named sanity checks and range guards of the public API on the C engine until #96. `EngineJupiterMoonsTests` checks the engine's range and guards. |
+
 ## Caches and reset
 
 In the tree: `EngineCache.swift`.

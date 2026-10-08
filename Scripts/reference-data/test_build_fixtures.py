@@ -112,12 +112,15 @@ class JupiterMoonToleranceDomainTests(unittest.TestCase):
         bounded = [vector for vector in vectors if vector["relativeTolerance"] is not None]
         unbounded = [vector for vector in vectors if vector["relativeTolerance"] is None]
 
-        self.assertEqual(4, len(bounded))
-        self.assertEqual({2_451_544.5}, {vector["julianDateTDB"] for vector in bounded})
+        # 2000-01-01 and 21 dates from one end of the domain, JD 2426545.0, to the other, 2476545.0, for each moon.
+        domain = {2_451_544.5} | {2_426_545.0 + 2_500.0 * k for k in range(21)}
+        self.assertEqual(4 * 22, len(bounded))
+        self.assertEqual(domain, {vector["julianDateTDB"] for vector in bounded})
         self.assertEqual({9e-4}, {vector["relativeTolerance"] for vector in bounded})
-        self.assertEqual(8, len(unbounded))
+        # 1900 and 2100, and a day outside each end of the domain.
+        self.assertEqual(4 * 4, len(unbounded))
         self.assertEqual(
-            {2_415_020.5, 2_488_069.5},
+            {2_415_020.5, 2_426_544.0, 2_476_546.0, 2_488_069.5},
             {vector["julianDateTDB"] for vector in unbounded},
         )
 

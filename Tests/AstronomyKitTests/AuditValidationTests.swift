@@ -44,7 +44,7 @@ struct AuditValidationTests {
         }
         #expect(archive.observations.count == 12)
         #expect(archive.chironObservations.count == 6)
-        #expect(archive.vectors.count == 196)
+        #expect(archive.vectors.count == 288)
         #expect(archive.horizontal.count == 96)
         #expect(archive.elongations.count == 40)
         #expect(archive.saturnRings.count == 11)
@@ -151,8 +151,9 @@ struct AuditValidationTests {
             "actual ICRF AU vector: [\(position.x), \(position.y), \(position.z)]")
     }
 
-    /// Named sanity check: only finiteness is asserted, at every epoch including 2000-01-01 where
-    /// `boundedGalileanMoonState` also applies the sourced tolerance, so it is not accuracy evidence.
+    /// Named sanity check: only finiteness is asserted, at every epoch including those inside JD 2426545.0
+    /// to 2476545.0 where `boundedGalileanMoonState` also applies the sourced tolerance, so it is not
+    /// accuracy evidence.
     @Test(
         "JPL Galilean moon state sanity check (finite only)",
         arguments: IndependentReferenceArchive.shared.vectors.filter { $0.origin == "jupiter" })
