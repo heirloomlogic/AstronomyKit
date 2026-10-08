@@ -20,6 +20,14 @@ struct EngineContractTests {
         let kind: NativeEngineViolationKind
     }
 
+    struct EntryPointReference {
+        let name: String
+        let file: String
+        let line: Int
+
+        var location: String { "\(file):\(line)" }
+    }
+
     static let root = URL(fileURLWithPath: #filePath)
         .deletingLastPathComponent()  // Foundation
         .deletingLastPathComponent()  // Engine
@@ -67,15 +75,31 @@ struct EngineContractTests {
         return nativeEngineViolations(in: try String(contentsOf: file, encoding: .utf8))
     }
 
-    static func namedEntryPoints(in source: String) -> Set<String> {
+    static func entryPointReferences(in source: String, file: String) -> [EntryPointReference] {
         guard source.contains("Astronomy_") else { return [] }
-        return Set(source.matches(of: #/\bAstronomy_\w+/#).map { String($0.0) })
+        var references: [EntryPointReference] = []
+        for (offset, line) in source.split(separator: "\n", omittingEmptySubsequences: false).enumerated()
+        where line.contains("Astronomy_") {
+            references.append(
+                contentsOf: line.matches(of: #/\bAstronomy_\w+/#).map {
+                    EntryPointReference(name: String($0.0), file: file, line: offset + 1)
+                })
+        }
+        return references
     }
 
-    static func namedEntryPoints(in file: URL) throws -> Set<String> {
+    static func entryPointReferences(in file: URL) throws -> [EntryPointReference] {
         let data = try Data(contentsOf: file, options: .mappedIfSafe)
         guard data.range(of: Data("Astronomy_".utf8)) != nil else { return [] }
-        return namedEntryPoints(in: try String(contentsOf: file, encoding: .utf8))
+        let source = try String(contentsOf: file, encoding: .utf8)
+        return entryPointReferences(in: source, file: file.lastPathComponent)
+    }
+
+    static func ownershipDiagnostic(
+        for name: String, owners: [String], references: [EntryPointReference]
+    ) -> String {
+        let locations = references.filter { $0.name == name }.map(\.location).sorted().joined(separator: ", ")
+        return "\(name) at \(locations): \(owners)"
     }
 
     @Test("Engine sources neither import the C engine nor use Mutex")
@@ -103,13 +127,15 @@ struct EngineContractTests {
                 owners[String(name.1), default: []].append(String(owner))
             }
         }
-        var named = Set<String>()
+        var references: [EntryPointReference] = []
         for file in try Self.swiftFiles(under: Self.sources) {
-            named.formUnion(try Self.namedEntryPoints(in: file))
+            references.append(contentsOf: try Self.entryPointReferences(in: file))
         }
-        #expect(!named.isEmpty)
-        for name in named.sorted() {
-            #expect(owners[name]?.count == 1, "\(name): \(owners[name] ?? [])")
+        #expect(!references.isEmpty)
+        for name in Set(references.map(\.name)).sorted() {
+            let listedOwners = owners[name] ?? []
+            let diagnostic = Self.ownershipDiagnostic(for: name, owners: listedOwners, references: references)
+            #expect(listedOwners.count == 1, "\(diagnostic)")
         }
     }
 
@@ -131,6 +157,11 @@ struct EngineContractTests {
         let violations = try Self.nativeEngineViolations(in: fixture)
         #expect(violations.map(\.line) == [2, 3])
         #expect(violations.map(\.kind) == [.cImport, .mutex])
-        #expect(try Self.namedEntryPoints(in: fixture) == ["Astronomy_Commented", "Astronomy_Unlisted"])
+        let references = try Self.entryPointReferences(in: fixture)
+        #expect(references.map(\.name) == ["Astronomy_Commented", "Astronomy_Unlisted"])
+        #expect(references.map(\.line) == [1, 5])
+        let diagnostic = Self.ownershipDiagnostic(
+            for: "Astronomy_Unlisted", owners: [], references: references)
+        #expect(diagnostic == "Astronomy_Unlisted at \(fixture.lastPathComponent):5: []")
     }
 }
