@@ -127,10 +127,17 @@ struct EngineRotationAxisTests {
         guard angles.count % (degree + 1) == 0 else {
             throw PCKError(description: "BODY\(system)_NUT_PREC_ANGLES is not in groups of \(degree + 1)")
         }
-        let theta = stride(from: 0, to: angles.count, by: degree + 1).map { start in
-            (0...degree).reduce(0.0) { sum, power in sum + angles[start + power] * pow(t, Double(power)) }
-                * Engine.radiansPerDegree
+        // Spelled out step by step: Linux's type checker gives up on the
+        // nested map/reduce form.
+        func angle(at start: Int) -> Double {
+            var degrees = 0.0
+            for power in 0...degree {
+                let coefficient: Double = angles[start + power]
+                degrees += coefficient * pow(t, Double(power))
+            }
+            return degrees * Engine.radiansPerDegree
         }
+        let theta: [Double] = stride(from: 0, to: angles.count, by: degree + 1).map(angle(at:))
         guard terms.allSatisfy({ $0.count <= theta.count }) else {
             throw PCKError(description: "BODY\(id) has more terms than its system has angles")
         }
@@ -262,7 +269,8 @@ struct EngineRotationAxisTests {
             let difference = Self.vector(axis.north) - SIMD3(row[0], row[1], row[2])
             #expect(EngineGravityTests.length(difference) <= 3.0.squareRoot() * 2e-15, "\(reference.year)")
             let equatorial = try Engine.Equatorial(axis.north)
-            #expect(axis.rightAscension == equatorial.rightAscension && axis.declination == equatorial.declination)
+            #expect(axis.rightAscension == equatorial.rightAscension)
+            #expect(axis.declination == equatorial.declination)
         }
     }
 
