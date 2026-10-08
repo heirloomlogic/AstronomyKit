@@ -57,8 +57,13 @@ jobs:
           .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
           .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
           python3 Scripts/solar-numerics/numerics.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/derive_altitude.py --check
           .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-debug.json
           .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-release.json
+
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-debug.json
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
 
       - name: Verify work-avoidance paths
         run: |

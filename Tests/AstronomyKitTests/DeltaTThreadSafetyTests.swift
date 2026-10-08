@@ -53,6 +53,7 @@ struct DeltaTThreadSafetyTests {
         let observer = Observer(latitude: 40, longitude: 0)
         let date = try #require(ISO8601DateFormatter().date(from: "2049-12-21T12:00:00Z"))
         let reference = AstroTime(date, deltaTModel: .espenakMeeus)
+        let nativeBefore = try CelestialBody.sun.horizon(at: reference, from: observer, refraction: .none)
 
         // Pass the stand-in to the time directly. Installing it as the default
         // first would let a time built by another suite capture it, or another
@@ -68,10 +69,16 @@ struct DeltaTThreadSafetyTests {
         let horizon = try CelestialBody.sun.horizon(at: time, from: observer, refraction: .none)
         #expect(defaultChangingCalls.load(ordering: .relaxed) - before >= 2)
 
-        // The stand-in returns the Espenak-Meeus bits, so the result is the
-        // one a plain Espenak-Meeus time gives.
-        let expected = try CelestialBody.sun.horizon(at: reference, from: observer, refraction: .none)
+        // Both custom callbacks use the staged C path. Named-model Sun
+        // horizons use the native path and need not share its result bits.
+        let unchangedCallbackTime = AstroTime(
+            raw: Astronomy_TimeFromPair(reference.universalTime, reference.terrestrialTime, espenakMeeusStandIn)
+        )
+        #expect(unchangedCallbackTime.deltaTModel == nil)
+        let expected = try CelestialBody.sun.horizon(at: unchangedCallbackTime, from: observer, refraction: .none)
         #expect(horizon == expected)
+        let nativeAfter = try CelestialBody.sun.horizon(at: reference, from: observer, refraction: .none)
+        #expect(nativeAfter == nativeBefore)
     }
 
     @Test("Concurrent model swaps never corrupt time construction")
