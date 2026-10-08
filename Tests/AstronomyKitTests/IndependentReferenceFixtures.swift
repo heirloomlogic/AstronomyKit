@@ -8,6 +8,7 @@ struct IndependentReferenceArchive: Decodable {
     let provenance: [String: Provenance]
     let observations: [Observation]
     let vectors: [Vector]
+    let horizontal: [Horizontal]
     let geocentricStates: [GeocentricState]
     let seasons: [Season]
     let lunarPhases: [LunarPhase]
@@ -59,6 +60,17 @@ struct IndependentReferenceArchive: Decodable {
         let velocityAUPerDay: [Double]
         let relativeTolerance: Double?
         let sanityToleranceAU: Double?
+    }
+
+    /// A Horizons azimuth and elevation from the Asheville site, with or
+    /// without Horizons' refraction.
+    struct Horizontal: Decodable {
+        let body: String
+        let refracted: Bool
+        let utc: String
+        let azimuthDegrees: Double
+        let elevationDegrees: Double
+        let angularToleranceArcminutes: Double
     }
 
     /// A Horizons state of the Moon or the Earth-Moon barycenter from
