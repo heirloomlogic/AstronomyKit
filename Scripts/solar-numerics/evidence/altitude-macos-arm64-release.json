@@ -5,9 +5,9 @@
     "continuous arithmetic or libm bounds",
     "other compilers or architectures"
   ],
-  "gitHead": "0dfc91d03b196dbc2d6f2b13ad0f12407144ded6",
-  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite NativeAltitudeProbe started.\n\udbc1\udfc8  Test export() started.\n\udbc4\udc5b  Test export() passed after 0.096 seconds.\n\udbc4\udc5b  Suite NativeAltitudeProbe passed after 0.096 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.097 seconds.\n        6.77 real         2.46 user         1.30 sys\n           120995840  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n              128407  page reclaims\n                4323  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                2733  voluntary context switches\n               25494  involuntary context switches\n          5301079101  instructions retired\n          2267952118  cycles elapsed\n            27296464  peak memory footprint\n",
-  "nativeProcessSecondsIncludingRunner": 6.808109999998123,
+  "gitHead": "3fe570255b04b3fc35d579860c33e5cb11d00371",
+  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite NativeAltitudeProbe started.\n\udbc1\udfc8  Test export() started.\n\udbc4\udc5b  Test export() passed after 0.060 seconds.\n\udbc4\udc5b  Suite NativeAltitudeProbe passed after 0.060 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.060 seconds.\n        3.18 real         2.11 user         0.87 sys\n           121159680  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n              129437  page reclaims\n                4338  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 729  voluntary context switches\n                5452  involuntary context switches\n          5188725405  instructions retired\n          1844508423  cycles elapsed\n            26870456  peak memory footprint\n",
+  "nativeProcessSecondsIncludingRunner": 3.200664499992854,
   "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
   "precisionDecimalDigits": 80,
   "pythonVersion": "3.14.7",
@@ -131170,7 +131170,7 @@
   "sourceSHA256": {
     "Package.swift": "9015473035c478da9e7022855be84b8c88867f123661c05d6bf4a8eb6a3b1139",
     "Scripts/solar-numerics/measure.py": "dc34e30725e1c67e8d934e999694c4dafe371772a3e9fd04b2ed045c2d6a31b9",
-    "Scripts/solar-numerics/measure_altitude.py": "540398c53a21a3d21443535d041f41f18c524d8a4fee5b0b981ccfdd1bed7316",
+    "Scripts/solar-numerics/measure_altitude.py": "4f8c03c2e1ce320a916f33f897b6939e8eb6261c349279c061309043c16689ba",
     "Scripts/solar-numerics/numerics.py": "9a5db9f8d47ffff6f8e5c1c849a0db983d1335d583af5b6eb7a7caada9f5b8fb",
     "Scripts/solar-numerics/reference.py": "b2fbb3c74f687637bbbdc2a14ad1d32b5761a777ee0a126ddfbc606b5fa62f64",
     "Scripts/solar-numerics/solar_reference.py": "f01234d56bdeecfccd6e4073c13f7d025cdfcba742e6b97223cfb169c4e58e43",
