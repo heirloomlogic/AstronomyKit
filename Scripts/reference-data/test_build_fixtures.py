@@ -81,6 +81,27 @@ class RefreshSourcesTests(unittest.TestCase):
                     self.builder.verify_sources()
 
 
+    def test_refresh_writes_a_publisher_source_by_its_full_url_into_its_directory(self):
+        data = b"published constants"
+        with tempfile.TemporaryDirectory() as temporary:
+            source_dir = Path(temporary)
+            download = mock.Mock(return_value=data)
+            with (
+                mock.patch.object(self.builder, "SOURCE_DIR", source_dir),
+                mock.patch.object(self.builder, "UPSTREAM_SOURCES", {}),
+                mock.patch.object(
+                    self.builder,
+                    "PUBLISHER_SOURCES",
+                    {"naif/constants.tpc": ("https://example.org/constants.tpc", self.builder.sha256(data))},
+                ),
+                mock.patch.object(self.builder, "horizons_acquisitions", return_value=[]),
+                mock.patch.object(self.builder, "download", download),
+            ):
+                self.builder.refresh_sources()
+            download.assert_called_once_with("https://example.org/constants.tpc")
+            self.assertEqual(data, (source_dir / "naif" / "constants.tpc").read_bytes())
+
+
 class ApparentRangeFixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

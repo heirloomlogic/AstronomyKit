@@ -3,7 +3,7 @@
 //  AstronomyKit
 //
 //  Rotation axes against the IAU WGCCRE elements as NAIF's PCK publishes
-//  them, Earth's against the IAU 2006/2000B orientation, and the guards.
+//  them, Earth's pole against the IAU 2006 precession, and the guards.
 //
 
 import Foundation
@@ -15,7 +15,9 @@ import Testing
 struct EngineRotationAxisTests {
     typealias Axes = Engine.RotationAxis
 
-    static func time(tt: Double) -> Engine.Time { PlanetTestSupport.time(tt: tt) }
+    /// A time at `tt` with its UT from the Espenak-Meeus Delta T, so a body
+    /// that rotated with UT instead of TDB would fail.
+    static func time(tt: Double) -> Engine.Time { Engine.Time(tt: tt, deltaTModel: .espenakMeeus) }
 
     static func tdb(tt: Double) -> Double { tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay }
 
@@ -104,22 +106,37 @@ struct EngineRotationAxisTests {
             return values
         }
         let t = d / 36_525
-        let ra = try variable("BODY\(id)_POLE_RA")
-        let dec = try variable("BODY\(id)_POLE_DEC")
-        let pm = try variable("BODY\(id)_PM")
+        func polynomial(_ name: String) throws -> [Double] {
+            let values = try variable(name)
+            guard values.count == 3 else { throw PCKError(description: "\(name) has \(values.count) values, not 3") }
+            return values
+        }
+        let ra = try polynomial("BODY\(id)_POLE_RA")
+        let dec = try polynomial("BODY\(id)_POLE_DEC")
+        let pm = try polynomial("BODY\(id)_PM")
         var result = (
             ra: ra[0] + ra[1] * t + ra[2] * t * t, dec: dec[0] + dec[1] * t + dec[2] * t * t,
             spin: pm[0] + pm[1] * d + pm[2] * d * d
         )
-        guard let angles = pck["BODY\(id / 100)_NUT_PREC_ANGLES"], id > 100 else { return result }
-        let degree = Int(pck["BODY\(id / 100)_MAX_PHASE_DEGREE"]?.first ?? 1)
+        let terms = ["RA", "DEC", "PM"].map { pck["BODY\(id)_NUT_PREC_\($0)"] ?? [] }
+        guard terms.contains(where: { !$0.isEmpty }) else { return result }
+        // A satellite's angles are its system's: 301 reads BODY3_.
+        let system = id / 100
+        let angles = try variable("BODY\(system)_NUT_PREC_ANGLES")
+        let degree = Int(pck["BODY\(system)_MAX_PHASE_DEGREE"]?.first ?? 1)
+        guard angles.count % (degree + 1) == 0 else {
+            throw PCKError(description: "BODY\(system)_NUT_PREC_ANGLES is not in groups of \(degree + 1)")
+        }
         let theta = stride(from: 0, to: angles.count, by: degree + 1).map { start in
             (0...degree).reduce(0.0) { sum, power in sum + angles[start + power] * pow(t, Double(power)) }
                 * Engine.radiansPerDegree
         }
-        for (i, a) in (pck["BODY\(id)_NUT_PREC_RA"] ?? []).enumerated() { result.ra += a * sin(theta[i]) }
-        for (i, a) in (pck["BODY\(id)_NUT_PREC_DEC"] ?? []).enumerated() { result.dec += a * cos(theta[i]) }
-        for (i, a) in (pck["BODY\(id)_NUT_PREC_PM"] ?? []).enumerated() { result.spin += a * sin(theta[i]) }
+        guard terms.allSatisfy({ $0.count <= theta.count }) else {
+            throw PCKError(description: "BODY\(id) has more terms than its system has angles")
+        }
+        for (i, a) in terms[0].enumerated() { result.ra += a * sin(theta[i]) }
+        for (i, a) in terms[1].enumerated() { result.dec += a * cos(theta[i]) }
+        for (i, a) in terms[2].enumerated() { result.spin += a * sin(theta[i]) }
         return result
     }
 
@@ -129,7 +146,7 @@ struct EngineRotationAxisTests {
     static func allowance(_ value: Double) -> Double { 1e-14 * (abs(value) + 360) }
 
     /// 81 times a century apart across the accepted range, both ends
-    /// included, and 61 times 13.37 days apart from 2026-01-01 into 2028,
+    /// included, and 61 times 13.37 days apart from 2025-12-31 12:00 TT into 2028,
     /// which land at every time of day.
     static let times: [Double] = {
         let centuries = Array(stride(from: -Engine.acceptedTTDays, through: Engine.acceptedTTDays, by: 36_525))
@@ -143,9 +160,7 @@ struct EngineRotationAxisTests {
         #expect(Self.times.count == 81 + 61)
     }
 
-    @Test(
-        "Every body but Earth matches the WGCCRE elements of pck00011.tpc",
-        arguments: Axes.bodies.filter { $0 != .earth })
+    @Test("Every body matches the WGCCRE elements of pck00011.tpc", arguments: Axes.bodies)
     func publishedElements(body: CelestialBody) throws {
         let id = try #require(Self.naifIDs[body])
         for tt in Self.times {
@@ -162,9 +177,9 @@ struct EngineRotationAxisTests {
     }
 
     /// At the sample time where TDB − TT is largest, over 1 ms, Jupiter's W
-    /// moves by over 1e-5°; the elements evaluated at TT, or for another body,
-    /// fail.
-    @Test("The check fails for TT taken as TDB or for the wrong body")
+    /// moves by over 1e-5°; the elements evaluated at TT, Earth's evaluated at
+    /// UT, or another body's, fail.
+    @Test("The check fails for TT or UT taken as TDB, or for the wrong body")
     func negativeControls() throws {
         let offsets = Self.times.map { (tt: $0, seconds: abs(Engine.TDB.offsetSeconds(tt: $0))) }
         let largest = try #require(offsets.max { $0.seconds < $1.seconds })
@@ -175,93 +190,65 @@ struct EngineRotationAxisTests {
         #expect(abs(axis.spin - atTT.spin) > Self.allowance(atTT.spin))
         let saturn = try Self.published(699, tdb: Self.tdb(tt: late))
         #expect(abs(axis.declination - saturn.dec) > Self.allowance(saturn.dec))
+        // Delta T is over a minute in 2026, which turns Earth by over 0.25°.
+        let now = Self.time(tt: 9_496)
+        #expect(now.tt - now.ut > 60 / Engine.secondsPerDay)
+        let earth = try Axes.axis(of: .earth, at: now)
+        let atUT = try Self.published(399, tdb: now.ut)
+        #expect(abs(earth.spin - atUT.spin) > Self.allowance(atUT.spin))
     }
 
-    // MARK: - Earth
+    // MARK: - The prime meridian
+
+    /// The prime meridian, the body-fixed x axis, that a pole (α0, δ0) and W
+    /// place, as NAIF's PCK required reading builds the body-fixed frame:
+    /// turn by W about the pole, tilt the pole down from z by 90° − δ0, and
+    /// turn the node to right ascension 90° + α0.
+    static func primeMeridian(ra: Double, dec: Double, spin: Double) -> SIMD3<Double> {
+        let frame = Engine.Rotation<Engine.EQJ, Engine.EQJ>.identity
+            .turned(axis: 2, degrees: spin)
+            .turned(axis: 0, degrees: 90 - dec)
+            .turned(axis: 2, degrees: 90 + ra)
+        return frame.apply(to: SIMD3(1.0, 0, 0))
+    }
+
+    @Test("The returned pole and W place the prime meridian where the published elements do", arguments: Axes.bodies)
+    func primeMeridians(body: CelestialBody) throws {
+        let id = try #require(Self.naifIDs[body])
+        for tt in Self.times {
+            let axis = try Axes.axis(of: body, at: Self.time(tt: tt))
+            let expected = try Self.published(id, tdb: Self.tdb(tt: tt))
+            let returned = Self.primeMeridian(ra: axis.rightAscension * 15, dec: axis.declination, spin: axis.spin)
+            let published = Self.primeMeridian(ra: expected.ra, dec: expected.dec, spin: expected.spin)
+            let allowed =
+                3600 * (Self.allowance(expected.ra) + Self.allowance(expected.dec) + Self.allowance(expected.spin))
+            #expect(Self.arcseconds(returned, published) <= allowed, "tt \(tt)")
+            #expect(abs((returned * Self.vector(axis.north)).sum()) < 1e-15, "tt \(tt)")
+        }
+    }
 
     /// 1800 to 2200 every 20 years, both ends included.
     static let earthTimes = Array(stride(from: -73_050.0, through: 73_050, by: 7_305))
 
-    @Test("Earth's pole is the true pole of date, rotated to J2000")
-    func earthPole() throws {
-        #expect(Self.earthTimes.first == -73_050 && Self.earthTimes.last == 73_050)
-        for tt in Self.times + Self.earthTimes {
-            let time = Self.time(tt: tt)
-            let axis = try Axes.axis(of: .earth, at: time)
-            let pole = Engine.FrameRotation.eqdToEqj(time).apply(to: SIMD3(0.0, 0, 1))
-            #expect(Self.vector(axis.north) == pole, "tt \(tt)")
-            let equatorial = try Engine.Equatorial(axis.north)
-            #expect(axis.rightAscension == equatorial.rightAscension && axis.declination == equatorial.declination)
-        }
-    }
-
-    /// The 2009 report's Earth pole, `BODY399` in the PCK, is linear in T.
-    /// The mean pole of date (precession without nutation) is at
+    /// The 2009 report's Earth pole, which `axis(of:at:)` returns, is linear
+    /// in T. The mean pole of date (precession without nutation) is at
     /// θA = 2004.191903″T − 0.4294934″T² − 0.04182264″T³ from the J2000 pole
     /// (Capitaine et al. 2003, the IAU 2006 precession), and the report puts
     /// it at 0.557°T = 2005.2″T; its right ascension, −0.641°T against
     /// −ζA = −2306.083227″T − 0.2988499″T² − 0.01801828″T³, moves it sideways
     /// by θA times that difference, under 0.1″ over these dates, and the
     /// frame bias between EQJ and the ICRF is 0.02″.
-    @Test("Earth's mean pole stays within the precession the report's Earth pole leaves out, 1800 to 2200")
-    func earthReportPole() throws {
+    @Test("Earth's pole stays within the precession the report's linear pole leaves out, 1800 to 2200")
+    func earthPole() throws {
+        #expect(Self.earthTimes.first == -73_050 && Self.earthTimes.last == 73_050)
         for tt in Self.earthTimes {
             let t = abs(tt) / 36_525
-            let tdb = Self.tdb(tt: tt)
-            let pck = try Self.published(399, tdb: tdb)
-            let report = Engine.Vector<Engine.EQJ>(
-                Engine.Spherical(latitude: pck.dec, longitude: pck.ra, distance: 1), time: .invalid)
-            let (ra, dec) = Axes.reportEarthPole(tdb: tdb)
-            #expect(abs(ra - pck.ra) <= Self.allowance(pck.ra) && abs(dec - pck.dec) <= Self.allowance(pck.dec))
+            let axis = try Axes.axis(of: .earth, at: Self.time(tt: tt))
             let mean = Engine.Precession.rotation(tt: tt).inverse.apply(to: SIMD3(0.0, 0, 1))
             let bound = 1.0081 * t + 0.4295 * t * t + 0.0419 * t * t * t + 0.1 + 0.02
-            #expect(Self.arcseconds(mean, Self.vector(report)) <= bound, "tt \(tt)")
+            #expect(Self.arcseconds(mean, Self.vector(axis.north)) <= bound, "tt \(tt)")
         }
     }
-
-    /// Greenwich, where the true equator of date meets the meridian at
-    /// apparent sidereal time, against the meridian the report's Earth pole
-    /// and the engine's W place. The report's pole is off the true one by
-    /// nutation and the precession above, which tilts the meridian by at most
-    /// their angle. Measuring W from the report pole's node instead of along
-    /// the true equator adds at most θ²/2 for a tilt θ = 0.557°T, 9.75″T².
-    @Test("Earth's spin places Greenwich, 1800 to 2200")
-    func earthSpin() throws {
-        for tt in Self.earthTimes {
-            let time = Self.time(tt: tt)
-            let axis = try Axes.axis(of: .earth, at: time)
-            let tdb = Self.tdb(tt: tt)
-            let (ra, dec) = Axes.reportEarthPole(tdb: tdb)
-            let rad = Engine.radiansPerDegree
-            // The body-fixed x axis: rotate by W about the pole, tilt the pole
-            // down from z by 90° − δ0, then turn the node to 90° + α0.
-            let (cw, sw) = (cos(axis.spin * rad), sin(axis.spin * rad))
-            let (ct, st) = (cos((90 - dec) * rad), sin((90 - dec) * rad))
-            let (cn, sn) = (cos((90 + ra) * rad), sin((90 + ra) * rad))
-            let tilted = SIMD3(cw, sw * ct, sw * st)
-            let meridian = SIMD3(tilted.x * cn - tilted.y * sn, tilted.x * sn + tilted.y * cn, tilted.z)
-            let gast = Engine.EarthRotation.apparentSiderealTime(time) * 15 * rad
-            let greenwich = Engine.FrameRotation.eqdToEqj(time).apply(to: SIMD3(cos(gast), sin(gast), 0))
-            let report = Engine.Vector<Engine.EQJ>(
-                Engine.Spherical(latitude: dec, longitude: ra, distance: 1), time: .invalid)
-            let tilt = Self.arcseconds(Self.vector(axis.north), Self.vector(report))
-            let t = tt / 36_525
-            #expect(Self.arcseconds(meridian, greenwich) <= tilt + 9.75 * t * t + 0.1, "tt \(tt)")
-        }
-    }
-
-    @Test("Earth's spin is the Earth rotation angle less 90° and the report pole's right ascension")
-    func earthSpinDefinition() throws {
-        for tt in Self.times {
-            let time = Self.time(tt: tt)
-            let axis = try Axes.axis(of: .earth, at: time)
-            let expected = Engine.EarthRotation.angle(ut: time.ut) - 90 - Axes.reportEarthPole(tdb: Self.tdb(tt: tt)).ra
-            let difference = (axis.spin - expected).truncatingRemainder(dividingBy: 360)
-            let turns = min(abs(difference), 360 - abs(difference))
-            #expect(turns <= Self.allowance(axis.spin), "tt \(tt)")
-        }
-    }
-
     // MARK: - Guards
 
     @Test("Bodies the reports do not cover throw invalidBody, before anything else")

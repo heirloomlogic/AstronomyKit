@@ -15,8 +15,9 @@ extension Engine {
         var rightAscension: Double
         var declination: Double
         /// The prime meridian's angle W in degrees, measured along the body's
-        /// equator, eastward, from the equator's ascending node on the J2000
-        /// equator. It is not reduced to one turn.
+        /// equator, counterclockwise as seen from the north pole, from the
+        /// equator's ascending node on the J2000 equator, which is at right
+        /// ascension α0 + 90°. It is not reduced to one turn.
         var spin: Double
         /// The unit vector toward the north pole.
         var north: Vector<EQJ>
@@ -24,27 +25,22 @@ extension Engine {
 
     /// Rotation axes (`Astronomy_RotationAxis`).
     ///
-    /// Every body but Earth follows the IAU Working Group on Cartographic
-    /// Coordinates and Rotational Elements: its 2015 report (Archinal et al.
-    /// 2018, Celest. Mech. Dyn. Astr. 130:22), and its 2009 report (Archinal
-    /// et al. 2011, 109:101) for the Moon, which the 2015 report leaves
-    /// unchanged. The expressions take d in TDB days and T in Julian centuries
-    /// of TDB from J2000, as the reports define them.
+    /// Every body follows the IAU Working Group on Cartographic Coordinates
+    /// and Rotational Elements: its 2015 report (Archinal et al. 2018,
+    /// Celest. Mech. Dyn. Astr. 130:22), and its 2009 report (Archinal et al.
+    /// 2011, 109:101) for the Moon and Earth, which the 2015 report does not
+    /// cover. The expressions take d in TDB days and T in Julian centuries of
+    /// TDB from J2000, as the reports define them.
     ///
-    /// Earth's pole is the true celestial pole of date from the IAU 2006
-    /// precession and IAU 2000B nutation (``Engine/FrameRotation``). Near
-    /// J2000 that pole is within arcseconds of the J2000 pole, so its node on
-    /// the J2000 equator, where W starts, turns through every right
-    /// ascension. Earth's W is measured instead from the node of the 2009
-    /// report's Earth pole, α0 = −0.641°T and δ0 = 90° − 0.557°T, at right
-    /// ascension 90° + α0. The Earth rotation angle (IAU 2000 Resolution
-    /// B1.8) runs from an origin that stays at right ascension 0, so
-    /// W = ERA − 90° − α0.
+    /// Earth's model is the reports' low-accuracy one: a pole linear in T, so
+    /// without nutation, and a uniform W in TDB, so without the variations of
+    /// UT1. NAIF, which publishes it in `pck00011.tpc`, puts its prime
+    /// meridian at least 150″ off, with a minimum in 1999.
     enum RotationAxis {}
 }
 
 extension Engine.RotationAxis {
-    /// The bodies the reports and the Earth model cover.
+    /// The bodies the reports cover.
     static let bodies: [CelestialBody] = [
         .sun, .mercury, .venus, .earth, .moon, .mars, .jupiter, .saturn, .uranus, .neptune, .pluto,
     ]
@@ -58,30 +54,17 @@ extension Engine.RotationAxis {
     static func axis(of body: CelestialBody, at time: Engine.Time) throws -> Engine.Axis {
         guard bodies.contains(body) else { throw AstronomyError.invalidBody }
         let tdb = time.tt + Engine.TDB.offsetSeconds(tt: time.tt) / Engine.secondsPerDay
-        var axis: Engine.Axis
-        if body == .earth {
-            axis = try earth(at: time, tdb: tdb)
-        } else {
-            let (ra, dec, spin) = try elements(of: body, tdb: tdb)
-            let north = Engine.Vector<Engine.EQJ>(
-                Engine.Spherical(latitude: dec, longitude: ra, distance: 1), time: time)
-            axis = Engine.Axis(rightAscension: ra / 15, declination: dec, spin: spin, north: north)
-        }
-        guard axis.rightAscension.isFinite, axis.declination.isFinite, axis.spin.isFinite else {
-            throw AstronomyError.badTime
-        }
-        axis.north = try Engine.Positions.checked(axis.north)
-        return axis
+        let (ra, dec, spin) = try elements(of: body, tdb: tdb)
+        guard ra.isFinite, dec.isFinite, spin.isFinite else { throw AstronomyError.badTime }
+        let north = Engine.Vector<Engine.EQJ>(Engine.Spherical(latitude: dec, longitude: ra, distance: 1), time: time)
+        return Engine.Axis(rightAscension: ra / 15, declination: dec, spin: spin, north: north)
     }
 
     /// The pole's right ascension α0 and declination δ0 and the prime
     /// meridian's W, all in degrees, at `tdb` days of TDB from J2000.
     ///
-    /// Earth is not among these bodies: ``axis(of:at:)`` takes its pole from
-    /// the IAU 2006/2000B orientation instead.
-    ///
-    /// - Throws: `AstronomyError.invalidBody` for Earth and for a body the
-    ///   reports do not cover.
+    /// - Throws: `AstronomyError.invalidBody` for a body the reports do not
+    ///   cover.
     static func elements(of body: CelestialBody, tdb d: Double) throws -> (ra: Double, dec: Double, spin: Double) {
         let t = d / 36_525
         func sine(_ degrees: Double) -> Double { sin(degrees * Engine.radiansPerDegree) }
@@ -100,6 +83,9 @@ extension Engine.RotationAxis {
             return (281.0103 - 0.0328 * t, 61.4155 - 0.0049 * t, w)
         case .venus:
             return (272.76, 67.16, 160.20 - 1.4813688 * d)
+        case .earth:
+            // The 2009 report's values, which pck00011.tpc carries as BODY399.
+            return (-0.641 * t, 90 - 0.557 * t, 190.147 + 360.9856235 * d)
         case .moon:
             // The 2009 report's Table 2.
             let e1 = 125.045 - 0.0529921 * d
@@ -184,24 +170,5 @@ extension Engine.RotationAxis {
         default:
             throw AstronomyError.invalidBody
         }
-    }
-
-    /// The 2009 report's Earth pole: right ascension and declination in
-    /// degrees at `tdb` days of TDB from J2000. W is measured from its node.
-    static func reportEarthPole(tdb: Double) -> (ra: Double, dec: Double) {
-        let t = tdb / 36_525
-        return (-0.641 * t, 90 - 0.557 * t)
-    }
-
-    /// Earth's true pole of date, rotated to J2000, and its spin from the
-    /// Earth rotation angle at `time.ut`, not reduced to one turn.
-    private static func earth(at time: Engine.Time, tdb: Double) throws -> Engine.Axis {
-        let z = Engine.Vector<Engine.EQD>(x: 0, y: 0, z: 1, time: time)
-        let pole = Engine.FrameRotation.eqdToEqj(time).apply(to: z)
-        let equatorial = try Engine.Equatorial(pole)
-        let rotationAngle = 360 * (0.779_057_273_264_0 + 1.002_737_811_911_354_48 * time.ut)
-        let spin = rotationAngle - 90 - reportEarthPole(tdb: tdb).ra
-        return Engine.Axis(
-            rightAscension: equatorial.rightAscension, declination: equatorial.declination, spin: spin, north: pole)
     }
 }
