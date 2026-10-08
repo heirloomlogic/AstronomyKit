@@ -61,10 +61,11 @@ struct EnginePlutoEphemerisTests {
     }
 
     /// The tables must reach past both blends of ``Engine/MoonEphemeris``,
-    /// read at TDB, which is within 1.7 ms (2e-8 day) of TT.
+    /// read at TDB. Across these 1899–2131 boundaries, TDB is within 1.85 ms
+    /// (2.2e-8 day) of TT.
     @Test("Every table covers both blends, with TDB − TT at its largest", arguments: tables)
     func coverage(_ entry: Table) {
-        let margin = 2e-8
+        let margin = 2.2e-8
         let moon = Engine.MoonEphemeris.self
         #expect(entry.table.start < moon.fullWeightStart - moon.blendDays - margin)
         #expect(Self.end(entry.table) > moon.fullWeightEnd + moon.blendDays + margin)

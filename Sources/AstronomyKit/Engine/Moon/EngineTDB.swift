@@ -14,7 +14,8 @@ extension Engine {
     /// adjustments and the topocentric terms of Moyer (1981) and Murray (1983).
     ///
     /// The JPL ephemerides take TDB as their time argument; the engine's
-    /// times are TT. The two never differ by more than about 1.7 ms.
+    /// times are TT. From 1900 through 2100 the two differ by less than
+    /// 1.7 ms; over the accepted range, by less than 1.85 ms.
     enum TDB {}
 }
 

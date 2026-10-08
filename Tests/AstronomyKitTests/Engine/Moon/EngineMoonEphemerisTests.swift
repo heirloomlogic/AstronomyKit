@@ -35,8 +35,8 @@ struct EngineMoonEphemerisTests {
 
     @Test("The records cover the blends, with TDB − TT at its largest")
     func coverage() {
-        // |TDB − TT| stays below 1.7 ms, 2e-8 day.
-        let margin = 2e-8
+        // Across these 1899–2131 boundaries, |TDB − TT| stays below 1.85 ms, 2.2e-8 day.
+        let margin = 2.2e-8
         #expect(Ephemeris.start < Ephemeris.fullWeightStart - Ephemeris.blendDays - margin)
         #expect(Self.end > Ephemeris.fullWeightEnd + Ephemeris.blendDays + margin)
         #expect(Ephemeris.state(tt: (Ephemeris.fullWeightStart - Ephemeris.blendDays).nextUp) != nil)
