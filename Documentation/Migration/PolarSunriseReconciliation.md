@@ -35,7 +35,7 @@ The native current-definition roots at 10, 0.1, and 0.01-second tolerances are +
 
 The newest #124 comment reports a bounded diagnostic at `861b142bf40d14a8735f50d6f8f0919ded81a39b` and refers to PR [#211](https://github.com/heirloomlogic/AstronomyKit/pull/211). That commit changes only `Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift` and `Tests/AstronomyKitTests/Engine/Stars/EngineConstellationTests.swift`. The merged PR contains constellation source, tests, fixtures, and provenance files, but no polar sunrise test, report, or raw diagnostic. The comment's measurements were transient evidence from the #92 investigation.
 
-The current native result is about 0.022 seconds earlier than the comment's `861b142b` result after later native orientation work on `main`. The public C result is unchanged. This report binds the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above.
+The current native result is about 0.022 seconds earlier than the transient value reported for `861b142b`. No diagnostic from that revision was retained, and the intervening commits do not change the native Sun position, orientation, horizontal, time, search, rise/set, or vendored C implementations used here. The available evidence therefore does not identify the cause of the difference. The public C result is unchanged. This report binds the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above.
 
 ## No correction is justified yet
 
