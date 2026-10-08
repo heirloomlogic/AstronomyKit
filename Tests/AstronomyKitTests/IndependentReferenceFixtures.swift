@@ -7,6 +7,11 @@ struct IndependentReferenceArchive: Decodable {
     let schemaVersion: Int
     let provenance: [String: Provenance]
     let fixedStars: [FixedStar]
+    let constellations: [ConstellationName]
+    let constellationBoundaries: [ConstellationBoundary]
+    let constellationBoundaryTies: [ConstellationBoundaryTie]
+    let constellationNearBoundaryStars: [ConstellationReference]
+    let constellationPublishedExamples: [ConstellationReference]
     let observations: [Observation]
     let chironObservations: [Observation]
     let vectors: [Vector]
@@ -61,6 +66,35 @@ struct IndependentReferenceArchive: Decodable {
         let unrefractedAltitudeDegrees: Double
         let sampledMaximumResidualArcseconds: Double
         let sampledToleranceArcseconds: Double
+    }
+
+    struct ConstellationName: Decodable {
+        let symbol: String
+        let name: String
+    }
+
+    struct ConstellationBoundary: Decodable {
+        let rightAscensionLowerHours: Double
+        let rightAscensionUpperHours: Double
+        let declinationLowerDegrees: Double
+        let symbol: String
+    }
+
+    struct ConstellationBoundaryTie: Decodable {
+        let boundaryIndex: Int
+        let kind: String
+        let rightAscensionHours: Double
+        let declinationDegrees: Double
+        let symbol: String
+    }
+
+    struct ConstellationReference: Decodable {
+        let boundaryIndex: Int?
+        let rightAscensionHoursJ2000: Double
+        let declinationDegreesJ2000: Double
+        let rightAscensionHoursB1875: Double
+        let declinationDegreesB1875: Double
+        let symbol: String
     }
 
     struct Observation: Decodable {

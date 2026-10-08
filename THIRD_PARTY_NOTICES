@@ -40,6 +40,14 @@ SOFTWARE.
 
 -------------------------------------------------------------------------------
 
+IAU constellation names and CDS/VizieR catalog VI/42
+
+AstronomyKit includes an archived copy of the International Astronomical Union's table of 88 constellation names and abbreviations and three files from CDS/VizieR catalog VI/42: Nancy Grace Roman's catalog ReadMe, its 357-row B1875 boundary table, and the accompanying C program. Roman's 1987 catalog rearranges the official constellation boundaries published by Eugène Delporte in 1930; the catalog ReadMe records a correction by Roman on 1999-12-30. The generated Swift table and test fixtures are derived from those archived sources. Please cite Roman, N. G. 1987, Publications of the Astronomical Society of the Pacific 99, 695-699; Delporte, E. 1930, Délimitation Scientifique des Constellations; the IAU; and the CDS/VizieR service. Inclusion does not imply endorsement by the IAU, CDS, VizieR, the authors, or their institutions.
+
+Sources: https://iauarchive.eso.org/public/themes/constellations/ and https://cdsarc.cds.unistra.fr/viz-bin/ReadMe/VI/42
+
+-------------------------------------------------------------------------------
+
 IAU Standards of Fundamental Astronomy (SOFA)
 
 AstronomyKit includes the unchanged official SOFA 2023-10-11 C source archive and astrometry example under Scripts/reference-data/sources/sofa. Scripts/reference-data/sofa-fixed-star-reference.c is AstronomyKit-authored integration code that calls the official routines with FixedStar's no-proper-motion contract. The archived fixed-star fixture records output from that recipe. AstronomyKit and its fixture do not constitute software provided by or endorsed by SOFA.

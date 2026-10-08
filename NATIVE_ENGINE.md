@@ -868,15 +868,21 @@ Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
 |---|---|
 | `RotationAxisTests` | Named sanity checks of the public API on the C engine until #96. `EngineRotationAxisTests` checks the engine against the published elements and orientation. |
 
-## Fixed stars
+## Fixed stars and constellations
 
-In the tree: `Engine/Stars/EngineStar.swift`. The constellation lookup remains planned for the second #91 PR.
+In the tree: `Engine/Stars/EngineStar.swift`, `EngineConstellations.swift` and generated `ConstellationData.swift`.
 
 `Engine.Star` is an immutable, `Sendable`, hashable value containing a catalog right ascension in `[0, 24)` hours, declination in `[-90, 90]` degrees and a distance of at least one light-year. It validates on use, as `Astronomy_DefineStar` does, and converts light-years with the C contract's 63,241.07708807546 AU per light-year. A definition is passed directly into each calculation; no shared star slots or mutable definitions exist in the native path.
 
 The heliocentric vector is fixed on J2000 axes and is treated as already corrected for light-travel time, as the C engine treats user-defined stars. A geocentric vector subtracts Earth's native heliocentric position. With annual aberration it adds Earth's heliocentric velocity multiplied by the star-to-Earth distance divided by the published speed of light; this retains the C engine's linear approximation. Equatorial results subtract the observer's J2000 vector and optionally rotate to the true equator and equinox of date. Ecliptic results use the true ecliptic and equinox of date, and horizon results use apparent topocentric equatorial coordinates of date before the requested refraction.
 
 The independent fixture archives the official IAU SOFA 2023-10-11 astrometry example and a recipe that sets its proper motion to zero because the public fixed-star value has no proper-motion terms. One row checks every native star calculation within 0.5 arcsecond, twice the sampled 0.246 arcsecond maximum rounded up. That limit is a sampled regression margin across the engine's IAU 1976/2000B orientation and linear aberration choices, not a published accuracy. The former Sirius row in `ReproducibilityTests`, which pinned C-engine bit patterns, is retired in favor of this published-source comparison. The public `FixedStar` remains on the C engine until #96.
+
+`Engine.Constellations` identifies a mean-J2000 right ascension and declination with Nancy Grace Roman's CDS/VizieR VI/42 rearrangement of Delporte's IAU boundaries. Its immutable J2000-to-B1875 rotation is the Herget mean-place precession in the catalog's published C program, with the program's constants and epoch pair 2000.0 to 1875.0. This deliberately replaces the C path's true-equator-of-date rotation, whose first initialization reads Delta T and nutation for its B1875 instant. A mean-place boundary conversion has no UT, Delta T, or nutation input, so native results do not depend on the process model or first call. `Engine.B1875` names this mean equator and equinox frame.
+
+The generated table contains all 357 VI/42 southern boundary segments and maps their abbreviations to all 88 official IAU names. Lookup follows the published inequalities in source order: declination is on or north of the row's lower boundary, right ascension includes the lower end and excludes the upper end. Right ascension wraps to `[0, 24)`; a declination outside `[-90, 90]` or a coordinate that is not finite throws `invalidParameter`. The public `Constellation` API remains on the C engine until #96.
+
+`EngineConstellationTests` checks every table row at its lower-right-ascension, upper-right-ascension and lower-declination ties, so 1,071 exact ties test the published table semantics without an angular tolerance. It also checks all eight examples printed in the VI/42 ReadMe and 357 generated J2000 points, one near each segment. The generator compiles and runs the archived publisher program on those eight examples, and independently translates its Herget formula for the J2000 samples. The `< 1e-9`-degree/hour coordinate check is cross-language recipe agreement at those generated points, not a certified precession accuracy or continuous-sky claim. `EngineStarConcurrencyTests` repeats every native star calculation and the constellation lookup for 24 distinct immutable stars under two explicit model-bearing times while equivalent process-default function pointers are changed concurrently. A separate direct test proves that two distinct Delta T outputs change the old true-of-date B1875 matrix while the published Herget matrix is fixed.
 
 ## Caches and reset
 

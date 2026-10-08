@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import hashlib
+import html
 import json
 import math
 import os
@@ -69,6 +70,10 @@ UPSTREAM_SOURCES = {
 # transcription of the IAU WGCCRE 2015 rotation elements (and the 2009 report's Earth and Moon), directly; no fixture
 # is built from it.
 PUBLISHER_SOURCES = {
+    "constellations/iau-constellation-names.html": ("https://iauarchive.eso.org/public/themes/constellations/", "bdd1ddc5215aece2c8d54df5e2682a9fc032b176ced8262776e975896d4a9c88"),
+    "constellations/roman1987-boundaries.dat": ("https://cdsarc.cds.unistra.fr/ftp/cats/VI/42/data.dat", "daf9e2b39ec57446d862a445276ae2ea50490ee455540972906098f5f9187957"),
+    "constellations/roman1987-program.c": ("https://cdsarc.cds.unistra.fr/ftp/cats/VI/42/program.c", "d73f51bc51b102bf319d699bb764f0879e356205a31d22896bc2361e3162de76"),
+    "constellations/roman1987-readme.txt": ("https://cdsarc.cds.unistra.fr/ftp/cats/VI/42/ReadMe", "b6a3e9ec21f902df084406e97d71754671c5787bee1cf49c109b3bc8cfc50ab9"),
     "naif/pck00011.tpc": ("https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc", "3dff7b1dbeceaa01f25467767d3fa25816051c85d162d1edf04acb310ee28bb1"),
     "sofa/sofa_ast_example.c": ("https://www.iausofa.org/s/sofa_ast_example.c", "9903dca63bd87e573db6a57c04945bb712f3c958a23c245db0c03a37bf31d4e9"),
     "sofa/sofa_c-20231011.tar.gz": ("https://www.iausofa.org/s/sofa_c-20231011tar.gz", "d9c10833cae8b4d9361a0ffda31ec361fd1262362025bec4d4e51a880150ace2"),
@@ -85,6 +90,8 @@ SOFA_RECIPE_SOURCES = (
     "rxp.c", "ry.c", "rz.c", "s06.c", "s2c.c", "sp00.c", "sxp.c", "taitt.c", "taiut1.c", "tf2a.c",
     "tr.c", "trxp.c", "utctai.c", "utcut1.c", "xys06a.c", "zp.c",
 )
+
+GENERATED_CONSTELLATION_PATH = ROOT / "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift"
 
 HORIZONS_OBSERVER_QUERIES = {
     "moon-observer": ("301", [2415020.5, 2451544.5, 2488069.5]),
@@ -667,6 +674,217 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
     return {"observations": observations, "chironObservations": chiron_observations, "vectors": vectors, "horizontal": horizontal, "elongations": elongations, "saturnRings": saturn_rings}
 
 
+def roman_precess(right_ascension: float, declination: float, epoch_from: float, epoch_to: float) -> tuple[float, float]:
+    """The Herget precession in the published VI/42 program.c, with angles returned in hours and degrees."""
+    radians_per_degree = 0.17453292519943e-01
+    radians_per_hour = 0.2617993878
+    ra = radians_per_hour * right_ascension
+    dec = radians_per_degree * declination
+    projected = math.cos(dec)
+    vector = (projected * math.cos(ra), projected * math.sin(ra), math.sin(dec))
+    centuries = 0.001 * (epoch_to - epoch_from)
+    start = 0.001 * (epoch_from - 1900)
+    arcseconds = radians_per_degree / 3600
+    a = arcseconds * centuries * (23042.53 + start * (139.75 + 0.06 * start) + centuries * (30.23 - 0.27 * start + 18 * centuries))
+    b = arcseconds * centuries * centuries * (79.27 + 0.66 * start + 0.32 * centuries) + a
+    c = arcseconds * centuries * (20046.85 - start * (85.33 + 0.37 * start) + centuries * (-42.67 - 0.37 * start - 41.8 * centuries))
+    sin_a, sin_b, sin_c = math.sin(a), math.sin(b), math.sin(c)
+    cos_a, cos_b, cos_c = math.cos(a), math.cos(b), math.cos(c)
+    rotation = (
+        (cos_a * cos_b * cos_c - sin_a * sin_b, -cos_a * sin_b - sin_a * cos_b * cos_c, -cos_b * sin_c),
+        (sin_a * cos_b + cos_a * sin_b * cos_c, cos_a * cos_b - sin_a * sin_b * cos_c, -sin_b * sin_c),
+        (cos_a * sin_c, -sin_a * sin_c, cos_c),
+    )
+    moved = tuple(sum(rotation[row][column] * vector[column] for column in range(3)) for row in range(3))
+    result_ra = math.atan2(moved[1], moved[0])
+    if result_ra < 0:
+        result_ra += 2 * math.pi
+    return result_ra / radians_per_hour, math.asin(moved[2]) / radians_per_degree
+
+
+def constellation_at(right_ascension: float, declination: float, boundaries: list[dict[str, object]]) -> str:
+    right_ascension %= 24
+    for boundary in boundaries:
+        if (
+            float(boundary["declinationLowerDegrees"]) <= declination
+            and float(boundary["rightAscensionLowerHours"]) <= right_ascension
+            and right_ascension < float(boundary["rightAscensionUpperHours"])
+        ):
+            return str(boundary["symbol"])
+    raise RuntimeError(f"published constellation table has no result for {right_ascension}h {declination}°")
+
+
+def verify_roman_constellation_program(examples: list[tuple[str, str, str]]) -> None:
+    """Compile and run VI/42 program.c against the ReadMe's eight 1950 examples."""
+    compiler = shlex.split(os.environ.get("CC", "cc"))
+    if not compiler:
+        raise RuntimeError("CDS VI/42 program compiler is empty")
+    with tempfile.TemporaryDirectory() as temporary:
+        directory = Path(temporary)
+        (directory / "data.dat").write_bytes(
+            (SOURCE_DIR / "constellations/roman1987-boundaries.dat").read_bytes()
+        )
+        executable = directory / "roman1987-program"
+        compilation = subprocess.run(
+            compiler
+            + [
+                "-std=gnu89",
+                "-include",
+                "stdlib.h",
+                "-include",
+                "unistd.h",
+                str(SOURCE_DIR / "constellations/roman1987-program.c"),
+                "-lm",
+                "-o",
+                str(executable),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        if compilation.returncode != 0:
+            raise RuntimeError(f"CDS VI/42 program compilation failed: {compilation.stderr.strip()}")
+        input_text = "1950\n" + "".join(f"{right_ascension}{float(declination):+.4f}\n" for right_ascension, declination, _ in examples)
+        execution = subprocess.run(
+            [str(executable)], cwd=directory, input=input_text, capture_output=True, text=True
+        )
+        if execution.returncode != 0:
+            raise RuntimeError(f"CDS VI/42 program execution failed: {execution.stderr.strip()}")
+    actual = re.findall(r"is in Constellation:\s*([A-Za-z]{3})", execution.stdout)
+    expected = [symbol for _, _, symbol in examples]
+    if actual != expected:
+        raise RuntimeError(f"CDS VI/42 program output mismatch: expected {expected}, got {actual}")
+
+
+def parse_constellations() -> dict[str, list[dict[str, object]]]:
+    iau_names = source_text("constellations/iau-constellation-names.html")
+    names = [
+        {"symbol": symbol, "name": html.unescape(re.sub(r"<[^>]+>", "", name)).strip()}
+        for name, symbol in re.findall(
+            r'<tr>\s*<td[^>]*>((?:(?!</td>).)*?)<a name="[a-z]+"></a>.*?</td>\s*<td[^>]*>([A-Za-z]{3})</td>',
+            iau_names,
+            re.DOTALL,
+        )
+    ]
+    boundaries = []
+    for line in source_text("constellations/roman1987-boundaries.dat").splitlines():
+        lower, upper, declination, symbol = line.split()
+        boundaries.append(
+            {
+                "rightAscensionLowerHours": float(lower),
+                "rightAscensionUpperHours": float(upper),
+                "declinationLowerDegrees": float(declination),
+                "symbol": symbol,
+            }
+        )
+    if len(names) != 88 or len({item["symbol"] for item in names}) != 88:
+        raise RuntimeError("IAU constellation name table must contain 88 unique symbols")
+    if len(boundaries) != 357:
+        raise RuntimeError("CDS VI/42 boundary table must contain 357 rows")
+    symbols = {item["symbol"] for item in names}
+    if {item["symbol"] for item in boundaries} != symbols:
+        raise RuntimeError("IAU constellation names and CDS boundary symbols differ")
+    boundary_ties = []
+    near_boundary_stars = []
+    for index, boundary in enumerate(boundaries):
+        lower = float(boundary["rightAscensionLowerHours"])
+        upper = float(boundary["rightAscensionUpperHours"])
+        declination = float(boundary["declinationLowerDegrees"])
+        for kind, right_ascension in (
+            ("rightAscensionLower", lower),
+            ("rightAscensionUpper", upper),
+            ("declinationLower", (lower + upper) / 2),
+        ):
+            boundary_ties.append(
+                {
+                    "boundaryIndex": index,
+                    "kind": kind,
+                    "rightAscensionHours": right_ascension % 24,
+                    "declinationDegrees": declination,
+                    "symbol": constellation_at(right_ascension, declination, boundaries),
+                }
+            )
+        right_ascension_1875 = (lower + upper) / 2
+        declination_1875 = min(90.0, declination + 0.01)
+        right_ascension_2000, declination_2000 = roman_precess(
+            right_ascension_1875, declination_1875, 1875, 2000
+        )
+        expected_right_ascension_1875, expected_declination_1875 = roman_precess(
+            right_ascension_2000, declination_2000, 2000, 1875
+        )
+        near_boundary_stars.append(
+            {
+                "boundaryIndex": index,
+                "rightAscensionHoursJ2000": right_ascension_2000,
+                "declinationDegreesJ2000": declination_2000,
+                "rightAscensionHoursB1875": expected_right_ascension_1875,
+                "declinationDegreesB1875": expected_declination_1875,
+                "symbol": constellation_at(right_ascension_1875, declination_1875, boundaries),
+            }
+        )
+    example_pattern = re.compile(
+        r"RA =\s*([0-9.]+) DEC =\s*([+-]?[0-9.]+)\s+IS IN CONSTELLATION ([A-Za-z]{3})",
+        re.IGNORECASE,
+    )
+    published_examples = []
+    example_rows = example_pattern.findall(source_text("constellations/roman1987-readme.txt"))
+    verify_roman_constellation_program(example_rows)
+    for right_ascension_1950, declination_1950, symbol in example_rows:
+        right_ascension_1950 = float(right_ascension_1950)
+        declination_1950 = float(declination_1950)
+        right_ascension_2000, declination_2000 = roman_precess(
+            right_ascension_1950, declination_1950, 1950, 2000
+        )
+        right_ascension_1875, declination_1875 = roman_precess(
+            right_ascension_2000, declination_2000, 2000, 1875
+        )
+        published_examples.append(
+            {
+                "rightAscensionHoursJ2000": right_ascension_2000,
+                "declinationDegreesJ2000": declination_2000,
+                "rightAscensionHoursB1875": right_ascension_1875,
+                "declinationDegreesB1875": declination_1875,
+                "symbol": symbol,
+            }
+        )
+    if len(published_examples) != 8:
+        raise RuntimeError("CDS VI/42 ReadMe must contain eight published examples")
+    return {
+        "names": names,
+        "boundaries": boundaries,
+        "boundaryTies": boundary_ties,
+        "nearBoundaryStars": near_boundary_stars,
+        "publishedExamples": published_examples,
+    }
+
+
+def generate_constellation_swift(fixture: dict[str, list[dict[str, object]]]) -> str:
+    names = fixture["names"]
+    indices = {item["symbol"]: index for index, item in enumerate(names)}
+    lines = [
+        "// Generated by Scripts/reference-data/build-fixtures.py from CDS/VizieR VI/42 and the IAU constellation name table.",
+        "// Do not edit this file directly.",
+        "",
+        "extension Engine.Constellations {",
+        "    static let infos: [Info] = [",
+    ]
+    lines.extend(
+        f'        Info(symbol: {json.dumps(item["symbol"], ensure_ascii=False)}, name: {json.dumps(item["name"], ensure_ascii=False)}),'
+        for item in names
+    )
+    lines.extend(["    ]", "", "    static let boundaries: [Boundary] = ["])
+    lines.extend(
+        "        Boundary(infoIndex: {index}, rightAscensionLower: {lower}, rightAscensionUpper: {upper}, declinationLower: {declination}),".format(
+            index=indices[item["symbol"]],
+            lower=item["rightAscensionLowerHours"],
+            upper=item["rightAscensionUpperHours"],
+            declination=item["declinationLowerDegrees"],
+        )
+        for item in fixture["boundaries"]
+    )
+    lines.extend(["    ]", "}", ""])
+    return "\n".join(lines)
+
+
 def sofa_fixed_star_recipe_output() -> dict[str, float]:
     archive_path = SOURCE_DIR / "sofa/sofa_c-20231011.tar.gz"
     if sha256(archive_path.read_bytes()) != SOFA_RELEASE_SHA256:
@@ -758,11 +976,18 @@ def parse_sofa_fixed_stars() -> list[dict[str, object]]:
     return [reference]
 
 
-def build_archive() -> dict[str, object]:
+def build_archive(constellations: dict[str, list[dict[str, object]]] | None = None) -> dict[str, object]:
+    if constellations is None:
+        constellations = parse_constellations()
     archive: dict[str, object] = {
-        "schemaVersion": 4,
+        "schemaVersion": 5,
         "provenance": source_catalog(),
         "fixedStars": parse_sofa_fixed_stars(),
+        "constellations": constellations["names"],
+        "constellationBoundaries": constellations["boundaries"],
+        "constellationBoundaryTies": constellations["boundaryTies"],
+        "constellationNearBoundaryStars": constellations["nearBoundaryStars"],
+        "constellationPublishedExamples": constellations["publishedExamples"],
     }
     archive.update(parse_upstream_events())
     archive.update(parse_eclipses())
@@ -778,6 +1003,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
     jpl_license = "NASA/JPL factual output; acknowledge NASA and do not imply endorsement; the copied files also retain the archived Astronomy Engine MIT license"
     nasa_license = "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license"
     return {
+        "cdsConstellations": {"version": "VI/42, corrected 1999-12-30; archived IAU name table", "frame": "mean equator and equinox of B1875", "origin": "celestial sphere", "units": "sidereal hours and degrees", "timeScale": "not applicable; positions are precessed between named equinoxes", "aberration": "none", "refraction": "none", "domain": "all 88 IAU constellations, all 357 VI/42 southern boundary segments and their exact right-ascension and declination ties", "license": "Published catalog data and program by Nancy Grace Roman through CDS/VizieR, with official names and abbreviations from the IAU; source and service attribution retained", "url": "https://cdsarc.cds.unistra.fr/viz-bin/ReadMe/VI/42", "recipe": "Pinned VI/42 ReadMe, boundary table and C program plus the archived IAU constellation name table. build-fixtures.py compiles and runs the published program on all eight ReadMe examples, parses every row, reproduces the published Herget precession for J2000 samples, and generates the native Swift table."},
         "sofaFixedStar": {"version": "2023-10-11", "frame": "ICRS/J2000, IAU 2006/2000A true equator and ecliptic of date, and topocentric horizon", "origin": "Sun center for the catalog definition, Earth center for geocentric coordinates, and the published geodetic site for topocentric coordinates", "units": "sidereal hours, degrees, metres, Julian dates, parallax-derived light-years, and arcseconds", "timeScale": "UTC, TT, and UT1 with UT1-UTC set to zero for the archived row", "aberration": "SOFA iauAtci13 relativistic annual aberration and light deflection; AstronomyKit retains its linear annual-aberration approximation", "refraction": "none", "domain": "one star and instant from the official SOFA astrometry example; proper motion is archived but set to zero by the recipe because FixedStar stores no proper-motion terms", "license": "IAU SOFA software and data terms; attribution retained and no endorsement implied", "url": "https://www.iausofa.org/2023_1011_C.html", "recipe": "The official sofa_ast_example.c is pinned unchanged; sofa-fixed-star-reference.c generates fixed-star-reference.json against SOFA release 2023-10-11. The 0.5 arcsec limit is twice the 0.246 arcsec sampled maximum rounded up, a regression margin rather than a published accuracy."},
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket and 2060 Chiron at 1900-01-01 03:00 UT, 1950, 2000, 2026-01-02, 2050 and 2100", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplHorizontal": {"serviceVersion": "recorded in every archived response", "frame": "topocentric apparent horizon: azimuth east of north and elevation", "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent position with light time, gravitational deflection and stellar aberration", "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)", "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
@@ -818,8 +1044,12 @@ def main() -> int:
         refresh_sources()
     sources = verify_sources()
     verify_recorded_queries()
-    archive_data = encoded(build_archive())
+    constellations = parse_constellations()
+    archive = build_archive(constellations)
+    archive_data = encoded(archive)
     write_or_check(OUTPUT_DIR / "reference-fixtures.json", archive_data, args.check)
+    constellation_data = generate_constellation_swift(constellations).encode()
+    write_or_check(GENERATED_CONSTELLATION_PATH, constellation_data, args.check)
     print(f"verified {len(sources)} source artifacts and archive {sha256(archive_data)}")
     return 0
 
