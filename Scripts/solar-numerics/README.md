@@ -57,7 +57,9 @@ The primitive report in each configuration records 162 rows: a 33-point coverage
 
 The Debug and Release reports differ by one ULP in nutation longitude at the 2101 fallback sample for both models. Their sampled maxima are identical; the reports retain the individual results.
 
-The process timing and RSS include SwiftPM and the test runner in a fresh invocation after the build. They are not library-only latency or retained library memory. Release library build time and library artifact size are reported separately on the PR.
+The full-altitude reports differ in 11 altitude results: ten supported rows differ by at most four ULP, and one excluded fallback row differs by eight ULP. Their sampled maxima are identical. Paired-altitude identity is asserted within a configuration, not between configurations.
+
+The process timing and RSS include SwiftPM and the test runner in a fresh invocation after the build. They are not library-only latency or retained library memory. Release library build time and library artifact size are reported separately on the PR. `evidence/production-macos-arm64.json` retains the production build/section-size logs, standalone public client source and command, call trials and process RSS, with the retained link-1 artifact for context.
 
 The full-altitude report in each configuration records 1,320 requests: the coverage/fallback/adjacent-seam grid at six observers under both models, three backdating-flip neighborhoods, and 96 civilDate cases. The native exporter records the actual light-time trace, full native altitude, and either a public observation with its budget or an explicit unsupported reason. It checks that supported observations retain the native time pair and ordinary altitude bits. The reference evaluates both the recorded pair and the exact public input; its inverse selects the solution near the recorded UT and reports a missing mathematical inverse explicitly. Request field `value` is UT/TT days when `scale` is `ut`/`tt`, or Foundation seconds since 2001-01-01 when `scale` is `date`.
 
