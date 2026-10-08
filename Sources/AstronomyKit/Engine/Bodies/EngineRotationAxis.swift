@@ -18,6 +18,11 @@ extension Engine {
         /// equator, counterclockwise as seen from the north pole, from the
         /// equator's ascending node on the J2000 equator, which is at right
         /// ascension α0 + 90°. It is not reduced to one turn.
+        ///
+        /// Earth's is the exception, as in the C engine: its pole is the true
+        /// pole of date, but its W is the 2009 report's, measured from the
+        /// node of the report's own Earth pole and re-expressed on UT. The
+        /// two together do not place Greenwich.
         var spin: Double
         /// The unit vector toward the north pole.
         var north: Vector<EQJ>
@@ -25,25 +30,34 @@ extension Engine {
 
     /// Rotation axes (`Astronomy_RotationAxis`).
     ///
-    /// Every body follows the IAU Working Group on Cartographic Coordinates
-    /// and Rotational Elements: its 2015 report (Archinal et al. 2018,
-    /// Celest. Mech. Dyn. Astr. 130:22), and its 2009 report (Archinal et al.
-    /// 2011, 109:101) for the Moon and Earth, which the 2015 report does not
+    /// Every body but Earth follows the IAU Working Group on Cartographic
+    /// Coordinates and Rotational Elements: its 2015 report (Archinal et al.
+    /// 2018, Celest. Mech. Dyn. Astr. 130:22), and its 2009 report (Archinal
+    /// et al. 2011, 109:101) for the Moon, which the 2015 report does not
     /// cover. The expressions take d in TDB days and T in Julian centuries of
     /// TDB from J2000, as the reports define them.
     ///
-    /// Earth's model is the reports' low-accuracy one: a pole linear in T, so
-    /// without nutation, and a uniform W in TDB, so without the variations of
-    /// UT1. NAIF, which publishes it in `pck00011.tpc`, puts its prime
-    /// meridian at least 150″ off, with a minimum in 1999.
+    /// Earth keeps the C engine's model. Its pole is the true pole of date
+    /// from the IAU 2006 precession and IAU 2000B nutation
+    /// (``Engine/FrameRotation``). Its W is ``earthSpinAtJ2000`` plus
+    /// ``earthSpinRate`` per UT day: the 2009 report's W at J2000,
+    /// 190.147°, moved onto UT with a Delta T of about 63.85 s, turning at the
+    /// rate of the Earth rotation angle (IAU 2000 Resolution B1.8).
     enum RotationAxis {}
 }
 
 extension Engine.RotationAxis {
-    /// The bodies the reports cover.
+    /// The bodies the reports and Earth's model cover.
     static let bodies: [CelestialBody] = [
         .sun, .mercury, .venus, .earth, .moon, .mars, .jupiter, .saturn, .uranus, .neptune, .pluto,
     ]
+
+    /// Earth's W at UT 0, J2000, in degrees.
+    static let earthSpinAtJ2000 = 190.41375788700253
+
+    /// Earth's W rate in degrees per UT day: 360° times the Earth rotation
+    /// angle's 1.00273781191135448 turns per UT day.
+    static let earthSpinRate = 360.9856122880876
 
     /// `body`'s north pole and prime meridian at `time`.
     ///
@@ -53,18 +67,40 @@ extension Engine.RotationAxis {
     ///   ``Engine/acceptedTTDays``, as the C function does not check it.
     static func axis(of body: CelestialBody, at time: Engine.Time) throws -> Engine.Axis {
         guard bodies.contains(body) else { throw AstronomyError.invalidBody }
-        let tdb = time.tt + Engine.TDB.offsetSeconds(tt: time.tt) / Engine.secondsPerDay
-        let (ra, dec, spin) = try elements(of: body, tdb: tdb)
-        guard ra.isFinite, dec.isFinite, spin.isFinite else { throw AstronomyError.badTime }
-        let north = Engine.Vector<Engine.EQJ>(Engine.Spherical(latitude: dec, longitude: ra, distance: 1), time: time)
-        return Engine.Axis(rightAscension: ra / 15, declination: dec, spin: spin, north: north)
+        let axis: Engine.Axis
+        if body == .earth {
+            axis = try earth(at: time)
+        } else {
+            let tdb = time.tt + Engine.TDB.offsetSeconds(tt: time.tt) / Engine.secondsPerDay
+            let (ra, dec, spin) = try elements(of: body, tdb: tdb)
+            let north = Engine.Vector<Engine.EQJ>(
+                Engine.Spherical(latitude: dec, longitude: ra, distance: 1), time: time)
+            axis = Engine.Axis(rightAscension: ra / 15, declination: dec, spin: spin, north: north)
+        }
+        guard axis.rightAscension.isFinite, axis.declination.isFinite, axis.spin.isFinite,
+            axis.north.x.isFinite, axis.north.y.isFinite, axis.north.z.isFinite
+        else { throw AstronomyError.badTime }
+        return axis
+    }
+
+    /// Earth's true pole of date, rotated to J2000, with its right ascension
+    /// from 0 up to 24 hours as `Engine.Equatorial` gives it, and its W at
+    /// `time.ut`.
+    private static func earth(at time: Engine.Time) throws -> Engine.Axis {
+        let z = Engine.Vector<Engine.EQD>(x: 0, y: 0, z: 1, time: time)
+        let pole = Engine.FrameRotation.eqdToEqj(time).apply(to: z)
+        let equatorial = try Engine.Equatorial(pole)
+        return Engine.Axis(
+            rightAscension: equatorial.rightAscension, declination: equatorial.declination,
+            spin: earthSpinAtJ2000 + earthSpinRate * time.ut, north: pole)
     }
 
     /// The pole's right ascension α0 and declination δ0 and the prime
     /// meridian's W, all in degrees, at `tdb` days of TDB from J2000.
     ///
-    /// - Throws: `AstronomyError.invalidBody` for a body the reports do not
-    ///   cover.
+    /// - Throws: `AstronomyError.invalidBody` for Earth, which
+    ///   ``axis(of:at:)`` takes from the C engine's model, and for a body the
+    ///   reports do not cover.
     static func elements(of body: CelestialBody, tdb d: Double) throws -> (ra: Double, dec: Double, spin: Double) {
         let t = d / 36_525
         func sine(_ degrees: Double) -> Double { sin(degrees * Engine.radiansPerDegree) }
@@ -83,9 +119,6 @@ extension Engine.RotationAxis {
             return (281.0103 - 0.0328 * t, 61.4155 - 0.0049 * t, w)
         case .venus:
             return (272.76, 67.16, 160.20 - 1.4813688 * d)
-        case .earth:
-            // The 2009 report's values, which pck00011.tpc carries as BODY399.
-            return (-0.641 * t, 90 - 0.557 * t, 190.147 + 360.9856235 * d)
         case .moon:
             // The 2009 report's Table 2.
             let e1 = 125.045 - 0.0529921 * d

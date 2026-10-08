@@ -160,12 +160,19 @@ struct EngineRotationAxisTests {
         #expect(Self.times.count == 81 + 61)
     }
 
-    @Test("Every body matches the WGCCRE elements of pck00011.tpc", arguments: Axes.bodies)
+    /// The bodies whose elements are the reports'; Earth keeps the C
+    /// engine's model and has tests of its own.
+    static let reportBodies = Axes.bodies.filter { $0 != .earth }
+
+    @Test("Every body but Earth matches the WGCCRE elements of pck00011.tpc", arguments: reportBodies)
     func publishedElements(body: CelestialBody) throws {
         let id = try #require(Self.naifIDs[body])
         for tt in Self.times {
             let axis = try Axes.axis(of: body, at: Self.time(tt: tt))
             let expected = try Self.published(id, tdb: Self.tdb(tt: tt))
+            // The C engine reduces no report body's right ascension; over the
+            // accepted range none leaves 0 to 24 hours.
+            #expect((0..<24).contains(axis.rightAscension), "tt \(tt)")
             #expect(abs(axis.rightAscension * 15 - expected.ra) <= Self.allowance(expected.ra), "tt \(tt)")
             #expect(abs(axis.declination - expected.dec) <= Self.allowance(expected.dec), "tt \(tt)")
             #expect(abs(axis.spin - expected.spin) <= Self.allowance(expected.spin), "tt \(tt)")
@@ -177,9 +184,9 @@ struct EngineRotationAxisTests {
     }
 
     /// At the sample time where TDB − TT is largest, over 1 ms, Jupiter's W
-    /// moves by over 1e-5°; the elements evaluated at TT, Earth's evaluated at
-    /// UT, or another body's, fail.
-    @Test("The check fails for TT or UT taken as TDB, or for the wrong body")
+    /// moves by over 1e-5°; the elements evaluated at TT, or another body's,
+    /// fail.
+    @Test("The check fails for TT taken as TDB, or for the wrong body")
     func negativeControls() throws {
         let offsets = Self.times.map { (tt: $0, seconds: abs(Engine.TDB.offsetSeconds(tt: $0))) }
         let largest = try #require(offsets.max { $0.seconds < $1.seconds })
@@ -190,12 +197,6 @@ struct EngineRotationAxisTests {
         #expect(abs(axis.spin - atTT.spin) > Self.allowance(atTT.spin))
         let saturn = try Self.published(699, tdb: Self.tdb(tt: late))
         #expect(abs(axis.declination - saturn.dec) > Self.allowance(saturn.dec))
-        // Delta T is over a minute in 2026, which turns Earth by over 0.25°.
-        let now = Self.time(tt: 9_496)
-        #expect(now.tt - now.ut > 60 / Engine.secondsPerDay)
-        let earth = try Axes.axis(of: .earth, at: now)
-        let atUT = try Self.published(399, tdb: now.ut)
-        #expect(abs(earth.spin - atUT.spin) > Self.allowance(atUT.spin))
     }
 
     // MARK: - The prime meridian
@@ -212,7 +213,9 @@ struct EngineRotationAxisTests {
         return frame.apply(to: SIMD3(1.0, 0, 0))
     }
 
-    @Test("The returned pole and W place the prime meridian where the published elements do", arguments: Axes.bodies)
+    @Test(
+        "The returned pole and W place the prime meridian where the published elements do",
+        arguments: reportBodies)
     func primeMeridians(body: CelestialBody) throws {
         let id = try #require(Self.naifIDs[body])
         for tt in Self.times {
@@ -227,28 +230,86 @@ struct EngineRotationAxisTests {
         }
     }
 
-    /// 1800 to 2200 every 20 years, both ends included.
-    static let earthTimes = Array(stride(from: -73_050.0, through: 73_050, by: 7_305))
+    // MARK: - Earth
 
-    /// The 2009 report's Earth pole, which `axis(of:at:)` returns, is linear
-    /// in T. The mean pole of date (precession without nutation) is at
-    /// θA = 2004.191903″T − 0.4294934″T² − 0.04182264″T³ from the J2000 pole
-    /// (Capitaine et al. 2003, the IAU 2006 precession), and the report puts
-    /// it at 0.557°T = 2005.2″T; its right ascension, −0.641°T against
-    /// −ζA = −2306.083227″T − 0.2988499″T² − 0.01801828″T³, moves it sideways
-    /// by θA times that difference, under 0.1″ over these dates, and the
-    /// frame bias between EQJ and the ICRF is 0.02″.
-    @Test("Earth's pole stays within the precession the report's linear pole leaves out, 1800 to 2200")
+    /// Earth's pole against N·P built from SOFA's precession and nutation
+    /// angles (`EngineFrameRotationTests.equatorOfDate`) at eight epochs from
+    /// 1600 to 2500, with UT1 and TT apart. The pole of date on J2000 axes is
+    /// the third row of N·P. The engine's matrix matches that one within
+    /// 2e-15 in each element, so the pole is within √3 · 2e-15 radians.
+    @Test("Earth's pole is the true pole of date from the IAU 2006/2000B orientation")
     func earthPole() throws {
-        #expect(Self.earthTimes.first == -73_050 && Self.earthTimes.last == 73_050)
-        for tt in Self.earthTimes {
-            let t = abs(tt) / 36_525
-            let axis = try Axes.axis(of: .earth, at: Self.time(tt: tt))
-            let mean = Engine.Precession.rotation(tt: tt).inverse.apply(to: SIMD3(0.0, 0, 1))
-            let bound = 1.0081 * t + 0.4295 * t * t + 0.0419 * t * t * t + 0.1 + 0.02
-            #expect(Self.arcseconds(mean, Self.vector(axis.north)) <= bound, "tt \(tt)")
+        let times = PublishedOrientation.references.map(\.tt)
+        #expect(times.contains { $0 < 0 } && times.contains { $0 > 0 })
+        for reference in PublishedOrientation.references {
+            let time = EngineFrameRotationTests.time(reference)
+            let axis = try Axes.axis(of: .earth, at: time)
+            let row = EngineFrameRotationTests.equatorOfDate(reference)[2]
+            let difference = Self.vector(axis.north) - SIMD3(row[0], row[1], row[2])
+            #expect(EngineGravityTests.length(difference) <= 3.0.squareRoot() * 2e-15, "\(reference.year)")
+            let equatorial = try Engine.Equatorial(axis.north)
+            #expect(axis.rightAscension == equatorial.rightAscension && axis.declination == equatorial.declination)
         }
     }
+
+    /// Like the C engine, Earth's right ascension runs from 0 up to 24 hours:
+    /// near J2000 the pole of date is arcseconds from the J2000 pole and its
+    /// right ascension turns through every hour.
+    @Test("Earth's right ascension stays in 0 to 24 hours before and after J2000")
+    func earthRightAscension() throws {
+        var signs = Set<Bool>()
+        for tt in Self.times + [9_303.0] {
+            let axis = try Axes.axis(of: .earth, at: Self.time(tt: tt))
+            #expect((0..<24).contains(axis.rightAscension), "tt \(tt)")
+            signs.insert(tt > 0)
+        }
+        #expect(signs == [false, true])
+    }
+
+    /// Earth's W turns at the Earth rotation angle's rate on UT1: against
+    /// SOFA's `era00` at UT1 for the same eight epochs, W less the angle is
+    /// the same, `earthSpinAtJ2000` less the angle's 280.46061837504° at UT1
+    /// 0, modulo 360°.
+    @Test("Earth's W is the Earth rotation angle on UT, offset")
+    func earthSpinRate() throws {
+        #expect(abs(Axes.earthSpinRate - 360 * 1.002_737_811_911_354_48) <= 1e-12)
+        let offset = Axes.earthSpinAtJ2000 - 360 * 0.779_057_273_264_0
+        for reference in PublishedOrientation.references {
+            let axis = try Axes.axis(of: .earth, at: EngineFrameRotationTests.time(reference))
+            let rotation = reference.era00 * Engine.degreesPerRadian
+            let difference = (axis.spin - rotation - offset).truncatingRemainder(dividingBy: 360)
+            #expect(min(abs(difference), 360 - abs(difference)) <= Self.allowance(axis.spin), "\(reference.year)")
+        }
+        // The same W at TT would be off by Delta T, over a minute in 2026: over 0.25°.
+        let now = Self.time(tt: 9_496)
+        #expect(now.tt - now.ut > 60 / Engine.secondsPerDay)
+        let earth = try Axes.axis(of: .earth, at: now)
+        let atTT = Axes.earthSpinAtJ2000 + Axes.earthSpinRate * now.tt
+        #expect(abs(earth.spin - atTT) > 0.25)
+    }
+
+    /// Earth's W at J2000 is the 2009 report's, `BODY399_PM` in the PCK,
+    /// moved onto UT: the Delta T it implies is within the 0.1 s to which the
+    /// Astronomical Almanac's observed Delta T for 2000.0, 63.8 s, is
+    /// published (`PublishedDeltaT.observedTable`). So the report's pole
+    /// and Earth's W place the report's prime meridian at J2000 TT, with UT
+    /// 63.8 s earlier, within that 0.1 s of rotation, 1.5″. The returned pole
+    /// is the true one, not the report's, so the returned values do not
+    /// place a prime meridian together.
+    @Test("Earth's W is the report's at J2000, re-expressed on UT")
+    func earthSpinOrigin() throws {
+        let report = try Self.published(399, tdb: 0)
+        let implied = (Axes.earthSpinAtJ2000 - report.spin) / Axes.earthSpinRate * Engine.secondsPerDay
+        let observed = try #require(PublishedDeltaT.observedTable.first { $0.year == 2000 })
+        #expect(abs(implied - observed.seconds) <= observed.bound)
+        let time = Engine.Time(ut: -observed.seconds / Engine.secondsPerDay, tt: 0, deltaTModel: .espenakMeeus)
+        let axis = try Axes.axis(of: .earth, at: time)
+        let placed = Self.primeMeridian(ra: report.ra, dec: report.dec, spin: axis.spin)
+        let published = Self.primeMeridian(ra: report.ra, dec: report.dec, spin: report.spin)
+        let rotation = Axes.earthSpinRate * observed.bound / Engine.secondsPerDay * 3600
+        #expect(Self.arcseconds(placed, published) <= rotation)
+    }
+
     // MARK: - Guards
 
     @Test("Bodies the reports do not cover throw invalidBody, before anything else")
