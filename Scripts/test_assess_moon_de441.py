@@ -36,12 +36,17 @@ class MoonDE441AssessmentTests(unittest.TestCase):
         self.assertEqual(-1.125, value)
         self.assertEqual(2.5, rate)
 
+    def test_numerical_reductions_use_one_reproducible_summation_rule(self):
+        coefficients = (5_188_920_063_839.186, -540_959_797_863.3882, 1.6408351731716191e-24)
+        value, _ = self.assessment.chebyshev_value_and_rate(coefficients, 1.0, 4.0)
+        self.assertEqual(math.fsum(coefficients), value)
+
     def test_float32_conversion_reports_component_position_and_rate_bounds(self):
         coefficients = (0.1, -0.2, 0.3, -0.4)
         converted, position_bound, rate_bound = self.assessment.float32_with_bounds(coefficients, 4.0)
         errors = [abs(source - result) for source, result in zip(coefficients, converted)]
-        self.assertEqual(sum(errors), position_bound)
-        self.assertEqual(sum(error * degree * degree / 2 for degree, error in enumerate(errors)), rate_bound)
+        self.assertEqual(math.fsum(errors), position_bound)
+        self.assertEqual(math.fsum(error * degree * degree / 2 for degree, error in enumerate(errors)), rate_bound)
         for value in converted:
             self.assertEqual(struct.pack("<f", value), struct.pack("<f", struct.unpack("<f", struct.pack("<f", value))[0]))
 

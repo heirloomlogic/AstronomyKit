@@ -169,22 +169,26 @@ def parse_horizons_vectors(data):
     return vectors
 
 
+def stable_sum(values):
+    return math.fsum(values)
+
+
 def chebyshev_value_and_rate(coefficients, x, record_days):
     values = [1.0, x]
     derivatives = [0.0, 1.0]
     for _ in range(2, len(coefficients)):
         values.append(2 * x * values[-1] - values[-2])
         derivatives.append(2 * values[-2] + 2 * x * derivatives[-1] - derivatives[-2])
-    value = sum(coefficient * values[index] for index, coefficient in enumerate(coefficients))
-    slope = sum(coefficient * derivatives[index] for index, coefficient in enumerate(coefficients))
+    value = stable_sum(coefficient * values[index] for index, coefficient in enumerate(coefficients))
+    slope = stable_sum(coefficient * derivatives[index] for index, coefficient in enumerate(coefficients))
     return value, slope * 2 / record_days
 
 
 def float32_with_bounds(coefficients, record_days):
     converted = tuple(struct.unpack("<f", struct.pack("<f", coefficient))[0] for coefficient in coefficients)
     errors = [abs(source - result) for source, result in zip(coefficients, converted)]
-    position_bound = sum(errors)
-    rate_bound = sum(error * degree * degree * 2 / record_days for degree, error in enumerate(errors))
+    position_bound = stable_sum(errors)
+    rate_bound = stable_sum(error * degree * degree * 2 / record_days for degree, error in enumerate(errors))
     return converted, position_bound, rate_bound
 
 
@@ -234,7 +238,7 @@ def evaluate(coefficients, x, record_days):
 
 
 def norm(values):
-    return math.sqrt(sum(value * value for value in values))
+    return math.sqrt(stable_sum(value * value for value in values))
 
 
 def difference(left, right):
