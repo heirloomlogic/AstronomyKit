@@ -279,3 +279,11 @@ Facility (NAIF) at the California Institute of Technology/Jet Propulsion
 Laboratory under contract to NASA. Use and redistribution rules, including the
 disclaimer applicable to NAIF-provided materials, are at
 https://naif.jpl.nasa.gov/naif/rules.html.
+
+-------------------------------------------------------------------------------
+
+Native numerical measurement tools
+
+Scripts/solar-numerics/reference.py evaluates the NASA Espenak-Meeus Delta T polynomials, the IAU Earth Rotation Angle definition, IAU 2000B with the existing ERFA-derived coefficient table, and VSOP87B with the existing native generated table. The data retain the source attribution and licenses above. The Python evaluator is AstronomyKit-authored and is not software provided by or endorsed by NASA, SOFA, ERFA or IMCCE.
+
+The tools require mpmath 1.3.0, by Fredrik Johansson and contributors, under its BSD license: https://github.com/mpmath/mpmath/blob/1.3.0/LICENSE. mpmath is installed separately for development and is not distributed with the AstronomyKit library.
