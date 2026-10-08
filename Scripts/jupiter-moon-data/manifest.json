@@ -1,0 +1,21 @@
+{
+  "model": {
+    "path": "Sources/CLibAstronomy/astronomy.c",
+    "content": "Astronomy Engine's series of Jupiter's moons, the jm_* term arrays and JupiterMoonModel of astronomy.c, from the first term array to the end of the model",
+    "sha256": "0a5d88feea057ab65e5c915a7197488f5fc6b36004e869fe4439cadf9b68a49c"
+  },
+  "published": {
+    "retrieved": "2026-10-07",
+    "note": "The L1.2 theory of the Galilean satellites as IMCCE publishes it (Lainey, Duriez and Vienne 2006, A&A 456, 783). Not checked in. --published DIR compares every term with BisL1.2.dat, and the constants EngineJupiterMoons.swift transcribes. TestL1.2.res holds the authors' check values.",
+    "files": {
+      "BisL1.2.dat": {
+        "url": "https://ftp.imcce.fr/pub/ephem/satel/galilean/L1/L1.2/BisL1.2.dat",
+        "sha256": "4b72cf1a4e5f9cc9ebe00ebe66f740d408535938bf52ae4cd63584d872a90d06"
+      },
+      "TestL1.2.res": {
+        "url": "https://ftp.imcce.fr/pub/ephem/satel/galilean/L1/L1.2/TestL1.2.res",
+        "sha256": "b3ed5b7acf8196367de8233007986f532831eb4eecdf6b67d49f8fef1017e6a5"
+      }
+    }
+  }
+}
