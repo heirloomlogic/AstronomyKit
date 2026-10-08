@@ -80,7 +80,6 @@ class RefreshSourcesTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "response hash"):
                     self.builder.verify_sources()
 
-
     def test_refresh_writes_a_publisher_source_by_its_full_url_into_its_directory(self):
         data = b"published constants"
         with tempfile.TemporaryDirectory() as temporary:
@@ -100,6 +99,37 @@ class RefreshSourcesTests(unittest.TestCase):
                 self.builder.refresh_sources()
             download.assert_called_once_with("https://example.org/constants.tpc")
             self.assertEqual(data, (source_dir / "naif" / "constants.tpc").read_bytes())
+
+
+class SofaFixedStarTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_reference_pins_recipe_and_requires_twice_the_sampled_residual(self):
+        references = self.builder.parse_sofa_fixed_stars()
+        self.assertEqual(1, len(references))
+        reference = references[0]
+        self.assertGreaterEqual(
+            reference["sampledToleranceArcseconds"],
+            2 * reference["sampledMaximumResidualArcseconds"],
+        )
+
+    def test_changed_recipe_fails_its_archived_hash(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source_dir = root / "Scripts/reference-data/sources"
+            (source_dir / "sofa").mkdir(parents=True)
+            (root / "Scripts/reference-data").mkdir(parents=True, exist_ok=True)
+            source = ROOT / "Scripts/reference-data/sources/sofa/fixed-star-reference.json"
+            (source_dir / "sofa/fixed-star-reference.json").write_bytes(source.read_bytes())
+            (root / "Scripts/reference-data/sofa-fixed-star-reference.c").write_text("changed recipe\n")
+            with (
+                mock.patch.object(self.builder, "ROOT", root),
+                mock.patch.object(self.builder, "SOURCE_DIR", source_dir),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "recipe hash"):
+                    self.builder.parse_sofa_fixed_stars()
 
 
 class ApparentRangeFixtureTests(unittest.TestCase):

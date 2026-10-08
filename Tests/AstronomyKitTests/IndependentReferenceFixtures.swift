@@ -6,6 +6,7 @@ import Testing
 struct IndependentReferenceArchive: Decodable {
     let schemaVersion: Int
     let provenance: [String: Provenance]
+    let fixedStars: [FixedStar]
     let observations: [Observation]
     let chironObservations: [Observation]
     let vectors: [Vector]
@@ -37,6 +38,29 @@ struct IndependentReferenceArchive: Decodable {
         let license: String
         let url: String
         let recipe: String
+    }
+
+    struct FixedStar: Decodable {
+        let rightAscensionHours: Double
+        let declinationDegrees: Double
+        let distanceLightYears: Double
+        let utJulianDate: Double
+        let ttJulianDate: Double
+        let latitudeDegrees: Double
+        let longitudeDegrees: Double
+        let heightMeters: Double
+        let j2000RightAscensionHours: Double
+        let j2000DeclinationDegrees: Double
+        let ofDateRightAscensionHours: Double
+        let ofDateDeclinationDegrees: Double
+        let topocentricRightAscensionHours: Double
+        let topocentricDeclinationDegrees: Double
+        let eclipticLongitudeDegrees: Double
+        let eclipticLatitudeDegrees: Double
+        let azimuthDegrees: Double
+        let unrefractedAltitudeDegrees: Double
+        let sampledMaximumResidualArcseconds: Double
+        let sampledToleranceArcseconds: Double
     }
 
     struct Observation: Decodable {

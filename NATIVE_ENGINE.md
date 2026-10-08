@@ -868,6 +868,16 @@ Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
 |---|---|
 | `RotationAxisTests` | Named sanity checks of the public API on the C engine until #96. `EngineRotationAxisTests` checks the engine against the published elements and orientation. |
 
+## Fixed stars
+
+In the tree: `Engine/Stars/EngineStar.swift`. The constellation lookup remains planned for the second #91 PR.
+
+`Engine.Star` is an immutable, `Sendable`, hashable value containing a catalog right ascension in `[0, 24)` hours, declination in `[-90, 90]` degrees and a distance of at least one light-year. It validates on use, as `Astronomy_DefineStar` does, and converts light-years with the C contract's 63,241.07708807546 AU per light-year. A definition is passed directly into each calculation; no shared star slots or mutable definitions exist in the native path.
+
+The heliocentric vector is fixed on J2000 axes and is treated as already corrected for light-travel time, as the C engine treats user-defined stars. A geocentric vector subtracts Earth's native heliocentric position. With annual aberration it adds Earth's heliocentric velocity multiplied by the star-to-Earth distance divided by the published speed of light; this retains the C engine's linear approximation. Equatorial results subtract the observer's J2000 vector and optionally rotate to the true equator and equinox of date. Ecliptic results use the true ecliptic and equinox of date, and horizon results use apparent topocentric equatorial coordinates of date before the requested refraction.
+
+The independent fixture archives the official IAU SOFA 2023-10-11 astrometry example and a recipe that sets its proper motion to zero because the public fixed-star value has no proper-motion terms. One row checks every native star calculation within 0.5 arcsecond, twice the sampled 0.246 arcsecond maximum rounded up. That limit is a sampled regression margin across the engine's IAU 1976/2000B orientation and linear aberration choices, not a published accuracy. The former Sirius row in `ReproducibilityTests`, which pinned C-engine bit patterns, is retired in favor of this published-source comparison. The public `FixedStar` remains on the C engine until #96.
+
 ## Caches and reset
 
 In the tree: `EngineCache.swift`.

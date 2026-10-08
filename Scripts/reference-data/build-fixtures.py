@@ -64,6 +64,7 @@ UPSTREAM_SOURCES = {
 # is built from it.
 PUBLISHER_SOURCES = {
     "naif/pck00011.tpc": ("https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc", "3dff7b1dbeceaa01f25467767d3fa25816051c85d162d1edf04acb310ee28bb1"),
+    "sofa/sofa_ast_example.c": ("https://www.iausofa.org/s/sofa_ast_example.c", "9903dca63bd87e573db6a57c04945bb712f3c958a23c245db0c03a37bf31d4e9"),
 }
 
 HORIZONS_OBSERVER_QUERIES = {
@@ -647,10 +648,23 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
     return {"observations": observations, "chironObservations": chiron_observations, "vectors": vectors, "horizontal": horizontal, "elongations": elongations, "saturnRings": saturn_rings}
 
 
+def parse_sofa_fixed_stars() -> list[dict[str, object]]:
+    reference = json.loads(source_text("sofa/fixed-star-reference.json"))
+    recipe_path = ROOT / "Scripts/reference-data/sofa-fixed-star-reference.c"
+    if reference.pop("_recipeSHA256") != sha256(recipe_path.read_bytes()):
+        raise RuntimeError("SOFA fixed-star recipe hash mismatch")
+    if reference.pop("_sofaReleaseSHA256") != "d9c10833cae8b4d9361a0ffda31ec361fd1262362025bec4d4e51a880150ace2":
+        raise RuntimeError("SOFA fixed-star release hash mismatch")
+    if reference["sampledToleranceArcseconds"] < 2 * reference["sampledMaximumResidualArcseconds"]:
+        raise RuntimeError("SOFA fixed-star tolerance must be at least twice the sampled maximum residual")
+    return [reference]
+
+
 def build_archive() -> dict[str, object]:
     archive: dict[str, object] = {
-        "schemaVersion": 3,
+        "schemaVersion": 4,
         "provenance": source_catalog(),
+        "fixedStars": parse_sofa_fixed_stars(),
     }
     archive.update(parse_upstream_events())
     archive.update(parse_eclipses())
@@ -666,6 +680,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
     jpl_license = "NASA/JPL factual output; acknowledge NASA and do not imply endorsement; the copied files also retain the archived Astronomy Engine MIT license"
     nasa_license = "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license"
     return {
+        "sofaFixedStar": {"version": "2023-10-11", "frame": "ICRS/J2000, IAU 2006/2000A true equator and ecliptic of date, and topocentric horizon", "origin": "Sun center for the catalog definition, Earth center for geocentric coordinates, and the published geodetic site for topocentric coordinates", "units": "sidereal hours, degrees, metres, Julian dates, parallax-derived light-years, and arcseconds", "timeScale": "UTC, TT, and UT1 with UT1-UTC set to zero for the archived row", "aberration": "SOFA iauAtci13 relativistic annual aberration and light deflection; AstronomyKit retains its linear annual-aberration approximation", "refraction": "none", "domain": "one star and instant from the official SOFA astrometry example; proper motion is archived but set to zero by the recipe because FixedStar stores no proper-motion terms", "license": "IAU SOFA software and data terms; attribution retained and no endorsement implied", "url": "https://www.iausofa.org/2023_1011_C.html", "recipe": "The official sofa_ast_example.c is pinned unchanged; sofa-fixed-star-reference.c generates fixed-star-reference.json against SOFA release 2023-10-11. The 0.5 arcsec limit is twice the 0.246 arcsec sampled maximum rounded up, a regression margin rather than a published accuracy."},
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket and 2060 Chiron at 1900-01-01 03:00 UT, 1950, 2000, 2026-01-02, 2050 and 2100", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplHorizontal": {"serviceVersion": "recorded in every archived response", "frame": "topocentric apparent horizon: azimuth east of north and elevation", "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent position with light time, gravitational deflection and stellar aberration", "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)", "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplElongation": {"serviceVersion": "recorded in every archived response", "frame": "geocentric Sun-observer-target angle and IAU76/80 ecliptic of date", "origin": "Earth center 500@399", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent positions with light time, gravitational deflection and stellar aberration", "refraction": "none", "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},

@@ -451,6 +451,30 @@
       "utc": "2026-Nov-20 00:00:00.000"
     }
   ],
+  "fixedStars": [
+    {
+      "azimuthDegrees": 91.39535951360347,
+      "declinationDegrees": -12.519554583333335,
+      "distanceLightYears": 19.768251269598043,
+      "eclipticLatitudeDegrees": 2.4757703160725675,
+      "eclipticLongitudeDegrees": 220.37838264772483,
+      "heightMeters": 625.0,
+      "j2000DeclinationDegrees": -12.521234450673669,
+      "j2000RightAscensionHours": 14.571661915580211,
+      "latitudeDegrees": -15.96188888888889,
+      "longitudeDegrees": -5.698388888888889,
+      "ofDateDeclinationDegrees": -12.57896306721032,
+      "ofDateRightAscensionHours": 14.583914970867305,
+      "rightAscensionHours": 14.571336619444445,
+      "sampledMaximumResidualArcseconds": 0.24646243356162456,
+      "sampledToleranceArcseconds": 0.5,
+      "topocentricDeclinationDegrees": -12.578950118025515,
+      "topocentricRightAscensionHours": 14.583919166877292,
+      "ttJulianDate": 2456385.4700316433,
+      "unrefractedAltitudeDegrees": 47.234863891984794,
+      "utJulianDate": 2456385.469254051
+    }
+  ],
   "geocentricStates": [
     {
       "body": "moon",
@@ -104076,6 +104100,19 @@
       "url": "https://eclipse.gsfc.nasa.gov/transit/catalog/",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     },
+    "sofaFixedStar": {
+      "aberration": "SOFA iauAtci13 relativistic annual aberration and light deflection; AstronomyKit retains its linear annual-aberration approximation",
+      "domain": "one star and instant from the official SOFA astrometry example; proper motion is archived but set to zero by the recipe because FixedStar stores no proper-motion terms",
+      "frame": "ICRS/J2000, IAU 2006/2000A true equator and ecliptic of date, and topocentric horizon",
+      "license": "IAU SOFA software and data terms; attribution retained and no endorsement implied",
+      "origin": "Sun center for the catalog definition, Earth center for geocentric coordinates, and the published geodetic site for topocentric coordinates",
+      "recipe": "The official sofa_ast_example.c is pinned unchanged; sofa-fixed-star-reference.c generates fixed-star-reference.json against SOFA release 2023-10-11. The 0.5 arcsec limit is twice the 0.246 arcsec sampled maximum rounded up, a regression margin rather than a published accuracy.",
+      "refraction": "none",
+      "timeScale": "UTC, TT, and UT1 with UT1-UTC set to zero for the archived row",
+      "units": "sidereal hours, degrees, metres, Julian dates, parallax-derived light-years, and arcseconds",
+      "url": "https://www.iausofa.org/2023_1011_C.html",
+      "version": "2023-10-11"
+    },
     "usnoRiseSet": {
       "aberration": "included in the USNO apparent-position service",
       "domain": "all 5,909 pinned rows in 17 body/location/year groups from 1750 through 2050; the USNO service documents years 1700 through 2100",
@@ -157387,7 +157424,7 @@
       "utc": "2035-Jan-01 00:00:00.000"
     }
   ],
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "seasons": [
     {
       "event": "marchEquinox",
