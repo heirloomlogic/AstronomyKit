@@ -762,7 +762,7 @@ Tests under `Tests/AstronomyKitTests/Engine/Positions/`:
 
 ## Jupiter's moons
 
-In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. The rest of #90, rotation axes and Lagrange points, is not in the tree yet.
+In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. Rotation axes are in the next section; Lagrange points, the rest of #90, are not in the tree yet.
 
 ```swift
 extension Engine {
@@ -820,6 +820,53 @@ Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
 |---|---|
 | `AuditValidationTests.boundedGalileanMoonState` and `galileanMoonStateObservation` | Published-value check and named sanity check of the public API on the C engine until #96. They read the 88 rows inside the domain and the 16 outside it. `EngineJupiterMoonsTests` applies the same rows and limit to the engine. |
 | `JupiterMoonsTests`, and the Jupiter moon cases of `AcceptedTimeRangeTests` and `HugeTimeTests` | Named sanity checks and range guards of the public API on the C engine until #96. `EngineJupiterMoonsTests` checks the engine's range and guards. |
+
+## Rotation axes
+
+In the tree: `Bodies/EngineRotationAxis.swift`. It ports `Astronomy_RotationAxis`.
+
+```swift
+extension Engine {
+    struct Axis { var rightAscension, declination, spin: Double; var north: Vector<EQJ> }
+}
+extension Engine.RotationAxis {
+    static let bodies: [CelestialBody]   // the Sun, Mercury to Pluto, the Moon
+    static let earthSpinAtJ2000: Double  // 190.41375788700253
+    static let earthSpinRate: Double     // 360.9856122880876
+    static func axis(of body: CelestialBody, at time: Engine.Time) throws -> Engine.Axis
+    static func elements(of body: CelestialBody, tdb: Double) throws -> (ra: Double, dec: Double, spin: Double)
+}
+```
+
+- Every body but Earth follows the IAU Working Group on Cartographic Coordinates and Rotational Elements: the 2015 report (Archinal et al. 2018, Celest. Mech. Dyn. Astr. 130:22), and for the Moon, which the 2015 report does not cover, the 2009 report (Archinal et al. 2011, 109:101). `elements(of:tt:)` gives the pole's right ascension α0 and declination δ0 and the prime meridian's W in degrees. The reports define d in TDB days and T in Julian centuries of TDB from J2000; the engine evaluates them at TT, as the C engine does and as #90's scope asks. The right ascension is reported in sidereal hours, unreduced as in the C engine; over the accepted range every one stays in 0 to 24 hours. `north` is the unit vector at (α0, δ0). W is measured counterclockwise about that pole from the node of the body's equator on the J2000 equator, at right ascension α0 + 90°, and is not reduced to one turn.
+- Earth keeps the C engine's model, as #90's scope asks ("retaining coefficients, frames, time scales, and provenance"). Its pole is the true pole of date, `Engine.FrameRotation.eqdToEqj` applied to the z axis (IAU 2006 precession and IAU 2000B nutation), with its right ascension from 0 up to 24 hours and its declination from `Engine.Equatorial`, as the C engine's `Astronomy_EquatorFromVector` gives them. Its W is `earthSpinAtJ2000` + `earthSpinRate` × UT days: it equals the 2009 report's W at J2000, 190.147° (`BODY399_PM` in `pck00011.tpc`), re-expressed on UT with a Delta T of about 63.85 s, and turns at the rate of the Earth rotation angle (IAU 2000 Resolution B1.8). The report's W turns at 360.9856235° per TDB day, so the two part away from J2000. Measured once with Espenak-Meeus Delta T, Earth's W is 0.69° above the report's in 1900 and 0.15° below in 2026 and 0.99° below in 2100; on the report's pole it puts Greenwich 0.59° off in 1900, 630″ in 2020 and 0.69° in 2100. Earth's returned pole and W do not place Greenwich together: measured with the construction the other bodies follow, they put it 179° off in 1900, 134° at 2000.0 and 0.4° to 0.7° from 2010 to 2100.
+- `axis(of:at:)` throws `invalidBody` for any other body before anything else, and `badTime` for a result that is not finite, a time that is not finite included. Like the C function it does not check the time against `Engine.acceptedTTDays`: the expressions hold no ephemeris. The north vector carries the time it was given.
+
+### Differences from published values
+
+- The reports' expressions take TDB; the engine, like the C engine, evaluates them at TT. Over the accepted range `Engine.TDB.offsetSeconds` stays under 1.85 ms in size: its largest, on a 2-day scan refined to 0.001 day, is 1.840 ms at TT −1,457,107.5 days, near the range's early end (1.697 ms on the same scan from 1900 to 2100). That moves W by under 1.9e-5° for Jupiter, the fastest: 1.854e-5° at the largest offset. The test asserts the 1.840 ms there and that every 100th day across the range stays under 1.85 ms.
+
+### Differences from the C engine
+
+- The C function returns a time or result that is not finite as a success; the engine throws `badTime`.
+
+### Published-value checks
+
+Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
+
+- NAIF's `pck00011.tpc` (`Scripts/reference-data/sources/naif`, URL and SHA-256 in `build-fixtures.py`), NAIF's machine-readable transcription of the 2015 report, and of the 2009 report for Earth and the Moon. The test reads its data blocks and evaluates each body's polynomials and nutation-precession terms as NAIF's PCK required reading defines them, at 81 times a century apart from one end of the accepted range to the other, both ends included, and 61 times 13.37 days apart from 2025-12-31 12:00 TT into 2028. Each time has its UT from Espenak-Meeus Delta T, and the expressions take its TT as TDB. The ten bodies other than Earth match it within 1e-14 of each value's size plus a turn, with right ascensions in 0 to 24 hours. The check fails for the elements evaluated at TDB and for the wrong body.
+- For the same ten bodies, the prime meridian that the returned α0, δ0 and W place, by NAIF's construction of the body-fixed frame, against the one the PCK's values place, at the same times and within the same allowances; and perpendicular to the returned pole.
+- Earth's pole against the third row of N·P built from SOFA's precession and nutation angles (pyerfa 2.0.1.5, the eight epochs from 1600 to 2500 with UT1 and TT apart that the orientation tests use), within √3 · 2e-15 radians from the 2e-15 those tests allow each element; its right ascension in 0 to 24 hours at every sample time, before and after J2000.
+- Earth's W less SOFA's `era00` at UT1 the same at those eight epochs, `earthSpinAtJ2000` less the Earth rotation angle's 280.46061837504° at UT1 0, modulo 360°; its rate 360 × 1.00273781191135448; and over 0.25° away from the same W taken at TT in 2026.
+- Earth's W at J2000 against `BODY399_PM`: the Delta T it implies, 63.85 s, within the 0.1 s to which the Astronomical Almanac's observed 63.8 s for 2000.0 is published; and the report's pole with Earth's W at J2000 TT, UT 63.8 s earlier, places the report's prime meridian within that 0.1 s of rotation, 1.5″.
+- Earth's returned pole and W, combined as for the other bodies, put Greenwich (the true equator of date at apparent sidereal time) more than 0.25° off in 1900, at 2000.0, in 2026 and in 2100. The other Greenwich figures above are measured, not asserted.
+- Mathematical bounds: `invalidBody` for every other `CelestialBody`, with a time that is not finite too; `badTime` for times that are not finite; and the time carried.
+
+### Rotation axis tests that depend on the C engine
+
+| Test | Disposition |
+|---|---|
+| `RotationAxisTests` | Named sanity checks of the public API on the C engine until #96. `EngineRotationAxisTests` checks the engine against the published elements and orientation. |
 
 ## Caches and reset
 
