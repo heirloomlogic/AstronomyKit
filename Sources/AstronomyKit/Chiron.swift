@@ -297,6 +297,12 @@ public enum Chiron {
 
     /// Calculates Chiron's horizontal coordinates for an observer.
     ///
+    /// The geocentric position of ``geocentricPosition(at:)`` is rotated from
+    /// the J2000 equator to the true equator and equinox of `time`, as
+    /// ``CelestialBody/horizon(at:from:refraction:)`` does, before the
+    /// conversion to altitude and azimuth. Like ``equatorial(at:)``, the
+    /// position carries no aberration or parallax.
+    ///
     /// - Parameters:
     ///   - time: The time at which to calculate the position.
     ///   - observer: The geographic observer location.
@@ -308,13 +314,15 @@ public enum Chiron {
         from observer: Observer,
         refraction: Refraction = .normal
     ) throws -> Horizon {
-        let eq = try equatorial(at: time)
+        let ofDate = try geocentricPosition(at: time)
+            .rotated(by: .equatorialJ2000ToEquatorialOfDate(at: time))
+            .toEquatorial()
         var rawTime = time.raw
         let result = Astronomy_Horizon(
             &rawTime,
             try observer.validatedRaw(),
-            eq.rightAscension,
-            eq.declination,
+            ofDate.rightAscension,
+            ofDate.declination,
             refraction.raw
         )
         return Horizon(result)

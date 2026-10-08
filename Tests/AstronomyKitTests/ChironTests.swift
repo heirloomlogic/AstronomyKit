@@ -5,6 +5,7 @@
 //  Tests for Chiron position calculations.
 //
 
+import Foundation
 import Testing
 
 @testable import AstronomyKit
@@ -209,6 +210,73 @@ struct ChironTests {
 
             #expect(horizon.altitude >= -90 && horizon.altitude <= 90, "Altitude is valid")
             #expect(horizon.azimuth >= 0 && horizon.azimuth < 360, "Azimuth is valid")
+        }
+
+        /// Where `vector`, a geocentric J2000 direction, appears from
+        /// `ashevilleObserver` at `time`, through the single J2000-to-horizon
+        /// rotation (`Astronomy_Rotation_EQJ_HOR`) with no refraction. It
+        /// composes the rotation to the true equator of date with the
+        /// sidereal-time and observer rotations in one matrix, where
+        /// `Chiron.horizon` rotates to the equator of date, converts to
+        /// right ascension and declination, and calls `Astronomy_Horizon`.
+        private static func horizontal(of vector: Vector3D, at time: AstroTime) throws -> Horizon {
+            let rotation = try RotationMatrix.equatorialJ2000ToHorizon(at: time, from: ashevilleObserver)
+            let spherical = Spherical.fromHorizonVector(try vector.rotated(by: rotation), refraction: .none)
+            return Horizon(altitude: spherical.latitude, azimuth: spherical.longitude)
+        }
+
+        /// The angle between two horizon directions, in arcminutes. Azimuth
+        /// differences shrink toward the zenith, so this compares directions
+        /// rather than the two angles one by one.
+        private static func separationArcminutes(_ lhs: Horizon, _ rhs: Horizon) -> Double {
+            IndependentReferenceMath.angularSeparationArcminutes(
+                raDegrees1: lhs.azimuth, decDegrees1: lhs.altitude,
+                raDegrees2: rhs.azimuth, decDegrees2: rhs.altitude)
+        }
+
+        /// Precession moves the equator about 50.3 arcseconds a year, so J2000
+        /// coordinates in the horizon conversion put Chiron 22′ off in 2026 and
+        /// 84′ off in 2100 (#200); the 1e-9 degree bound is far below that.
+        @Test(
+            "Horizon is Chiron's position on the equator of date",
+            arguments: [
+                AstroTime(year: 2_026, month: 7, day: 1, hour: 3),
+                AstroTime(year: 2_100, month: 1, day: 1, hour: 3),
+            ])
+        func horizonIsOnEquatorOfDate(time: AstroTime) throws {
+            let position = try Chiron.geocentricPosition(at: time)
+            let expected = try Self.horizontal(of: position, at: time)
+            let horizon = try Chiron.horizon(at: time, from: ashevilleObserver, refraction: .none)
+
+            // Both routes rotate one vector through the same frames, so they
+            // differ by double-precision rounding, a few 1e-14 degrees. The
+            // azimuth is scaled by the cosine of the altitude, as it shrinks
+            // toward the zenith.
+            let altitude = abs(horizon.altitude - expected.altitude)
+            let azimuth = abs(IndependentReferenceMath.wrappedDifference(horizon.azimuth, expected.azimuth))
+            #expect(altitude < 1e-9, "\(time): altitude \(altitude)°")
+            #expect(azimuth * cos(expected.altitude * .pi / 180) < 1e-9, "\(time): azimuth \(azimuth)°")
+        }
+
+        /// Horizons' astrometric direction, which has no aberration as the API
+        /// has none, is the published position. The 1′ row tolerance is the
+        /// accuracy `Engine Chiron positions` measures against these rows;
+        /// the largest difference here is 0.49′, in 1900.
+        @Test("Horizon matches the Horizons observer rows rotated to the equator of date")
+        func horizonMatchesHorizonsRows() throws {
+            let rows = IndependentReferenceArchive.shared.chironObservations
+            #expect(!rows.isEmpty)
+            for row in rows {
+                let time = IndependentReferenceDate.civil(row.utc)
+                let vector = Vector3D.from(
+                    sphere: Spherical(
+                        latitude: row.declinationDegrees, longitude: row.rightAscensionDegrees, distance: 1),
+                    at: time)
+                let expected = try Self.horizontal(of: vector, at: time)
+                let horizon = try Chiron.horizon(at: time, from: ashevilleObserver, refraction: .none)
+                let separation = Self.separationArcminutes(horizon, expected)
+                #expect(separation <= row.angularToleranceArcminutes, "\(row.utc): \(separation)′")
+            }
         }
     }
 
