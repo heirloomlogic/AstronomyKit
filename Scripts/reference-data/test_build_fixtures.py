@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -80,7 +81,6 @@ class RefreshSourcesTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "response hash"):
                     self.builder.verify_sources()
 
-
     def test_refresh_writes_a_publisher_source_by_its_full_url_into_its_directory(self):
         data = b"published constants"
         with tempfile.TemporaryDirectory() as temporary:
@@ -100,6 +100,62 @@ class RefreshSourcesTests(unittest.TestCase):
                 self.builder.refresh_sources()
             download.assert_called_once_with("https://example.org/constants.tpc")
             self.assertEqual(data, (source_dir / "naif" / "constants.tpc").read_bytes())
+
+
+class SofaFixedStarTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_reference_pins_recipe_and_requires_twice_the_sampled_residual(self):
+        references = self.builder.parse_sofa_fixed_stars()
+        self.assertEqual(1, len(references))
+        reference = references[0]
+        self.assertGreaterEqual(
+            reference["sampledToleranceArcseconds"],
+            2 * reference["sampledMaximumResidualArcseconds"],
+        )
+
+    def test_changed_recipe_fails_its_archived_hash(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source_dir = root / "Scripts/reference-data/sources"
+            (source_dir / "sofa").mkdir(parents=True)
+            (root / "Scripts/reference-data").mkdir(parents=True, exist_ok=True)
+            source = ROOT / "Scripts/reference-data/sources/sofa/fixed-star-reference.json"
+            (source_dir / "sofa/fixed-star-reference.json").write_bytes(source.read_bytes())
+            (root / "Scripts/reference-data/sofa-fixed-star-reference.c").write_text("changed recipe\n")
+            with (
+                mock.patch.object(self.builder, "ROOT", root),
+                mock.patch.object(self.builder, "SOURCE_DIR", source_dir),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "recipe hash"):
+                    self.builder.parse_sofa_fixed_stars()
+
+    def test_changed_recipe_output_fails_even_when_recipe_hash_matches(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            sofa_dir = root / "Scripts/reference-data/sources/sofa"
+            sofa_dir.mkdir(parents=True)
+            source = ROOT / "Scripts/reference-data/sources/sofa/fixed-star-reference.json"
+            reference = json.loads(source.read_text())
+            recipe_source = ROOT / "Scripts/reference-data/sofa-fixed-star-reference.c"
+            changed_recipe = recipe_source.read_text().replace(
+                'printf("rightAscensionHours %.17g\\n", hours(rc));',
+                'printf("rightAscensionHours %.17g\\n", hours(rc) + 1.0);',
+            )
+            self.assertNotEqual(recipe_source.read_text(), changed_recipe)
+            reference["_recipeSHA256"] = self.builder.sha256(changed_recipe.encode())
+            (sofa_dir / "fixed-star-reference.json").write_text(self.builder.encoded(reference).decode())
+            archive = ROOT / "Scripts/reference-data/sources/sofa/sofa_c-20231011.tar.gz"
+            (sofa_dir / archive.name).write_bytes(archive.read_bytes())
+            (root / "Scripts/reference-data/sofa-fixed-star-reference.c").write_text(changed_recipe)
+            with (
+                mock.patch.object(self.builder, "ROOT", root),
+                mock.patch.object(self.builder, "SOURCE_DIR", root / "Scripts/reference-data/sources"),
+            ):
+                with self.assertRaisesRegex(RuntimeError, "recipe output mismatch"):
+                    self.builder.parse_sofa_fixed_stars()
 
 
 class ApparentRangeFixtureTests(unittest.TestCase):

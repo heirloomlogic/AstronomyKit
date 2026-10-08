@@ -400,25 +400,7 @@ struct ReproducibilityTests {
         )
     }
 
-    // MARK: - 5. FixedStar Ecliptic Conversion
-
-    /// Exercises the FixedStar ecliptic path (true ecliptic and equinox of date) end to end.
-    @Test("FixedStar (Sirius) ecliptic conversion at 2000-01-01T00:00Z")
-    func fixedStarEcliptic2000() throws {
-        let sirius = FixedStar(
-            name: "Sirius",
-            rightAscension: 6.752477,
-            declination: -16.716116,
-            distance: 8.6
-        )
-        expectEcliptic(
-            try sirius.ecliptic(at: Self.t2000),
-            lon: 0x405a_0575_2c42_0892, lat: 0xc043_cd71_c1b8_e50d, dist: 0x4120_9907_31c0_2639,
-            "Sirius 2000"
-        )
-    }
-
-    // MARK: - 6. Chiron (Gravity-Simulated, Within Bounds)
+    // MARK: - 5. Chiron (Gravity-Simulated, Within Bounds)
 
     @Test("Chiron ecliptic position at 2026-07-24T00:00Z (within 1900–2150 bounds)")
     func chironEcliptic2026() throws {
@@ -430,7 +412,7 @@ struct ReproducibilityTests {
         )
     }
 
-    // MARK: - 7. Geocentric Ecliptic Rates
+    // MARK: - 6. Geocentric Ecliptic Rates
 
     /// Compares ecliptic rates in degrees per day and AU per day. The Moon's rates
     /// are analytic in the bundled interval and keep looser budgets than the other bodies.
