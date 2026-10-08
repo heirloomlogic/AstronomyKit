@@ -7,8 +7,11 @@ struct IndependentReferenceArchive: Decodable {
     let schemaVersion: Int
     let provenance: [String: Provenance]
     let observations: [Observation]
+    let chironObservations: [Observation]
     let vectors: [Vector]
     let horizontal: [Horizontal]
+    let elongations: [Elongation]
+    let saturnRings: [SaturnRing]
     let geocentricStates: [GeocentricState]
     let seasons: [Season]
     let lunarPhases: [LunarPhase]
@@ -71,6 +74,28 @@ struct IndependentReferenceArchive: Decodable {
         let azimuthDegrees: Double
         let elevationDegrees: Double
         let angularToleranceArcminutes: Double
+    }
+
+    /// A Horizons elongation from the Sun, with whether the body trails it
+    /// (`/T`, evening) or leads it (`/L`, morning), and the apparent ecliptic
+    /// of date.
+    struct Elongation: Decodable {
+        let body: String
+        let utc: String
+        let elongationDegrees: Double
+        let trailsSun: Bool
+        let eclipticLongitudeDegrees: Double
+        let eclipticLatitudeDegrees: Double
+    }
+
+    /// Saturn's planetodetic sub-observer latitude from Earth's center, with
+    /// the radii Horizons gives for it, and its phase angle.
+    struct SaturnRing: Decodable {
+        let utc: String
+        let subObserverPlanetodeticLatitudeDegrees: Double
+        let phaseAngleDegrees: Double
+        let equatorialRadiusKm: Double
+        let polarRadiusKm: Double
     }
 
     /// A Horizons state of the Moon or the Earth-Moon barycenter from
@@ -215,6 +240,11 @@ struct IndependentReferenceArchive: Decodable {
 }
 
 enum IndependentReferenceDate {
+    /// The engine time at `text`'s UT, under Espenak-Meeus.
+    static func engine(_ text: String) -> Engine.Time {
+        Engine.Time(ut: universal(text, deltaTModel: .espenakMeeus).universalTime, deltaTModel: .espenakMeeus)
+    }
+
     static func civil(_ text: String) -> AstroTime {
         AstroTime(date(text))
     }

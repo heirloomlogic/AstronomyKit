@@ -1,4 +1,90 @@
 {
+  "chironObservations": [
+    {
+      "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 11.2578222669407,
+      "body": "chiron",
+      "declinationDegrees": -18.3439,
+      "declinationRateArcsecondsPerHour": -0.59626,
+      "eclipticLatitudeDegrees": 4.7663244,
+      "eclipticLongitudeDegrees": 258.9101874,
+      "rangeRateKmPerSecond": -7.5273983,
+      "rightAscensionDegrees": 259.81867,
+      "rightAscensionRateArcsecondsPerHour": 16.7186,
+      "series": "chiron-observer",
+      "utc": "1900-Jan-01 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 10.9757541285629,
+      "body": "chiron",
+      "declinationDegrees": -18.2878,
+      "declinationRateArcsecondsPerHour": -0.9234,
+      "eclipticLatitudeDegrees": 4.4935375,
+      "eclipticLongitudeDegrees": 255.7772883,
+      "rangeRateKmPerSecond": -9.005916,
+      "rightAscensionDegrees": 255.79269,
+      "rightAscensionRateArcsecondsPerHour": 16.97238,
+      "series": "chiron-observer",
+      "utc": "1950-Jan-01 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 10.6667225953704,
+      "body": "chiron",
+      "declinationDegrees": -18.13898,
+      "declinationRateArcsecondsPerHour": -1.36023,
+      "eclipticLatitudeDegrees": 4.0686422,
+      "eclipticLongitudeDegrees": 251.5603761,
+      "rangeRateKmPerSecond": -10.9762013,
+      "rightAscensionDegrees": 250.61885,
+      "rightAscensionRateArcsecondsPerHour": 17.10838,
+      "series": "chiron-observer",
+      "utc": "2000-Jan-01 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 18.1968165077089,
+      "body": "chiron",
+      "declinationDegrees": 9.11922,
+      "declinationRateArcsecondsPerHour": -0.26598,
+      "eclipticLatitudeDegrees": 0.5002884,
+      "eclipticLongitudeDegrees": 22.599065,
+      "rangeRateKmPerSecond": 28.4865064,
+      "rightAscensionDegrees": 20.36983,
+      "rightAscensionRateArcsecondsPerHour": 0.0133,
+      "series": "chiron-observer",
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 10.3407558544302,
+      "body": "chiron",
+      "declinationDegrees": -17.81149,
+      "declinationRateArcsecondsPerHour": -1.83464,
+      "eclipticLatitudeDegrees": 3.5241993,
+      "eclipticLongitudeDegrees": 246.5876019,
+      "rangeRateKmPerSecond": -13.7188408,
+      "rightAscensionDegrees": 244.64352,
+      "rightAscensionRateArcsecondsPerHour": 16.96018,
+      "series": "chiron-observer",
+      "utc": "2050-Jan-01 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "apparentRangeAU": 10.0271976595875,
+      "body": "chiron",
+      "declinationDegrees": -17.29935,
+      "declinationRateArcsecondsPerHour": -2.30452,
+      "eclipticLatitudeDegrees": 3.0023269,
+      "eclipticLongitudeDegrees": 241.8597549,
+      "rangeRateKmPerSecond": -15.7885976,
+      "rightAscensionDegrees": 238.96357,
+      "rightAscensionRateArcsecondsPerHour": 16.8639,
+      "series": "chiron-observer",
+      "utc": "2100-Jan-01 00:00:00.000"
+    }
+  ],
   "earthApsides": [
     {
       "distanceAU": 0.983286,
@@ -41,6 +127,328 @@
       "kind": "apocenter",
       "timeToleranceSeconds": 7234.8,
       "utc": "2100-07-06T15:58Z"
+    }
+  ],
+  "elongations": [
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": 4.9720024,
+      "eclipticLongitudeDegrees": 81.7534307,
+      "elongationDegrees": 159.5766,
+      "trailsSun": true,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": -1.5164399,
+      "eclipticLongitudeDegrees": 322.2664792,
+      "elongationDegrees": 6.243,
+      "trailsSun": false,
+      "utc": "2026-Feb-17 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": -4.365117,
+      "eclipticLongitudeDegrees": 216.051175,
+      "elongationDegrees": 157.7712,
+      "trailsSun": false,
+      "utc": "2026-Apr-04 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": 3.9057332,
+      "eclipticLongitudeDegrees": 103.7973227,
+      "elongationDegrees": 44.9186,
+      "trailsSun": true,
+      "utc": "2026-May-20 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": 0.755277,
+      "eclipticLongitudeDegrees": 339.1133969,
+      "elongationDegrees": 123.8991,
+      "trailsSun": false,
+      "utc": "2026-Jul-05 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": -5.268988,
+      "eclipticLongitudeDegrees": 235.7370853,
+      "elongationDegrees": 88.7242,
+      "trailsSun": true,
+      "utc": "2026-Aug-20 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": 2.4660407,
+      "eclipticLongitudeDegrees": 120.6395325,
+      "elongationDegrees": 71.1532,
+      "trailsSun": false,
+      "utc": "2026-Oct-05 00:00:00.000"
+    },
+    {
+      "body": "moon",
+      "eclipticLatitudeDegrees": 2.6475221,
+      "eclipticLongitudeDegrees": 356.7762899,
+      "elongationDegrees": 119.0716,
+      "trailsSun": true,
+      "utc": "2026-Nov-20 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": -0.678856,
+      "eclipticLongitudeDegrees": 270.1799862,
+      "elongationDegrees": 11.4274,
+      "trailsSun": false,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": 0.505612,
+      "eclipticLongitudeDegrees": 346.0235591,
+      "elongationDegrees": 17.7073,
+      "trailsSun": true,
+      "utc": "2026-Feb-17 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": -1.7309727,
+      "eclipticLongitudeDegrees": 346.4640936,
+      "elongationDegrees": 27.8194,
+      "trailsSun": false,
+      "utc": "2026-Apr-04 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": 1.055905,
+      "eclipticLongitudeDegrees": 65.5696383,
+      "elongationDegrees": 6.6411,
+      "trailsSun": true,
+      "utc": "2026-May-20 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": -3.5145132,
+      "eclipticLongitudeDegrees": 115.2229719,
+      "elongationDegrees": 12.6956,
+      "trailsSun": true,
+      "utc": "2026-Jul-05 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": 1.55176,
+      "eclipticLongitudeDegrees": 139.03294,
+      "elongationDegrees": 8.1338,
+      "trailsSun": false,
+      "utc": "2026-Aug-20 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": -2.2061801,
+      "eclipticLongitudeDegrees": 215.8008436,
+      "elongationDegrees": 24.1214,
+      "trailsSun": true,
+      "utc": "2026-Oct-05 00:00:00.000"
+    },
+    {
+      "body": "mercury",
+      "eclipticLatitudeDegrees": 2.3910759,
+      "eclipticLongitudeDegrees": 218.2337143,
+      "elongationDegrees": 19.5778,
+      "trailsSun": false,
+      "utc": "2026-Nov-20 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": -0.5422322,
+      "eclipticLongitudeDegrees": 280.4647629,
+      "elongationDegrees": 1.2468,
+      "trailsSun": false,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": -1.4637345,
+      "eclipticLongitudeDegrees": 338.2262875,
+      "elongationDegrees": 10.0096,
+      "trailsSun": true,
+      "utc": "2026-Feb-17 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": -0.3177501,
+      "eclipticLongitudeDegrees": 35.3320505,
+      "elongationDegrees": 21.1004,
+      "trailsSun": true,
+      "utc": "2026-Apr-04 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": 1.6288909,
+      "eclipticLongitudeDegrees": 91.1407415,
+      "elongationDegrees": 32.165,
+      "trailsSun": true,
+      "utc": "2026-May-20 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": 1.6447397,
+      "eclipticLongitudeDegrees": 144.7112455,
+      "elongationDegrees": 41.7219,
+      "trailsSun": true,
+      "utc": "2026-Jul-05 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": -1.9321968,
+      "eclipticLongitudeDegrees": 192.7957448,
+      "elongationDegrees": 45.8091,
+      "trailsSun": true,
+      "utc": "2026-Aug-20 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": -7.3643459,
+      "eclipticLongitudeDegrees": 218.4349542,
+      "elongationDegrees": 27.5868,
+      "trailsSun": true,
+      "utc": "2026-Oct-05 00:00:00.000"
+    },
+    {
+      "body": "venus",
+      "eclipticLatitudeDegrees": -0.3700738,
+      "eclipticLongitudeDegrees": 203.5587932,
+      "elongationDegrees": 34.1136,
+      "trailsSun": false,
+      "utc": "2026-Nov-20 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": -0.8973197,
+      "eclipticLongitudeDegrees": 283.4548451,
+      "elongationDegrees": 2.0718,
+      "trailsSun": true,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": -1.0831687,
+      "eclipticLongitudeDegrees": 319.290795,
+      "elongationDegrees": 9.0966,
+      "trailsSun": false,
+      "utc": "2026-Feb-17 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": -1.0328594,
+      "eclipticLongitudeDegrees": 355.4629195,
+      "elongationDegrees": 18.7983,
+      "trailsSun": false,
+      "utc": "2026-Apr-04 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": -0.7371781,
+      "eclipticLongitudeDegrees": 30.8017707,
+      "elongationDegrees": 28.2197,
+      "trailsSun": false,
+      "utc": "2026-May-20 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": -0.2522454,
+      "eclipticLongitudeDegrees": 64.3946504,
+      "elongationDegrees": 38.6219,
+      "trailsSun": false,
+      "utc": "2026-Jul-05 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": 0.357595,
+      "eclipticLongitudeDegrees": 95.6805508,
+      "elongationDegrees": 51.3386,
+      "trailsSun": false,
+      "utc": "2026-Aug-20 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": 1.0847605,
+      "eclipticLongitudeDegrees": 124.0036337,
+      "elongationDegrees": 67.7752,
+      "trailsSun": false,
+      "utc": "2026-Oct-05 00:00:00.000"
+    },
+    {
+      "body": "mars",
+      "eclipticLatitudeDegrees": 2.0299558,
+      "eclipticLongitudeDegrees": 147.5213196,
+      "elongationDegrees": 90.1492,
+      "trailsSun": false,
+      "utc": "2026-Nov-20 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.2415663,
+      "eclipticLongitudeDegrees": 111.2265951,
+      "elongationDegrees": 170.3578,
+      "trailsSun": false,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.3299254,
+      "eclipticLongitudeDegrees": 105.8820308,
+      "elongationDegrees": 137.5578,
+      "trailsSun": true,
+      "utc": "2026-Feb-17 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.3732103,
+      "eclipticLongitudeDegrees": 105.9890309,
+      "elongationDegrees": 91.7551,
+      "trailsSun": true,
+      "utc": "2026-Apr-04 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.4031355,
+      "eclipticLongitudeDegrees": 111.8949418,
+      "elongationDegrees": 52.8834,
+      "trailsSun": true,
+      "utc": "2026-May-20 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.4432348,
+      "eclipticLongitudeDegrees": 121.0223505,
+      "elongationDegrees": 18.0118,
+      "trailsSun": true,
+      "utc": "2026-Jul-05 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.5069384,
+      "eclipticLongitudeDegrees": 131.1361114,
+      "elongationDegrees": 15.8901,
+      "trailsSun": false,
+      "utc": "2026-Aug-20 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.6077572,
+      "eclipticLongitudeDegrees": 140.2962639,
+      "elongationDegrees": 51.4809,
+      "trailsSun": false,
+      "utc": "2026-Oct-05 00:00:00.000"
+    },
+    {
+      "body": "jupiter",
+      "eclipticLatitudeDegrees": 0.7591098,
+      "eclipticLongitudeDegrees": 146.177099,
+      "elongationDegrees": 91.4934,
+      "trailsSun": false,
+      "utc": "2026-Nov-20 00:00:00.000"
     }
   ],
   "geocentricStates": [
@@ -103564,6 +103972,19 @@
       "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     },
+    "jplElongation": {
+      "aberration": "apparent positions with light time, gravitational deflection and stellar aberration",
+      "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT",
+      "frame": "geocentric Sun-observer-target angle and IAU76/80 ecliptic of date",
+      "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
+      "origin": "Earth center 500@399",
+      "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256",
+      "refraction": "none",
+      "serviceVersion": "recorded in every archived response",
+      "timeScale": "UTC calendar output",
+      "units": "degrees",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
+    },
     "jplHorizontal": {
       "aberration": "apparent position with light time, gravitational deflection and stellar aberration",
       "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon",
@@ -103579,7 +104000,7 @@
     },
     "jplObserver": {
       "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections",
-      "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket",
+      "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket and 2060 Chiron at 1900-01-01 03:00 UT, 1950, 2000, 2026-01-02, 2050 and 2100",
       "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date",
       "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
       "origin": "Earth center 500@399",
@@ -103588,6 +104009,19 @@
       "serviceVersion": "recorded in every archived response",
       "timeScale": "UT/UTC calendar output",
       "units": "degrees, arcseconds/hour, AU, and km/s",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
+    },
+    "jplSaturnRings": {
+      "aberration": "apparent sub-observer point with light time; S-T-O as Horizons defines it",
+      "domain": "11 dates from 2010 to 2035, through the 2025 ring-plane crossing",
+      "frame": "Saturn's planetodetic sub-observer latitude on the IAU pole and ellipsoid Horizons lists, and the Sun-target-observer angle",
+      "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
+      "origin": "Earth center 500@399",
+      "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256",
+      "refraction": "none",
+      "serviceVersion": "recorded in every archived response",
+      "timeScale": "UTC calendar output",
+      "units": "degrees and km",
       "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
     },
     "jplVectors": {
@@ -156850,6 +157284,85 @@
       "sourceLine": 5909,
       "timeToleranceSeconds": 70.8,
       "utc": "2022-09-25T04:13Z"
+    }
+  ],
+  "saturnRings": [
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 5.927,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 5.990755,
+      "utc": "2010-Jan-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 5.8276,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 15.290907,
+      "utc": "2012-Jul-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 3.5925,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 29.275256,
+      "utc": "2015-Jan-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 1.5942,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 31.678711,
+      "utc": "2017-Jul-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 1.1123,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 28.187555,
+      "utc": "2020-Jan-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 4.2178,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 15.363853,
+      "utc": "2022-Jul-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 5.254,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": 5.227768,
+      "utc": "2025-Jan-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 6.0432,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": -4.41362,
+      "utc": "2025-Jul-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 5.9488,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": -17.125531,
+      "utc": "2027-Jul-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 4.8834,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": -25.689657,
+      "utc": "2030-Jan-01 00:00:00.000"
+    },
+    {
+      "equatorialRadiusKm": 60268.0,
+      "phaseAngleDegrees": 2.4544,
+      "polarRadiusKm": 54364.0,
+      "subObserverPlanetodeticLatitudeDegrees": -24.381793,
+      "utc": "2035-Jan-01 00:00:00.000"
     }
   ],
   "schemaVersion": 3,

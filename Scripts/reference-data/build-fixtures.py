@@ -45,6 +45,17 @@ UPSTREAM_SOURCES = {
     "mooninfo_2020.txt": ("generate/libration/mooninfo_2020.txt", "e487d4f934724e477d4247b60b09c4da0b39d6d61a5fa92b4ac60a76a8adf1b1"),
     "mooninfo_2021.txt": ("generate/libration/mooninfo_2021.txt", "8e0e187f5993d4ba377da27f4f4fb524a1ad7b7324977f26e3adb01e5da28873"),
     "mooninfo_2022.txt": ("generate/libration/mooninfo_2022.txt", "2ab619bf7104b861c7205b52c4f22bcea2b64ce79631031b3726e508abffc4a2"),
+    # JPL Horizons visual magnitude tables, 2010 to 2030 every two days, as Astronomy Engine pins them for ctest.c's
+    # MagnitudeTest. EngineIlluminationTests reads them directly; no fixture is built from them.
+    "magnitude_sun.txt": ("generate/magnitude/Sun.txt", "87c4afbd5dece1d61a97a97b27ec241d951afc4a9d8130633d79df2298230f61"),
+    "magnitude_moon.txt": ("generate/magnitude/Moon.txt", "410de451d9d80a91eec51910580a6211e989436a5e900ef9a667f6312c76c8fc"),
+    "magnitude_mercury.txt": ("generate/magnitude/Mercury.txt", "902e8a36d700f4c309791575bb0dc1f62ec89614a5bb1eedeb0c56bf56a9adf4"),
+    "magnitude_venus.txt": ("generate/magnitude/Venus.txt", "4e26a87c6d37ce003e5851bc59b0a4abf69d7202c765d7cbbfd9cc3ee159a143"),
+    "magnitude_mars.txt": ("generate/magnitude/Mars.txt", "744c38a99816e2f252bce80489c0523afba6b070fc0f45a51f543519cdc95894"),
+    "magnitude_jupiter.txt": ("generate/magnitude/Jupiter.txt", "ab7bf7b239244ada7c11315522a8d8d5b3b9b3120bbb627813de725c3522ffc7"),
+    "magnitude_uranus.txt": ("generate/magnitude/Uranus.txt", "fff69569917a255e3ffe97e3a3249e2e3205eddcd03abffb9c0ac533bdfa2ea5"),
+    "magnitude_neptune.txt": ("generate/magnitude/Neptune.txt", "436ea40468af37f4062f126dc78e0c56910363b9368e109d8563fcffeb8a3d77"),
+    "magnitude_pluto.txt": ("generate/magnitude/Pluto.txt", "7b7297188e8b2875432d8c6cb3cf691e97a1cf18e953662f8adf6f8919b286ca"),
     "astronomy-engine-license.txt": ("LICENSE", "a76df666a7db8a06f599d08e07c3ff74c4b250b50b49c43353af2bd5bb34604e"),
 }
 
@@ -53,7 +64,21 @@ HORIZONS_OBSERVER_QUERIES = {
     "mars-observer": ("499", [2415020.5, 2451544.5, 2488069.5]),
     "pluto-observer": ("999", [2415020.5, 2451544.5, 2488069.5]),
     "mercury-station": ("199", [2460897.5, 2460898.5, 2460899.5]),
+    # Chiron from Earth's center: 1900-01-01 03:00 UT, once light time from the start of its supported span has passed,
+    # then 1950, 2000, 2026-01-02, 2050 and 2100.
+    "chiron-observer": ("2060;", [2415020.625, 2433282.5, 2451544.5, 2461042.5, 2469807.5, 2488069.5]),
 }
+
+# Elongation from the Sun with the side it falls on, and the apparent ecliptic longitude, of the Moon, Mercury, Venus,
+# Mars and Jupiter every 46 days through 2026.
+ELONGATION_DATES = [2461042.5 + 46 * k for k in range(8)]
+HORIZONS_ELONGATION_QUERIES = {
+    f"{name}-elongation": command
+    for name, command in [("moon", "301"), ("mercury", "199"), ("venus", "299"), ("mars", "499"), ("jupiter", "599")]
+}
+
+# Saturn's sub-observer latitude and phase angle from Earth's center, through the ring-plane crossings of 2009 and 2025.
+SATURN_RING_DATES = [2455197.5, 2456109.5, 2457023.5, 2457935.5, 2458849.5, 2459761.5, 2460676.5, 2460857.5, 2461587.5, 2462502.5, 2464328.5]
 
 # The Sun, the Moon and Mars from the Asheville observer of JPLValidationTests (35.595 N, 82.5572 W, sea level), every
 # three hours on 2026-01-02 and 2026-07-02 UT, without refraction and with Horizons' refraction model.
@@ -187,6 +212,23 @@ def vector_query(command: str, center: str, julian_dates: list[float]) -> dict[s
     }
 
 
+def geocentric_query(command: str, quantities: str, julian_dates: list[float]) -> dict[str, str]:
+    return {
+        "COMMAND": quoted(command),
+        "OBJ_DATA": quoted("NO"),
+        "MAKE_EPHEM": quoted("YES"),
+        "EPHEM_TYPE": quoted("OBSERVER"),
+        "CENTER": quoted("500@399"),
+        "TLIST": quoted(",".join(str(value) for value in julian_dates)),
+        "QUANTITIES": quoted(quantities),
+        "CAL_FORMAT": quoted("CAL"),
+        "TIME_DIGITS": quoted("SECONDS"),
+        "ANG_FORMAT": quoted("DEG"),
+        "EXTRA_PREC": quoted("YES"),
+        "CSV_FORMAT": quoted("YES"),
+    }
+
+
 def horizontal_query(command: str, apparent: str, julian_dates: list[float]) -> dict[str, str]:
     return {
         "COMMAND": quoted(command),
@@ -220,6 +262,11 @@ def horizons_acquisitions() -> list[tuple[str, dict[str, str]]]:
         (name, horizontal_query(command, apparent, HORIZONTAL_DATES))
         for name, (command, apparent) in HORIZONS_HORIZONTAL_QUERIES.items()
     )
+    acquisitions.extend(
+        (name, geocentric_query(command, "23,31", ELONGATION_DATES))
+        for name, command in HORIZONS_ELONGATION_QUERIES.items()
+    )
+    acquisitions.append(("saturn-rings", geocentric_query("699", "14,24", SATURN_RING_DATES)))
     return acquisitions
 
 
@@ -539,11 +586,12 @@ def jupiter_moon_relative_tolerance(julian_date_tdb: float) -> float | None:
 
 def parse_horizons() -> dict[str, list[dict[str, object]]]:
     observations = []
-    body_names = {"moon-observer": "moon", "mars-observer": "mars", "pluto-observer": "pluto", "mercury-station": "mercury"}
+    body_names = {"moon-observer": "moon", "mars-observer": "mars", "pluto-observer": "pluto", "mercury-station": "mercury", "chiron-observer": "chiron"}
+    chiron_observations = []
     for name, body in body_names.items():
         for line in data_lines(horizons_result(name)):
             columns = [column.strip() for column in line.split(",")]
-            observations.append({"series": name, "body": body, "utc": columns[0].replace("A.D. ", ""), "rightAscensionDegrees": float(columns[3]), "declinationDegrees": float(columns[4]), "rightAscensionRateArcsecondsPerHour": float(columns[5]), "declinationRateArcsecondsPerHour": float(columns[6]), "apparentRangeAU": float(columns[7]), "rangeRateKmPerSecond": float(columns[8]), "eclipticLongitudeDegrees": float(columns[9]), "eclipticLatitudeDegrees": float(columns[10]), "angularToleranceArcminutes": 1.5 if body in {"pluto"} else 1.0})
+            (chiron_observations if body == "chiron" else observations).append({"series": name, "body": body, "utc": columns[0].replace("A.D. ", ""), "rightAscensionDegrees": float(columns[3]), "declinationDegrees": float(columns[4]), "rightAscensionRateArcsecondsPerHour": float(columns[5]), "declinationRateArcsecondsPerHour": float(columns[6]), "apparentRangeAU": float(columns[7]), "rangeRateKmPerSecond": float(columns[8]), "eclipticLongitudeDegrees": float(columns[9]), "eclipticLatitudeDegrees": float(columns[10]), "angularToleranceArcminutes": 1.5 if body in {"pluto"} else 1.0})
 
     vectors = []
     vector_names = {"chiron-vector": ("chiron", "sun"), "io-vector": ("io", "jupiter"), "europa-vector": ("europa", "jupiter"), "ganymede-vector": ("ganymede", "jupiter"), "callisto-vector": ("callisto", "jupiter"), "moon-vector": ("moon", "earth"), "pluto-vector": ("pluto", "sun"), "pluto-barycenter-vector": ("pluto-barycenter", "sun"), "pluto-barycenter-decade": ("pluto-barycenter-decade", "sun"), "chiron-anchor-vector": ("chiron-anchor", "sun")}
@@ -559,7 +607,18 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
         for line in data_lines(horizons_result(name)):
             columns = [column.strip() for column in line.split(",")]
             horizontal.append({"body": body, "refracted": apparent == "refracted", "utc": columns[0], "azimuthDegrees": float(columns[3]), "elevationDegrees": float(columns[4]), "angularToleranceArcminutes": 1.0})
-    return {"observations": observations, "vectors": vectors, "horizontal": horizontal}
+    elongations = []
+    for name in HORIZONS_ELONGATION_QUERIES:
+        for line in data_lines(horizons_result(name)):
+            columns = [column.strip() for column in line.split(",")]
+            elongations.append({"body": name.removesuffix("-elongation"), "utc": columns[0], "elongationDegrees": float(columns[3]), "trailsSun": columns[4] == "/T", "eclipticLongitudeDegrees": float(columns[5]), "eclipticLatitudeDegrees": float(columns[6])})
+    saturn = horizons_result("saturn-rings")
+    radii = [float(value) for value in saturn.split("Target radii    :", 1)[1].split("km", 1)[0].split(",")]
+    saturn_rings = []
+    for line in data_lines(saturn):
+        columns = [column.strip() for column in line.split(",")]
+        saturn_rings.append({"utc": columns[0], "subObserverPlanetodeticLatitudeDegrees": float(columns[4]), "phaseAngleDegrees": float(columns[5]), "equatorialRadiusKm": radii[0], "polarRadiusKm": radii[2]})
+    return {"observations": observations, "chironObservations": chiron_observations, "vectors": vectors, "horizontal": horizontal, "elongations": elongations, "saturnRings": saturn_rings}
 
 
 def build_archive() -> dict[str, object]:
@@ -581,8 +640,10 @@ def source_catalog() -> dict[str, dict[str, str]]:
     jpl_license = "NASA/JPL factual output; acknowledge NASA and do not imply endorsement; the copied files also retain the archived Astronomy Engine MIT license"
     nasa_license = "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license"
     return {
-        "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket and 2060 Chiron at 1900-01-01 03:00 UT, 1950, 2000, 2026-01-02, 2050 and 2100", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplHorizontal": {"serviceVersion": "recorded in every archived response", "frame": "topocentric apparent horizon: azimuth east of north and elevation", "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent position with light time, gravitational deflection and stellar aberration", "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)", "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplElongation": {"serviceVersion": "recorded in every archived response", "frame": "geocentric Sun-observer-target angle and IAU76/80 ecliptic of date", "origin": "Earth center 500@399", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent positions with light time, gravitational deflection and stellar aberration", "refraction": "none", "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplSaturnRings": {"serviceVersion": "recorded in every archived response", "frame": "Saturn's planetodetic sub-observer latitude on the IAU pole and ellipsoid Horizons lists, and the Sun-target-observer angle", "origin": "Earth center 500@399", "units": "degrees and km", "timeScale": "UTC calendar output", "aberration": "apparent sub-observer point with light time; S-T-O as Horizons defines it", "refraction": "none", "domain": "11 dates from 2010 to 2035, through the 2025 ring-plane crossing", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon; the solar system barycenter 500@0 for the Sun, the planets, Pluto (999), the Moon and the Earth-Moon barycenter (3)", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center, and at 4 dates from 1990 to 2010 for the gravity simulation; barycentric states inside the spans of Astronomy Engine's BaryStateTest files: the Sun, Jupiter to Neptune and Pluto every 25 years from 1900 to 2099, Mercury to Mars every 10 years from 1980 to 2020, and the Moon and the Earth-Moon barycenter at 5 dates from 1970 to 2040; Chiron at its five anchors from 2000 to 2040, around the four midpoints between them, and at 1900-01-01 and 2150-01-01", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "calendar timestamps", "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parser, C validation harness, engine source, and table under {upstream}/moonphase, {upstream}/ctest.c, and the matching source/c tree"},
         "espenakMoonNodes": {"version": UPSTREAM_REVISION, "frame": "geocentric equator and equinox of date as consumed by the pinned harness", "origin": "Earth center", "units": "UTC calendar timestamps, right ascension hours, and declination degrees", "timeScale": "UTC as serialized by the pinned transformation", "aberration": "not documented by the source table", "refraction": "not applicable to geocentric node events", "domain": "published table 2001 through 2100; sampled at 2001, 2050, and 2100", "license": f"Fred Espenak table with attribution; {mit_license}", "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html", "recipe": f"Pinned README, parser, and table under {upstream}/moon_nodes"},

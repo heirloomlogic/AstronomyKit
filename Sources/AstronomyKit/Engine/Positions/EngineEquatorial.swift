@@ -56,7 +56,7 @@ extension Engine.Positions {
 
     /// `Engine.Equatorial` of `vector`, with the C engine's `badVector` for a
     /// zero vector where ``Engine/Spherical`` throws `invalidParameter`.
-    private static func coordinates<F>(_ vector: Engine.Vector<F>) throws -> Engine.Equatorial {
+    static func coordinates<F>(_ vector: Engine.Vector<F>) throws -> Engine.Equatorial {
         guard vector.x != 0 || vector.y != 0 || vector.z != 0 else { throw AstronomyError.badVector }
         return try Engine.Equatorial(vector)
     }
