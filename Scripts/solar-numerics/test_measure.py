@@ -1,7 +1,11 @@
+import contextlib
 import copy
+import io
 import json
 from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
 import measure
 
@@ -10,6 +14,29 @@ class MeasurementProvenanceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.saved = json.loads(Path(__file__).with_name("evidence").joinpath("macos-arm64-debug.json").read_text())
+
+    def recheck(self, report):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "report.json"
+            path.write_text(json.dumps(report))
+            with patch("sys.argv", ["measure.py", "--recheck", "--output", str(path)]), contextlib.redirect_stdout(io.StringIO()):
+                measure.main()
+
+    def test_recheck_requires_the_complete_canonical_request_sequence(self):
+        for mutation in ["delete", "reorder", "rename", "duplicate"]:
+            with self.subTest(mutation=mutation):
+                changed = copy.deepcopy(self.saved)
+                for field in ["requests", "rows"]:
+                    if mutation == "delete":
+                        del changed[field][0]
+                    elif mutation == "reorder":
+                        changed[field][0], changed[field][1] = changed[field][1], changed[field][0]
+                    elif mutation == "rename":
+                        changed[field][0]["id"] = "different-request"
+                    else:
+                        changed[field][0] = copy.deepcopy(changed[field][1])
+                with self.assertRaisesRegex(SystemExit, "canonical request grid"):
+                    self.recheck(changed)
 
     def test_saved_reference_is_reexecuted(self):
         rows = self.saved["rows"][:1]

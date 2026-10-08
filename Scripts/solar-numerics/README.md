@@ -19,7 +19,7 @@ python3 Scripts/solar-numerics/numerics.py --check
 
 `numerics.py` without `--check` regenerates `derived-earth.json`. `--bindings-only` checks source hashes without repeating the derivation. A changed bound source or data file fails the existing binding; regeneration records the new source and derivation together. Hash equality identifies the expressions evaluated; it does not prove that a changed expression is covered by an unchanged argument. Such a change still needs its mathematical derivation checked.
 
-The measurement exporter reads explicit request and output paths from the runner's environment. It is disabled during ordinary tests. It executes `Engine.Time`, `Engine.DeltaT`, `Engine.EarthRotation`, `Engine.Nutation` and `Engine.Planet.earth` directly. C is still linked by the package, but none of those measured functions calls it. All native inputs and outputs are recorded as binary64 bit patterns. Rechecking re-executes the reference from those bits and verifies the source/data hashes; mismatched request IDs, lost input bits, duplicate/missing rows and altered reference values are tested failure cases.
+The measurement exporter reads explicit request and output paths from the runner's environment. It is disabled during ordinary tests. It executes `Engine.Time`, `Engine.DeltaT`, `Engine.EarthRotation`, `Engine.Nutation` and `Engine.Planet.earth` directly. C is still linked by the package, but none of those measured functions calls it. All native inputs and outputs are recorded as binary64 bit patterns. Rechecking requires the complete canonical request sequence, re-executes the reference from those bits and verifies the source/data hashes; mismatched request IDs, lost input bits, duplicate/missing rows and altered reference values are tested failure cases.
 
 ## Derived polynomial terms
 
@@ -43,7 +43,7 @@ The independent Python implementation is AstronomyKit code. mpmath is a developm
 
 ## Recorded coverage and remaining work
 
-Each configuration records 162 rows: a 33-point coverage grid, six fallback epochs, four polynomial seams with adjacent doubles, nine Delta T piece boundaries with adjacent doubles, and the held-model boundary, for both models. Files contain all requests, native bits, extended values, signed differences, inverse residuals, source/data hashes, compiler identity and process measurements. There is no error threshold inferred from these maxima. `gitHead` is the checkout base at measurement time; source hashes identify the evaluated working-tree candidate precisely.
+Each configuration records 162 rows: a 33-point coverage grid, six fallback epochs, four polynomial seams with adjacent doubles, nine Delta T piece boundaries with adjacent doubles, and the held-model boundary, for both models. Files contain all requests, native bits, extended values, signed differences, inverse residuals, source/data hashes, compiler identity and process measurements. There is no error threshold inferred from these maxima. `gitHead` is the checkout revision at measurement time; source hashes identify the evaluated working-tree candidate precisely.
 
 The Debug and Release reports differ by one ULP in nutation longitude at the 2101 fallback sample for both models. Their sampled maxima are identical; the reports retain the individual results.
 

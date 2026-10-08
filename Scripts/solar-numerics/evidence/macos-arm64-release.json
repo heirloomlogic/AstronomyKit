@@ -9,9 +9,9 @@
     "continuous arithmetic or libm bounds",
     "other compilers or architectures"
   ],
-  "gitHead": "861b142bf40d14a8735f50d6f8f0919ded81a39b",
-  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite \"Native numerical measurement export\" started.\n\udbc1\udfc8  Test \"Export native primitives for independent extended-precision comparison\" started.\n\udbc4\udc5b  Test \"Export native primitives for independent extended-precision comparison\" passed after 0.009 seconds.\n\udbc4\udc5b  Suite \"Native numerical measurement export\" passed after 0.009 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.010 seconds.\n        1.35 real         0.80 user         0.28 sys\n            75251712  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n               37900  page reclaims\n                 721  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                  51  voluntary context switches\n                1199  involuntary context switches\n          4937484555  instructions retired\n          1589844773  cycles elapsed\n            27247312  peak memory footprint\n",
-  "nativeProcessSecondsIncludingRunner": 1.3723549580026884,
+  "gitHead": "baab0b190a7fe4b1b0789a76c3e3054779d5d14a",
+  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite \"Native numerical measurement export\" started.\n\udbc1\udfc8  Test \"Export native primitives for independent extended-precision comparison\" started.\n\udbc4\udc5b  Test \"Export native primitives for independent extended-precision comparison\" passed after 0.010 seconds.\n\udbc4\udc5b  Suite \"Native numerical measurement export\" passed after 0.010 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.011 seconds.\n        1.35 real         0.89 user         0.32 sys\n            74760192  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n               37876  page reclaims\n                 721  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 100  voluntary context switches\n                1228  involuntary context switches\n          4924804199  instructions retired\n          1656968539  cycles elapsed\n            26772176  peak memory footprint\n",
+  "nativeProcessSecondsIncludingRunner": 1.3721707500008051,
   "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
   "precisionDecimalDigits": 80,
   "pythonVersion": "3.14.7",
@@ -7323,7 +7323,7 @@
   "schemaVersion": 1,
   "sourceSHA256": {
     "Package.swift": "9015473035c478da9e7022855be84b8c88867f123661c05d6bf4a8eb6a3b1139",
-    "Scripts/solar-numerics/measure.py": "8151e2135db4da18f926bd10b1a8425ac7979b06122f3d55100138b9b3a868c7",
+    "Scripts/solar-numerics/measure.py": "dc34e30725e1c67e8d934e999694c4dafe371772a3e9fd04b2ed045c2d6a31b9",
     "Scripts/solar-numerics/numerics.py": "9a5db9f8d47ffff6f8e5c1c849a0db983d1335d583af5b6eb7a7caada9f5b8fb",
     "Scripts/solar-numerics/reference.py": "b2fbb3c74f687637bbbdc2a14ad1d32b5761a777ee0a126ddfbc606b5fa62f64",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",

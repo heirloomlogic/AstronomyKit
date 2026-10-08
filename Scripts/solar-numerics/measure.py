@@ -95,9 +95,12 @@ def main():
         raise SystemExit("Install pinned requirements.txt")
     if args.recheck:
         saved = json.loads(args.output.read_text())
+        requests = grid()
+        if saved["requests"] != requests:
+            raise SystemExit("Recorded requests differ from the complete canonical request grid")
         check_hashes(ROOT, saved["sourceSHA256"])
         verify_summary(saved)
-        calculated = comparisons(saved["rows"], saved["requests"])
+        calculated = comparisons(saved["rows"], requests)
         if calculated != saved["rows"]:
             raise SystemExit("Recorded reference is not the current evaluator's output")
         print(f"Re-executed {len(calculated)} reference rows: {args.output}")
