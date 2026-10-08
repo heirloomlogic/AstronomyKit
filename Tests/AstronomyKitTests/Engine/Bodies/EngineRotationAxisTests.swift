@@ -16,7 +16,7 @@ struct EngineRotationAxisTests {
     typealias Axes = Engine.RotationAxis
 
     /// A time at `tt` with its UT from the Espenak-Meeus Delta T, so a body
-    /// that rotated with UT instead of TDB would fail.
+    /// that rotated with UT instead of TT would fail.
     static func time(tt: Double) -> Engine.Time { Engine.Time(tt: tt, deltaTModel: .espenakMeeus) }
 
     static func tdb(tt: Double) -> Double { tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay }
@@ -197,6 +197,20 @@ struct EngineRotationAxisTests {
         #expect(abs(axis.spin - atTDB.spin) > Self.allowance(atTDB.spin))
         let saturn = try Self.published(699, tdb: late)
         #expect(abs(axis.declination - saturn.dec) > Self.allowance(saturn.dec))
+    }
+
+    /// The engine takes TT for the reports' TDB. Over the accepted range
+    /// `Engine.TDB.offsetSeconds` reaches 1.840 ms at TT −1,457,107.53 days,
+    /// the largest a 2-day scan of the whole range, refined to 0.001 day,
+    /// found. Every 100th day stays under 1.85 ms, so W moves by under
+    /// 870.536° per day × 1.85 ms, 1.9e-5°, for Jupiter, the fastest.
+    @Test("TDB − TT stays under 1.85 ms over the accepted range")
+    func tdbOffsetBound() {
+        #expect(abs(abs(Engine.TDB.offsetSeconds(tt: -1_457_107.53)) - 1.840e-3) < 5e-7)
+        let days = Array(stride(from: -Engine.acceptedTTDays, through: Engine.acceptedTTDays, by: 100))
+        #expect(days.first == -Engine.acceptedTTDays && days.last == Engine.acceptedTTDays)
+        #expect(days.allSatisfy { abs(Engine.TDB.offsetSeconds(tt: $0)) < 1.85e-3 })
+        #expect(870.536 * 1.85e-3 / Engine.secondsPerDay < 1.9e-5)
     }
 
     // MARK: - The prime meridian

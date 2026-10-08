@@ -844,7 +844,7 @@ extension Engine.RotationAxis {
 
 ### Differences from published values
 
-- The reports' expressions take TDB; the engine, like the C engine, evaluates them at TT. TDB − TT stays under 1.7 ms, which moves W by under 1.7e-5°, for Jupiter, the fastest.
+- The reports' expressions take TDB; the engine, like the C engine, evaluates them at TT. Over the accepted range `Engine.TDB.offsetSeconds` stays under 1.85 ms in size: its largest, on a 2-day scan refined to 0.001 day, is 1.840 ms at TT −1,457,107.5 days, near the range's early end (1.697 ms on the same scan from 1900 to 2100). That moves W by under 1.9e-5° for Jupiter, the fastest: 1.854e-5° at the largest offset. The test asserts the 1.840 ms there and that every 100th day across the range stays under 1.85 ms.
 
 ### Differences from the C engine
 

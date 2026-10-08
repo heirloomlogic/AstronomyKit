@@ -36,7 +36,8 @@ extension Engine {
     /// et al. 2011, 109:101) for the Moon, which the 2015 report does not
     /// cover. The reports define d in TDB days and T in Julian centuries of
     /// TDB from J2000; the engine evaluates them at TT, as the C engine does.
-    /// TDB − TT stays under 1.7 ms, which moves W by under 1.7e-5°.
+    /// Over the accepted range TDB − TT stays under 1.85 ms, which moves W by
+    /// under 1.9e-5°.
     ///
     /// Earth keeps the C engine's model. Its pole is the true pole of date
     /// from the IAU 2006 precession and IAU 2000B nutation
