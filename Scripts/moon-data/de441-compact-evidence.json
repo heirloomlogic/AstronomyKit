@@ -1,0 +1,1249 @@
+{
+  "assessment": {
+    "decision": "Compare representation bounds, storage and boundary jumps before choosing integration; Python timings do not select the production representation.",
+    "endToEndAccuracyQualified": false,
+    "fullSourceRangeScanned": true,
+    "productionIntegrated": false,
+    "remaining": "Swift encoding/evaluation and memory/runtime measurements, continuity handling, TT-to-TDB/frame transforms, independent end-to-end positions/states/events across the accepted range"
+  },
+  "candidates": [
+    {
+      "archivedHorizons": [
+        {
+          "julianDateTDB": 990546.0,
+          "positionDifferenceKm": 35.21417141055125,
+          "rateDifferenceKmPerDay": 110.86437380226356
+        },
+        {
+          "julianDateTDB": 990910.5,
+          "positionDifferenceKm": 60.33779732701321,
+          "rateDifferenceKmPerDay": 4.869825662442325
+        },
+        {
+          "julianDateTDB": 1173170.5,
+          "positionDifferenceKm": 145.10160743920426,
+          "rateDifferenceKmPerDay": 26.233471997730675
+        },
+        {
+          "julianDateTDB": 1355795.5,
+          "positionDifferenceKm": 43.728753225106715,
+          "rateDifferenceKmPerDay": 181.39420037024848
+        },
+        {
+          "julianDateTDB": 1538420.5,
+          "positionDifferenceKm": 69.86963484030066,
+          "rateDifferenceKmPerDay": 555.7950570245857
+        },
+        {
+          "julianDateTDB": 1721045.5,
+          "positionDifferenceKm": 29.375561791609798,
+          "rateDifferenceKmPerDay": 120.44465458560867
+        },
+        {
+          "julianDateTDB": 1903670.5,
+          "positionDifferenceKm": 141.7062601777438,
+          "rateDifferenceKmPerDay": 25.599756510199192
+        },
+        {
+          "julianDateTDB": 2086295.5,
+          "positionDifferenceKm": 48.892502453177876,
+          "rateDifferenceKmPerDay": 205.4175721094228
+        },
+        {
+          "julianDateTDB": 2268920.5,
+          "positionDifferenceKm": 70.833841814406,
+          "rateDifferenceKmPerDay": 562.9652746139055
+        },
+        {
+          "julianDateTDB": 2341970.5,
+          "positionDifferenceKm": 82.42112340865059,
+          "rateDifferenceKmPerDay": 9.720505154404332
+        },
+        {
+          "julianDateTDB": 2378495.5,
+          "positionDifferenceKm": 50.550257690306026,
+          "rateDifferenceKmPerDay": 190.4386870012421
+        },
+        {
+          "julianDateTDB": 2396758.5,
+          "positionDifferenceKm": 142.94185061453965,
+          "rateDifferenceKmPerDay": 25.693113863616368
+        },
+        {
+          "julianDateTDB": 2414980.5,
+          "positionDifferenceKm": 58.12666636864066,
+          "rateDifferenceKmPerDay": 468.28555138237783
+        },
+        {
+          "julianDateTDB": 2414996.5,
+          "positionDifferenceKm": 113.73937455859674,
+          "rateDifferenceKmPerDay": 912.0406307680054
+        },
+        {
+          "julianDateTDB": 2415004.5,
+          "positionDifferenceKm": 78.74959886036855,
+          "rateDifferenceKmPerDay": 634.8791355821576
+        },
+        {
+          "julianDateTDB": 2415012.5,
+          "positionDifferenceKm": 63.452451611526065,
+          "rateDifferenceKmPerDay": 502.51487242850504
+        },
+        {
+          "julianDateTDB": 2415019.5,
+          "positionDifferenceKm": 51.86397193062548,
+          "rateDifferenceKmPerDay": 217.3268713511649
+        },
+        {
+          "julianDateTDB": 2415021.5,
+          "positionDifferenceKm": 69.67695137578103,
+          "rateDifferenceKmPerDay": 274.9875122039028
+        },
+        {
+          "julianDateTDB": 2499390.5,
+          "positionDifferenceKm": 99.1652089805053,
+          "rateDifferenceKmPerDay": 14.09583206749665
+        },
+        {
+          "julianDateTDB": 2499392.5,
+          "positionDifferenceKm": 113.21636881762612,
+          "rateDifferenceKmPerDay": 903.3551533315899
+        },
+        {
+          "julianDateTDB": 2499407.5,
+          "positionDifferenceKm": 38.970183938422906,
+          "rateDifferenceKmPerDay": 149.0813990655739
+        },
+        {
+          "julianDateTDB": 2499422.5,
+          "positionDifferenceKm": 128.89097516832052,
+          "rateDifferenceKmPerDay": 20.688774286730922
+        },
+        {
+          "julianDateTDB": 2499430.5,
+          "positionDifferenceKm": 90.41535723052375,
+          "rateDifferenceKmPerDay": 11.01994731722978
+        },
+        {
+          "julianDateTDB": 2524595.5,
+          "positionDifferenceKm": 30.315868368774556,
+          "rateDifferenceKmPerDay": 119.71408846119294
+        },
+        {
+          "julianDateTDB": 2634170.5,
+          "positionDifferenceKm": 122.80154960279712,
+          "rateDifferenceKmPerDay": 20.333930726150758
+        },
+        {
+          "julianDateTDB": 2816795.5,
+          "positionDifferenceKm": 59.144115355486804,
+          "rateDifferenceKmPerDay": 247.6270617175887
+        },
+        {
+          "julianDateTDB": 3182045.5,
+          "positionDifferenceKm": 29.344014710433346,
+          "rateDifferenceKmPerDay": 116.5812122356748
+        },
+        {
+          "julianDateTDB": 3547295.5,
+          "positionDifferenceKm": 70.81642190577035,
+          "rateDifferenceKmPerDay": 290.31120519116297
+        },
+        {
+          "julianDateTDB": 3912180.5,
+          "positionDifferenceKm": 72.22117099731699,
+          "rateDifferenceKmPerDay": 585.4808076134151
+        },
+        {
+          "julianDateTDB": 3912544.0,
+          "positionDifferenceKm": 56.0019304749411,
+          "rateDifferenceKmPerDay": 43.83761507082484
+        }
+      ],
+      "bytesPerCoefficient": 4,
+      "degree": 3,
+      "encodedBytes": 35064048,
+      "encoding": "float32",
+      "failedRecordCount": 680202,
+      "firstFailedRecords": [
+        990544.5,
+        990552.5,
+        990556.5,
+        990560.5,
+        990564.5
+      ],
+      "maximumAngularBoundArcminutes": 4.729661312746562,
+      "maximumAngularBoundArcminutesAtRecordStartJD": 2500524.5,
+      "maximumBoundaryPositionJumpKm": 182.94649857245858,
+      "maximumBoundaryRateJumpKmPerDay": 1935.2444998868775,
+      "maximumPositionBoundKm": 170.30372095797864,
+      "maximumPositionBoundKmAtRecordStartJD": 2500524.5,
+      "maximumRateBoundKmPerDay": 1427.0156791040026,
+      "maximumRateBoundKmPerDayAtRecordStartJD": 2500524.5,
+      "name": "degree-3-float32",
+      "passesRepresentationTarget": false,
+      "recordCount": 730501,
+      "sha256": "24d505da48bea860162ab27a0482ae90a2cde258f1216bac04a63a0befe05031"
+    },
+    {
+      "archivedHorizons": [
+        {
+          "julianDateTDB": 990546.0,
+          "positionDifferenceKm": 0.010971079620584348,
+          "rateDifferenceKmPerDay": 0.3901083720057275
+        },
+        {
+          "julianDateTDB": 990910.5,
+          "positionDifferenceKm": 0.03959803398775997,
+          "rateDifferenceKmPerDay": 0.004179583246764247
+        },
+        {
+          "julianDateTDB": 1173170.5,
+          "positionDifferenceKm": 0.8076363115954106,
+          "rateDifferenceKmPerDay": 0.22976988632567025
+        },
+        {
+          "julianDateTDB": 1355795.5,
+          "positionDifferenceKm": 0.17985280763661476,
+          "rateDifferenceKmPerDay": 0.037406973320902676
+        },
+        {
+          "julianDateTDB": 1538420.5,
+          "positionDifferenceKm": 0.09224954655468012,
+          "rateDifferenceKmPerDay": 1.5698499169231899
+        },
+        {
+          "julianDateTDB": 1721045.5,
+          "positionDifferenceKm": 0.05594813249745324,
+          "rateDifferenceKmPerDay": 0.026857077120375546
+        },
+        {
+          "julianDateTDB": 1903670.5,
+          "positionDifferenceKm": 0.7884092607911823,
+          "rateDifferenceKmPerDay": 0.23618587808128308
+        },
+        {
+          "julianDateTDB": 2086295.5,
+          "positionDifferenceKm": 0.3205195110113089,
+          "rateDifferenceKmPerDay": 0.08707682679319537
+        },
+        {
+          "julianDateTDB": 2268920.5,
+          "positionDifferenceKm": 0.06952218658189108,
+          "rateDifferenceKmPerDay": 1.1725722636032145
+        },
+        {
+          "julianDateTDB": 2341970.5,
+          "positionDifferenceKm": 0.23971914592765592,
+          "rateDifferenceKmPerDay": 0.066540021062698
+        },
+        {
+          "julianDateTDB": 2378495.5,
+          "positionDifferenceKm": 0.39360499320647224,
+          "rateDifferenceKmPerDay": 0.10433447321451474
+        },
+        {
+          "julianDateTDB": 2396758.5,
+          "positionDifferenceKm": 0.8014849225275786,
+          "rateDifferenceKmPerDay": 0.23864792527598766
+        },
+        {
+          "julianDateTDB": 2414980.5,
+          "positionDifferenceKm": 0.08593206276809273,
+          "rateDifferenceKmPerDay": 1.5851419931147943
+        },
+        {
+          "julianDateTDB": 2414996.5,
+          "positionDifferenceKm": 0.28491543206478437,
+          "rateDifferenceKmPerDay": 5.332974291740479
+        },
+        {
+          "julianDateTDB": 2415004.5,
+          "positionDifferenceKm": 0.19755136161700357,
+          "rateDifferenceKmPerDay": 3.5100309884672
+        },
+        {
+          "julianDateTDB": 2415012.5,
+          "positionDifferenceKm": 0.12518444123788047,
+          "rateDifferenceKmPerDay": 2.306282842674429
+        },
+        {
+          "julianDateTDB": 2415019.5,
+          "positionDifferenceKm": 0.4595520015235428,
+          "rateDifferenceKmPerDay": 0.12484435025685212
+        },
+        {
+          "julianDateTDB": 2415021.5,
+          "positionDifferenceKm": 0.6788284819005027,
+          "rateDifferenceKmPerDay": 0.18700679331200876
+        },
+        {
+          "julianDateTDB": 2499390.5,
+          "positionDifferenceKm": 0.3227856626332559,
+          "rateDifferenceKmPerDay": 0.07269896590335082
+        },
+        {
+          "julianDateTDB": 2499392.5,
+          "positionDifferenceKm": 0.3237613579569504,
+          "rateDifferenceKmPerDay": 5.956422124794398
+        },
+        {
+          "julianDateTDB": 2499407.5,
+          "positionDifferenceKm": 0.19785513980041328,
+          "rateDifferenceKmPerDay": 0.048459053598323885
+        },
+        {
+          "julianDateTDB": 2499422.5,
+          "positionDifferenceKm": 0.5318605715132864,
+          "rateDifferenceKmPerDay": 0.13354778544493062
+        },
+        {
+          "julianDateTDB": 2499430.5,
+          "positionDifferenceKm": 0.18331267782585836,
+          "rateDifferenceKmPerDay": 0.02179439077288682
+        },
+        {
+          "julianDateTDB": 2524595.5,
+          "positionDifferenceKm": 0.05059951494458104,
+          "rateDifferenceKmPerDay": 0.009523930215792717
+        },
+        {
+          "julianDateTDB": 2634170.5,
+          "positionDifferenceKm": 0.5984685067449905,
+          "rateDifferenceKmPerDay": 0.17286066544254935
+        },
+        {
+          "julianDateTDB": 2816795.5,
+          "positionDifferenceKm": 0.5325378658610052,
+          "rateDifferenceKmPerDay": 0.15077801677292443
+        },
+        {
+          "julianDateTDB": 3182045.5,
+          "positionDifferenceKm": 0.04863457630378109,
+          "rateDifferenceKmPerDay": 0.01049802248868726
+        },
+        {
+          "julianDateTDB": 3547295.5,
+          "positionDifferenceKm": 0.7649008233590865,
+          "rateDifferenceKmPerDay": 0.22505105470469056
+        },
+        {
+          "julianDateTDB": 3912180.5,
+          "positionDifferenceKm": 0.19398868841123576,
+          "rateDifferenceKmPerDay": 3.463510965676839
+        },
+        {
+          "julianDateTDB": 3912544.0,
+          "positionDifferenceKm": 0.014300863565718728,
+          "rateDifferenceKmPerDay": 0.08295491109152453
+        }
+      ],
+      "bytesPerCoefficient": 4,
+      "degree": 5,
+      "encodedBytes": 52596072,
+      "encoding": "float32",
+      "failedRecordCount": 0,
+      "firstFailedRecords": [],
+      "maximumAngularBoundArcminutes": 0.029680040813098427,
+      "maximumAngularBoundArcminutesAtRecordStartJD": 3761392.5,
+      "maximumBoundaryPositionJumpKm": 1.5348332388220105,
+      "maximumBoundaryRateJumpKmPerDay": 15.587721745556186,
+      "maximumPositionBoundKm": 1.0695538551293373,
+      "maximumPositionBoundKmAtRecordStartJD": 2225860.5,
+      "maximumRateBoundKmPerDay": 19.61974915811734,
+      "maximumRateBoundKmPerDayAtRecordStartJD": 2500524.5,
+      "name": "degree-5-float32",
+      "passesRepresentationTarget": true,
+      "recordCount": 730501,
+      "sha256": "6655b68c95ddcfc6e36d37b00a58b0ae0d98fb84a4aa47ba453ad6982ad3778c"
+    },
+    {
+      "archivedHorizons": [
+        {
+          "julianDateTDB": 990546.0,
+          "positionDifferenceKm": 0.006291062431552995,
+          "rateDifferenceKmPerDay": 0.005052518714363735
+        },
+        {
+          "julianDateTDB": 990910.5,
+          "positionDifferenceKm": 0.01453352888694564,
+          "rateDifferenceKmPerDay": 0.0019152380653971418
+        },
+        {
+          "julianDateTDB": 1173170.5,
+          "positionDifferenceKm": 0.017131678761462203,
+          "rateDifferenceKmPerDay": 0.0018319592968262849
+        },
+        {
+          "julianDateTDB": 1355795.5,
+          "positionDifferenceKm": 0.011998163964791834,
+          "rateDifferenceKmPerDay": 0.00413388019137966
+        },
+        {
+          "julianDateTDB": 1538420.5,
+          "positionDifferenceKm": 0.00863451177496657,
+          "rateDifferenceKmPerDay": 0.005956651693617737
+        },
+        {
+          "julianDateTDB": 1721045.5,
+          "positionDifferenceKm": 0.00829911953707781,
+          "rateDifferenceKmPerDay": 0.0030298316391250287
+        },
+        {
+          "julianDateTDB": 1903670.5,
+          "positionDifferenceKm": 0.005008934840679308,
+          "rateDifferenceKmPerDay": 0.0036847380780974308
+        },
+        {
+          "julianDateTDB": 2086295.5,
+          "positionDifferenceKm": 0.00249543743773348,
+          "rateDifferenceKmPerDay": 0.009870676750145132
+        },
+        {
+          "julianDateTDB": 2268920.5,
+          "positionDifferenceKm": 0.007559794492645785,
+          "rateDifferenceKmPerDay": 0.013619124306272965
+        },
+        {
+          "julianDateTDB": 2341970.5,
+          "positionDifferenceKm": 0.008090955593696823,
+          "rateDifferenceKmPerDay": 0.0022681947333187645
+        },
+        {
+          "julianDateTDB": 2378495.5,
+          "positionDifferenceKm": 0.010664804399735758,
+          "rateDifferenceKmPerDay": 0.008400848121417887
+        },
+        {
+          "julianDateTDB": 2396758.5,
+          "positionDifferenceKm": 0.010887796111709374,
+          "rateDifferenceKmPerDay": 0.005625616054684589
+        },
+        {
+          "julianDateTDB": 2414980.5,
+          "positionDifferenceKm": 0.01437560402749159,
+          "rateDifferenceKmPerDay": 0.017239708393671185
+        },
+        {
+          "julianDateTDB": 2414996.5,
+          "positionDifferenceKm": 0.014503008503793949,
+          "rateDifferenceKmPerDay": 0.015414608137109645
+        },
+        {
+          "julianDateTDB": 2415004.5,
+          "positionDifferenceKm": 0.0034175752943571367,
+          "rateDifferenceKmPerDay": 0.022613868708714218
+        },
+        {
+          "julianDateTDB": 2415012.5,
+          "positionDifferenceKm": 0.015855513478765067,
+          "rateDifferenceKmPerDay": 0.025890088705410267
+        },
+        {
+          "julianDateTDB": 2415019.5,
+          "positionDifferenceKm": 0.007368503317814569,
+          "rateDifferenceKmPerDay": 0.009907448532654725
+        },
+        {
+          "julianDateTDB": 2415021.5,
+          "positionDifferenceKm": 0.010768519201527011,
+          "rateDifferenceKmPerDay": 0.016455929335127534
+        },
+        {
+          "julianDateTDB": 2499390.5,
+          "positionDifferenceKm": 0.004789572837778125,
+          "rateDifferenceKmPerDay": 0.0007559581994500821
+        },
+        {
+          "julianDateTDB": 2499392.5,
+          "positionDifferenceKm": 0.012097813301422544,
+          "rateDifferenceKmPerDay": 0.03137780315608801
+        },
+        {
+          "julianDateTDB": 2499407.5,
+          "positionDifferenceKm": 0.011649679919872497,
+          "rateDifferenceKmPerDay": 0.0017216312365859493
+        },
+        {
+          "julianDateTDB": 2499422.5,
+          "positionDifferenceKm": 0.004858593890376625,
+          "rateDifferenceKmPerDay": 0.0017408225845726762
+        },
+        {
+          "julianDateTDB": 2499430.5,
+          "positionDifferenceKm": 0.007451364607649215,
+          "rateDifferenceKmPerDay": 0.0020175303032283166
+        },
+        {
+          "julianDateTDB": 2524595.5,
+          "positionDifferenceKm": 0.007320321553582736,
+          "rateDifferenceKmPerDay": 0.002077004081527836
+        },
+        {
+          "julianDateTDB": 2634170.5,
+          "positionDifferenceKm": 0.006801935074496582,
+          "rateDifferenceKmPerDay": 0.0013919904421358892
+        },
+        {
+          "julianDateTDB": 2816795.5,
+          "positionDifferenceKm": 0.006507342579601783,
+          "rateDifferenceKmPerDay": 0.012071798377408785
+        },
+        {
+          "julianDateTDB": 3182045.5,
+          "positionDifferenceKm": 0.01680010939123144,
+          "rateDifferenceKmPerDay": 0.0021204167238723093
+        },
+        {
+          "julianDateTDB": 3547295.5,
+          "positionDifferenceKm": 0.002160103286004292,
+          "rateDifferenceKmPerDay": 0.021081355510887804
+        },
+        {
+          "julianDateTDB": 3912180.5,
+          "positionDifferenceKm": 0.006926660051949774,
+          "rateDifferenceKmPerDay": 0.03269305694045566
+        },
+        {
+          "julianDateTDB": 3912544.0,
+          "positionDifferenceKm": 0.006195915720642984,
+          "rateDifferenceKmPerDay": 0.004140810850132828
+        }
+      ],
+      "bytesPerCoefficient": 4,
+      "degree": 7,
+      "encodedBytes": 70128096,
+      "encoding": "float32",
+      "failedRecordCount": 0,
+      "firstFailedRecords": [],
+      "maximumAngularBoundArcminutes": 0.0008890135655469793,
+      "maximumAngularBoundArcminutesAtRecordStartJD": 2225860.5,
+      "maximumBoundaryPositionJumpKm": 0.046249346130920556,
+      "maximumBoundaryRateJumpKmPerDay": 0.15344704642005563,
+      "maximumPositionBoundKm": 0.03208801871972233,
+      "maximumPositionBoundKmAtRecordStartJD": 2225860.5,
+      "maximumRateBoundKmPerDay": 0.2819710560547591,
+      "maximumRateBoundKmPerDayAtRecordStartJD": 1097556.5,
+      "name": "degree-7-float32",
+      "passesRepresentationTarget": true,
+      "recordCount": 730501,
+      "sha256": "f180b05ecf0756e10e041308cd563b5cad36a440ddf74c42b3e7f968bd1e739d"
+    },
+    {
+      "archivedHorizons": [
+        {
+          "julianDateTDB": 990546.0,
+          "positionDifferenceKm": 7.972721001238271,
+          "rateDifferenceKmPerDay": 1.9519682193459433
+        },
+        {
+          "julianDateTDB": 990910.5,
+          "positionDifferenceKm": 6.661023042244123,
+          "rateDifferenceKmPerDay": 2.4021822415612677
+        },
+        {
+          "julianDateTDB": 1173170.5,
+          "positionDifferenceKm": 5.160434479035403,
+          "rateDifferenceKmPerDay": 2.050873376083741
+        },
+        {
+          "julianDateTDB": 1355795.5,
+          "positionDifferenceKm": 1.0581195123558638,
+          "rateDifferenceKmPerDay": 2.224721990720572
+        },
+        {
+          "julianDateTDB": 1538420.5,
+          "positionDifferenceKm": 8.938200889292167,
+          "rateDifferenceKmPerDay": 2.3062856437059067
+        },
+        {
+          "julianDateTDB": 1721045.5,
+          "positionDifferenceKm": 10.325683092304178,
+          "rateDifferenceKmPerDay": 2.3546875899362885
+        },
+        {
+          "julianDateTDB": 1903670.5,
+          "positionDifferenceKm": 5.1992455536606785,
+          "rateDifferenceKmPerDay": 2.3439846831003854
+        },
+        {
+          "julianDateTDB": 2086295.5,
+          "positionDifferenceKm": 7.5617546730385,
+          "rateDifferenceKmPerDay": 2.4767959394785226
+        },
+        {
+          "julianDateTDB": 2268920.5,
+          "positionDifferenceKm": 6.673913897666053,
+          "rateDifferenceKmPerDay": 2.599246878058667
+        },
+        {
+          "julianDateTDB": 2341970.5,
+          "positionDifferenceKm": 5.728915919396486,
+          "rateDifferenceKmPerDay": 2.227050438772516
+        },
+        {
+          "julianDateTDB": 2378495.5,
+          "positionDifferenceKm": 6.357339661988731,
+          "rateDifferenceKmPerDay": 1.876655530847259
+        },
+        {
+          "julianDateTDB": 2396758.5,
+          "positionDifferenceKm": 8.760351896136681,
+          "rateDifferenceKmPerDay": 1.731144189868294
+        },
+        {
+          "julianDateTDB": 2414980.5,
+          "positionDifferenceKm": 5.579448879524889,
+          "rateDifferenceKmPerDay": 3.0102190572256955
+        },
+        {
+          "julianDateTDB": 2414996.5,
+          "positionDifferenceKm": 9.67214220872358,
+          "rateDifferenceKmPerDay": 5.370491100984234
+        },
+        {
+          "julianDateTDB": 2415004.5,
+          "positionDifferenceKm": 6.959506956363483,
+          "rateDifferenceKmPerDay": 4.822229278887851
+        },
+        {
+          "julianDateTDB": 2415012.5,
+          "positionDifferenceKm": 8.513873807317356,
+          "rateDifferenceKmPerDay": 2.752722638056797
+        },
+        {
+          "julianDateTDB": 2415019.5,
+          "positionDifferenceKm": 6.508564424663503,
+          "rateDifferenceKmPerDay": 1.783464404077285
+        },
+        {
+          "julianDateTDB": 2415021.5,
+          "positionDifferenceKm": 9.176321143078289,
+          "rateDifferenceKmPerDay": 2.3356501972977934
+        },
+        {
+          "julianDateTDB": 2499390.5,
+          "positionDifferenceKm": 10.023266860866828,
+          "rateDifferenceKmPerDay": 2.404516658006242
+        },
+        {
+          "julianDateTDB": 2499392.5,
+          "positionDifferenceKm": 11.048501221764758,
+          "rateDifferenceKmPerDay": 5.310835341399796
+        },
+        {
+          "julianDateTDB": 2499407.5,
+          "positionDifferenceKm": 12.037043636433125,
+          "rateDifferenceKmPerDay": 1.7412138996725108
+        },
+        {
+          "julianDateTDB": 2499422.5,
+          "positionDifferenceKm": 5.973494540238435,
+          "rateDifferenceKmPerDay": 2.4585814527545082
+        },
+        {
+          "julianDateTDB": 2499430.5,
+          "positionDifferenceKm": 8.395869324510224,
+          "rateDifferenceKmPerDay": 2.7656888158375854
+        },
+        {
+          "julianDateTDB": 2524595.5,
+          "positionDifferenceKm": 10.940424889847035,
+          "rateDifferenceKmPerDay": 2.4171264821323417
+        },
+        {
+          "julianDateTDB": 2634170.5,
+          "positionDifferenceKm": 6.09890825888855,
+          "rateDifferenceKmPerDay": 1.4736293713126423
+        },
+        {
+          "julianDateTDB": 2816795.5,
+          "positionDifferenceKm": 4.5813698804234155,
+          "rateDifferenceKmPerDay": 2.1060075033658765
+        },
+        {
+          "julianDateTDB": 3182045.5,
+          "positionDifferenceKm": 0.9959202502816534,
+          "rateDifferenceKmPerDay": 1.2290329291395814
+        },
+        {
+          "julianDateTDB": 3547295.5,
+          "positionDifferenceKm": 7.620949074494557,
+          "rateDifferenceKmPerDay": 1.3876227449107503
+        },
+        {
+          "julianDateTDB": 3912180.5,
+          "positionDifferenceKm": 10.898114504756354,
+          "rateDifferenceKmPerDay": 3.149134626157124
+        },
+        {
+          "julianDateTDB": 3912544.0,
+          "positionDifferenceKm": 11.016177484352452,
+          "rateDifferenceKmPerDay": 2.2140485788103637
+        }
+      ],
+      "bytesPerCoefficient": 2,
+      "degree": 5,
+      "encodedBytes": 26298036,
+      "encoding": "int16",
+      "failedRecordCount": 0,
+      "firstFailedRecords": [],
+      "maximumAngularBoundArcminutes": 0.5633934513490746,
+      "maximumAngularBoundArcminutesAtRecordStartJD": 2779928.5,
+      "maximumBoundaryPositionJumpKm": 32.88138915661339,
+      "maximumBoundaryRateJumpKmPerDay": 21.49634815961827,
+      "maximumPositionBoundKm": 20.753247316716003,
+      "maximumPositionBoundKmAtRecordStartJD": 3007228.5,
+      "maximumRateBoundKmPerDay": 23.737047643947562,
+      "maximumRateBoundKmPerDayAtRecordStartJD": 1496380.5,
+      "name": "degree-5-int16",
+      "passesRepresentationTarget": true,
+      "recordCount": 730501,
+      "scalesKm": [
+        16.0,
+        8.0,
+        1.0,
+        0.125,
+        0.015625,
+        0.001953125
+      ],
+      "sha256": "b901bd0e85e22083b4dd7fc77bb3e3c82916a8bd23e088e78765b9378380b34e"
+    },
+    {
+      "archivedHorizons": [
+        {
+          "julianDateTDB": 990546.0,
+          "positionDifferenceKm": 1.9943447217768067,
+          "rateDifferenceKmPerDay": 0.12252470726244108
+        },
+        {
+          "julianDateTDB": 990910.5,
+          "positionDifferenceKm": 0.4804963894091749,
+          "rateDifferenceKmPerDay": 0.008528911534908907
+        },
+        {
+          "julianDateTDB": 1173170.5,
+          "positionDifferenceKm": 12.480862771857668,
+          "rateDifferenceKmPerDay": 0.5094969096277681
+        },
+        {
+          "julianDateTDB": 1355795.5,
+          "positionDifferenceKm": 2.403364322285535,
+          "rateDifferenceKmPerDay": 1.5003090973576039
+        },
+        {
+          "julianDateTDB": 1538420.5,
+          "positionDifferenceKm": 0.010756190249841887,
+          "rateDifferenceKmPerDay": 0.0017048733134627252
+        },
+        {
+          "julianDateTDB": 1721045.5,
+          "positionDifferenceKm": 0.8104229490977755,
+          "rateDifferenceKmPerDay": 0.48229938329951094
+        },
+        {
+          "julianDateTDB": 1903670.5,
+          "positionDifferenceKm": 12.45102531478076,
+          "rateDifferenceKmPerDay": 0.5240062129919449
+        },
+        {
+          "julianDateTDB": 2086295.5,
+          "positionDifferenceKm": 4.3437271028608,
+          "rateDifferenceKmPerDay": 2.7171813823255753
+        },
+        {
+          "julianDateTDB": 2268920.5,
+          "positionDifferenceKm": 0.009151877706343542,
+          "rateDifferenceKmPerDay": 0.0011945290862594143
+        },
+        {
+          "julianDateTDB": 2341970.5,
+          "positionDifferenceKm": 3.8537048749667666,
+          "rateDifferenceKmPerDay": 0.15271365437156068
+        },
+        {
+          "julianDateTDB": 2378495.5,
+          "positionDifferenceKm": 5.11010919768342,
+          "rateDifferenceKmPerDay": 3.5825615631550676
+        },
+        {
+          "julianDateTDB": 2396758.5,
+          "positionDifferenceKm": 12.49436970878785,
+          "rateDifferenceKmPerDay": 0.529082345194819
+        },
+        {
+          "julianDateTDB": 2414980.5,
+          "positionDifferenceKm": 0.011263789934181487,
+          "rateDifferenceKmPerDay": 0.0005712354099622281
+        },
+        {
+          "julianDateTDB": 2414996.5,
+          "positionDifferenceKm": 0.004095717855369442,
+          "rateDifferenceKmPerDay": 0.0012333133554316912
+        },
+        {
+          "julianDateTDB": 2415004.5,
+          "positionDifferenceKm": 0.006613969618021697,
+          "rateDifferenceKmPerDay": 0.0005067476232447604
+        },
+        {
+          "julianDateTDB": 2415012.5,
+          "positionDifferenceKm": 0.00737621218855938,
+          "rateDifferenceKmPerDay": 0.0030628849493407532
+        },
+        {
+          "julianDateTDB": 2415019.5,
+          "positionDifferenceKm": 6.120019322278873,
+          "rateDifferenceKmPerDay": 3.9179922613424356
+        },
+        {
+          "julianDateTDB": 2415021.5,
+          "positionDifferenceKm": 9.159985224387416,
+          "rateDifferenceKmPerDay": 6.103741881383598
+        },
+        {
+          "julianDateTDB": 2499390.5,
+          "positionDifferenceKm": 5.190616084538277,
+          "rateDifferenceKmPerDay": 0.1640047154646097
+        },
+        {
+          "julianDateTDB": 2499392.5,
+          "positionDifferenceKm": 0.008648973996156797,
+          "rateDifferenceKmPerDay": 0.0038858485789102443
+        },
+        {
+          "julianDateTDB": 2499407.5,
+          "positionDifferenceKm": 2.6575135719741483,
+          "rateDifferenceKmPerDay": 1.852502422950583
+        },
+        {
+          "julianDateTDB": 2499422.5,
+          "positionDifferenceKm": 8.48937079353019,
+          "rateDifferenceKmPerDay": 0.2972176976162076
+        },
+        {
+          "julianDateTDB": 2499430.5,
+          "positionDifferenceKm": 2.971570062831683,
+          "rateDifferenceKmPerDay": 0.053356830953173305
+        },
+        {
+          "julianDateTDB": 2524595.5,
+          "positionDifferenceKm": 0.736505791696948,
+          "rateDifferenceKmPerDay": 0.5092379901472729
+        },
+        {
+          "julianDateTDB": 2634170.5,
+          "positionDifferenceKm": 9.505429655961372,
+          "rateDifferenceKmPerDay": 0.3861546499073358
+        },
+        {
+          "julianDateTDB": 2816795.5,
+          "positionDifferenceKm": 7.235080457806978,
+          "rateDifferenceKmPerDay": 4.6038541097577
+        },
+        {
+          "julianDateTDB": 3182045.5,
+          "positionDifferenceKm": 0.5249228611771337,
+          "rateDifferenceKmPerDay": 0.3662791541234881
+        },
+        {
+          "julianDateTDB": 3547295.5,
+          "positionDifferenceKm": 10.295087727057062,
+          "rateDifferenceKmPerDay": 6.669417771189371
+        },
+        {
+          "julianDateTDB": 3912180.5,
+          "positionDifferenceKm": 0.011622074006807275,
+          "rateDifferenceKmPerDay": 0.003655643065020085
+        },
+        {
+          "julianDateTDB": 3912544.0,
+          "positionDifferenceKm": 0.12424997080714628,
+          "rateDifferenceKmPerDay": 0.35775821593828816
+        }
+      ],
+      "degree": 5,
+      "encodedBytes": 35064072,
+      "encoding": "hermite-float32",
+      "failedRecordCount": 0,
+      "firstFailedRecords": [],
+      "maximumAngularBoundArcminutes": 0.5015870378091519,
+      "maximumAngularBoundArcminutesAtRecordStartJD": 3166380.5,
+      "maximumBoundaryPositionJumpKm": 2.9103830456733704e-11,
+      "maximumBoundaryRateJumpKmPerDay": 1.4551915228366852e-11,
+      "maximumPositionBoundKm": 18.072312915470672,
+      "maximumPositionBoundKmAtRecordStartJD": 3166380.5,
+      "maximumRateBoundKmPerDay": 39.084428078852625,
+      "maximumRateBoundKmPerDayAtRecordStartJD": 3166380.5,
+      "name": "degree-5-shared-endpoints",
+      "passesRepresentationTarget": true,
+      "recordBytes": 48,
+      "recordCount": 730501,
+      "sha256": "6187da7287ed4bbaa5f503d42def7821dcb32036f3bea182e21212f35c519bac"
+    }
+  ],
+  "coverage": {
+    "minimumRangeLowerBoundKm": 123649.2761831612,
+    "recordCount": 730501,
+    "segments": [
+      {
+        "exclusiveEndJulianDateTDB": 2440432.5,
+        "firstRecord": 1022640,
+        "firstRecordStartJulianDateTDB": 990544.5,
+        "recordCount": 362472,
+        "startJulianDateTDB": 990544.999999978
+      },
+      {
+        "exclusiveEndJulianDateTDB": 3912545.000000022,
+        "firstRecord": 0,
+        "firstRecordStartJulianDateTDB": 2440432.5,
+        "recordCount": 368029,
+        "startJulianDateTDB": 2440432.5
+      }
+    ],
+    "sourceBoundaryDiagnostics": {
+      "boundaryCount": 730500,
+      "maximumPositionJumpKm": 2.1399233329943297e-10,
+      "maximumRateJumpKmPerDay": 5.259364950616495e-11
+    },
+    "specialBoundaryRecords": [
+      {
+        "minimumRangeBoundKm": 194334.27042327935,
+        "startJulianDateTDB": 2414984.5
+      },
+      {
+        "minimumRangeBoundKm": 164701.0795778279,
+        "startJulianDateTDB": 2414988.5
+      },
+      {
+        "minimumRangeBoundKm": 160140.68607249422,
+        "startJulianDateTDB": 2415016.5
+      },
+      {
+        "minimumRangeBoundKm": 135428.11738725682,
+        "startJulianDateTDB": 2415020.5
+      },
+      {
+        "minimumRangeBoundKm": 126555.66501082797,
+        "startJulianDateTDB": 2440428.5
+      },
+      {
+        "minimumRangeBoundKm": 145482.62301651863,
+        "startJulianDateTDB": 2440432.5
+      },
+      {
+        "minimumRangeBoundKm": 164944.237072914,
+        "startJulianDateTDB": 2499388.5
+      },
+      {
+        "minimumRangeBoundKm": 140272.73138315848,
+        "startJulianDateTDB": 2499420.5
+      }
+    ],
+    "tdbMarginDays": 2.2e-08,
+    "ttDaysFromJ2000Inclusive": [
+      -1461000.0,
+      1461000.0
+    ]
+  },
+  "directComparison": {
+    "float32Bytes": 113958156,
+    "float64Bytes": 227916312
+  },
+  "method": {
+    "angular": "asin(position bound / distance lower bound); one-arcminute sine comparison determines pass/fail",
+    "binary": "little endian, chronological records across both segments; ordinary candidates store axis-major coefficients without a header; shared-endpoint candidate starts with six Float32 left-node values, then each 48-byte record stores right position xyz, right rate xyz, and c4/c5 for x/y/z as Float32; the preceding right node supplies the next left node; per-segment first record epoch and counts are in coverage",
+    "bounds": "coefficient absolute-error sums using |T_n| <= 1 and |T_n prime| <= n^2 on [-1,1]; derivative scale 2/4 days",
+    "distance": "norm(c_0) minus sum of norms(c_n), reduced by coefficient subtraction roundoff",
+    "independentReferenceSHA256": "ab64e50e46af852cdedd790561f22e93607f486967dc95ff07647dfcd5e6177d",
+    "projection": "retain low-degree source Chebyshev coefficients, then quantize; the shared-endpoint quintic instead retains c4/c5 and matches shared Float32 position/rate nodes; no sampled fit",
+    "rounding": "binary64 IEEE-754, math.fsum and one-ulp outward steps for bounds; one ulp per source coefficient subtraction; bounds apply to exact decoded polynomials, excluding runtime evaluator roundoff",
+    "selection": "all source records, every adjacent boundary, all 30 archived Horizons epochs; special boundary records include the source split and both ends of each current DE440 blend"
+  },
+  "observations": {
+    "encoding": {
+      "degree-3-float32": {
+        "encodedBytes": 480000,
+        "iterations": 10000,
+        "recordsPerSecond": 707851.8464033685,
+        "seconds": 0.014127250004094094
+      },
+      "degree-5-float32": {
+        "encodedBytes": 720000,
+        "iterations": 10000,
+        "recordsPerSecond": 608522.3556287672,
+        "seconds": 0.016433249998954125
+      },
+      "degree-5-int16": {
+        "encodedBytes": 360000,
+        "iterations": 10000,
+        "recordsPerSecond": 197486.6544704433,
+        "seconds": 0.05063633300596848
+      },
+      "degree-5-shared-endpoints": {
+        "encodedBytes": 480000,
+        "iterations": 10000,
+        "recordsPerSecond": 48126.86232962928,
+        "seconds": 0.20778416701068636
+      },
+      "degree-7-float32": {
+        "encodedBytes": 960000,
+        "iterations": 10000,
+        "recordsPerSecond": 547963.9717005392,
+        "seconds": 0.018249374988954514
+      },
+      "direct-float64": {
+        "encodedBytes": 3120000,
+        "iterations": 10000,
+        "recordsPerSecond": 992399.8064291531,
+        "seconds": 0.010076583988848142
+      }
+    },
+    "evaluator": "same Python math.fsum Chebyshev value and analytic derivative evaluator for all candidates; warm coefficients; decoding and I/O excluded",
+    "generationAndQualificationSeconds": 207.3419404590095,
+    "host": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+    "productionRepresentative": false,
+    "python": "3.14.7",
+    "runtime": {
+      "degree-3-float32": {
+        "checksum": 125818180.40306436,
+        "evaluationsPerSecond": 197642.45557347257,
+        "iterations": 20000,
+        "seconds": 0.10119283299718518
+      },
+      "degree-5-float32": {
+        "checksum": 125818600.5307196,
+        "evaluationsPerSecond": 153111.6595376441,
+        "iterations": 20000,
+        "seconds": 0.13062362500932068
+      },
+      "degree-5-int16": {
+        "checksum": 125813012.62323277,
+        "evaluationsPerSecond": 154376.2283808426,
+        "iterations": 20000,
+        "seconds": 0.12955362499633338
+      },
+      "degree-5-shared-endpoints": {
+        "checksum": 125819454.65827562,
+        "evaluationsPerSecond": 154767.6655309088,
+        "iterations": 20000,
+        "seconds": 0.1292259589972673
+      },
+      "degree-7-float32": {
+        "checksum": 125818596.11167267,
+        "evaluationsPerSecond": 124914.90172007012,
+        "iterations": 20000,
+        "seconds": 0.16010900000401307
+      },
+      "direct-float64": {
+        "checksum": 125818608.43722601,
+        "evaluationsPerSecond": 86769.38582723399,
+        "iterations": 20000,
+        "seconds": 0.23049604200059548
+      }
+    },
+    "sourceRetrievalOrCacheVerificationSeconds": 0.17830570800288115
+  },
+  "schemaVersion": 1,
+  "source": {
+    "frame": "ICRF",
+    "globalDigestVerified": false,
+    "identity": [
+      3307878400,
+      "\"5fe1446a-c52a3800\"",
+      "Tue, 22 Dec 2020 00:57:14 GMT"
+    ],
+    "retrievedByteRangesSHA256": {
+      "0-1023": "71686c47d507ccdae25d47dfcf52830188bbbd1c390405eff6c4c02f35c38156",
+      "1651118784-1653805759": "beab0706ba30de102070c9ff35be3daf5c589ba694164583c346b4e6eba6c943",
+      "1653805760-1656492735": "cb603bbfaa492e5f236f4e3b21d45fb34f10c09e730e869dd00f1ee7daf60197",
+      "1656492736-1659179711": "77a8e08d50544142c6448c6b00889fdf8262a2f06e0ff7820ddbd7bc42db1347",
+      "1659179712-1661866687": "b1f4647ed3de543938fa9c339b9090aa3e1044ae699c89225f37d9bd1fcd1696",
+      "1661866688-1664553663": "6c132dbb59fe57d0f229ca44a388a5c596a4039eef6ec3e9d7638e78dd916194",
+      "1664553664-1667240639": "b26e410015c40a79bd0ba49fe48263c577996a9e342a2476ad0108392f1dfcf9",
+      "1667240640-1669927615": "1a3f7d903f99d3be055e2eb833f4cffd740971440da357b11cb653b5b7b39ff6",
+      "1669927616-1672614591": "d4650edfd68aff84985f01008e67175038350bd0aface8d1076f890e810f0e58",
+      "1672614592-1675301567": "e595757abeaad356c911f1bdb45aa04b5fc6800008d61fcbbcf9ea933b4ebc25",
+      "1675301568-1677988543": "e4d8992fc5036f5e12701b7f06bd143e9e4ab43aee8006c0a9520bc6d4d5cf98",
+      "1677988544-1680675519": "7f8afba6bc6210c20f7471be8e5033ee3a69630b511d6604e5f3cea72f4b6b78",
+      "1680675520-1683362495": "04e69c75e5984b1d1e5c06fec1e27a64bf4e8acccfdcb7a8702a8cee86321bd5",
+      "1683362496-1686049471": "0e78561c77f1278face475ab079c691ba6fe033b2ca7425ad74c3c6f7de2fcbd",
+      "1686049472-1688736447": "c1c44973e6a7833e81e34c8139a57a5ae9440e570decb4aaa9a2b93b2922de73",
+      "1688736448-1691423423": "5799a9abb86ae20460f9bc6029f61513a97edbcda1de97b6eca0e02f54d60fb3",
+      "1691423424-1694110399": "1880a79c723c7fcc75c996c50bcbdfe99d01971eb3d01e7c441040800b86b9f8",
+      "1694110400-1696797375": "1dd46067420646c4e78ea48c4ade4c02496561d3d565a915175e6bdbcdd38d9f",
+      "1696797376-1699484351": "8d8f13fcac2f8417a1e52d164a20c0b658c5c43c7ea97f2749ccae8edc90a6c1",
+      "1699484352-1702171327": "37ab517ed95ec6c2000890169abbd378976c297cf78638ef9384129d679f03b0",
+      "1702171328-1704858303": "61839e75333498bc08e891b13353b4fe4de4d4396681540b8b7b1fd08272e9f7",
+      "1704858304-1707545279": "7806b1824303e147f040b98686aff2ca01d24b98d5b489dba378e6b79b398097",
+      "1707545280-1710232255": "1e61c26306010c3c59a75b97c2863abd45052b85f479053e83b2f8d3e4da7888",
+      "1710232256-1712919231": "558426783877beb6350fbbc376784da4edcd1cfb1c9cefe90de4404f3620149c",
+      "1712919232-1715606207": "0075b6222b71a2c7e9cbeade4ef359bd355c6485fffc251094efa377b6c438b6",
+      "1715606208-1718293183": "330c344964f4be1811aadb2d062be13568a5d3b0c41b1e54e32dff559331cc91",
+      "1718293184-1720980159": "457316c54f694b5f4cd07282e2d6f6e32c2782de49f1ad48d5fb6a499e36a14e",
+      "1720980160-1723667135": "571cc7e678e575ed01637d0137decaae4f80722749359889e608daddf2f4b12e",
+      "1723667136-1726354111": "bc48378ec925552325b8cdb497bef69ece7183f9bfef4b657014535b27449764",
+      "1726354112-1729041087": "584736e3e7461a04b50a70967de014bf3afbc92dc8a31adb163ceadada9d3512",
+      "1729041088-1731728063": "5e037d3c3a557e76bcd82b1803b7e79337a218afc9a61c0fe9ec34e2b6e671a1",
+      "1731728064-1734415039": "6690ce5f90d6e9c84514b4892a6922f7814a4e721456558d6e3d8db3853f0c2a",
+      "1734415040-1737102015": "89d5e4f32e787842e46e5adc5df269bc219b5b8049582948838927b0600f5c13",
+      "1737102016-1739788991": "fc663174c8302f7469f852507c9e16c35d0a5084e2fc6f457ee23e460899e710",
+      "1739788992-1742475967": "80ce1579f4637e5cf2192d6754751eb037d3ab2ecb52e3e979bfb8f3c791cda6",
+      "1742475968-1745162943": "6ddc82600a0e3c9b3a4e1bb0bf14085a62df1e66317492981a81be8b72a02a67",
+      "1745162944-1747849919": "247c8f5be2a677415e71803402553caa16ade2dca0467571115b8f2d6b8819f5",
+      "1747849920-1750536895": "c539a967d98c1a910e56734e7e028cee74e24600b075555f50928b138b97a7ba",
+      "1750536896-1753223871": "08ea216b9313c95ae251b8ca8074924debc5d4e069c720339e192a93e0cb6148",
+      "1753223872-1755910847": "5f7fe751ae5f7282f9fb85637877ccaf6efdc180deddfaa224478708191b168e",
+      "1755910848-1758597823": "e1364ba45a17eb582aa7cda99d2e9be075543b1b5cada4e037f67a9891a0e029",
+      "1758597824-1761284799": "b392643c8e78421dc38ef25b86d840e514c1a53848c59ac1c42bc60b002842c8",
+      "1761284800-1763971775": "e01442d3f66e18b9286adff5fb5ee8380f0744ac962db6dd0078340bd9bf4154",
+      "1763971776-1766658751": "83b276ff2d563c3119f88c5415f7950e80e9e529ea94990dd522930e713ba974",
+      "1766658752-1769345727": "933402f74c80ebe454070139efda615a8d0aaf7bff7b662294d890c1137ad5e0",
+      "1769345728-1771832295": "391f7674115bf63f4db60d6fd9582d06ecc36fc0aed6e927f967a138d9b722d8",
+      "2107004672-2107004703": "19e862dfae75aedefbcec480c2fb68b457f1ed14b318635dcbe8938f54060136",
+      "2107004704-2109691679": "ec6e444e4be721126b8d920f056518ad305d45ba7e696d147b1fc85a839c3032",
+      "2109691680-2112378655": "d9a66677989023b464d3321131afd790655cb7a92953eb60cc6ef13fb16730e7",
+      "2112378656-2115065631": "a65d707fc0ccba4d3e3450c9e5e57d56d621729595454388e308542571d04486",
+      "2115065632-2117752607": "616b8a91b12e40a72e62a4072c45b540cdebadb60fc2774a3b81c5c17592543e",
+      "2117752608-2120439583": "762e25270ed879246b952712d35bc2ace22c88b9c6c72ad2512fb7b8149dcc58",
+      "2120439584-2123126559": "d5eca4975201ab0d636471a25e409ab2910b681b1cf6c5063a1aeed01304cc0f",
+      "2123126560-2125813535": "e48e50cae0c1bb70b06ad1fd5f9f83ca823212a1bffa58211940cdbc08369f0f",
+      "2125813536-2128500511": "c30beef03207b617e3dba6bb59a91b7f366b7ba66df989e44097920b72323244",
+      "2128500512-2131187487": "a8f9c7d1e4f3949288e1fef21ef96971079e45c0d40285b7c5c327cbc9a9b2fe",
+      "2131187488-2133874463": "c943257367417ea20ca1fa7be56b57aac45fc165c3fb56d58d49852457f370c6",
+      "2133874464-2136561439": "894b9ccadfd22342fd06ea72d5f0ddbdcd5a8f7bd8bda5f5a6df25bf2bcb9f03",
+      "2136561440-2139248415": "34fb4ac47758929e8a582fe17a97fb485eb5c2aad0cd0d53d60f78a016b0b296",
+      "2139248416-2141935391": "987c92887ca5305fb720b47292372f7bb6286668be9d351a882d46df694df6a5",
+      "2141935392-2144622367": "9d3f6fe50ec338b3e76e8abcb7339ccff992fbf0fe489d8eab297865b8c0952f",
+      "2144622368-2147309343": "795e0cf88a90b13c283aa0a576705591efd643580ea75113e44e7bc191345349",
+      "2147309344-2149996319": "4c093a9be408cda9aa6be15a9203b45cc7337ebbe70a730ce1e6f348477755e4",
+      "2149996320-2152683295": "9ab1dc4a65f4daa8c6fa22496cc8598f068b0bccc2d3d10462cdbca7cee0b483",
+      "2152683296-2155370271": "180d208259d34d82aae6a82af8d5703e97c479adce18c6f006404e531bef5b27",
+      "2155370272-2158057247": "f041e7f4c978b9c212a29a19f6abe8c08075439818acf675aad9225c7c05989c",
+      "2158057248-2160744223": "244cd1bf5f3d7df68e65d34826c193afacc44943c22956c04e63adedea531db3",
+      "2160744224-2163431199": "f9624cbb72a35132f6a6e9ac65e369e352df03a402046a6a78f4b2e209ce75cd",
+      "2163431200-2166118175": "bb4c4b3702f4ab101ad6b0c1322aa16063177abf298514726479cf536ad370b0",
+      "2166118176-2168805151": "4c61977e7558b6927934c0e51d25b32e1d1d4ed51463af02e306c89cd1f724a8",
+      "2168805152-2171492127": "b327f59f8b1b0981fd40192f62aa5d9cebd91bb50a921bac656c2d6ecde3003d",
+      "2171492128-2174179103": "7b6bcf7545c84acb7847ebad0ac0c8be2addd370c467e9eefeb6577dd91c7874",
+      "2174179104-2176866079": "8a3efd5c02495843fe468e0a8564810041b43e3591064094f5981166ecab323b",
+      "2176866080-2179553055": "fb96d9641485f46c71a80fc83fccd2a34c9ec5d8cee3c8a5c503fa1147cf2f66",
+      "2179553056-2182240031": "2f6359244b7a9c826f553a79487e822eed053a9573a59a12be8a51458784bba2",
+      "2182240032-2184927007": "9e0ef08dfb39428bad6565450787012ba6ffc5fa041467c2b83531ba467a32cf",
+      "2184927008-2187613983": "47309cb92e7a048ec27f0bd1bbbf592562cb4daf0bab5858f9b7aab9713c7337",
+      "2187613984-2190300959": "456dd9049b6df887f976d256253736ccc9991b7a98f84ae45348ab660cad19b3",
+      "2190300960-2192987935": "17be5e2f55761f700acf66350b45650582528c1f6afaace9887857f5931d12cb",
+      "2192987936-2195674911": "4c4256e1172c570463c10db7d5c85d5d4e08f98e398c0619f705ff06dd864cbe",
+      "2195674912-2198361887": "a589d98341734b710715c16db1097d094560feabb804e85a51067283660a2050",
+      "2198361888-2201048863": "a015f52b17178988b95b2cc11a28e5b79acc3cc14b07b3c40a2332e059757a58",
+      "2201048864-2203735839": "ba2db6766612abed3deba32b77478ed3c7621c09ae7c473d4866d34aa2d43ee2",
+      "2203735840-2206422815": "93a6b6c2ccba878f85d09ebeb7d630f2d58a9f5c4788320b54f9ca5187ac80e5",
+      "2206422816-2209109791": "0ff6f77a1a536407319be01c8529387ef4ac296bc532f427e06ee34934b04247",
+      "2209109792-2211796767": "ed27d6906fed43c481c5a3b727981248612bdfcf67e86412bfd8b25fb4e8a9fe",
+      "2211796768-2214483743": "525c9520ce00e1f6b298818b466b2e4454e9db1f240605184fcf658bf2314e61",
+      "2214483744-2217170719": "69f5d5b5c3b49e62e1c8077ba277bebf8d11170bea04eee0f7f3d76cc4ad446c",
+      "2217170720-2219857695": "3290367979947ee0d28b33413ae47afc6fba0575ea96bf95909da0f3e603601a",
+      "2219857696-2222544671": "b7d763c8bdc27c8797b121c7b5279c41bae5365efda1d4cd0bb3e28380ea90b0",
+      "2222544672-2225231647": "66f746acd5ce9d0fcb56f5948e8063339d8938d8409006e66f4be31457b4d733",
+      "2225231648-2227718215": "0af39aa01726075df7077725c6787d15f04c10be79a5842c1656c2602d8a74b5",
+      "2562890592-2562890623": "19e862dfae75aedefbcec480c2fb68b457f1ed14b318635dcbe8938f54060136",
+      "2860328960-2860329983": "d52c057ae9b1fffeaa6130c91e56145fcb061e6904c76bb66d3242fc18629236",
+      "335490624-338177599": "28fbcd6541cf81900c47c69003402334f564ef952f1c58e2a9bdc781d16fe9ce",
+      "338177600-340864575": "e891a461388180cba0ae6b96915478393d93effc3da88baf0b9183d8a057362f",
+      "340864576-343551551": "3548cb7343a803528c00ace5f8feef3a1192aea17c9bdf83f8357dcd23c36aa4",
+      "343551552-346238527": "ca11e466bccbd4907e834c706d61466c49b8c9f4c96c7f39998273dfaacd7bb6",
+      "346238528-348925503": "3ce610f4ff671999fd4ccff1a55f6373827c5ebd2fb38448d2611ec568a6d17a",
+      "348925504-351612479": "cd07353e54650c4e2da8458fd9d7bce6631d67e8f1969a5909ab4f619cb1eb2e",
+      "351612480-354299455": "f7bce10b9243d2e48435bb87c74879f4c5740695c4762566387440a5322ed603",
+      "354299456-356986431": "b4403a89ef70fd3bd829d1ee0452789a3eac1e9342404fa649cd33af7766e291",
+      "356986432-359673407": "7a89086e23d730e7e1ca3a8fe3a6f095a3f1aca9183b297793d443b355d5e922",
+      "359673408-362360383": "aa469fe3091254dd0f722784e9a06fa0a6a163d951c0e907cca09ffc451ad6d6",
+      "362360384-365047359": "17b8e55917c5b7722e4b06cd2fcbc79ff1b174b915a22a8e25af6e1ead9e836d",
+      "365047360-367734335": "8256be86ff176b8395cf5a1bd018832996186eff6bd9dab098729d693dbded00",
+      "367734336-370421311": "2511715a7bd66189883c1c4ce297867e3cfe26a07cbdc79177a058f9f9513af9",
+      "370421312-373108287": "92b5ee5906239a71c94aa8788b3f3f98410acd31267709cb08d3cdda0c48ca78",
+      "373108288-375795263": "d94df04da1447d835839b66e4393137afd3fd19870261735752572d0be3f5c39",
+      "375795264-378482239": "7140f59298d13ecb1754618aa6fdc9c6b3f1e7e4ac6a554c73c7a4388da5ec02",
+      "378482240-381169215": "601cdfd84b14bd9c6f26b17de79054a649c074aad7d34671f4ad84887efeeb53",
+      "381169216-383856191": "920b402daaf8893e588bc552f9797bf211457cd12d343349a74fca19e969fbd1",
+      "383856192-386543167": "77f7bb4d7818dac9e09890890d6ff7440fe886fef0d6bc5ced308c99a8f22450",
+      "386543168-389230143": "696a8443ced128f14546814d1f7e82497ca5eebefd8d33ba27ea650c6d7280f7",
+      "389230144-391917119": "3662c29efa7cd465f1008629939dcee8674d005c566f252b11b9abfc55f93147",
+      "391917120-394604095": "c83dc24935e41cbd541c47b6a00d7d17b27cdda7b055edf1ede403a91c50c296",
+      "394604096-397291071": "c02e09fbb132e891fc72ccd4edeeda25a6649ceeca52b47ed214cbcbd7373e34",
+      "397291072-399978047": "44206540df55a111ca910f5a4fde3b84f2ed58abf2199fef49a7db442f29a602",
+      "399978048-402665023": "bbfb2ec940fff7cf5478dd1faa931f79827687e02853c6c7676ff048f0e6a1c4",
+      "402665024-405351999": "af8cc30b786a2df6aaee0690a9fa8861edc01f9fffc8838933702ac1331fda03",
+      "405352000-408038975": "bb5fe71133141a963d099587dda8b7eacf851467cc5aff3b352a2eae0206dbe0",
+      "408038976-410725951": "16864f38905e832f888d60a7cb276671d8e416e91ab2f8271aecffcef7dba2a7",
+      "410725952-413412927": "29f80650cdae53b01fabd956ef93b32c5136dca4f5bc0a1a05a4302e361025a9",
+      "413412928-416099903": "f879874726fff5ccbb63d01166144e5972a5d71bb86f54180e206bc36029e47b",
+      "416099904-418786879": "2e9dc8dd9b84f7f968ee5370eb7f60416c62bdf5bcacae9670686cf7cf2355f1",
+      "418786880-421473855": "f16bf1c2f365851666bc07147de4c319a7b5a6f8c61c7d3462c4a006e918206f",
+      "421473856-424160831": "c1572a2c4d460c0229066eeed2d5d65cdcba87b14b9f3222f427200b08e2d3d6",
+      "424160832-426847807": "6823d95c6ad12b9658bf381ebb414acb76aace75a529c3f99b74cf0b6280f1a1",
+      "426847808-429534783": "d0fe14d59b64a85e19de32db3750de79aa7fc3642d7156d6eb0f2b6bebd46772",
+      "429534784-432221759": "a1582c241b6a7804a640e236532c8d848e8f7f6756455699881bf699f1c8b43f",
+      "432221760-434908735": "641f93f1140ef45c26fd8fa263d60e43c82f0cdbd51e2bae9ccfd2c07b94005e",
+      "434908736-437595711": "a53b42aa911e55eec6053362bc108149225068516f271225a5ef29c9a3374ba4",
+      "437595712-440282687": "7d6831d5c36c09abc2ffb8a4f9c6be514a2ceff0cfc058d56339e5862d32b5d3",
+      "440282688-442969663": "f5bf39c42ddda7906a8014b56ee8d052b1d6fb8e10d5e5260e7bf56bc91424a4",
+      "442969664-445656639": "e6b8e61ea44bd13464efe5d1251da0b51198231c6f4724b9b2e143278e22a54e",
+      "445656640-448343615": "593dcd14a1c3ea40eabc23511ecd729fc90da2e2c48e067be4f75413dce58f17",
+      "448343616-451030591": "d05d3bfc51c94091568f49ffb9cbba7497a8ac3aae0cab6d65fe040e8f45f568",
+      "451030592-453717567": "12c1a2938ab92ddce0dde24b7fb07f86eb6bbeab65fe4f672b4c5ed6060e41a4",
+      "453717568-454381439": "8d115401e5832fc9120e8de9396beb8e69bd4ea17a8f38a02b7a597a4362fa86",
+      "454381440-454381471": "a1d6d563d98ced69c1fc8391c30c60a7c39a6ec03a5c926fd0c9bbed3d822639",
+      "62464-63487": "8f82a0ffd8f6977bc43f4d7d407b9044be8ed0789a6c92966586829d710813de",
+      "789807392-792494367": "24ab5c1f994d00a04639991f74a0e194f57c19b8e3517341bb4b423f8aecca41",
+      "792494368-795181343": "ea9c2e622fb6c16de26943ca53406399e4e81c513cfe00b22ce8485e3e4df6ca",
+      "795181344-797868319": "7c237d3de66bf619cb7e685842069e0681883460cf34681bcfe99378ec9debdf",
+      "797868320-800555295": "573d5de3623b0e0a1e903748e5e85e22bca8579f9578341eb0bc7cdb5f963319",
+      "800555296-803242271": "8a6d9a1ecd6b77d259a586daddc5982daa3eec992101134b7ffdf079b92020a1",
+      "803242272-805929247": "ec79d3dd686ae5ba4f23c98a828b86f5dab7112b723d56b45d4baf85fbfbddec",
+      "805929248-808616223": "fdddd787765f030b8d894f0cc5dc3aa111134c9e40bb2a3d59ad2b6de021ca5b",
+      "808616224-811303199": "03eadf9196b72df2dc425e11ac98ed1437ac851ece16826069ba7d86236ec57f",
+      "811303200-813990175": "affe87011038a6c3a009a98c24e7db128cd64eeb13cb73eb59ad5c47a00d0180",
+      "813990176-816677151": "7c9007a64d45e5c0743ff349d0f5c053c5ca0f26fa4d8503f8557308e4c904c2",
+      "816677152-819364127": "b2311287378a9f94ff76cd0af0f41280b9d6bb28c2f21b5e018b8565f162e378",
+      "819364128-822051103": "383906220897c9563fec78e29d47ed265c6724318c47aab7add4b069ec2922fe",
+      "822051104-824738079": "fd667db25f45f19106220c3dfcd5676df639567a0e3203b176aefdbb31281893",
+      "824738080-827425055": "113f34e7e9e2ff4e30e3efeca94ad000ccabc20d33a2b8264cdf808f113df273",
+      "827425056-830112031": "32fb92c15991a63637e594356c90110ea96a7fe632fbf1ff80473997b5adbea4",
+      "830112032-832799007": "c48c5d47a9e1cb4df845ba1a4cdb7f6c7c0d43a0b4dead13f807f38e688465e6",
+      "832799008-835485983": "4ed35e25e45b95a3ca48cc066864c14bea4cf577a76a9eab8613ae50cec60ce6",
+      "835485984-838172959": "14f0fe1e7dc5c10041d7dba0934228fc4feeabcdd9d29d63162c57f84cd81ba0",
+      "838172960-840859935": "985e9dae160d7e3cef6937aa1ae6be57512ffb978de9b9aa510a47bdc7e66422",
+      "840859936-843546911": "8d9ef095dd833c365d75d584bf97ab31d9b48a57315df54cb3e7389e8ba6e377",
+      "843546912-846233887": "76dcaae3860a7003bd45422de894b76b61c9d2dbf8a5a99da7786afbdd62febc",
+      "846233888-848920863": "fb31f69ba4985ff56cc3a6c1a6ac6de2f1824cb588d3f1feaae4b572041ed9dd",
+      "848920864-851607839": "535e5db8dc5c06cfbb9090d72eb1136cbc19d98a92d18d3ef83ee235836057f3",
+      "851607840-854294815": "ad8997118b7a19bf2bf460b805bfee3b40d1794de2c1f12a4ba731429b1df348",
+      "854294816-856981791": "89c70b6aa95198b1aa768e2825996fb4f078ceab998c6f61ed69c4fb9d5fcbbb",
+      "856981792-859668767": "696b92d8f167080e15d0cd2ff6f3ee786e0f78039fd9da27f4dcec31e4f8ff99",
+      "859668768-862355743": "a21fa34d8cff3b038a54576a64ab82719a19b8218bb9a3779a4eccc76bf85032",
+      "862355744-865042719": "eaa8ff6b1cb81bfaafd41a1735ad772b4a446745be3a433644adb50e41adf929",
+      "865042720-867729695": "0b6be0054ff3be5297f78eaa5fc644bbe122f7597295ab594ce718719abf74c6",
+      "867729696-870416671": "4e5ac174c3090cc97b6eb5a95ef18ebfc61ab440da198618b020fb7be4739a1f",
+      "870416672-873103647": "e454523b31b45684e0cfa6ccfb34606bc2c160dab90717dc9cb16271cc3fd5ff",
+      "873103648-875790623": "800adc151d6cdbff69db738165152daaa5ed59816191a74624c25b3eeaf5965f",
+      "875790624-878477599": "e700f9733770d17e1a60937b173bf9f2943697a722d4a71c32fbed33f82d1c04",
+      "878477600-881164575": "ffaa59f2e2cbcbeccefec080bc3a6e09fb3b644d7ec723a5f8992e3d13609893",
+      "881164576-883851551": "fb14e623fc120bf9a307a3e7658a2a2965a7d780445369693d276108193e6d09",
+      "883851552-886538527": "341142ca4aaa5b246c15eac4bf3e1d55bdf9684bb883aad5073348a214f387a7",
+      "886538528-889225503": "5a3f1e34b3ab6c035b4b651ccb1c49b50e559e1614d4906e461868c1f6ed4930",
+      "889225504-891912479": "d2d844f11d9d0d23cf5e60593ecd8a3296cc327adc20ebf7283076abc192f899",
+      "891912480-894599455": "409dc9d09f30298b8db730aa3a658dbbd7e4048a74eccb964b9c4c2284e1220f",
+      "894599456-897286431": "2677810c454bf11cf254b6b61fa2f6b90858fe4bf5cfd48b231120948267ef91",
+      "897286432-899973407": "2fbeb00d1c8f0d91c8862805bad2580038c76fac2bbb8a5207d9d0b1a4397c83",
+      "899973408-902660383": "259ca074ae278662e7f753347ce93b9f2a1e96ca9e8cbe96e48117f9cba8227d",
+      "902660384-905347359": "f59f97ae1e20f1f7ad13a3ec0d0a33c008b08d509875b13316e0f38e161b3b7c",
+      "905347360-908034335": "7538c7e669f7ef08d188195ffb875cfec26a1744a5bf0811d51605d93394af74",
+      "908034336-908698207": "76c82f6a77eba56a6007b804f86e27f8976ae13ec602f95e98eb429e2895d5a3",
+      "908698208-908698239": "a1d6d563d98ced69c1fc8391c30c60a7c39a6ec03a5c926fd0c9bbed3d822639"
+    },
+    "state": "geometric Moon (301) minus Earth (399), km; analytic velocity in km per TDB day",
+    "time": "TDB",
+    "url": "https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/de441.bsp"
+  }
+}
