@@ -109,6 +109,35 @@ struct ElongationTests {
 
     @Suite("Max Elongation Search")
     struct MaxElongationSearchTests {
+        static let publishedEvents = IndependentReferenceArchive.shared.maximumElongationEvents
+
+        @Test("Published Mercury and Venus maximum-elongation intervals", arguments: publishedEvents)
+        func publishedEvent(reference: IndependentReferenceArchive.MaximumElongationEvent) throws {
+            let body = try #require(["mercury": CelestialBody.mercury, "venus": .venus][reference.body])
+            let start = IndependentReferenceDate.civil(reference.startUTC)
+            let lower = IndependentReferenceDate.civil(reference.lowerUTC)
+            let sample = IndependentReferenceDate.civil(reference.sampleUTC)
+            let upper = IndependentReferenceDate.civil(reference.upperUTC)
+            let actual = try body.searchMaxElongation(after: start)
+
+            #expect(actual.time > start)
+            #expect(actual.time.terrestrialTime >= lower.terrestrialTime)
+            #expect(actual.time.terrestrialTime <= upper.terrestrialTime)
+            #expect(
+                IndependentReferenceDate.terrestrialSeconds(actual.time, sample)
+                    <= reference.timeToleranceSeconds)
+            #expect(abs(actual.angle - reference.sampledMaximumDegrees) <= reference.angleToleranceDegrees)
+            #expect(actual.visibility == (reference.trailsSun ? .evening : .morning))
+            #expect(reference.sampleResolutionSeconds >= 3_600)
+        }
+
+        @Test("Published events retain successive morning and evening maxima", arguments: ["mercury", "venus"])
+        func publishedSides(body: String) {
+            let events = Self.publishedEvents.filter { $0.body == body }
+            #expect(events.count == 2)
+            #expect(Set(events.map(\.trailsSun)) == [true, false])
+        }
+
         @Test("Search max elongation for Mercury")
         func mercuryMaxElong() throws {
             let startTime = AstroTime(year: 2_025, month: 1, day: 1)

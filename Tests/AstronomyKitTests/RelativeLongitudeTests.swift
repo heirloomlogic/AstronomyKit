@@ -90,6 +90,47 @@ struct RelativeLongitudeTests {
 
     @Suite("Relative Longitude Search")
     struct RelativeLongitudeSearchTests {
+        static let publishedEvents = IndependentReferenceArchive.shared.relativeLongitudeEvents
+
+        @Test("Published conjunction and opposition intervals", arguments: publishedEvents)
+        func publishedEvent(reference: IndependentReferenceArchive.RelativeLongitudeEvent) throws {
+            let body = try #require(["mars": CelestialBody.mars, "venus": .venus][reference.body])
+            let start = IndependentReferenceDate.civil(reference.startUTC)
+            let actual = try body.searchRelativeLongitude(
+                reference.targetRelativeLongitudeDegrees, after: start)
+            let actualJulianDateTT = 2_451_545 + actual.terrestrialTime
+            let timeScaleDays = reference.timeScaleAllowanceSeconds / 86_400
+
+            #expect(actual > start)
+            #expect(actualJulianDateTT >= reference.lowerJulianDateTDB - timeScaleDays)
+            #expect(actualJulianDateTT <= reference.upperJulianDateTDB + timeScaleDays)
+            #expect(
+                IndependentReferenceDate.terrestrialSeconds(
+                    actual,
+                    IndependentReferenceDate.terrestrial(
+                        julianDateTDB: reference.estimatedJulianDateTDB))
+                    <= reference.timeToleranceSeconds)
+            #expect(reference.lowerOffsetDegrees <= 0)
+            #expect(reference.upperOffsetDegrees > 0)
+            #expect(
+                reference.timeToleranceSeconds
+                    == reference.sampleResolutionSeconds + reference.timeScaleAllowanceSeconds)
+
+            if reference.targetRelativeLongitudeDegrees == 180 {
+                #expect(try body.searchSuperiorConjunction(after: start) == actual)
+            } else if body == .mars {
+                #expect(try body.searchOpposition(after: start) == actual)
+            }
+        }
+
+        @Test("Published zero-degree events straddle the longitude wrap")
+        func publishedWraps() {
+            let wraps = Self.publishedEvents.filter { $0.targetRelativeLongitudeDegrees == 0 }
+            #expect(wraps.count == 2)
+            #expect(wraps.map(\.direction).sorted() == [-1, 1])
+            #expect(wraps.allSatisfy { $0.lowerOffsetDegrees < 0 && $0.upperOffsetDegrees > 0 })
+        }
+
         @Test("Search for arbitrary relative longitude")
         func arbitraryAngle() throws {
             let start = AstroTime(year: 2025, month: 1, day: 1)

@@ -116686,6 +116686,56 @@
       "toleranceSeconds": 90.0
     }
   ],
+  "maximumElongationEvents": [
+    {
+      "angleToleranceDegrees": 0.0002,
+      "body": "mercury",
+      "lowerUTC": "2025-Mar-08 05:00:00.000",
+      "sampleResolutionSeconds": 3600.0,
+      "sampleUTC": "2025-Mar-08 06:00:00.000",
+      "sampledMaximumDegrees": 18.2481,
+      "startUTC": "2025-01-01T00:00:00Z",
+      "timeToleranceSeconds": 3600.001,
+      "trailsSun": true,
+      "upperUTC": "2025-Mar-08 07:00:00.000"
+    },
+    {
+      "angleToleranceDegrees": 0.0002,
+      "body": "mercury",
+      "lowerUTC": "2025-Apr-21 18:00:00.000",
+      "sampleResolutionSeconds": 3600.0,
+      "sampleUTC": "2025-Apr-21 19:00:00.000",
+      "sampledMaximumDegrees": 27.3903,
+      "startUTC": "2025-03-09T00:00:00Z",
+      "timeToleranceSeconds": 3600.001,
+      "trailsSun": false,
+      "upperUTC": "2025-Apr-21 20:00:00.000"
+    },
+    {
+      "angleToleranceDegrees": 0.0002,
+      "body": "venus",
+      "lowerUTC": "2025-Jan-10 02:00:00.000",
+      "sampleResolutionSeconds": 3600.0,
+      "sampleUTC": "2025-Jan-10 05:00:00.000",
+      "sampledMaximumDegrees": 47.1687,
+      "startUTC": "2025-01-01T00:00:00Z",
+      "timeToleranceSeconds": 10800.001,
+      "trailsSun": true,
+      "upperUTC": "2025-Jan-10 08:00:00.000"
+    },
+    {
+      "angleToleranceDegrees": 0.0002,
+      "body": "venus",
+      "lowerUTC": "2025-Jun-01 02:00:00.000",
+      "sampleResolutionSeconds": 3600.0,
+      "sampleUTC": "2025-Jun-01 04:00:00.000",
+      "sampledMaximumDegrees": 45.883,
+      "startUTC": "2025-01-11T00:00:00Z",
+      "timeToleranceSeconds": 7200.001,
+      "trailsSun": false,
+      "upperUTC": "2025-Jun-01 05:00:00.000"
+    }
+  ],
   "observations": [
     {
       "angularToleranceArcminutes": 1.0,
@@ -116922,6 +116972,19 @@
       "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     },
+    "jplAngularEvents": {
+      "aberration": "none for VEC_CORR=NONE relative-longitude vectors; Horizons apparent light time, gravitational deflection, and stellar aberration for S-O-T elongation",
+      "domain": "Mars opposition and superior conjunction, Venus inferior and superior conjunction, and two successive maximum elongations for each of Mercury and Venus in 2025",
+      "frame": "simultaneous geometric ICRF vectors transformed by official SOFA IAU 1976/1980 precession-nutation to true ecliptic of date for relative longitude; apparent full-sky Sun-observer-target angle for maximum elongation",
+      "license": "NASA/JPL factual output and IAU SOFA software/data terms; attribution retained and no endorsement implied",
+      "origin": "Sun center 500@10 for Earth, Mars, and Venus vectors; Earth center 500@399 for Mercury and Venus elongation",
+      "recipe": "Adjacent *.query.json files contain every Horizons API parameter and response SHA-256. build-fixtures.py applies Scripts/reference-data/sofa-angular-events.c to simultaneous geometric vectors, derives sign-change or sampled-maximum brackets, and records the source sampling resolution as an allowance rather than a published accuracy.",
+      "refraction": "none (AIRLESS)",
+      "serviceVersion": "recorded in every archived response",
+      "timeScale": "TDB for geometric vectors and UTC for apparent elongation tables; the 0.002-second TDB-minus-TT bound is included in relative-longitude allowances",
+      "units": "Julian dates TDB, UTC calendar timestamps, degrees, and seconds",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
+    },
     "jplElongation": {
       "aberration": "apparent positions with light time, gravitational deflection and stellar aberration",
       "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT",
@@ -117066,6 +117129,64 @@
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     }
   },
+  "relativeLongitudeEvents": [
+    {
+      "body": "mars",
+      "direction": 1,
+      "estimatedJulianDateTDB": 2460691.6058037546,
+      "lowerJulianDateTDB": 2460691.59375,
+      "lowerOffsetDegrees": -0.006748416639567267,
+      "sampleResolutionSeconds": 2700.0,
+      "startUTC": "2025-01-01T00:00:00Z",
+      "targetRelativeLongitudeDegrees": 0.0,
+      "timeScaleAllowanceSeconds": 0.002,
+      "timeToleranceSeconds": 2700.002,
+      "upperJulianDateTDB": 2460691.625,
+      "upperOffsetDegrees": 0.010747212600847433
+    },
+    {
+      "body": "mars",
+      "direction": 1,
+      "estimatedJulianDateTDB": 2461050.007691648,
+      "lowerJulianDateTDB": 2461050.0,
+      "lowerOffsetDegrees": -0.003216494946059356,
+      "sampleResolutionSeconds": 2700.0,
+      "startUTC": "2025-01-01T00:00:00Z",
+      "targetRelativeLongitudeDegrees": 180.0,
+      "timeScaleAllowanceSeconds": 0.002,
+      "timeToleranceSeconds": 2700.002,
+      "upperJulianDateTDB": 2461050.03125,
+      "upperOffsetDegrees": 0.009851637072983976
+    },
+    {
+      "body": "venus",
+      "direction": -1,
+      "estimatedJulianDateTDB": 2460757.5435257596,
+      "lowerJulianDateTDB": 2460757.53125,
+      "lowerOffsetDegrees": -0.007687489209047271,
+      "sampleResolutionSeconds": 2700.0,
+      "startUTC": "2025-01-01T00:00:00Z",
+      "targetRelativeLongitudeDegrees": 0.0,
+      "timeScaleAllowanceSeconds": 0.002,
+      "timeToleranceSeconds": 2700.002,
+      "upperJulianDateTDB": 2460757.5625,
+      "upperOffsetDegrees": 0.01188230088055775
+    },
+    {
+      "body": "venus",
+      "direction": -1,
+      "estimatedJulianDateTDB": 2461047.1646846705,
+      "lowerJulianDateTDB": 2461047.15625,
+      "lowerOffsetDegrees": -0.004743844276589471,
+      "sampleResolutionSeconds": 2700.0,
+      "startUTC": "2025-01-01T00:00:00Z",
+      "targetRelativeLongitudeDegrees": 180.0,
+      "timeScaleAllowanceSeconds": 0.002,
+      "timeToleranceSeconds": 2700.002,
+      "upperJulianDateTDB": 2461047.1875,
+      "upperOffsetDegrees": 0.012831843736819337
+    }
+  ],
   "riseSet": [
     {
       "body": "moon",
@@ -170350,7 +170471,7 @@
       "utc": "2035-Jan-01 00:00:00.000"
     }
   ],
-  "schemaVersion": 5,
+  "schemaVersion": 6,
   "seasons": [
     {
       "event": "marchEquinox",

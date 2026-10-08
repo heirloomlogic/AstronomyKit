@@ -17,6 +17,8 @@ struct IndependentReferenceArchive: Decodable {
     let vectors: [Vector]
     let horizontal: [Horizontal]
     let elongations: [Elongation]
+    let relativeLongitudeEvents: [RelativeLongitudeEvent]
+    let maximumElongationEvents: [MaximumElongationEvent]
     let saturnRings: [SaturnRing]
     let geocentricStates: [GeocentricState]
     let seasons: [Season]
@@ -144,6 +146,34 @@ struct IndependentReferenceArchive: Decodable {
         let trailsSun: Bool
         let eclipticLongitudeDegrees: Double
         let eclipticLatitudeDegrees: Double
+    }
+
+    struct RelativeLongitudeEvent: Decodable {
+        let body: String
+        let targetRelativeLongitudeDegrees: Double
+        let direction: Int
+        let startUTC: String
+        let lowerJulianDateTDB: Double
+        let upperJulianDateTDB: Double
+        let estimatedJulianDateTDB: Double
+        let lowerOffsetDegrees: Double
+        let upperOffsetDegrees: Double
+        let sampleResolutionSeconds: Double
+        let timeScaleAllowanceSeconds: Double
+        let timeToleranceSeconds: Double
+    }
+
+    struct MaximumElongationEvent: Decodable {
+        let body: String
+        let startUTC: String
+        let lowerUTC: String
+        let sampleUTC: String
+        let upperUTC: String
+        let sampledMaximumDegrees: Double
+        let trailsSun: Bool
+        let sampleResolutionSeconds: Double
+        let timeToleranceSeconds: Double
+        let angleToleranceDegrees: Double
     }
 
     /// Saturn's planetodetic sub-observer latitude from Earth's center, with
