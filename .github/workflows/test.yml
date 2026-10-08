@@ -51,6 +51,15 @@ jobs:
           python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
           python3 Scripts/reference-data/build-fixtures.py --check
 
+      - name: Verify native solar numerical tools
+        run: |
+          python3 -m venv .build/numerics-venv
+          .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
+          .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
+          python3 Scripts/solar-numerics/numerics.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-debug.json
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-release.json
+
       - name: Verify work-avoidance paths
         run: |
           sh Scripts/performance/test-vsop-cache.sh
