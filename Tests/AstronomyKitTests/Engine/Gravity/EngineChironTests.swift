@@ -75,7 +75,7 @@ struct EngineChironTests {
             let velocity = Self.length(anchor.velocity - EngineMoonStatesTests.eqj(reference.velocityAUPerDay))
             #expect(km <= 5, "\(reference.tdb): \(km) km")
             #expect(velocity <= 2e-11, "\(reference.tdb): \(velocity)")
-            // 00:00 TDB is within 1.7 ms (2e-8 day) of 00:00 TT.
+            // At these 2000–2040 anchors, 00:00 TDB is within 1.7 ms (2e-8 day) of 00:00 TT.
             #expect(abs(anchor.tt - (date - 2_451_545)) <= 2e-8)
         }
     }
