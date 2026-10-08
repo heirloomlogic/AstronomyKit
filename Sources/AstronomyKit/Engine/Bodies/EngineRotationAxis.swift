@@ -20,8 +20,8 @@ extension Engine {
         /// ascension α0 + 90°. It is not reduced to one turn.
         ///
         /// Earth's is the exception, as in the C engine: its pole is the true
-        /// pole of date, but its W is the 2009 report's, measured from the
-        /// node of the report's own Earth pole and re-expressed on UT. The
+        /// pole of date, and its W equals the 2009 report's W at J2000,
+        /// re-expressed on UT, turning at the Earth rotation angle's rate. The
         /// two together do not place Greenwich.
         var spin: Double
         /// The unit vector toward the north pole.
@@ -34,8 +34,9 @@ extension Engine {
     /// Coordinates and Rotational Elements: its 2015 report (Archinal et al.
     /// 2018, Celest. Mech. Dyn. Astr. 130:22), and its 2009 report (Archinal
     /// et al. 2011, 109:101) for the Moon, which the 2015 report does not
-    /// cover. The expressions take d in TDB days and T in Julian centuries of
-    /// TDB from J2000, as the reports define them.
+    /// cover. The reports define d in TDB days and T in Julian centuries of
+    /// TDB from J2000; the engine evaluates them at TT, as the C engine does.
+    /// TDB − TT stays under 1.7 ms, which moves W by under 1.7e-5°.
     ///
     /// Earth keeps the C engine's model. Its pole is the true pole of date
     /// from the IAU 2006 precession and IAU 2000B nutation
@@ -71,8 +72,7 @@ extension Engine.RotationAxis {
         if body == .earth {
             axis = try earth(at: time)
         } else {
-            let tdb = time.tt + Engine.TDB.offsetSeconds(tt: time.tt) / Engine.secondsPerDay
-            let (ra, dec, spin) = try elements(of: body, tdb: tdb)
+            let (ra, dec, spin) = try elements(of: body, tt: time.tt)
             let north = Engine.Vector<Engine.EQJ>(
                 Engine.Spherical(latitude: dec, longitude: ra, distance: 1), time: time)
             axis = Engine.Axis(rightAscension: ra / 15, declination: dec, spin: spin, north: north)
@@ -96,12 +96,13 @@ extension Engine.RotationAxis {
     }
 
     /// The pole's right ascension α0 and declination δ0 and the prime
-    /// meridian's W, all in degrees, at `tdb` days of TDB from J2000.
+    /// meridian's W, all in degrees, at `tt` days of TT from J2000, taken as
+    /// the reports' TDB.
     ///
     /// - Throws: `AstronomyError.invalidBody` for Earth, which
     ///   ``axis(of:at:)`` takes from the C engine's model, and for a body the
     ///   reports do not cover.
-    static func elements(of body: CelestialBody, tdb d: Double) throws -> (ra: Double, dec: Double, spin: Double) {
+    static func elements(of body: CelestialBody, tt d: Double) throws -> (ra: Double, dec: Double, spin: Double) {
         let t = d / 36_525
         func sine(_ degrees: Double) -> Double { sin(degrees * Engine.radiansPerDegree) }
         func cosine(_ degrees: Double) -> Double { cos(degrees * Engine.radiansPerDegree) }

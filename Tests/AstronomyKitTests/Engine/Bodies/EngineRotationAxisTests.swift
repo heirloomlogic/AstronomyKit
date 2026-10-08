@@ -169,7 +169,7 @@ struct EngineRotationAxisTests {
         let id = try #require(Self.naifIDs[body])
         for tt in Self.times {
             let axis = try Axes.axis(of: body, at: Self.time(tt: tt))
-            let expected = try Self.published(id, tdb: Self.tdb(tt: tt))
+            let expected = try Self.published(id, tdb: tt)
             // The C engine reduces no report body's right ascension; over the
             // accepted range none leaves 0 to 24 hours.
             #expect((0..<24).contains(axis.rightAscension), "tt \(tt)")
@@ -183,19 +183,19 @@ struct EngineRotationAxisTests {
         }
     }
 
-    /// At the sample time where TDB − TT is largest, over 1 ms, Jupiter's W
-    /// moves by over 1e-5°; the elements evaluated at TT, or another body's,
-    /// fail.
-    @Test("The check fails for TT taken as TDB, or for the wrong body")
+    /// The engine, like the C engine, takes TT for the reports' TDB. At the
+    /// sample time where TDB − TT is largest, over 1 ms, Jupiter's W moves by
+    /// over 1e-5°; the elements evaluated at TDB, or another body's, fail.
+    @Test("The check fails for the elements at TDB, or for the wrong body")
     func negativeControls() throws {
         let offsets = Self.times.map { (tt: $0, seconds: abs(Engine.TDB.offsetSeconds(tt: $0))) }
         let largest = try #require(offsets.max { $0.seconds < $1.seconds })
         let late = largest.tt
         #expect(largest.seconds > 1e-3)
         let axis = try Axes.axis(of: .jupiter, at: Self.time(tt: late))
-        let atTT = try Self.published(599, tdb: late)
-        #expect(abs(axis.spin - atTT.spin) > Self.allowance(atTT.spin))
-        let saturn = try Self.published(699, tdb: Self.tdb(tt: late))
+        let atTDB = try Self.published(599, tdb: Self.tdb(tt: late))
+        #expect(abs(axis.spin - atTDB.spin) > Self.allowance(atTDB.spin))
+        let saturn = try Self.published(699, tdb: late)
         #expect(abs(axis.declination - saturn.dec) > Self.allowance(saturn.dec))
     }
 
@@ -220,7 +220,7 @@ struct EngineRotationAxisTests {
         let id = try #require(Self.naifIDs[body])
         for tt in Self.times {
             let axis = try Axes.axis(of: body, at: Self.time(tt: tt))
-            let expected = try Self.published(id, tdb: Self.tdb(tt: tt))
+            let expected = try Self.published(id, tdb: tt)
             let returned = Self.primeMeridian(ra: axis.rightAscension * 15, dec: axis.declination, spin: axis.spin)
             let published = Self.primeMeridian(ra: expected.ra, dec: expected.dec, spin: expected.spin)
             let allowed =
@@ -288,14 +288,13 @@ struct EngineRotationAxisTests {
         #expect(abs(earth.spin - atTT) > 0.25)
     }
 
-    /// Earth's W at J2000 is the 2009 report's, `BODY399_PM` in the PCK,
+    /// Earth's W at J2000 equals the 2009 report's, `BODY399_PM` in the PCK,
     /// moved onto UT: the Delta T it implies is within the 0.1 s to which the
     /// Astronomical Almanac's observed Delta T for 2000.0, 63.8 s, is
-    /// published (`PublishedDeltaT.observedTable`). So the report's pole
-    /// and Earth's W place the report's prime meridian at J2000 TT, with UT
-    /// 63.8 s earlier, within that 0.1 s of rotation, 1.5″. The returned pole
-    /// is the true one, not the report's, so the returned values do not
-    /// place a prime meridian together.
+    /// published (`PublishedDeltaT.observedTable`). So at J2000 TT, with UT
+    /// 63.8 s earlier, the report's pole and Earth's W place the report's
+    /// prime meridian within that 0.1 s of rotation, 1.5″. Only there: the
+    /// two W turn at different rates, on UT and on TDB.
     @Test("Earth's W is the report's at J2000, re-expressed on UT")
     func earthSpinOrigin() throws {
         let report = try Self.published(399, tdb: 0)
@@ -308,6 +307,23 @@ struct EngineRotationAxisTests {
         let published = Self.primeMeridian(ra: report.ra, dec: report.dec, spin: report.spin)
         let rotation = Axes.earthSpinRate * observed.bound / Engine.secondsPerDay * 3600
         #expect(Self.arcseconds(placed, published) <= rotation)
+    }
+
+    /// Greenwich, where the true equator of date meets the meridian at
+    /// apparent sidereal time, against the prime meridian Earth's returned
+    /// pole and W place by the construction the other bodies follow. Near
+    /// J2000 the true pole's right ascension, from which that construction
+    /// starts, turns through every hour, so the two need not be close.
+    @Test("Earth's returned pole and W do not place Greenwich")
+    func earthGreenwich() throws {
+        for tt in [-36_524.5, -0.5, 9_496.5, 36_525.5] {
+            let time = Self.time(tt: tt)
+            let axis = try Axes.axis(of: .earth, at: time)
+            let placed = Self.primeMeridian(ra: axis.rightAscension * 15, dec: axis.declination, spin: axis.spin)
+            let gast = Engine.EarthRotation.apparentSiderealTime(time) * 15 * Engine.radiansPerDegree
+            let greenwich = Engine.FrameRotation.eqdToEqj(time).apply(to: SIMD3(cos(gast), sin(gast), 0))
+            #expect(Self.arcseconds(placed, greenwich) > 0.25 * 3600, "tt \(tt)")
+        }
     }
 
     // MARK: - Guards
