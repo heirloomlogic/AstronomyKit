@@ -5,10 +5,13 @@
 //  Tests for Observer vector/state functionality.
 //
 
+import CLibAstronomy
 import Foundation
 import Testing
 
 @testable import AstronomyKit
+
+private let observerVectorCustomDeltaT: astro_deltat_func = { _ in 123.456 }
 
 @Suite("Observer Vector Tests")
 struct ObserverVectorTests {
@@ -183,6 +186,49 @@ struct ObserverVectorTests {
 
     // MARK: - Reverse Observer from Vector
 
+    static func expectUndefined(_ observer: Observer, source: Comment? = nil) {
+        #expect(observer.latitude.isNaN, source)
+        #expect(observer.longitude.isNaN, source)
+        #expect(observer.height.isNaN, source)
+    }
+
+    @Test("A nonfinite vector returns a NaN observer without ending the process")
+    func nonfiniteVectorReturnsUndefinedObserver() {
+        let time = AstroTime(ut: 0)
+        for equator in [EquatorDate.j2000, .ofDate] {
+            for value in [Double.nan, .infinity, -.infinity] {
+                for axis in 0..<3 {
+                    var components = [1e-5, 2e-5, 3e-5]
+                    components[axis] = value
+                    let vector = Vector3D(x: components[0], y: components[1], z: components[2], time: time)
+                    Self.expectUndefined(
+                        Observer.from(vector: vector, equatorDate: equator), source: "\(equator), \(components)")
+                }
+            }
+        }
+    }
+
+    @Test("A finite vector whose kilometre conversion overflows returns a NaN observer")
+    func overflowingVectorReturnsUndefinedObserver() {
+        let time = AstroTime(ut: 0)
+        for equator in [EquatorDate.j2000, .ofDate] {
+            for axis in 0..<3 {
+                var components = [1e-5, 2e-5, 3e-5]
+                components[axis] = .greatestFiniteMagnitude
+                let vector = Vector3D(x: components[0], y: components[1], z: components[2], time: time)
+                Self.expectUndefined(
+                    Observer.from(vector: vector, equatorDate: equator), source: "\(equator), axis \(axis)")
+            }
+        }
+    }
+
+    @Test("A finite vector that does not converge returns a NaN observer")
+    func nonconvergentVectorReturnsUndefinedObserver() {
+        let time = AstroTime(ut: 0)
+        let vector = Vector3D(x: 1e16, y: 0, z: 2e16, time: time)
+        Self.expectUndefined(Observer.from(vector: vector, equatorDate: .ofDate))
+    }
+
     @Test("Vector-to-observer roundtrip preserves location")
     func vectorObserverRoundtrip() throws {
         let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
@@ -204,5 +250,35 @@ struct ObserverVectorTests {
 
         #expect(abs(restored.latitude - original.latitude) < 0.01)
         #expect(abs(restored.longitude - original.longitude) < 0.5)
+    }
+
+    @Test("Vector-to-observer uses the stored UT and TT pair", arguments: [EquatorDate.j2000, .ofDate])
+    func vectorObserverUsesStoredTimePair(equator: EquatorDate) throws {
+        let time = AstroTime(tt: 45_678.25, ut: -12_345.75, deltaTModel: .jplHorizons)
+        let original = Observer(latitude: -33.8688, longitude: 151.2093, height: 117)
+        let vector = try original.vector(at: time, equator: equator)
+        let restored = Observer.from(vector: vector, equatorDate: equator)
+
+        #expect(vector.time.universalTime.bitPattern == time.universalTime.bitPattern)
+        #expect(vector.time.terrestrialTime.bitPattern == time.terrestrialTime.bitPattern)
+        #expect(abs(restored.latitude - original.latitude) < 1e-8)
+        #expect(abs(restored.longitude - original.longitude) < 1e-6)
+        #expect(abs(restored.height - original.height) < 1e-3)
+    }
+
+    @Test(
+        "Vector-to-observer accepts a time with an unnamed Delta T function", arguments: [EquatorDate.j2000, .ofDate])
+    func vectorObserverAcceptsUnnamedDeltaT(equator: EquatorDate) throws {
+        let time = AstroTime(raw: Astronomy_TimeFromDaysWithDeltaT(9_496.375, observerVectorCustomDeltaT))
+        let original = Observer(latitude: 35.6, longitude: -82.55, height: 650)
+        let vector = try original.vector(at: time, equator: equator)
+        let restored = Observer.from(vector: vector, equatorDate: equator)
+
+        #expect(time.deltaTModel == nil)
+        #expect(vector.time.universalTime.bitPattern == time.universalTime.bitPattern)
+        #expect(vector.time.terrestrialTime.bitPattern == time.terrestrialTime.bitPattern)
+        #expect(abs(restored.latitude - original.latitude) < 1e-8)
+        #expect(abs(restored.longitude - original.longitude) < 1e-6)
+        #expect(abs(restored.height - original.height) < 1e-3)
     }
 }

@@ -170,19 +170,27 @@ extension Observer {
     /// - Parameters:
     ///   - vector: A geocentric equatorial position vector.
     ///   - equatorDate: The equinox reference frame of the vector.
-    /// - Returns: The observer location.
+    /// - Returns: The observer location. If a component is not finite, the AU-to-kilometre conversion overflows, or the ellipsoid inverse does not converge, all three fields are NaN.
     public static func from(
         vector: Vector3D,
         equatorDate: EquatorDate = .j2000
     ) -> Observer {
-        var raw = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: vector.x,
-            y: vector.y,
-            z: vector.z,
-            t: vector.time.raw
+        // The inverse reads this pair but never derives another time. An
+        // unnamed C Delta T function can therefore use either named model here.
+        let time = Engine.Time(
+            ut: vector.time.universalTime,
+            tt: vector.time.terrestrialTime,
+            deltaTModel: vector.time.deltaTModel ?? .espenakMeeus
         )
-        let obs = Astronomy_VectorObserver(&raw, equatorDate.raw)
-        return Observer(latitude: obs.latitude, longitude: obs.longitude, height: obs.height)
+        switch equatorDate {
+        case .j2000:
+            return Engine.Observers.observer(
+                atVector: Engine.Vector(x: vector.x, y: vector.y, z: vector.z, time: time)
+            )
+        case .ofDate:
+            return Engine.Observers.observer(
+                atVectorOfDate: Engine.Vector(x: vector.x, y: vector.y, z: vector.z, time: time)
+            )
+        }
     }
 }
