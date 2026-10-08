@@ -146,6 +146,30 @@ extension Engine.Chiron {
         ///   simulation's errors.
         func heliocentricState(at time: Engine.Time) throws -> Engine.State<Engine.EQJ> {
             let model = try Engine.Chiron.checkSupported(time)
+            return try uncheckedHeliocentricState(at: time, model: model)
+        }
+
+        /// Chiron at an internal light-time evaluation for a supported
+        /// observation. The evaluation may precede the public span's start,
+        /// but it must use the observation's model and be no later than it.
+        func heliocentricState(
+            forLightTimeAt time: Engine.Time, observedAt observation: Engine.Time
+        ) throws -> Engine.State<Engine.EQJ> {
+            let model = try Engine.Chiron.checkSupported(observation)
+            guard time.deltaTModel == model,
+                time.ut.isFinite,
+                time.tt.isFinite,
+                time.ut <= observation.ut,
+                time.tt <= observation.tt
+            else { throw AstronomyError.badTime }
+            return try uncheckedHeliocentricState(at: time, model: model)
+        }
+
+        /// Simulates a time whose validity for its caller has already been
+        /// checked.
+        private func uncheckedHeliocentricState(
+            at time: Engine.Time, model: DeltaTModel
+        ) throws -> Engine.State<Engine.EQJ> {
             let index = Engine.Chiron.nearestAnchor(tt: time.tt)
             let anchor = Engine.Chiron.anchors[index]
             let freshPath = abs(time.tt - anchor.tt)

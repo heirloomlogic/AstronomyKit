@@ -39,9 +39,10 @@ struct ChironTests {
                 let earliest = AstroTime(ut: -36_524.5, deltaTModel: model)
                 try Chiron.checkSupported(earliest)
                 try Chiron.checkSupported(AstroTime(tt: Self.latestTT, deltaTModel: model))
-                #expect(throws: AstronomyError.badTime) {
-                    try Chiron.checkSupported(AstroTime(tt: earliest.terrestrialTime.nextDown, deltaTModel: model))
-                }
+                let before = AstroTime(tt: earliest.terrestrialTime.nextDown, deltaTModel: model)
+                #expect(throws: AstronomyError.badTime) { try Chiron.checkSupported(before) }
+                #expect(throws: AstronomyError.badTime) { _ = try Chiron.heliocentricPosition(at: before) }
+                #expect(throws: AstronomyError.badTime) { _ = try Chiron.geoState(at: before) }
                 // The C engine's Delta T has no drop at 1900-01-01, unlike the
                 // engine's (EngineChironTests), so a UT just before is outside.
                 #expect(throws: AstronomyError.badTime) {
@@ -51,6 +52,24 @@ struct ChironTests {
                     try Chiron.checkSupported(AstroTime(tt: Self.latestTT.nextUp, deltaTModel: model))
                 }
             }
+        }
+
+        @Test("Every apparent API accepts 1900-01-01 01:00 UT", arguments: DeltaTModel.allCases)
+        func apparentAtSpanStart(model: DeltaTModel) throws {
+            let time = AstroTime(year: 1_900, month: 1, day: 1, hour: 1, deltaTModel: model)
+            let position = try Chiron.geocentricPosition(at: time)
+            #expect(position.time.terrestrialTime < Self.earliestTT)
+
+            let equatorial = try Chiron.equatorial(at: time)
+            let ecliptic = try Chiron.ecliptic(at: time)
+            let longitude = try Chiron.eclipticLongitude(at: time)
+            let latitude = try Chiron.eclipticLatitude(at: time)
+            let horizon = try Chiron.horizon(at: time, from: ashevilleObserver, refraction: .none)
+
+            #expect(equatorial.rightAscension.isFinite && equatorial.declination.isFinite)
+            #expect(ecliptic.longitude.isFinite && ecliptic.latitude.isFinite)
+            #expect(longitude == ecliptic.longitude && latitude == ecliptic.latitude)
+            #expect(horizon.azimuth.isFinite && horizon.altitude.isFinite)
         }
 
         /// A pair rebuilt from recorded scales need not agree with its model.

@@ -211,6 +211,7 @@ public enum Chiron {
     /// - Returns: The geocentric position vector in AU (J2000 equatorial frame).
     /// - Throws: `AstronomyError` if the calculation fails.
     public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
+        try checkSupported(time)
         let helioEarth = try CelestialBody.earth.heliocentricPosition(at: time)
 
         // Reuse one simulation across the light-travel iterations. The instance
@@ -218,7 +219,7 @@ public enum Chiron {
         let chiron = ReusableSimulation()
 
         return try AstroSearch.correctLightTravel(at: time) { t in
-            let helioChiron = try chiron.state(at: t).position
+            let helioChiron = try chiron.state(forLightTimeAt: t, observedAt: time).position
             return Vector3D(
                 x: helioChiron.x - helioEarth.x,
                 y: helioChiron.y - helioEarth.y,
@@ -356,7 +357,26 @@ public enum Chiron {
         /// the anchored simulation when the error budget allows.
         func state(at time: AstroTime) throws -> StateVector {
             try checkSupported(time)
+            return try uncheckedState(at: time)
+        }
 
+        /// Simulates the internal light-time evaluation for a supported
+        /// observation, including when the backdated time precedes the public
+        /// span's start.
+        func state(forLightTimeAt time: AstroTime, observedAt observation: AstroTime) throws -> StateVector {
+            try checkSupported(observation)
+            guard time.deltaTModel == observation.deltaTModel,
+                time.universalTime.isFinite,
+                time.terrestrialTime.isFinite,
+                time.universalTime <= observation.universalTime,
+                time.terrestrialTime <= observation.terrestrialTime
+            else { throw AstronomyError.badTime }
+            return try uncheckedState(at: time)
+        }
+
+        /// Simulates a time whose validity for its caller has already been
+        /// checked.
+        private func uncheckedState(at time: AstroTime) throws -> StateVector {
             // Find the closest reference epoch.
             guard
                 let (index, epoch) = referenceEpochs.enumerated().min(by: { lhs, rhs in
