@@ -111,7 +111,17 @@ struct NativeAltitudeProbeTests {
         let request = NativeAltitudeProbe.Request(
             id: "2005-flip", value: 1826.5056790659519, scale: "ut", model: "espenakMeeus", observer: [0, 0, 0])
         let record = try NativeAltitudeProbe.evaluate(request)
-        #expect(record.trace.count == 2)
+        // Different configurations can select different valid stopping steps.
+        // Check that the recorded final callback supplied the returned vector.
+        #expect((1...10).contains(record.trace.count))
+        let last = try #require(record.trace.last)
+        for (axis, output) in [("x", "sunX"), ("y", "sunY"), ("z", "sunZ")] {
+            let input = try #require(last[axis])
+            let output = try #require(record.values[output])
+            let inputBits = try #require(UInt64(input, radix: 16))
+            let outputBits = try #require(UInt64(output, radix: 16))
+            #expect(-Double(bitPattern: inputBits) == Double(bitPattern: outputBits))
+        }
         #expect(record.values["ut"] == String(request.value.bitPattern, radix: 16))
         let time = Engine.Time(ut: request.value, deltaTModel: .espenakMeeus)
         let expected = try Engine.Positions.horizontal(
