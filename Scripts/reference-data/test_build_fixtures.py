@@ -33,6 +33,7 @@ class RefreshSourcesTests(unittest.TestCase):
             with (
                 mock.patch.object(self.builder, "SOURCE_DIR", source_dir),
                 mock.patch.object(self.builder, "UPSTREAM_SOURCES", {}),
+                mock.patch.object(self.builder, "PUBLISHER_SOURCES", {}),
                 mock.patch.object(
                     self.builder,
                     "HORIZONS_OBSERVER_QUERIES",
@@ -68,6 +69,7 @@ class RefreshSourcesTests(unittest.TestCase):
             with (
                 mock.patch.object(self.builder, "SOURCE_DIR", source_dir),
                 mock.patch.object(self.builder, "UPSTREAM_SOURCES", {}),
+                mock.patch.object(self.builder, "PUBLISHER_SOURCES", {}),
                 mock.patch.object(
                     self.builder,
                     "HORIZONS_OBSERVER_QUERIES",

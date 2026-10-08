@@ -59,6 +59,13 @@ UPSTREAM_SOURCES = {
     "astronomy-engine-license.txt": ("LICENSE", "a76df666a7db8a06f599d08e07c3ff74c4b250b50b49c43353af2bd5bb34604e"),
 }
 
+# Sources copied unchanged from their publishers, by full URL. EngineRotationAxisTests reads NAIF's PCK, its
+# transcription of the IAU WGCCRE 2015 rotation elements (and the 2009 report's Earth and Moon), directly; no fixture
+# is built from it.
+PUBLISHER_SOURCES = {
+    "naif/pck00011.tpc": ("https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc", "3dff7b1dbeceaa01f25467767d3fa25816051c85d162d1edf04acb310ee28bb1"),
+}
+
 HORIZONS_OBSERVER_QUERIES = {
     "moon-observer": ("301", [2415020.5, 2451544.5, 2488069.5]),
     "mars-observer": ("499", [2415020.5, 2451544.5, 2488069.5]),
@@ -289,17 +296,23 @@ def validate_horizons_response(name: str, data: bytes) -> None:
         raise RuntimeError(f"Horizons response {name} has no complete result table")
 
 
+def pinned_sources() -> list[tuple[str, str, str]]:
+    """Each pinned source file: its path under SOURCE_DIR, its URL and its SHA-256."""
+    upstream = [(name, f"{UPSTREAM_BASE}/{path}", digest) for name, (path, digest) in UPSTREAM_SOURCES.items()]
+    return upstream + [(name, url, digest) for name, (url, digest) in PUBLISHER_SOURCES.items()]
+
+
 def refresh_sources() -> None:
     SOURCE_DIR.mkdir(parents=True, exist_ok=True)
     writes: dict[Path, bytes] = {}
-    for local_name, (remote_path, expected_hash) in UPSTREAM_SOURCES.items():
+    for local_name, url, expected_hash in pinned_sources():
         destination = SOURCE_DIR / local_name
         if destination.exists() and sha256(destination.read_bytes()) == expected_hash:
             continue
-        data = download(f"{UPSTREAM_BASE}/{remote_path}")
+        data = download(url)
         actual_hash = sha256(data)
         if actual_hash != expected_hash:
-            raise RuntimeError(f"source hash changed for {remote_path}: expected {expected_hash}, got {actual_hash}")
+            raise RuntimeError(f"source hash changed for {url}: expected {expected_hash}, got {actual_hash}")
         writes[destination] = data
     horizons_dir = SOURCE_DIR / "horizons"
     horizons_dir.mkdir(parents=True, exist_ok=True)
@@ -310,6 +323,7 @@ def refresh_sources() -> None:
         recipe = {**parameters, "_responseSHA256": sha256(response)}
         writes[horizons_dir / f"{name}.query.json"] = encoded(recipe)
     for path, data in writes.items():
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(data)
 
 
@@ -332,14 +346,14 @@ def verify_recorded_queries(directory: Path | None = None) -> None:
 
 def verify_sources() -> list[dict[str, str]]:
     records = []
-    for local_name, (remote_path, expected_hash) in UPSTREAM_SOURCES.items():
+    for local_name, url, expected_hash in pinned_sources():
         path = SOURCE_DIR / local_name
         if not path.exists():
             raise RuntimeError(f"missing source snapshot: {path}; run with --refresh")
         actual_hash = sha256(path.read_bytes())
         if actual_hash != expected_hash:
             raise RuntimeError(f"source snapshot hash mismatch for {path}: expected {expected_hash}, got {actual_hash}")
-        records.append({"path": str(path.relative_to(ROOT)), "sha256": actual_hash, "url": f"{UPSTREAM_BASE}/{remote_path}"})
+        records.append({"path": str(path.relative_to(ROOT)), "sha256": actual_hash, "url": url})
     for name, parameters in horizons_acquisitions():
         response_path = SOURCE_DIR / "horizons" / f"{name}.json"
         recipe_path = SOURCE_DIR / "horizons" / f"{name}.query.json"

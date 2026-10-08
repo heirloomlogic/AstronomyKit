@@ -762,7 +762,7 @@ Tests under `Tests/AstronomyKitTests/Engine/Positions/`:
 
 ## Jupiter's moons
 
-In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. The rest of #90, rotation axes and Lagrange points, is not in the tree yet.
+In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. Rotation axes are in the next section; Lagrange points, the rest of #90, are not in the tree yet.
 
 ```swift
 extension Engine {
@@ -820,6 +820,48 @@ Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
 |---|---|
 | `AuditValidationTests.boundedGalileanMoonState` and `galileanMoonStateObservation` | Published-value check and named sanity check of the public API on the C engine until #96. They read the 88 rows inside the domain and the 16 outside it. `EngineJupiterMoonsTests` applies the same rows and limit to the engine. |
 | `JupiterMoonsTests`, and the Jupiter moon cases of `AcceptedTimeRangeTests` and `HugeTimeTests` | Named sanity checks and range guards of the public API on the C engine until #96. `EngineJupiterMoonsTests` checks the engine's range and guards. |
+
+## Rotation axes
+
+In the tree: `Bodies/EngineRotationAxis.swift`. It ports `Astronomy_RotationAxis`.
+
+```swift
+extension Engine {
+    struct Axis { var rightAscension, declination, spin: Double; var north: Vector<EQJ> }
+}
+extension Engine.RotationAxis {
+    static let bodies: [CelestialBody]   // the Sun, Mercury to Pluto, the Moon
+    static func axis(of body: CelestialBody, at time: Engine.Time) throws -> Engine.Axis
+    static func elements(of body: CelestialBody, tdb: Double) throws -> (ra: Double, dec: Double, spin: Double)
+    static func reportEarthPole(tdb: Double) -> (ra: Double, dec: Double)
+}
+```
+
+- Every body but Earth follows the IAU Working Group on Cartographic Coordinates and Rotational Elements: the 2015 report (Archinal et al. 2018, Celest. Mech. Dyn. Astr. 130:22), and for the Moon the 2009 report (Archinal et al. 2011, 109:101), which the 2015 report leaves unchanged. `elements(of:tdb:)` gives the pole's right ascension α0 and declination δ0 and the prime meridian's W in degrees, with d in TDB days and T in Julian centuries of TDB from J2000, as the reports define them; `axis(of:at:)` takes TDB as TT plus `Engine.TDB.offsetSeconds(tt:)`. The right ascension is reported in sidereal hours, and `north` is the unit vector at (α0, δ0).
+- Earth's pole is the true pole of date, `Engine.FrameRotation.eqdToEqj` applied to the z axis, with its right ascension and declination from `Engine.Equatorial`. That pole stays within arcseconds of the J2000 pole near J2000, so its node on the J2000 equator, where the reports start W, turns through every right ascension. Earth's W is measured instead from the node of the 2009 report's Earth pole, α0 = −0.641°T and δ0 = 90° − 0.557°T (`reportEarthPole`), at right ascension 90° + α0. The Earth rotation angle (IAU 2000 Resolution B1.8) runs from an origin that stays at right ascension 0, so W = ERA − 90° − α0, with the angle at `time.ut`.
+- W is not reduced to one turn, as in the C engine.
+- `axis(of:at:)` throws `invalidBody` for any other body before anything else, and `badTime` for a result that is not finite, a time that is not finite included. Like the C function it does not check the time against `Engine.acceptedTTDays`: the expressions hold no ephemeris. The north vector carries the time it was given.
+
+### Differences from the C engine
+
+- The reports' expressions take TDB; the C engine evaluates them at TT. TDB − TT stays under 1.7 ms, which moves W by under 1.7e-5°, for Jupiter, the fastest.
+- Earth's W: the C engine uses 190.41375788700253° + 360.9856122880876° × UT days, the Earth rotation angle's rate with an offset it gives no source for and no node motion. By those formulas it is 0.047° below the engine's at J2000 and 0.69° below in 2100. The engine's W places Greenwich within 9.8″ of the true meridian from 1800 to 2200, as measured by the check below.
+- The C function returns a time or result that is not finite as a success; the engine throws `badTime`.
+
+### Published-value checks
+
+Tests under `Tests/AstronomyKitTests/Engine/Bodies/`:
+
+- NAIF's `pck00011.tpc` (`Scripts/reference-data/sources/naif`, URL and SHA-256 in `build-fixtures.py`), NAIF's machine-readable transcription of the 2015 report, and of the 2009 report for Earth and the Moon. The test reads its data blocks and evaluates each body's polynomials and nutation-precession terms as NAIF's PCK required reading defines them, at 81 times a century apart from one end of the accepted range to the other, both ends included, and 61 times 13.37 days apart from 2026-01-01 into 2028. The Sun, Mercury to Neptune but Earth, Pluto and the Moon match it within 1e-14 of each value's size plus a turn (measured 0.36 of that). The check fails for the elements evaluated at TT and for the wrong body.
+- Earth's mean pole of date against the report's Earth pole every 20 years from 1800 to 2200, both ends included, within what the report's linear pole leaves out of the IAU 2006 precession: 1.0081″|T| + 0.4295″T² + 0.0419″|T|³ from θA (Capitaine et al. 2003), 0.1″ from the right ascension and 0.02″ of frame bias (measured 4.07″ against 4.19″ in 2200). The report pole's coefficients match the PCK.
+- Earth's W against Greenwich at the same dates: the true equator of date at apparent sidereal time, rotated to J2000, against the meridian the report's Earth pole and W place, within the angle between the true and report poles plus 9.75″T² for measuring W from the report pole's node plus 0.1″ (measured 9.8″, in 1960).
+- Mathematical bounds: Earth's pole equal to `eqdToEqj` of the z axis and its right ascension and declination to `Engine.Equatorial`'s, double for double; Earth's W equal to the Earth rotation angle less 90° and α0, modulo 360°, within rounding; `invalidBody` for every other `CelestialBody`, with a time that is not finite too; `badTime` for times that are not finite; and the time carried.
+
+### Rotation axis tests that depend on the C engine
+
+| Test | Disposition |
+|---|---|
+| `RotationAxisTests` | Named sanity checks of the public API on the C engine until #96. `EngineRotationAxisTests` checks the engine against the published elements. |
 
 ## Caches and reset
 
