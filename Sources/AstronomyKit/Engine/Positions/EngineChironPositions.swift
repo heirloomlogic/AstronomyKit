@@ -19,8 +19,8 @@ extension Engine.Positions {
     ///
     /// Each backdated time is checked against Chiron's supported span, as
     /// every evaluated time is. Its start is 1900-01-01 00:00 UT, so a time
-    /// earlier than the start plus Chiron's light time, about 1.3 to 1.6
-    /// hours then, throws `badTime` (#197).
+    /// earlier than the start plus Chiron's light time, about 1.56 hours
+    /// then, throws `badTime` (#197).
     ///
     /// - Throws: `AstronomyError.badTime` for a time beyond
     ///   ``Engine/acceptedTTDays`` or outside Chiron's span, the backdated

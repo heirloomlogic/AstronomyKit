@@ -104014,14 +104014,14 @@
     "jplSaturnRings": {
       "aberration": "apparent sub-observer point with light time; S-T-O as Horizons defines it",
       "domain": "11 dates from 2010 to 2035, through the 2025 ring-plane crossing",
-      "frame": "Saturn's planetodetic sub-observer latitude on the IAU pole and ellipsoid Horizons lists, and the Sun-target-observer angle",
+      "frame": "Saturn's planetodetic sub-observer latitude on the IAU pole and ellipsoid Horizons lists, its distances from the Sun and from Earth, and the Sun-target-observer angle",
       "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
       "origin": "Earth center 500@399",
       "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256",
       "refraction": "none",
       "serviceVersion": "recorded in every archived response",
       "timeScale": "UTC calendar output",
-      "units": "degrees and km",
+      "units": "degrees, AU and km",
       "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
     },
     "jplVectors": {
@@ -157289,6 +157289,8 @@
   "saturnRings": [
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 9.32261363841024,
+      "heliocentricDistanceAU": 9.475089008302,
       "phaseAngleDegrees": 5.927,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 5.990755,
@@ -157296,6 +157298,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 9.46061087729026,
+      "heliocentricDistanceAU": 9.74313021651,
       "phaseAngleDegrees": 5.8276,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 15.290907,
@@ -157303,6 +157307,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 10.6944687574067,
+      "heliocentricDistanceAU": 9.954276009683,
       "phaseAngleDegrees": 3.5925,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 29.275256,
@@ -157310,6 +157316,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 9.07798362421048,
+      "heliocentricDistanceAU": 10.05893601557,
       "phaseAngleDegrees": 1.5942,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 31.678711,
@@ -157317,6 +157325,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 10.9964084750081,
+      "heliocentricDistanceAU": 10.03434290844,
       "phaseAngleDegrees": 1.1123,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 28.187555,
@@ -157324,6 +157334,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 9.14124578812011,
+      "heliocentricDistanceAU": 9.880001499922,
       "phaseAngleDegrees": 4.2178,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 15.363853,
@@ -157331,6 +157343,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 10.0253268561948,
+      "heliocentricDistanceAU": 9.630453250113,
       "phaseAngleDegrees": 5.254,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": 5.227768,
@@ -157338,6 +157352,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 9.38720419766959,
+      "heliocentricDistanceAU": 9.575270224727,
       "phaseAngleDegrees": 6.0432,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": -4.41362,
@@ -157345,6 +157361,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 9.60930200918338,
+      "heliocentricDistanceAU": 9.352976892302,
       "phaseAngleDegrees": 5.9488,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": -17.125531,
@@ -157352,6 +157370,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 8.48827593997969,
+      "heliocentricDistanceAU": 9.123485258962,
       "phaseAngleDegrees": 4.8834,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": -25.689657,
@@ -157359,6 +157379,8 @@
     },
     {
       "equatorialRadiusKm": 60268.0,
+      "geocentricDistanceAU": 8.16043963660946,
+      "heliocentricDistanceAU": 9.072533090792,
       "phaseAngleDegrees": 2.4544,
       "polarRadiusKm": 54364.0,
       "subObserverPlanetodeticLatitudeDegrees": -24.381793,

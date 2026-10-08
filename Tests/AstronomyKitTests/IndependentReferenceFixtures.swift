@@ -89,10 +89,13 @@ struct IndependentReferenceArchive: Decodable {
     }
 
     /// Saturn's planetodetic sub-observer latitude from Earth's center, with
-    /// the radii Horizons gives for it, and its phase angle.
+    /// the radii Horizons gives for it, its distances from the Sun and from
+    /// Earth, and its phase angle.
     struct SaturnRing: Decodable {
         let utc: String
         let subObserverPlanetodeticLatitudeDegrees: Double
+        let heliocentricDistanceAU: Double
+        let geocentricDistanceAU: Double
         let phaseAngleDegrees: Double
         let equatorialRadiusKm: Double
         let polarRadiusKm: Double

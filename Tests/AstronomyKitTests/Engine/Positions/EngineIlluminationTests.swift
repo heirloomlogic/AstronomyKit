@@ -53,9 +53,9 @@ struct EngineIlluminationTests {
             let clock = fields[1].split(separator: ":")
             let month = try #require(months.firstIndex(of: String(date[1]))) + 1
             let ut = Engine.Time.days(
-                year: Int(date[0])!, month: month, day: Int(date[2])!, hour: Int(clock[0])!, minute: Int(clock[1])!,
-                second: 0)
-            let values = fields[2...].map { Double($0)! }
+                year: try #require(Int(date[0])), month: month, day: try #require(Int(date[2])),
+                hour: try #require(Int(clock[0])), minute: try #require(Int(clock[1])), second: 0)
+            let values = try fields[2...].map { try #require(Double($0)) }
             return MagnitudeRow(
                 time: Engine.Time.civil(utcDays: ut, deltaTModel: .espenakMeeus).time, label: "\(body) \(fields[0])",
                 magnitude: values[0], heliocentricDistance: values[2], heliocentricDistanceRate: values[3],
@@ -143,8 +143,17 @@ struct EngineIlluminationTests {
     /// Schlyter's fixed approximation, so the allowance, 0.02°, is a measured
     /// bound rounded up (measured 0.015°), not a published accuracy. The
     /// phase angle has the allowance of the magnitude tables, under 0.02°
-    /// for Saturn. Saturn's magnitude has no published check: Horizons leaves
-    /// the rings out of it.
+    /// for Saturn.
+    ///
+    /// Horizons leaves the rings out of Saturn's magnitude, so the magnitude
+    /// is checked against its definition instead: Paul Schlyter's formula
+    /// (How to compute planetary positions, section 15), −9.0 + 0.044·i
+    /// − 2.6·sin|B| + 1.2·sin²B + 5·log10(r·Δ), which the engine implements,
+    /// evaluated on Horizons' phase angle i, ring tilt B, and distances r and
+    /// Δ. The engine's inputs differ from those by its phase angle (0.044 ×
+    /// 0.02° = 0.0009), its ring tilt (2.6 × 0.015° in radians = 0.0007) and
+    /// the light time Horizons' distances include (under 1e-4), so the
+    /// allowance is 0.002.
     @Test("Saturn's ring tilt and phase angle against Horizons")
     func saturnRings() throws {
         let rows = IndependentReferenceArchive.shared.saturnRings
@@ -157,6 +166,13 @@ struct EngineIlluminationTests {
             let tilt = atan(ratio * ratio * tan(planetodetic)) * Engine.degreesPerRadian
             #expect(abs(illumination.ringTilt + tilt) <= 0.02, "\(row.utc): \(illumination.ringTilt)° vs \(-tilt)°")
             #expect(abs(illumination.phaseAngle - row.phaseAngleDegrees) <= 0.02, "\(row.utc)")
+            let sinTilt = sin(abs(tilt) * Engine.radiansPerDegree)
+            let magnitude =
+                -9.0 + 0.044 * row.phaseAngleDegrees + sinTilt * (-2.6 + 1.2 * sinTilt)
+                + 5 * log10(row.heliocentricDistanceAU * row.geocentricDistanceAU)
+            #expect(
+                abs(illumination.magnitude - magnitude) <= 0.002,
+                "\(row.utc): \(illumination.magnitude) vs \(magnitude)")
             signs.insert(tilt > 0)
         }
         // The dates straddle the 2025 ring-plane crossing.

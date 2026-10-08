@@ -87,7 +87,7 @@ struct EngineChironPositionsTests {
 
     /// The span starts at 1900-01-01 00:00 UT, and every time Chiron is
     /// evaluated at is checked against it. At 01:00 UT the observation is in
-    /// the span but light left Chiron about 1.4 hours earlier, before it, so
+    /// the span but light left Chiron about 1.56 hours earlier, before it, so
     /// the position throws; by 03:00 the backdated time is inside.
     @Test("Apparent positions start once Chiron's light time from the span's start has passed (#197)")
     func spanStart() throws {
@@ -101,6 +101,9 @@ struct EngineChironPositionsTests {
         // the backdated time falls before the start.
         let lightTime = later.tt - vector.time.tt
         #expect(early.tt - lightTime < start && early.tt > start, "light time \(lightTime * 24) h")
+        // Horizons puts Chiron 11.2578 AU from Earth at 03:00 UT, 1.560 hours of
+        // light time, so positions start at about 01:34 UT.
+        #expect(abs(lightTime * 24 - 1.560) < 0.005, "light time \(lightTime * 24) h")
         // The coordinates are this position's (see `composition`), so they
         // throw with it.
         #expect(throws: AstronomyError.badTime) { try Positions.chironGeocentricPosition(at: early) }
