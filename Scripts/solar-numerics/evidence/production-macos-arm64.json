@@ -1,0 +1,62 @@
+{
+  "archiveBytes": 75171976,
+  "archiveSHA256": "d167a60cd4859701f9ec04320a447c23f83946252fb666db4a5edb6ba4d92e67",
+  "buildCommand": [
+    "/usr/bin/time",
+    "-l",
+    "swift",
+    "build",
+    "-c",
+    "release",
+    "--scratch-path",
+    ".context/94-link2-production"
+  ],
+  "buildLog": "Fetching https://github.com/heirloomlogic/Persnicket from cache\nFetching https://github.com/apple/swift-docc-plugin from cache\nFetching https://github.com/swiftlang/swift-docc-symbolkit from cache\nFetched https://github.com/heirloomlogic/Persnicket from cache (0.07s)\nFetched https://github.com/swiftlang/swift-docc-symbolkit from cache (0.08s)\nFetched https://github.com/apple/swift-docc-plugin from cache (0.10s)\nCreating working copy for https://github.com/heirloomlogic/Persnicket\nCreating working copy for https://github.com/swiftlang/swift-docc-symbolkit\nCreating working copy for https://github.com/apple/swift-docc-plugin\nWorking copy of https://github.com/heirloomlogic/Persnicket resolved at 2.3.0\nWorking copy of https://github.com/swiftlang/swift-docc-symbolkit resolved at 1.0.0\nWorking copy of https://github.com/apple/swift-docc-plugin resolved at 1.5.0\nBuilding for production...\n[Computing dependencies]\n[Pre-planning 1\u2009/\u2009125]\n[Planning deferred tasks]\n[5\u2009/\u200956]\n[12\u2009/\u200956] CLibAstronomy\n[23\u2009/\u200956]\n[34\u2009/\u200956] CLibAstronomy\n[37\u2009/\u200960]\n[47\u2009/\u200960] CLibAstronomy\n[49\u2009/\u200961] CLibAstronomy\n[53\u2009/\u200970]\n[56\u2009/\u200970]\n[58\u2009/\u200970]\n[59\u2009/\u200970] CLibAstronomy\n[60\u2009/\u200970] CLibAstronomy\n[62\u2009/\u200970] AstronomyKit\n[63\u2009/\u200971] AstronomyKit\n[73\u2009/\u2009107]\n[75\u2009/\u2009107]\n[77\u2009/\u2009107]\n[80\u2009/\u2009107]\n[82\u2009/\u2009107]\n[83\u2009/\u2009107]\n[84\u2009/\u2009107]\n[87\u2009/\u2009107]\n[88\u2009/\u2009107]\n[89\u2009/\u2009107]\n[90\u2009/\u2009107]\n[91\u2009/\u2009107]\n[93\u2009/\u2009107]\n[96\u2009/\u2009107]\n[97\u2009/\u2009107]\n[98\u2009/\u2009107]\n[99\u2009/\u2009107]\n[100\u2009/\u2009107] AstronomyKit\n[106\u2009/\u2009107] AstronomyKit\n[107\u2009/\u2009107] AstronomyKit-product\nBuild complete! (58.70 sec)\n       70.86 real        33.84 user        10.13 sys\n          3597484032  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n             1207827  page reclaims\n               33542  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                2513  voluntary context switches\n               98942  involuntary context switches\n         26849308347  instructions retired\n          9789954555  cycles elapsed\n           246383912  peak memory footprint\n",
+  "buildMaximumRSSBytes": 3597484032,
+  "buildReportedSeconds": 58.7,
+  "buildWallSeconds": 70.86,
+  "clientCommand": [
+    "xcrun",
+    "swiftc",
+    "-O",
+    "-target",
+    "arm64-apple-macos15.0",
+    "-I",
+    ".context/94-link2-production/out/Products/Release",
+    "-I",
+    "Sources/CLibAstronomy",
+    ".context/94-link2-public-latency.swift",
+    ".context/94-link2-production/out/Products/Release/libAstronomyKit.a",
+    "-o",
+    ".context/94-link2-public-latency"
+  ],
+  "clientLog": "trial=0 calls=10000 elapsedSeconds=0.046891542 nanosecondsPerCall=4689.1542\ntrial=1 calls=10000 elapsedSeconds=0.065035208 nanosecondsPerCall=6503.5208\ntrial=2 calls=10000 elapsedSeconds=0.045120125 nanosecondsPerCall=4512.0125\ntrial=3 calls=10000 elapsedSeconds=0.044766875 nanosecondsPerCall=4476.6875\ntrial=4 calls=10000 elapsedSeconds=0.05347625 nanosecondsPerCall=5347.625\nchecksum=443566.44265962293\n        0.58 real         0.19 user         0.01 sys\n            16400384  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                1207  page reclaims\n                   3  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                 784  involuntary context switches\n          2194688160  instructions retired\n           616902663  cycles elapsed\n             8077840  peak memory footprint\n",
+  "clientRunCommand": [
+    "/usr/bin/time",
+    "-l",
+    ".context/94-link2-public-latency"
+  ],
+  "clientSource": "import AstronomyKit\nimport Foundation\n\nlet observer = Observer(latitude: 51.5, longitude: -0.12, height: 46)\nlet clock = ContinuousClock()\nlet count = 10_000\nvar checksum = 0.0\nfor index in 0..<100 {\n    checksum += try Sun.altitudeObservation(universalTime: 9000 + Double(index) / 1440, from: observer, deltaTModel: .espenakMeeus).altitude\n}\nfor trial in 0..<5 {\n    let duration = try clock.measure {\n        for index in 0..<count {\n            checksum += try Sun.altitudeObservation(universalTime: 9000 + Double(index) / 1440, from: observer, deltaTModel: .espenakMeeus).altitude\n        }\n    }\n    let seconds = Double(duration.components.seconds) + Double(duration.components.attoseconds) / 1e18\n    print(\"trial=\\(trial) calls=\\(count) elapsedSeconds=\\(seconds) nanosecondsPerCall=\\(seconds * 1e9 / Double(count))\")\n}\nprint(\"checksum=\\(checksum)\")\n",
+  "kind": "local-production-release-observations-not-a-performance-gate",
+  "limits": [
+    "Shared development machine and compiler caches; build overlapped independent reference evaluation.",
+    "Client trials ran after this task compiler/reference generation stopped; other machine workloads were uncontrolled.",
+    "The separately linked client uses the production archive, not the test-enabled module.",
+    "RSS is process maximum including startup and coefficient initialization, not retained library memory.",
+    "The archive still contains C and native implementations; archive bytes are not installed app size.",
+    "Baseline/current model arithmetic and checks differ; these local trials do not establish a controlled speedup or regression."
+  ],
+  "retainedLink1Baseline": {
+    "archiveBytes": 32628104,
+    "archiveSHA256": "00ff73f04ebbb0d98a94328ab2eab66fcf35c14a853790dc9e342b276a8ddd3d",
+    "clientLog": "trial=0 calls=10000 elapsedSeconds=0.178565167 nanosecondsPerCall=17856.5167\ntrial=1 calls=10000 elapsedSeconds=0.080522 nanosecondsPerCall=8052.2\ntrial=2 calls=10000 elapsedSeconds=0.035905333 nanosecondsPerCall=3590.5333\ntrial=3 calls=10000 elapsedSeconds=0.056107833 nanosecondsPerCall=5610.7833\ntrial=4 calls=10000 elapsedSeconds=0.043373375 nanosecondsPerCall=4337.3375\nchecksum=443566.4466484055\n        1.14 real         0.12 user         0.00 sys\n             6340608  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n                 587  page reclaims\n                   2  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                   0  voluntary context switches\n                1164  involuntary context switches\n          1266868898  instructions retired\n           364067954  cycles elapsed\n             1966584  peak memory footprint\n",
+    "librarySourcesUnchangedThrough": "d7bf151a899f1248c806f665352794797655e4ad",
+    "swiftCStringSectionBytes": 1706,
+    "swiftObjectBytes": 780064
+  },
+  "sizeLog": "Segment : 42666728\n\tSection (__TEXT, __text): 203900\n\tSection (__TEXT, __literal16): 11808\n\tSection (__TEXT, __swift5_typeref): 2430\n\tSection (__TEXT, __const): 13200\n\tSection (__TEXT, __cstring): 42285018\n\tSection (__TEXT, __constg_swiftt): 3632\n\tSection (__TEXT, __swift5_reflstr): 2770\n\tSection (__TEXT, __swift5_fieldmd): 5720\n\tSection (__TEXT, __swift5_builtin): 60\n\tSection (__TEXT, __swift5_assocty): 264\n\tSection (__TEXT, __swift5_proto): 748\n\tSection (__TEXT, __swift5_types): 408\n\tSection (__TEXT, __objc_classname): 540\n\tSection (__TEXT, __objc_methname): 150\n\tSection (__TEXT, __objc_methtype): 1\n\tSection (__TEXT, __swift5_capture): 20\n\tSection (__TEXT, __swift5_protos): 8\n\tSection (__TEXT, __swift5_types2): 4\n\tSection (__TEXT, __eh_frame): 8968\n\tSection (__DATA, __const): 41264\n\tSection (__DATA, __objc_classlist): 72\n\tSection (__DATA, __objc_imageinfo): 8\n\tSection (__DATA, __objc_const): 2176\n\tSection (__DATA, __objc_classrefs): 16\n\tSection (__DATA, __data): 3592\n\tSection (__DATA, __objc_clsrolist): 16\n\tSection (__DATA, __bss): 23808 (zerofill)\n\tSection (__DATA, __common): 952 (zerofill)\n\tSection (__LD, __compact_unwind): 55136\n\ttotal 42666689\ntotal 42666728\n",
+  "sourceHead": "0dfc91d03b196dbc2d6f2b13ad0f12407144ded6",
+  "swiftCStringSectionBytes": 42285018,
+  "swiftObjectBytes": 43323872,
+  "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+}

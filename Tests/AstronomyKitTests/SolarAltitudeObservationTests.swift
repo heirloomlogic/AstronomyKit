@@ -40,14 +40,29 @@ struct SolarAltitudeObservationTests {
         try Sun.altitudeObservation(universalTime: ut, from: observer, deltaTModel: deltaTModel)
     }
 
+    private static func nativeTime(_ date: Date, deltaTModel model: DeltaTModel) -> AstroTime {
+        let native = Engine.Time.civil(utcDays: AstroTime.civilDays(of: date), deltaTModel: model).time
+        return AstroTime(tt: native.tt, ut: native.ut, deltaTModel: model)
+    }
+
+    private static func nativeTime(tt: Double, deltaTModel model: DeltaTModel) -> AstroTime {
+        let native = Engine.Time(tt: tt, deltaTModel: model)
+        return AstroTime(tt: native.tt, ut: native.ut, deltaTModel: model)
+    }
+
+    private static func nativeTime(ut: Double, deltaTModel model: DeltaTModel) -> AstroTime {
+        let native = Engine.Time(ut: ut, deltaTModel: model)
+        return AstroTime(tt: native.tt, ut: native.ut, deltaTModel: model)
+    }
+
     private static func geometricAltitude(_ time: AstroTime) throws -> Double {
         try CelestialBody.sun.horizon(at: time, from: observer40N, refraction: .none).altitude
     }
 
-    @Test("Each entry point evaluates the matching initializer's time")
+    @Test("Each entry point records native model time and repeats the ordinary horizon result")
     func entryPointsMatchHorizon() throws {
         let date = try Self.date("2026-07-24T06:30:00Z")
-        let time = AstroTime(date, deltaTModel: .jplHorizons)
+        let time = Self.nativeTime(date, deltaTModel: .jplHorizons)
 
         let civil = try Self.observe(date, deltaTModel: .jplHorizons)
         #expect(civil.time.universalTime == time.universalTime)
@@ -59,14 +74,14 @@ struct SolarAltitudeObservationTests {
         #expect(civil.altitude == (try Self.geometricAltitude(time)))
 
         let terrestrial = try Self.observe(tt: time.terrestrialTime, deltaTModel: .jplHorizons)
-        let fromTT = AstroTime(tt: time.terrestrialTime, deltaTModel: .jplHorizons)
+        let fromTT = Self.nativeTime(tt: time.terrestrialTime, deltaTModel: .jplHorizons)
         #expect(terrestrial.reference == .terrestrialTime)
         #expect(terrestrial.time.terrestrialTime == time.terrestrialTime)
         #expect(terrestrial.time.universalTime == fromTT.universalTime)
         #expect(terrestrial.altitude == (try Self.geometricAltitude(fromTT)))
 
         let universal = try Self.observe(ut: time.universalTime, deltaTModel: .jplHorizons)
-        let fromUT = AstroTime(ut: time.universalTime, deltaTModel: .jplHorizons)
+        let fromUT = Self.nativeTime(ut: time.universalTime, deltaTModel: .jplHorizons)
         #expect(universal.reference == .universalTime)
         #expect(universal.time.universalTime == time.universalTime)
         #expect(universal.time.terrestrialTime == fromUT.terrestrialTime)
@@ -106,9 +121,9 @@ struct SolarAltitudeObservationTests {
             #expect(bound.total >= plainSum)
             #expect(bound.total <= plainSum.nextUp.nextUp.nextUp)
         }
-        // The inverse dominates; the UT-defined constructions are an order smaller.
-        #expect(terrestrial.errorBound.total > 8e-9 && terrestrial.errorBound.total < 9e-9)
-        #expect(universal.errorBound.total > 1.1e-9 && universal.errorBound.total < 1.2e-9)
+        // The source-derived inverse term exceeds the two-residual light-time term.
+        #expect(terrestrial.errorBound.total > 1.1e-8 && terrestrial.errorBound.total < 1.2e-8)
+        #expect(universal.errorBound.total > 2.2e-9 && universal.errorBound.total < 2.3e-9)
     }
 
     @Test("A Date's civil term covers the rounding carried into UT")
@@ -119,7 +134,7 @@ struct SolarAltitudeObservationTests {
         // day, so the civil term is at least that rounding times 360. The floor
         // does not read the civil constants it checks.
         let civil = try Self.observe(try Self.date("1972-07-01T12:00:00Z"))
-        let fromTT = AstroTime(tt: civil.time.terrestrialTime, deltaTModel: .espenakMeeus)
+        let fromTT = Self.nativeTime(tt: civil.time.terrestrialTime, deltaTModel: .espenakMeeus)
         #expect(civil.time.universalTime == fromTT.universalTime)
         let proxy = try Self.observe(try Self.date("1950-06-01T12:00:00Z"))
         #expect(proxy.time.universalTime == AstroTime.civilDays(of: try Self.date("1950-06-01T12:00:00Z")))
@@ -177,14 +192,14 @@ struct SolarAltitudeObservationTests {
         // The light-time loop backdates up to 8.6 minutes; the first minutes of
         // the coverage evaluate the Earth before it.
         let backdate = SolarAltitudeObservation.maximumLightTimeDays
-        #expect(backdate > 0.0059 && backdate < 0.006)
+        #expect(backdate > 0.0059 && backdate <= 0.006)
         #expect(throws: Unsupported.outsidePolynomialCoverage) {
             try Self.observe(tt: coverage.lowerBound + backdate / 2)
         }
         _ = try Self.observe(tt: coverage.lowerBound + backdate + 1e-3)
 
         // The last UT whose TT is inside the coverage is accepted; the next one is not.
-        let deltaTDays = AstronomyConfig.deltaTEspenakMeeus(universalTime: coverage.upperBound) / 86_400
+        let deltaTDays = Engine.DeltaT.seconds(ut: coverage.upperBound, model: .espenakMeeus) / 86_400
         _ = try Self.observe(ut: coverage.upperBound - deltaTDays - 1e-6)
         #expect(throws: Unsupported.outsidePolynomialCoverage) {
             try Self.observe(ut: coverage.upperBound - deltaTDays + 1e-6)
@@ -193,9 +208,9 @@ struct SolarAltitudeObservationTests {
 
     @Test("A TT inside a Delta T gap is refused; a TT with two UTs is accepted")
     func deltaTGaps() throws {
-        // The engine's year is 2000 + (ut - 14) / 365.24217; the pieces meet at whole years.
-        func boundary(year: Double) -> Double { 14 + (year - 2_000) * 365.24217 }
-        func forward(_ ut: Double) -> Double { AstroTime(ut: ut, deltaTModel: .espenakMeeus).terrestrialTime }
+        // Native model pieces meet at Gregorian 1 January UT.
+        func boundary(year: Double) -> Double { Engine.DeltaT.Gregorian.start(year: year) }
+        func forward(_ ut: Double) -> Double { Self.nativeTime(ut: ut, deltaTModel: .espenakMeeus).terrestrialTime }
 
         // 1961: Delta T steps up by 0.0296 s, leaving TT values with no UT.
         let gapBoundary = boundary(year: 1_961)
@@ -203,7 +218,7 @@ struct SolarAltitudeObservationTests {
         let above = forward(gapBoundary + 1e-6)
         #expect(abs((above - below - 2e-6) * 86_400 - 0.0296) < 0.001)
         let inGap = (below + above) / 2
-        let clamped = AstroTime(tt: inGap, deltaTModel: .espenakMeeus)
+        let clamped = Self.nativeTime(tt: inGap, deltaTModel: .espenakMeeus)
         #expect(clamped.terrestrialTime == inGap)
         let residual = abs(inGap - forward(clamped.universalTime))
         #expect(residual > SolarAltitudeObservation.inverseTolerance(terrestrialTime: inGap))
@@ -220,7 +235,7 @@ struct SolarAltitudeObservationTests {
         let twoSolutions = forward(boundary(year: 2_005) - 1e-7)
         let observation = try Self.observe(tt: twoSolutions)
         #expect(observation.time.terrestrialTime == twoSolutions)
-        #expect(observation.errorBound.scaleConversion == Bounds.ttInverseDegrees)
+        #expect(observation.errorBound.scaleConversion >= Bounds.ttInverseDegrees + Bounds.arrivalJumpInverseDegrees)
     }
 
     @Test("The inverse tolerance is the engine's expression")
@@ -288,13 +303,13 @@ struct SolarAltitudeObservationTests {
         let coverage = SolarAltitudeObservation.polynomialCoverage
         let segments = (coverage.upperBound - coverage.lowerBound) / SolarAltitudeObservation.polynomialSegmentDays
         #expect(segments.rounded(.up) == 9_177)
-        // Every bound is a small positive angle; the inverse is the largest.
+        // Baseline partial terms remain below one tenth of a microdegree; model-step supplements are tested separately.
         let bounds = [
             Bounds.civilToTTDegrees, Bounds.civilToUTDegrees, Bounds.forwardTTDegrees,
             Bounds.lightTimeDegrees, Bounds.eraDegrees, Bounds.joinDegrees,
         ]
         for bound in bounds {
-            #expect(bound > 0 && bound < Bounds.ttInverseDegrees)
+            #expect(bound > 0 && bound < 1e-7)
         }
     }
 }

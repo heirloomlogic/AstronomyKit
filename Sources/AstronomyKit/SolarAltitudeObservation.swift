@@ -13,8 +13,8 @@ import Foundation
 /// Get one from ``Sun/altitudeObservation(at:from:deltaTModel:)``,
 /// ``Sun/altitudeObservation(terrestrialTime:from:deltaTModel:)``, or
 /// ``Sun/altitudeObservation(universalTime:from:deltaTModel:)``. Each builds
-/// the ``AstroTime`` with the matching initializer and an explicit
-/// ``DeltaTModel``, so the result records every input the calculation read:
+/// time with the native model and an explicit ``DeltaTModel``, then records
+/// its two scales in an ``AstroTime``. The result keeps every input the calculation read:
 /// both time scales, the model, and the observer. A later
 /// ``AstronomyConfig/setDeltaTModel(_:)`` call does not change what a
 /// repeated call returns.
@@ -24,9 +24,9 @@ import Foundation
 /// ``errorBound`` sums the terms of the article's budget that apply to how
 /// the time was built. It covers only what the article derives. The terms the
 /// article measures (polynomial evaluation, frame rotation, sidereal time, the
-/// horizon transform, the math library, and the Delta T polynomial) have no
-/// bound; the article reports their measurements instead, and a certificate
-/// has to treat them as evidence about that platform and grid.
+/// horizon transform, the math library, and the Delta T polynomial) are
+/// excluded from this bound. The article distinguishes their sampled
+/// differences from the coarse guards used only to classify supported inputs.
 ///
 /// A case the article excludes throws ``Unsupported`` instead of returning a
 /// bound.
@@ -59,7 +59,8 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         /// rounding when it derived TT.
         public let scaleConversion: Double
 
-        /// Light-time termination.
+        /// Light-time termination, including a model-step allowance when
+        /// the conservative backdating interval can cross a Delta T boundary.
         public let lightTimeTermination: Double
 
         /// Earth Rotation Angle rounding.
@@ -85,13 +86,14 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
 
     /// A case <doc:SolarAltitudeNumerics> excludes from the budget.
     public enum Unsupported: Error, Sendable, Equatable, Hashable {
-        /// The input TT, or a TT the light-time loop can reach by backdating,
+        /// The input TT, or the conservative enclosure of backdated TT,
         /// is outside ``SolarAltitudeObservation/polynomialCoverage``.
         case outsidePolynomialCoverage
 
         /// The TT lies in a positive Delta T step of the model (1920, 1941,
         /// 1961, or 1986), where the model has no UT and the inverse stores a
-        /// pair the model does not relate.
+        /// pair the model does not relate. A civil input whose rounding
+        /// interval can reach a gap is also refused.
         case terrestrialTimeInDeltaTGap
 
         /// The civil date is within the calendar rounding of a UTC segment
@@ -133,9 +135,9 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
     public static let polynomialSegmentDays = SolarAltitudeBounds.polynomialSegmentDays
 
     /// The most the Sun's direction changes across one polynomial segment
-    /// boundary, in degrees. A point observation never pays it; an enclosure
-    /// over a time interval widens by this much per boundary the backdated TT
-    /// crosses.
+    /// boundary, in degrees. An interval enclosure widens by this much
+    /// per boundary the backdated TT crosses. The point budget separately
+    /// allows its backdating interval to straddle one polynomial join.
     public static let joinDiscontinuityDegrees = SolarAltitudeBounds.joinDegrees
 
     /// The most the light-time loop backdates the Earth position, in days.
@@ -160,7 +162,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         let scaleConversion: Double
         switch reference {
         case .terrestrialTime, .civilUTC:
-            forwardTT = AstroTime(ut: ut, deltaTModel: deltaTModel).terrestrialTime
+            forwardTT = Engine.Time(ut: ut, deltaTModel: deltaTModel).tt
             // The engine's inverse accepts this residual as converged; a TT in
             // a gap is stored with a UT whose residual exceeds it.
             guard abs(tt - forwardTT) <= Self.inverseTolerance(terrestrialTime: tt) else {
@@ -174,26 +176,77 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
             scaleConversion = SolarAltitudeBounds.forwardTTDegrees
         }
 
-        // The light-time loop evaluates the Earth at the input TT first, then
-        // at the TT derived from `ut - tau` for tau up to the backdate bound.
+        if reference == .terrestrialTime || reference == .civilUTC {
+            for gap in SolarAltitudeBounds.positiveGaps {
+                let intersects: Bool
+                if reference == .terrestrialTime {
+                    intersects = tt >= gap.lower && tt < gap.upper
+                } else {
+                    let lower = (tt - SolarAltitudeBounds.civilToTTDays).nextDown
+                    let upper = (tt + SolarAltitudeBounds.civilToTTDays).nextUp
+                    intersects = upper >= gap.lowerEnclosure && lower <= gap.upperEnclosure
+                }
+                guard !intersects else { throw Unsupported.terrestrialTimeInDeltaTGap }
+            }
+        }
+
         let coverage = Self.polynomialCoverage
-        let earliest = AstroTime(ut: ut - SolarAltitudeBounds.backdateMaxDays, deltaTModel: deltaTModel)
-        let earliestTT = earliest.terrestrialTime
-        guard coverage.contains(tt), coverage.contains(forwardTT), coverage.contains(earliestTT) else {
+        guard coverage.contains(tt), abs(ut) < SolarAltitudeBounds.classificationUTLimit else {
+            throw Unsupported.outsidePolynomialCoverage
+        }
+        let classificationGuard = SolarAltitudeBounds.classificationGuardDays
+        let globalUncertainty =
+            (SolarAltitudeBounds.arrivalUncertaintyDays + SolarAltitudeBounds.classificationInverseGuardDays).nextUp
+        let arrivalStep = Self.crossesModelStep(
+            lower: (ut - globalUncertainty).nextDown, upper: (ut + globalUncertainty).nextUp, model: deltaTModel)
+        let uncertainty =
+            arrivalStep
+            ? globalUncertainty
+            : (SolarAltitudeBounds.arrivalUncertaintyBaseDays + SolarAltitudeBounds.classificationInverseGuardDays)
+                .nextUp
+        let earliestUT = ((ut - uncertainty).nextDown - SolarAltitudeBounds.backdateMaxDays).nextDown
+        let latestUT = (ut + uncertainty).nextUp
+        guard earliestUT >= -SolarAltitudeBounds.classificationUTLimit,
+            latestUT <= SolarAltitudeBounds.classificationUTLimit
+        else { throw Unsupported.outsidePolynomialCoverage }
+        let lightStep = Self.crossesModelStep(lower: earliestUT, upper: latestUT, model: deltaTModel)
+        let jump = lightStep ? SolarAltitudeBounds.deltaTJumpDays : 0
+        // Within each piece g is increasing. The absolute jump sum also
+        // encloses downward steps, for which endpoint images alone fail.
+        let earliestTT = Engine.Time(ut: earliestUT, deltaTModel: deltaTModel).tt
+        let latestTT = Engine.Time(ut: latestUT, deltaTModel: deltaTModel).tt
+        let lowerTT = ((min(tt, forwardTT, earliestTT) - classificationGuard).nextDown - jump).nextDown
+        let upperTT = ((max(tt, forwardTT, latestTT) + classificationGuard).nextUp + jump).nextUp
+        guard coverage.contains(lowerTT), coverage.contains(upperTT) else {
             throw Unsupported.outsidePolynomialCoverage
         }
 
+        let inverseReference = reference == .terrestrialTime || reference == .civilUTC
+        let inverseJump = arrivalStep && inverseReference ? SolarAltitudeBounds.arrivalJumpInverseDegrees : 0
+        let civilJump = arrivalStep && reference == .civilUT1 ? SolarAltitudeBounds.arrivalJumpForwardDegrees : 0
         self.time = time
         self.deltaTModel = deltaTModel
         self.observer = observer
         self.reference = reference
         self.altitude = try CelestialBody.sun.horizon(at: time, from: observer, refraction: .none).altitude
         self.errorBound = ErrorBound(
-            civilConversion: civilConversion,
-            scaleConversion: scaleConversion,
-            lightTimeTermination: SolarAltitudeBounds.lightTimeDegrees,
+            civilConversion: ErrorBound.addingUp(civilConversion, civilJump),
+            scaleConversion: ErrorBound.addingUp(scaleConversion, inverseJump),
+            lightTimeTermination: ErrorBound.addingUp(
+                SolarAltitudeBounds.lightTimeDegrees, lightStep ? SolarAltitudeBounds.lightTimeJumpDegrees : 0),
             earthRotationAngle: SolarAltitudeBounds.eraDegrees
         )
+    }
+
+    private static func crossesModelStep(lower: Double, upper: Double, model: DeltaTModel) -> Bool {
+        SolarAltitudeBounds.modelStepUTs.contains { boundary in
+            if model == .jplHorizons && boundary > 17 * Engine.DeltaT.daysPerTropicalYear { return false }
+            return lower <= boundary && boundary <= upper
+        }
+    }
+
+    static func recorded(_ time: Engine.Time, model: DeltaTModel) -> AstroTime {
+        AstroTime(tt: time.tt, ut: time.ut, deltaTModel: model)
     }
 
     /// The residual `|tt - time.tt|` the engine's TT to UT inverse accepts as
@@ -209,8 +262,8 @@ extension Sun {
     /// The Sun's geometric altitude at a civil UTC date, with its inputs and
     /// derived error bound.
     ///
-    /// The time is `AstroTime(date, deltaTModel: deltaTModel)`. From 1961 on
-    /// the bound adds the calendar and civil-to-TT rounding, carried into the
+    /// The native civil conversion and model inverse construct both time
+    /// scales. From 1961 on the bound adds the calendar and civil-to-TT rounding, carried into the
     /// derived UT, and the TT to UT inverse; before 1961 it adds the calendar
     /// rounding taken as UT, carried into the derived TT, and the UT to TT
     /// rounding. Either way it adds light-time termination and Earth Rotation
@@ -237,9 +290,9 @@ extension Sun {
         guard !nearSegmentStart else {
             throw SolarAltitudeObservation.Unsupported.civilDateAtSegmentStart
         }
-        let civil = AstroTime.civil(days: civilDays, deltaTModel: deltaTModel)
+        let civil = Engine.Time.civil(utcDays: civilDays, deltaTModel: deltaTModel)
         return try SolarAltitudeObservation(
-            time: civil.time,
+            time: SolarAltitudeObservation.recorded(civil.time, model: deltaTModel),
             reference: civil.fromTable ? .civilUTC : .civilUT1,
             observer: observer,
             deltaTModel: deltaTModel
@@ -249,8 +302,8 @@ extension Sun {
     /// The Sun's geometric altitude at a Terrestrial Time, with its inputs and
     /// derived error bound.
     ///
-    /// The time is `AstroTime(tt: terrestrialTime, deltaTModel: deltaTModel)`.
-    /// The bound adds the TT to UT inverse, light-time termination, and Earth
+    /// The time stores the supplied TT exactly and derives UT with the
+    /// native model inverse. The bound adds the TT to UT inverse, light-time termination, and Earth
     /// Rotation Angle rounding.
     ///
     /// - Parameters:
@@ -268,7 +321,8 @@ extension Sun {
         deltaTModel: DeltaTModel
     ) throws -> SolarAltitudeObservation {
         try SolarAltitudeObservation(
-            time: AstroTime(tt: terrestrialTime, deltaTModel: deltaTModel),
+            time: SolarAltitudeObservation.recorded(
+                Engine.Time(tt: terrestrialTime, deltaTModel: deltaTModel), model: deltaTModel),
             reference: .terrestrialTime,
             observer: observer,
             deltaTModel: deltaTModel
@@ -278,8 +332,8 @@ extension Sun {
     /// The Sun's geometric altitude at a Universal Time, with its inputs and
     /// derived error bound.
     ///
-    /// The time is `AstroTime(ut: universalTime, deltaTModel: deltaTModel)`.
-    /// The bound adds the UT to TT rounding, light-time termination, and Earth
+    /// The time stores the supplied UT exactly and derives TT with the
+    /// native model. The bound adds the UT to TT rounding, light-time termination, and Earth
     /// Rotation Angle rounding. A time the engine derived, such as a search
     /// result or an ``AstroTime/addingDays(_:)`` result, is rebuilt exactly
     /// from its ``AstroTime/universalTime`` and ``AstroTime/deltaTModel``.
@@ -298,7 +352,8 @@ extension Sun {
         deltaTModel: DeltaTModel
     ) throws -> SolarAltitudeObservation {
         try SolarAltitudeObservation(
-            time: AstroTime(ut: universalTime, deltaTModel: deltaTModel),
+            time: SolarAltitudeObservation.recorded(
+                Engine.Time(ut: universalTime, deltaTModel: deltaTModel), model: deltaTModel),
             reference: .universalTime,
             observer: observer,
             deltaTModel: deltaTModel

@@ -79,3 +79,7 @@ python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
 ```
 
 `--refresh` validates every download before writing any of them.
+
+## Native solar numerical evidence
+
+`../solar-numerics/README.md` describes the independent higher-precision Sun model and the exact-rational native numerical derivations used by #94. Its sampled reports and partial arithmetic bounds are separate from this archive's published-reference fixtures. The SOFA/VI42 source pins, compilation recipes, recipe-output associations, archived rows and scientific tolerances are unchanged. Re-execute this fixture pipeline as well as the solar numerical checks; agreement between two sampled model implementations does not replace a published-reference check.

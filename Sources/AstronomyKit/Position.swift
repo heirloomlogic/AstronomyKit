@@ -117,6 +117,13 @@ extension CelestialBody {
         refraction: Refraction = .normal
     ) throws -> Horizon {
         let rawObserver = try observer.validatedRaw()
+        if self == .sun, let model = time.deltaTModel {
+            let native = Engine.Time.fromPair(ut: time.universalTime, tt: time.terrestrialTime, deltaTModel: model)
+            let result = try Engine.Positions.horizontal(of: .sun, at: native, from: observer, refraction: refraction)
+            return Horizon(
+                altitude: result.altitude, azimuth: result.azimuth,
+                rightAscension: result.rightAscension, declination: result.declination)
+        }
         var rawTime = time.raw
         let eq = try Equatorial(Astronomy_Equator(raw, &rawTime, rawObserver, EQUATOR_OF_DATE, ABERRATION), time: time)
         let result = Astronomy_Horizon(&rawTime, rawObserver, eq.rightAscension, eq.declination, refraction.raw)
