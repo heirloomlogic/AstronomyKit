@@ -240,6 +240,33 @@ class AngularEventFixtureTests(unittest.TestCase):
             self.assertGreaterEqual(row["timeToleranceSeconds"], row["sampleResolutionSeconds"])
             self.assertGreaterEqual(row["angleToleranceDegrees"], 0.0001)
 
+    def test_maximum_elongation_rows_reject_timestamp_mismatches(self):
+        source_name = "mercury-max-2025-03"
+        original_horizons_result = self.builder.horizons_result
+
+        def changed_result(mutation):
+            def result(name):
+                original = original_horizons_result(name)
+                if name != source_name:
+                    return original
+                prefix, remainder = original.split("$$SOE\n", 1)
+                table, suffix = remainder.split("$$EOE", 1)
+                lines = table.strip().splitlines()
+                return f"{prefix}$$SOE\n{'\n'.join(mutation(lines))}\n$$EOE{suffix}"
+
+            return result
+
+        mutations = {
+            "shifted": lambda lines: [lines[0].replace("18:00:00.000", "17:00:00.000"), *lines[1:]],
+            "duplicate": lambda lines: [lines[0], lines[1].replace("19:00:00.000", "18:00:00.000"), *lines[2:]],
+            "reordered": lambda lines: [lines[1], lines[0], *lines[2:]],
+        }
+        for mismatch, mutation in mutations.items():
+            with self.subTest(mismatch=mismatch):
+                with mock.patch.object(self.builder, "horizons_result", side_effect=changed_result(mutation)):
+                    with self.assertRaisesRegex(RuntimeError, "maximum-elongation timestamp mismatch"):
+                        self.builder.parse_angular_events()
+
     def test_angular_event_queries_keep_the_required_observables(self):
         acquisitions = dict(self.builder.horizons_acquisitions())
         for name in self.builder.RELATIVE_LONGITUDE_VECTOR_QUERIES:

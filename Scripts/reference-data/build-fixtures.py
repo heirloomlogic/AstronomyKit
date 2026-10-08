@@ -730,6 +730,22 @@ def wrapped_degrees(value: float) -> float:
     return (value + 180) % 360 - 180
 
 
+def validate_horizons_ut_timestamp(name: str, row_index: int, timestamp: str, julian_date_ut: float) -> None:
+    match = re.fullmatch(r"\d{4}-[A-Z][a-z]{2}-\d{2} \d{2}:\d{2}:\d{2}\.(\d+)", timestamp)
+    if match is None:
+        raise RuntimeError(f"unreadable maximum-elongation timestamp in {name} row {row_index}: {timestamp!r}")
+    returned = datetime.datetime.strptime(timestamp, "%Y-%b-%d %H:%M:%S.%f")
+    j2000 = datetime.datetime(2000, 1, 1, 12)
+    returned_seconds = (returned - j2000).total_seconds()
+    requested_seconds = (julian_date_ut - 2_451_545.0) * 86_400
+    displayed_precision_seconds = 10 ** -len(match.group(1))
+    if abs(returned_seconds - requested_seconds) > displayed_precision_seconds / 2 + 1e-6:
+        raise RuntimeError(
+            f"maximum-elongation timestamp mismatch in {name} row {row_index}: "
+            f"requested JD UT {julian_date_ut}, returned {timestamp}"
+        )
+
+
 def parse_angular_events() -> dict[str, list[dict[str, object]]]:
     samples: list[tuple[float, float, float, float]] = []
     sample_keys: list[tuple[str, float]] = []
@@ -789,10 +805,11 @@ def parse_angular_events() -> dict[str, list[dict[str, object]]]:
         if len(lines) != len(event["dates"]):
             raise RuntimeError(f"unexpected maximum-elongation row count in {name}")
         rows = []
-        for date, line in zip(event["dates"], lines):
+        for row_index, (date, line) in enumerate(zip(event["dates"], lines), start=1):
             columns = [column.strip() for column in line.split(",")]
             if columns[4] not in {"/T", "/L"}:
                 raise RuntimeError(f"unexpected elongation flag {columns[4]!r} in {name}")
+            validate_horizons_ut_timestamp(name, row_index, columns[0], date)
             rows.append((date, columns[0], float(columns[3]), columns[4]))
         maximum = max(row[2] for row in rows)
         maximum_indices = [index for index, row in enumerate(rows) if row[2] == maximum]
