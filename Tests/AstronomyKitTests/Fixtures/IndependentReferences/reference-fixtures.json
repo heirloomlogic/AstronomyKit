@@ -102343,6 +102343,776 @@
       "timeToleranceSeconds": 453.6
     }
   ],
+  "horizontal": [
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 254.357362484,
+      "body": "sun",
+      "elevationDegrees": -18.151263701,
+      "refracted": false,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 280.153360713,
+      "body": "sun",
+      "elevationDegrees": -54.357213522,
+      "refracted": false,
+      "utc": "2026-Jan-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 25.628375975,
+      "body": "sun",
+      "elevationDegrees": -76.127930079,
+      "refracted": false,
+      "utc": "2026-Jan-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 88.589089558,
+      "body": "sun",
+      "elevationDegrees": -43.893600714,
+      "refracted": false,
+      "utc": "2026-Jan-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 112.347977895,
+      "body": "sun",
+      "elevationDegrees": -8.189662661,
+      "refracted": false,
+      "utc": "2026-Jan-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 141.997925103,
+      "body": "sun",
+      "elevationDegrees": 21.062136043,
+      "refracted": false,
+      "utc": "2026-Jan-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 186.90558488,
+      "body": "sun",
+      "elevationDegrees": 31.22460551,
+      "refracted": false,
+      "utc": "2026-Jan-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 227.907831504,
+      "body": "sun",
+      "elevationDegrees": 13.974105594,
+      "refracted": false,
+      "utc": "2026-Jan-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 292.48700585,
+      "body": "sun",
+      "elevationDegrees": 8.270451046,
+      "refracted": false,
+      "utc": "2026-Jul-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 322.109198151,
+      "body": "sun",
+      "elevationDegrees": -20.938321907,
+      "refracted": false,
+      "utc": "2026-Jul-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 6.914425576,
+      "body": "sun",
+      "elevationDegrees": -31.060397327,
+      "refracted": false,
+      "utc": "2026-Jul-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 47.819654015,
+      "body": "sun",
+      "elevationDegrees": -13.829304452,
+      "refracted": false,
+      "utc": "2026-Jul-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 74.250027015,
+      "body": "sun",
+      "elevationDegrees": 18.132675457,
+      "refracted": false,
+      "utc": "2026-Jul-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 99.983732778,
+      "body": "sun",
+      "elevationDegrees": 54.344250643,
+      "refracted": false,
+      "utc": "2026-Jul-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 205.568237092,
+      "body": "sun",
+      "elevationDegrees": 76.222036388,
+      "refracted": false,
+      "utc": "2026-Jul-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 268.665187214,
+      "body": "sun",
+      "elevationDegrees": 43.966339122,
+      "refracted": false,
+      "utc": "2026-Jul-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 254.357362484,
+      "body": "sun",
+      "elevationDegrees": -17.504650951,
+      "refracted": true,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 280.153360713,
+      "body": "sun",
+      "elevationDegrees": -53.710600772,
+      "refracted": true,
+      "utc": "2026-Jan-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 25.628375975,
+      "body": "sun",
+      "elevationDegrees": -75.481317329,
+      "refracted": true,
+      "utc": "2026-Jan-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 88.589089558,
+      "body": "sun",
+      "elevationDegrees": -43.246987964,
+      "refracted": true,
+      "utc": "2026-Jan-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 112.347977895,
+      "body": "sun",
+      "elevationDegrees": -7.543049911,
+      "refracted": true,
+      "utc": "2026-Jan-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 141.997925103,
+      "body": "sun",
+      "elevationDegrees": 21.10542327,
+      "refracted": true,
+      "utc": "2026-Jan-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 186.90558488,
+      "body": "sun",
+      "elevationDegrees": 31.252370339,
+      "refracted": true,
+      "utc": "2026-Jan-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 227.907831504,
+      "body": "sun",
+      "elevationDegrees": 14.039806492,
+      "refracted": true,
+      "utc": "2026-Jan-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 292.48700585,
+      "body": "sun",
+      "elevationDegrees": 8.377331331,
+      "refracted": true,
+      "utc": "2026-Jul-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 322.109198151,
+      "body": "sun",
+      "elevationDegrees": -20.291709157,
+      "refracted": true,
+      "utc": "2026-Jul-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 6.914425576,
+      "body": "sun",
+      "elevationDegrees": -30.413784577,
+      "refracted": true,
+      "utc": "2026-Jul-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 47.819654015,
+      "body": "sun",
+      "elevationDegrees": -13.182691702,
+      "refracted": true,
+      "utc": "2026-Jul-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 74.250027015,
+      "body": "sun",
+      "elevationDegrees": 18.183292658,
+      "refracted": true,
+      "utc": "2026-Jul-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 99.983732778,
+      "body": "sun",
+      "elevationDegrees": 54.356400928,
+      "refracted": true,
+      "utc": "2026-Jul-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 205.568237092,
+      "body": "sun",
+      "elevationDegrees": 76.226197375,
+      "refracted": true,
+      "utc": "2026-Jul-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 268.665187214,
+      "body": "sun",
+      "elevationDegrees": 43.983867262,
+      "refracted": true,
+      "utc": "2026-Jul-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 79.812513245,
+      "body": "moon",
+      "elevationDegrees": 37.199905299,
+      "refracted": false,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 109.889230529,
+      "body": "moon",
+      "elevationDegrees": 72.314521848,
+      "refracted": false,
+      "utc": "2026-Jan-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 257.329569295,
+      "body": "moon",
+      "elevationDegrees": 67.710162639,
+      "refracted": false,
+      "utc": "2026-Jan-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 283.027509623,
+      "body": "moon",
+      "elevationDegrees": 32.57020775,
+      "refracted": false,
+      "utc": "2026-Jan-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 304.312362889,
+      "body": "moon",
+      "elevationDegrees": 0.461201822,
+      "refracted": false,
+      "utc": "2026-Jan-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 334.904969477,
+      "body": "moon",
+      "elevationDegrees": -22.403406777,
+      "refracted": false,
+      "utc": "2026-Jan-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 15.881558708,
+      "body": "moon",
+      "elevationDegrees": -25.376090993,
+      "refracted": false,
+      "utc": "2026-Jan-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 49.778749179,
+      "body": "moon",
+      "elevationDegrees": -6.313244368,
+      "refracted": false,
+      "utc": "2026-Jan-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 99.129797758,
+      "body": "moon",
+      "elevationDegrees": -27.320923128,
+      "refracted": false,
+      "utc": "2026-Jul-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 122.665018424,
+      "body": "moon",
+      "elevationDegrees": 5.818822707,
+      "refracted": false,
+      "utc": "2026-Jul-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 157.867453965,
+      "body": "moon",
+      "elevationDegrees": 29.298810827,
+      "refracted": false,
+      "utc": "2026-Jul-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 205.05293457,
+      "body": "moon",
+      "elevationDegrees": 28.88491413,
+      "refracted": false,
+      "utc": "2026-Jul-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 240.153505405,
+      "body": "moon",
+      "elevationDegrees": 4.929917986,
+      "refracted": false,
+      "utc": "2026-Jul-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 264.729441647,
+      "body": "moon",
+      "elevationDegrees": -28.271731871,
+      "refracted": false,
+      "utc": "2026-Jul-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 298.932971371,
+      "body": "moon",
+      "elevationDegrees": -62.116631524,
+      "refracted": false,
+      "utc": "2026-Jul-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 46.827849709,
+      "body": "moon",
+      "elevationDegrees": -67.225891357,
+      "refracted": false,
+      "utc": "2026-Jul-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 79.812513245,
+      "body": "moon",
+      "elevationDegrees": 37.222137678,
+      "refracted": true,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 109.889230529,
+      "body": "moon",
+      "elevationDegrees": 72.319931171,
+      "refracted": true,
+      "utc": "2026-Jan-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 257.329569295,
+      "body": "moon",
+      "elevationDegrees": 67.717114487,
+      "refracted": true,
+      "utc": "2026-Jan-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 283.027509623,
+      "body": "moon",
+      "elevationDegrees": 32.596574725,
+      "refracted": true,
+      "utc": "2026-Jan-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 304.312362889,
+      "body": "moon",
+      "elevationDegrees": 0.882663628,
+      "refracted": true,
+      "utc": "2026-Jan-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 334.904969477,
+      "body": "moon",
+      "elevationDegrees": -21.756794027,
+      "refracted": true,
+      "utc": "2026-Jan-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 15.881558708,
+      "body": "moon",
+      "elevationDegrees": -24.729478243,
+      "refracted": true,
+      "utc": "2026-Jan-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 49.778749179,
+      "body": "moon",
+      "elevationDegrees": -5.666631618,
+      "refracted": true,
+      "utc": "2026-Jan-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 99.129797758,
+      "body": "moon",
+      "elevationDegrees": -26.674310378,
+      "refracted": true,
+      "utc": "2026-Jul-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 122.665018424,
+      "body": "moon",
+      "elevationDegrees": 5.962245155,
+      "refracted": true,
+      "utc": "2026-Jul-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 157.867453965,
+      "body": "moon",
+      "elevationDegrees": 29.328770618,
+      "refracted": true,
+      "utc": "2026-Jul-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 205.05293457,
+      "body": "moon",
+      "elevationDegrees": 28.915379269,
+      "refracted": true,
+      "utc": "2026-Jul-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 240.153505405,
+      "body": "moon",
+      "elevationDegrees": 5.092902832,
+      "refracted": true,
+      "utc": "2026-Jul-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 264.729441647,
+      "body": "moon",
+      "elevationDegrees": -27.625119121,
+      "refracted": true,
+      "utc": "2026-Jul-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 298.932971371,
+      "body": "moon",
+      "elevationDegrees": -61.470018774,
+      "refracted": true,
+      "utc": "2026-Jul-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 46.827849709,
+      "body": "moon",
+      "elevationDegrees": -66.579278607,
+      "refracted": true,
+      "utc": "2026-Jul-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 252.640672139,
+      "body": "mars",
+      "elevationDegrees": -16.880037358,
+      "refracted": false,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 277.522994106,
+      "body": "mars",
+      "elevationDegrees": -53.032498924,
+      "refracted": false,
+      "utc": "2026-Jan-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 18.928768054,
+      "body": "mars",
+      "elevationDegrees": -77.441480953,
+      "refracted": false,
+      "utc": "2026-Jan-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 88.276584179,
+      "body": "mars",
+      "elevationDegrees": -45.868363476,
+      "refracted": false,
+      "utc": "2026-Jan-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 111.895999927,
+      "body": "mars",
+      "elevationDegrees": -10.097327035,
+      "refracted": false,
+      "utc": "2026-Jan-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 140.83580344,
+      "body": "mars",
+      "elevationDegrees": 19.46713061,
+      "refracted": false,
+      "utc": "2026-Jan-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 184.785511882,
+      "body": "mars",
+      "elevationDegrees": 30.655451289,
+      "refracted": false,
+      "utc": "2026-Jan-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 226.057343724,
+      "body": "mars",
+      "elevationDegrees": 14.534095465,
+      "refracted": false,
+      "utc": "2026-Jan-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 317.026565302,
+      "body": "mars",
+      "elevationDegrees": -20.955811193,
+      "refracted": false,
+      "utc": "2026-Jul-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 2.57371665,
+      "body": "mars",
+      "elevationDegrees": -34.014013548,
+      "refracted": false,
+      "utc": "2026-Jul-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 46.536214694,
+      "body": "mars",
+      "elevationDegrees": -18.320353991,
+      "refracted": false,
+      "utc": "2026-Jul-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 74.425882339,
+      "body": "mars",
+      "elevationDegrees": 13.522666645,
+      "refracted": false,
+      "utc": "2026-Jul-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 100.514028363,
+      "body": "mars",
+      "elevationDegrees": 49.786366659,
+      "refracted": false,
+      "utc": "2026-Jul-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 188.537120464,
+      "body": "mars",
+      "elevationDegrees": 74.684969468,
+      "refracted": false,
+      "utc": "2026-Jul-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 262.983614755,
+      "body": "mars",
+      "elevationDegrees": 45.951649811,
+      "refracted": false,
+      "utc": "2026-Jul-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 288.196056177,
+      "body": "mars",
+      "elevationDegrees": 9.832951419,
+      "refracted": false,
+      "utc": "2026-Jul-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 252.640672139,
+      "body": "mars",
+      "elevationDegrees": -16.233424608,
+      "refracted": true,
+      "utc": "2026-Jan-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 277.522994106,
+      "body": "mars",
+      "elevationDegrees": -52.385886174,
+      "refracted": true,
+      "utc": "2026-Jan-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 18.928768054,
+      "body": "mars",
+      "elevationDegrees": -76.794868203,
+      "refracted": true,
+      "utc": "2026-Jan-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 88.276584179,
+      "body": "mars",
+      "elevationDegrees": -45.221750726,
+      "refracted": true,
+      "utc": "2026-Jan-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 111.895999927,
+      "body": "mars",
+      "elevationDegrees": -9.450714285,
+      "refracted": true,
+      "utc": "2026-Jan-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 140.83580344,
+      "body": "mars",
+      "elevationDegrees": 19.514160038,
+      "refracted": true,
+      "utc": "2026-Jan-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 184.785511882,
+      "body": "mars",
+      "elevationDegrees": 30.683839541,
+      "refracted": true,
+      "utc": "2026-Jan-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 226.057343724,
+      "body": "mars",
+      "elevationDegrees": 14.597314656,
+      "refracted": true,
+      "utc": "2026-Jan-02 21:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 317.026565302,
+      "body": "mars",
+      "elevationDegrees": -20.309198443,
+      "refracted": true,
+      "utc": "2026-Jul-02 00:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 2.57371665,
+      "body": "mars",
+      "elevationDegrees": -33.367400798,
+      "refracted": true,
+      "utc": "2026-Jul-02 03:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 46.536214694,
+      "body": "mars",
+      "elevationDegrees": -17.673741241,
+      "refracted": true,
+      "utc": "2026-Jul-02 06:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 74.425882339,
+      "body": "mars",
+      "elevationDegrees": 13.590501512,
+      "refracted": true,
+      "utc": "2026-Jul-02 09:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 100.514028363,
+      "body": "mars",
+      "elevationDegrees": 49.800676639,
+      "refracted": true,
+      "utc": "2026-Jul-02 12:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 188.537120464,
+      "body": "mars",
+      "elevationDegrees": 74.689615921,
+      "refracted": true,
+      "utc": "2026-Jul-02 15:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 262.983614755,
+      "body": "mars",
+      "elevationDegrees": 45.968010938,
+      "refracted": true,
+      "utc": "2026-Jul-02 18:00:00.000"
+    },
+    {
+      "angularToleranceArcminutes": 1.0,
+      "azimuthDegrees": 288.196056177,
+      "body": "mars",
+      "elevationDegrees": 9.924509063,
+      "refracted": true,
+      "utc": "2026-Jul-02 21:00:00.000"
+    }
+  ],
   "localSolarEclipses": [
     {
       "altitudeToleranceDegrees": 0.5,
@@ -102793,6 +103563,19 @@
       "units": "UTC calendar timestamps, right ascension hours, and declination degrees",
       "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
+    },
+    "jplHorizontal": {
+      "aberration": "apparent position with light time, gravitational deflection and stellar aberration",
+      "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon",
+      "frame": "topocentric apparent horizon: azimuth east of north and elevation",
+      "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
+      "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)",
+      "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256",
+      "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)",
+      "serviceVersion": "recorded in every archived response",
+      "timeScale": "UTC calendar output",
+      "units": "degrees",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
     },
     "jplObserver": {
       "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections",

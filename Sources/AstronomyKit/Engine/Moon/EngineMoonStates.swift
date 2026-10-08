@@ -7,24 +7,6 @@
 
 import Foundation
 
-extension Engine {
-    /// A position and velocity on the true ecliptic and equinox of date, with
-    /// the spherical coordinates and their rates.
-    struct EclipticState: Sendable {
-        /// Position in AU and velocity in AU per TT day.
-        var state: State<ECT>
-        /// Longitude in [0, 360) and latitude, in degrees.
-        var longitude: Double
-        var latitude: Double
-        /// Distance in AU.
-        var distance: Double
-        /// Rates in degrees, and AU, per TT day.
-        var longitudeRate: Double
-        var latitudeRate: Double
-        var distanceRate: Double
-    }
-}
-
 extension Engine.Moon {
     /// The half-width in TT days of the central difference that gives the
     /// series' velocity, about 43 seconds, as in the C engine.
@@ -157,24 +139,10 @@ extension Engine.Moon {
         let (trueTilt, trueTiltRate) = tiltAndRate(
             by: tilt.trueObliquity, rate: tilt.trueObliquityRate, from: Engine.EQD.self, to: Engine.ECT.self)
         let state = try checked(trueTilt.apply(to: trueEquator, rate: trueTiltRate))
-        let (x, y, z) = (state.x, state.y, state.z)
-        let rho2 = x * x + y * y
-        guard rho2 > 0 else { throw AstronomyError.badVector }
-        let rho = rho2.squareRoot()
-        let rhoRate = (x * state.vx + y * state.vy) / rho
         let angles = eclipticAngles(state.position)
-        let result = Engine.EclipticState(
-            state: state,
-            longitude: angles.longitude,
-            latitude: angles.latitude,
-            distance: distance,
-            longitudeRate: Engine.degreesPerRadian * (x * state.vy - y * state.vx) / rho2,
-            latitudeRate: Engine.degreesPerRadian * (rho * state.vz - z * rhoRate) / (rho2 + z * z),
+        return try Engine.EclipticState(
+            state: state, longitude: angles.longitude, latitude: angles.latitude, distance: distance,
             distanceRate: distanceRate)
-        try checkFinite(
-            result.longitude, result.latitude, result.distance, result.longitudeRate, result.latitudeRate,
-            result.distanceRate)
-        return result
     }
 
     /// The mean obliquity's rotation from the mean equator to the mean
@@ -190,7 +158,7 @@ extension Engine.Moon {
     private static func tiltAndRate<From, To>(
         by obliquity: Double, rate: Double, from: From.Type, to: To.Type
     ) -> (Engine.Rotation<From, To>, Engine.RotationRate<From, To>) {
-        (tilted(by: obliquity), tiltRate(by: obliquity, rate: rate))
+        (Engine.tilted(by: obliquity), Engine.tiltRate(by: obliquity, rate: rate))
     }
 
     private static func checked<F>(_ state: Engine.State<F>) throws -> Engine.State<F> {

@@ -82,26 +82,7 @@ extension Engine.Moon {
     /// R1(εA): from the mean equator to the mean ecliptic of date, with the
     /// IAU 2006 mean obliquity at `tt`.
     static func meanEquatorToEcliptic(tt: Double) -> Engine.Rotation<Engine.EQM, Engine.ECM> {
-        tilted(by: Engine.Precession.meanObliquity(tt: tt))
-    }
-
-    /// R1(ε): from an equator to an ecliptic `obliquity` degrees from it,
-    /// built as ``Engine/FrameRotation`` builds its ecliptic rotations.
-    static func tilted<From, To>(by obliquity: Double) -> Engine.Rotation<From, To> {
-        let radians = obliquity * Engine.radiansPerDegree
-        let c = cos(radians)
-        let s = sin(radians)
-        return Engine.Rotation(rot: ((1, 0, 0), (0, c, -s), (0, s, c)))
-    }
-
-    /// The derivative per TT day of ``tilted(by:)`` when the obliquity
-    /// changes by `rate` degrees per TT day.
-    static func tiltRate<From, To>(by obliquity: Double, rate: Double) -> Engine.RotationRate<From, To> {
-        let radians = obliquity * Engine.radiansPerDegree
-        let radiansRate = rate * Engine.radiansPerDegree
-        let c = cos(radians) * radiansRate
-        let s = sin(radians) * radiansRate
-        return Engine.RotationRate(rot: ((0, 0, 0), (0, -s, -c), (0, c, -s)))
+        Engine.tilted(by: Engine.Precession.meanObliquity(tt: tt))
     }
 
     /// The Moon's position in AU relative to Earth's center, on EQJ axes,
@@ -142,8 +123,8 @@ extension Engine.Moon {
         let coordinates = coordinates(centuries: time.tt / 36_525, cache: cache)
         let ecliptic = vector(coordinates, time: time)
         let tilt = Engine.EarthTilt(tt: time.tt)
-        let meanTilt: Engine.Rotation<Engine.EQM, Engine.ECM> = tilted(by: tilt.meanObliquity)
-        let trueTilt: Engine.Rotation<Engine.EQD, Engine.ECT> = tilted(by: tilt.trueObliquity)
+        let meanTilt: Engine.Rotation<Engine.EQM, Engine.ECM> = Engine.tilted(by: tilt.meanObliquity)
+        let trueTilt: Engine.Rotation<Engine.EQD, Engine.ECT> = Engine.tilted(by: tilt.trueObliquity)
         let trueEquator = tilt.nutationRotation.apply(to: meanTilt.inverse.apply(to: ecliptic))
         let trueEcliptic = trueTilt.apply(to: trueEquator)
         let angles = eclipticAngles(trueEcliptic)
