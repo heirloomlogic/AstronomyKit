@@ -71,9 +71,7 @@ extension Engine.Positions {
     /// Where Chiron appears in `observer`'s sky: the geocentric
     /// ``chironGeocentricPosition(at:)``, with no parallax or aberration as
     /// in the public `Chiron.horizon(at:from:refraction:)`, on the true
-    /// equator of `time`, through ``Engine/Horizontal``. The public function
-    /// passes J2000 coordinates where the true equator of date belongs
-    /// (#200).
+    /// equator of `time`, through ``Engine/Horizontal``.
     ///
     /// - Throws: As ``chironGeocentricPosition(at:)``.
     static func chironHorizontal(

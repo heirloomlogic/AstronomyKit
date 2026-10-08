@@ -301,7 +301,9 @@ public enum Chiron {
     /// the J2000 equator to the true equator and equinox of `time`, as
     /// ``CelestialBody/horizon(at:from:refraction:)`` does, before the
     /// conversion to altitude and azimuth. Like ``equatorial(at:)``, the
-    /// position carries no aberration or parallax.
+    /// position carries no aberration or parallax. The returned
+    /// ``Horizon/rightAscension`` and ``Horizon/declination`` are on that
+    /// equator of date, not J2000.
     ///
     /// - Parameters:
     ///   - time: The time at which to calculate the position.
