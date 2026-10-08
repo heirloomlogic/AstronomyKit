@@ -159,8 +159,8 @@ extension Engine.Atmosphere {
     /// Runge-Kutta method in steps of at most `step` metres, restarting at
     /// 91, 95, 97 and 100 km, where the temperature profile, the eddy
     /// diffusion, the oxygen flux term and the molecular weight change form.
-    /// With the default 100 m the densities move by at most 1e-10 when the
-    /// step is halved.
+    /// Halving the default 100 m step moves the densities by at most 8.5e-11
+    /// at the heights the tests sample (91.5 km, 93 km and 101.6 km).
     static func numberDensities(geometricHeight z: Double, step: Double = 100) -> Species {
         var logs = Species()
         var height = Upper.base

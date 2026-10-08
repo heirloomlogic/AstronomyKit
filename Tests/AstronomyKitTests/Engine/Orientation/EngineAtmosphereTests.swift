@@ -35,14 +35,23 @@ struct EngineAtmosphereTests {
         return unit / 2 / abs(value)
     }
 
-    /// The standard's printed tables stray from its own equations by more
-    /// than their rounding. Above 32 km, table I's pressures sit below the
-    /// closed form by up to 5.7e-5 (at 47 km it prints 1.1090 mb for
-    /// 1.109063). From 86 to 102 km its pressures and table VIII's number
-    /// densities scatter about this model, with both signs, by up to 1.8e-5
-    /// more than their rounding. Comparisons with those tables allow this on
-    /// top of half a unit in the last printed figure.
-    static let tableSlack = 6e-5
+    // Some of the standard's printed values stray from its own equations by
+    // more than half a unit in their last figure. Each comparison with a
+    // table allows that table's largest measured excess, rounded up, on top
+    // of half a unit.
+
+    /// Table I's pressure at the 47 km layer base is 5.69e-5 below the
+    /// closed form (it prints 1.1090 mb for 1.109063), 1.18e-5 beyond its
+    /// rounding; at 51 km the excess is 5.6e-6, and 71 km is within rounding.
+    static let layerBaseSlack = 1.5e-5
+
+    /// From 86 km, table I's pressures exceed their rounding by at most
+    /// 4.3e-6 (at 97 km), and its densities stay within it.
+    static let geometricTableSlack = 5e-6
+
+    /// Table VIII's number densities exceed their rounding only for O and He
+    /// at 102 km, by 1.85e-5 each.
+    static let compositionSlack = 2e-5
 
     // MARK: - Below 86 km
 
@@ -50,7 +59,7 @@ struct EngineAtmosphereTests {
     /// geopotential height in metres, temperature in kelvins and pressure in
     /// pascals as the standard prints them, with the number of significant
     /// figures printed. The bases from 47 km come from table I, which prints
-    /// pressure to five figures in millibars and carries `tableSlack`.
+    /// pressure to five figures in millibars and carries `layerBaseSlack`.
     static let layerBases: [(height: Double, temperature: Double, pressure: Double, figures: Int)] = [
         (0, 288.15, 101_325.0, 7),
         (11_000, 216.65, 22_632.06, 7),
@@ -68,7 +77,7 @@ struct EngineAtmosphereTests {
         #expect(abs(atmosphere.temperature - base.temperature) <= 1e-12)
         #expect(
             abs(atmosphere.pressure / base.pressure - 1)
-                <= Self.halfUnit(base.pressure, figures: base.figures) + (base.figures == 5 ? Self.tableSlack : 0)
+                <= Self.halfUnit(base.pressure, figures: base.figures) + (base.figures == 5 ? Self.layerBaseSlack : 0)
         )
     }
 
@@ -124,7 +133,7 @@ struct EngineAtmosphereTests {
     /// Table I of the standard by geometric height: kinetic temperature in
     /// kelvins to two decimals, pressure in pascals to five significant
     /// figures and density relative to sea level to four. The comparison
-    /// allows `tableSlack` beyond the rounding.
+    /// allows `geometricTableSlack` beyond the rounding.
     static let geometricTable: [(z: Double, temperature: Double, pressure: Double, density: Double)] = [
         (86_000, 186.87, 3.733_8e-1, 5.680e-6),
         (88_000, 186.87, 2.617_3e-1, 3.980e-6),
@@ -147,13 +156,14 @@ struct EngineAtmosphereTests {
         #expect(abs(atmosphere.temperature - row.temperature) <= 0.005, "\(atmosphere.temperature) K")
         let pressure = atmosphere.pressure / row.pressure - 1
         let density = atmosphere.density / row.density - 1
-        #expect(abs(pressure) <= Self.halfUnit(row.pressure, figures: 5) + Self.tableSlack, "error \(pressure)")
-        #expect(abs(density) <= Self.halfUnit(row.density, figures: 4) + Self.tableSlack, "error \(density)")
+        let slack = Self.geometricTableSlack
+        #expect(abs(pressure) <= Self.halfUnit(row.pressure, figures: 5) + slack, "error \(pressure)")
+        #expect(abs(density) <= Self.halfUnit(row.density, figures: 4) + slack, "error \(density)")
     }
 
     /// Table VIII: number densities in m⁻³ of N2, O, O2, Ar and He, to four
-    /// significant figures. The comparison allows `tableSlack` beyond the
-    /// rounding.
+    /// significant figures. The comparison allows `compositionSlack` beyond
+    /// the rounding.
     static let compositionTable: [(z: Double, densities: [Double])] = [
         (86_000, [1.130e20, 8.600e16, 3.031e19, 1.351e18, 7.582e14]),
         (90_000, [5.547e19, 2.443e17, 1.479e19, 6.574e17, 3.976e14]),
@@ -171,12 +181,13 @@ struct EngineAtmosphereTests {
         for (lane, printed) in row.densities.enumerated() {
             let density = densities[lane]
             let error = density / printed - 1
-            #expect(abs(error) <= Self.halfUnit(printed, figures: 4) + Self.tableSlack, "\(density), table \(printed)")
+            let tolerance = Self.halfUnit(printed, figures: 4) + Self.compositionSlack
+            #expect(abs(error) <= tolerance, "\(density), table \(printed)")
         }
     }
 
-    /// The step error peaks just above 91 km, where the ellipse begins, at
-    /// about 9e-11.
+    /// Of these heights, the step error is largest just above 91 km, where
+    /// the ellipse begins: 8.5e-11.
     @Test(
         "Halving the integration step leaves the densities within 1e-10",
         arguments: [91_500.0, 93_000, 101_598.27]

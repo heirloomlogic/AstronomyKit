@@ -177,9 +177,8 @@ struct AtmosphereTests {
         #expect(abs(density) < Self.closedFormTolerance, "density \(atm.density), relative error \(density)")
     }
 
-    /// Above 32 km the model follows the standard's later layers rather than
-    /// continuing the 20 to 32 km gradient, which gave 243.65 K at 47 km
-    /// (#175).
+    /// The 47 km layer base, where the 32 to 47 km gradient of 2.8 K/km
+    /// ends (#175).
     @Test("The stratopause is 270.65 K")
     func stratopause() throws {
         let atm = try Atmosphere.at(elevation: 47_000)
