@@ -258,6 +258,22 @@ struct EngineChironTests {
         #expect(sequence.anchorIndex == 1 && path(130))
     }
 
+    @Test("An internal light-time state still requires a supported observation", arguments: DeltaTModel.allCases)
+    func lightTimeObservationGuard(model: DeltaTModel) {
+        let observation = Engine.Time(ut: Chiron.earliestUT + 1.0 / 24, deltaTModel: model)
+        let backdated = observation.adding(days: -2.0 / 24)
+        let before = Engine.Time(
+            tt: Engine.Time(ut: Chiron.earliestUT, deltaTModel: model).tt.nextDown, deltaTModel: model)
+        #expect(throws: AstronomyError.badTime) {
+            _ = try Chiron.ReusableSimulation().heliocentricState(
+                forLightTimeAt: backdated, observedAt: before)
+        }
+        #expect(throws: AstronomyError.badTime) {
+            _ = try Chiron.ReusableSimulation().heliocentricState(
+                forLightTimeAt: observation.adding(days: 1.0 / 24), observedAt: observation)
+        }
+    }
+
     /// Light-time correction asks for times a few hours apart. A reused
     /// sequence answers each within 1e-9 AU of a fresh start; the gap is the
     /// integrator's, from a different path to the same time.

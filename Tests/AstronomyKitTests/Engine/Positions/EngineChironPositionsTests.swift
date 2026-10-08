@@ -85,27 +85,32 @@ struct EngineChironPositionsTests {
         #expect(horizontal.azimuth == expectedHorizontal.azimuth && horizontal.altitude == expectedHorizontal.altitude)
     }
 
-    /// The span starts at 1900-01-01 00:00 UT, and every time Chiron is
-    /// evaluated at is checked against it. At 01:00 UT the observation is in
-    /// the span but light left Chiron about 1.56 hours earlier, before it, so
-    /// the position throws; by 03:00 the backdated time is inside.
-    @Test("Apparent positions start once Chiron's light time from the span's start has passed (#197)")
-    func spanStart() throws {
-        let start = Engine.Time(ut: Engine.Chiron.earliestUT, deltaTModel: .espenakMeeus).tt
-        let early = Engine.Time(ut: Engine.Chiron.earliestUT + 1.0 / 24, deltaTModel: .espenakMeeus)
-        let later = Self.firstRowTime
+    /// The observation span starts at 1900-01-01 00:00 UT. At 01:00 UT light
+    /// left Chiron about 1.56 hours earlier, so the internal evaluation is
+    /// before the span even though the requested apparent position is inside.
+    @Test("Apparent positions accept the first hour of Chiron's span", arguments: DeltaTModel.allCases)
+    func spanStart(model: DeltaTModel) throws {
+        let start = Engine.Time(ut: Engine.Chiron.earliestUT, deltaTModel: model).tt
+        let early = Engine.Time(ut: Engine.Chiron.earliestUT + 1.0 / 24, deltaTModel: model)
         try Engine.Chiron.checkSupported(early)
         let vector = try Self.firstRow.get()
         #expect(vector.time.tt >= start)
-        // The light time changes by under a second in two hours, so at 01:00
-        // the backdated time falls before the start.
-        let lightTime = later.tt - vector.time.tt
+        let lightTime = Self.firstRowTime.tt - vector.time.tt
         #expect(early.tt - lightTime < start && early.tt > start, "light time \(lightTime * 24) h")
-        // Horizons puts Chiron 11.2578 AU from Earth at 03:00 UT, 1.560 hours of
-        // light time, so positions start at about 01:34 UT.
         #expect(abs(lightTime * 24 - 1.560) < 0.005, "light time \(lightTime * 24) h")
-        // The coordinates are this position's (see `composition`), so they
-        // throw with it.
-        #expect(throws: AstronomyError.badTime) { try Positions.chironGeocentricPosition(at: early) }
+
+        let earlyVector = try Positions.chironGeocentricPosition(at: early)
+        #expect(earlyVector.time.tt < start)
+        let equatorial = try Engine.Equatorial(earlyVector)
+        let ecliptic = Engine.Ecliptic(earlyVector)
+        var ofDate = earlyVector
+        ofDate.time = early
+        let rotated = try Engine.Equatorial(Engine.FrameRotation.eqjToEqd(early).apply(to: ofDate))
+        let horizontal = Engine.Horizontal(
+            time: early, observer: ashevilleObserver, rightAscension: rotated.rightAscension,
+            declination: rotated.declination, refraction: .none)
+        #expect(equatorial.rightAscension.isFinite && equatorial.declination.isFinite)
+        #expect(ecliptic.longitude.isFinite && ecliptic.latitude.isFinite)
+        #expect(horizontal.azimuth.isFinite && horizontal.altitude.isFinite)
     }
 }
