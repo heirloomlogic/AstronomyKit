@@ -55,6 +55,10 @@ HORIZONS_OBSERVER_QUERIES = {
     "mercury-station": ("199", [2460897.5, 2460898.5, 2460899.5]),
 }
 
+BARYCENTRIC_OUTER_DATES = [2415020.5, 2424151.5, 2433282.5, 2442413.5, 2451544.5, 2460676.5, 2469807.5, 2478938.5, 2487704.5]
+BARYCENTRIC_INNER_DATES = [2444239.5, 2447892.5, 2451544.5, 2455197.5, 2458849.5]
+BARYCENTRIC_LUNAR_DATES = [2440587.5, 2446066.5, 2451544.5, 2458849.5, 2466154.5]
+
 HORIZONS_VECTOR_QUERIES = {
     "chiron-vector": ("2060;", "500@10", [2415020.5, 2451544.5, 2488069.5]),
     # Chiron at the five anchors the engine starts from (2000 to 2040), at each midpoint between neighboring anchors,
@@ -77,6 +81,27 @@ HORIZONS_VECTOR_QUERIES = {
     # The Pluto system barycenter on 1990-01-01, 2000-01-01, 2001-01-01 and 2010-01-01: the gravity simulation starts from
     # the 2000 state and steps forward and backward to the others.
     "pluto-barycenter-decade": ("9", "500@10", [2447892.5, 2451544.5, 2451910.5, 2455197.5]),
+    # Barycentric states for Astronomy Engine's BaryStateTest limits (ctest.c), inside the span each limit was set on:
+    # 1900 to 2099 every 25 years for the Sun, the outer planets and Pluto's center (its file holds the Pluto system
+    # barycenter to 2099), 1980 to 2020 every 10 years for Mercury to Mars, and 1970 to 2040 for the Moon and the
+    # Earth-Moon barycenter.
+    **{
+        f"{name}-barycentric-vector": (command, "500@0", dates)
+        for name, command, dates in [
+            ("sun", "10", BARYCENTRIC_OUTER_DATES),
+            ("mercury", "199", BARYCENTRIC_INNER_DATES),
+            ("venus", "299", BARYCENTRIC_INNER_DATES),
+            ("earth", "399", BARYCENTRIC_INNER_DATES),
+            ("mars", "499", BARYCENTRIC_INNER_DATES),
+            ("jupiter", "599", BARYCENTRIC_OUTER_DATES),
+            ("saturn", "699", BARYCENTRIC_OUTER_DATES),
+            ("uranus", "799", BARYCENTRIC_OUTER_DATES),
+            ("neptune", "899", BARYCENTRIC_OUTER_DATES),
+            ("pluto", "999", BARYCENTRIC_OUTER_DATES),
+            ("moon", "301", BARYCENTRIC_LUNAR_DATES),
+            ("emb", "3", BARYCENTRIC_LUNAR_DATES),
+        ]
+    },
 }
 
 JUPITER_MOON_RELATIVE_TOLERANCE = 9e-4
@@ -488,6 +513,7 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
 
     vectors = []
     vector_names = {"chiron-vector": ("chiron", "sun"), "io-vector": ("io", "jupiter"), "europa-vector": ("europa", "jupiter"), "ganymede-vector": ("ganymede", "jupiter"), "callisto-vector": ("callisto", "jupiter"), "moon-vector": ("moon", "earth"), "pluto-vector": ("pluto", "sun"), "pluto-barycenter-vector": ("pluto-barycenter", "sun"), "pluto-barycenter-decade": ("pluto-barycenter-decade", "sun"), "chiron-anchor-vector": ("chiron-anchor", "sun")}
+    vector_names.update({name: (name.removesuffix("-vector"), "barycenter") for name in HORIZONS_VECTOR_QUERIES if name.endswith("-barycentric-vector")})
     for name, (body, origin) in vector_names.items():
         for line in data_lines(horizons_result(name)):
             columns = [column.strip() for column in line.split(",")]
@@ -516,7 +542,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
     nasa_license = "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license"
     return {
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
-        "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center, and at 4 dates from 1990 to 2010 for the gravity simulation; Chiron at its five anchors from 2000 to 2040, around the four midpoints between them, and at 1900-01-01 and 2150-01-01", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon; the solar system barycenter 500@0 for the Sun, the planets, Pluto (999), the Moon and the Earth-Moon barycenter (3)", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center, and at 4 dates from 1990 to 2010 for the gravity simulation; barycentric states inside the spans of Astronomy Engine's BaryStateTest files: the Sun, Jupiter to Neptune and Pluto every 25 years from 1900 to 2099, Mercury to Mars every 10 years from 1980 to 2020, and the Moon and the Earth-Moon barycenter at 5 dates from 1970 to 2040; Chiron at its five anchors from 2000 to 2040, around the four midpoints between them, and at 1900-01-01 and 2150-01-01", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "calendar timestamps", "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parser, C validation harness, engine source, and table under {upstream}/moonphase, {upstream}/ctest.c, and the matching source/c tree"},
         "espenakMoonNodes": {"version": UPSTREAM_REVISION, "frame": "geocentric equator and equinox of date as consumed by the pinned harness", "origin": "Earth center", "units": "UTC calendar timestamps, right ascension hours, and declination degrees", "timeScale": "UTC as serialized by the pinned transformation", "aberration": "not documented by the source table", "refraction": "not applicable to geocentric node events", "domain": "published table 2001 through 2100; sampled at 2001, 2050, and 2100", "license": f"Fred Espenak table with attribution; {mit_license}", "url": "http://astropixels.com/ephemeris/moon/moonnodes2001.html", "recipe": f"Pinned README, parser, and table under {upstream}/moon_nodes"},
         "astronomyEngineGeocentricStates": {"version": UPSTREAM_REVISION, "frame": "geometric ICRF/J2000 vectors", "origin": "Earth center 500@399; the Moon (301) and the Earth-Moon barycenter (3)", "units": "AU and AU/day", "timeScale": "TDB; the pinned C harness passes each Julian date to Astronomy_TerrestrialTime as TT", "aberration": "none (geometric states)", "refraction": "not applicable to geometric vectors", "domain": "JPL Horizons (DE441) states every 8 days from 1970-01-01 to 2040-01-01 TDB, all of them; the harness's relative limits cover exactly this domain", "license": jpl_license, "url": f"{upstream}/barystate", "recipe": "Pinned GeoMoon.txt and GeoEMB.txt are parsed directly; each carries its own Horizons header, and ctest.c VerifyStateBody supplies the limits"},
