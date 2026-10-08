@@ -20,9 +20,10 @@ struct EngineJupiterMoonsTests {
 
     typealias States = EngineMoonStatesTests
 
-    /// A Fortran `D` exponent number as `BisL1.2.dat` and `TestL1.2.res` print it.
+    /// A Fortran `D` exponent number as `BisL1.2.dat` and `TestL1.2.res` print it,
+    /// or NaN, which equals nothing, for text that is not one.
     static func published(_ text: String) -> Double {
-        Double(text.replacingOccurrences(of: "D", with: "e"))!
+        Double(text.replacingOccurrences(of: "D", with: "e")) ?? .nan
     }
 
     // MARK: - The published theory
@@ -95,15 +96,9 @@ struct EngineJupiterMoonsTests {
 
     static let domain = 2_426_545.0...2_476_545.0
 
-    static func moon(_ reference: IndependentReferenceArchive.Vector) -> Moons.Moon {
-        switch reference.body {
-        case "io": .io
-        case "europa": .europa
-        case "ganymede": .ganymede
-        case "callisto": .callisto
-        default: fatalError("unexpected Galilean moon \(reference.body)")
-        }
-    }
+    static let moons: [String: Moons.Moon] = [
+        "io": .io, "europa": .europa, "ganymede": .ganymede, "callisto": .callisto,
+    ]
 
     /// The position and velocity errors over Horizons' distance and speed,
     /// as `AuditValidationTests` measures them, with Horizons' ICRF axes
@@ -135,7 +130,8 @@ struct EngineJupiterMoonsTests {
     /// the fixture carries; outside it, where no limit was set, finite.
     @Test("States match Horizons within 9e-4 inside the domain", arguments: vectors)
     func horizons(reference: IndependentReferenceArchive.Vector) throws {
-        let state = try Moons.state(of: Self.moon(reference), at: Self.time(tt: Horizons.tt(reference)))
+        let moon = try #require(Self.moons[reference.body], "unexpected Galilean moon \(reference.body)")
+        let state = try Moons.state(of: moon, at: Self.time(tt: Horizons.tt(reference)))
         let errors = Self.errors(state, reference)
         if let tolerance = reference.relativeTolerance {
             #expect(errors.position <= tolerance)
@@ -214,8 +210,12 @@ struct EngineJupiterMoonsTests {
 
     @Test("Kepler's equation and the mean longitude where the series reach, and the bounded iteration")
     func kepler() throws {
+        // 401 times from one end of the accepted range to the other, both ends included.
+        let times = Array(stride(from: -Engine.acceptedTTDays, through: Engine.acceptedTTDays, by: 7_305))
+        #expect(times.count == 401)
+        #expect(times.first == -Engine.acceptedTTDays && times.last == Engine.acceptedTTDays)
         for moon in Moons.Moon.allCases {
-            for tt in stride(from: -1_461_000.0, through: 1_461_000, by: 7_304.9) {
+            for tt in times {
                 let e = Moons.elements(of: Moons.models[moon.rawValue], tt: tt)
                 let f = try Moons.eccentricAnomaly(meanLongitude: e.meanLongitude, k: e.k, h: e.h)
                 let residual = f - e.k * sin(f) + e.h * cos(f) - e.meanLongitude
