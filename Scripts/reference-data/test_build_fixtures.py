@@ -204,6 +204,56 @@ class ApparentRangeFixtureTests(unittest.TestCase):
         self.assertEqual(0.00246250044096, moon_1900["apparentRangeAU"])
 
 
+class AngularEventFixtureTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+        cls.fixture = cls.builder.parse_angular_events()
+
+    def test_relative_longitude_rows_are_source_brackets(self):
+        rows = self.fixture["relativeLongitudeEvents"]
+        self.assertEqual(4, len(rows))
+        self.assertEqual(
+            {("mars", 0.0), ("mars", 180.0), ("venus", 0.0), ("venus", 180.0)},
+            {(row["body"], row["targetRelativeLongitudeDegrees"]) for row in rows},
+        )
+        for row in rows:
+            self.assertLessEqual(row["lowerOffsetDegrees"], 0)
+            self.assertGreater(row["upperOffsetDegrees"], 0)
+            self.assertLessEqual(row["lowerJulianDateTDB"], row["estimatedJulianDateTDB"])
+            self.assertLessEqual(row["estimatedJulianDateTDB"], row["upperJulianDateTDB"])
+            self.assertEqual(0.002, row["timeScaleAllowanceSeconds"])
+            self.assertAlmostEqual(
+                row["timeToleranceSeconds"],
+                row["sampleResolutionSeconds"] + row["timeScaleAllowanceSeconds"],
+            )
+
+    def test_maximum_elongation_rows_preserve_source_resolution_and_both_sides(self):
+        rows = self.fixture["maximumElongationEvents"]
+        self.assertEqual(4, len(rows))
+        for body in ("mercury", "venus"):
+            body_rows = [row for row in rows if row["body"] == body]
+            self.assertEqual(2, len(body_rows))
+            self.assertEqual({False, True}, {row["trailsSun"] for row in body_rows})
+        for row in rows:
+            self.assertGreaterEqual(row["sampleResolutionSeconds"], 3600)
+            self.assertGreaterEqual(row["timeToleranceSeconds"], row["sampleResolutionSeconds"])
+            self.assertGreaterEqual(row["angleToleranceDegrees"], 0.0001)
+
+    def test_angular_event_queries_keep_the_required_observables(self):
+        acquisitions = dict(self.builder.horizons_acquisitions())
+        for name in self.builder.RELATIVE_LONGITUDE_VECTOR_QUERIES:
+            query = acquisitions[name]
+            self.assertEqual("'500@10'", query["CENTER"])
+            self.assertEqual("'NONE'", query["VEC_CORR"])
+            self.assertEqual("'FRAME'", query["REF_PLANE"])
+        for name in self.builder.MAX_ELONGATION_QUERIES:
+            query = acquisitions[name]
+            self.assertEqual("'500@399'", query["CENTER"])
+            self.assertEqual("'23'", query["QUANTITIES"])
+            self.assertEqual("'AIRLESS'", query["APPARENT"])
+
+
 class JupiterMoonToleranceDomainTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

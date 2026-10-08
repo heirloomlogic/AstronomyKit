@@ -91,6 +91,11 @@ SOFA_RECIPE_SOURCES = (
     "tr.c", "trxp.c", "utctai.c", "utcut1.c", "xys06a.c", "zp.c",
 )
 
+SOFA_ANGULAR_EVENT_SOURCES = (
+    "anpm.c", "cp.c", "cr.c", "ir.c", "numat.c", "nut80.c", "nutm80.c", "obl80.c", "pmat76.c",
+    "pnm80.c", "prec76.c", "rx.c", "rxp.c", "rxr.c", "ry.c", "rz.c",
+)
+
 GENERATED_CONSTELLATION_PATH = ROOT / "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift"
 
 HORIZONS_OBSERVER_QUERIES = {
@@ -109,6 +114,37 @@ ELONGATION_DATES = [2461042.5 + 46 * k for k in range(8)]
 HORIZONS_ELONGATION_QUERIES = {
     f"{name}-elongation": command
     for name, command in [("moon", "301"), ("mercury", "199"), ("venus", "299"), ("mars", "499"), ("jupiter", "599")]
+}
+
+
+def julian_grid(start: float, stop: float, step_hours: float) -> list[float]:
+    count = round((stop - start) * 24 / step_hours)
+    return [round(start + index * step_hours / 24, 9) for index in range(count + 1)]
+
+
+RELATIVE_LONGITUDE_EVENTS = [
+    {"body": "mars", "command": "499", "target": 0.0, "direction": 1, "startUTC": "2025-01-01T00:00:00Z", "dates": julian_grid(2460691.5, 2460691.75, 0.75)},
+    {"body": "mars", "command": "499", "target": 180.0, "direction": 1, "startUTC": "2025-01-01T00:00:00Z", "dates": julian_grid(2461049.875, 2461050.125, 0.75)},
+    {"body": "venus", "command": "299", "target": 0.0, "direction": -1, "startUTC": "2025-01-01T00:00:00Z", "dates": julian_grid(2460757.375, 2460757.625, 0.75)},
+    {"body": "venus", "command": "299", "target": 180.0, "direction": -1, "startUTC": "2025-01-01T00:00:00Z", "dates": julian_grid(2461047.0, 2461047.25, 0.75)},
+]
+
+RELATIVE_LONGITUDE_VECTOR_QUERIES = {
+    "earth-angular-events": ("399", sorted({date for event in RELATIVE_LONGITUDE_EVENTS for date in event["dates"]})),
+    **{
+        f"{body}-angular-events": (
+            next(event["command"] for event in RELATIVE_LONGITUDE_EVENTS if event["body"] == body),
+            sorted({date for event in RELATIVE_LONGITUDE_EVENTS if event["body"] == body for date in event["dates"]}),
+        )
+        for body in sorted({event["body"] for event in RELATIVE_LONGITUDE_EVENTS})
+    },
+}
+
+MAX_ELONGATION_QUERIES = {
+    "mercury-max-2025-03": {"body": "mercury", "command": "199", "startUTC": "2025-01-01T00:00:00Z", "dates": julian_grid(2460742.25, 2460743.25, 1.0)},
+    "mercury-max-2025-04": {"body": "mercury", "command": "199", "startUTC": "2025-03-09T00:00:00Z", "dates": julian_grid(2460786.75, 2460787.75, 1.0)},
+    "venus-max-2025-01": {"body": "venus", "command": "299", "startUTC": "2025-01-01T00:00:00Z", "dates": julian_grid(2460685.25, 2460686.25, 1.0)},
+    "venus-max-2025-06": {"body": "venus", "command": "299", "startUTC": "2025-01-11T00:00:00Z", "dates": julian_grid(2460827.125, 2460828.125, 1.0)},
 }
 
 # Saturn's sub-observer latitude, distances from the Sun and from Earth, and phase angle from Earth's center, from 2010
@@ -272,6 +308,12 @@ def geocentric_query(command: str, quantities: str, julian_dates: list[float]) -
     }
 
 
+def angular_elongation_query(command: str, julian_dates: list[float]) -> dict[str, str]:
+    parameters = geocentric_query(command, "23", julian_dates)
+    parameters["APPARENT"] = quoted("AIRLESS")
+    return parameters
+
+
 def horizontal_query(command: str, apparent: str, julian_dates: list[float]) -> dict[str, str]:
     return {
         "COMMAND": quoted(command),
@@ -302,12 +344,20 @@ def horizons_acquisitions() -> list[tuple[str, dict[str, str]]]:
         for name, (command, center, dates) in HORIZONS_VECTOR_QUERIES.items()
     )
     acquisitions.extend(
+        (name, vector_query(command, "500@10", dates))
+        for name, (command, dates) in RELATIVE_LONGITUDE_VECTOR_QUERIES.items()
+    )
+    acquisitions.extend(
         (name, horizontal_query(command, apparent, HORIZONTAL_DATES))
         for name, (command, apparent) in HORIZONS_HORIZONTAL_QUERIES.items()
     )
     acquisitions.extend(
         (name, geocentric_query(command, "23,31", ELONGATION_DATES))
         for name, command in HORIZONS_ELONGATION_QUERIES.items()
+    )
+    acquisitions.extend(
+        (name, angular_elongation_query(event["command"], event["dates"]))
+        for name, event in MAX_ELONGATION_QUERIES.items()
     )
     acquisitions.append(("saturn-rings", geocentric_query("699", "14,19,20,24", SATURN_RING_DATES)))
     return acquisitions
@@ -625,6 +675,156 @@ def horizons_result(name: str) -> str:
 
 def data_lines(result: str) -> list[str]:
     return result.split("$$SOE\n", 1)[1].split("$$EOE", 1)[0].strip().splitlines()
+
+
+def sofa_angular_event_longitudes(samples: list[tuple[float, float, float, float]]) -> list[float]:
+    archive_path = SOURCE_DIR / "sofa/sofa_c-20231011.tar.gz"
+    if sha256(archive_path.read_bytes()) != SOFA_RELEASE_SHA256:
+        raise RuntimeError("SOFA angular-event release hash mismatch")
+    with tempfile.TemporaryDirectory() as temporary:
+        source_dir = Path(temporary) / "sofa"
+        source_dir.mkdir()
+        archive_prefix = "sofa/20231011/c/src/"
+        with tarfile.open(archive_path, "r:gz") as archive:
+            for name in ("sofa.h", "sofam.h", *SOFA_ANGULAR_EVENT_SOURCES):
+                source = archive.extractfile(archive.getmember(archive_prefix + name))
+                if source is None:
+                    raise RuntimeError(f"SOFA angular-event release has no {name}")
+                (source_dir / name).write_bytes(source.read())
+        executable = Path(temporary) / "sofa-angular-events"
+        compiler = shlex.split(os.environ.get("CC", "cc"))
+        if not compiler:
+            raise RuntimeError("SOFA angular-event recipe compiler is empty")
+        compilation = subprocess.run(
+            compiler
+            + [
+                "-std=c99", "-O", f"-I{source_dir}",
+                str(ROOT / "Scripts/reference-data/sofa-angular-events.c"),
+                *(str(source_dir / name) for name in SOFA_ANGULAR_EVENT_SOURCES),
+                "-lm", "-o", str(executable),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        if compilation.returncode != 0:
+            raise RuntimeError(f"SOFA angular-event recipe compilation failed: {compilation.stderr.strip()}")
+        input_text = "".join(f"{date:.17g} {x:.17g} {y:.17g} {z:.17g}\n" for date, x, y, z in samples)
+        execution = subprocess.run([str(executable)], input=input_text, capture_output=True, text=True)
+        if execution.returncode != 0:
+            raise RuntimeError(f"SOFA angular-event recipe execution failed: {execution.stderr.strip()}")
+    rows = [line.split() for line in execution.stdout.splitlines()]
+    if len(rows) != len(samples):
+        raise RuntimeError("SOFA angular-event recipe row count mismatch")
+    longitudes = []
+    for sample, row in zip(samples, rows):
+        if len(row) != 2 or float(row[0]) != sample[0]:
+            raise RuntimeError("SOFA angular-event recipe date mismatch")
+        longitude = float(row[1])
+        if not 0 <= longitude < 360:
+            raise RuntimeError("SOFA angular-event recipe returned an invalid longitude")
+        longitudes.append(longitude)
+    return longitudes
+
+
+def wrapped_degrees(value: float) -> float:
+    return (value + 180) % 360 - 180
+
+
+def parse_angular_events() -> dict[str, list[dict[str, object]]]:
+    samples: list[tuple[float, float, float, float]] = []
+    sample_keys: list[tuple[str, float]] = []
+    for name, (_, expected_dates) in RELATIVE_LONGITUDE_VECTOR_QUERIES.items():
+        rows = []
+        for line in data_lines(horizons_result(name)):
+            columns = [column.strip() for column in line.split(",")]
+            row = (float(columns[0]), float(columns[2]), float(columns[3]), float(columns[4]))
+            rows.append(row)
+            samples.append(row)
+            sample_keys.append((name, row[0]))
+        if [row[0] for row in rows] != expected_dates:
+            raise RuntimeError(f"unexpected angular-event vector dates in {name}")
+    longitude_by_key = dict(zip(sample_keys, sofa_angular_event_longitudes(samples)))
+
+    relative_longitude_events = []
+    earth_name = "earth-angular-events"
+    for event in RELATIVE_LONGITUDE_EVENTS:
+        body_name = f"{event['body']}-angular-events"
+        offsets = []
+        for date in event["dates"]:
+            earth = longitude_by_key[(earth_name, date)]
+            planet = longitude_by_key[(body_name, date)]
+            offsets.append(wrapped_degrees(event["direction"] * (earth - planet) - event["target"]))
+        brackets = [
+            (index, offsets[index], offsets[index + 1])
+            for index in range(len(offsets) - 1)
+            if offsets[index] <= 0 < offsets[index + 1]
+        ]
+        if len(brackets) != 1:
+            raise RuntimeError(f"expected one relative-longitude bracket for {event['body']} {event['target']}, got {brackets}")
+        index, lower_offset, upper_offset = brackets[0]
+        lower = event["dates"][index]
+        upper = event["dates"][index + 1]
+        estimate = lower + (upper - lower) * (-lower_offset) / (upper_offset - lower_offset)
+        resolution = (upper - lower) * 86_400
+        relative_longitude_events.append(
+            {
+                "body": event["body"],
+                "targetRelativeLongitudeDegrees": event["target"],
+                "direction": event["direction"],
+                "startUTC": event["startUTC"],
+                "lowerJulianDateTDB": lower,
+                "upperJulianDateTDB": upper,
+                "estimatedJulianDateTDB": estimate,
+                "lowerOffsetDegrees": lower_offset,
+                "upperOffsetDegrees": upper_offset,
+                "sampleResolutionSeconds": resolution,
+                "timeScaleAllowanceSeconds": 0.002,
+                "timeToleranceSeconds": resolution + 0.002,
+            }
+        )
+
+    maximum_elongation_events = []
+    for name, event in MAX_ELONGATION_QUERIES.items():
+        lines = data_lines(horizons_result(name))
+        if len(lines) != len(event["dates"]):
+            raise RuntimeError(f"unexpected maximum-elongation row count in {name}")
+        rows = []
+        for date, line in zip(event["dates"], lines):
+            columns = [column.strip() for column in line.split(",")]
+            if columns[4] not in {"/T", "/L"}:
+                raise RuntimeError(f"unexpected elongation flag {columns[4]!r} in {name}")
+            rows.append((date, columns[0], float(columns[3]), columns[4]))
+        maximum = max(row[2] for row in rows)
+        maximum_indices = [index for index, row in enumerate(rows) if row[2] == maximum]
+        lower_index = maximum_indices[0] - 1
+        upper_index = maximum_indices[-1] + 1
+        sample_index = maximum_indices[len(maximum_indices) // 2]
+        if lower_index < 0 or upper_index >= len(rows):
+            raise RuntimeError(f"maximum-elongation sample is not bracketed in {name}")
+        lower, sample, upper = rows[lower_index], rows[sample_index], rows[upper_index]
+        if lower[3] != sample[3] or upper[3] != sample[3]:
+            raise RuntimeError(f"maximum-elongation side changes inside the bracket in {name}")
+        resolution = round((rows[1][0] - rows[0][0]) * 86_400, 3)
+        angle_tolerance = round(max(sample[2] - lower[2], sample[2] - upper[2]) + 0.0001, 7)
+        time_tolerance = round(max(sample[0] - lower[0], upper[0] - sample[0]) * 86_400, 3) + 0.001
+        maximum_elongation_events.append(
+            {
+                "body": event["body"],
+                "startUTC": event["startUTC"],
+                "lowerUTC": lower[1],
+                "sampleUTC": sample[1],
+                "upperUTC": upper[1],
+                "sampledMaximumDegrees": sample[2],
+                "trailsSun": sample[3] == "/T",
+                "sampleResolutionSeconds": resolution,
+                "timeToleranceSeconds": time_tolerance,
+                "angleToleranceDegrees": angle_tolerance,
+            }
+        )
+    return {
+        "relativeLongitudeEvents": relative_longitude_events,
+        "maximumElongationEvents": maximum_elongation_events,
+    }
 
 
 def jupiter_moon_relative_tolerance(julian_date_tdb: float) -> float | None:
@@ -980,7 +1180,7 @@ def build_archive(constellations: dict[str, list[dict[str, object]]] | None = No
     if constellations is None:
         constellations = parse_constellations()
     archive: dict[str, object] = {
-        "schemaVersion": 5,
+        "schemaVersion": 6,
         "provenance": source_catalog(),
         "fixedStars": parse_sofa_fixed_stars(),
         "constellations": constellations["names"],
@@ -992,6 +1192,7 @@ def build_archive(constellations: dict[str, list[dict[str, object]]] | None = No
     archive.update(parse_upstream_events())
     archive.update(parse_eclipses())
     archive.update(parse_horizons())
+    archive.update(parse_angular_events())
     archive.update(parse_geocentric_states())
     return archive
 
@@ -1008,6 +1209,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket and 2060 Chiron at 1900-01-01 03:00 UT, 1950, 2000, 2026-01-02, 2050 and 2100", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplHorizontal": {"serviceVersion": "recorded in every archived response", "frame": "topocentric apparent horizon: azimuth east of north and elevation", "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent position with light time, gravitational deflection and stellar aberration", "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)", "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplElongation": {"serviceVersion": "recorded in every archived response", "frame": "geocentric Sun-observer-target angle and IAU76/80 ecliptic of date", "origin": "Earth center 500@399", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent positions with light time, gravitational deflection and stellar aberration", "refraction": "none", "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplAngularEvents": {"serviceVersion": "recorded in every archived response", "frame": "simultaneous geometric ICRF vectors transformed by official SOFA IAU 1976/1980 precession-nutation to true ecliptic of date for relative longitude; apparent full-sky Sun-observer-target angle for maximum elongation", "origin": "Sun center 500@10 for Earth, Mars, and Venus vectors; Earth center 500@399 for Mercury and Venus elongation", "units": "Julian dates TDB, UTC calendar timestamps, degrees, and seconds", "timeScale": "TDB for geometric vectors and UTC for apparent elongation tables; the 0.002-second TDB-minus-TT bound is included in relative-longitude allowances", "aberration": "none for VEC_CORR=NONE relative-longitude vectors; Horizons apparent light time, gravitational deflection, and stellar aberration for S-O-T elongation", "refraction": "none (AIRLESS)", "domain": "Mars opposition and superior conjunction, Venus inferior and superior conjunction, and two successive maximum elongations for each of Mercury and Venus in 2025", "license": "NASA/JPL factual output and IAU SOFA software/data terms; attribution retained and no endorsement implied", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and response SHA-256. build-fixtures.py applies Scripts/reference-data/sofa-angular-events.c to simultaneous geometric vectors, derives sign-change or sampled-maximum brackets, and records the source sampling resolution as an allowance rather than a published accuracy."},
         "jplSaturnRings": {"serviceVersion": "recorded in every archived response", "frame": "Saturn's planetodetic sub-observer latitude on the IAU pole and ellipsoid Horizons lists, its distances from the Sun and from Earth, and the Sun-target-observer angle", "origin": "Earth center 500@399", "units": "degrees, AU and km", "timeScale": "UTC calendar output", "aberration": "apparent sub-observer point with light time; S-T-O as Horizons defines it", "refraction": "none", "domain": "11 dates from 2010 to 2035, through the 2025 ring-plane crossing", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon; the solar system barycenter 500@0 for the Sun, the planets, Pluto (999), the Moon and the Earth-Moon barycenter (3)", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0, where the Galilean moons are also sampled at both ends and every 2,500 days between, with a day outside each end; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center, and at 4 dates from 1990 to 2010 for the gravity simulation; barycentric states inside the spans of Astronomy Engine's BaryStateTest files: the Sun, Jupiter to Neptune and Pluto every 25 years from 1900 to 2099, Mercury to Mars every 10 years from 1980 to 2020, and the Moon and the Earth-Moon barycenter at 5 dates from 1970 to 2040; Chiron at its five anchors from 2000 to 2040, around the four midpoints between them, and at 1900-01-01 and 2150-01-01", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "calendar timestamps", "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parser, C validation harness, engine source, and table under {upstream}/moonphase, {upstream}/ctest.c, and the matching source/c tree"},
