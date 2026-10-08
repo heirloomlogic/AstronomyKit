@@ -25,12 +25,12 @@ public struct Atmosphere: Sendable, Equatable {
     /// At sea level, this is approximately 1013.25 mbar.
     public let pressure: Double
 
-    /// The temperature in degrees Celsius.
+    /// The kinetic temperature in degrees Celsius.
     public let temperature: Double
 
     /// The atmospheric density relative to sea level.
     ///
-    /// A value of 1.0 represents sea level density.
+    /// A value of 1.0 represents the sea level density of 1.2250 kg/m³.
     /// Higher elevations have lower density.
     public let density: Double
 
@@ -60,11 +60,18 @@ extension Atmosphere {
     /// Calculates atmospheric properties at a given elevation.
     ///
     /// Uses the 1976 U.S. Standard Atmosphere (NOAA-S/T 76-1562), computed
-    /// from its defining constants. Below 32 km it agrees with the ISO 2533
-    /// standard atmosphere, whose molar mass is 28.96442 kg/kmol rather than
-    /// 28.9644, to within 3.3e-6 in pressure; the difference grows with
-    /// height, from 1.0e-6 at 11 km. Above 32 km the model keeps the 20 to 32 km layer
-    /// (+1 K/km), where the standard changes layer.
+    /// from its defining constants, through all of its layers up to 100 km.
+    /// Below 32 km it agrees with the ISO 2533 standard atmosphere, whose
+    /// molar mass is 28.96442 kg/kmol rather than 28.9644, to within 3.3e-6
+    /// in pressure; the difference grows with height, from 1.0e-6 at 11 km.
+    ///
+    /// Up to 84,852 m (86 km geometric height) the standard's seven layers
+    /// are linear in geopotential height. Above that the standard works in
+    /// geometric height and follows the diffusion of nitrogen, oxygen,
+    /// argon and helium separately, which this model integrates. Between
+    /// 80 and 86 km geometric height the temperature is the standard's
+    /// kinetic temperature, which its printed tables leave uncorrected and
+    /// overstate by up to 0.08 K.
     ///
     /// - Parameter elevation: The geopotential height above sea level in
     ///   meters, from -500 to 100,000.
