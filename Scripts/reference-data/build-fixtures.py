@@ -7,8 +7,14 @@ import argparse
 import datetime
 import hashlib
 import json
+import math
+import os
 import re
+import shlex
+import subprocess
 import sys
+import tarfile
+import tempfile
 import time
 import urllib.parse
 import urllib.request
@@ -65,7 +71,20 @@ UPSTREAM_SOURCES = {
 PUBLISHER_SOURCES = {
     "naif/pck00011.tpc": ("https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/pck00011.tpc", "3dff7b1dbeceaa01f25467767d3fa25816051c85d162d1edf04acb310ee28bb1"),
     "sofa/sofa_ast_example.c": ("https://www.iausofa.org/s/sofa_ast_example.c", "9903dca63bd87e573db6a57c04945bb712f3c958a23c245db0c03a37bf31d4e9"),
+    "sofa/sofa_c-20231011.tar.gz": ("https://www.iausofa.org/s/sofa_c-20231011tar.gz", "d9c10833cae8b4d9361a0ffda31ec361fd1262362025bec4d4e51a880150ace2"),
 }
+
+SOFA_RELEASE_SHA256 = "d9c10833cae8b4d9361a0ffda31ec361fd1262362025bec4d4e51a880150ace2"
+SOFA_RECIPE_SOURCES = (
+    "ab.c", "af2a.c", "anp.c", "anpm.c", "apcg.c", "apci.c", "apci13.c", "apcs.c", "apio.c", "apio13.c",
+    "atci13.c", "atciq.c", "atio13.c", "atioq.c", "bpn2xy.c", "c2ixys.c", "c2s.c", "cal2jd.c", "cp.c", "cr.c",
+    "dat.c", "dtf2d.c", "eform.c", "eors.c", "epv00.c", "era00.c", "fad03.c", "fae03.c", "faf03.c", "faju03.c",
+    "fal03.c", "falp03.c", "fama03.c", "fame03.c", "faom03.c", "fapa03.c", "fasa03.c", "faur03.c", "fave03.c", "fw2m.c",
+    "gd2gc.c", "gd2gce.c", "ir.c", "jd2cal.c", "ld.c", "ldsun.c", "nut00a.c", "nut06a.c", "obl06.c", "pdp.c",
+    "pfw06.c", "pm.c", "pmpx.c", "pn.c", "pnm06a.c", "pom00.c", "pvtob.c", "pxp.c", "refco.c", "rx.c",
+    "rxp.c", "ry.c", "rz.c", "s06.c", "s2c.c", "sp00.c", "sxp.c", "taitt.c", "taiut1.c", "tf2a.c",
+    "tr.c", "trxp.c", "utctai.c", "utcut1.c", "xys06a.c", "zp.c",
+)
 
 HORIZONS_OBSERVER_QUERIES = {
     "moon-observer": ("301", [2415020.5, 2451544.5, 2488069.5]),
@@ -648,13 +667,92 @@ def parse_horizons() -> dict[str, list[dict[str, object]]]:
     return {"observations": observations, "chironObservations": chiron_observations, "vectors": vectors, "horizontal": horizontal, "elongations": elongations, "saturnRings": saturn_rings}
 
 
+def sofa_fixed_star_recipe_output() -> dict[str, float]:
+    archive_path = SOURCE_DIR / "sofa/sofa_c-20231011.tar.gz"
+    if sha256(archive_path.read_bytes()) != SOFA_RELEASE_SHA256:
+        raise RuntimeError("SOFA fixed-star release hash mismatch")
+    with tempfile.TemporaryDirectory() as temporary:
+        source_dir = Path(temporary) / "sofa"
+        source_dir.mkdir()
+        archive_prefix = "sofa/20231011/c/src/"
+        with tarfile.open(archive_path, "r:gz") as archive:
+            for name in ("sofa.h", "sofam.h", *SOFA_RECIPE_SOURCES):
+                source = archive.extractfile(archive.getmember(archive_prefix + name))
+                if source is None:
+                    raise RuntimeError(f"SOFA fixed-star release has no {name}")
+                (source_dir / name).write_bytes(source.read())
+        executable = Path(temporary) / "sofa-fixed-star-reference"
+        compiler = shlex.split(os.environ.get("CC", "cc"))
+        if not compiler:
+            raise RuntimeError("SOFA fixed-star recipe compiler is empty")
+        compilation = subprocess.run(
+            compiler
+            + [
+                "-std=c99",
+                "-O",
+                f"-I{source_dir}",
+                str(ROOT / "Scripts/reference-data/sofa-fixed-star-reference.c"),
+                *(str(source_dir / name) for name in SOFA_RECIPE_SOURCES),
+                "-lm",
+                "-o",
+                str(executable),
+            ],
+            capture_output=True,
+            text=True,
+        )
+        if compilation.returncode != 0:
+            raise RuntimeError(f"SOFA fixed-star recipe compilation failed: {compilation.stderr.strip()}")
+        execution = subprocess.run([str(executable)], capture_output=True, text=True)
+        if execution.returncode != 0:
+            raise RuntimeError(f"SOFA fixed-star recipe execution failed: {execution.stderr.strip()}")
+    output: dict[str, float] = {}
+    for line in execution.stdout.splitlines():
+        name, value = line.split()
+        if name in output:
+            raise RuntimeError(f"SOFA fixed-star recipe repeats {name}")
+        output[name] = float(value)
+    return output
+
+
+def verify_sofa_fixed_star_recipe_output(reference: dict[str, object]) -> None:
+    recipe_keys = {
+        "utcJD": "utJulianDate",
+        "ttJD": "ttJulianDate",
+        "rightAscensionHours": "rightAscensionHours",
+        "declinationDegrees": "declinationDegrees",
+        "distanceLightYears": "distanceLightYears",
+        "j2000RAHours": "j2000RightAscensionHours",
+        "j2000DecDegrees": "j2000DeclinationDegrees",
+        "ofDateRAHours": "ofDateRightAscensionHours",
+        "ofDateDecDegrees": "ofDateDeclinationDegrees",
+        "eclipticLongitudeDegrees": "eclipticLongitudeDegrees",
+        "eclipticLatitudeDegrees": "eclipticLatitudeDegrees",
+        "azimuthDegrees": "azimuthDegrees",
+        "altitudeDegrees": "unrefractedAltitudeDegrees",
+        "topocentricRAHours": "topocentricRightAscensionHours",
+        "topocentricDecDegrees": "topocentricDeclinationDegrees",
+    }
+    output = sofa_fixed_star_recipe_output()
+    if output.keys() != recipe_keys.keys():
+        raise RuntimeError("SOFA fixed-star recipe output fields mismatch")
+    for output_name, reference_name in recipe_keys.items():
+        actual = output[output_name]
+        expected = float(reference[reference_name])
+        if not math.isfinite(actual) or not math.isfinite(expected):
+            raise RuntimeError(f"SOFA fixed-star recipe output mismatch for {reference_name}: expected {expected}, got {actual}")
+        tolerance = 8 * max(math.ulp(actual), math.ulp(expected))
+        if abs(actual - expected) > tolerance:
+            raise RuntimeError(f"SOFA fixed-star recipe output mismatch for {reference_name}: expected {expected}, got {actual}")
+
+
 def parse_sofa_fixed_stars() -> list[dict[str, object]]:
     reference = json.loads(source_text("sofa/fixed-star-reference.json"))
     recipe_path = ROOT / "Scripts/reference-data/sofa-fixed-star-reference.c"
     if reference.pop("_recipeSHA256") != sha256(recipe_path.read_bytes()):
         raise RuntimeError("SOFA fixed-star recipe hash mismatch")
-    if reference.pop("_sofaReleaseSHA256") != "d9c10833cae8b4d9361a0ffda31ec361fd1262362025bec4d4e51a880150ace2":
+    if reference.pop("_sofaReleaseSHA256") != SOFA_RELEASE_SHA256:
         raise RuntimeError("SOFA fixed-star release hash mismatch")
+    verify_sofa_fixed_star_recipe_output(reference)
     if reference["sampledToleranceArcseconds"] < 2 * reference["sampledMaximumResidualArcseconds"]:
         raise RuntimeError("SOFA fixed-star tolerance must be at least twice the sampled maximum residual")
     return [reference]
