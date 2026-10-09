@@ -44,6 +44,12 @@ jobs:
           python3 Scripts/reference-data/capture-planetary-apsides.py --check
           python3 Scripts/record-planetary-event-evidence.py --check
 
+      - name: Verify observer-event primary sources and evidence
+        run: |
+          python3 -m unittest Scripts/test_observer_events.py -v
+          python3 Scripts/capture-observer-events.py --check
+          python3 Scripts/record-observer-event-evidence.py --check
+
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
 
@@ -115,6 +121,12 @@ jobs:
           python3 Scripts/generate-saturn-tables.py --check
           python3 Scripts/reference-data/capture-planetary-apsides.py --check
           python3 Scripts/record-planetary-event-evidence.py --check
+
+      - name: Verify observer-event primary sources and evidence
+        run: |
+          python3 -m unittest Scripts/test_observer_events.py -v
+          python3 Scripts/capture-observer-events.py --check
+          python3 Scripts/record-observer-event-evidence.py --check
 
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check

@@ -1,0 +1,558 @@
+{
+  "angularToleranceArcminutes": 1,
+  "polar": [
+    {
+      "altitudeDegrees": -0.832888468,
+      "apparentICRFDeg": [
+        177.796323219,
+        0.957896128
+      ],
+      "distanceAU": 1.00422154497984,
+      "tt": 8298.410568322055
+    },
+    {
+      "altitudeDegrees": -0.832348776,
+      "apparentICRFDeg": [
+        177.797569129,
+        0.957356598
+      ],
+      "distanceAU": 1.00422116751151,
+      "tt": 8298.411957208999
+    },
+    {
+      "altitudeDegrees": -0.83200697,
+      "apparentICRFDeg": [
+        177.798358207,
+        0.957014894
+      ],
+      "distanceAU": 1.00422092844601,
+      "tt": 8298.41283683898
+    },
+    {
+      "altitudeDegrees": -0.831809082,
+      "apparentICRFDeg": [
+        177.798815042,
+        0.956817066
+      ],
+      "distanceAU": 1.00422079003894,
+      "tt": 8298.413346097805
+    }
+  ],
+  "radiusScope": "Apparent optical limb in native rise/set only; independent USNO navigation semidiameters support the convention but do not disclose the rise/set service implementation.",
+  "rows": [
+    {
+      "altitudeDegrees": -18.304851246,
+      "apparentEQDDeg": [
+        281.043750381,
+        -23.064176715
+      ],
+      "apparentICRFDeg": [
+        282.550847304,
+        -22.951346724
+      ],
+      "azimuthDegrees": 254.296837223,
+      "body": "sun",
+      "distanceAU": 0.98327960906063,
+      "dut1Seconds": null,
+      "hourAngleHours": 6.440174497,
+      "localSiderealHours": 1.1764245222,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 10,
+      "tdbMinusUTSeconds": -1.944461,
+      "tt": -36524.5
+    },
+    {
+      "altitudeDegrees": -8.329857981,
+      "apparentEQDDeg": [
+        281.279747364,
+        -23.033872011
+      ],
+      "apparentICRFDeg": [
+        281.28408583,
+        -23.035143486
+      ],
+      "azimuthDegrees": 112.427900654,
+      "body": "sun",
+      "distanceAU": 0.98333375298222,
+      "dut1Seconds": 0.35518,
+      "hourAngleHours": 18.424042014,
+      "localSiderealHours": 13.1760251716,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 10,
+      "tdbMinusUTSeconds": 64.183905,
+      "tt": 0.0
+    },
+    {
+      "altitudeDegrees": -4.178157677,
+      "apparentEQDDeg": [
+        242.470417727,
+        -21.029314964
+      ],
+      "apparentICRFDeg": [
+        242.153207206,
+        -20.972470726
+      ],
+      "azimuthDegrees": 112.96729282,
+      "body": "sun",
+      "distanceAU": 0.98690499466647,
+      "dut1Seconds": -0.10531,
+      "hourAngleHours": 18.688370482,
+      "localSiderealHours": 10.8530649972,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 10,
+      "tdbMinusUTSeconds": 69.182944,
+      "tt": 8000.0
+    },
+    {
+      "altitudeDegrees": -18.173445522,
+      "apparentEQDDeg": [
+        280.944159167,
+        -23.040973705
+      ],
+      "apparentICRFDeg": [
+        278.963539164,
+        -23.167770623
+      ],
+      "azimuthDegrees": 254.24001932,
+      "body": "sun",
+      "distanceAU": 0.98345590840382,
+      "dut1Seconds": -0.11244,
+      "hourAngleHours": 6.430020543,
+      "localSiderealHours": 1.1596311545,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 10,
+      "tdbMinusUTSeconds": 69.18385,
+      "tt": 47846.5
+    },
+    {
+      "altitudeDegrees": -25.489930222,
+      "apparentEQDDeg": [
+        271.772297815,
+        -22.767706457
+      ],
+      "apparentICRFDeg": [
+        273.281227283,
+        -22.743877893
+      ],
+      "azimuthDegrees": 259.283548306,
+      "body": "moon",
+      "distanceAU": 0.00248050061291,
+      "dut1Seconds": null,
+      "hourAngleHours": 7.058271335,
+      "localSiderealHours": 1.1764245222,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 301,
+      "tdbMinusUTSeconds": -1.944461,
+      "tt": -36524.5
+    },
+    {
+      "altitudeDegrees": 37.21127983,
+      "apparentEQDDeg": [
+        222.763239987,
+        -11.547066845
+      ],
+      "apparentICRFDeg": [
+        222.766774727,
+        -11.549289771
+      ],
+      "azimuthDegrees": 148.51313316,
+      "body": "moon",
+      "distanceAU": 0.00266391935702,
+      "dut1Seconds": 0.35518,
+      "hourAngleHours": 22.325142506,
+      "localSiderealHours": 13.1760251716,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 301,
+      "tdbMinusUTSeconds": 64.183905,
+      "tt": 0.0
+    },
+    {
+      "altitudeDegrees": 67.745634856,
+      "apparentEQDDeg": [
+        146.45071302,
+        18.666956818
+      ],
+      "apparentICRFDeg": [
+        146.151239819,
+        18.766306673
+      ],
+      "azimuthDegrees": 224.74928579,
+      "body": "moon",
+      "distanceAU": 0.00259228019701,
+      "dut1Seconds": -0.10531,
+      "hourAngleHours": 1.089684129,
+      "localSiderealHours": 10.8530649972,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 301,
+      "tdbMinusUTSeconds": 69.182944,
+      "tt": 8000.0
+    },
+    {
+      "altitudeDegrees": -3.120137,
+      "apparentEQDDeg": [
+        299.721490362,
+        -21.745421776
+      ],
+      "apparentICRFDeg": [
+        297.79003271,
+        -22.096288074
+      ],
+      "azimuthDegrees": 245.336188737,
+      "body": "moon",
+      "distanceAU": 0.0025276402462,
+      "dut1Seconds": -0.11244,
+      "hourAngleHours": 5.178198464,
+      "localSiderealHours": 1.1596311545,
+      "observer": [
+        -82.55,
+        35.6,
+        0.0
+      ],
+      "target": 301,
+      "tdbMinusUTSeconds": 69.18385,
+      "tt": 47846.5
+    },
+    {
+      "altitudeDegrees": 58.856483184,
+      "apparentEQDDeg": [
+        285.166867192,
+        -23.649279469
+      ],
+      "apparentICRFDeg": [
+        286.676168193,
+        -23.497666236
+      ],
+      "azimuthDegrees": 79.826149985,
+      "body": "mars",
+      "distanceAU": 2.40092696223811,
+      "dut1Seconds": null,
+      "hourAngleHours": 21.749302173,
+      "localSiderealHours": 16.7604266529,
+      "observer": [
+        151.21,
+        -33.87,
+        0.058
+      ],
+      "target": 499,
+      "tdbMinusUTSeconds": -1.944461,
+      "tt": -36524.5
+    },
+    {
+      "altitudeDegrees": -1.465489009,
+      "apparentEQDDeg": [
+        330.515126108,
+        -13.181946084
+      ],
+      "apparentICRFDeg": [
+        330.519192438,
+        -13.181391784
+      ],
+      "azimuthDegrees": 253.027489007,
+      "body": "mars",
+      "distanceAU": 1.8496849601894,
+      "dut1Seconds": 0.35518,
+      "hourAngleHours": 6.725687162,
+      "localSiderealHours": 4.7600289021,
+      "observer": [
+        151.21,
+        -33.87,
+        0.058
+      ],
+      "target": 499,
+      "tdbMinusUTSeconds": 64.183902,
+      "tt": 0.0
+    },
+    {
+      "altitudeDegrees": -38.31446967,
+      "apparentEQDDeg": [
+        225.881411045,
+        -17.045305704
+      ],
+      "apparentICRFDeg": [
+        225.578776632,
+        -16.960607814
+      ],
+      "azimuthDegrees": 191.387881185,
+      "body": "mars",
+      "distanceAU": 2.5040405356162,
+      "dut1Seconds": -0.10531,
+      "hourAngleHours": 11.378307341,
+      "localSiderealHours": 2.4370680776,
+      "observer": [
+        151.21,
+        -33.87,
+        0.058
+      ],
+      "target": 499,
+      "tdbMinusUTSeconds": 69.182941,
+      "tt": 8000.0
+    },
+    {
+      "altitudeDegrees": 73.758063702,
+      "apparentEQDDeg": [
+        240.776414262,
+        -20.479477196
+      ],
+      "apparentICRFDeg": [
+        238.868594241,
+        -20.114787912
+      ],
+      "azimuthDegrees": 322.888618545,
+      "body": "mars",
+      "distanceAU": 2.24506051177265,
+      "dut1Seconds": -0.11244,
+      "hourAngleHours": 0.691874181,
+      "localSiderealHours": 16.7436351321,
+      "observer": [
+        151.21,
+        -33.87,
+        0.058
+      ],
+      "target": 499,
+      "tdbMinusUTSeconds": 69.18385,
+      "tt": 47846.5
+    },
+    {
+      "altitudeDegrees": -44.839836178,
+      "apparentEQDDeg": [
+        239.177959944,
+        -19.600774821
+      ],
+      "apparentICRFDeg": [
+        240.626507545,
+        -19.879602536
+      ],
+      "azimuthDegrees": 60.684187496,
+      "body": "jupiter",
+      "distanceAU": 6.11309233510616,
+      "dut1Seconds": null,
+      "hourAngleHours": 14.734565608,
+      "localSiderealHours": 6.679762938,
+      "observer": [
+        0.0,
+        51.48,
+        0.046
+      ],
+      "target": 599,
+      "tdbMinusUTSeconds": -1.944461,
+      "tt": -36524.5
+    },
+    {
+      "altitudeDegrees": -1.644525196,
+      "apparentEQDDeg": [
+        23.868120458,
+        8.593820587
+      ],
+      "apparentICRFDeg": [
+        23.871554345,
+        8.595881742
+      ],
+      "azimuthDegrees": 73.972305777,
+      "body": "jupiter",
+      "distanceAU": 4.62116497073594,
+      "dut1Seconds": 0.35518,
+      "hourAngleHours": 17.08815908,
+      "localSiderealHours": 18.6793671109,
+      "observer": [
+        0.0,
+        51.48,
+        0.046
+      ],
+      "target": 599,
+      "tdbMinusUTSeconds": 64.183903,
+      "tt": 0.0
+    },
+    {
+      "altitudeDegrees": -6.301912446,
+      "apparentEQDDeg": [
+        327.463744122,
+        -14.24706183
+      ],
+      "apparentICRFDeg": [
+        327.170399808,
+        -14.347595179
+      ],
+      "azimuthDegrees": 105.00068968,
+      "body": "jupiter",
+      "distanceAU": 5.07005757944171,
+      "dut1Seconds": -0.10531,
+      "hourAngleHours": 18.525488853,
+      "localSiderealHours": 16.3564051277,
+      "observer": [
+        0.0,
+        51.48,
+        0.046
+      ],
+      "target": 599,
+      "tdbMinusUTSeconds": 69.182942,
+      "tt": 8000.0
+    },
+    {
+      "altitudeDegrees": 32.823364511,
+      "apparentEQDDeg": [
+        43.631475112,
+        15.508460639
+      ],
+      "apparentICRFDeg": [
+        41.821726954,
+        14.974884352
+      ],
+      "azimuthDegrees": 252.575915442,
+      "body": "jupiter",
+      "distanceAU": 4.36056773161357,
+      "dut1Seconds": -0.11244,
+      "hourAngleHours": 3.754208663,
+      "localSiderealHours": 6.6629736708,
+      "observer": [
+        0.0,
+        51.48,
+        0.046
+      ],
+      "target": 599,
+      "tdbMinusUTSeconds": 69.18385,
+      "tt": 47846.5
+    }
+  ],
+  "schemaVersion": 1,
+  "selection": "Sixteen frozen source epochs: four bodies, four TT epochs, three geodetic sites. Separate four-point polar diagnostic and three USNO/Horizons semidiameter pairs.",
+  "semidiameterComparisonDegrees": 1e-06,
+  "semidiameters": [
+    {
+      "date": "2000-01-03",
+      "distanceAU": 0.98328225102318,
+      "inferredRadiusKM": 695999.418269,
+      "semidiameterDegrees": 0.2711,
+      "universalTime": "2000-01-03T12:00Z"
+    },
+    {
+      "date": "2022-07-04",
+      "distanceAU": 1.01667603209906,
+      "inferredRadiusKM": 696001.076033,
+      "semidiameterDegrees": 0.262196,
+      "universalTime": "2022-07-04T12:00Z"
+    },
+    {
+      "date": "2022-09-20",
+      "distanceAU": 1.0042894013142,
+      "inferredRadiusKM": 695998.777086,
+      "semidiameterDegrees": 0.265429,
+      "universalTime": "2022-09-20T12:00Z"
+    }
+  ],
+  "solarRiseSetRadiusKM": 696000,
+  "sources": [
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/horizons-sd-2000-01-03.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/horizons-sd-2000-01-03.query.json",
+      "querySHA256": "aa5dca2f03c8552562289c7d799ab3512fc955dc14760511a74dea342ae0dbd6",
+      "sha256": "b1805e417fbcc5c4a63ae541b5946f87af4aa3aff905dc1c9e9f9b65f6885077"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/horizons-sd-2022-07-04.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/horizons-sd-2022-07-04.query.json",
+      "querySHA256": "e7dc8d5491d0b3040ee8615285a76ed40eadb4820ae20e97c96beb9661622f37",
+      "sha256": "6e4b1e6a34902978d88627cc7169a92751a474e1b0b2a37571dcc387b1ecba82"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/horizons-sd-2022-09-20.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/horizons-sd-2022-09-20.query.json",
+      "querySHA256": "0ba054b35952a2e3a3de6bc0b08b683e996957aa6f45382bd70f5a6de2b48429",
+      "sha256": "2e3c7f11c4ad333738316d130a9266eb4577adf39b06ade1d753d73e66441df5"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/jupiter.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/jupiter.query.json",
+      "querySHA256": "77557f3e1829420c477c9a11d060261669f6405d0fb88abb818c73999708b373",
+      "sha256": "98dd9a3f421ea16d6de3be937670b30fdf91f3504f4ada5ae38fba365642c9a6"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/mars.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/mars.query.json",
+      "querySHA256": "d5c6f508102c51947870c69795c19fbd7f2f1280b938180ad9d25a0120ee0b58",
+      "sha256": "a9b134d6947610a7f3aa06f30f88c81b6aa5e48797d761f39847bb914fa737d3"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/moon.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/moon.query.json",
+      "querySHA256": "2ad7bd33efbc1a7da9a53b8a4ab229743cb7a3307f728407a0833a1b19585b2f",
+      "sha256": "6108cb3e4b849beb6eb11a199a8d414e10238becebbdd9877ac56914808e331f"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/polar-primary.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/polar-primary.query.json",
+      "querySHA256": "c97f7b3b2e62107bd4d343bf7ea720a9ae0640f0e168b354dacc1024c962d35e",
+      "sha256": "8b208e292727c212732163464a1c86c1e76b2c2f813e0cefc2dcbb19f9bf3322"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/horizons/sun.json",
+      "queryPath": "Scripts/observer-event-data/sources/horizons/sun.query.json",
+      "querySHA256": "99cd5c9f05794abc0d38bbdbcc8c548923e2de350132b9f0450011ba7f931a02",
+      "sha256": "e6a2dd56f54a737c89e0ed6bc636601faa2c57ef22fb740cedd542f223d2b120"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/usno/usno-polar-celnav.json",
+      "queryPath": "Scripts/observer-event-data/sources/usno/usno-polar-celnav.query.json",
+      "querySHA256": "dcda6d9603dd96fbf1447b36b5eeffa448a9ca33a62f781f4d90840cdd9044ca",
+      "sha256": "0431f5a842f8f1d5258144d363962110dc29484f7b7118ca76d4f8469417a7ef"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/usno/usno-polar.json",
+      "queryPath": "Scripts/observer-event-data/sources/usno/usno-polar.query.json",
+      "querySHA256": "d5bb076ad7a0c1d152e68456ec92999ee030d95d13daea32478d17b02b0e1946",
+      "sha256": "bf803aecf1e78e9911008e2534973c1f14f92838ef87d56494240d73079f8a39"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/usno/usno-sd-2000-01-03.json",
+      "queryPath": "Scripts/observer-event-data/sources/usno/usno-sd-2000-01-03.query.json",
+      "querySHA256": "437ec5ef348238ba8f1fa5c20c1cea0f228e0ec557d9c70987981c2b35f0ed29",
+      "sha256": "2f19e5e7fa7bb02092adbe7881f06dbcd6047f9ed264cb8c4cf50e55559827e3"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/usno/usno-sd-2022-07-04.json",
+      "queryPath": "Scripts/observer-event-data/sources/usno/usno-sd-2022-07-04.query.json",
+      "querySHA256": "1a2ceec8717e437ea3178a5aca127703c92e66a9b171d60130e400651546fec0",
+      "sha256": "bf067bea9cb24d2bd0ddab15496fb0043222c66e3a668746a40b9872230072e2"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/usno/usno-sd-2022-09-20.json",
+      "queryPath": "Scripts/observer-event-data/sources/usno/usno-sd-2022-09-20.query.json",
+      "querySHA256": "17f7b07272cc4a0de208c3b009e9cf661a82f6d932b60f87833052a27e00742d",
+      "sha256": "cd7256d10e3d71e8d51d1772ab642642c2f36c7efde1112b28e79d4331388534"
+    },
+    {
+      "path": "Scripts/observer-event-data/sources/usno/usno-semidiameter.json",
+      "queryPath": "Scripts/observer-event-data/sources/usno/usno-semidiameter.query.json",
+      "querySHA256": "c609deb5cf451bd785f03d04181050748501d0f69257f7dfa229cd24acc2b0b1",
+      "sha256": "73c0f2238f714d464a2c6e4c1a75e4874d9d921be9d5e9fb053e4c51aa67fe0c"
+    }
+  ],
+  "timeSemantics": "JD TT input. Before 1962 Horizons UT means UT1; later it means UTC and quantity 49 supplies UT1 minus UTC. TT minus UT1 equals quantity 30 minus TDB minus TT minus DUT1. Derived native times retain their captured Delta T model."
+}

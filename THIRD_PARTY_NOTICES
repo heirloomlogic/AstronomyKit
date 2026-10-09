@@ -299,3 +299,9 @@ The shared-node tables in Sources/AstronomyKit/Engine/Moon/Generated/DE441 and S
 NASA/JPL DE441 and SAT441 derived Saturn tables
 
 Sources/AstronomyKit/Engine/Planets/Generated/Saturn contains DE441 Saturn-system barycenter and Sun coefficients together with SAT441 Saturn-center offsets from https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441.bsp. Scripts/saturn-data/assessment.json pins the source HTTP identities, retrieved byte-range SHA-256 hashes, segment descriptors and derived payload digests. All coefficients are retained; only the small satellite offset is rounded to Float32. The JPL reference and NAIF attribution/disclaimer link above apply. These packed arrays and their evaluator are AstronomyKit-derived representations, not official JPL SPK kernels or the CSPICE toolkit.
+
+-------------------------------------------------------------------------------
+
+Observer-event reference archives
+
+Scripts/observer-event-data/sources contains numerical observer output retrieved from NASA/JPL Horizons (https://ssd.jpl.nasa.gov/horizons/) and the U.S. Naval Observatory's celestial-navigation and one-day rise/set APIs (https://aa.usno.navy.mil/data/api). Every response has an adjacent query recipe and SHA-256 binding. AstronomyKit's derived fixtures and native comparisons are not official JPL or USNO software or an endorsement by either agency. The publisher responses retain their source descriptions and notices.

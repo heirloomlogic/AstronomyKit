@@ -1,8 +1,10 @@
-# South Pole sunrise remains outside the USNO allowance
+# Native sunrise meets the polar allowance; the public C facade is unchanged
 
-Issue [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) covers one failure among 5,909 archived rise/set rows: the Sun rising at the South Pole on 2022-09-20 at 21:52 Universal Time. The public C search at AstronomyKit revision `e3d3d85c804aacf1c13be8249f4350e5013da48e` is +75.985957542 seconds from that minute after the fixture converts both values to TT with Espenak-Meeus. The archived allowance is 70.8 seconds.
+The new native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. Its South Pole residual is +50.550159736 TT seconds, within the unchanged 70.8-second allowance. The public facade remains on C until [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96), so its known-issue assertion and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) remain open.
 
-`Tests/AstronomyKitTests/Engine/Events/PolarSunriseReconciliationTests.swift` retains the reconstruction. It runs the public search and three native controls, checks the archived row and allowance, repeats the native root search at four tolerances, and compares the finest result with independent bisection. It does not change a production path.
+The retained public failure is the Sun rising at the South Pole on 2022-09-20 at 21:52 Universal Time. The public C search at AstronomyKit revision `e3d3d85c804aacf1c13be8249f4350e5013da48e` is +75.985957542 seconds from that minute after the fixture converts both values to TT with Espenak-Meeus. The archived allowance is 70.8 seconds.
+
+`Tests/AstronomyKitTests/Engine/Events/PolarSunriseReconciliationTests.swift` retains the reconstruction. It runs the public search and three native controls, checks the archived row and allowance, repeats the native root search at four tolerances, and compares the finest result with independent bisection. Those controls retain the old nominal-radius observable; the new native event path is tested separately in `EngineObserverEventsTests` and `EngineObserverSourceTests`.
 
 ## Sources and time convention
 
@@ -25,11 +27,11 @@ All native searches start at 2022-01-01 00:00 UT, carry Espenak-Meeus through ev
 | Control | Signed TT residual from the archived minute |
 | --- | ---: |
 | Public C rise search | +75.985957542 s |
-| Native, current distance-dependent upper limb | +75.961503026 s |
+| Native control, 695,700 km distance-dependent upper limb | +75.961503026 s |
 | Native topocentric, USNO fixed 50-arcminute center depression | -220.637220290 s |
 | Native geocentric direction, USNO fixed 50-arcminute center depression | -759.641944652 s |
 
-The native current-definition roots at 10, 0.1, and 0.01-second tolerances are +75.963882124 seconds; the 0.001-second root is +75.961503026 seconds. Their 0.002379-second spread is below the coarsest requested precision, and the 40-step bisection result matches the finest root at the displayed precision. Root convergence does not account for the allowance failure.
+The native nominal-radius control roots at 10, 0.1, and 0.01-second tolerances are +75.963882124 seconds; the 0.001-second root is +75.961503026 seconds. Their 0.002379-second spread is below the coarsest requested precision, and the 40-step bisection result matches the finest root at the displayed precision. Root convergence does not account for the allowance failure.
 
 ## PR #211 did not retain the earlier diagnostic
 
@@ -37,12 +39,26 @@ The newest #124 comment reports a bounded diagnostic at `861b142bf40d14a8735f50d
 
 The current native result is about 0.022 seconds earlier than the transient value reported for `861b142b`. No diagnostic from that revision was retained, and the intervening commits do not change the native Sun position, orientation, horizontal, time, search, rise/set, or vendored C implementations used here. The available evidence therefore does not identify the cause of the difference. The public C result is unchanged. This report binds the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above.
 
-## No correction is justified yet
+## Independent optical-limb evidence
 
-The current native observable nearly reproduces the public failure, while the published fixed-center alternatives miss the archived minute in the other direction by more than three minutes. These finite controls do not identify the unpublished calculation behind the archived USNO table and do not establish that one model is scientifically more accurate.
+Four archived [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/manual.html) responses near the polar minute use Sun center 10, Earth center 399, the geodetic South Pole, TT input and no atmospheric refraction. At the reference TT, the native airless center altitude is only 0.000007645458 degrees above Horizons. Linear interpolation of the source altitude plus the existing 695,700 km radius and 34-arcminute refraction gives approximately +77.59094 seconds from the reference TT. Moving the trajectory toward this source would make the old timing residual larger.
 
-A correction needs source evidence for the archived table's actual apparent-horizon calculation or an independent reference that evaluates the same observable. Until then, row 2,923, the 70.8-second allowance, and the known-issue assertion in `AuditValidationTests.swift` remain unchanged. Issue #124 stays open. Issue #92 may continue separate native migration work, but this evidence does not satisfy #124 or support closing it.
+A separate [USNO celestial-navigation API](https://aa.usno.navy.mil/data/api) comparison identifies the limb convention. At three dates, its printed apparent semidiameter and a Horizons topocentric distance imply these radii:
+
+| UT date, noon at 0° longitude and latitude | USNO semidiameter | Inferred radius |
+| --- | ---: | ---: |
+| 2000-01-03 | 0.271100° | 695,999.418 km |
+| 2022-07-04 | 0.262196° | 696,001.076 km |
+| 2022-09-20 | 0.265429° | 695,998.777 km |
+
+All three agree with 696,000 km within the six-decimal-degree printing resolution and exclude 695,700 km. The pairing uses USNO UT1 and the same numerical UTC coordinate for the Horizons distance; the archived DUT1 and range rate make this subsecond distance mismatch negligible relative to the printed semidiameter resolution. An additional noon-side site at 150°W on September 20 reports 0.265459°, retaining a separate site check. [NASA's 2019 eclipse calculation](https://svs.gsfc.nasa.gov/4711/) explicitly uses a 696,000 km optical radius. [IAU 2015 Resolution B3](https://arxiv.org/abs/1510.07674) defines 695,700 km as a nominal conversion constant; it does not require that number for every apparent-limb event convention.
+
+The native rise/set path therefore retains its distance-dependent angular radius and 34-arcminute refraction, using 696,000 km for the Sun's apparent limb. No other solar-radius consumer changes. This is a source-supported event convention, not a fit to the polar timestamp or a claim about the Sun's physical radius at every wavelength. The three native semidiameters match the printed USNO values within 0.000001 degree; the nominal-radius controls miss that comparison by over a factor of 100. The current USNO one-day service independently reproduces the archived 21:52 entry. Its rise/set implementation is unavailable, and the navigation service's convention does not prove which internal calculation produced that entry.
+
+With the optical radius, the same four Horizons points give an interpolated polar crossing about +52.15501 seconds from the reference TT. The native root is +50.550159736 seconds with the original 0.1-second search tolerance. These are sampled comparisons under specified conventions, not a continuous event-time bound or a prediction of actual atmospheric refraction.
+
+Exact queries, raw responses, digests and derived fixtures are under [`Scripts/observer-event-data`](../../Scripts/observer-event-data/README.md). The complete native Debug/Release captures and source-bound summary preserve every USNO row and the independent observables. The old controls, archived minute, tolerance and public known issue remain intact.
 
 ## Reproduction
 
-Run `swift test --filter PolarSunriseReconciliationTests` for the retained controls, `swift test --filter AuditValidationTests.riseSet` for all 5,909 archived rows, and `python3 Scripts/reference-data/build-fixtures.py --check` for the pinned source archive. The measurements above used Apple Swift 6.4 on arm64 macOS in Debug; Release is checked separately by the PR validation.
+Run `swift test --filter EngineObserverEventsTests` for the native complete-row acceptance and `swift test --filter EngineObserverSourceTests` for the independent source comparisons. Run `swift test --filter PolarSunriseReconciliationTests` for the retained controls, `swift test --filter AuditValidationTests.riseSet` for all 5,909 archived rows, and `python3 Scripts/reference-data/build-fixtures.py --check` for the pinned source archive. The measurements above used Apple Swift 6.4 on arm64 macOS in Debug; Release is checked separately by the PR validation.
