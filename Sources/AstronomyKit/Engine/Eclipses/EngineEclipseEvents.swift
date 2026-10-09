@@ -84,6 +84,12 @@ extension Engine.Events {
             Engine.longitudeOffset(try Engine.Events.moonPhaseAngle(at: $0) - 180)
         }
     ) throws -> Engine.Time {
+        try canonicalEclipsePhase(candidate, phaseOffset: phaseOffset)
+    }
+
+    static func canonicalEclipsePhase(
+        _ candidate: Engine.Time, phaseOffset: (Engine.Time) throws -> Double
+    ) throws -> Engine.Time {
         try Engine.checkAcceptedTime(candidate)
         guard let model = candidate.deltaTModel else { throw AstronomyError.badTime }
         func offset(_ time: Engine.Time) throws -> Double {

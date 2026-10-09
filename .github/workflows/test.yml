@@ -76,6 +76,10 @@ jobs:
           python3 Scripts/reference-data/build-fixtures.py --check
           python3 -m unittest Scripts/test_eclipse_event_evidence.py -v
           python3 Scripts/record-eclipse-event-evidence.py --check
+          python3 -m unittest Scripts/test_global_solar.py -v
+          python3 Scripts/capture-global-solar.py --check
+          python3 Scripts/assess-global-solar-radii.py --check
+          python3 Scripts/record-global-solar-evidence.py --check
 
       - name: Verify native solar numerical tools
         run: |
@@ -154,6 +158,10 @@ jobs:
         run: |
           python3 -m unittest Scripts.reference-data.test_build_fixtures.LunarEclipseFixtureTests Scripts/test_eclipse_event_evidence.py -v
           python3 Scripts/record-eclipse-event-evidence.py --check
+          python3 -m unittest Scripts/test_global_solar.py -v
+          python3 Scripts/capture-global-solar.py --check
+          python3 Scripts/assess-global-solar-radii.py --check
+          python3 Scripts/record-global-solar-evidence.py --check
 
       - name: Verify work-avoidance paths
         run: |

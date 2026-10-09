@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "sha256": "feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956",
+  "subject": "solar eclipses",
+  "timeScale": "geometry",
+  "url": "https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/mean-lunar-radius.html"
+}

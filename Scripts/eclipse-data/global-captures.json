@@ -1,0 +1,269 @@
+{
+  "buildReceipts": {
+    "debug": "Build complete! (9.64 sec)",
+    "release": "Build complete! (112.41 sec)"
+  },
+  "debug": {
+    "area": [
+      {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7847310562547,
+        "moonRadiusRadians": 0.004344926615857783,
+        "obscuration": 0.8894664439284661,
+        "separationRadians": 1.177569344012831e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.784722222222,
+        "sunRadiusRadians": 0.004606994157896881,
+        "tt": -2061.7840335648148
+      },
+      {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7812588341244,
+        "moonRadiusRadians": 0.004344936785425717,
+        "obscuration": 0.8894720440572418,
+        "separationRadians": 2.387624894196368e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.78125,
+        "sunRadiusRadians": 0.004606990437942518,
+        "tt": -2061.7805613425926
+      },
+      {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7837244912603,
+        "moonRadiusRadians": 0.004344943287681772,
+        "obscuration": 0.8894736711708832,
+        "separationRadians": 6.206335383118183e-17,
+        "sourceDeltaTSeconds": null,
+        "sourceUT": null,
+        "sunRadiusRadians": 0.004606993118574747,
+        "tt": -2061.783026999794
+      }
+    ],
+    "published": [
+      {
+        "distanceKm": 3906.827761278141,
+        "id": "1800-04-24T00:24:00Z",
+        "kind": "annular",
+        "latitude": 45.711472048222035,
+        "longitude": 151.3421752786847,
+        "obscuration": 0.8868074430690518,
+        "physicalTT": -72935.48336319008,
+        "sourceTT": -72935.48333333334,
+        "tt": -72935.48336319008,
+        "ut": -72935.48352080396
+      },
+      {
+        "distanceKm": 2188.50535468373,
+        "id": "2024-04-08T18:18:29Z",
+        "kind": "total",
+        "latitude": 25.29183129421714,
+        "longitude": -104.11904225666002,
+        "obscuration": 1,
+        "physicalTT": 8864.26283212943,
+        "sourceTT": 8864.262835648147,
+        "tt": 8864.26283212943,
+        "ut": 8864.261975288266
+      },
+      {
+        "distanceKm": 2561.7974750725302,
+        "id": "2099-03-21T22:54:32Z",
+        "kind": "annular",
+        "latitude": -20.021914843052723,
+        "longitude": -149.04038250148312,
+        "obscuration": 0.8681975814164765,
+        "physicalTT": 36239.45451844626,
+        "sourceTT": 36239.45453703704,
+        "tt": 36239.45451844626,
+        "ut": 36239.45219318048
+      },
+      {
+        "distanceKm": 6377.93620192099,
+        "id": "2014-04-29",
+        "kind": "annular",
+        "latitude": -70.69724180354977,
+        "longitude": 131.12803691518383,
+        "obscuration": 0.9686646084576606,
+        "physicalTT": 5231.753141287304,
+        "sourceTT": 5231.753159722222,
+        "tt": 5231.753141287304,
+        "ut": 5231.752346362685
+      },
+      {
+        "distanceKm": 2520.429937455561,
+        "id": "2023-04-20",
+        "kind": "total",
+        "latitude": -9.595781127425113,
+        "longitude": 125.79611661918563,
+        "obscuration": 1,
+        "physicalTT": 8509.679102627637,
+        "sourceTT": 8509.67912037037,
+        "tt": 8509.679102627637,
+        "ut": 8509.67825239315
+      },
+      {
+        "distanceKm": 6636.575519141165,
+        "id": "2025-03-29",
+        "kind": "partial",
+        "latitude": null,
+        "longitude": null,
+        "obscuration": null,
+        "physicalTT": 9218.950402018767,
+        "sourceTT": 9218.950416666667,
+        "tt": 9218.950402018767,
+        "ut": 9218.949538455843
+      },
+      {
+        "distanceKm": 6398.117540987323,
+        "id": "2043-04-09",
+        "kind": "total",
+        "latitude": 61.459792519729845,
+        "longitude": 151.80984572509294,
+        "obscuration": 1,
+        "physicalTT": 15804.290139280934,
+        "sourceTT": 15804.290150462963,
+        "tt": 15804.290139280934,
+        "ut": 15804.289128574119
+      }
+    ]
+  },
+  "release": {
+    "area": [
+      {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7847310562547,
+        "moonRadiusRadians": 0.004344926615857783,
+        "obscuration": 0.8894664439284661,
+        "separationRadians": 1.177569344012831e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.784722222222,
+        "sunRadiusRadians": 0.004606994157896881,
+        "tt": -2061.7840335648148
+      },
+      {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7812588341244,
+        "moonRadiusRadians": 0.004344936785425717,
+        "obscuration": 0.8894720440572418,
+        "separationRadians": 2.387624894196368e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.78125,
+        "sunRadiusRadians": 0.004606990437942518,
+        "tt": -2061.7805613425926
+      },
+      {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7837244912603,
+        "moonRadiusRadians": 0.004344943287681772,
+        "obscuration": 0.8894736711708832,
+        "separationRadians": 6.206335383118183e-17,
+        "sourceDeltaTSeconds": null,
+        "sourceUT": null,
+        "sunRadiusRadians": 0.004606993118574747,
+        "tt": -2061.783026999794
+      }
+    ],
+    "published": [
+      {
+        "distanceKm": 3906.827761278141,
+        "id": "1800-04-24T00:24:00Z",
+        "kind": "annular",
+        "latitude": 45.711472048222035,
+        "longitude": 151.3421752786847,
+        "obscuration": 0.8868074430690518,
+        "physicalTT": -72935.48336319008,
+        "sourceTT": -72935.48333333334,
+        "tt": -72935.48336319008,
+        "ut": -72935.48352080396
+      },
+      {
+        "distanceKm": 2188.50535468373,
+        "id": "2024-04-08T18:18:29Z",
+        "kind": "total",
+        "latitude": 25.29183129421714,
+        "longitude": -104.11904225666002,
+        "obscuration": 1,
+        "physicalTT": 8864.26283212943,
+        "sourceTT": 8864.262835648147,
+        "tt": 8864.26283212943,
+        "ut": 8864.261975288266
+      },
+      {
+        "distanceKm": 2561.7974750725302,
+        "id": "2099-03-21T22:54:32Z",
+        "kind": "annular",
+        "latitude": -20.021914843052723,
+        "longitude": -149.04038250148312,
+        "obscuration": 0.8681975814164765,
+        "physicalTT": 36239.45451844626,
+        "sourceTT": 36239.45453703704,
+        "tt": 36239.45451844626,
+        "ut": 36239.45219318048
+      },
+      {
+        "distanceKm": 6377.93620192099,
+        "id": "2014-04-29",
+        "kind": "annular",
+        "latitude": -70.69724180354977,
+        "longitude": 131.12803691518383,
+        "obscuration": 0.9686646084576606,
+        "physicalTT": 5231.753141287304,
+        "sourceTT": 5231.753159722222,
+        "tt": 5231.753141287304,
+        "ut": 5231.752346362685
+      },
+      {
+        "distanceKm": 2520.429937455561,
+        "id": "2023-04-20",
+        "kind": "total",
+        "latitude": -9.595781127425113,
+        "longitude": 125.79611661918563,
+        "obscuration": 1,
+        "physicalTT": 8509.679102627637,
+        "sourceTT": 8509.67912037037,
+        "tt": 8509.679102627637,
+        "ut": 8509.67825239315
+      },
+      {
+        "distanceKm": 6636.575519141165,
+        "id": "2025-03-29",
+        "kind": "partial",
+        "latitude": null,
+        "longitude": null,
+        "obscuration": null,
+        "physicalTT": 9218.950402018767,
+        "sourceTT": 9218.950416666667,
+        "tt": 9218.950402018767,
+        "ut": 9218.949538455843
+      },
+      {
+        "distanceKm": 6398.117540987323,
+        "id": "2043-04-09",
+        "kind": "total",
+        "latitude": 61.459792519729845,
+        "longitude": 151.80984572509294,
+        "obscuration": 1,
+        "physicalTT": 15804.290139280934,
+        "sourceTT": 15804.290150462963,
+        "tt": 15804.290139280934,
+        "ut": 15804.289128574119
+      }
+    ]
+  },
+  "releaseExecutableBytes": 164521440,
+  "releaseObjectBytes": {
+    "EngineGeoidIntersection.o": 31608,
+    "EngineGlobalSolarEvents.o": 94368
+  },
+  "resources": {
+    "checksum": -2866939.3761416273,
+    "coldSeconds": 0.03156590461730957,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "nextCount": 99,
+    "nextSeconds": 0.06948709487915039,
+    "peakAfterColdBytes": 161546240,
+    "peakAfterWorkloadBytes": 161562624,
+    "peakBeforeBytes": 46956544
+  },
+  "runtimeBaseRevision": "d6f6de0e151815aa9ec92a2dcf97d65fdc2d4d73",
+  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+}

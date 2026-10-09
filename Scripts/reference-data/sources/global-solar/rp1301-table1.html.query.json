@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "sha256": "a9952d45c37aea7207fffbc60a799e3f9488830f754fc72fb0b869c0a7fe6213",
+  "subject": "solar eclipses",
+  "timeScale": "TDT",
+  "url": "https://eclipse.gsfc.nasa.gov/SEpubs/19940510/tables/table.1"
+}

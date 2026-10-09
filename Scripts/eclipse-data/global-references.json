@@ -1,0 +1,108 @@
+{
+  "boundary1986": {
+    "catalogSource": "nasa-solar-1901.html",
+    "date": "1986-10-03",
+    "limbSource": "rp1301-lunar-radius.html",
+    "magnitude": 1.0,
+    "observedLimbKind": "beaded annular",
+    "pathType": "H",
+    "printedMagnitude": "1.0000",
+    "timeScale": "TD",
+    "tt": -4837.703993055556
+  },
+  "events": [
+    {
+      "catalogDeltaTSeconds": 69,
+      "date": "2014-04-29",
+      "gammaEarthRadii": -1.0,
+      "kindAtPeak": "annular",
+      "latitude": -70.6,
+      "locationToleranceDegrees": 0.247,
+      "longitude": 131.3,
+      "magnitude": 0.9868,
+      "pathType": "A-",
+      "timeToleranceSeconds": 453.6,
+      "tt": 5231.753159722222
+    },
+    {
+      "catalogDeltaTSeconds": 73,
+      "date": "2023-04-20",
+      "gammaEarthRadii": -0.3952,
+      "kindAtPeak": "total",
+      "latitude": -9.6,
+      "locationToleranceDegrees": 0.247,
+      "longitude": 125.8,
+      "magnitude": 1.0132,
+      "pathType": "H",
+      "timeToleranceSeconds": 453.6,
+      "tt": 8509.67912037037
+    },
+    {
+      "catalogDeltaTSeconds": 75,
+      "date": "2025-03-29",
+      "gammaEarthRadii": 1.0405,
+      "kindAtPeak": "partial",
+      "latitude": 61.1,
+      "locationToleranceDegrees": 0.247,
+      "longitude": -77.1,
+      "magnitude": 0.9376,
+      "pathType": "P",
+      "timeToleranceSeconds": 453.6,
+      "tt": 9218.950416666667
+    },
+    {
+      "catalogDeltaTSeconds": 87,
+      "date": "2043-04-09",
+      "gammaEarthRadii": 1.0031,
+      "kindAtPeak": "total",
+      "latitude": 61.3,
+      "locationToleranceDegrees": 0.247,
+      "longitude": 152.0,
+      "magnitude": 1.0095,
+      "pathType": "T+",
+      "timeToleranceSeconds": 453.6,
+      "tt": 15804.290150462963
+    }
+  ],
+  "rounding": "conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted",
+  "rp1301": {
+    "deltaTSeconds": 59.5,
+    "greatestDiameterRatio": 0.94314,
+    "greatestTT": -2061.783026999794,
+    "k1": 0.2725076,
+    "k2": 0.272281,
+    "model": "DE200/LE200",
+    "moonK1GeocentricSemidiameterArcseconds": 884.08,
+    "moonParallaxArcseconds": 3244.35,
+    "ratioLower": 0.943135,
+    "ratioUpper": 0.943145,
+    "samples": [
+      {
+        "diameterRatio": 0.9431,
+        "lower": 0.88945,
+        "obscuration": 0.8895,
+        "tt": -2061.7840335648148,
+        "upper": 0.88955,
+        "ut": -2061.784722222222
+      },
+      {
+        "diameterRatio": 0.9431,
+        "lower": 0.88945,
+        "obscuration": 0.8895,
+        "tt": -2061.7805613425926,
+        "upper": 0.88955,
+        "ut": -2061.78125
+      }
+    ],
+    "sunGeocentricSemidiameterArcseconds": 950.22
+  },
+  "schemaVersion": 1,
+  "sourceHashes": {
+    "nasa-solar-1901.html": "1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff",
+    "rp1301-lunar-radius.html": "feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956",
+    "rp1301-parameters.html": "2d34652d03f95e0ec8c4d0fff292f0b8ab3527044005acbadac70a0b0f0eb7c5",
+    "rp1301-table1.html": "a9952d45c37aea7207fffbc60a799e3f9488830f754fc72fb0b869c0a7fe6213",
+    "rp1301-table4.html": "0b6c2c938b181a85c457bafd7bd442115ef93a620021589f76a8f12a94ae9e28",
+    "solar_2001.html": "820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d"
+  }
+}

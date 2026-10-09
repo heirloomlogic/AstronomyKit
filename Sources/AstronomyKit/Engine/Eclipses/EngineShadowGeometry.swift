@@ -25,9 +25,12 @@ extension Engine.Shadows {
     static func calculate<F>(
         bodyRadiusKilometers: Double,
         target: Engine.Vector<F>,
-        direction: Engine.Vector<F>
+        direction: Engine.Vector<F>,
+        sunRadiusKilometers: Double = sunRadiusKilometers
     ) throws -> Shadow<F> {
-        guard bodyRadiusKilometers > 0, bodyRadiusKilometers.isFinite else {
+        guard bodyRadiusKilometers > 0, bodyRadiusKilometers.isFinite,
+            sunRadiusKilometers > bodyRadiusKilometers, sunRadiusKilometers.isFinite
+        else {
             throw AstronomyError.invalidParameter
         }
         let directionSquared = direction.x * direction.x + direction.y * direction.y + direction.z * direction.z
