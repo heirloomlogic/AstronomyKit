@@ -1,0 +1,7 @@
+{
+  "method": "GET",
+  "sha256": "bcc186a518298636340e7975bf5a32da660cd656b90081f2e7c8aa7ec2b6561a",
+  "subject": "sun volumetric mean radius",
+  "units": "km",
+  "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html"
+}

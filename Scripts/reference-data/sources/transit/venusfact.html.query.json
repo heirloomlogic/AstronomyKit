@@ -1,0 +1,7 @@
+{
+  "method": "GET",
+  "sha256": "473c61da0bf7188764ec8ae5b12c0fdc9f922bccd9e3f6b47c885fef0723541c",
+  "subject": "venus volumetric mean radius",
+  "units": "km",
+  "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html"
+}

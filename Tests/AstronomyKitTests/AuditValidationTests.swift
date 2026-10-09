@@ -382,18 +382,18 @@ struct AuditValidationTests {
 
     @Test("NASA planetary transit contacts", arguments: IndependentReferenceArchive.shared.transits)
     func planetaryTransit(reference: IndependentReferenceArchive.Transit) throws {
-        let expectedPeak = IndependentReferenceDate.civil(reference.peakUTC)
+        let expectedPeak = IndependentReferenceDate.universal(reference.peakUTC, deltaTModel: .espenakMeeus)
         let actual = try Transit.search(
             body: body(named: reference.body), after: expectedPeak.addingDays(-100))
         #expect(
-            IndependentReferenceDate.seconds(
-                actual.start, IndependentReferenceDate.civil(reference.startUTC))
+            IndependentReferenceDate.universalSeconds(
+                actual.start, IndependentReferenceDate.universal(reference.startUTC, deltaTModel: .espenakMeeus))
                 <= reference.timeToleranceSeconds)
         #expect(
-            IndependentReferenceDate.seconds(actual.peak, expectedPeak) <= reference.timeToleranceSeconds)
+            IndependentReferenceDate.universalSeconds(actual.peak, expectedPeak) <= reference.timeToleranceSeconds)
         #expect(
-            IndependentReferenceDate.seconds(
-                actual.finish, IndependentReferenceDate.civil(reference.finishUTC))
+            IndependentReferenceDate.universalSeconds(
+                actual.finish, IndependentReferenceDate.universal(reference.finishUTC, deltaTModel: .espenakMeeus))
                 <= reference.timeToleranceSeconds)
         #expect(
             abs(actual.separation - reference.separationArcminutes)

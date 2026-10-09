@@ -1,53 +1,270 @@
 {
-  "baselineRevision": "39954da87cb083ef9e39ee5bddb4a4bc895bd5e7",
   "buildSeconds": {
     "debug": 1.0,
     "release": 117.34
   },
-  "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. Two NASA SVS Moon-disc obscurations fall inside intervals inferred from the printed percentages under a nearest-0.1-percentage-point rounding assumption. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
-  "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. Both obscuration references come from one NASA SVS publisher and DE421/LOLA model family. The pages do not publish their exact rounding rule, lunar and shadow radii, or full-precision area algorithm, so interval agreement does not establish algorithm replication. Public eclipse facades remain C-backed until #96. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
-  "published": {
-    "maximumObscurationResidualFromPrintedFraction": 0.0004997639053458958,
-    "maximumPartialDurationResidualMinutes": 0.9746688231825829,
-    "maximumPeakResidualSeconds": 31.450777204531732,
-    "maximumPenumbralDurationResidualMinutes": 0.023154153821451473,
-    "maximumTotalDurationResidualMinutes": 0.4741875727273168,
-    "minimumObscurationMarginInsidePrintInterval": 2.3609465404916818e-07,
-    "obscurationRows": 2,
-    "rows": 6
+  "limitations": "Sampled independent UT contacts/angular minima and published next identities, not full-domain accuracy. Physical spheres use NASA fact-sheet mean radii; these are not attributed to the Meeus catalog. Apparent vectors retain engine light-time/aberration conventions. OH2001 December penumbral contacts remain outside 120 s; matching Danjon diagrams are separately qualified. Global G0/1986 and local peak limitations remain in their evidence owners. Public routing stays C under #96; host costs are not portable gates.",
+  "published": [
+    {
+      "body": "mercury",
+      "correctedPublicPeakResidualSeconds": 38.45564507282688,
+      "formerPublicPeakResidualSeconds": 38.727386897517135,
+      "seconds": {
+        "finish": -22.06090787440189,
+        "peak": 23.85298518856871,
+        "start": 4.778961247211555
+      },
+      "separationResidualArcminutes": 0.00034766429181232184,
+      "sourceUT": "2003-05-07T07:52Z"
+    },
+    {
+      "body": "mercury",
+      "correctedPublicPeakResidualSeconds": -14.46567501698155,
+      "formerPublicPeakResidualSeconds": -12.147178442683071,
+      "seconds": {
+        "finish": 7.716604694724083,
+        "peak": -14.40080065804068,
+        "start": 28.732271294575185
+      },
+      "separationResidualArcminutes": 0.0005967878361796686,
+      "sourceUT": "2019-11-11T15:20Z"
+    },
+    {
+      "body": "mercury",
+      "correctedPublicPeakResidualSeconds": 18.376525060739368,
+      "formerPublicPeakResidualSeconds": 41.58826768398285,
+      "seconds": {
+        "finish": 30.148036032915115,
+        "peak": 10.794451483525336,
+        "start": 44.18936785077676
+      },
+      "separationResidualArcminutes": 0.00020050171247909532,
+      "sourceUT": "2049-05-07T14:24Z"
+    },
+    {
+      "body": "venus",
+      "correctedPublicPeakResidualSeconds": 35.19139123382047,
+      "formerPublicPeakResidualSeconds": 36.777323196292855,
+      "seconds": {
+        "finish": 22.7172944432823,
+        "peak": 35.21594617632218,
+        "start": 47.531062440248206
+      },
+      "separationResidualArcminutes": -0.0002787105081161201,
+      "sourceUT": "2012-06-06T01:29Z"
+    },
+    {
+      "body": "venus",
+      "correctedPublicPeakResidualSeconds": 2.530170721001923,
+      "formerPublicPeakResidualSeconds": 179.27296897396445,
+      "seconds": {
+        "finish": -19.349965453147888,
+        "peak": 2.415353525429964,
+        "start": 24.653604836203158
+      },
+      "separationResidualArcminutes": 0.0004840725001606927,
+      "sourceUT": "2117-12-11T02:48Z"
+    },
+    {
+      "body": "venus",
+      "correctedPublicPeakResidualSeconds": 22.992133512161672,
+      "formerPublicPeakResidualSeconds": 219.67835859395564,
+      "seconds": {
+        "finish": -16.999011975713074,
+        "peak": 22.79149149544537,
+        "start": 2.9129883740097284
+      },
+      "separationResidualArcminutes": -6.783375705232686e-05,
+      "sourceUT": "2125-12-08T16:01Z"
+    }
+  ],
+  "radiusConventions": {
+    "mercury": {
+      "convention": "NASA fact-sheet volumetric mean radius; engine spherical-disc approximation, not a claim about Meeus catalog constants",
+      "radiusKilometers": 2439.7,
+      "sha256": "170d9f2d2ba7f7ae322c68d473ccb0b35ab94f4b4aca197bf74fe3b7e4e10f3f",
+      "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/mercuryfact.html"
+    },
+    "sun": {
+      "convention": "NASA fact-sheet volumetric mean radius; engine spherical-disc approximation, not a claim about Meeus catalog constants",
+      "radiusKilometers": 695700.0,
+      "sha256": "bcc186a518298636340e7975bf5a32da660cd656b90081f2e7c8aa7ec2b6561a",
+      "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html"
+    },
+    "venus": {
+      "convention": "NASA fact-sheet volumetric mean radius; engine spherical-disc approximation, not a claim about Meeus catalog constants",
+      "radiusKilometers": 6051.8,
+      "sha256": "473c61da0bf7188764ec8ae5b12c0fdc9f922bccd9e3f6b47c885fef0723541c",
+      "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html"
+    }
   },
   "releaseExecutableBytes": 165038480,
   "releaseObjectBytes": {
-    "EngineEclipseEvents.o": 106824,
-    "EngineShadowGeometry.o": 31240
+    "EngineTransitEvents.o": 45664
   },
   "resources": {
-    "checksum": -2855994.8865676024,
-    "coldSeconds": 0.030810952186584473,
+    "checksum": 537515.4328593763,
+    "coldSeconds": 0.005983948707580566,
     "host": "Version 27.0.1 (Build 26A434)",
-    "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 0.07674300670623779,
-    "peakAfterColdBytes": 163758080,
-    "peakAfterWorkloadBytes": 163758080,
-    "peakBeforeBytes": 49233920,
-    "totalEclipseCount": 100
+    "nextCount": 19,
+    "nextSeconds": 0.40755510330200195,
+    "peakAfterColdBytes": 63471616,
+    "peakAfterWorkloadBytes": 64274432,
+    "peakBeforeBytes": 46710784
   },
+  "runtimeBaseRevision": "39954da87cb083ef9e39ee5bddb4a4bc895bd5e7",
   "schemaVersion": 1,
-  "sourceSHA256": {
-    "Scripts/eclipse-data/native-captures.json": "938d7daed54acd2c303e9b45df58c4ad914b9922bb6db6bf95928add79c60147",
+  "sequences": {
+    "global": [
+      {
+        "date": "2024-04-08",
+        "seconds": -0.304017128655687
+      },
+      {
+        "date": "2024-10-02",
+        "seconds": -1.006719481665641
+      },
+      {
+        "date": "2025-03-29",
+        "seconds": -1.265578530728817
+      }
+    ],
+    "penumbralContacts": [
+      {
+        "danjonDiagramResidualSeconds": {
+          "penumbralBegin": -1.4976696085795993,
+          "penumbralEnd": -1.3941820530817495
+        },
+        "date": "2001-01-09",
+        "oh2001ResidualSeconds": {
+          "penumbralBegin": 94.50233039297018,
+          "penumbralEnd": -86.39418205184484
+        },
+        "oh2001Within120Seconds": {
+          "penumbralBegin": true,
+          "penumbralEnd": true
+        },
+        "scope": "Independent source/model comparisons. December OH2001 failures remain unmet for that older convention; matching Danjon contacts do not make those comparisons pass.",
+        "toleranceSeconds": 120
+      },
+      {
+        "danjonDiagramResidualSeconds": {
+          "penumbralBegin": -0.0560569667868549,
+          "penumbralEnd": -2.7140224759932607
+        },
+        "date": "2001-07-05",
+        "oh2001ResidualSeconds": {
+          "penumbralBegin": 119.94394303146692,
+          "penumbralEnd": -110.71402247835067
+        },
+        "oh2001Within120Seconds": {
+          "penumbralBegin": true,
+          "penumbralEnd": true
+        },
+        "scope": "Independent source/model comparisons. December OH2001 failures remain unmet for that older convention; matching Danjon contacts do not make those comparisons pass.",
+        "toleranceSeconds": 120
+      },
+      {
+        "danjonDiagramResidualSeconds": {
+          "penumbralBegin": 0.8778251285548322,
+          "penumbralEnd": -3.9006733295536833
+        },
+        "date": "2001-12-30",
+        "oh2001ResidualSeconds": {
+          "penumbralBegin": 131.87782512468402,
+          "penumbralEnd": -122.90067332978651
+        },
+        "oh2001Within120Seconds": {
+          "penumbralBegin": false,
+          "penumbralEnd": false
+        },
+        "scope": "Independent source/model comparisons. December OH2001 failures remain unmet for that older convention; matching Danjon contacts do not make those comparisons pass.",
+        "toleranceSeconds": 120
+      }
+    ],
+    "transits": [
+      {
+        "body": "mercury",
+        "date": "2003-05-07",
+        "seconds": {
+          "finish": -22.06090787440189,
+          "peak": 23.85298518856871,
+          "start": 4.778961247211555
+        },
+        "separationResidualArcminutes": 0.00034766429181232184
+      },
+      {
+        "body": "mercury",
+        "date": "2006-11-08",
+        "seconds": {
+          "finish": 3.8310992473270744,
+          "peak": 3.8115212693810463,
+          "start": 8.517381876299623
+        },
+        "separationResidualArcminutes": 0.00024068655715137055
+      },
+      {
+        "body": "venus",
+        "date": "2012-06-06",
+        "seconds": {
+          "finish": 22.7172944432823,
+          "peak": 35.21594617632218,
+          "start": 47.531062440248206
+        },
+        "separationResidualArcminutes": -0.0002787105081161201
+      },
+      {
+        "body": "venus",
+        "date": "2117-12-11",
+        "seconds": {
+          "finish": -19.349965453147888,
+          "peak": 2.415353525429964,
+          "start": 24.653604836203158
+        },
+        "separationResidualArcminutes": 0.0004840725001606927
+      },
+      {
+        "body": "venus",
+        "date": "2125-12-08",
+        "seconds": {
+          "finish": -16.999011975713074,
+          "peak": 22.79149149544537,
+          "start": 2.9129883740097284
+        },
+        "separationResidualArcminutes": -6.783375705232686e-05
+      }
+    ]
+  },
+  "sourceHashes": {
+    "Scripts/capture-global-solar.py": "5a7507b7681f194c6ea0cfe88a617bc0d04d4efa0f451595828098d72e0758c9",
+    "Scripts/capture-transit-references.py": "353dbde0ada3434cb96205cffc0aeda8fff46142b876c99015246c805daee224",
+    "Scripts/eclipse-data/transit-captures.json": "35601f3c964fe544189f385cc80fd4412b3eb76f4935a34b36888e8021247b7e",
+    "Scripts/eclipse-data/transit-references.json": "cc822496e688ba73e8d9e83d1aaab071d436bebf24c964bb4ca4537218d543bb",
     "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
+    "Scripts/record-transit-evidence.py": "76dc2d1a795e4e02daf0766cecf9fef89959b18809e6d571ce4bfef2b0bcfb64",
     "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
-    "Scripts/reference-data/sources/lunar_1701.html": "15ed1e6e6b1153f6c85e724258aa91e23655fecb08ac7623fd6e2b4b1d8199f7",
-    "Scripts/reference-data/sources/lunar_1901.html": "587cf5bf48e1b9f17b0e2b6d72d42fc81828f62e9a9252d7f661a747b95154ca",
-    "Scripts/reference-data/sources/lunar_2001.html": "cf12604099d2ed7766180139a4e79633ae361dd9030e2bd618f8b3eadaefde72",
-    "Scripts/reference-data/sources/nasa-lunar-2001-2100.html": "0f640913669a640418f05c173cea0bdeca194fcac6b5b196b6b9ab1b08122792",
+    "Scripts/reference-data/sources/mercury.html": "e29ff3e1ada11eaee343032f0c5b927ccf9a9b2cacad8e006a2bd6b4fc71ba40",
     "Scripts/reference-data/sources/nasa-oh2001.html": "09a0c66a75942e594f7cd1d7b02c85a4e7f73594b8e64669a0a324926d6cb873",
-    "Scripts/reference-data/sources/nasa-shadow-enlargement.html": "95b466d625a292a16f3d6f1a3aa9e7e4fb5224a2e13b4fd9a5252ff5de20841f",
-    "Scripts/reference-data/sources/nasa-svs-4953.html": "e58a5ce4ebe1b59779dc931f374d8e44c5b299beaa9db5fea024065c39d61f8e",
-    "Scripts/reference-data/sources/nasa-svs-5672.html": "58c3f58627ad6846c41391280f8fbb90e5c7cff2623f229cfa465d5bc620af4e",
-    "Scripts/test_eclipse_event_evidence.py": "8cdae1d2a32496c387f23a597a8d6ce51b9dc5a902e7674b7424cd3676ed1fc4",
+    "Scripts/reference-data/sources/solar_2001.html": "820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d",
+    "Scripts/reference-data/sources/transit/LE2001Dec30N.pdf": "fc9c7bd2d601a75f974bb6534545b32c1adbcf5df4585ac86fb59c603fd871a9",
+    "Scripts/reference-data/sources/transit/LE2001Dec30N.pdf.query.json": "4ad86bd1af5f56828960d41e1e1a49836744a43c9f0168c8193e3a8b089f37d8",
+    "Scripts/reference-data/sources/transit/LE2001Jan09T.pdf": "30b36c9619634f0d4a362101097cf0502048e58b51ba62485b411f50d6a63024",
+    "Scripts/reference-data/sources/transit/LE2001Jan09T.pdf.query.json": "06c4874c68e8fa02a98943366da09c9093e8c3d9e56cd96745a35af9862476b9",
+    "Scripts/reference-data/sources/transit/LE2001Jul05P.pdf": "4aecb526a5b2a44fd84e791cb0018e408e3ad4a99a9a5b82aa4dc96774d34b03",
+    "Scripts/reference-data/sources/transit/LE2001Jul05P.pdf.query.json": "4a689f69065ca9987d311bebd064a2b4a25bdbb03ec8429da87ed7172b264d08",
+    "Scripts/reference-data/sources/transit/lunar-diagram-transcription.json": "739f7b9c89107db68d86f3f76710b85d6b7d4fba71114d6c45911451f1ca73fd",
+    "Scripts/reference-data/sources/transit/mercuryfact.html": "170d9f2d2ba7f7ae322c68d473ccb0b35ab94f4b4aca197bf74fe3b7e4e10f3f",
+    "Scripts/reference-data/sources/transit/mercuryfact.html.query.json": "1fc4bc00160ba26561b5c3ee0ad9d2f78b88eb3b01d642d41250013cd7c85310",
+    "Scripts/reference-data/sources/transit/sunfact.html": "bcc186a518298636340e7975bf5a32da660cd656b90081f2e7c8aa7ec2b6561a",
+    "Scripts/reference-data/sources/transit/sunfact.html.query.json": "015204277254b645ce9c34306243d228596bad35b768063231947849a59fde18",
+    "Scripts/reference-data/sources/transit/venusfact.html": "473c61da0bf7188764ec8ae5b12c0fdc9f922bccd9e3f6b47c885fef0723541c",
+    "Scripts/reference-data/sources/transit/venusfact.html.query.json": "7da22e95fade9ab13a649655a650aafecd7a8bceaa762f56b38a47999322ea30",
+    "Scripts/reference-data/sources/venus.html": "c06f2f10efc8554328bb51ed1725d13f1ec53a5a82a0c25089dcf1104994ca7f",
+    "Scripts/test_transit_evidence.py": "1c1d357b43edb7fefbfdf06853a23bba786aab6ca7604eca754462f98fe2217a",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
+    "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
     "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
+    "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
@@ -138,7 +355,13 @@
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "1e7d556d94b09301aac6535d71347adfae546d437140867c19aa59601602efe8",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
     "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
-    "Tests/AstronomyKitTests/Engine/Eclipses/EngineEclipseEventTests.swift": "1abe935daa5f26ad25c2f454850f39c5774cf3e929259a350cb1bb199b38941d",
+    "Sources/AstronomyKit/Transit.swift": "506eec46785f547500396747963463e774e0113d8bfdc0c383744da01cfbc2e9",
+    "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
+    "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
+    "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "ffcd7f57aeb09966520e36a87893bdcf174fdd255250ea308eb4e6e532a62192",
+    "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
+    "Tests/AstronomyKitTests/Engine/Eclipses/EngineTransitEventTests.swift": "b7dea2ea02bc5f8484509a2c32b010c7970d37b0be5c80ac017222dff77ca02c",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "93ba4b8e4784b25c4868a02e2d2f9e3d0219432a58a879f81248fbbb035b1728"
   },
