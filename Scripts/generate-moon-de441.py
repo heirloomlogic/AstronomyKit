@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "Scripts/moon-data/de441-compact-evidence.json"
-OUTPUT = ROOT / "Sources/AstronomyKit/Engine/Moon/Generated/MoonDE441Data.swift"
+OUTPUT = ROOT / "Sources/AstronomyKit/Engine/Moon/Generated/DE441/MoonDE441Data.swift"
 
 
 def validate(data, candidate):
@@ -104,6 +104,7 @@ def main():
             raise SystemExit("Generated DE441 Moon table differs")
         print("Verified generated DE441 Moon table")
     else:
+        OUTPUT.parent.mkdir(parents=True, exist_ok=True)
         OUTPUT.write_text(source)
         print(f"Wrote {OUTPUT.relative_to(ROOT)}")
 

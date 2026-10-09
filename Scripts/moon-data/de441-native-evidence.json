@@ -35,6 +35,11 @@
     "All record boundaries are checked, but integrated source states and event inputs are sampled. Full-range absolute velocity and event-time accuracy remain unqualified.",
     "Public Moon APIs still use C pending issue #96. Issue #184 remains open for link 4 qualification and closure work."
   ],
+  "maintenanceVerification": {
+    "change": "The DE441 Swift output moved byte-for-byte into Generated/DE441 so the legacy Moon generator owns only its direct Generated/*.swift outputs. Runtime source contents and qualified payload are unchanged from nativeMeasurementsCommit.",
+    "sourceHashScope": "Hashes identify current generation tooling and runtime sources; timing, RSS and object-size observations were recorded at nativeMeasurementsCommit."
+  },
+  "nativeMeasurementsCommit": "65f226abf40227e360314846fa60988db4702a50",
   "nativeRelease": {
     "checksum": -0.0156088671782274,
     "coldSeconds": 0.05508697032928467,
@@ -50,14 +55,14 @@
   },
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Scripts/generate-moon-de441.py": "67d41e37d494a9e4560cb1f31663fb76e479902707ccc032c1b0c97a7c334a2a",
+    "Scripts/generate-moon-de441.py": "b350b467dd0e9eb57fbe440a42a31e97b9d80edc612ad3281456d36b41ff7fbe",
     "Scripts/moon-data/de441-compact-evidence.json": "2b5d686303a7b638ae0ee6512574124ef22e7e1c77f9cf871397bbfc82307182",
     "Scripts/moon-data/de441-native-fixtures.json": "460f1f9a8b8abf7ef558443786bf39e270d5be883ab793475656f16711ceae3c",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
     "Sources/AstronomyKit/Engine/Moon/EngineMoon.swift": "a802e1a73089bc26e7b68e3927a4cf7dc3664fbc9c01cb0086565c7c218ef4eb",
     "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441.swift": "4835f666ca2fd7a9d1f5cb7de59f639ce8dc8f8fd93cd81b722cf34cf503c1d9",
     "Sources/AstronomyKit/Engine/Moon/EngineMoonStates.swift": "442cf8a11ac4b65d4e6fe7c230d73f4ff599584130272a1915d17794d1889e7a",
-    "Sources/AstronomyKit/Engine/Moon/Generated/MoonDE441Data.swift": "18183bac224958b016b9ee348a9d57c698efd8838eee7578f01af6add96102ae",
+    "Sources/AstronomyKit/Engine/Moon/Generated/DE441/MoonDE441Data.swift": "18183bac224958b016b9ee348a9d57c698efd8838eee7578f01af6add96102ae",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonDE441Tests.swift": "e32d04c005c9911c73f8484c77d28adc64203717329ae50d4defdbf572a6ab51",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonMeasurementTests.swift": "589676449093b0e3910ff50d8cef712fc82405992c08b6aa4c9dd4091ab810af",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonStatesTests.swift": "8ea0b2f1158df283509f598b4ee76e52f799374c324b06d16f02076863f2a2c4"
@@ -92,7 +97,7 @@
       "suites": 265,
       "tests": 1315
     },
-    "python": "23 tests pass on Python 3.11 and 3.14; embedded-data checks pass; Python 3.11 regenerates fixtures byte-identically.",
+    "python": "24 tests pass on Python 3.11 and 3.14, including both Moon generators through check/regeneration/fresh-output lifecycles without changing either payload; all seven CI-generated-table checks pass.",
     "tolerances": "Existing angular, distance, central state, event-input and derivative-consistency tolerances are retained. Raw sampled rates use the previously qualified representation bound, not a new physical velocity requirement."
   }
 }
