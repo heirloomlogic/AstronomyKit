@@ -95,6 +95,8 @@ extension Engine.Events {
             let next = time.adding(days: adjustment)
             try Engine.checkAcceptedTime(next)
             if abs(adjustment) * Engine.secondsPerDay < 1 {
+                _ = try relativeLongitudeOffset(
+                    body: body, time: next, direction: direction, targetDegrees: targetDegrees)
                 return next
             }
             guard next.ut != time.ut else { throw AstronomyError.noConvergence }

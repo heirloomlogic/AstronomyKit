@@ -195,4 +195,35 @@ struct EngineAngularEventTests {
             _ = try Engine.Events.searchRelativeLongitude(of: .mars, targetDegrees: 0, after: start)
         }
     }
+
+    @Test("Subsecond convergence validates Pluto's final event time against its source range")
+    func plutoFinalStepRange() throws {
+        let stepDegrees = 0.000_005_680_757_104_338_431
+
+        func target(after start: Engine.Time) throws -> Double {
+            let earth = try Engine.Positions.eclipticLongitude(of: .earth, at: start)
+            let pluto = try Engine.Positions.eclipticLongitude(of: .pluto, at: start)
+            return Engine.normalizedLongitude(earth - pluto + stepDegrees)
+        }
+
+        let endpoint = Engine.Time(tt: Engine.PlutoDE441.acceptedTTDays, deltaTModel: .jplHorizons)
+        let outsideTarget = try target(after: endpoint)
+        #expect(throws: AstronomyError.badTime) {
+            _ = try Engine.Events.searchRelativeLongitude(
+                of: .pluto,
+                targetDegrees: outsideTarget,
+                after: endpoint)
+        }
+
+        let inside = Engine.Time(
+            tt: Engine.PlutoDE441.acceptedTTDays - 1 / Engine.secondsPerDay,
+            deltaTModel: .jplHorizons)
+        let insideTarget = try target(after: inside)
+        let event = try Engine.Events.searchRelativeLongitude(
+            of: .pluto,
+            targetDegrees: insideTarget,
+            after: inside)
+        #expect(event.tt > inside.tt && event.tt < endpoint.tt)
+        _ = try Engine.Positions.eclipticLongitude(of: .pluto, at: event)
+    }
 }
