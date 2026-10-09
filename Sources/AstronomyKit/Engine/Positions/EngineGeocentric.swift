@@ -31,8 +31,14 @@ extension Engine.Positions {
     ) throws -> Engine.Vector<Engine.EQJ> {
         let fixedObserver = aberration == .none ? try heliocentricPosition(of: observer, at: time) : nil
         let vector = try Engine.LightTravel.correct(at: time) { backdated in
-            let origin = try fixedObserver ?? heliocentricPosition(of: observer, at: backdated)
-            let position = try heliocentricPosition(of: target, at: backdated)
+            func position(of body: CelestialBody) throws -> Engine.Vector<Engine.EQJ> {
+                if body == .pluto {
+                    return try Engine.Pluto.heliocentricPosition(forLightTimeAt: backdated, observedAt: time)
+                }
+                return try heliocentricPosition(of: body, at: backdated)
+            }
+            let origin = try fixedObserver ?? position(of: observer)
+            let position = try position(of: target)
             return Engine.Vector<Engine.EQJ>(
                 x: position.x - origin.x, y: position.y - origin.y, z: position.z - origin.z,
                 time: backdated)

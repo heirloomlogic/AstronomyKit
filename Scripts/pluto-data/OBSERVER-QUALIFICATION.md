@@ -22,9 +22,9 @@ Omitting Earth subtraction misses 1′ at all 20 epochs; omitting the frame conv
 
 ## Domain and remaining work
 
-The heliocentric state accepts both exact TT endpoints. Geocentric positions reject TT −766525 and −766524.9 for both aberration modes because their emission times precede the Pluto domain; −766524, +766524 and +766525 succeed. Nonfinite and out-of-range observations reject. The one-day margin used by the outer references is a sample selection, not a revised accepted range or a proven universal margin.
+The direct heliocentric state retains its exact TT ±766525-day range. Geocentric positions accept both endpoints for both aberration modes, including a 0.025-day grid through the first 0.3 days after the lower endpoint. Nonfinite and out-of-range observations reject. The light-time-only evaluator first validates the observation, preserves its Delta T model, requires finite internal scales no later than the observation, and permits earlier Pluto states only where the compiled Pluto and Sun tables overlap. Their joint TDB coverage is [−766536.5, +766535.5), derived from the generated table metadata rather than a fixed padding assumption.
 
-[Issue #227](https://github.com/heirloomlogic/AstronomyKit/issues/227) tracks this existing boundary gap. The same guard and retarded-time composition exist before the DE441 integration at 00119ad33521b67fa365b33d940404d5739e356b. Its resolution must reconcile observation availability with the owner-approved range. This final planned qualification link leaves that issue and #92/#96 open; it does not close #190 or propose another link.
+The endpoint tests cover `backdatedPosition`, position and state composition, ecliptic state and rate, equatorial and horizontal coordinates, solar angle, pair longitude, and elongation. A pinned internal state guards the source-backed position and velocity calculation. These composition checks do not independently qualify full-range velocity accuracy or event timing. The public API remains C-backed until #96, so this native change does not alter its behavior. #190 remains open for full-range physical-center qualification; #92 and #96 retain their existing scopes.
 
 ## Offline reproduction
 
@@ -39,4 +39,4 @@ python3 Scripts/capture-pluto-observers.py --check
 
 The record command binds outputs to the current native engine and test/capture sources. `--check` checks the archived measurements and bindings; it does not execute Swift. Rerun the two Swift commands to independently reproduce residuals. `--capture` explicitly fetches new publisher responses and replaces the fixtures; it is not part of offline verification and may require a new reviewed baseline if Horizons changes.
 
-Validation passed 1,328 full debug tests in 269 suites with 24 existing known issues, the focused release suite, 44 affected Python tests, all nine existing generated-data checks, the 139-source archive check, Python 3.11/3.14 replay, and changed Swift lint. The complete release suite passed on the unchanged production base; this test-only link reran its new release suite.
+Validation results for this implementation are recorded in the pull request. The reproduction commands above remain the authoritative way to refresh the source-bound artifact after engine or qualification-test changes.
