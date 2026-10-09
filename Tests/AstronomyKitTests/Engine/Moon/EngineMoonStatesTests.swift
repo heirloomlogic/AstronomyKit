@@ -18,7 +18,7 @@ struct EngineMoonStatesTests {
     static func time(tt: Double) -> Engine.Time { PlanetTestSupport.time(tt: tt) }
 
     /// TT instants on binary fractions of a day in each part of the model:
-    /// the series before and after DE440, both blends, and DE440 alone.
+    /// DE441 before and after DE440, both blends, and DE440 alone.
     static let instants: [Double] = [
         -1_000_000.25, -200_000.5, -36_540.0, -36_531.75, -36_524.5, -12_345.625, 0, 9_497.375, 47_846.5,
         47_850.125, 47_870.0, 200_000.25, 1_000_000.75,
@@ -103,19 +103,25 @@ struct EngineMoonStatesTests {
 
     // MARK: - Rates
 
-    /// A five-point difference on a 1/64-day stencil, whose own truncation
-    /// is below 1e-11 of the speed.
+    /// Fourth-order finite differences on a 1/64-day grid.
     static let step = 1.0 / 64
 
-    /// The allowed relative difference at `tt`. In the series the velocity
-    /// is a central difference over ±5e-4 day. Its truncation is about
-    /// (5e-4)²/6 · ω² ≈ 2e-9 of the speed for the Moon's ω ≈ 0.23 rad/day,
-    /// and the series rounds arguments that grow by 2π · 1,337 rad per
-    /// Julian century, which over that difference comes to about 4e-9 of
-    /// the speed per century from J2000. The allowance is 1e-8 for each, so
-    /// it grows with |t| in centuries.
+    /// The existing relative derivative tolerance, including argument-rounding growth with centuries from J2000.
     static func allowance(tt: Double) -> Double {
         1e-8 * (1 + abs(tt) / 36_525)
+    }
+
+    /// A central stencil requires smooth higher derivatives. Near a DE441 C1 knot, use the fourth-order stencil on the containing polynomial instead, retaining the same error tolerance.
+    static func derivativeWeights(tt: Double) -> [(Double, Double)] {
+        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        let phase = (tdb - Engine.MoonDE441.start).truncatingRemainder(dividingBy: 4)
+        if Engine.MoonEphemeris.weight(tt: tt).weight < 1 && (phase < 2 * step || phase > 4 - 2 * step) {
+            let direction = phase < 2 * step ? 1.0 : -1.0
+            return [(0, -25), (1, 48), (2, -36), (3, 16), (4, -3)].map {
+                (Double($0.0) * direction, Double($0.1) * direction)
+            }
+        }
+        return [(-2, 1), (-1, -8), (1, 8), (2, -1)]
     }
 
     @Test("The EQJ velocity is the derivative of the position", arguments: instants)
@@ -126,7 +132,9 @@ struct EngineMoonStatesTests {
             let vector = try Engine.Moon.geocentricPosition(at: Self.time(tt: tt + k * Self.step))
             return SIMD3(vector.x, vector.y, vector.z)
         }
-        let difference = try (p(-2) - 8 * p(-1) + 8 * p(1) - p(2)) / (12 * Self.step)
+        var difference = SIMD3<Double>()
+        for (offset, weight) in Self.derivativeWeights(tt: tt) { difference += try weight * p(offset) }
+        difference /= 12 * Self.step
         let speed = (velocity * velocity).sum().squareRoot()
         let error = EngineMoonEphemerisTests.largest(velocity - difference)
         #expect(error <= Self.allowance(tt: tt) * speed, "tt \(tt): \(error / speed) of the speed")
@@ -136,9 +144,10 @@ struct EngineMoonStatesTests {
     func eclipticRates(tt: Double) throws {
         let state = try Engine.Moon.eclipticState(at: Self.time(tt: tt))
         func derivative(_ field: @escaping (Engine.Spherical) -> Double) -> Double {
-            PublishedOrientation.derivative(at: tt, step: Self.step) { t in
-                (try? field(Engine.Moon.eclipticPosition(at: Self.time(tt: t)))) ?? .nan
-            }
+            Self.derivativeWeights(tt: tt).reduce(0.0) { total, term in
+                total + term.1
+                    * ((try? field(Engine.Moon.eclipticPosition(at: Self.time(tt: tt + term.0 * Self.step)))) ?? .nan)
+            } / (12 * Self.step)
         }
         // Unwrap longitude around the center value.
         let longitude = derivative { remainder($0.longitude - state.longitude, 360) }
@@ -157,14 +166,16 @@ struct EngineMoonStatesTests {
     /// speed against that test's 1e-8.
     @Test("The weight's rate times the models' separation is large enough for the velocity test to see")
     func blendRateMatters() throws {
-        let tt = Ephemeris.fullWeightStart - Ephemeris.blendDays / 2
+        let tt = Ephemeris.fullWeightStart - Ephemeris.blendDays / 2 + 1
         let (weight, rate) = Ephemeris.weight(tt: tt)
-        #expect(weight == 0.5 && rate > 0.04)
+        #expect(weight > 0 && weight < 1 && rate > 0.04)
         let source = try #require(Engine.Moon.meanEclipticSourceState(tt: tt))
-        let legacy = Engine.Moon.rectangular(Engine.LunarSeries.coordinates(centuries: tt / 36_525))
-        let term = rate * (source.position - legacy)
+        let outer = try #require(Engine.Moon.meanEclipticSourceState(tt: tt, compact: true)).position
+        let term = rate * (source.position - outer)
         let speed = (source.velocity * source.velocity).sum().squareRoot()
         #expect(EngineMoonEphemerisTests.largest(term) > 1e-6 * speed)
+        try velocity(tt: tt)
+        try eclipticRates(tt: tt)
     }
 
     // MARK: - Edges

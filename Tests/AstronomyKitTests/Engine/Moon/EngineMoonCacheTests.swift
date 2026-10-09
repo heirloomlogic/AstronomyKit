@@ -25,7 +25,7 @@ struct EngineMoonCacheTests {
         return (Cache(capacity: capacity, registry: registry), registry)
     }
 
-    /// Instants where the model is the series, a blend, and DE440 alone.
+    /// Instants where the model is DE441, a blend, and DE440 alone.
     static let series = 200_000.25
     static let blend = Engine.MoonEphemeris.fullWeightEnd + 16
     static let de440 = 9_497.375
@@ -43,25 +43,25 @@ struct EngineMoonCacheTests {
         #expect(own.count == 0)
     }
 
-    @Test("A repeated ecliptic state reads the same three epochs from the cache in the series")
-    func threeEpochs() throws {
+    @Test("A repeated ecliptic state reads the same one epoch from the cache in DE441")
+    func outerEpoch() throws {
         let (cache, _) = Self.makeCache()
         let time = Self.time(tt: Self.series)
         let first = try Engine.Moon.eclipticState(at: time, cache: cache)
-        #expect(cache.statistics == Statistics(hits: 0, misses: 3))
-        #expect(cache.count == 3)
+        #expect(cache.statistics == Statistics(hits: 0, misses: 1))
+        #expect(cache.count == 1)
         let second = try Engine.Moon.eclipticState(at: time, cache: cache)
-        #expect(cache.statistics == Statistics(hits: 3, misses: 3))
+        #expect(cache.statistics == Statistics(hits: 1, misses: 1))
         #expect(second.longitudeRate == first.longitudeRate && second.distanceRate == first.distanceRate)
         // The other state and both positions reuse the center epoch.
         _ = try Engine.Moon.geocentricState(at: time, cache: cache)
         _ = try Engine.Moon.barycenterState(at: time, cache: cache)
         _ = try Engine.Moon.geocentricPosition(at: time, cache: cache)
         _ = try Engine.Moon.eclipticPosition(at: time, cache: cache)
-        #expect(cache.statistics == Statistics(hits: 11, misses: 3))
+        #expect(cache.statistics == Statistics(hits: 5, misses: 1))
     }
 
-    @Test("Where DE440 has weight a state reads one cached epoch; the blend's series samples bypass the cache")
+    @Test("Both tables and their blend read one cached position epoch per state")
     func oneEpoch() throws {
         for tt in [Self.de440, Self.blend] {
             let (cache, _) = Self.makeCache()
@@ -78,7 +78,7 @@ struct EngineMoonCacheTests {
         let time = Self.time(tt: Self.series)
         let first = try Engine.Moon.eclipticState(at: time, cache: cache)
         let second = try Engine.Moon.eclipticState(at: time, cache: cache)
-        #expect(cache.statistics == Statistics(hits: 0, misses: 6))
+        #expect(cache.statistics == Statistics(hits: 0, misses: 2))
         #expect(cache.count == 0)
         let shared = try Engine.Moon.eclipticState(at: time)
         #expect([first.longitude, first.longitudeRate] == [second.longitude, second.longitudeRate])
@@ -121,7 +121,7 @@ struct EngineMoonCacheTests {
         let second = Engine.Time(ut: Self.series - 0.002, tt: Self.series, deltaTModel: .jplHorizons)
         _ = try Engine.Moon.geocentricState(at: first, cache: cache)
         let state = try Engine.Moon.geocentricState(at: second, cache: cache)
-        #expect(cache.statistics.hits == 3)
+        #expect(cache.statistics.hits == 1)
         #expect(state.time.ut == second.ut && state.time.deltaTModel == .jplHorizons)
     }
 

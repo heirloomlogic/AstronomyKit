@@ -1,0 +1,32 @@
+# Native DE441 integration
+
+The native Swift Moon uses the shared-endpoint representation qualified in [link 2](de441-compact-method.md) outside the central DE440 span. DE440 and the existing 32-day smoothstep weights remain in place. Public Moon APIs still call the C engine; #96 owns that cutover. This integration does not close #184 or claim full-range state/event accuracy.
+
+## Storage and evaluation
+
+`Scripts/generate-moon-de441.py` reads the binary produced by `qualify-moon-de441.py`, requires its exact qualified length and SHA-256, and writes `MoonDE441Data.swift`. `--check` decodes the committed Swift payload and verifies the digest and generated metadata offline. To rebuild the payload from source, run the link-2 qualification command first, then the generator.
+
+The generated literal contains 35,064,072 bytes after decoding. The bytes stay packed as Float32 nodes and coefficients. `Engine.MoonDE441` reads the previous endpoint node and the requested record, reconstructs six Double coefficients per axis, and evaluates position and analytic derivative by Clenshaw recurrence. It does not expand the complete table into Double coefficients. Both source segments form one continuous four-day grid from TDB day −1,461,000.5 through 1,461,003.5 exclusive.
+
+The evaluator converts kilometers and kilometers per TDB day into AU and AU per TDB day. `state(tt:)` applies the TT-to-TDB offset, TDB rate, and ICRF-to-EQJ frame bias. The integrated model carries velocity through precession and obliquity with their derivatives, including the blend-weight derivative. The cached position remains the source of position bits for both position and state APIs; a state now reads one cached epoch throughout the range.
+
+## Validation
+
+The source fixtures contain 1,365 direct DE441 states: 273 records selected from a uniform full-range grid, every link-2 candidate's worst-bound records, and transition records, each evaluated at normalized coordinates −1, −0.5, 0, 0.5, and 1. Regenerate them with `python3 Scripts/generate-moon-de441.py --reference-fixtures` against the verified local source cache. The fixture pins the exact link-2 evidence digest. These states check the Swift decoder against the established 18.073 km position and 39.085 km/TDB-day representation bounds; those bounds are not new physical velocity-accuracy promises.
+
+At the fixture dates inside the accepted range, the integrated EQJ state is compared with the source state after the TT/TDB rate and frame-bias conversion. True-ecliptic longitude and latitude are compared with the rotated source position under the existing one-arcminute allowance, and distance under the existing 28.689 km allowance. There are 1,360 in-range fixture dates. Their maximum integrated residuals are 0.084467′ in direction, 15.113246 km in distance, and 8.594317 km/TT-day in rate; maximum true-ecliptic longitude and latitude residuals are 0.084188′ and 0.007160′. This checks event inputs at those samples; it does not certify event times.
+
+The integrated native model is also checked against all 30 independent archived Horizons vectors with the existing one-arcminute and 28.689 km allowances. Existing central-domain Moon/barycenter state tolerances and lunar phase, apsis, node, and libration input tolerances are unchanged. The legacy-series #184 known-issue checks remain scoped to the model still used by public C APIs.
+
+Every one of the 730,500 record knots is checked from both sides for position and rate continuity within the existing 1e-12 AU and AU/day limits. The candidate is C1, not C2. At TT −200,000.5, a symmetric finite-difference stencil crossed an acceleration discontinuity and differed from the analytic velocity by 1.64e-6 of speed. The derivative check retains that epoch and the original error tolerance, using a fourth-order one-sided stencil within the containing polynomial near a knot. The direct two-sided continuity check remains separate. The blend-weight negative control uses an interior point one day away from a shared endpoint so the models' separation remains large enough to expose an omitted weight derivative.
+
+## Release measurements
+
+`EngineMoonMeasurementTests` is opt-in. It measures first-use initialization, peak process resident memory, and 20,000 uncached geocentric states in each of two workloads: a broad outer-range sequence and a central DE440 sequence. The baseline uses the link-2 revision plus the same probe; the candidate uses the native integration. Measurements run under the test harness and include the TT/TDB and coordinate transformations.
+
+```sh
+MOON_MEASUREMENT_OUTPUT="$PWD/.context/issue-184/link3-native-release.json" swift test -c release --no-parallel --filter EngineMoonMeasurementTests
+MOON_DIFFERENTIAL_OUTPUT="$PWD/.context/issue-184/link3-differential-release.json" MOON_BOUNDARY_OUTPUT="$PWD/.context/issue-184/link3-boundaries-release.json" swift test -c release --skip-build --no-parallel
+```
+
+The [measurement artifact](de441-native-evidence.json) records the tested source hashes, baseline revision, host, numerical comparisons, generated and compiled data sizes, timings, and process memory. On this arm64 macOS host with Swift 6.4, the 20,000-state outer workload took 0.4382 s versus 0.09277 s for the prior series; the central workload took 0.3347 s versus 0.3331 s. First use took 55.1 ms versus 0.206 ms. Peak process RSS after both workloads was 150.44 MB versus 68.22 MB. The source literal is 47,117,715 bytes, its compiled C-string section is 47,117,347 bytes, and the release object file is 94,247,080 bytes before linking. The resident literal and the decoded 35,064,072-byte buffer both contribute to memory. These figures describe different storage stages; the packed 33.44 MiB is not the application download size or process-memory increase. Single-host timing and peak-memory observations do not establish device performance or a resource ceiling. Independent full-range state/event qualification remains for link 4; public behavior remains dependent on #96.

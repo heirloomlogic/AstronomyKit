@@ -1,0 +1,98 @@
+{
+  "baselineCommit": "7e9d89a624c554d76ae1476ab4eefbc10f7da838",
+  "baselineModification": "Only the identical opt-in EngineMoonMeasurementTests.swift probe was added to the baseline.",
+  "baselineRelease": {
+    "checksum": -0.015630431893212404,
+    "coldSeconds": 0.00020611286163330078,
+    "evaluationsPerWorkload": 20000,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "peakBytesAfterCold": 46039040,
+    "peakBytesAfterLoops": 68222976,
+    "peakBytesBefore": 45776896,
+    "seconds": {
+      "central": 0.3331359624862671,
+      "outer": 0.09276890754699707
+    }
+  },
+  "directSourceComparison": {
+    "integratedSamples": 1360,
+    "maximumIntegratedAngleArcminutes": 0.08446647751275221,
+    "maximumIntegratedDistanceKm": 15.113245301463243,
+    "maximumIntegratedRateKmPerTTDay": 8.594316764891964,
+    "maximumLatitudeArcminutes": 0.007159669613336916,
+    "maximumLongitudeArcminutes": 0.08418734510883041,
+    "maximumPositionKm": 15.142138249543308,
+    "maximumRateKmPerTDBDay": 8.594316762553278,
+    "samples": 1365
+  },
+  "everyBoundary": {
+    "boundaries": 730500,
+    "maximumPositionJumpAU": 4.336808689942018e-19,
+    "maximumRateJumpAUPerTDBDay": 1.0842021724855044e-19
+  },
+  "limits": [
+    "Timings and peak RSS are single-process, single-host observations under the release test harness; no performance or storage ceiling is inferred.",
+    "All record boundaries are checked, but integrated source states and event inputs are sampled. Full-range absolute velocity and event-time accuracy remain unqualified.",
+    "Public Moon APIs still use C pending issue #96. Issue #184 remains open for link 4 qualification and closure work."
+  ],
+  "nativeRelease": {
+    "checksum": -0.0156088671782274,
+    "coldSeconds": 0.05508697032928467,
+    "evaluationsPerWorkload": 20000,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "peakBytesAfterCold": 128319488,
+    "peakBytesAfterLoops": 150437888,
+    "peakBytesBefore": 45809664,
+    "seconds": {
+      "central": 0.33473503589630127,
+      "outer": 0.43821704387664795
+    }
+  },
+  "schemaVersion": 1,
+  "sourceSHA256": {
+    "Scripts/generate-moon-de441.py": "67d41e37d494a9e4560cb1f31663fb76e479902707ccc032c1b0c97a7c334a2a",
+    "Scripts/moon-data/de441-compact-evidence.json": "2b5d686303a7b638ae0ee6512574124ef22e7e1c77f9cf871397bbfc82307182",
+    "Scripts/moon-data/de441-native-fixtures.json": "460f1f9a8b8abf7ef558443786bf39e270d5be883ab793475656f16711ceae3c",
+    "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoon.swift": "a802e1a73089bc26e7b68e3927a4cf7dc3664fbc9c01cb0086565c7c218ef4eb",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441.swift": "4835f666ca2fd7a9d1f5cb7de59f639ce8dc8f8fd93cd81b722cf34cf503c1d9",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonStates.swift": "442cf8a11ac4b65d4e6fe7c230d73f4ff599584130272a1915d17794d1889e7a",
+    "Sources/AstronomyKit/Engine/Moon/Generated/MoonDE441Data.swift": "18183bac224958b016b9ee348a9d57c698efd8838eee7578f01af6add96102ae",
+    "Tests/AstronomyKitTests/Engine/Moon/EngineMoonDE441Tests.swift": "e32d04c005c9911c73f8484c77d28adc64203717329ae50d4defdbf572a6ab51",
+    "Tests/AstronomyKitTests/Engine/Moon/EngineMoonMeasurementTests.swift": "589676449093b0e3910ff50d8cef712fc82405992c08b6aa4c9dd4091ab810af",
+    "Tests/AstronomyKitTests/Engine/Moon/EngineMoonStatesTests.swift": "8ea0b2f1158df283509f598b4ee76e52f799374c324b06d16f02076863f2a2c4"
+  },
+  "storage": {
+    "generatedSwiftBytes": 47117715,
+    "objectPath": ".build/out/Intermediates.noindex/AstronomyKit.build/Release/AstronomyKit-t.build/Objects-normal/arm64/MoonDE441Data.o",
+    "packedDecodedBytes": 35064072,
+    "releaseObjectCStringSectionBytes": 47117347,
+    "releaseObjectFileBytes": 94247080,
+    "scope": "Object and literal sizes precede application linking, stripping and distribution compression; they are not download-size claims.",
+    "sectionMeasurementCommand": "xcrun size -m <objectPath>"
+  },
+  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0",
+  "validation": {
+    "finalAffectedRelease": {
+      "knownIssues": 23,
+      "seconds": 0.452,
+      "suites": 3,
+      "tests": 19
+    },
+    "fixtureDomain": "1365 raw source comparisons, of which 1360 are inside accepted TT and exercise integrated state and ecliptic inputs; padded source records extend beyond accepted TT.",
+    "fullDebug": {
+      "knownIssues": 39,
+      "seconds": 235.908,
+      "suites": 265,
+      "tests": 1315
+    },
+    "fullRelease": {
+      "knownIssues": 39,
+      "seconds": 61.067,
+      "suites": 265,
+      "tests": 1315
+    },
+    "python": "23 tests pass on Python 3.11 and 3.14; embedded-data checks pass; Python 3.11 regenerates fixtures byte-identically.",
+    "tolerances": "Existing angular, distance, central state, event-input and derivative-consistency tolerances are retained. Raw sampled rates use the previously qualified representation bound, not a new physical velocity requirement."
+  }
+}

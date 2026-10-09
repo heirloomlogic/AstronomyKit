@@ -10,12 +10,7 @@ import Foundation
 extension Engine {
     /// The Moon relative to Earth's center.
     ///
-    /// The lunar model is the DE440 Moon (``MoonEphemeris``) from 1900
-    /// through 2130 TT and the lunar series (``LunarSeries``) beyond, blended
-    /// over the 32 days between them. Every position and state starts from
-    /// the model's longitude, latitude and distance on the mean ecliptic and
-    /// equinox of date, ``coordinates(centuries:cache:)``, read through
-    /// ``cache``.
+    /// DE440 supplies 1900 through 2130 TT; compact DE441 supplies the rest of the accepted range, with 32-day blends. Positions and states share the cached mean-ecliptic coordinates.
     enum Moon {}
 
     /// The mean ecliptic and equinox of the vector's time.
@@ -44,19 +39,20 @@ extension Engine.Moon {
     /// and equinox of date, and its distance in AU, at `t` Julian centuries
     /// of TT from J2000, without the cache. The longitude is from 0 to 2π.
     ///
-    /// The DE440 Moon is read at TT = `t` · 36,525, rotated from EQJ by
-    /// precession and the mean obliquity at that TT, and blended with the
-    /// series position by ``Engine/MoonEphemeris/weight(tt:)``. A TT outside
-    /// the blend, or not finite, gives the series alone.
+    /// Both tables are read in TDB and rotated from EQJ into the mean ecliptic of date. The DE440 weight preserves its central span and blends into DE441 outside it.
     static func evaluate(centuries t: Double) -> SIMD3<Double> {
         let tt = t * 36_525
         let weight = Engine.MoonEphemeris.weight(tt: tt).weight
-        guard weight > 0, var position = meanEclipticPosition(tt: tt) else {
-            return Engine.LunarSeries.coordinates(centuries: t)
-        }
-        if weight < 1 {
-            let legacy = rectangular(Engine.LunarSeries.coordinates(centuries: t))
-            position = legacy + weight * (position - legacy)
+        var position: SIMD3<Double>
+        if weight == 1 {
+            guard let source = meanEclipticPosition(tt: tt) else { return SIMD3(repeating: .nan) }
+            position = source
+        } else {
+            guard let outer = meanEclipticPosition(tt: tt, compact: true) else { return SIMD3(repeating: .nan) }
+            position = outer
+            if weight > 0, let central = meanEclipticPosition(tt: tt) {
+                position += weight * (central - outer)
+            }
         }
         let distance = (position.x * position.x + position.y * position.y + position.z * position.z).squareRoot()
         var longitude = atan2(position.y, position.x)
@@ -65,10 +61,11 @@ extension Engine.Moon {
         return SIMD3(longitude, latitude, distance)
     }
 
-    /// The DE440 Moon at `tt` on the mean ecliptic and equinox of date, in
-    /// AU, or `nil` outside its records.
-    static func meanEclipticPosition(tt: Double) -> SIMD3<Double>? {
-        guard let source = Engine.MoonEphemeris.position(tt: tt) else { return nil }
+    /// The selected table at `tt` on the mean ecliptic and equinox of date, in AU, or `nil` outside its records.
+    static func meanEclipticPosition(tt: Double, compact: Bool = false) -> SIMD3<Double>? {
+        guard let source = compact ? Engine.MoonDE441.position(tt: tt) : Engine.MoonEphemeris.position(tt: tt) else {
+            return nil
+        }
         return meanEquatorToEcliptic(tt: tt).apply(to: Engine.Precession.rotation(tt: tt).apply(to: source))
     }
 

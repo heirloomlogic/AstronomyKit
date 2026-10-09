@@ -117,18 +117,28 @@ struct EngineMoonHorizonsTests {
     /// The engine's position against one Horizons vector: the angle in
     /// arcminutes and the range error in km. Horizons gives the time in TDB
     /// and the vector on ICRF axes; the engine takes TT and gives EQJ.
-    static func errors(_ reference: IndependentReferenceArchive.Vector) throws -> (arcminutes: Double, km: Double) {
+    static func errors(
+        _ reference: IndependentReferenceArchive.Vector, legacy: Bool = false
+    ) throws -> (arcminutes: Double, km: Double) {
         let tdb = reference.julianDateTDB - 2_451_545
         let tt = tdb - Engine.TDB.offsetSeconds(tt: tdb) / 86_400
         let time = PlanetTestSupport.time(tt: tt)
-        let moon = try Engine.Moon.geocentricPosition(at: time)
+        let moon: Engine.Vector<Engine.EQJ>
+        if legacy {
+            let coordinates = Engine.Moon.rectangular(Engine.LunarSeries.coordinates(centuries: tt / 36_525))
+            let eqj = Engine.Precession.rotation(tt: tt).inverse.apply(
+                to: Engine.Moon.meanEquatorToEcliptic(tt: tt).inverse.apply(to: coordinates))
+            moon = Engine.Vector(x: eqj.x, y: eqj.y, z: eqj.z, time: time)
+        } else {
+            moon = try Engine.Moon.geocentricPosition(at: time)
+        }
         let icrs = reference.positionAU
         let published = Engine.FrameBias.icrsToEqj.apply(to: SIMD3(icrs[0], icrs[1], icrs[2]))
         let expected = Engine.Vector<Engine.EQJ>(x: published.x, y: published.y, z: published.z, time: time)
         return (try moon.angle(to: expected) * 60, abs(moon.length - expected.length) * Engine.kilometersPerAU)
     }
 
-    @Test("Through the blends, and the series from 1499 to 2500, within 1′ and the Moon's distance allowance")
+    @Test("Through the blends and DE441 from 1499 to 2500, within 1′ and the Moon's distance allowance")
     func beyondTheTable() throws {
         #expect(Self.vectors.count == 30)
         let checked = Self.vectors.filter { !Self.beyondSeriesAccuracy.contains($0.julianDateTDB) }
@@ -140,10 +150,11 @@ struct EngineMoonHorizonsTests {
         }
     }
 
-    @Test("Far from J2000 the series misses 1′ (#184)", arguments: beyondSeriesAccuracy.sorted())
+    @Test(
+        "The legacy series still used by public C APIs misses 1′ (#184, #96)", arguments: beyondSeriesAccuracy.sorted())
     func farFromJ2000(julianDateTDB: Double) throws {
         let reference = try #require(Self.vectors.first { $0.julianDateTDB == julianDateTDB })
-        let (arcminutes, km) = try Self.errors(reference)
+        let (arcminutes, km) = try Self.errors(reference, legacy: true)
         withKnownIssue("#184: the lunar series is more than 1′ from DE441 before 1500 and after 2500") {
             #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
             #expect(km <= Self.distanceAllowanceKm, "\(reference.tdb): \(km) km")
