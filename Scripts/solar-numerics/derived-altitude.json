@@ -76,8 +76,8 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "5d8bd4003fae869c238e3ab168244a0039d8f2b4723f36da73050ec9695c5bb8",
     "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "3f0391e0a6b3d74d4013695e83452d1dc984b0964e046e1d130e1472fdec0316",
-    "Sources/AstronomyKit/Observer.swift": "733bc2a9748cf4d9cbb6b20b4fe67412b5fdd4ce47df86998f473c62dbdc2429",
-    "Sources/AstronomyKit/Position.swift": "43a758d5f778a0751a2cf4d20d282e30dd3aa6f416954d2e4c4196e0e27428c1",
+    "Sources/AstronomyKit/Observer.swift": "8198f9e5412d937a23aac6925417f279a811d319478b010cb5e40c89ca8516e6",
+    "Sources/AstronomyKit/Position.swift": "aba30765b3e83fad1210ca0db420d09efb1413be2a520a32a6d6f669582e168e",
     "Sources/AstronomyKit/SolarAltitudeObservation.swift": "82b7f489fbe5fb814f03b9a569a5f89acf9515721b716c7a6854a69b4c2643ea",
     "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5"

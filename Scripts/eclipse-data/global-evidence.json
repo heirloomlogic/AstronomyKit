@@ -218,7 +218,7 @@
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "1e7d556d94b09301aac6535d71347adfae546d437140867c19aa59601602efe8",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
-    "Sources/AstronomyKit/Observer.swift": "733bc2a9748cf4d9cbb6b20b4fe67412b5fdd4ce47df86998f473c62dbdc2429",
+    "Sources/AstronomyKit/Observer.swift": "8198f9e5412d937a23aac6925417f279a811d319478b010cb5e40c89ca8516e6",
     "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776",

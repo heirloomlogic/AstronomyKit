@@ -320,15 +320,12 @@ public enum Chiron {
         let ofDate = try geocentricPosition(at: time)
             .rotated(by: .equatorialJ2000ToEquatorialOfDate(at: time))
             .toEquatorial()
-        var rawTime = time.raw
-        let result = Astronomy_Horizon(
-            &rawTime,
-            try observer.validatedRaw(),
-            ofDate.rightAscension,
-            ofDate.declination,
-            refraction.raw
-        )
-        return Horizon(result)
+        try observer.validate()
+        return Horizon(
+            Engine.Horizontal(
+                time: time.coordinateTime, observer: observer,
+                rightAscension: ofDate.rightAscension, declination: ofDate.declination, refraction: refraction
+            ))
     }
 
     // MARK: - Private Helpers

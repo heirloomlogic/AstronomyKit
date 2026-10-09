@@ -5,8 +5,6 @@
 //  Coordinate system rotation matrices.
 //
 
-import CLibAstronomy
-
 // MARK: - Rotation Matrix
 
 /// A 3x3 rotation matrix for coordinate system transformations.
@@ -23,53 +21,20 @@ import CLibAstronomy
 /// let ecliptic = position.rotated(by: rotation)
 /// ```
 public struct RotationMatrix: Sendable {
-    /// The 3x3 rotation matrix, stored inline as the C structure to avoid a heap
-    /// allocation per matrix.
-    private let storage: astro_rotation_t
+    /// The public matrix carries no frame type; its elements stay inline.
+    enum Frame: Engine.Frame {}
+    let storage: Engine.Rotation<Frame, Frame>
 
     /// Access matrix element at row, column.
     ///
-    /// Traps on an out-of-range index, matching the previous array-backed behavior.
+    /// Traps on an out-of-range index.
     public subscript(row: Int, col: Int) -> Double {
-        switch (row, col) {
-        case (0, 0): return storage.rot.0.0
-        case (0, 1): return storage.rot.0.1
-        case (0, 2): return storage.rot.0.2
-        case (1, 0): return storage.rot.1.0
-        case (1, 1): return storage.rot.1.1
-        case (1, 2): return storage.rot.1.2
-        case (2, 0): return storage.rot.2.0
-        case (2, 1): return storage.rot.2.1
-        case (2, 2): return storage.rot.2.2
-        default: preconditionFailure("RotationMatrix index (\(row), \(col)) out of range")
-        }
+        storage[row, col]
     }
-
-    /// Creates a rotation matrix from the C structure.
-    init(_ raw: astro_rotation_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        var normalized = raw
-        normalized.status = ASTRO_SUCCESS
-        self.storage = normalized
-    }
-
-    /// Creates a rotation matrix from a C structure known to be valid, skipping the
-    /// status check. For internally constructed matrices only (e.g. ``identity``).
-    private init(unchecked raw: astro_rotation_t) {
-        self.storage = raw
-    }
-
-    /// The internal C representation.
-    var raw: astro_rotation_t { storage }
 
     /// Creates a rotation matrix with the elements of a native engine rotation.
     init<From, To>(_ rotation: Engine.Rotation<From, To>) {
-        var raw = astro_rotation_t()
-        raw.status = ASTRO_SUCCESS
-        raw.rot = rotation.rot
-        self.storage = raw
+        storage = Engine.Rotation(rot: rotation.rot)
     }
 }
 
@@ -77,22 +42,14 @@ public struct RotationMatrix: Sendable {
 
 extension RotationMatrix {
     /// The identity rotation matrix (no rotation).
-    public static let identity: RotationMatrix = {
-        var rot = astro_rotation_t()
-        rot.status = ASTRO_SUCCESS
-        rot.rot.0 = (1, 0, 0)
-        rot.rot.1 = (0, 1, 0)
-        rot.rot.2 = (0, 0, 1)
-        return RotationMatrix(unchecked: rot)
-    }()
+    public static let identity = RotationMatrix(Engine.Rotation<Frame, Frame>.identity)
 
     /// Returns the inverse (transpose) of this rotation.
     ///
     /// For rotation matrices, the inverse equals the transpose.
     public var inverse: RotationMatrix {
         get throws {
-            let result = Astronomy_InverseRotation(raw)
-            return try RotationMatrix(result)
+            RotationMatrix(storage.inverse)
         }
     }
 
@@ -104,8 +61,7 @@ extension RotationMatrix {
     /// - Returns: The combined rotation matrix.
     /// - Throws: `AstronomyError` if the combination fails.
     public func combined(with other: RotationMatrix) throws -> RotationMatrix {
-        let result = Astronomy_CombineRotation(self.raw, other.raw)
-        return try RotationMatrix(result)
+        RotationMatrix(storage.then(other.storage))
     }
 
     /// Creates a rotation that pivots around an axis.
@@ -116,11 +72,7 @@ extension RotationMatrix {
     /// - Returns: The rotation matrix.
     /// - Throws: `AstronomyError` if the pivot fails.
     public static func pivot(axis: Int, angle: Double) throws -> RotationMatrix {
-        guard (0...2).contains(axis) else {
-            throw AstronomyError.invalidParameter
-        }
-        let result = Astronomy_Pivot(RotationMatrix.identity.raw, Int32(axis), angle)
-        return try RotationMatrix(result)
+        RotationMatrix(try identity.storage.pivoted(axis: axis, angle: angle))
     }
 }
 
@@ -131,14 +83,12 @@ extension RotationMatrix {
 
     /// Creates a rotation from J2000 equatorial to ecliptic coordinates.
     public static func equatorialJ2000ToEcliptic() throws -> RotationMatrix {
-        let result = Astronomy_Rotation_EQJ_ECL()
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqjToEcl)
     }
 
     /// Creates a rotation from ecliptic to J2000 equatorial coordinates.
     public static func eclipticToEquatorialJ2000() throws -> RotationMatrix {
-        let result = Astronomy_Rotation_ECL_EQJ()
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eclToEqj)
     }
 
     /// Creates a rotation from J2000 equatorial to equatorial-of-date coordinates.
@@ -149,9 +99,7 @@ extension RotationMatrix {
     public static func equatorialJ2000ToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQJ_EQD(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqjToEqd(time.coordinateTime))
     }
 
     /// Creates a rotation from equatorial-of-date to J2000 equatorial coordinates.
@@ -162,9 +110,7 @@ extension RotationMatrix {
     public static func equatorialOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQD_EQJ(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqdToEqj(time.coordinateTime))
     }
 
     /// Creates a rotation from J2000 equatorial to horizontal coordinates.
@@ -178,9 +124,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQJ_HOR(&rawTime, try observer.validatedRaw())
-        return try RotationMatrix(result)
+        try observer.validate()
+        return RotationMatrix(Engine.FrameRotation.eqjToHor(time.coordinateTime, observer: observer))
     }
 
     /// Creates a rotation from horizontal to J2000 equatorial coordinates.
@@ -194,9 +139,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_HOR_EQJ(&rawTime, try observer.validatedRaw())
-        return try RotationMatrix(result)
+        try observer.validate()
+        return RotationMatrix(Engine.FrameRotation.horToEqj(time.coordinateTime, observer: observer))
     }
 
     /// Creates a rotation from J2000 equatorial to galactic coordinates.
@@ -222,9 +166,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_ECL_HOR(&rawTime, try observer.validatedRaw())
-        return try RotationMatrix(result)
+        try observer.validate()
+        return RotationMatrix(Engine.FrameRotation.eclToHor(time.coordinateTime, observer: observer))
     }
 
     /// Creates a rotation from horizontal to ecliptic coordinates.
@@ -232,9 +175,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_HOR_ECL(&rawTime, try observer.validatedRaw())
-        return try RotationMatrix(result)
+        try observer.validate()
+        return RotationMatrix(Engine.FrameRotation.horToEcl(time.coordinateTime, observer: observer))
     }
 
     // MARK: Equatorial of Date (EQD) conversions
@@ -244,9 +186,8 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQD_HOR(&rawTime, try observer.validatedRaw())
-        return try RotationMatrix(result)
+        try observer.validate()
+        return RotationMatrix(Engine.FrameRotation.eqdToHor(time.coordinateTime, observer: observer))
     }
 
     /// Creates a rotation from horizontal to equatorial-of-date coordinates.
@@ -254,23 +195,18 @@ extension RotationMatrix {
         at time: AstroTime,
         from observer: Observer
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_HOR_EQD(&rawTime, try observer.validatedRaw())
-        return try RotationMatrix(result)
+        try observer.validate()
+        return RotationMatrix(Engine.FrameRotation.horToEqd(time.coordinateTime, observer: observer))
     }
 
     /// Creates a rotation from equatorial-of-date to ecliptic coordinates.
     public static func equatorialOfDateToEcliptic(at time: AstroTime) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQD_ECL(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqdToEcl(time.coordinateTime))
     }
 
     /// Creates a rotation from ecliptic to equatorial-of-date coordinates.
     public static func eclipticToEquatorialOfDate(at time: AstroTime) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_ECL_EQD(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eclToEqd(time.coordinateTime))
     }
 
     // MARK: Ecliptic of Date (ECT) conversions
@@ -279,36 +215,28 @@ extension RotationMatrix {
     public static func equatorialJ2000ToEclipticOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQJ_ECT(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqjToEct(time.coordinateTime))
     }
 
     /// Creates a rotation from ecliptic-of-date to J2000 equatorial coordinates.
     public static func eclipticOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_ECT_EQJ(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.ectToEqj(time.coordinateTime))
     }
 
     /// Creates a rotation from equatorial-of-date to ecliptic-of-date coordinates.
     public static func equatorialOfDateToEclipticOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_EQD_ECT(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.eqdToEct(time.coordinateTime))
     }
 
     /// Creates a rotation from ecliptic-of-date to equatorial-of-date coordinates.
     public static func eclipticOfDateToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        var rawTime = time.raw
-        let result = Astronomy_Rotation_ECT_EQD(&rawTime)
-        return try RotationMatrix(result)
+        RotationMatrix(Engine.FrameRotation.ectToEqd(time.coordinateTime))
     }
 }
 
@@ -321,15 +249,7 @@ extension Vector3D {
     /// - Returns: The rotated vector.
     /// - Throws: `AstronomyError` if the rotation fails.
     public func rotated(by rotation: RotationMatrix) throws -> Vector3D {
-        let raw = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: x,
-            y: y,
-            z: z,
-            t: time.raw
-        )
-        let result = Astronomy_RotateVector(rotation.raw, raw)
-        return try Vector3D(result)
+        Vector3D(rotation.storage.apply(to: engineVector(in: RotationMatrix.Frame.self)), at: time)
     }
 }
 
@@ -342,18 +262,12 @@ extension StateVector {
     /// - Returns: The rotated state vector.
     /// - Throws: `AstronomyError` if the rotation fails.
     public func rotated(by rotation: RotationMatrix) throws -> StateVector {
-        let raw = astro_state_vector_t(
-            status: ASTRO_SUCCESS,
-            x: position.x,
-            y: position.y,
-            z: position.z,
-            vx: velocity.x,
-            vy: velocity.y,
-            vz: velocity.z,
-            t: time.raw
+        let state = Engine.State<RotationMatrix.Frame>(
+            x: position.x, y: position.y, z: position.z,
+            vx: velocity.x, vy: velocity.y, vz: velocity.z,
+            time: time.coordinateTime
         )
-        let result = Astronomy_RotateState(rotation.raw, raw)
-        return try StateVector(result)
+        return StateVector(rotation.storage.apply(to: state), at: time)
     }
 }
 
@@ -362,7 +276,7 @@ extension StateVector {
 extension RotationMatrix: Equatable {
     /// Two rotation matrices are equal when all nine elements match.
     ///
-    /// Written by hand because the inline C-tuple storage has no synthesized conformance.
+    /// Written by hand because the inline tuple storage has no synthesized conformance.
     public static func == (lhs: RotationMatrix, rhs: RotationMatrix) -> Bool {
         lhs[0, 0] == rhs[0, 0] && lhs[0, 1] == rhs[0, 1] && lhs[0, 2] == rhs[0, 2]
             && lhs[1, 0] == rhs[1, 0] && lhs[1, 1] == rhs[1, 1] && lhs[1, 2] == rhs[1, 2]

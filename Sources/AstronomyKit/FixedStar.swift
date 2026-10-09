@@ -233,8 +233,11 @@ public struct FixedStar: Sendable, Hashable {
         let eq = try withSlot { cBody in
             try Equatorial(Astronomy_Equator(cBody, &rawTime, rawObserver, EQUATOR_OF_DATE, ABERRATION), time: time)
         }
-        let result = Astronomy_Horizon(&rawTime, rawObserver, eq.rightAscension, eq.declination, refraction.raw)
-        return Horizon(result)
+        return Horizon(
+            Engine.Horizontal(
+                time: time.coordinateTime, observer: observer,
+                rightAscension: eq.rightAscension, declination: eq.declination, refraction: refraction
+            ))
     }
 
     /// Determines which constellation contains the star.

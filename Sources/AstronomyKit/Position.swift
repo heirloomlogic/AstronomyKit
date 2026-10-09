@@ -126,8 +126,11 @@ extension CelestialBody {
         }
         var rawTime = time.raw
         let eq = try Equatorial(Astronomy_Equator(raw, &rawTime, rawObserver, EQUATOR_OF_DATE, ABERRATION), time: time)
-        let result = Astronomy_Horizon(&rawTime, rawObserver, eq.rightAscension, eq.declination, refraction.raw)
-        return Horizon(result)
+        return Horizon(
+            Engine.Horizontal(
+                time: time.coordinateTime, observer: observer,
+                rightAscension: eq.rightAscension, declination: eq.declination, refraction: refraction
+            ))
     }
 
     /// Calculates the ecliptic longitude of this body.
