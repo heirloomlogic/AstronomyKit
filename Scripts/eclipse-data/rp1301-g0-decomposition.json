@@ -1,0 +1,75 @@
+{
+  "axisSurfaceZeta": 0.9115017541491648,
+  "conditionalPrintInterval": [
+    0.943135,
+    0.943145
+  ],
+  "evaluatedBesselianElements": {
+    "d": 17.688336993921755,
+    "l1": 0.5669258846297116,
+    "l2": 0.020665209665292828,
+    "x": -0.06992553940859865,
+    "y": 0.4016746144590079
+  },
+  "interpretation": "RP1301 G0 is reproducible as a central Besselian magnitude that combines the k1 penumbral and k2 umbral elements. Squaring it is not a physical single-radius overlap-area reference. Table 4 directly publishes diameter ratio and obscuration controls.",
+  "mixedMagnitudeInsidePrintInterval": true,
+  "mixedRadiusMagnitude": 0.9431418141006214,
+  "mixedRadiusMagnitudeSquared": 0.8895164815050111,
+  "observerPlaneL1": 0.5627049023065976,
+  "observerPlaneL2": 0.016465283032699722,
+  "physicalDiscCandidates": [
+    {
+      "case": "retained",
+      "diameterRatio": 0.9431605820037319,
+      "physicalOverlapArea": 0.8895518834456182,
+      "ratioResidualFromPrintedMagnitude": 2.0582003731894893e-05
+    },
+    {
+      "case": "k2-nominal",
+      "diameterRatio": 0.9435112332685376,
+      "physicalOverlapArea": 0.8902134473039167,
+      "ratioResidualFromPrintedMagnitude": 0.0003712332685376074
+    },
+    {
+      "case": "k2-695992",
+      "diameterRatio": 0.9431153850000756,
+      "physicalOverlapArea": 0.8894666294238409,
+      "ratioResidualFromPrintedMagnitude": -2.4614999924343905e-05
+    },
+    {
+      "case": "k2-959.63",
+      "diameterRatio": 0.9431191182294412,
+      "physicalOverlapArea": 0.8894736711698786,
+      "ratioResidualFromPrintedMagnitude": -2.0881770558811574e-05
+    }
+  ],
+  "schemaVersion": 1,
+  "sourceConventions": {
+    "centralMagnitude": "(L1'-L2')/(L1'+L2')",
+    "earthPolarToEquatorialRatio": 0.99664719,
+    "methodImplementation": "https://eclipse.gsfc.nasa.gov/JSEX/program.js",
+    "observerReduction": "L'=l-zeta*tan(f)",
+    "rp1301L1UsesK1": 0.2725076,
+    "rp1301L2UsesK2": 0.272281
+  },
+  "sourceLabel": "Eclipse Magnitude",
+  "sourcePrintedMagnitude": 0.94314,
+  "table4Controls": [
+    {
+      "diameterRatio": 0.9431,
+      "lower": 0.88945,
+      "obscuration": 0.8895,
+      "tt": -2061.7840335648148,
+      "upper": 0.88955,
+      "ut": -2061.784722222222
+    },
+    {
+      "diameterRatio": 0.9431,
+      "lower": 0.88945,
+      "obscuration": 0.8895,
+      "tt": -2061.7805613425926,
+      "upper": 0.88955,
+      "ut": -2061.78125
+    }
+  ]
+}

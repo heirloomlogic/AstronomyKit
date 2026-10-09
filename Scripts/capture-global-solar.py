@@ -56,6 +56,24 @@ def build(blobs, recipes, catalog):
     for marker in ['2449483.216973', '0.94314', '0.2725076', '0.2722810', '59.5', 'DE200/LE200', 'Terrestrial Dynamical Time']:
         if marker not in table1:
             raise ValueError('RP1301 semantics missing: ' + marker)
+    greatest = re.findall(r'Instant of\s+(\d+):(\d+):([\d.]+) TDT', table1)
+    origin = re.findall(r'Polynomial Besselian Elements for:.*?(\d+):(\d+):([\d.]+) TDT', table1)
+    slopes = re.findall(r'Tan \S*1 = ([\d.]+)\s+Tan \S*2 = ([\d.]+)', table1)
+    source_magnitude = re.findall(r'(Eclipse Magnitude) = ([\d.]+)', table1)
+    if len(greatest) != 1 or len(origin) != 1 or len(slopes) != 1 or source_magnitude != [('Eclipse Magnitude','0.94314')]:
+        raise ValueError('RP1301 greatest-eclipse metadata missing or duplicated')
+    decimal_hour = lambda clock: int(clock[0])+int(clock[1])/60+float(clock[2])/3600
+    element_rows = re.findall(r'^\s*([0-3])\s+([\-\d.]+)\s+([\-\d.]+)(?:\s+([\-\d.]+)\s+([\-\d.]+)\s+([\-\d.]+)\s+([\-\d.]+))?\s*$', table1, re.M)
+    if len(element_rows) != 4:
+        raise ValueError('RP1301 Besselian element rows missing or duplicated')
+    besselian = {'t0TDT': decimal_hour(origin[0]), 'greatestTDT': decimal_hour(greatest[0]), 'tanF1': float(slopes[0][0]), 'tanF2': float(slopes[0][1]),
+                 'coefficients': {key: [] for key in ['x','y','d','l1','l2']}}
+    for row in element_rows:
+        values = [float(value) for value in row[1:] if value]
+        for key, value in zip(['x','y','d','l1','l2'], values):
+            besselian['coefficients'][key].append(value)
+    if [len(besselian['coefficients'][key]) for key in ['x','y','d','l1','l2']] != [4,4,3,3,3]:
+        raise ValueError('unexpected RP1301 Besselian polynomial degrees')
     wanted = {'2014-04-29': 'annular', '2043-04-09': 'total', '2023-04-20': 'total', '2025-03-29': 'partial'}
     months = dict(zip('Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(), range(1, 13)))
     rows = []
@@ -93,7 +111,7 @@ def build(blobs, recipes, catalog):
                 'catalogSource': 'nasa-solar-1901.html', 'pathType': fields[8],
                 'printedMagnitude': fields[11], 'magnitude': float(fields[11]),
                 'observedLimbKind': claims[0], 'limbSource': 'rp1301-lunar-radius.html'}
-    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestDiameterRatio': 0.94314, 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
+    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestLabel': source_magnitude[0][0], 'greatestMagnitude': float(source_magnitude[0][1]), 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'besselian': besselian, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
 
 
 def publish(files):
