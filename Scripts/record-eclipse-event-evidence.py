@@ -38,6 +38,7 @@ def source_hashes(capture_bytes=None):
         ROOT / "Scripts/reference-data/sources/nasa-svs-4953.html",
         ROOT / "Scripts/reference-data/sources/nasa-svs-5672.html",
         ROOT / "Scripts/record-eclipse-event-evidence.py",
+        ROOT / "Scripts/test_eclipse_event_evidence.py",
         ROOT / "Scripts/eclipse-data/native-captures.json",
     ]
     return {

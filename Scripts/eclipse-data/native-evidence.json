@@ -35,7 +35,7 @@
   "schemaVersion": 1,
   "sourceSHA256": {
     "Scripts/eclipse-data/native-captures.json": "68c0a87f64723d1718295909ce826b0c2bffbe3a7564d0b409535924914ff40f",
-    "Scripts/record-eclipse-event-evidence.py": "08dd1ac3add8002a23ff8d2da4f69d6f0969a7865636554909309439c1c672c8",
+    "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
     "Scripts/reference-data/build-fixtures.py": "3e5fc9e2e4a0ee8de5659f7b78bd5a493f626f20e1b7c72e3cc565f231a524e6",
     "Scripts/reference-data/sources/lunar_1701.html": "15ed1e6e6b1153f6c85e724258aa91e23655fecb08ac7623fd6e2b4b1d8199f7",
     "Scripts/reference-data/sources/lunar_1901.html": "587cf5bf48e1b9f17b0e2b6d72d42fc81828f62e9a9252d7f661a747b95154ca",
@@ -45,6 +45,7 @@
     "Scripts/reference-data/sources/nasa-shadow-enlargement.html": "95b466d625a292a16f3d6f1a3aa9e7e4fb5224a2e13b4fd9a5252ff5de20841f",
     "Scripts/reference-data/sources/nasa-svs-4953.html": "e58a5ce4ebe1b59779dc931f374d8e44c5b299beaa9db5fea024065c39d61f8e",
     "Scripts/reference-data/sources/nasa-svs-5672.html": "58c3f58627ad6846c41391280f8fbb90e5c7cff2623f229cfa465d5bc620af4e",
+    "Scripts/test_eclipse_event_evidence.py": "8cdae1d2a32496c387f23a597a8d6ce51b9dc5a902e7674b7424cd3676ed1fc4",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
