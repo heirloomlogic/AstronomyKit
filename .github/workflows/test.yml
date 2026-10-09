@@ -51,6 +51,8 @@ jobs:
           python3 Scripts/generate-pluto-tables.py --check
           python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py -v
           python3 Scripts/generate-pluto-de441.py --check
+          python3 -m unittest Scripts/test_capture_pluto_observers.py -v
+          python3 Scripts/capture-pluto-observers.py --check
 
       - name: Verify generated Jupiter moon series
         run: python3 Scripts/generate-jupiter-moon-series.py --check
@@ -114,6 +116,8 @@ jobs:
           python3 Scripts/generate-pluto-tables.py --check
           python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py -v
           python3 Scripts/generate-pluto-de441.py --check
+          python3 -m unittest Scripts/test_capture_pluto_observers.py -v
+          python3 Scripts/capture-pluto-observers.py --check
 
       - name: Verify generated Jupiter moon series
         run: python3 Scripts/generate-jupiter-moon-series.py --check
