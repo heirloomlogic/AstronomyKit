@@ -12,5 +12,7 @@
 # Mutex around both the Astronomy_DefineStar write and the calculation that
 # reads the slot, and the per-slot cached StarDefinition payload is only read
 # or written inside the same withLock. See Sources/AstronomyKit/FixedStar.swift.
+# Audited for #95: these are the only suppressions. Native caches, their
+# registry, Delta T publication, and gravity simulations require none.
 race:Astronomy_DefineStar
 race:*FixedStar*withSlot*
