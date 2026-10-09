@@ -1,0 +1,399 @@
+{
+  "candidates": {
+    "float32": {
+      "bodies": {
+        "10": {
+          "coefficientCount": 11,
+          "encodedBytes": 1393392,
+          "encoding": "float64",
+          "positionBoundKm": 4.445517498970156e-162,
+          "rateBoundKmPerTDBDay": 4.445517498970156e-162,
+          "recordCount": 5278,
+          "recordDays": 16.0,
+          "seams": {
+            "boundaries": 5277,
+            "maximumPositionJumpKm": 4.835091451484521e-10,
+            "maximumRateJumpKmPerTDBDay": 4.687428401686771e-13
+          },
+          "sha256": "dec28fe40444a8a464fd4c6a8d555770e550612209a690a4cb8759a3b866e620",
+          "startJDTDB": 2414976.5,
+          "worstRecords": [
+            0,
+            0
+          ]
+        },
+        "6": {
+          "coefficientCount": 7,
+          "encodedBytes": 443520,
+          "encoding": "float64",
+          "positionBoundKm": 4.445517498970156e-162,
+          "rateBoundKmPerTDBDay": 4.445517498970156e-162,
+          "recordCount": 2640,
+          "recordDays": 32.0,
+          "seams": {
+            "boundaries": 2639,
+            "maximumPositionJumpKm": 4.951133646320149e-07,
+            "maximumRateJumpKmPerTDBDay": 2.6193447411060333e-10
+          },
+          "sha256": "dd07f7eba7172570e19e25c66829f7da38e9be276f0a4c2bb645a478691b7add",
+          "startJDTDB": 2414960.5,
+          "worstRecords": [
+            0,
+            0
+          ]
+        },
+        "699": {
+          "coefficientCount": 13,
+          "encodedBytes": 8781552,
+          "encoding": "float32",
+          "positionBoundKm": 1.9733917163714793e-05,
+          "rateBoundKmPerTDBDay": 7.303156184805486e-06,
+          "recordCount": 56292,
+          "recordDays": 1.5,
+          "seams": {
+            "boundaries": 56291,
+            "maximumPositionJumpKm": 3.1658386167218754e-05,
+            "maximumRateJumpKmPerTDBDay": 1.1143606348524221e-05
+          },
+          "sha256": "eceea1a46b9d478663d89eb76dc060dc2f927d990ec271046702259d9802ccce",
+          "startJDTDB": 2414987.0,
+          "worstRecords": [
+            38222,
+            33333
+          ]
+        }
+      },
+      "encodedBytes": 10618464,
+      "roots": [
+        {
+          "errorSeconds": 0.03295093774795532,
+          "rangeErrorKm": 4.291534423828125e-06,
+          "rateAtReferenceKmPerDay": 1.4023242799654908e-05,
+          "referenceJDTT": 2425931.5364708,
+          "rootJDTT": 2425931.5364711815
+        },
+        {
+          "errorSeconds": -0.0926971435546875,
+          "rangeErrorKm": 5.7220458984375e-06,
+          "rateAtReferenceKmPerDay": 7.15462893104426e-05,
+          "referenceJDTT": 2431340.87455362,
+          "rootJDTT": 2431340.874552547
+        },
+        {
+          "errorSeconds": -0.15811622142791748,
+          "rangeErrorKm": -9.775161743164062e-06,
+          "rateAtReferenceKmPerDay": 0.00012163064313620117,
+          "referenceJDTT": 2442055.64869819,
+          "rootJDTT": 2442055.64869636
+        },
+        {
+          "errorSeconds": -0.6381779909133911,
+          "rangeErrorKm": 0.0,
+          "rateAtReferenceKmPerDay": 0.0005260099593882347,
+          "referenceJDTT": 2463565.54855741,
+          "rootJDTT": 2463565.5485500237
+        },
+        {
+          "errorSeconds": 0.10066330432891846,
+          "rangeErrorKm": 5.4836273193359375e-06,
+          "rateAtReferenceKmPerDay": 6.715517213768119e-05,
+          "referenceJDTT": 2468907.28259141,
+          "rootJDTT": 2468907.282592575
+        },
+        {
+          "errorSeconds": -0.16897916793823242,
+          "rangeErrorKm": 1.430511474609375e-06,
+          "rateAtReferenceKmPerDay": 0.00012079722324508956,
+          "referenceJDTT": 2474345.48053982,
+          "rootJDTT": 2474345.4805378644
+        }
+      ]
+    },
+    "float64": {
+      "bodies": {
+        "10": {
+          "coefficientCount": 11,
+          "encodedBytes": 1393392,
+          "encoding": "float64",
+          "positionBoundKm": 4.445517498970156e-162,
+          "rateBoundKmPerTDBDay": 4.445517498970156e-162,
+          "recordCount": 5278,
+          "recordDays": 16.0,
+          "seams": {
+            "boundaries": 5277,
+            "maximumPositionJumpKm": 4.835091451484521e-10,
+            "maximumRateJumpKmPerTDBDay": 4.687428401686771e-13
+          },
+          "sha256": "dec28fe40444a8a464fd4c6a8d555770e550612209a690a4cb8759a3b866e620",
+          "startJDTDB": 2414976.5,
+          "worstRecords": [
+            0,
+            0
+          ]
+        },
+        "6": {
+          "coefficientCount": 7,
+          "encodedBytes": 443520,
+          "encoding": "float64",
+          "positionBoundKm": 4.445517498970156e-162,
+          "rateBoundKmPerTDBDay": 4.445517498970156e-162,
+          "recordCount": 2640,
+          "recordDays": 32.0,
+          "seams": {
+            "boundaries": 2639,
+            "maximumPositionJumpKm": 4.951133646320149e-07,
+            "maximumRateJumpKmPerTDBDay": 2.6193447411060333e-10
+          },
+          "sha256": "dd07f7eba7172570e19e25c66829f7da38e9be276f0a4c2bb645a478691b7add",
+          "startJDTDB": 2414960.5,
+          "worstRecords": [
+            0,
+            0
+          ]
+        },
+        "699": {
+          "coefficientCount": 13,
+          "encodedBytes": 17563104,
+          "encoding": "float64",
+          "positionBoundKm": 4.445517498970156e-162,
+          "rateBoundKmPerTDBDay": 4.445517498970156e-162,
+          "recordCount": 56292,
+          "recordDays": 1.5,
+          "seams": {
+            "boundaries": 56291,
+            "maximumPositionJumpKm": 1.8120798873069757e-13,
+            "maximumRateJumpKmPerTDBDay": 7.796847635210117e-12
+          },
+          "sha256": "56d5ab961a9150c3e95ee4cd10546df768505136749c6628e47e245349cc3b62",
+          "startJDTDB": 2414987.0,
+          "worstRecords": [
+            0,
+            0
+          ]
+        }
+      },
+      "encodedBytes": 19400016,
+      "roots": [
+        {
+          "errorSeconds": 0.028605759143829346,
+          "rangeErrorKm": 4.76837158203125e-07,
+          "rateAtReferenceKmPerDay": 1.2181109868872635e-05,
+          "referenceJDTT": 2425931.5364708,
+          "rootJDTT": 2425931.5364711313
+        },
+        {
+          "errorSeconds": -0.09293854236602783,
+          "rangeErrorKm": 0.0,
+          "rateAtReferenceKmPerDay": 7.16841746220136e-05,
+          "referenceJDTT": 2431340.87455362,
+          "rootJDTT": 2431340.874552544
+        },
+        {
+          "errorSeconds": -0.15859901905059814,
+          "rangeErrorKm": -4.76837158203125e-07,
+          "rateAtReferenceKmPerDay": 0.00012204693248155995,
+          "referenceJDTT": 2442055.64869819,
+          "rootJDTT": 2442055.6486963546
+        },
+        {
+          "errorSeconds": -0.6377756595611572,
+          "rangeErrorKm": 2.384185791015625e-07,
+          "rateAtReferenceKmPerDay": 0.0005257337263947674,
+          "referenceJDTT": 2463565.54855741,
+          "rootJDTT": 2463565.5485500284
+        },
+        {
+          "errorSeconds": 0.0997781753540039,
+          "rangeErrorKm": -7.152557373046875e-07,
+          "rateAtReferenceKmPerDay": 6.656226116488984e-05,
+          "referenceJDTT": 2468907.28259141,
+          "rootJDTT": 2468907.282592565
+        },
+        {
+          "errorSeconds": -0.16809403896331787,
+          "rangeErrorKm": -4.76837158203125e-07,
+          "rateAtReferenceKmPerDay": 0.00012016345116080512,
+          "referenceJDTT": 2474345.48053982,
+          "rootJDTT": 2474345.4805378746
+        }
+      ]
+    }
+  },
+  "layouts": {
+    "10": [
+      {
+        "firstRecord": 344687,
+        "metadata": {
+          "record_count": 346278,
+          "record_days": 16.0,
+          "record_words": 35,
+          "start_jd_tdb": -3100015.5
+        },
+        "recordCount": 1591,
+        "segment": {
+          "center": 0,
+          "end_seconds_tdb": -960120000.0,
+          "first_word": 113587281,
+          "frame": 1,
+          "kind": 2,
+          "last_word": 125707014,
+          "start_seconds_tdb": -479654827200.0,
+          "target": 10
+        }
+      },
+      {
+        "firstRecord": 0,
+        "metadata": {
+          "record_count": 347474,
+          "record_days": 16.0,
+          "record_words": 35,
+          "start_jd_tdb": 2440432.5
+        },
+        "recordCount": 3687,
+        "segment": {
+          "center": 0,
+          "end_seconds_tdb": 479387937600.0,
+          "first_word": 320361329,
+          "frame": 1,
+          "kind": 2,
+          "last_word": 332522922,
+          "start_seconds_tdb": -960120000.0,
+          "target": 10
+        }
+      }
+    ],
+    "6": [
+      {
+        "firstRecord": 172343,
+        "metadata": {
+          "record_count": 173139,
+          "record_days": 32.0,
+          "record_words": 23,
+          "start_jd_tdb": -3100015.5
+        },
+        "recordCount": 796,
+        "segment": {
+          "center": 0,
+          "end_seconds_tdb": -960120000.0,
+          "first_word": 136095367,
+          "frame": 1,
+          "kind": 2,
+          "last_word": 140077567,
+          "start_seconds_tdb": -479654827200.0,
+          "target": 6
+        }
+      },
+      {
+        "firstRecord": 0,
+        "metadata": {
+          "record_count": 173737,
+          "record_days": 32.0,
+          "record_words": 23,
+          "start_jd_tdb": 2440432.5
+        },
+        "recordCount": 1844,
+        "segment": {
+          "center": 0,
+          "end_seconds_tdb": 479387937600.0,
+          "first_word": 342947155,
+          "frame": 1,
+          "kind": 2,
+          "last_word": 346943109,
+          "start_seconds_tdb": -960120000.0,
+          "target": 6
+        }
+      }
+    ],
+    "699": [
+      {
+        "firstRecord": 36503,
+        "metadata": {
+          "record_count": 64464,
+          "record_days": 1.5,
+          "record_words": 41,
+          "start_jd_tdb": 2360232.5
+        },
+        "recordCount": 27961,
+        "segment": {
+          "center": 6,
+          "end_seconds_tdb": 465134400.0,
+          "first_word": 39627645,
+          "frame": 1,
+          "kind": 2,
+          "last_word": 42270672,
+          "start_seconds_tdb": -7889400000.0,
+          "target": 699
+        }
+      },
+      {
+        "firstRecord": 0,
+        "metadata": {
+          "record_count": 57288,
+          "record_days": 1.5,
+          "record_words": 41,
+          "start_jd_tdb": 2456928.5
+        },
+        "recordCount": 28331,
+        "segment": {
+          "center": 6,
+          "end_seconds_tdb": 7889659200.0,
+          "first_word": 77479297,
+          "frame": 1,
+          "kind": 2,
+          "last_word": 79828108,
+          "start_seconds_tdb": 465134400.0,
+          "target": 699
+        }
+      }
+    ]
+  },
+  "planetary": {
+    "identity": [
+      3307878400,
+      "\"5fe1446a-c52a3800\"",
+      "Tue, 22 Dec 2020 00:57:14 GMT"
+    ],
+    "ranges": {
+      "0-1023": "71686c47d507ccdae25d47dfcf52830188bbbd1c390405eff6c4c02f35c38156",
+      "1005210600-1005656079": "4d037c7e86eaebd80c678aeeb0961a0ea9d6e910b5f1f1f225c95ed304fa21b6",
+      "1005656080-1005656111": "64a7c55bd4b84846e1cc4130248db54fc8c40d7b83b76089268d7cd9ce1897a3",
+      "1120474040-1120620503": "bf7766ec33ddaae7ad1fe984fe2a89c2268e3c095bb94832ca1fcc6795115c67",
+      "1120620504-1120620535": "d548fbd5caa5012437bb8ab2465e58fdedec855ca0143d45b6bb93dcfd2ce96d",
+      "2562890624-2563922983": "5988ce9adaefe69eb10c308d6a0209c771774b9888e334a00c60e28297842c7e",
+      "2660183344-2660183375": "c20c893bf36fb75d069891586c264742c93ddeaeced831ad706eb19a4d1be8f8",
+      "2743577232-2743916527": "9b31bdf92deccbe899267705f1f303f52263eb0bd97b9a5a6dd630c249aa88c4",
+      "2775544840-2775544871": "bc5f7290355751a03f785c10f059e7358cfcce5164e3501717b8acc1591e9ba1",
+      "2860328960-2860329983": "d52c057ae9b1fffeaa6130c91e56145fcb061e6904c76bb66d3242fc18629236",
+      "62464-63487": "8f82a0ffd8f6977bc43f4d7d407b9044be8ed0789a6c92966586829d710813de"
+    },
+    "url": "https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/de441.bsp"
+  },
+  "requestedJDTDB": [
+    2414988.499999978,
+    2499423.500000022
+  ],
+  "satellite": {
+    "identity": [
+      661592064,
+      null,
+      "Sat, 29 Jan 2022 14:38:13 GMT"
+    ],
+    "ranges": {
+      "0-1023": "fc4440f408de006438f48f9ac73061a1384cad6deb8e39f7ce773cc832d08686",
+      "328994136-331681111": "4a90b3559dde4d5688fa4c9cf8e857fb7f7d2d6935bebbfd337e229eb49fa0ad",
+      "331681112-334368087": "6b801f446a316ef91c283b314f07d5823942deb3e1b499f62525ecfe70b4021a",
+      "334368088-337055063": "83c23a1c52979f2a1cb1bff909b9d9ea7b3cb1abffbc6d30daf832ba15e4128e",
+      "337055064-338165343": "411ad630c70fc44f4676b9a0a84328a495281f94582433c32612ed51a1fc34d1",
+      "338165344-338165375": "5c7820dbbd7b11cdae40e393b452f4a1d565c9e7cd833bb657cab35316e75e87",
+      "510755840-510756863": "0fdd99c47f99d02739a7be62d02cb6f0a951f08652711504551f555696b6aa65",
+      "619834368-622521343": "aa707100bf8c5a17c502dd62f41e7a820ee9f7d5389aa3afd72a9e50370f0b87",
+      "622521344-625208319": "c17341ae736a920442d37b10b951ac1c111446ff90e8b1215b711072e588cfdf",
+      "625208320-627895295": "dd2987b1f42d8ecd507d90a8b5499b7beca661f4301616881a88051ddb0d4c2f",
+      "627895296-629126935": "8398d6b5be483d2cf0243d631f2696dce7dbc4860f656260fdca25cfab978fb5",
+      "638624832-638624863": "3a2827bff2dd2b77198023b3980f805ff671a522ab156c2a7345e7050ac4da9d",
+      "70656-71679": "bd2fbddd74f177a95aef3f5e773fe22e649493eeb1dedcd7f94975bc40bfad31"
+    },
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441.bsp"
+  },
+  "schemaVersion": 1
+}

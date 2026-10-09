@@ -1,0 +1,575 @@
+{
+  "baseline": {
+    "bytes": 149068464,
+    "scope": "previous link3 candidate release executable before Saturn integration"
+  },
+  "blendTT": [
+    [
+      -36556.5,
+      -36524.5
+    ],
+    [
+      47846.5,
+      47878.5
+    ]
+  ],
+  "buildSeconds": {
+    "debug": 18.51,
+    "release": 104.81
+  },
+  "debug": {
+    "coefficients": {
+      "maximumPositionKm": 1.7970192483703922e-05,
+      "maximumRateKmPerTDBDay": 6.272927653846405e-06,
+      "rows": 1167
+    },
+    "parity": {
+      "apsisEvents": [
+        {
+          "body": "mercury",
+          "jdtt": 2460695.0845825057,
+          "kind": "apocenter"
+        },
+        {
+          "body": "venus",
+          "jdtt": 2460726.3289744984,
+          "kind": "pericenter"
+        },
+        {
+          "body": "earth",
+          "jdtt": 2460680.0618358366,
+          "kind": "pericenter"
+        },
+        {
+          "body": "mars",
+          "jdtt": 2460782.4260232407,
+          "kind": "apocenter"
+        },
+        {
+          "body": "jupiter",
+          "jdtt": 2462133.6140703936,
+          "kind": "apocenter"
+        },
+        {
+          "body": "uranus",
+          "jdtt": 2470035.695252181,
+          "kind": "pericenter"
+        }
+      ],
+      "maximumElongationParitySeconds": 0.00010152580216526985,
+      "peakMagnitudeParitySeconds": 2.986053004860878e-06,
+      "planetaryApsisBodies": 6,
+      "planetaryApsisParitySeconds": 9.131002449430525,
+      "planetaryApsisWorstBody": "Uranus"
+    },
+    "saturn": [
+      {
+        "nativeJulianDateTT": 2425931.5364700793,
+        "nativeMinusSourceDistanceAUAtReference": 2.8670399387920042e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
+        "referenceJulianDateTT": 2425931.5364708,
+        "signedTimingErrorSeconds": -0.0622639199718833,
+        "sourceRangeRateAUPerDay": 8.148453522703298e-14
+      },
+      {
+        "nativeJulianDateTT": 2431340.8745553205,
+        "nativeMinusSourceDistanceAUAtReference": 2.6272317654729704e-12,
+        "nativeSlopeAtEventAUPerDay": -1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2431340.87455362,
+        "signedTimingErrorSeconds": 0.14692795230075717,
+        "sourceRangeRateAUPerDay": 4.79209996261333e-13
+      },
+      {
+        "nativeJulianDateTT": 2442055.6486924216,
+        "nativeMinusSourceDistanceAUAtReference": 2.460254222569347e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2442055.64869819,
+        "signedTimingErrorSeconds": -0.4983977065421641,
+        "sourceRangeRateAUPerDay": 8.159403329905785e-13
+      },
+      {
+        "nativeJulianDateTT": 2463565.548550721,
+        "nativeMinusSourceDistanceAUAtReference": 2.5295321393059567e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": 3.552713678800501e-12,
+        "referenceJulianDateTT": 2463565.54855741,
+        "signedTimingErrorSeconds": -0.5779444298241287,
+        "sourceRangeRateAUPerDay": 3.5145443472243e-12
+      },
+      {
+        "nativeJulianDateTT": 2468907.282593336,
+        "nativeMinusSourceDistanceAUAtReference": 2.8190783041281975e-12,
+        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2468907.28259141,
+        "signedTimingErrorSeconds": 0.16640801914036274,
+        "sourceRangeRateAUPerDay": 4.451012363232244e-13
+      },
+      {
+        "nativeJulianDateTT": 2474345.480539227,
+        "nativeMinusSourceDistanceAUAtReference": 2.5863755581667647e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2474345.48053982,
+        "signedTimingErrorSeconds": -0.05124695599079132,
+        "sourceRangeRateAUPerDay": 8.033357806810229e-13
+      }
+    ],
+    "source": [
+      {
+        "body": "mercury",
+        "localCrossings": 1,
+        "nativeJDTT": 2460695.0845825057,
+        "nativeMinusSourceSeconds": -0.3296703100204468,
+        "publicCMinusSourceSeconds": -0.3296703100204468,
+        "sourceLowerJDTT": 2460695.084582506,
+        "sourceUpperJDTT": 2460695.084590137
+      },
+      {
+        "body": "venus",
+        "localCrossings": 1,
+        "nativeJDTT": 2460726.3289744984,
+        "nativeMinusSourceSeconds": -22.08251953125,
+        "publicCMinusSourceSeconds": -22.084088623523712,
+        "sourceLowerJDTT": 2460726.329226268,
+        "sourceUpperJDTT": 2460726.329233898
+      },
+      {
+        "body": "earth",
+        "localCrossings": 1,
+        "nativeJDTT": 2460680.0618358366,
+        "nativeMinusSourceSeconds": -12.194985151290894,
+        "publicCMinusSourceSeconds": -12.193778157234192,
+        "sourceLowerJDTT": 2460680.061973167,
+        "sourceUpperJDTT": 2460680.061980797
+      },
+      {
+        "body": "mars",
+        "localCrossings": 1,
+        "nativeJDTT": 2460782.4260232407,
+        "nativeMinusSourceSeconds": 0.32958984375,
+        "publicCMinusSourceSeconds": 0.33075660467147827,
+        "sourceLowerJDTT": 2460782.426015611,
+        "sourceUpperJDTT": 2460782.426023241
+      },
+      {
+        "body": "jupiter",
+        "localCrossings": 3,
+        "nativeJDTT": 2462133.6140703936,
+        "nativeMinusSourceSeconds": 19895.031617581844,
+        "publicCMinusSourceSeconds": 19895.08186876774,
+        "sourceLowerJDTT": 2462133.383800009,
+        "sourceUpperJDTT": 2462133.383807639
+      },
+      {
+        "body": "uranus",
+        "localCrossings": 3,
+        "nativeJDTT": 2470035.695252181,
+        "nativeMinusSourceSeconds": -174123.3030617237,
+        "publicCMinusSourceSeconds": -174114.1720712185,
+        "sourceLowerJDTT": 2470037.710564374,
+        "sourceUpperJDTT": 2470037.710572003
+      },
+      {
+        "body": "neptune",
+        "localCrossings": 2,
+        "nativeJDTT": 2467133.445785323,
+        "nativeMinusSourceSeconds": 117316.19380563498,
+        "publicCMinusSourceSeconds": 117251.88600718975,
+        "sourceLowerJDTT": 2467132.087955191,
+        "sourceUpperJDTT": 2467132.087962821
+      },
+      {
+        "body": "pluto",
+        "localCrossings": 3,
+        "nativeJDTT": 2493228.9734084043,
+        "nativeMinusSourceSeconds": -2.854420244693756,
+        "publicCMinusSourceSeconds": -194.22312676906586,
+        "sourceLowerJDTT": 2493228.973437627,
+        "sourceUpperJDTT": 2493228.973445256
+      }
+    ]
+  },
+  "decodedPayloadBytes": 10618464,
+  "encodingBoundaryLimits": {
+    "encodingOnlySlopePerturbationBoundAUPerDay": 2.638261770889603e-10,
+    "existingStateDerivativeComparisonAllowanceAUPerDay": 2e-09,
+    "finiteDifferenceWidthDays": 0.001,
+    "roots": [
+      {
+        "nearestRecordJoinSeconds": 46351.10887885094,
+        "referenceJDTT": 2425931.5364708
+      },
+      {
+        "nearestRecordJoinSeconds": 54038.66142787447,
+        "referenceJDTT": 2431340.87455362
+      },
+      {
+        "nearestRecordJoinSeconds": 30352.634360053344,
+        "referenceJDTT": 2442055.64869819
+      },
+      {
+        "nearestRecordJoinSeconds": 39005.27895838022,
+        "referenceJDTT": 2463565.54855741
+      },
+      {
+        "nearestRecordJoinSeconds": 18784.001755400095,
+        "referenceJDTT": 2468907.28259141
+      },
+      {
+        "nearestRecordJoinSeconds": 41518.47228674451,
+        "referenceJDTT": 2474345.48053982
+      }
+    ],
+    "scope": "Position-encoding contribution only, using the Lipschitz property of vector norm. Evaluator roundoff and the physical source are separate. This does not bound event-time error near shallow roots; the six qualified roots do not test join-adjacent events."
+  },
+  "fullWeightTT": [
+    -36524.5,
+    47846.5
+  ],
+  "limitations": [
+    "Six Saturn source roots and eight native-selected diagnostic windows, not a continuous event-time bound or an orbital event census.",
+    "Jupiter, Uranus and Neptune fail the unchanged sixty-second comparison and remain owned by #92.",
+    "Public C searches are unchanged until #96, including the pre-existing sampled-refinement stopping defect.",
+    "Outside the Saturn source window the retained model remains; global physical-center and event accuracy are not established."
+  ],
+  "release": {
+    "coefficients": {
+      "maximumPositionKm": 1.7970192483703922e-05,
+      "maximumRateKmPerTDBDay": 6.272927653846405e-06,
+      "rows": 1167
+    },
+    "parity": {
+      "apsisEvents": [
+        {
+          "body": "mercury",
+          "jdtt": 2460695.0845825057,
+          "kind": "apocenter"
+        },
+        {
+          "body": "venus",
+          "jdtt": 2460726.3289744984,
+          "kind": "pericenter"
+        },
+        {
+          "body": "earth",
+          "jdtt": 2460680.0618358366,
+          "kind": "pericenter"
+        },
+        {
+          "body": "mars",
+          "jdtt": 2460782.4260232407,
+          "kind": "apocenter"
+        },
+        {
+          "body": "jupiter",
+          "jdtt": 2462133.6140703936,
+          "kind": "apocenter"
+        },
+        {
+          "body": "uranus",
+          "jdtt": 2470035.695252181,
+          "kind": "pericenter"
+        }
+      ],
+      "maximumElongationParitySeconds": 0.00010152580216526985,
+      "peakMagnitudeParitySeconds": 2.986053004860878e-06,
+      "planetaryApsisBodies": 6,
+      "planetaryApsisParitySeconds": 9.131002449430525,
+      "planetaryApsisWorstBody": "Uranus"
+    },
+    "saturn": [
+      {
+        "nativeJulianDateTT": 2425931.5364700793,
+        "nativeMinusSourceDistanceAUAtReference": 2.8670399387920042e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
+        "referenceJulianDateTT": 2425931.5364708,
+        "signedTimingErrorSeconds": -0.0622639199718833,
+        "sourceRangeRateAUPerDay": 8.148453522703298e-14
+      },
+      {
+        "nativeJulianDateTT": 2431340.8745553205,
+        "nativeMinusSourceDistanceAUAtReference": 2.6272317654729704e-12,
+        "nativeSlopeAtEventAUPerDay": -1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2431340.87455362,
+        "signedTimingErrorSeconds": 0.14692795230075717,
+        "sourceRangeRateAUPerDay": 4.79209996261333e-13
+      },
+      {
+        "nativeJulianDateTT": 2442055.6486924216,
+        "nativeMinusSourceDistanceAUAtReference": 2.460254222569347e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2442055.64869819,
+        "signedTimingErrorSeconds": -0.4983977065421641,
+        "sourceRangeRateAUPerDay": 8.159403329905785e-13
+      },
+      {
+        "nativeJulianDateTT": 2463565.548550721,
+        "nativeMinusSourceDistanceAUAtReference": 2.5295321393059567e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": 3.552713678800501e-12,
+        "referenceJulianDateTT": 2463565.54855741,
+        "signedTimingErrorSeconds": -0.5779444298241287,
+        "sourceRangeRateAUPerDay": 3.5145443472243e-12
+      },
+      {
+        "nativeJulianDateTT": 2468907.282593336,
+        "nativeMinusSourceDistanceAUAtReference": 2.8190783041281975e-12,
+        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2468907.28259141,
+        "signedTimingErrorSeconds": 0.16640801914036274,
+        "sourceRangeRateAUPerDay": 4.451012363232244e-13
+      },
+      {
+        "nativeJulianDateTT": 2474345.480539227,
+        "nativeMinusSourceDistanceAUAtReference": 2.5863755581667647e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": 0,
+        "referenceJulianDateTT": 2474345.48053982,
+        "signedTimingErrorSeconds": -0.05124695599079132,
+        "sourceRangeRateAUPerDay": 8.033357806810229e-13
+      }
+    ],
+    "source": [
+      {
+        "body": "mercury",
+        "localCrossings": 1,
+        "nativeJDTT": 2460695.0845825057,
+        "nativeMinusSourceSeconds": -0.3296703100204468,
+        "publicCMinusSourceSeconds": -0.3296703100204468,
+        "sourceLowerJDTT": 2460695.084582506,
+        "sourceUpperJDTT": 2460695.084590137
+      },
+      {
+        "body": "venus",
+        "localCrossings": 1,
+        "nativeJDTT": 2460726.3289744984,
+        "nativeMinusSourceSeconds": -22.08251953125,
+        "publicCMinusSourceSeconds": -22.084088623523712,
+        "sourceLowerJDTT": 2460726.329226268,
+        "sourceUpperJDTT": 2460726.329233898
+      },
+      {
+        "body": "earth",
+        "localCrossings": 1,
+        "nativeJDTT": 2460680.0618358366,
+        "nativeMinusSourceSeconds": -12.194985151290894,
+        "publicCMinusSourceSeconds": -12.193778157234192,
+        "sourceLowerJDTT": 2460680.061973167,
+        "sourceUpperJDTT": 2460680.061980797
+      },
+      {
+        "body": "mars",
+        "localCrossings": 1,
+        "nativeJDTT": 2460782.4260232407,
+        "nativeMinusSourceSeconds": 0.32958984375,
+        "publicCMinusSourceSeconds": 0.33075660467147827,
+        "sourceLowerJDTT": 2460782.426015611,
+        "sourceUpperJDTT": 2460782.426023241
+      },
+      {
+        "body": "jupiter",
+        "localCrossings": 3,
+        "nativeJDTT": 2462133.6140703936,
+        "nativeMinusSourceSeconds": 19895.031617581844,
+        "publicCMinusSourceSeconds": 19895.08186876774,
+        "sourceLowerJDTT": 2462133.383800009,
+        "sourceUpperJDTT": 2462133.383807639
+      },
+      {
+        "body": "uranus",
+        "localCrossings": 3,
+        "nativeJDTT": 2470035.695252181,
+        "nativeMinusSourceSeconds": -174123.3030617237,
+        "publicCMinusSourceSeconds": -174114.1720712185,
+        "sourceLowerJDTT": 2470037.710564374,
+        "sourceUpperJDTT": 2470037.710572003
+      },
+      {
+        "body": "neptune",
+        "localCrossings": 2,
+        "nativeJDTT": 2467133.445785323,
+        "nativeMinusSourceSeconds": 117316.19380563498,
+        "publicCMinusSourceSeconds": 117251.88600718975,
+        "sourceLowerJDTT": 2467132.087955191,
+        "sourceUpperJDTT": 2467132.087962821
+      },
+      {
+        "body": "pluto",
+        "localCrossings": 3,
+        "nativeJDTT": 2493228.9734084043,
+        "nativeMinusSourceSeconds": -2.854420244693756,
+        "publicCMinusSourceSeconds": -194.22312676906586,
+        "sourceLowerJDTT": 2493228.973437627,
+        "sourceUpperJDTT": 2493228.973445256
+      }
+    ]
+  },
+  "releaseExecutableBytes": 163641584,
+  "resourceScope": "macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.",
+  "resources": {
+    "centerColdSeconds": 0.006041049957275391,
+    "checksum": -443.8575980663478,
+    "evaluationsPerModel": 2000,
+    "eventCount": 100,
+    "eventSeconds": 0.046372056007385254,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "peakAfterCenterBytes": 75415552,
+    "peakAfterRetainedBytes": 51789824,
+    "peakAfterWorkloadsBytes": 76038144,
+    "peakBeforeBytes": 46743552,
+    "retainedColdSeconds": 0.0013750791549682617,
+    "seconds": {
+      "center": 0.0335240364074707,
+      "retained": 0.01231396198272705
+    }
+  },
+  "schemaVersion": 2,
+  "sourceSHA256": {
+    "Scripts/assess-moon-de441.py": "5da238cbd372de58899fc7de9ca49dbe5e02a33b0886a8ce8bf69854783c26a4",
+    "Scripts/assess-pluto-de441.py": "dfba8100da9c972770a130f6f44f69d7effddc3a13bf20ee9ca288c1f3aa1eff",
+    "Scripts/assess-saturn-apsides.py": "888bdb62009f37750a8fd26ac3c4f8210dc7cea3606bac244adbb57601e0a021",
+    "Scripts/generate-moon-de441.py": "b350b467dd0e9eb57fbe440a42a31e97b9d80edc612ad3281456d36b41ff7fbe",
+    "Scripts/generate-moon-tables.py": "674afcfcfc28b1a9d0ede7716e2540de132afe573cbdf95cb167690cb88026e0",
+    "Scripts/generate-saturn-tables.py": "ddc05f7fa1d7ee48c42d1fb1400d975538947d66a809dd6d9298c743e83ffce4",
+    "Scripts/qualify-moon-de441.py": "69521b985aa7d5f577ca8b1d89712d11b5e3453d042059f498bfaaebd24667be",
+    "Scripts/record-planetary-event-evidence.py": "6eff79b2d3543e2dfb5963a07aadac55a70ea129e00fb7a5c7ba694753bfc129",
+    "Scripts/reference-data/build-fixtures.py": "710ee11ea778fa3412950a5325b8e922c25c91f334e0a4e72ff656da7f046055",
+    "Scripts/reference-data/capture-planetary-apsides.py": "3789be611d1bc5219d2e55d82ad4429188ced595c6b88d51cdd421de6b0b0eba",
+    "Scripts/reference-data/planetary-apsis-evidence.json": "9cb0ab7430beef2029dc69cabe34010231609c702bfe621b8856feb521aea684",
+    "Scripts/reference-data/sources/horizons/saturn-apsis-precision.json": "afa8afd2bcf166946ceee8fc5192cfe416c073506e27fa2cf418c8bb0ad8f4dc",
+    "Scripts/reference-data/sources/horizons/saturn-apsis-precision.query.json": "9b711ebb0b743b35dbd0fa53e24fa0dfbb90641850399faf63ad6cc0d95d29ca",
+    "Scripts/reference-data/sources/planetary-apsides/earth-refinement.json": "9cc55617c62a0ae46b09e02cd7c08dc88444269098945f189927789c512f529e",
+    "Scripts/reference-data/sources/planetary-apsides/earth.json": "22b882ef8e62d00d9bbd78f2faf2c49b4542b6faff574e60886e43ec43f3ec54",
+    "Scripts/reference-data/sources/planetary-apsides/earth.query.json": "f884490af8ec179237775b81adcc8c9343189654d3e345de9be3627b2126c4e2",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter-refinement.json": "fe6bbcbaa548693d6478f18eda9132f211202f05972a9e8335fb9a8eb400d3cb",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter.json": "b2212ce9f360c3c993d5922fbd8b4fd1b2f9db3cd05737f95b896a5853fb4037",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter.query.json": "59a7f609ca6d52661dc701db1f534876c14427429c568445b885084f32d3a537",
+    "Scripts/reference-data/sources/planetary-apsides/mars-refinement.json": "fa48216c7a18714985c1a88a381391a6ddec93998cf8cd8f5ae0d74e3bac49e6",
+    "Scripts/reference-data/sources/planetary-apsides/mars.json": "ed4ac548d795923b5d361ea4b7152beabef2f270d914333b934e41ae96389924",
+    "Scripts/reference-data/sources/planetary-apsides/mars.query.json": "59c377ca77857111f2f606a90bbb2d76cb14bc261bf458c2f3d844dfad9dee06",
+    "Scripts/reference-data/sources/planetary-apsides/mercury-refinement.json": "071e54fa466e4cb4e32239da265ea11ebba58e458fc41ed17d159c01fef0ea50",
+    "Scripts/reference-data/sources/planetary-apsides/mercury.json": "b35c41baca859b3ed7dfcd8429898618c19451703151149db720f827b04b4810",
+    "Scripts/reference-data/sources/planetary-apsides/mercury.query.json": "ac1c36082690bc92916c9bf5a087329be924546a78defa54f4406b626088932b",
+    "Scripts/reference-data/sources/planetary-apsides/neptune-refinement.json": "fcf81ac55ec6fedb56a6a6bb14cdc09bbf8edc6684bf18717618b38ff1104858",
+    "Scripts/reference-data/sources/planetary-apsides/neptune.json": "8c7e33b2ba0a3f6f253f3faec23074cfd0b0d931fcaa9f2f36e748ed10063adb",
+    "Scripts/reference-data/sources/planetary-apsides/neptune.query.json": "8863fb9722331d3dbfeea90e27808f5be8271d3df876a77dfda502b1a20cad15",
+    "Scripts/reference-data/sources/planetary-apsides/pluto-refinement.json": "c65f0e0c4d4058061c5869ebe17c7d148d5e1e75f43051d892b99e1d87333aa6",
+    "Scripts/reference-data/sources/planetary-apsides/pluto.json": "625ed747f0e7d2f88196afc3f65758665a0dcaf0b8e5a1067fb03fdbb6476631",
+    "Scripts/reference-data/sources/planetary-apsides/pluto.query.json": "6cf8667c85e705db26e8a7b3c3a8edce996e50088b3ad137ae87c2aeddfdd905",
+    "Scripts/reference-data/sources/planetary-apsides/uranus-refinement.json": "3e8dee3401cf4ecaebe56bc7fda0c19d25984d91dabacf14deddd389575062d8",
+    "Scripts/reference-data/sources/planetary-apsides/uranus.json": "53f72c2aa96022ac91cb0b446269c4f834f95224b40fac2c8567c9e28ecb1303",
+    "Scripts/reference-data/sources/planetary-apsides/uranus.query.json": "1b6390473901e577ec64a828187ceb39688554c06fdf8bc865b86e38b29421e8",
+    "Scripts/reference-data/sources/planetary-apsides/venus-refinement.json": "a54a0ee72cd0298db80fe5cfe0850e7b94716be895c81eacc8e6bee3741a9f57",
+    "Scripts/reference-data/sources/planetary-apsides/venus.json": "3d62b806b3e2f89894f26cbb1952910349b8637223736eb43af914ee8bd6809f",
+    "Scripts/reference-data/sources/planetary-apsides/venus.query.json": "d09b3929d26f10c207ec394b96e50769fb592ee6575a1d2696b2189bcba0c65f",
+    "Scripts/reference-data/test_capture_planetary_apsides.py": "5a91d6655681c2bc8e465a74c8d9cc36cdf33c66ccaae37731659df4a719e3d2",
+    "Scripts/saturn-data/assessment.json": "3828b14e0163d04c751f801d8af20b9ea8c1c0caeb2ae6483c447c810b2daee4",
+    "Scripts/saturn-data/barycenter-reference.json": "218c6a9cda702a969c6eecb4cb6927aa735f5d6af9f7c81a5d41f180104c9041",
+    "Scripts/saturn-data/barycenter-reference.query.json": "a12f1e6346ba1016f68c4d9eabf51ba11a71896b8122381f70151c6a02c1ab78",
+    "Scripts/saturn-data/direct-fixtures.json": "09fc0c61567cb69fd7953712827029c8fe10399b8db5ed0fea8885676a0a0524",
+    "Scripts/saturn-data/native-captures.json": "d93d7b75e9ef8622591fa646f99b26ce907c9bd4e18509125a9079bc40835a6c",
+    "Scripts/test_saturn_ephemeris.py": "c4e6e58d90210c1aaa01014eedcbb037076a3a552929bf922ffcb7d6e3b94c4a",
+    "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
+    "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
+    "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
+    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
+    "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
+    "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
+    "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "32ca3a429bdabd8c6992264ee2cc2880a51d06ca57c44721ac873e7af56e8735",
+    "Sources/AstronomyKit/Engine/Foundation/Engine.swift": "57d6d1ae8dbdacadc23daeab092445b9f27acf5baf021b900c21c5e59a09b38c",
+    "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
+    "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
+    "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "267a630c712e7d254d2302dc470486ac28f1509ea55f5dd53a66c36c47662036",
+    "Sources/AstronomyKit/Engine/Foundation/EngineConstants.swift": "9504fdbc479821e8fbb658db830079cc86deada403331113e92bb98b768f946c",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "e8059d781fcddcc8fe5d1f459427cb72f19a85541b8c486e66f925ded436cde2",
+    "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift": "da587b4d643ba188392481fe846aed7c6cbe7fd01e84ab1d73706165c654e027",
+    "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
+    "Sources/AstronomyKit/Engine/Foundation/EngineSearch.swift": "0abe5aa2f8f23e97064b7fe43648542876c175d3215706bae81f20d0926fffe6",
+    "Sources/AstronomyKit/Engine/Foundation/EngineTables.swift": "b23eefd8a7160329868bc503a262f672489b32985bc22ae983ca2de6f432c3ba",
+    "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
+    "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
+    "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "81af4e399a16a4cc8d8915add97a9c9ff425fd14b311673edbb943df29cce2fd",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "40c1ff9ef30b3bd82ccb86cf57510b260f2f491e29c784388324fec6120b3a53",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "8ff9656a39a1442fa7e556287205573430268fbd37a9d70fa81c02e34437b2ce",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoEphemeris.swift": "7a061d0fde49bc677b78d90324ee5d61b4573e43460041ccbbdbbecf0521a278",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoLightTime.swift": "001ba2e370d974fe9842c8c9727243813f33e963ca667f5e939ae5dbd7f18090",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441PlutoData.swift": "8cc2f1d853099e7d6790e5e034208058863e80acb96a1092e0950b1e1d4746a1",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441SunData.swift": "d4ae95ca844562624d8391543e6295dfcf9227f1329cda24138881813e042f68",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoBarycenterCoefficients.swift": "62ba561dd0fc419332f3faecdef9245303c01b67558e7a1b8e14bc5a7116d17a",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoCenterCoefficients.swift": "db7f56dd0da095ac99dd42204269fa59984985401d3469a71c07b32f09a09ee5",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoStateTable.swift": "23daa2037a4dd5add677903fd3e08549c2997979573fc1ba3b4caabb8d81d4e9",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoSunCoefficients.swift": "b76780f119d5691f54c10e548fa94b263bbf23aa86c35a1e70a760881ba29259",
+    "Sources/AstronomyKit/Engine/Moon/EngineFrameBias.swift": "96e32a064cb907b394223c966eaee27a104a5309d0fdbaaaa1cfc5e25b8d66a3",
+    "Sources/AstronomyKit/Engine/Moon/EngineLibration.swift": "9d9b38890d2ccf06c3c13cf086bb8792b79fe08ccff12d8edddf286f8767c23f",
+    "Sources/AstronomyKit/Engine/Moon/EngineLunarSeries.swift": "0f65e3d6a9892558637f12eab83b13ef8276eb4d1283267a1643a1da424db3f8",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoon.swift": "a802e1a73089bc26e7b68e3927a4cf7dc3664fbc9c01cb0086565c7c218ef4eb",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441.swift": "4835f666ca2fd7a9d1f5cb7de59f639ce8dc8f8fd93cd81b722cf34cf503c1d9",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonEphemeris.swift": "d959aabb49a5dc8f2d796be90a62bec164224d0e431dfa15492b6342d0a9290b",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonStates.swift": "442cf8a11ac4b65d4e6fe7c230d73f4ff599584130272a1915d17794d1889e7a",
+    "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift": "2a353a151eee9be26a61da7ace4854f73b7190d6147ab89a4e9665e98e4cfd93",
+    "Sources/AstronomyKit/Engine/Moon/Generated/DE441/MoonDE441Data.swift": "18183bac224958b016b9ee348a9d57c698efd8838eee7578f01af6add96102ae",
+    "Sources/AstronomyKit/Engine/Moon/Generated/MoonDE440Coefficients.swift": "690ed21578f3b89d0438deb22a88710ed31e11394cf12d69f6911d36e1d75b6b",
+    "Sources/AstronomyKit/Engine/Moon/Generated/TDBTerms.swift": "e117834cde595413631dd655605ae97a0fd85b20829476472f1eacba1fdb2ef2",
+    "Sources/AstronomyKit/Engine/Orientation/EngineAtmosphere.swift": "597cf1e08dc7e8de30c21983549f3ea3fe0467a823f7bdfe87abb0003532b8bf",
+    "Sources/AstronomyKit/Engine/Orientation/EngineCoordinates.swift": "10136541491835563c124727f046015c9dc8a554a1bb12c711c797ff812ce385",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEarthRotation.swift": "8da0ccef9811c6a6af993429e2772e07488ed09dea16d77f790b40efd3828a01",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "00bae4b6e220398fe02081fa8d585fd56dfbc9a15776e71e488609c9583e8644",
+    "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
+    "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "8a8e64fb4955949b25c91d287f7e685bab0a02ff9395179ee79213e6f49c4a4c",
+    "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
+    "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
+    "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift": "889f639ad72ca00cd69b59f1178d6ca024c9c5172b3008902fb46f4ddb8021ab",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "880b1f1f052c430d9d050ab3e6683cf227c71b8429fac56c02151670d287a471",
+    "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialCoverage.swift": "c1c74a4ea6b29371b0b53884b7b0849d57e3830efe81aea097c8ffaa5be32133",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialJupiter.swift": "87319ed3e420bf2b5fa0b1a1e0f1985539a0ccfdb5def27eb808b3d64531f275",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialMars.swift": "b9c150843b00b0521fa85d79f3dac97e5e8716b555aa51c2d52c84e7cc0e547b",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialMercury.swift": "68ecb99714f4471108dc4dfa71fb8e6f82903897d2bca464cf3e32ee9fbca948",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialNeptune.swift": "a12e7fd7fcc700245e1b33bb3a5b98695348d44c7d09665e05d8780d09f58216",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialSaturn.swift": "c685dc93fd5a86e96f29865b8bfc25a0158395e9d87c12440f3c006c8051d733",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialUranus.swift": "05ba88c79fcca26988c9042b4b728603bde9c197b9ab9bb73f2a389259e438e5",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialVenus.swift": "96463d608a7242dbc5db215b559757ca987f6115a62533d33cd630e271a55795",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnBarycenterData.swift": "4085bb1543aa6aa682b57cee1dbf6671aeed42b3cc5355e266a184c5f59dca98",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
+    "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
+    "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
+    "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "a94e41c7df6863e696f6cf4079a114919e56f91ae30d0befeb14b31641ff8596",
+    "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "5d8bd4003fae869c238e3ab168244a0039d8f2b4723f36da73050ec9695c5bb8",
+    "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "3f0391e0a6b3d74d4013695e83452d1dc984b0964e046e1d130e1472fdec0316",
+    "Sources/AstronomyKit/Engine/Positions/EngineHeliocentric.swift": "5d739e7aac8027ba2b7ad309cb5a5b627ff3ca847bddfc02433a36bd5f671023",
+    "Sources/AstronomyKit/Engine/Positions/EngineIllumination.swift": "7caf847bc8937b91cc57dcbc9e191ee05a67143ce83af837678679acced8b6bf",
+    "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
+    "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "1e7d556d94b09301aac6535d71347adfae546d437140867c19aa59601602efe8",
+    "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
+    "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
+    "Sources/CLibAstronomy/EphemerisTime/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
+    "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
+    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "a449b460ac97417041952e32a096208250ef3c95e8835e19a2119c57a0141176",
+    "Tests/AstronomyKitTests/Engine/Gravity/EngineGravityTests.swift": "70a588e2c3a0b8d719655410d888ae58df8bbd6bd3586f4d4018a6542873291c",
+    "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnEphemerisTests.swift": "57b0cbf2a03a52b053a9d6a1c10ee5bd95621d4ce0daeedd1f5d42243c081bdf",
+    "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnMeasurementTests.swift": "2ef055c4a9f6e61bb14373c3c8aacfdb010d5b9d818521bc2e5e74e6991a3453",
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "fe6bc562613b1d1ed6b36ef3f719a27d06d2e824ca8b45cf02864c56c5af5dc2",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "acdc9e3663f3a32256d01d7a6aad58f8d72889abd2c74481f7e0687fffffb1f6"
+  },
+  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+}

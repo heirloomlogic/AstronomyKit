@@ -3452,7 +3452,7 @@
   "sourceSHA256": {
     "Package.swift": "9015473035c478da9e7022855be84b8c88867f123661c05d6bf4a8eb6a3b1139",
     "Scripts/solar-numerics/certify_light_time.py": "0948cd14b3a04f9750a6c04c03a6e8f5446323598d2c98f88198a11d755ce3fb",
-    "Scripts/solar-numerics/derived-earth.json": "8d58d243000adf408e42c20e8a69e612cd4af31154ef2ad8738bbd8aae9de35e",
+    "Scripts/solar-numerics/derived-earth.json": "9f48306bf5df145fbaffe1e9c3c5b8396dc6eb063e1b6c50886590f78fdcf13a",
     "Scripts/solar-numerics/intervals.py": "f311ffea878782dd46cb55a79486615626bbf8d8fb351c4186f9c22dfff297c1",
     "Scripts/solar-numerics/numerics.py": "9a5db9f8d47ffff6f8e5c1c849a0db983d1335d583af5b6eb7a7caada9f5b8fb",
     "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
@@ -3472,7 +3472,7 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift": "889f639ad72ca00cd69b59f1178d6ca024c9c5172b3008902fb46f4ddb8021ab",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "1f04338ea9a1a4f62b564800568d42b59b058d7399e1d411c65898c6b4cd0e9a",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialCoverage.swift": "c1c74a4ea6b29371b0b53884b7b0849d57e3830efe81aea097c8ffaa5be32133",

@@ -128,10 +128,11 @@ extension Engine.Events {
         return offset
     }
 
-    private static func orbitalPeriod(of body: CelestialBody) throws -> Double {
+    static func orbitalPeriod(of body: CelestialBody) throws -> Double {
         switch body {
         case .mercury: 87.969
         case .venus: 224.701
+        case .earth: 365.256
         case .mars: 686.980
         case .jupiter: 4_332.589
         case .saturn: 10_759.22

@@ -65,7 +65,7 @@ struct EngineGravityTests {
                 let body = try #require(system.state(of: celestial))
                 #expect(Self.length(body.position - system.sun.position - position) <= 1e-14, "\(planet) at \(tt)")
                 let gm = Gravity.SolarSystem.planetGM[planet.rawValue]
-                offset += gm / (gm + Gravity.sunGM) * position
+                offset += gm / (gm + Gravity.sunGM) * (try planet.systemHeliocentricState(at: time)).positionVector
             }
             #expect(Self.length(system.sun.position + offset) <= 1e-17)
             let barycenter = try #require(system.state(of: .solarSystemBarycenter))
@@ -110,7 +110,7 @@ struct EngineGravityTests {
                 (Engine.Planet.jupiter, Gravity.jupiterGM, bodies.jupiter), (.saturn, Gravity.saturnGM, bodies.saturn),
                 (.uranus, Gravity.uranusGM, bodies.uranus), (.neptune, Gravity.neptuneGM, bodies.neptune),
             ] {
-                let state = try planet.heliocentricState(at: time)
+                let state = try planet.systemHeliocentricState(at: time)
                 let position = SIMD3(state.x, state.y, state.z)
                 let velocity = SIMD3(state.vx, state.vy, state.vz)
                 #expect(Self.length(body.position - bodies.sun.position - position) <= 1e-14, "\(planet) at \(tt)")

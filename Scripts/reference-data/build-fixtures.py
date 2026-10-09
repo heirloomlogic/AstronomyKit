@@ -147,6 +147,31 @@ MAX_ELONGATION_QUERIES = {
     "venus-max-2025-06": {"body": "venus", "command": "299", "startUTC": "2025-01-11T00:00:00Z", "dates": julian_grid(2460827.125, 2460828.125, 1.0)},
 }
 
+# Six Saturn body-center extrema from the source-bound #81/#132 diagnosis. Each reference is sampled at ±0.01 and ±0.005 TT days around the resolved root. The native port replays the unchanged sixty-second target; target 699 is the public planet-center semantic, never system barycenter 6.
+SATURN_APSIS_REFERENCES = [
+    ("apocenter", 2425931.53647080),
+    ("pericenter", 2431340.87455362),
+    ("pericenter", 2442055.64869819),
+    ("pericenter", 2463565.54855741),
+    ("apocenter", 2468907.28259141),
+    ("pericenter", 2474345.48053982),
+]
+SATURN_APSIS_DATES = [
+    *[round(root + offset, 8) for _, root in SATURN_APSIS_REFERENCES[:-1] for offset in (-0.01, -0.005, 0, 0.005, 0.01)],
+    2474345.47053983, 2474345.47553982, 2474345.48053982, 2474345.48553982, 2474345.49053982,
+]
+
+
+def saturn_apsis_query() -> dict[str, str]:
+    parameters = vector_query("699", "500@10", SATURN_APSIS_DATES)
+    parameters.update({
+        "CAL_TYPE": quoted("GREGORIAN"),
+        "TIME_TYPE": quoted("TT"),
+        "TLIST_TYPE": quoted("JD"),
+        "VEC_TABLE": quoted("3"),
+    })
+    return parameters
+
 # Saturn's sub-observer latitude, distances from the Sun and from Earth, and phase angle from Earth's center, from 2010
 # to 2035, through the ring-plane crossing of 2025.
 SATURN_RING_DATES = [2455197.5, 2456109.5, 2457023.5, 2457935.5, 2458849.5, 2459761.5, 2460676.5, 2460857.5, 2461587.5, 2462502.5, 2464328.5]
@@ -359,6 +384,7 @@ def horizons_acquisitions() -> list[tuple[str, dict[str, str]]]:
         (name, angular_elongation_query(event["command"], event["dates"]))
         for name, event in MAX_ELONGATION_QUERIES.items()
     )
+    acquisitions.append(("saturn-apsis-precision", saturn_apsis_query()))
     acquisitions.append(("saturn-rings", geocentric_query("699", "14,19,20,24", SATURN_RING_DATES)))
     return acquisitions
 
@@ -844,6 +870,47 @@ def parse_angular_events() -> dict[str, list[dict[str, object]]]:
     }
 
 
+def parse_saturn_apsis_events() -> list[dict[str, object]]:
+    result = horizons_result("saturn-apsis-precision")
+    required = [
+        "Target body name: Saturn (699)",
+        "Center body name: Sun (10)",
+        "Output units    : AU-D",
+        "JDTT",
+        "Output type     : GEOMETRIC cartesian states",
+        "Reference frame : ICRF",
+    ]
+    if any(item not in result for item in required):
+        raise RuntimeError("unexpected Saturn apsis target, center, correction, or frame")
+    lines = data_lines(result)
+    if len(lines) != len(SATURN_APSIS_DATES):
+        raise RuntimeError("unexpected Saturn apsis precision row count")
+    rows = []
+    for date, line in zip(SATURN_APSIS_DATES, lines):
+        columns = [column.strip() for column in line.split(",")]
+        values = [float(columns[index]) for index in (0, 9, 10)]
+        if not all(math.isfinite(value) for value in values) or abs(values[0] - date) > 2e-9:
+            raise RuntimeError("Saturn apsis precision date or finite-value mismatch")
+        rows.append((date, values[1], values[2]))
+    events = []
+    for index, (kind, root) in enumerate(SATURN_APSIS_REFERENCES):
+        group = rows[index * 5 : index * 5 + 5]
+        rates = [row[2] for row in group]
+        directed = rates if kind == "pericenter" else [-rate for rate in rates]
+        if not (directed[0] < 0 < directed[-1]) or group[2][0] != root:
+            raise RuntimeError(f"Saturn {kind} reference does not retain its directed crossing")
+        events.append({
+            "body": "saturn",
+            "kind": kind,
+            "julianDateTT": root,
+            "distanceAU": group[2][1],
+            "sourceRangeRateAUPerDay": group[2][2],
+            "sourceToleranceSeconds": 1.0,
+            "acceptanceToleranceSeconds": 60.0,
+        })
+    return events
+
+
 def jupiter_moon_relative_tolerance(julian_date_tdb: float) -> float | None:
     start, end = JUPITER_MOON_TOLERANCE_JD_TDB_RANGE
     if start <= julian_date_tdb <= end:
@@ -1210,6 +1277,7 @@ def build_archive(constellations: dict[str, list[dict[str, object]]] | None = No
     archive.update(parse_eclipses())
     archive.update(parse_horizons())
     archive.update(parse_angular_events())
+    archive["saturnApsides"] = parse_saturn_apsis_events()
     archive.update(parse_geocentric_states())
     return archive
 
@@ -1227,6 +1295,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
         "jplHorizontal": {"serviceVersion": "recorded in every archived response", "frame": "topocentric apparent horizon: azimuth east of north and elevation", "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent position with light time, gravitational deflection and stellar aberration", "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)", "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplElongation": {"serviceVersion": "recorded in every archived response", "frame": "geocentric Sun-observer-target angle and IAU76/80 ecliptic of date", "origin": "Earth center 500@399", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent positions with light time, gravitational deflection and stellar aberration", "refraction": "none", "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplAngularEvents": {"serviceVersion": "recorded in every archived response", "frame": "simultaneous geometric ICRF vectors transformed by official SOFA IAU 1976/1980 precession-nutation to true ecliptic of date for relative longitude; apparent full-sky Sun-observer-target angle for maximum elongation", "origin": "Sun center 500@10 for Earth, Mars, and Venus vectors; Earth center 500@399 for Mercury and Venus elongation", "units": "Julian dates TDB, UTC calendar timestamps, degrees, and seconds", "timeScale": "TDB for geometric vectors and UTC for apparent elongation tables; the 0.002-second TDB-minus-TT bound is included in relative-longitude allowances", "aberration": "none for VEC_CORR=NONE relative-longitude vectors; Horizons apparent light time, gravitational deflection, and stellar aberration for S-O-T elongation", "refraction": "none (AIRLESS)", "domain": "Mars opposition and superior conjunction, Venus inferior and superior conjunction, and two successive maximum elongations for each of Mercury and Venus in 2025", "license": "NASA/JPL factual output and IAU SOFA software/data terms; attribution retained and no endorsement implied", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and response SHA-256. build-fixtures.py applies Scripts/reference-data/sofa-angular-events.c to simultaneous geometric vectors, derives sign-change or sampled-maximum brackets, and records the source sampling resolution as an allowance rather than a published accuracy."},
+        "jplSaturnApsides": {"serviceVersion": "recorded in the archived response", "frame": "geometric ICRF vectors", "origin": "Saturn body center 699 relative to Sun body center 500@10", "units": "Julian dates TT, AU, AU/day, and seconds", "timeScale": "TT", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable", "domain": "six failure-selected Saturn body-center extrema from 1929 through 2062, each sampled at five instants over ±0.01 TT day", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "The adjacent query records target 699, Sun-center origin, TT, geometric correction, exact sample epochs, and response SHA-256. These are failure-selected diagnostics from #81/#132, not a new accuracy holdout."},
         "jplSaturnRings": {"serviceVersion": "recorded in every archived response", "frame": "Saturn's planetodetic sub-observer latitude on the IAU pole and ellipsoid Horizons lists, its distances from the Sun and from Earth, and the Sun-target-observer angle", "origin": "Earth center 500@399", "units": "degrees, AU and km", "timeScale": "UTC calendar output", "aberration": "apparent sub-observer point with light time; S-T-O as Horizons defines it", "refraction": "none", "domain": "11 dates from 2010 to 2035, through the 2025 ring-plane crossing", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplVectors": {"serviceVersion": "recorded in every archived response", "frame": "geometric ICRF/J2000 vectors", "origin": "Sun center 500@10 for Chiron, Pluto (999) and the Pluto system barycenter (9); Jupiter center 500@599 for Galilean moons; Earth center 500@399 for the Moon; the solar system barycenter 500@0 for the Sun, the planets, Pluto (999), the Moon and the Earth-Moon barycenter (3)", "units": "AU and AU/day", "timeScale": "TDB", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable to geometric vectors", "domain": "JPL vectors sampled at 1900, 2000, and 2100; Astronomy Engine's 9e-4 Galilean-moon threshold covers only JD 2426545.0 through 2476545.0, where the Galilean moons are also sampled at both ends and every 2,500 days between, with a day outside each end; the Moon at 30 dates from 2002 BCE to 6000 CE, eleven of them within 40 days of 1900-01-01 or 2131-01-01; Pluto at 29 dates from 1840 to 2159, through both 32-day blends at 1900 and 2131 and across record, segment and step seams, and the Pluto system barycenter at 15 dates from 100 BCE to 4098 CE, where Horizons has no Pluto center, and at 4 dates from 1990 to 2010 for the gravity simulation; barycentric states inside the spans of Astronomy Engine's BaryStateTest files: the Sun, Jupiter to Neptune and Pluto every 25 years from 1900 to 2099, Mercury to Mars every 10 years from 1980 to 2020, and the Moon and the Earth-Moon barycenter at 5 dates from 1970 to 2040; Chiron at its five anchors from 2000 to 2040, around the four midpoints between them, and at 1900-01-01 and 2150-01-01", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "usnoSeasonsAndPhases": {"version": UPSTREAM_REVISION, "frame": "geocentric seasonal and lunar-phase event definitions from USNO APIs", "origin": "Earth center", "units": "calendar timestamps", "timeScale": "source timestamps are serialized with Z; the pinned C harness passes them to Astronomy_MakeTime as UT coordinates and compares lunar-quarter TT values derived with its default Espenak-Meeus Delta T model", "aberration": "not separately configurable or documented in the archived API output", "refraction": "not applicable to geocentric event times", "domain": "pinned table contains one year every ten years from 1800 through 2100; sampled at 1800, 2000, and 2100", "license": government_license, "url": "https://aa.usno.navy.mil/data/api", "recipe": f"Pinned parser, C validation harness, engine source, and table under {upstream}/moonphase, {upstream}/ctest.c, and the matching source/c tree"},

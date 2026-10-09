@@ -43,13 +43,13 @@ struct EnginePlanetPositionsTests {
     static func allowance(radius: Double) -> Double { 1e-10 * (1 + 2 * radius) }
 
     @Test(
-        "Ecliptic position and velocity against IMCCE vsop87.chk, J2000 through the polynomials and earlier dates through the series",
+        "Retained polynomial/VSOP position and velocity against IMCCE vsop87.chk",
         arguments: PublishedVSOP87.records)
     func publishedEcliptic(record: PublishedVSOP87.Record) throws {
         let polynomial = Engine.PlanetPolynomial.position(record.planet, tt: record.tt) != nil
         #expect(polynomial == (record.tt == 0))
         let cache = Self.cache()
-        let state = try record.planet.heliocentricEclipticState(at: Self.time(tt: record.tt), cache: cache)
+        let state = try record.planet.retainedEclipticState(at: Self.time(tt: record.tt), cache: cache)
         let expected = Self.rectangular(record)
         let allowance = Self.allowance(radius: record.radius)
         for (axis, (actual, published)) in zip(

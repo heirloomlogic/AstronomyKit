@@ -98,8 +98,10 @@ extension Engine.Gravity {
     /// reads.
     struct SolarSystem: Sendable {
         var sun: BodyState
-        /// Mercury to Neptune, indexed by ``Engine/Planet/rawValue``.
+        /// Mercury to Neptune gravitational model states, indexed by ``Engine/Planet/rawValue``. Saturn uses its system barycenter; other planets retain their existing approximations.
         var planets: [BodyState]
+        /// Physical Saturn center for exposed body states and origin translation; forces use `planets`.
+        var saturnCenter: BodyState
 
         /// The GM each planet pulls with, in table order. Earth's includes
         /// the Moon's.
@@ -117,6 +119,10 @@ extension Engine.Gravity {
         /// - Throws: As ``MajorBodies/init(tt:)``.
         init(tt: Double) throws {
             (sun, planets) = try barycentricStates(Self.planetsWithGM, tt: tt)
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let physical = try Engine.Planet.saturn.heliocentricState(at: time, cache: seriesCache)
+            saturnCenter = BodyState(
+                position: physical.positionVector + sun.position, velocity: physical.velocityVector + sun.velocity)
         }
 
         /// The barycentric state of `body`: the Sun, a planet, or the
@@ -124,6 +130,7 @@ extension Engine.Gravity {
         func state(of body: CelestialBody) -> BodyState? {
             if body == .solarSystemBarycenter { return BodyState(position: .zero, velocity: .zero) }
             if body == .sun { return sun }
+            if body == .saturn { return saturnCenter }
             return Engine.Planet(body).map { planets[$0.rawValue] }
         }
 
@@ -150,7 +157,7 @@ extension Engine.Gravity {
 
     /// The Sun's barycentric state and the planets' at `tt`, the C engine's
     /// `AdjustBarycenterPosVel` loop: each planet's heliocentric state from
-    /// ``Engine/Planet/heliocentricState(at:cache:)``, the barycenter offset
+    /// ``Engine/Planet/systemHeliocentricState(at:cache:)``, the barycenter offset
     /// from the Sun by Σ GM/(GM + GM☉) times each position and velocity, in
     /// the order given, then every planet moved to the barycenter and the
     /// Sun put at minus the offset.
@@ -163,7 +170,7 @@ extension Engine.Gravity {
         var heliocentric: [BodyState] = []
         heliocentric.reserveCapacity(planets.count)
         for (planet, gm) in planets {
-            let state = try planet.heliocentricState(at: time, cache: seriesCache)
+            let state = try planet.systemHeliocentricState(at: time, cache: seriesCache)
             let (position, velocity) = (state.positionVector, state.velocityVector)
             let shift = gm / (gm + sunGM)
             offset.position += shift * position
