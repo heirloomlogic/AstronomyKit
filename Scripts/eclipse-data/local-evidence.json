@@ -260,7 +260,7 @@
     }
   ],
   "sourceHashes": {
-    "Scripts/capture-global-solar.py": "0b354a2f7bc3db8b52636ea3ee58f79c6c18ef12357ca78abeac3270973e0dd4",
+    "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-local-solar.py": "c65a5f544352fddd7ef75e8ed3d8da374c94dfce78672fc8d3c2f6b066d3877a",
     "Scripts/eclipse-data/local-captures.json": "9ec152c1f0cbfefd091566b82d8c99d661575caed71d925d442f0042e628f51f",
     "Scripts/eclipse-data/local-references.json": "7d2301230ee722952c2654f1ae8d067c3d8a615ab3d2061adc606df9fc7bced0",
@@ -268,6 +268,8 @@
     "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
     "Scripts/record-local-solar-evidence.py": "104ef3f6bc8896d44116b4eb578c2006be7a4d5e9651e5cd1b4fdb95ae9f6903",
     "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
+    "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+    "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0.query.json": "94a0287ea73d9baeef2c602d2a46c62d0f795ed48bf32e52044f56f2a359fbc0",
     "Scripts/reference-data/sources/global-solar/nasa-jsex-program.js": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
     "Scripts/reference-data/sources/global-solar/nasa-jsex-program.js.query.json": "4f345e282b4aee9adfd8ea300fbc5a31a38624bede7ea7baa54aee3a79e18e2b",
     "Scripts/reference-data/sources/global-solar/nasa-solar-1901.html": "1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff",

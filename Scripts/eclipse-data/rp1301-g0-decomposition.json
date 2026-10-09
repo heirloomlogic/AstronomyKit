@@ -49,6 +49,9 @@
     "methodSource": {
       "earthPolarToEquatorialRatio": 0.99664719,
       "license": "GNU GPL version 2 or later",
+      "licenseSHA256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+      "licenseSource": "COPYING.GPL-2.0",
+      "licenseURL": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt",
       "relation": "L'=l-zeta*tan(f); central Moon/Sun ratio=(L1'-L2')/(L1'+L2')",
       "sha256": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
       "source": "nasa-jsex-program.js",

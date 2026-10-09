@@ -110,6 +110,9 @@
     "methodSource": {
       "earthPolarToEquatorialRatio": 0.99664719,
       "license": "GNU GPL version 2 or later",
+      "licenseSHA256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+      "licenseSource": "COPYING.GPL-2.0",
+      "licenseURL": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt",
       "relation": "L'=l-zeta*tan(f); central Moon/Sun ratio=(L1'-L2')/(L1'+L2')",
       "sha256": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
       "source": "nasa-jsex-program.js",
@@ -142,6 +145,7 @@
   },
   "schemaVersion": 1,
   "sourceHashes": {
+    "COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
     "nasa-jsex-program.js": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
     "nasa-solar-1901.html": "1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff",
     "rp1301-lunar-radius.html": "feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956",

@@ -305,3 +305,13 @@ Sources/AstronomyKit/Engine/Planets/Generated/Saturn contains DE441 Saturn-syste
 Observer-event reference archives
 
 Scripts/observer-event-data/sources contains numerical observer output retrieved from NASA/JPL Horizons (https://ssd.jpl.nasa.gov/horizons/) and the U.S. Naval Observatory's celestial-navigation and one-day rise/set APIs (https://aa.usno.navy.mil/data/api). Every response has an adjacent query recipe and SHA-256 binding. AstronomyKit's derived fixtures and native comparisons are not official JPL or USNO software or an endorsement by either agency. The publisher responses retain their source descriptions and notices.
+
+-------------------------------------------------------------------------------
+
+NASA JavaScript Solar Eclipse Explorer reference source
+
+Scripts/reference-data/sources/global-solar/nasa-jsex-program.js is an unchanged archive of the JavaScript Solar Eclipse Explorer by Chris O'Byrne and Fred Espenak, published by NASA GSFC in 2007. AstronomyKit uses the archived program only as a replayable third-party reference for the RP1301 G0 evidence. The file retains its original GNU General Public License version 2-or-later notice. The complete GPLv2 text accompanies it at Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0. These GPL terms apply to the archived JSEX program and do not replace AstronomyKit's own LICENSE.
+
+Source: https://eclipse.gsfc.nasa.gov/JSEX/program.js
+
+License: https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
