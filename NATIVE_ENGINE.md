@@ -888,6 +888,28 @@ The generated table contains all 357 VI/42 southern boundary segments and maps t
 
 `EngineConstellationTests` checks every table row at its lower-right-ascension, upper-right-ascension and lower-declination ties, so 1,071 exact ties test the published table semantics without an angular tolerance. It also checks all eight examples printed in the VI/42 ReadMe and 357 generated J2000 points, one near each segment. The generator compiles and runs the archived publisher program on those eight examples, and independently translates its Herget formula for the J2000 samples. The `< 1e-9`-degree/hour coordinate check is cross-language recipe agreement at those generated points, not a certified precession accuracy or continuous-sky claim. `EngineStarConcurrencyTests` repeats every native star calculation and the constellation lookup for 24 distinct immutable stars under two explicit model-bearing times while equivalent process-default function pointers are changed concurrently. A separate direct test proves that two distinct Delta T outputs change the old true-of-date B1875 matrix while the published Herget matrix is fixed.
 
+## Angular event searches
+
+In the tree: `Events/EngineAngularEvents.swift`. This first #92 link adds the shared event namespace, apparent solar-longitude search, seasons and heliocentric planetary relative-longitude search. Lunar, planetary apsis/visibility and observer event searches remain for later #92 links. The public event facades remain on the C engine until #96.
+
+```swift
+extension Engine.Events {
+    struct Seasons {
+        let marchEquinox, juneSolstice, septemberEquinox, decemberSolstice: Engine.Time
+        var all: [Engine.Time] { get }
+    }
+    static func searchSunLongitude(_ targetDegrees: Double, after start: Engine.Time, limitDays: Double) throws -> Engine.Time?
+    static func seasons(year: Int, deltaTModel: DeltaTModel) throws -> Seasons
+    static func searchRelativeLongitude(of body: CelestialBody, targetDegrees: Double, after start: Engine.Time) throws -> Engine.Time
+}
+```
+
+`searchSunLongitude` follows the apparent geocentric Sun on the true ecliptic and equinox of date and calls the native ascending-root search with the C algorithm's 0.01-second tolerance. The inclusive window may run either direction. A window without an ascending crossing returns `nil`; a target or limit that is not finite throws `invalidParameter`; and either bound outside the native ephemeris range throws `badTime`. Targets wrap by whole turns through `longitudeOffset`.
+
+`seasons` searches from modeled UT midnight on 10 March, June, September and December for 0°, 90°, 180° and 270° respectively, over 20 days. It rejects a year outside the `Int32` range and derives every search time with the explicit model it receives. `EngineAngularEventTests` checks all 924 seasonal crossings from 1900 through 2130 under both Delta T models against independently derived Horizons LT+S vectors rotated with ERFA; every root must be within 60 seconds. The seasonal fixture now contains only this independent reference. The former model-output columns and 10-millisecond regression test were retired because recorded engine output is not accuracy evidence.
+
+`searchRelativeLongitude` supports Mercury, Venus and Mars through Pluto. It follows the original definition: Earth's heliocentric longitude minus the planet's, positive for outer planets and negative for Mercury and Venus. The initial angular error is forced behind the target, so iteration advances from the supplied start; each step uses the body's mean synodic period and the near-root period correction from the original algorithm. It stops inside one second, caps iteration at 100, rejects a step that is not finite or cannot advance, and checks actual native ephemeris coverage after each step. Earth throws `earthNotAllowed`; every other unsupported body throws `invalidBody`. Tests bracket four independently sampled Mars and Venus conjunction/opposition roots derived from SOFA-transformed geometric Sun-centered vectors, exercise every supported planet, and retain target wrapping, body errors, forward ordering, model capture and range guards.
+
 ## Caches and reset
 
 In the tree: `EngineCache.swift`.
