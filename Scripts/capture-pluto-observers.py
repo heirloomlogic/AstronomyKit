@@ -104,8 +104,8 @@ def validate_measurement(measurement):
                 raise ValueError('one-arcminute target missed')
         if row['horizonsLightTimeMinutes'] != reference['lightTimeMinutes']:
             raise ValueError('reference light time changed')
-        if not -766525 <= row['emissionTT'] < row['tt']:
-            raise ValueError('emission outside domain')
+        if not row['emissionTT'] < row['tt']:
+            raise ValueError('emission does not precede observation')
     for name in ['Earth', 'Frame']:
         count = sum(row[f'omitted{name}Arcminutes'] > 1 for row in rows)
         if count != measurement[f'omitted{name}Failures'] or count < 15:
@@ -119,13 +119,13 @@ def native_evidence(debug, release):
                 observationTimeScale='TT, inverted to modeled UT with jplHorizons for the native UT light-time iteration',
                 toleranceArcminutes=1,
                 domain=dict(acceptedHeliocentricTTDays=[-766525, 766525],
-                            rejectedGeocentricTTDays=[-766525, -766524.9],
-                            successfulGeocentricTTDays=[-766524, 766524, 766525],
+                            retardedSourceTDBInterval=dict(lowerInclusive=-766536.5, upperExclusive=766535.5),
+                            successfulGeocentricTTDays=[-766525, -766524.9, -766524, 766524, 766525],
                             modes=['none', 'corrected'], issue='https://github.com/heirloomlogic/AstronomyKit/issues/227',
                             preexistingBase='00119ad33521b67fa365b33d940404d5739e356b'),
                 limitations=['Twenty sampled native directions, not a full-range bound.',
                              'Outer target 9 references do not qualify the physical center 999.',
-                             'No velocity, event, or public API qualification; #92/#96 and #227 remain.',
+                             'Endpoint tests cover velocity composition, not independent velocity accuracy; event and public API qualification remain with #92/#96.',
                              'Horizons apparent coordinates include gravitational deflection and barycentric light time; native uses heliocentric light time and first-order aberration.',
                              'Native and Horizons equator-of-date precession/nutation conventions differ.'])
 

@@ -54,7 +54,7 @@ class PlutoObserverCaptureTests(unittest.TestCase):
         evidence = json.loads((g.DATA / 'observer-evidence.json').read_bytes())
         g.validate_measurement(evidence['debug'])
         for key, value in [('tt', 42), ('target', 999), ('astrometricArcminutes', 1.01),
-                           ('apparentICRFArcminutes', float('nan')), ('emissionTT', -766526),
+                           ('apparentICRFArcminutes', float('nan')), ('emissionTT', evidence['debug']['rows'][0]['tt']),
                            ('horizonsLightTimeMinutes', 0)]:
             changed = copy.deepcopy(evidence['debug'])
             changed['rows'][0][key] = value

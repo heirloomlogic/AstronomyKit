@@ -84,23 +84,90 @@ struct EnginePlutoConsumerQualificationTests {
             ], key: "PLUTO_OBSERVER_OUTPUT")
     }
 
-    @Test("Observation endpoints expose the retarded-emission domain without changing the state range")
+    @Test("Observation endpoints accept retarded emission without changing the direct state range")
     func retardedDomain() throws {
         for tt in [-766_525.0, 766_525.0] {
             _ = try Engine.Positions.heliocentricPosition(
                 of: .pluto, at: Engine.Time(tt: tt, deltaTModel: .jplHorizons))
         }
+        for tt in [(-766_525.0).nextDown, 766_525.0.nextUp, .nan, .infinity, -.infinity] {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Engine.Positions.heliocentricPosition(
+                    of: .pluto, at: Engine.Time(tt: tt, deltaTModel: .jplHorizons))
+            }
+        }
         for aberration in [Aberration.none, .corrected] {
-            for tt in [-766_525.0, -766_524.9, (-766_525.0).nextDown, 766_525.0.nextUp, .nan, .infinity, -.infinity] {
+            for tt in [(-766_525.0).nextDown, 766_525.0.nextUp, .nan, .infinity, -.infinity] {
                 #expect(throws: AstronomyError.badTime) {
                     _ = try Engine.Positions.geocentricPosition(
                         of: .pluto, at: Engine.Time(tt: tt, deltaTModel: .jplHorizons), aberration: aberration)
                 }
             }
-            for tt in [-766_524.0, 766_524.0, 766_525.0] {
+            let initialInterval = (0...12).map { -766_525.0 + Double($0) / 40 }
+            for tt in initialInterval + [-766_524.0, 766_524.0, 766_525.0] {
                 let time = Engine.Time(tt: tt, deltaTModel: .jplHorizons)
                 let result = try Engine.Positions.geocentricPosition(of: .pluto, at: time, aberration: aberration)
                 #expect(result.time.tt == tt && result.length.isFinite)
+            }
+        }
+    }
+
+    @Test("Every native retarded Pluto consumer accepts the lower observation endpoint")
+    func lowerEndpointConsumers() throws {
+        let time = Engine.Time(tt: -766_525, deltaTModel: .jplHorizons)
+        for aberration in [Aberration.none, .corrected] {
+            let vector = try Engine.Positions.backdatedPosition(
+                of: .pluto, seenFrom: .earth, at: time, aberration: aberration)
+            #expect(vector.time.tt < time.tt && vector.time.deltaTModel == .jplHorizons)
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Engine.Pluto.heliocentricState(at: vector.time)
+            }
+            let state = try Engine.Positions.geocentricState(of: .pluto, at: time, aberration: aberration)
+            #expect(state.time.tt == time.tt && state.positionVector == SIMD3(vector.x, vector.y, vector.z))
+            let ecliptic = try Engine.Positions.geocentricEclipticState(of: .pluto, at: time, aberration: aberration)
+            #expect(ecliptic.state.time.tt == time.tt && ecliptic.longitude.isFinite && ecliptic.longitudeRate.isFinite)
+            let equatorial = try Engine.Positions.equatorial(
+                of: .pluto, at: time, from: .geocentric, equatorDate: .j2000, aberration: aberration)
+            #expect(equatorial.rightAscension.isFinite && equatorial.declination.isFinite)
+        }
+        let horizontal = try Engine.Positions.horizontal(
+            of: .pluto, at: time, from: ashevilleObserver, refraction: .none)
+        #expect(horizontal.azimuth.isFinite && horizontal.altitude.isFinite)
+        #expect(try Engine.Positions.angleFromSun(of: .pluto, at: time).isFinite)
+        #expect(try Engine.Positions.pairLongitude(.pluto, .sun, at: time).isFinite)
+        let elongation = try Engine.Positions.elongation(of: .pluto, at: time)
+        #expect(elongation.elongation.isFinite && elongation.eclipticSeparation.isFinite)
+    }
+
+    @Test("The internal evaluator is confined to validated observations and the compiled source coverage")
+    func internalEmissionGuard() throws {
+        let observation = Engine.Time(tt: -766_525, deltaTModel: .jplHorizons)
+        let retarded = observation.adding(days: -0.25)
+        let state = try Engine.Pluto.heliocentricState(forLightTimeAt: retarded, observedAt: observation)
+        #expect(state.time.tt == retarded.tt && state.time.deltaTModel == .jplHorizons)
+        #expect(
+            [state.x, state.y, state.z, state.vx, state.vy, state.vz].map(\.bitPattern) == [
+                4_627_431_996_928_111_898, 4_631_104_392_175_455_840, 4_618_282_394_626_914_162,
+                13_789_615_947_424_258_115, 4_560_118_899_743_259_915, 4_560_476_487_805_888_871,
+            ])
+
+        let sourceStartTDB = max(Engine.PlutoDE441.pluto.start, Engine.PlutoDE441.sun.start)
+        _ = try Engine.Pluto.heliocentricState(
+            forLightTimeAt: Engine.Time(tt: sourceStartTDB + 1, deltaTModel: .jplHorizons), observedAt: observation)
+        for time in [
+            Engine.Time(tt: sourceStartTDB - 1, deltaTModel: .jplHorizons),
+            Engine.Time(tt: retarded.tt, deltaTModel: .espenakMeeus), observation.adding(days: 0.1), .invalid,
+        ] {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Engine.Pluto.heliocentricState(forLightTimeAt: time, observedAt: observation)
+            }
+        }
+        for invalidObservation in [
+            Engine.Time(tt: (-766_525.0).nextDown, deltaTModel: .jplHorizons),
+            Engine.Time(tt: 766_525.0.nextUp, deltaTModel: .jplHorizons), .invalid,
+        ] {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Engine.Pluto.heliocentricState(forLightTimeAt: retarded, observedAt: invalidObservation)
             }
         }
     }

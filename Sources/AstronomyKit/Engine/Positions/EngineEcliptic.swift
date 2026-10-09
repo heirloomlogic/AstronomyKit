@@ -76,7 +76,10 @@ extension Engine.Positions {
         let vector = try backdatedPosition(of: body, seenFrom: .earth, at: time, aberration: aberration)
         let position = SIMD3(vector.x, vector.y, vector.z)
         let direction = position / vector.length
-        let target = try heliocentricState(of: body, at: vector.time).velocityVector
+        let target =
+            try body == .pluto
+            ? Engine.Pluto.heliocentricState(forLightTimeAt: vector.time, observedAt: time).velocityVector
+            : heliocentricState(of: body, at: vector.time).velocityVector
         let c = Engine.speedOfLightAUPerDay
         let velocity: SIMD3<Double>
         switch aberration {
