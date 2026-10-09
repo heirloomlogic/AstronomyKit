@@ -29,6 +29,7 @@ struct IndependentReferenceArchive: Decodable {
     let earthApsides: [Apsis]
     let riseSet: [RiseSet]
     let lunarEclipses: [LunarEclipse]
+    let lunarEclipseObscurations: [LunarEclipseObscuration]
     let globalSolarEclipses: [GlobalSolarEclipse]
     let localSolarEclipses: [LocalSolarEclipse]
     let transits: [Transit]
@@ -286,10 +287,23 @@ struct IndependentReferenceArchive: Decodable {
 
     struct LunarEclipse: Decodable {
         let universalTime: String
+        let kind: String
+        let gammaEarthRadii: Double
+        let penumbralMagnitude: Double
+        let umbralMagnitude: Double
+        let penumbralSemiDurationMinutes: Double?
         let partialSemiDurationMinutes: Double
         let totalSemiDurationMinutes: Double
         let toleranceSeconds: Double
         let durationToleranceMinutes: Double
+    }
+
+    struct LunarEclipseObscuration: Decodable {
+        let universalTimeSearchSeed: String
+        let obscuration: Double
+        let roundingLowerBound: Double
+        let roundingUpperBound: Double
+        let peakToleranceSeconds: Double
     }
 
     struct GlobalSolarEclipse: Decodable {

@@ -573,7 +573,7 @@
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": -1.375891923729796,
+        "distanceResidualKm": -1.3758919236133806,
         "event": "lastQuarter",
         "nativeTT": -1095734.953201041,
         "residualSeconds": -1.2040168046951294,
@@ -1453,7 +1453,7 @@
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -2.488552127033472e-06,
+        "distanceResidualKm": -2.4886103346943855e-06,
         "event": "pericenter",
         "nativeTT": -10.044837995316394,
         "residualSeconds": 0.0003564477992767934,
@@ -1479,8 +1479,8 @@
       {
         "distanceResidualKm": 3.1713861972093582e-06,
         "event": "apocenter",
-        "nativeTT": 3.016246841414931,
-        "residualSeconds": 0.000763052993590918,
+        "nativeTT": 3.0162468414149317,
+        "residualSeconds": 0.0007630530703295335,
         "sourceTT": 3.016246832583299,
         "window": "uniform-08"
       },
@@ -3359,7 +3359,7 @@
       }
     ]
   },
-  "runtimeBaseRevision": "2729e75c3c2d0ad12ad0b062617a69d6bd8007ef",
+  "runtimeBaseRevision": "4a60daaa2cb389604c0e5a63833fecbe996f459e",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
@@ -3371,7 +3371,7 @@
     "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift": "4a9eadfaae13399368825e926d9ff5667a6d26b21bf0d9f80f71b061c959dc33",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "61ce567d8bdd7beda0107d61d5e57778275dd4fcc5dce0e7478580f31a5e585b",
     "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift": "8b87b34d50a9d91842c0730149d3525f4bb6aa70c2d637cdd645fe38332250f9",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "fe6bc562613b1d1ed6b36ef3f719a27d06d2e824ca8b45cf02864c56c5af5dc2"
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "6d62e47bb2d2b34d2b0ccff5b74d29b9117c266eec85ab0237f026cc3dc8763b"
   },
   "summaries": {
     "published": {
