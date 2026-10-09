@@ -19,6 +19,7 @@ def load(name,file):
 
 archive=load('global_archive_tests','capture-global-solar.py')
 recorder=load('global_record_tests','record-global-solar-evidence.py')
+g0=load('rp1301_g0_tests','assess-rp1301-g0.py')
 
 class GlobalSolarArchiveTests(unittest.TestCase):
     def setUp(self):
@@ -116,6 +117,14 @@ class GlobalSolarArchiveTests(unittest.TestCase):
             with mock.patch.object(archive,'SOURCES',sources):
                 with self.assertRaises(ValueError):archive.build(blobs,{n:archive.recipe(n) for n in sources},self.catalog)
 
+    def test_jsex_method_source_is_pinned_and_semantically_checked(self):
+        self.assertIn('nasa-jsex-program.js',self.blobs)
+        name='nasa-jsex-program.js';old=b'mid[38] = (mid[28] - mid[29]) / (mid[28] + mid[29])';new=b'mid[38] = (mid[28] + mid[29]) / (mid[28] - mid[29])'
+        self.assertIn(old,self.blobs[name]);blobs=dict(self.blobs);blobs[name]=blobs[name].replace(old,new)
+        sources=dict(archive.SOURCES);url,_,scale=sources[name];sources[name]=(url,hashlib.sha256(blobs[name]).hexdigest(),scale)
+        with mock.patch.object(archive,'SOURCES',sources):
+            with self.assertRaises(ValueError):archive.build(blobs,{n:archive.recipe(n) for n in sources},self.catalog)
+
 class GlobalSolarPublicationTests(unittest.TestCase):
     def test_staging_failure_and_new_file_rollback(self):
         for phase in ['staging','publication']:
@@ -174,6 +183,30 @@ class GlobalSolarRadiusTests(unittest.TestCase):
                 data[0]['sunEQD']=[x*1.001 for x in data[0]['sunEQD']]
             with self.assertRaises(ValueError):recorder.radii.build(data)
 
+class RP1301G0Tests(unittest.TestCase):
+    def setUp(self):
+        self.references=json.loads(archive.OUTPUT.read_bytes())
+        self.physical=json.loads((recorder.DATA/'radius-comparison.json').read_bytes())
+
+    def test_replay_reproduces_published_magnitude(self):
+        result=g0.build(self.references,self.physical)
+        self.assertEqual(result,json.loads((recorder.DATA/'rp1301-g0-decomposition.json').read_bytes()))
+        self.assertTrue(result['mixedMagnitudeInsidePrintInterval'])
+        self.assertEqual(result['sourceLabel'],'Eclipse Magnitude')
+        self.assertEqual(len(result['table4Controls']),2)
+
+    def test_source_elements_and_physical_candidates_are_independent_controls(self):
+        references=copy.deepcopy(self.references);references['rp1301']['besselian']['coefficients']['l2'][0]+=0.001
+        with self.assertRaises(ValueError):g0.build(references,self.physical)
+        physical=copy.deepcopy(self.physical);physical[0]['tt']+=1
+        with self.assertRaises(ValueError):g0.build(self.references,physical)
+
+    def test_all_physical_candidates_shifted_by_a_tenth_second_are_rejected(self):
+        physical=copy.deepcopy(self.physical)
+        for row in physical:
+            if abs(row['tt']-self.references['rp1301']['greatestTT'])<1e-6:row['tt']+=0.1/86400
+        with self.assertRaises(ValueError):g0.build(self.references,physical)
+
 class GlobalSolarEvidenceTests(unittest.TestCase):
     def setUp(self):
         self.captures=json.loads(recorder.CAPTURE.read_bytes())
@@ -229,8 +262,8 @@ class GlobalSolarEvidenceTests(unittest.TestCase):
                 if mutation=='g0':values[c]['area'][2]['tt']+=1
             with self.assertRaises(ValueError):recorder.evidence(values,{})
         result=recorder.evidence(self.captures,{})['annularArea']
-        self.assertFalse(result['g0InsideDerivedInterval'])
-        self.assertLess(result['nativeG0Area'],result['sourceG0AreaInterval'][0])
+        self.assertFalse(result['g0PhysicalAreaInsideSquaredMagnitudeInterval'])
+        self.assertLess(result['nativeG0PhysicalArea'],result['sourceG0SquaredMagnitudeInterval'][0])
 
     def test_boundary_metadata_must_match_parsed_sources(self):
         refs=json.loads(recorder.archive.OUTPUT.read_bytes())

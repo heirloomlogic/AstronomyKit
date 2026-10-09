@@ -22,6 +22,8 @@ SOURCES = {
     'rp1301-parameters.html': ('https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/ephemerides.html', '2d34652d03f95e0ec8c4d0fff292f0b8ab3527044005acbadac70a0b0f0eb7c5', 'TDT'),
     'rp1301-lunar-radius.html': ('https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/mean-lunar-radius.html', 'feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956', 'geometry'),
     'nasa-solar-1901.html': ('https://eclipse.gsfc.nasa.gov/SEcat5/SE1901-2000.html', '1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff', 'TD'),
+    'nasa-jsex-program.js': ('https://eclipse.gsfc.nasa.gov/JSEX/program.js', '9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881', 'algorithm'),
+    'COPYING.GPL-2.0': ('https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt', 'edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6', 'not applicable'),
 }
 CATALOG = ROOT / 'Scripts/reference-data/sources/solar_2001.html'
 CATALOG_HASH = '820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d'
@@ -33,7 +35,8 @@ def encoded(value):
 
 def recipe(name):
     url, sha, scale = SOURCES[name]
-    return {'url': url, 'sha256': sha, 'timeScale': scale, 'publisher': 'NASA GSFC', 'subject': 'solar eclipses', 'method': 'GET'}
+    publisher, subject = ('Free Software Foundation', 'GNU General Public License version 2') if name == 'COPYING.GPL-2.0' else ('NASA GSFC', 'solar eclipses')
+    return {'url': url, 'sha256': sha, 'timeScale': scale, 'publisher': publisher, 'subject': subject, 'method': 'GET'}
 
 
 def text(data):
@@ -53,9 +56,35 @@ def build(blobs, recipes, catalog):
     if hashlib.sha256(catalog).hexdigest() != CATALOG_HASH:
         raise ValueError('catalog digest mismatch')
     table1, table4 = text(blobs['rp1301-table1.html']), text(blobs['rp1301-table4.html'])
+    method = blobs['nasa-jsex-program.js'].decode('utf-8')
+    method_markers = ['GNU General Public License', 'either version 2', 'any later version.', 'circumstances[28] = circumstances[8] - circumstances[21] * elements[26+index]', 'circumstances[29] = circumstances[9] - circumstances[21] * elements[27+index]', 'mid[38] = (mid[28] - mid[29]) / (mid[28] + mid[29])', 'tmp=Math.atan(0.99664719*Math.tan(obsvconst[0]))']
+    if any(marker not in method for marker in method_markers):
+        raise ValueError('NASA JSEX method semantics missing')
+    license_text = blobs['COPYING.GPL-2.0'].decode('utf-8')
+    license_markers = ['GNU GENERAL PUBLIC LICENSE', 'Version 2, June 1991', 'Everyone is permitted to copy and distribute verbatim copies', 'changing it is not allowed.', 'END OF TERMS AND CONDITIONS']
+    if any(marker not in license_text for marker in license_markers):
+        raise ValueError('GNU GPL version 2 license text missing')
     for marker in ['2449483.216973', '0.94314', '0.2725076', '0.2722810', '59.5', 'DE200/LE200', 'Terrestrial Dynamical Time']:
         if marker not in table1:
             raise ValueError('RP1301 semantics missing: ' + marker)
+    greatest = re.findall(r'Instant of\s+(\d+):(\d+):([\d.]+) TDT', table1)
+    origin = re.findall(r'Polynomial Besselian Elements for:.*?(\d+):(\d+):([\d.]+) TDT', table1)
+    slopes = re.findall(r'Tan \S*1 = ([\d.]+)\s+Tan \S*2 = ([\d.]+)', table1)
+    source_magnitude = re.findall(r'(Eclipse Magnitude) = ([\d.]+)', table1)
+    if len(greatest) != 1 or len(origin) != 1 or len(slopes) != 1 or source_magnitude != [('Eclipse Magnitude','0.94314')]:
+        raise ValueError('RP1301 greatest-eclipse metadata missing or duplicated')
+    decimal_hour = lambda clock: int(clock[0])+int(clock[1])/60+float(clock[2])/3600
+    element_rows = re.findall(r'^\s*([0-3])\s+([\-\d.]+)\s+([\-\d.]+)(?:\s+([\-\d.]+)\s+([\-\d.]+)\s+([\-\d.]+)\s+([\-\d.]+))?\s*$', table1, re.M)
+    if len(element_rows) != 4:
+        raise ValueError('RP1301 Besselian element rows missing or duplicated')
+    besselian = {'t0TDT': decimal_hour(origin[0]), 'greatestTDT': decimal_hour(greatest[0]), 'tanF1': float(slopes[0][0]), 'tanF2': float(slopes[0][1]),
+                 'coefficients': {key: [] for key in ['x','y','d','l1','l2']}}
+    for row in element_rows:
+        values = [float(value) for value in row[1:] if value]
+        for key, value in zip(['x','y','d','l1','l2'], values):
+            besselian['coefficients'][key].append(value)
+    if [len(besselian['coefficients'][key]) for key in ['x','y','d','l1','l2']] != [4,4,3,3,3]:
+        raise ValueError('unexpected RP1301 Besselian polynomial degrees')
     wanted = {'2014-04-29': 'annular', '2043-04-09': 'total', '2023-04-20': 'total', '2025-03-29': 'partial'}
     months = dict(zip('Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(), range(1, 13)))
     rows = []
@@ -93,7 +122,8 @@ def build(blobs, recipes, catalog):
                 'catalogSource': 'nasa-solar-1901.html', 'pathType': fields[8],
                 'printedMagnitude': fields[11], 'magnitude': float(fields[11]),
                 'observedLimbKind': claims[0], 'limbSource': 'rp1301-lunar-radius.html'}
-    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestDiameterRatio': 0.94314, 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
+    method_source = {'source': 'nasa-jsex-program.js', 'url': SOURCES['nasa-jsex-program.js'][0], 'sha256': SOURCES['nasa-jsex-program.js'][1], 'license': 'GNU GPL version 2 or later', 'licenseSource': 'COPYING.GPL-2.0', 'licenseURL': SOURCES['COPYING.GPL-2.0'][0], 'licenseSHA256': SOURCES['COPYING.GPL-2.0'][1], 'earthPolarToEquatorialRatio': 0.99664719, 'relation': "L'=l-zeta*tan(f); central Moon/Sun ratio=(L1'-L2')/(L1'+L2')"}
+    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestLabel': source_magnitude[0][0], 'greatestMagnitude': float(source_magnitude[0][1]), 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'besselian': besselian, 'methodSource': method_source, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
 
 
 def publish(files):

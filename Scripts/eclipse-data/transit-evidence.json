@@ -236,7 +236,7 @@
     ]
   },
   "sourceHashes": {
-    "Scripts/capture-global-solar.py": "5a7507b7681f194c6ea0cfe88a617bc0d04d4efa0f451595828098d72e0758c9",
+    "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-transit-references.py": "353dbde0ada3434cb96205cffc0aeda8fff46142b876c99015246c805daee224",
     "Scripts/eclipse-data/transit-captures.json": "35601f3c964fe544189f385cc80fd4412b3eb76f4935a34b36888e8021247b7e",
     "Scripts/eclipse-data/transit-references.json": "cc822496e688ba73e8d9e83d1aaab071d436bebf24c964bb4ca4537218d543bb",

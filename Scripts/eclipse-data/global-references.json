@@ -66,11 +66,58 @@
   ],
   "rounding": "conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted",
   "rp1301": {
+    "besselian": {
+      "coefficients": {
+        "d": [
+          17.6861305,
+          0.0106418,
+          -4e-06
+        ],
+        "l1": [
+          0.5669329,
+          -3.18e-05,
+          -9.8e-06
+        ],
+        "l2": [
+          0.0206722,
+          -3.17e-05,
+          -9.7e-06
+        ],
+        "x": [
+          -0.1734118,
+          0.4990638,
+          2.96e-05,
+          -5.6e-06
+        ],
+        "y": [
+          0.3836521,
+          0.0869394,
+          -0.0001183,
+          -9e-07
+        ]
+      },
+      "greatestTDT": 17.20735833333333,
+      "t0TDT": 17.0,
+      "tanF1": 0.0046308,
+      "tanF2": 0.0046077
+    },
     "deltaTSeconds": 59.5,
-    "greatestDiameterRatio": 0.94314,
+    "greatestLabel": "Eclipse Magnitude",
+    "greatestMagnitude": 0.94314,
     "greatestTT": -2061.783026999794,
     "k1": 0.2725076,
     "k2": 0.272281,
+    "methodSource": {
+      "earthPolarToEquatorialRatio": 0.99664719,
+      "license": "GNU GPL version 2 or later",
+      "licenseSHA256": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+      "licenseSource": "COPYING.GPL-2.0",
+      "licenseURL": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt",
+      "relation": "L'=l-zeta*tan(f); central Moon/Sun ratio=(L1'-L2')/(L1'+L2')",
+      "sha256": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
+      "source": "nasa-jsex-program.js",
+      "url": "https://eclipse.gsfc.nasa.gov/JSEX/program.js"
+    },
     "model": "DE200/LE200",
     "moonK1GeocentricSemidiameterArcseconds": 884.08,
     "moonParallaxArcseconds": 3244.35,
@@ -98,6 +145,8 @@
   },
   "schemaVersion": 1,
   "sourceHashes": {
+    "COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+    "nasa-jsex-program.js": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
     "nasa-solar-1901.html": "1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff",
     "rp1301-lunar-radius.html": "feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956",
     "rp1301-parameters.html": "2d34652d03f95e0ec8c4d0fff292f0b8ab3527044005acbadac70a0b0f0eb7c5",

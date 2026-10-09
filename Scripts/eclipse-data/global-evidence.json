@@ -1,11 +1,11 @@
 {
   "annularArea": {
     "directTable4SamplesQualified": 2,
-    "g0InsideDerivedInterval": false,
-    "g0ResidualBelowInterval": -2.995705411668048e-05,
-    "g0ResidualFromPrintedArea": -3.9388429116771206e-05,
-    "nativeG0Area": 0.8894736711708832,
-    "sourceG0AreaInterval": [
+    "g0PhysicalAreaInsideSquaredMagnitudeInterval": false,
+    "g0PhysicalAreaResidualBelowSquaredMagnitudeInterval": -2.995705411668048e-05,
+    "g0PhysicalAreaResidualFromSquaredMagnitude": -3.9388429116771206e-05,
+    "nativeG0PhysicalArea": 0.8894736711708832,
+    "sourceG0SquaredMagnitudeInterval": [
       0.8895036282249998,
       0.889522491025
     ]
@@ -44,7 +44,7 @@
     "debug": 1.0,
     "release": 117.34
   },
-  "limitations": "Sampled native geometry and published events; public C remains unchanged under #96. RP1301 direct Table 4 areas pass conditional rounding intervals, but the finer G0 ratio-derived interval does not. The report does not disclose its modified two-k magnitude algebra. No radius was fitted to that interval. Host costs are observations, not portable gates.",
+  "limitations": "Sampled native geometry and published events; public C remains unchanged under #96. RP1301 direct Table 4 areas pass conditional rounding intervals. G0 is a mixed-k Besselian magnitude, so its square is retained only as a diagnostic beside physical single-radius area. No radius was fitted. Host costs are observations, not portable gates.",
   "releaseExecutableBytes": 165038480,
   "releaseObjectBytes": {
     "EngineGeoidIntersection.o": 31608,
@@ -101,14 +101,20 @@
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/assess-global-solar-radii.py": "a23afc2a186c09466ef2db23ad8a14a55d84578fe90219d1f931bb0d0121d639",
-    "Scripts/capture-global-solar.py": "5a7507b7681f194c6ea0cfe88a617bc0d04d4efa0f451595828098d72e0758c9",
+    "Scripts/assess-rp1301-g0.py": "36dad831724e3c611793009c382c333eb80bdc8f625b16a65d9b92638be60882",
+    "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/eclipse-data/global-captures.json": "245a6f9ef25246982eccc58c14d0b3d40cbb92c1e67b8e63264f009424199f55",
-    "Scripts/eclipse-data/global-references.json": "6e90a738764f4bd552159c390ceb11d5bc4bf7248a2e915a469cdf29bb972da6",
+    "Scripts/eclipse-data/global-references.json": "cff3956935437c3b24bcb17695e15bc743520f8e31f7f4c7cf6ee7a017acb207",
     "Scripts/eclipse-data/radius-comparison.json": "3e4d575e888cd84571991592888756fbcf20adcf1f147b1e3bc8b0afd063a4f5",
     "Scripts/eclipse-data/radius-vectors.json": "2c5652a64931eade4954fb89dc3981f3d76c48d38a9e45d9c0b4e6508dcc7394",
+    "Scripts/eclipse-data/rp1301-g0-decomposition.json": "7c16b4e7be4d10644362babfa5647135d37b0d2a589d8462b5eae8e541496c19",
     "Scripts/global-solar-radius-probe.swift": "4148e4c7451b832c3e3bb4f782b5088835694c48bcadf5e68fb8a53c8ce19329",
     "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
-    "Scripts/record-global-solar-evidence.py": "a827dbdb0cc62b7a57f8719ef605b7a213ac1590eb00e5bf775df6e2fa0b718e",
+    "Scripts/record-global-solar-evidence.py": "e08921d7b507b0ff768148f40aac15ebacc71d565d792f553c845ce69c849fbc",
+    "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
+    "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0.query.json": "94a0287ea73d9baeef2c602d2a46c62d0f795ed48bf32e52044f56f2a359fbc0",
+    "Scripts/reference-data/sources/global-solar/nasa-jsex-program.js": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
+    "Scripts/reference-data/sources/global-solar/nasa-jsex-program.js.query.json": "4f345e282b4aee9adfd8ea300fbc5a31a38624bede7ea7baa54aee3a79e18e2b",
     "Scripts/reference-data/sources/global-solar/nasa-solar-1901.html": "1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff",
     "Scripts/reference-data/sources/global-solar/nasa-solar-1901.html.query.json": "af3e63872915582a2e28320d890aab48360b6fa9d7f5ee1bc445bfd6e240a834",
     "Scripts/reference-data/sources/global-solar/rp1301-lunar-radius.html": "feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956",
@@ -120,7 +126,7 @@
     "Scripts/reference-data/sources/global-solar/rp1301-table4.html": "0b6c2c938b181a85c457bafd7bd442115ef93a620021589f76a8f12a94ae9e28",
     "Scripts/reference-data/sources/global-solar/rp1301-table4.html.query.json": "592a46292903b96ec9dfc8581fa28ec02cb33de8e643f4cda5aca9f9d2312bac",
     "Scripts/reference-data/sources/solar_2001.html": "820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d",
-    "Scripts/test_global_solar.py": "844408f763fb8e432e75fecd95e0d7653a42d6117ae6682c624b761332187098",
+    "Scripts/test_global_solar.py": "f5bf500d843135cfc19db743c2ee7c7c2daa2956a92d10ff3a5ed0b7594fc225",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/CelestialBody.swift": "826f7b17f1da4dc7f7eaa42d84d2a7d46a1a879517dce58e19d5320836547131",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
