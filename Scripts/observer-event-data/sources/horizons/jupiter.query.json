@@ -1,0 +1,19 @@
+{
+  "COMMAND": "'599'",
+  "OBJ_DATA": "'NO'",
+  "MAKE_EPHEM": "'YES'",
+  "EPHEM_TYPE": "'OBSERVER'",
+  "CENTER": "'coord@399'",
+  "COORD_TYPE": "'GEODETIC'",
+  "SITE_COORD": "'0,51.48,0.046'",
+  "TLIST": "'2415020.5,2451545.0,2459545.0,2499391.5'",
+  "TIME_TYPE": "'TT'",
+  "QUANTITIES": "'2,4,7,20,30,42,45,49'",
+  "CAL_FORMAT": "'JD'",
+  "EXTRA_PREC": "'YES'",
+  "ANG_FORMAT": "'DEG'",
+  "APPARENT": "'AIRLESS'",
+  "CSV_FORMAT": "'YES'",
+  "RANGE_UNITS": "'AU'",
+  "_responseSHA256": "98dd9a3f421ea16d6de3be937670b30fdf91f3504f4ada5ae38fba365642c9a6"
+}

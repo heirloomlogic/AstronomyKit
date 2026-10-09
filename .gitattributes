@@ -1,4 +1,5 @@
 Scripts/reference-data/sources/** -whitespace
+Scripts/observer-event-data/sources/** -whitespace
 
 # Preserve byte-locked upstream source and attribution whitespace.
 Sources/CLibAstronomy/EphemerisTime/dtdb.c -whitespace
@@ -17,3 +18,4 @@ Scripts/orientation-data/eect00.c -whitespace
 # Checked-in generated coefficient tables.
 Sources/CLibAstronomy/EphemerisData/*.inc linguist-generated=true
 Sources/AstronomyKit/Engine/*/Generated/*.swift linguist-generated=true
+Scripts/observer-event-data/native-captures.json linguist-generated=true
