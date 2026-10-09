@@ -116551,26 +116551,88 @@
       "utc": "2100-01-17T10:48Z"
     }
   ],
+  "lunarEclipseObscurations": [
+    {
+      "obscuration": 0.991,
+      "roundingLowerBound": 0.9905,
+      "roundingUpperBound": 0.9914999999999999,
+      "universalTimeSearchSeed": "2021-11-19T09:03Z"
+    },
+    {
+      "obscuration": 0.963,
+      "roundingLowerBound": 0.9625,
+      "roundingUpperBound": 0.9634999999999999,
+      "universalTimeSearchSeed": "2026-08-28T04:13Z"
+    }
+  ],
   "lunarEclipses": [
     {
       "durationToleranceMinutes": 2.0,
+      "gammaEarthRadii": 0.722,
+      "kind": "partial",
       "partialSemiDurationMinutes": 76,
+      "penumbralMagnitude": 1.54,
       "toleranceSeconds": 120.0,
       "totalSemiDurationMinutes": 0,
+      "umbralMagnitude": 0.555,
       "universalTime": "1800-04-09T16:26Z"
     },
     {
       "durationToleranceMinutes": 2.0,
+      "gammaEarthRadii": -0.296,
+      "kind": "total",
       "partialSemiDurationMinutes": 102,
+      "penumbralMagnitude": 2.331,
       "toleranceSeconds": 120.0,
       "totalSemiDurationMinutes": 39,
+      "umbralMagnitude": 1.33,
       "universalTime": "2000-01-21T04:44Z"
     },
     {
       "durationToleranceMinutes": 2.0,
-      "partialSemiDurationMinutes": 45,
+      "gammaEarthRadii": 0.372,
+      "kind": "total",
+      "partialSemiDurationMinutes": 98.15,
+      "penumbralMagnitude": 2.187,
+      "penumbralSemiDurationMinutes": 155.5,
+      "toleranceSeconds": 120.0,
+      "totalSemiDurationMinutes": 30.5,
+      "umbralMagnitude": 1.194,
+      "universalTime": "2001-01-09T20:20:30Z"
+    },
+    {
+      "durationToleranceMinutes": 2.0,
+      "gammaEarthRadii": -0.729,
+      "kind": "partial",
+      "partialSemiDurationMinutes": 79.65,
+      "penumbralMagnitude": 1.573,
+      "penumbralSemiDurationMinutes": 162.55,
       "toleranceSeconds": 120.0,
       "totalSemiDurationMinutes": 0,
+      "umbralMagnitude": 0.499,
+      "universalTime": "2001-07-05T14:55:12Z"
+    },
+    {
+      "durationToleranceMinutes": 2.0,
+      "gammaEarthRadii": 1.073,
+      "kind": "penumbral",
+      "partialSemiDurationMinutes": 0,
+      "penumbralMagnitude": 0.919,
+      "penumbralSemiDurationMinutes": 121.75,
+      "toleranceSeconds": 120.0,
+      "totalSemiDurationMinutes": 0,
+      "umbralMagnitude": -0.11,
+      "universalTime": "2001-12-30T10:29:12Z"
+    },
+    {
+      "durationToleranceMinutes": 2.0,
+      "gammaEarthRadii": -0.931,
+      "kind": "partial",
+      "partialSemiDurationMinutes": 45,
+      "penumbralMagnitude": 1.158,
+      "toleranceSeconds": 120.0,
+      "totalSemiDurationMinutes": 0,
+      "umbralMagnitude": 0.173,
       "universalTime": "2099-04-05T08:27Z"
     }
   ],
@@ -117076,18 +117138,31 @@
       "url": "https://eclipse.gsfc.nasa.gov/solar.html",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     },
+    "nasaLunarEclipseObscuration": {
+      "aberration": "not separately configurable in the published visualizations",
+      "domain": "deep partial lunar eclipses on 2021-11-19 and 2026-08-28",
+      "frame": "geocentric Earth-shadow geometry rendered on the Moon's apparent disc",
+      "license": "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license",
+      "origin": "Earth center",
+      "recipe": "Pinned complete NASA SVS pages 4953 and 5672. Each directly publishes the Moon-disc area inside the umbra at greatest eclipse. Inclusive bounds add and subtract 0.0005 from the printed fraction, solely representing nearest-0.1-percentage-point print precision without assuming a tie rule; they are not NASA uncertainty bounds or a new accuracy policy.",
+      "refraction": "not applicable to geocentric eclipse geometry",
+      "timeScale": "the pages label greatest eclipse in Universal Time; the printed minute is used only to seed native event search and is not asserted as an exact TT or UTC coordinate",
+      "units": "fraction of the Moon's disc area and Universal Time calendar labels",
+      "url": "https://svs.gsfc.nasa.gov/5672/",
+      "version": "NASA SVS 4953 released 2021-11-04; NASA SVS 5672 updated 2026-08-25"
+    },
     "nasaLunarEclipses": {
       "aberration": "not separately configurable in the published catalog",
-      "domain": "NASA catalog centuries represented by archived pages; sampled at 1800, 2000, and 2099",
+      "domain": "NASA catalog centuries represented by archived pages, sampled at 1800, 2000, 2001, and 2099; UT peaks for the three 2001 lunar eclipses come from NASA's Observer's Handbook, while their phase durations come from the Danjon-based Five Millennium Catalog",
       "frame": "geocentric Earth-shadow geometry",
       "license": "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license",
       "origin": "Earth center",
-      "recipe": "Pinned catalog pages, source key, normalizer, C validation harness, and engine source under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse, https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/ctest.c, and the matching source/c tree",
+      "recipe": "Pinned catalog pages, NASA OH2001 and Five Millennium Catalog sources, NASA's shadow-convention page, source key, normalizer, C validation harness, and engine source under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse, https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/ctest.c, and the matching source/c tree",
       "refraction": "not applicable to geocentric eclipse geometry",
-      "timeScale": "UT; the pinned C harness compares eclipse.peak.ut with the parsed catalog coordinate under its default Espenak-Meeus Delta T model",
-      "units": "UT calendar timestamps and minutes",
-      "url": "https://eclipse.gsfc.nasa.gov/lunar.html",
-      "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
+      "timeScale": "Observer's Handbook peaks are UT coordinates; the modern catalog publishes phase durations beside TD greatest-eclipse coordinates, whose coordinates are not reinterpreted as UT",
+      "units": "UT calendar timestamps, TD catalog durations, eclipse magnitudes, Earth equatorial radii, and minutes",
+      "url": "https://eclipse.gsfc.nasa.gov/LEcat5/LE2001-2100.html",
+      "version": "865d3da7d8112bbc7911238052c6af4aaf877181; NASA OH2001 and Five Millennium Catalog archived 2026-10-09"
     },
     "nasaPlanetaryTransits": {
       "aberration": "not separately configurable in the published catalog",
@@ -170540,7 +170615,7 @@
       "utc": "2035-Jan-01 00:00:00.000"
     }
   ],
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "seasons": [
     {
       "event": "marchEquinox",

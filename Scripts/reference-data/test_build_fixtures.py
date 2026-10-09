@@ -204,6 +204,27 @@ class ApparentRangeFixtureTests(unittest.TestCase):
         self.assertEqual(0.00246250044096, moon_1900["apparentRangeAU"])
 
 
+class LunarEclipseFixtureTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_catalog_and_observers_handbook_preserve_lunar_types_peaks_and_durations(self):
+        fixture = self.builder.parse_eclipses()
+        rows = fixture["lunarEclipses"]
+        self.assertEqual(6, len(rows))
+        detailed = [row for row in rows if row["universalTime"].startswith("2001-")]
+        self.assertEqual(["total", "partial", "penumbral"], [row["kind"] for row in detailed])
+        self.assertEqual([155.5, 162.55, 121.75], [row["penumbralSemiDurationMinutes"] for row in detailed])
+        self.assertEqual([98.15, 79.65, 0], [row["partialSemiDurationMinutes"] for row in detailed])
+        self.assertEqual([30.5, 0, 0], [row["totalSemiDurationMinutes"] for row in detailed])
+        self.assertEqual("2001-12-30T10:29:12Z", detailed[-1]["universalTime"])
+        self.assertEqual(0.919, detailed[-1]["penumbralMagnitude"])
+        self.assertEqual(-0.110, detailed[-1]["umbralMagnitude"])
+        self.assertEqual([0.991, 0.963], [row["obscuration"] for row in fixture["lunarEclipseObscurations"]])
+        self.assertEqual([0.9905, 0.9625], [row["roundingLowerBound"] for row in fixture["lunarEclipseObscurations"]])
+
+
 class AngularEventFixtureTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

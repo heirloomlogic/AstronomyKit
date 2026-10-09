@@ -25,14 +25,14 @@ struct AuditValidationTests {
     /// Fixture integrity only: provenance fields and row counts, not accuracy evidence.
     @Test("Archived references declare reproducible provenance")
     func provenanceIsComplete() {
-        #expect(archive.schemaVersion == 6)
+        #expect(archive.schemaVersion == 7)
         #expect(
             Set(archive.provenance.keys) == [
                 "astronomyEngineApsides", "astronomyEngineGeocentricStates", "cdsConstellations",
                 "eclipseWiseLocalSolar", "espenakMoonNodes",
                 "jplAngularEvents", "jplElongation", "jplHorizontal", "jplObserver", "jplSaturnApsides",
                 "jplSaturnRings", "jplVectors",
-                "nasaGlobalSolarEclipses", "nasaLunarEclipses",
+                "nasaGlobalSolarEclipses", "nasaLunarEclipseObscuration", "nasaLunarEclipses",
                 "nasaPlanetaryTransits", "sofaFixedStar", "usnoRiseSet", "usnoSeasonsAndPhases",
             ])
         for source in archive.provenance.values {
