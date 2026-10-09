@@ -74,6 +74,8 @@ jobs:
         run: |
           python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
           python3 Scripts/reference-data/build-fixtures.py --check
+          python3 -m unittest Scripts/test_eclipse_event_evidence.py -v
+          python3 Scripts/record-eclipse-event-evidence.py --check
 
       - name: Verify native solar numerical tools
         run: |
@@ -147,6 +149,12 @@ jobs:
 
       - name: Verify generated Jupiter moon series
         run: python3 Scripts/generate-jupiter-moon-series.py --check
+
+      - name: Verify lunar eclipse sources and evidence
+        run: |
+          python3 -m unittest Scripts/reference-data/test_build_fixtures.py Scripts/test_eclipse_event_evidence.py -v
+          python3 Scripts/reference-data/build-fixtures.py --check
+          python3 Scripts/record-eclipse-event-evidence.py --check
 
       - name: Verify work-avoidance paths
         run: |
