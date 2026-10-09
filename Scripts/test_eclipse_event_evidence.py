@@ -21,9 +21,17 @@ class EclipseEvidenceTests(unittest.TestCase):
         RECORD.evidence(self.captures, RECORD.source_hashes())
 
     def test_peak_outside_published_allowance_is_rejected(self):
-        self.captures["debug"]["published"][0]["peakResidualSeconds"] = 121
-        self.captures["release"]["published"][0]["peakResidualSeconds"] = 121
+        for configuration in ("debug", "release"):
+            row = self.captures[configuration]["published"][0]
+            row["nativePeakTT"] = RECORD.source_time_tt(row["sourceTime"]) + 121 / 86_400
+            row["peakResidualSeconds"] = 121
         with self.assertRaisesRegex(ValueError, "peak criterion"):
+            RECORD.evidence(self.captures, {})
+
+    def test_published_peak_residual_is_derived_from_native_event_time(self):
+        for configuration in ("debug", "release"):
+            self.captures[configuration]["published"][0]["peakResidualSeconds"] = -500
+        with self.assertRaisesRegex(ValueError, "peak residual relation"):
             RECORD.evidence(self.captures, {})
 
     def test_debug_release_disagreement_is_rejected(self):
@@ -35,6 +43,12 @@ class EclipseEvidenceTests(unittest.TestCase):
         for configuration in ("debug", "release"):
             self.captures[configuration]["obscurations"][0]["obscuration"] = 0.99
         with self.assertRaisesRegex(ValueError, "print interval criterion"):
+            RECORD.evidence(self.captures, {})
+
+    def test_obscuration_event_time_must_match_the_published_event(self):
+        for configuration in ("debug", "release"):
+            self.captures[configuration]["obscurations"][0]["nativePeakTT"] = -1_000_000
+        with self.assertRaisesRegex(ValueError, "obscuration event time"):
             RECORD.evidence(self.captures, {})
 
 

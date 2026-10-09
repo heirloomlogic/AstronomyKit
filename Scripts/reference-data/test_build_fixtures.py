@@ -223,6 +223,7 @@ class LunarEclipseFixtureTests(unittest.TestCase):
         self.assertEqual(-0.110, detailed[-1]["umbralMagnitude"])
         self.assertEqual([0.991, 0.963], [row["obscuration"] for row in fixture["lunarEclipseObscurations"]])
         self.assertEqual([0.9905, 0.9625], [row["roundingLowerBound"] for row in fixture["lunarEclipseObscurations"]])
+        self.assertEqual([120.0, 120.0], [row["peakToleranceSeconds"] for row in fixture["lunarEclipseObscurations"]])
 
 
 class AngularEventFixtureTests(unittest.TestCase):

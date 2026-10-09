@@ -28,6 +28,25 @@ struct EngineEclipseEventTests {
         #expect(Engine.Shadows.obscuration(firstRadius: 2, secondRadius: 1, separation: 0) == 0.25)
         let oneRadiusSeparation = Engine.Shadows.obscuration(firstRadius: 1, secondRadius: 1, separation: 1)
         #expect(abs(oneRadiusSeparation - 0.3910022189557706) < 1.0e-15)
+
+        let nearExternal = Engine.Shadows.obscuration(
+            firstRadius: 1_737.4, secondRadius: 4_669.7, separation: (1_737.4 + 4_669.7).nextDown)
+        let roundedNegative = Engine.Shadows.obscuration(
+            firstRadius: 1_737.4, secondRadius: 4_600, separation: (1_737.4 + 4_600).nextDown)
+        #expect(0...2.0e-16 ~= nearExternal)
+        #expect(0...2.0e-16 ~= roundedNegative)
+
+        let innerTangent = Engine.Shadows.obscuration(firstRadius: 2, secondRadius: 1, separation: 1)
+        let nearInner = Engine.Shadows.obscuration(firstRadius: 2, secondRadius: 1, separation: 1.nextUp)
+        let nearConcentric = Engine.Shadows.obscuration(
+            firstRadius: 1, secondRadius: 1, separation: Double.leastNonzeroMagnitude)
+        let hugeScale = Double.greatestFiniteMagnitude / 4
+        let hugeEqualRadii = Engine.Shadows.obscuration(
+            firstRadius: hugeScale, secondRadius: hugeScale, separation: hugeScale)
+        #expect(innerTangent == 0.25)
+        #expect(0...0.25 ~= nearInner)
+        #expect(0...1 ~= nearConcentric)
+        #expect(abs(hugeEqualRadii - oneRadiusSeparation) < 1.0e-15)
     }
 
     @Test("Lunar shadow boundaries use strict contact geometry")
@@ -82,6 +101,7 @@ struct EngineEclipseEventTests {
             var measurement: [String: Any] = [
                 "sourceTime": reference.universalTime,
                 "kind": actual.kind.rawValue,
+                "nativePeakTT": actual.peak.tt,
                 "peakResidualSeconds": peakResidual,
                 "penumbralDurationMinutes": actual.penumbralDurationMinutes,
                 "partialDurationMinutes": actual.partialDurationMinutes,
@@ -115,6 +135,32 @@ struct EngineEclipseEventTests {
         try Self.write(measurements, name: "obscurations")
     }
 
+    @Test("Lunar search includes an eclipse after its full-moon boundary and excludes it after peak")
+    func lunarEclipseStartBoundary() throws {
+        let nearJanuaryPeak = IndependentReferenceDate.engine("2000-01-21T04:42:00Z")
+        let fullMoon = try #require(
+            try Events.searchMoonPhase(180, after: nearJanuaryPeak.adding(days: -1), limitDays: 2))
+        let second = 1 / Engine.secondsPerDay
+        let january = try Events.searchLunarEclipse(after: fullMoon.adding(days: -second))
+        #expect(fullMoon.tt < january.peak.tt)
+
+        for start in [
+            fullMoon,
+            fullMoon.adding(days: second),
+            january.peak.adding(days: -second),
+            january.peak,
+        ] {
+            let result = try Events.searchLunarEclipse(after: start)
+            #expect(
+                abs(result.peak.tt - january.peak.tt) * Engine.secondsPerDay <= 1,
+                "search start TT \(start.tt)")
+            #expect(result.peak.tt >= start.tt)
+        }
+
+        let later = try Events.searchLunarEclipse(after: january.peak.adding(days: second))
+        #expect(later.peak.tt > january.peak.tt)
+    }
+
     @Test(.enabled(if: ProcessInfo.processInfo.environment["ECLIPSE_EVENT_MEASUREMENT"] != nil))
     func resources() throws {
         func peakBytes() -> Int {
@@ -143,7 +189,9 @@ struct EngineEclipseEventTests {
         try Self.write(
             [
                 "coldSeconds": coldSeconds,
-                "hundredEclipsesSeconds": Date().timeIntervalSince(workloadStart),
+                "nextEclipseCount": 99,
+                "nextEclipsesSeconds": Date().timeIntervalSince(workloadStart),
+                "totalEclipseCount": 100,
                 "peakBeforeBytes": before,
                 "peakAfterColdBytes": afterCold,
                 "peakAfterWorkloadBytes": peakBytes(),
@@ -174,5 +222,7 @@ struct EngineEclipseEventTests {
         let firstSupported = try Events.searchLunarEclipse(after: nearStart)
         #expect(firstSupported.peak.tt >= nearStart.tt)
         #expect(firstSupported.peak.deltaTModel == .jplHorizons)
+        let lowerEndpoint = Engine.Time(tt: -Engine.acceptedTTDays, deltaTModel: .espenakMeeus)
+        #expect(try Events.searchLunarEclipse(after: lowerEndpoint).peak.tt >= lowerEndpoint.tt)
     }
 }

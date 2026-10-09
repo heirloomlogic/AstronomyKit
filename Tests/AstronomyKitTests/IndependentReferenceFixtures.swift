@@ -303,6 +303,7 @@ struct IndependentReferenceArchive: Decodable {
         let obscuration: Double
         let roundingLowerBound: Double
         let roundingUpperBound: Double
+        let peakToleranceSeconds: Double
     }
 
     struct GlobalSolarEclipse: Decodable {

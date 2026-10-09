@@ -27,22 +27,54 @@ extension Engine.Events {
         try Engine.checkAcceptedTime(start)
         var fullMoonStart = start
 
+        // A lunar eclipse peaks shortly after the phase boundary used to find it. Search backward only over the same
+        // interval that bounds peak refinement, then require the refined peak to remain inside the caller's interval.
+        let lowerBoundDistance = start.tt + Engine.acceptedTTDays
+        let lookbackDays = min(peakWindowDays, lowerBoundDistance)
+        if lookbackDays > 0,
+            let backwardFullMoon = try searchMoonPhase(180, after: start, limitDays: -lookbackDays)
+        {
+            let precedingFullMoon = try canonicalFullMoon(backwardFullMoon)
+            if let eclipse = try lunarEclipse(near: precedingFullMoon), eclipse.peak.tt >= start.tt {
+                return eclipse
+            }
+            fullMoonStart = precedingFullMoon.adding(days: 10)
+            guard fullMoonStart.tt > precedingFullMoon.tt else { throw AstronomyError.badTime }
+        }
+
         for _ in 0..<fullMoonLimit {
-            guard let fullMoon = try searchMoonPhase(180, after: fullMoonStart, limitDays: 40) else {
+            guard let foundFullMoon = try searchMoonPhase(180, after: fullMoonStart, limitDays: 40) else {
                 throw AstronomyError.searchFailure
             }
-            if abs(try Engine.Moon.eclipticPosition(at: fullMoon).latitude) < eclipseLatitudeLimitDegrees {
-                let shadow = try peakEarthShadow(near: fullMoon)
-                let moonRadius = try moonDiscRadius(in: shadow)
-                if shadow.axisDistanceKilometers < shadow.penumbraRadiusKilometers + moonRadius {
-                    return try lunarEclipse(from: shadow)
-                }
+            let fullMoon = try canonicalFullMoon(foundFullMoon)
+            if let eclipse = try lunarEclipse(near: fullMoon), eclipse.peak.tt >= start.tt {
+                return eclipse
             }
             let nextStart = fullMoon.adding(days: 10)
             guard nextStart.tt > fullMoon.tt else { throw AstronomyError.badTime }
             fullMoonStart = nextStart
         }
         throw AstronomyError.internalError
+    }
+
+    private static func canonicalFullMoon(_ candidate: Engine.Time) throws -> Engine.Time {
+        let backwardDays = min(phaseCanonicalizationDays, candidate.tt + Engine.acceptedTTDays)
+        let forwardDays = min(phaseCanonicalizationDays, Engine.acceptedTTDays - candidate.tt)
+        return try searchMoonPhase(
+            180, after: candidate.adding(days: -backwardDays),
+            limitDays: backwardDays + forwardDays) ?? candidate
+    }
+
+    private static func lunarEclipse(near fullMoon: Engine.Time) throws -> LunarEclipse? {
+        guard abs(try Engine.Moon.eclipticPosition(at: fullMoon).latitude) < eclipseLatitudeLimitDegrees else {
+            return nil
+        }
+        let shadow = try peakEarthShadow(near: fullMoon)
+        let moonRadius = try moonDiscRadius(in: shadow)
+        guard shadow.axisDistanceKilometers < shadow.penumbraRadiusKilometers + moonRadius else {
+            return nil
+        }
+        return try lunarEclipse(from: shadow)
     }
 
     static func nextLunarEclipse(after eclipse: LunarEclipse) throws -> LunarEclipse {
@@ -182,6 +214,7 @@ extension Engine.Events {
 
     private static let eclipseLatitudeLimitDegrees = 1.8
     private static let peakWindowDays = 0.03
+    private static let phaseCanonicalizationDays = 1 / Engine.secondsPerDay
     private static let fullMoonLimit = 12
 
     private enum LunarShadowContact {

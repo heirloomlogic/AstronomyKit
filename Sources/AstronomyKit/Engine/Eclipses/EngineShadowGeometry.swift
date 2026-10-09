@@ -102,24 +102,43 @@ extension Engine.Shadows {
 
     /// Area shared by two discs, divided by the area of the first disc.
     static func obscuration(firstRadius: Double, secondRadius: Double, separation: Double) -> Double {
-        guard firstRadius > 0, secondRadius > 0, separation >= 0 else { return 0 }
+        guard firstRadius > 0, secondRadius > 0, separation >= 0,
+            firstRadius.isFinite, secondRadius.isFinite, separation.isFinite
+        else { return 0 }
         guard separation < firstRadius + secondRadius else { return 0 }
-        if separation == 0 {
-            return firstRadius <= secondRadius ? 1 : secondRadius * secondRadius / (firstRadius * firstRadius)
+        let radiusRatio = secondRadius / firstRadius
+        let maximumFraction = radiusRatio >= 1 ? 1 : radiusRatio * radiusRatio
+        if separation <= abs(firstRadius - secondRadius) {
+            return maximumFraction
         }
 
-        let intersection =
-            (firstRadius * firstRadius - secondRadius * secondRadius + separation * separation) / (2 * separation)
-        let radicand = firstRadius * firstRadius - intersection * intersection
-        if radicand <= 0 {
-            return firstRadius <= secondRadius ? 1 : secondRadius * secondRadius / (firstRadius * firstRadius)
-        }
-
-        let height = radicand.squareRoot()
-        let firstLens = firstRadius * firstRadius * acos(intersection / firstRadius) - intersection * height
-        let secondOffset = separation - intersection
-        let secondLens = secondRadius * secondRadius * acos(secondOffset / secondRadius) - secondOffset * height
-        return (firstLens + secondLens) / (.pi * firstRadius * firstRadius)
+        let scale = max(firstRadius, secondRadius, separation)
+        let normalizedFirst = firstRadius / scale
+        let normalizedSecond = secondRadius / scale
+        let normalizedSeparation = separation / scale
+        let firstSquared = normalizedFirst * normalizedFirst
+        let secondSquared = normalizedSecond * normalizedSecond
+        let separationSquared = normalizedSeparation * normalizedSeparation
+        let firstCosine = min(
+            1,
+            max(
+                -1,
+                (separationSquared + firstSquared - secondSquared)
+                    / (2 * normalizedSeparation * normalizedFirst)))
+        let secondCosine = min(
+            1,
+            max(
+                -1,
+                (separationSquared + secondSquared - firstSquared)
+                    / (2 * normalizedSeparation * normalizedSecond)))
+        let product =
+            (-normalizedSeparation + normalizedFirst + normalizedSecond)
+            * (normalizedSeparation + normalizedFirst - normalizedSecond)
+            * (normalizedSeparation - normalizedFirst + normalizedSecond)
+            * (normalizedSeparation + normalizedFirst + normalizedSecond)
+        let area =
+            firstSquared * acos(firstCosine) + secondSquared * acos(secondCosine) - 0.5 * max(0, product).squareRoot()
+        return min(maximumFraction, max(0, area / (.pi * firstSquared)))
     }
 
     static let sunRadiusKilometers = 695_700.0

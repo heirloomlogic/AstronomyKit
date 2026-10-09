@@ -2,6 +2,9 @@
 """Record and verify native lunar-eclipse observations and source bindings."""
 
 import argparse
+import ast
+import datetime
+import functools
 import hashlib
 import json
 import math
@@ -68,6 +71,57 @@ def references():
     return {row["universalTime"]: row for row in archive["lunarEclipses"]}
 
 
+def arithmetic(expression, variables):
+    node = ast.parse(expression.replace("p.u", "u**"), mode="eval").body
+
+    def value(item):
+        if isinstance(item, ast.Constant) and isinstance(item.value, (int, float)):
+            return item.value
+        if isinstance(item, ast.Name):
+            return variables[item.id]
+        if isinstance(item, ast.UnaryOp) and isinstance(item.op, ast.USub):
+            return -value(item.operand)
+        if isinstance(item, ast.BinOp):
+            first, second = value(item.left), value(item.right)
+            if isinstance(item.op, ast.Add):
+                return first + second
+            if isinstance(item.op, ast.Sub):
+                return first - second
+            if isinstance(item.op, ast.Mult):
+                return first * second
+            if isinstance(item.op, ast.Div):
+                return first / second
+            if isinstance(item.op, ast.Pow):
+                return first**second
+        raise ValueError("unrecognized Delta T expression")
+
+    return value(node)
+
+
+@functools.lru_cache(maxsize=1)
+def delta_pieces():
+    text = (ROOT / "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift").read_text()
+    result = []
+    for stop, body in re.findall(r"if y < (-?\d+) \{(.*?)\n            \}", text, re.S):
+        result.append((int(stop), re.search(r"let u = ([^\n]+)", body)[1], " ".join(re.search(r"return (.*)", body, re.S)[1].split())))
+    if [row[0] for row in result] != [-500, 500, 1600, 1700, 1800, 1860, 1900, 1920, 1941, 1961, 1986, 2005, 2050, 2150]:
+        raise ValueError("changed Delta T layout")
+    return result
+
+
+def source_time_tt(text):
+    date = datetime.datetime.fromisoformat(text.replace("Z", "+00:00")).replace(tzinfo=None)
+    epoch = datetime.datetime(2000, 1, 1, 12)
+    ut = (date - epoch).total_seconds() / 86_400
+    start, end = datetime.datetime(date.year, 1, 1), datetime.datetime(date.year + 1, 1, 1)
+    year = date.year + (date - start).total_seconds() / (end - start).total_seconds()
+    for stop, origin, expression in delta_pieces():
+        if year < stop:
+            u = arithmetic(origin, {"y": year})
+            return ut + arithmetic(expression, {"y": year, "u": u}) / 86_400
+    raise ValueError("outside recorded Delta T scope")
+
+
 def validate_published(rows):
     expected = references()
     if len(rows) != len(expected) or {row["sourceTime"] for row in rows} != set(expected):
@@ -75,14 +129,19 @@ def validate_published(rows):
     for row in rows:
         source = expected[row["sourceTime"]]
         fields = {
-            "sourceTime", "kind", "peakResidualSeconds", "penumbralDurationMinutes",
+            "sourceTime", "kind", "nativePeakTT", "peakResidualSeconds", "penumbralDurationMinutes",
             "partialDurationMinutes", "totalDurationMinutes", "obscuration",
         }
         if "penumbralSemiDurationMinutes" in source:
             fields.add("penumbralDurationResidualMinutes")
         if set(row) != fields or row["kind"] != source["kind"]:
             raise ValueError("lunar eclipse observation fields or type differ")
-        if row["peakResidualSeconds"] > source["toleranceSeconds"]:
+        expected_tt = source_time_tt(row["sourceTime"])
+        residual = abs(row["nativePeakTT"] - expected_tt) * 86_400
+        relation_tolerance = max(1.0e-9, 8 * max(math.ulp(row["nativePeakTT"]), math.ulp(expected_tt)) * 86_400)
+        if row["peakResidualSeconds"] < 0 or abs(residual - row["peakResidualSeconds"]) > relation_tolerance:
+            raise ValueError("lunar eclipse peak residual relation failed")
+        if residual > source["toleranceSeconds"]:
             raise ValueError("lunar eclipse peak criterion failed")
         if abs(row["partialDurationMinutes"] - source["partialSemiDurationMinutes"]) > source["durationToleranceMinutes"]:
             raise ValueError("lunar eclipse partial-duration criterion failed")
@@ -105,6 +164,9 @@ def validate_obscurations(rows):
         if set(row) != {"sourceTimeSearchSeed", "nativePeakTT", "obscuration"} or not 0 <= row["obscuration"] <= 1:
             raise ValueError("invalid lunar obscuration observation")
         source = expected[row["sourceTimeSearchSeed"]]
+        expected_tt = source_time_tt(row["sourceTimeSearchSeed"])
+        if abs(row["nativePeakTT"] - expected_tt) * 86_400 > source["peakToleranceSeconds"]:
+            raise ValueError("lunar obscuration event time differs from the published event")
         if not source["roundingLowerBound"] <= row["obscuration"] <= source["roundingUpperBound"]:
             raise ValueError("lunar obscuration print interval criterion failed")
 
@@ -126,13 +188,15 @@ def evidence(captures, hashes):
         raise ValueError("Debug and Release lunar eclipse observations differ")
     resources = captures["resources"]
     if set(resources) != {
-        "checksum", "coldSeconds", "host", "hundredEclipsesSeconds", "peakAfterColdBytes",
-        "peakAfterWorkloadBytes", "peakBeforeBytes",
+        "checksum", "coldSeconds", "host", "nextEclipseCount", "nextEclipsesSeconds", "peakAfterColdBytes",
+        "peakAfterWorkloadBytes", "peakBeforeBytes", "totalEclipseCount",
     }:
         raise ValueError("resource observation fields differ")
     peaks = [resources[key] for key in ("peakBeforeBytes", "peakAfterColdBytes", "peakAfterWorkloadBytes")]
-    if peaks != sorted(peaks) or min(peaks) <= 0 or resources["coldSeconds"] < 0 or resources["hundredEclipsesSeconds"] < 0:
+    if peaks != sorted(peaks) or min(peaks) <= 0 or resources["coldSeconds"] < 0 or resources["nextEclipsesSeconds"] < 0:
         raise ValueError("invalid resource observation")
+    if resources["nextEclipseCount"] != 99 or resources["totalEclipseCount"] != 100:
+        raise ValueError("resource workload count differs")
     if any(value <= 0 for value in captures["releaseObjectBytes"].values()) or captures["releaseExecutableBytes"] <= 0:
         raise ValueError("invalid binary-size observation")
     release_rows = captures["release"]["published"]
@@ -160,8 +224,8 @@ def evidence(captures, hashes):
             "maximumObscurationResidualFromPrintedFraction": max(abs(row["obscuration"] - obscuration_references[row["sourceTimeSearchSeed"]]["obscuration"]) for row in obscuration_rows),
             "minimumObscurationMarginInsidePrintInterval": min(min(row["obscuration"] - obscuration_references[row["sourceTimeSearchSeed"]]["roundingLowerBound"], obscuration_references[row["sourceTimeSearchSeed"]]["roundingUpperBound"] - row["obscuration"]) for row in obscuration_rows),
         },
-        "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. Two direct NASA SVS Moon-disc obscurations fall inside their disclosed print-precision intervals. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
-        "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. The SVS comparison intervals represent printed precision, not NASA uncertainty bounds or an engine accuracy policy. Public eclipse facades remain C-backed until #96. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
+        "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. Two NASA SVS Moon-disc obscurations fall inside intervals inferred from the printed percentages under a nearest-0.1-percentage-point rounding assumption. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
+        "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. Both obscuration references come from one NASA SVS publisher and DE421/LOLA model family. The pages do not publish their exact rounding rule, lunar and shadow radii, or full-precision area algorithm, so interval agreement does not establish algorithm replication. Public eclipse facades remain C-backed until #96. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
     }
 
 

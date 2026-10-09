@@ -116554,12 +116554,14 @@
   "lunarEclipseObscurations": [
     {
       "obscuration": 0.991,
+      "peakToleranceSeconds": 120.0,
       "roundingLowerBound": 0.9905,
       "roundingUpperBound": 0.9914999999999999,
       "universalTimeSearchSeed": "2021-11-19T09:03Z"
     },
     {
       "obscuration": 0.963,
+      "peakToleranceSeconds": 120.0,
       "roundingLowerBound": 0.9625,
       "roundingUpperBound": 0.9634999999999999,
       "universalTimeSearchSeed": "2026-08-28T04:13Z"
@@ -117144,9 +117146,9 @@
       "frame": "geocentric Earth-shadow geometry rendered on the Moon's apparent disc",
       "license": "NASA factual data may be reproduced with acknowledgment and without implied endorsement; transformed files also retain the archived Astronomy Engine MIT license",
       "origin": "Earth center",
-      "recipe": "Pinned complete NASA SVS pages 4953 and 5672. Each directly publishes the Moon-disc area inside the umbra at greatest eclipse. Inclusive bounds add and subtract 0.0005 from the printed fraction, solely representing nearest-0.1-percentage-point print precision without assuming a tie rule; they are not NASA uncertainty bounds or a new accuracy policy.",
+      "recipe": "Pinned complete NASA SVS pages 4953 and 5672. Each directly publishes the Moon-disc area inside the umbra at greatest eclipse. Assuming nearest-0.1-percentage-point rounding, inclusive bounds add and subtract 0.0005 from the printed fraction without assuming a tie rule. Both pages come from one NASA SVS publisher and DE421/LOLA model family, and neither publishes its exact rounding rule, radii, or full-precision area algorithm. The inferred intervals are not NASA uncertainty bounds or a new accuracy policy.",
       "refraction": "not applicable to geocentric eclipse geometry",
-      "timeScale": "the pages label greatest eclipse in Universal Time; the printed minute is used only to seed native event search and is not asserted as an exact TT or UTC coordinate",
+      "timeScale": "the pages label greatest eclipse in Universal Time; the printed minute identifies the published event and is not asserted as an exact TT or UTC coordinate",
       "units": "fraction of the Moon's disc area and Universal Time calendar labels",
       "url": "https://svs.gsfc.nasa.gov/5672/",
       "version": "NASA SVS 4953 released 2021-11-04; NASA SVS 5672 updated 2026-08-25"
