@@ -3359,7 +3359,7 @@
       }
     ]
   },
-  "runtimeBaseRevision": "4a60daaa2cb389604c0e5a63833fecbe996f459e",
+  "runtimeBaseRevision": "6a3e1db4bc5213afd0d52d27b058fb56660c080f",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
