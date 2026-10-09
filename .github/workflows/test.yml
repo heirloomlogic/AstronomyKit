@@ -83,6 +83,9 @@ jobs:
           python3 -m unittest Scripts/test_local_solar.py -v
           python3 Scripts/capture-local-solar.py --check
           python3 Scripts/record-local-solar-evidence.py --check
+          python3 -m unittest Scripts/test_transit_evidence.py -v
+          python3 Scripts/capture-transit-references.py --check
+          python3 Scripts/record-transit-evidence.py --check
 
       - name: Verify native solar numerical tools
         run: |
@@ -168,6 +171,9 @@ jobs:
           python3 -m unittest Scripts/test_local_solar.py -v
           python3 Scripts/capture-local-solar.py --check
           python3 Scripts/record-local-solar-evidence.py --check
+          python3 -m unittest Scripts/test_transit_evidence.py -v
+          python3 Scripts/capture-transit-references.py --check
+          python3 Scripts/record-transit-evidence.py --check
 
       - name: Verify work-avoidance paths
         run: |

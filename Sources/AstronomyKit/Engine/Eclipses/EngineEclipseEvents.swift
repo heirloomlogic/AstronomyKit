@@ -260,6 +260,13 @@ extension Engine.Events {
     private static func shadowSemiDurationMinutes(
         at center: Engine.Time, contact: LunarShadowContact, windowMinutes: Double
     ) throws -> Double {
+        let contacts = try lunarShadowContacts(at: center, contact: contact, windowMinutes: windowMinutes)
+        return (contacts.egress.ut - contacts.ingress.ut) * 720
+    }
+
+    static func lunarShadowContacts(
+        at center: Engine.Time, contact: LunarShadowContact, windowMinutes: Double
+    ) throws -> (ingress: Engine.Time, egress: Engine.Time) {
         guard windowMinutes > 0, windowMinutes.isFinite else {
             throw AstronomyError.searchFailure
         }
@@ -282,7 +289,7 @@ extension Engine.Events {
         }
         let duration = (egress.ut - ingress.ut) * 720
         guard duration > 0, duration.isFinite else { throw AstronomyError.searchFailure }
-        return duration
+        return (ingress, egress)
     }
 
     private static let eclipseLatitudeLimitDegrees = 1.8
@@ -291,7 +298,7 @@ extension Engine.Events {
     private static let peakSearchResolutionDays = peakSearchResolutionSeconds / Engine.secondsPerDay
     private static let fullMoonLimit = 12
 
-    private enum LunarShadowContact {
+    enum LunarShadowContact {
         case penumbral
         case partial
         case total

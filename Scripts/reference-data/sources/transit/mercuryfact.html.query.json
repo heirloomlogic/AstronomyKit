@@ -1,0 +1,7 @@
+{
+  "method": "GET",
+  "sha256": "170d9f2d2ba7f7ae322c68d473ccb0b35ab94f4b4aca197bf74fe3b7e4e10f3f",
+  "subject": "mercury volumetric mean radius",
+  "units": "km",
+  "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/mercuryfact.html"
+}
