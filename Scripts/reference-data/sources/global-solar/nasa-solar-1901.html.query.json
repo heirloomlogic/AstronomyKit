@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "sha256": "1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff",
+  "subject": "solar eclipses",
+  "timeScale": "TD",
+  "url": "https://eclipse.gsfc.nasa.gov/SEcat5/SE1901-2000.html"
+}

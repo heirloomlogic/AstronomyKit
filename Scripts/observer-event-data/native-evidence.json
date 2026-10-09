@@ -7,8 +7,8 @@
     "sha256": "f6a2b408dcb32a3ad1e8f57dcc16767f055d3f4bd93c675728a4a351bc9c5d6e"
   },
   "buildSeconds": {
-    "debug": 1.04,
-    "release": 118.75
+    "debug": 10.29,
+    "release": 127.83
   },
   "criteria": "All 5909 archived USNO rows retain their source-specific allowance, including 70.8 TT seconds at line 2923. Sixteen sampled altitude/hour-angle points retain one arcminute. Three printed USNO semidiameters discriminate the optical convention at 0.000001 degree; this is not an asserted physical solar-radius accuracy.",
   "debug": {
@@ -61,20 +61,20 @@
       "sourceLine": 2923
     }
   },
-  "releaseExecutableBytes": 164252384,
+  "releaseExecutableBytes": 164520432,
   "resources": {
     "checksum": 3257705.947319458,
-    "coldSunRiseSeconds": 0.0031549930572509766,
+    "coldSunRiseSeconds": 0.0027840137481689453,
     "eventsPerWorkload": 100,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterColdBytes": 56606720,
-    "peakAfterWorkloadsBytes": 78938112,
-    "peakBeforeBytes": 46481408,
+    "peakAfterColdBytes": 56721408,
+    "peakAfterWorkloadsBytes": 79020032,
+    "peakBeforeBytes": 46596096,
     "seconds": {
-      "moonRise": 0.01600790023803711,
-      "publicCSunRise": 0.003489971160888672,
-      "sunHourAngle": 0.001623988151550293,
-      "sunRise": 0.005674004554748535
+      "moonRise": 0.0145111083984375,
+      "publicCSunRise": 0.0026199817657470703,
+      "sunHourAngle": 0.0015039443969726562,
+      "sunRise": 0.0053060054779052734
     }
   },
   "schemaVersion": 1,
@@ -82,7 +82,7 @@
     "Fuzzing/corpus/fixed-riseset-infinite-limit": "6d88cbde5da0ca9da353a20326d522e27c88dde3714498e5d4bc6929753a4e02",
     "Fuzzing/corpus/fixed-riseset-stall": "ca78b6218e4c663f595a10afa5cb38a76a73ba5d15e81f3923c133d3454305c8",
     "Scripts/capture-observer-events.py": "7bd88e87e94c1baa4972970fbccc96426ed3a3d925b7c1c8dc8317e0edbc0875",
-    "Scripts/observer-event-data/native-captures.json": "1d4af023e89c3af111ce1099c6086a817b3432dee5b6e076fb8752af935b43a3",
+    "Scripts/observer-event-data/native-captures.json": "f53b879a467eca6475d52203c8c6fd476314334578bbf60160dcb6a91eed141d",
     "Scripts/observer-event-data/reference-fixtures.json": "7f0fdbf7b72e6cd828f4301bacfd75a6505b4ba01bc594c4431e2a8fd116b638",
     "Scripts/observer-event-data/sources/horizons/horizons-sd-2000-01-03.json": "b1805e417fbcc5c4a63ae541b5946f87af4aa3aff905dc1c9e9f9b65f6885077",
     "Scripts/observer-event-data/sources/horizons/horizons-sd-2000-01-03.query.json": "aa5dca2f03c8552562289c7d799ab3512fc955dc14760511a74dea342ae0dbd6",
@@ -119,8 +119,10 @@
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "318b4df049a1c834a7ad8046bf86522279a48d2839d89f4da0e9ac0f0df1a143",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "c71a67fda7be5135cd2a9a5b7f7d28c3357f8136c5dc37041fc356f40de6a883",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "13abd22d2ae3102670acddd38428d08aa026f14d4394eac1520e49b6237ee691",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "7f1e9d1e130c2b4c61b610099488e74be40aabe87442dbd26c20528b768d7239",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
     "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "d5872b4f262924ec859bd0849dc7f182b37d102d097df6bff1c14772e2bf8079",
@@ -209,7 +211,7 @@
     "Tests/AstronomyKitTests/Engine/Events/EngineObserverMeasurementTests.swift": "9b659b4ada3c9719446f18ee5d1ba79cd0c77e6c9668e9a515976843a2a164fb",
     "Tests/AstronomyKitTests/Engine/Events/EngineObserverSourceTests.swift": "36d86e803634ae46dbab8dcca4a8351bffa64288ef0db50a5246028dddf01901",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "6d62e47bb2d2b34d2b0ccff5b74d29b9117c266eec85ab0237f026cc3dc8763b",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "8b894f59f82d685c92d2960891f20f531c255fc54135e30b822e2e4a93bdf972"
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "93ba4b8e4784b25c4868a02e2d2f9e3d0219432a58a879f81248fbbb035b1728"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

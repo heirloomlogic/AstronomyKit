@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "sha256": "2d34652d03f95e0ec8c4d0fff292f0b8ab3527044005acbadac70a0b0f0eb7c5",
+  "subject": "solar eclipses",
+  "timeScale": "TDT",
+  "url": "https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/ephemerides.html"
+}

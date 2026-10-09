@@ -412,7 +412,7 @@ enum IndependentReferenceDate {
     }
 
     static func terrestrialCalendar(_ text: String) -> AstroTime {
-        AstroTime(tt: civil(text).universalTime)
+        AstroTime(tt: AstroTime.civilDays(of: date(text)))
     }
 
     static func seconds(_ lhs: AstroTime, _ rhs: AstroTime) -> Double {
