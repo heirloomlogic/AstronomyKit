@@ -42,6 +42,11 @@ def main():
     parser.add_argument('--binaries',type=Path,default=ROOT/'.context/issue-92/saturn-assessment')
     args=parser.parse_args()
     candidate=json.loads(MANIFEST.read_bytes())['candidates']['float32']
+    expected_paths = {OUTPUT/f'Saturn{name.title()}Data.swift' for name in BODIES.values()}
+    existing_paths = set(OUTPUT.rglob('*.swift'))
+    if args.check and existing_paths != expected_paths:
+        raise SystemExit('generated Saturn file set differs')
+    rendered = {}
     for target,name in BODIES.items():
         body=candidate['bodies'][str(target)]
         path=OUTPUT/f'Saturn{name.title()}Data.swift'
@@ -53,7 +58,14 @@ def main():
         if args.check:
             if path.read_text()!=expected: raise SystemExit('generated Saturn table differs')
         else:
-            OUTPUT.mkdir(parents=True,exist_ok=True);path.write_text(expected)
+            rendered[path] = expected
+    if not args.check:
+        # Validate every input before replacing or retiring an owned output.
+        OUTPUT.mkdir(parents=True, exist_ok=True)
+        for path, expected in rendered.items():
+            path.write_text(expected)
+        for path in existing_paths - expected_paths:
+            path.unlink()
     print('Verified Saturn tables' if args.check else 'Wrote Saturn tables')
 
 if __name__=='__main__': main()

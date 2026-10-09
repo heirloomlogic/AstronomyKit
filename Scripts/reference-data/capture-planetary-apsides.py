@@ -39,7 +39,7 @@ def parse_vectors(target,dates,raw):
     rows=[]
     for expected,line in zip(dates,lines):
         fields=line.split(',');jd=float(fields[0]);rate=float(fields[10])
-        if not math.isfinite(rate) or abs(jd-expected)>1e-9:raise ValueError('changed epoch or nonfinite rate')
+        if not math.isfinite(jd) or not math.isfinite(rate) or abs(jd-expected)>1e-9:raise ValueError('changed epoch or nonfinite rate')
         rows.append(dict(jdtt=jd,rateAUPerDay=rate))
     return header,rows
 
@@ -89,6 +89,13 @@ def main():
         body,target,epoch,kind=case;q=query(target,epoch);path=DATA/f'{body}.json'
         if args.capture:path.write_bytes(f.download(f.horizons_url(q)))
         raw=path.read_bytes();header,rows,crossings=parse(target,epoch,raw)
+        recipe_path = path.with_name(f'{body}.query.json')
+        recipe = {**q, '_responseSHA256': hashlib.sha256(raw).hexdigest()}
+        if args.check:
+            if json.loads(recipe_path.read_bytes()) != recipe:
+                raise ValueError('primary response query or digest changed')
+        else:
+            recipe_path.write_text(json.dumps(recipe, indent=2, sort_keys=True)+'\n')
         roots,refinement_sha=refine(body,target,epoch,crossings,args.capture or args.refine)
         return dict(body=body,target=target,nativeCandidateJDTT=epoch,nativeKind=kind,targetHeader=header,query=q,url=f.horizons_url(q),responseSHA256=hashlib.sha256(raw).hexdigest(),samples=rows,crossings=crossings,roots=roots,refinementSHA256=refinement_sha)
     with ThreadPoolExecutor(max_workers=2) as pool:cases=list(pool.map(one,CASES))

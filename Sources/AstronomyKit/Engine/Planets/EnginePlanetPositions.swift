@@ -63,10 +63,26 @@ extension Engine.Planet {
     func heliocentricEclipticState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
+        try eclipticState(at: time, cache: cache, physicalCenter: true)
+    }
+
+    /// System-mass trajectory for gravity and GM-weighted origins. Saturn excludes its satellite-induced center offset; other planets retain their existing model.
+    func systemHeliocentricState(
+        at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
+    ) throws -> Engine.State<Engine.EQJ> {
+        Engine.VSOP87B.toEquatorial.apply(to: try eclipticState(at: time, cache: cache, physicalCenter: false))
+    }
+
+    private func eclipticState(
+        at time: Engine.Time, cache: Engine.VSOP87B.Cache, physicalCenter: Bool
+    ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
         try Engine.checkAcceptedTime(time)
         let (weight, rate) = Engine.SaturnEphemeris.weight(tt: time.tt)
         if self == .saturn, weight > 0 {
-            guard var (position, velocity) = Engine.SaturnEphemeris.eclipticState(at: time) else {
+            guard
+                var (position, velocity) = Engine.SaturnEphemeris.eclipticState(
+                    at: time, physicalCenter: physicalCenter)
+            else {
                 throw AstronomyError.badTime
             }
             if weight < 1 {

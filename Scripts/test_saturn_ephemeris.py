@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 
 def module(name, filename):
@@ -72,6 +73,49 @@ class SaturnEphemerisTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'bracket'):
             recorder.validate(changed)
 
+    def test_rejects_corrupt_recorded_sections(self):
+        recorder = module('planetary_recorder_negative', 'record-planetary-event-evidence.py')
+        original = json.loads(recorder.OUTPUT.read_bytes())
+        for configuration in ['debug', 'release']:
+            changed = copy.deepcopy(original[configuration])
+            changed['parity']['planetaryApsisParitySeconds'] = 999
+            with self.assertRaises(ValueError):
+                recorder.validate(changed)
+        for key, value in [('resources', {}), ('buildSeconds', {'debug': -1, 'release': 1})]:
+            changed = copy.deepcopy(original)
+            changed[key] = value
+            with self.assertRaises(ValueError):
+                recorder.validate_recording(changed)
+
+    def test_every_recorded_observation_is_bound_to_raw_capture(self):
+        recorder = module('planetary_recorder_integrity', 'record-planetary-event-evidence.py')
+        original = json.loads(recorder.OUTPUT.read_bytes())
+        recorder.validate_recording(original)
+        for path in [('debug', 'parity', 'maximumElongationParitySeconds'), ('release', 'parity', 'apsisEvents', 0, 'jdtt'), ('debug', 'coefficients', 'maximumPositionKm'), ('resources', 'seconds', 'center'), ('resources', 'checksum'), ('buildSeconds', 'debug'), ('releaseExecutableBytes',), ('decodedPayloadBytes',)]:
+            changed = copy.deepcopy(original)
+            cursor = changed
+            for key in path[:-1]:
+                cursor = cursor[key]
+            cursor[path[-1]] += 0.01
+            with self.assertRaises(ValueError, msg=str(path)):
+                recorder.validate_recording(changed)
+
+    def test_check_command_rejects_corrupt_parity_and_resource_json(self):
+        recorder = module('planetary_recorder_cli', 'record-planetary-event-evidence.py')
+        original = json.loads(recorder.OUTPUT.read_bytes())
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)/'changed.json'
+            for field in ['parity', 'resources']:
+                changed = copy.deepcopy(original)
+                if field == 'parity':
+                    changed['release']['parity']['planetaryApsisParitySeconds'] = 999
+                else:
+                    changed['resources']['seconds']['center'] *= 2
+                output.write_text(json.dumps(changed))
+                with patch.object(recorder, 'OUTPUT', output), patch.object(sys, 'argv', ['recorder', '--check']):
+                    with self.assertRaises(ValueError):
+                        recorder.main()
+
     def test_packed_payload_identity_and_generator_coexistence(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -95,6 +139,17 @@ class SaturnEphemerisTests(unittest.TestCase):
                     g.common.validate(bytes([data[0] ^ 1]) + data[1:], body)
                 (binaries/f'float32-{target}.bin').write_bytes(data)
             expected = {p.relative_to(root): hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/generated).rglob('*.swift')}
+            stale = root/generated/'Saturn/Retired.swift'
+            stale.write_text('// obsolete owned output\n')
+            nested_stale = stale.parent/'Retired/Nested.swift'
+            nested_stale.parent.mkdir()
+            nested_stale.write_text('// obsolete nested owned output\n')
+            check = subprocess.run([sys.executable, str(root/'Scripts/generate-saturn-tables.py'), '--check'], capture_output=True, text=True)
+            self.assertNotEqual(0, check.returncode, 'stale owned output must fail check')
+            regenerate = subprocess.run([sys.executable, str(root/'Scripts/generate-saturn-tables.py'), '--binaries', str(binaries)], capture_output=True, text=True)
+            self.assertEqual(0, regenerate.returncode, regenerate.stdout+regenerate.stderr)
+            self.assertFalse(stale.exists())
+            self.assertFalse(nested_stale.exists())
             for command in [('generate-planet-tables.py', '--check'), ('generate-planet-tables.py',), ('generate-saturn-tables.py', '--check'), ('generate-saturn-tables.py', '--binaries', str(binaries)), ('generate-planet-tables.py', '--check'), ('generate-saturn-tables.py', '--check')]:
                 if '--binaries' in command:
                     shutil.rmtree(root/generated/'Saturn')

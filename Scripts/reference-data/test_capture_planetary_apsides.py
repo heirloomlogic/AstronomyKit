@@ -44,6 +44,33 @@ class PlanetaryApsisSourceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'nonfinite'):
             f.parse(target, epoch, json.dumps(response).encode())
 
+    def test_rejects_nonfinite_epoch(self):
+        body, target, epoch, _ = f.CASES[0]
+        response = json.loads((f.DATA/f'{body}.json').read_bytes())
+        before, rest = response['result'].split('$$SOE')
+        lines = rest.splitlines()
+        fields = lines[1].split(',')
+        fields[0] = 'nan'
+        lines[1] = ','.join(fields)
+        response['result'] = before + '$$SOE' + '\n'.join(lines)
+        with self.assertRaisesRegex(ValueError, 'nonfinite'):
+            f.parse(target, epoch, json.dumps(response).encode())
+
+    def test_primary_recipes_meet_existing_archive_contract(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory)
+            for body, target, epoch, _ in f.CASES:
+                response = f.DATA/f'{body}.json'
+                recipe = f.DATA/f'{body}.query.json'
+                self.assertTrue(recipe.exists(), 'missing primary response recipe')
+                self.assertEqual({**f.query(target, epoch), '_responseSHA256': f.hashlib.sha256(response.read_bytes()).hexdigest()}, json.loads(recipe.read_bytes()))
+                (destination/response.name).write_bytes(response.read_bytes())
+                (destination/recipe.name).write_bytes(recipe.read_bytes())
+            f.f.verify_recorded_queries(destination)
+            (destination/'mercury.json').write_bytes(b'{}')
+            with self.assertRaisesRegex(RuntimeError, 'hash mismatch'):
+                f.f.verify_recorded_queries(destination)
+
     def test_refinement_rejects_changed_query_and_digest(self):
         body, target, epoch, _ = f.CASES[0]
         _, _, crossings = f.parse(target, epoch, (f.DATA/f'{body}.json').read_bytes())

@@ -72,13 +72,19 @@ extension Engine.SaturnEphemeris {
     /// The 1900–2130 full-weight interval and its 32-day blends deliberately reuse the existing Moon/Pluto window; this is not a new global accuracy range.
     static func weight(tt: Double) -> (weight: Double, rate: Double) { Engine.MoonEphemeris.weight(tt: tt) }
 
-    /// The physical-center state in AU and AU per TT day, on the same ecliptic axes as the retained planetary model.
-    static func eclipticState(at time: Engine.Time) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+    /// A state in AU and AU per TT day on the retained model’s ecliptic axes. The default includes the physical-center offset; system-mass callers exclude it.
+    static func eclipticState(
+        at time: Engine.Time, physicalCenter: Bool = true
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         let tt = time.tt
         guard tt.isFinite, weight(tt: tt).weight > 0 else { return nil }
         let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
-        guard let b = barycenter.evaluate(tdb: tdb), let s = sun.evaluate(tdb: tdb), let c = offset.evaluate(tdb: tdb)
-        else { return nil }
+        guard let b = barycenter.evaluate(tdb: tdb), let s = sun.evaluate(tdb: tdb) else { return nil }
+        var c = (position: SIMD3<Double>.zero, velocity: SIMD3<Double>.zero)
+        if physicalCenter {
+            guard let center = offset.evaluate(tdb: tdb) else { return nil }
+            c = center
+        }
         let position = (b.position - s.position + c.position) / Engine.kilometersPerAU
         let velocity = (b.velocity - s.velocity + c.velocity) * Engine.TDB.rate(tt: tt) / Engine.kilometersPerAU
         let p = Engine.FrameBias.icrsToEqj.apply(to: position)
