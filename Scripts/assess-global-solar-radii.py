@@ -48,7 +48,7 @@ def build(vectors):
         point = [fraction*v[i]-e[i] for i in range(3)]
         point[2] *= POLAR_RATIO
         sun_distance, moon_distance = norm(subtract(sun,point)), norm(subtract(moon,point))
-        candidates = [('retained',695700,1736), ('k2-nominal',695700,EARTH*.272281), ('k2-695992',695992,EARTH*.272281), ('k2-959.63',149597870.69098932*math.sin(math.radians(959.63/3600)),EARTH*.272281)]
+        candidates = [('retained',695700,1736), ('k2-nominal',695700,EARTH*.272281), ('k2-695992',695992,EARTH*.272281), ('k2-959.63',149597870.700*math.sin(math.radians(959.63/3600)),EARTH*.272281)]
         for label, sun_radius, moon_radius in candidates:
             solar_angle = math.asin(sun_radius/sun_distance)
             lunar_angle = math.asin(moon_radius/moon_distance)

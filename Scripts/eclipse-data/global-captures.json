@@ -1,33 +1,42 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (10.29 sec)",
-    "release": "Build complete! (127.83 sec)"
+    "debug": "Build complete! (9.64 sec)",
+    "release": "Build complete! (112.41 sec)"
   },
   "debug": {
     "area": [
       {
-        "moonRadiusRadians": 0.004344926637216907,
-        "obscuration": 0.8894664562179984,
-        "separationRadians": 3.925231146709438e-17,
-        "sunRadiusRadians": 0.004606994148717462,
-        "tt": -2061.7840335648148,
-        "ut": -2061.784722222222
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7847310562547,
+        "moonRadiusRadians": 0.004344926615857783,
+        "obscuration": 0.8894664439284661,
+        "separationRadians": 1.177569344012831e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.784722222222,
+        "sunRadiusRadians": 0.004606994157896881,
+        "tt": -2061.7840335648148
       },
       {
-        "moonRadiusRadians": 0.004344936836693048,
-        "obscuration": 0.8894720685590675,
-        "separationRadians": 1.1443916996305596e-16,
-        "sunRadiusRadians": 0.004606990428848717,
-        "tt": -2061.7805613425926,
-        "ut": -2061.78125
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7812588341244,
+        "moonRadiusRadians": 0.004344936785425717,
+        "obscuration": 0.8894720440572418,
+        "separationRadians": 2.387624894196368e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.78125,
+        "sunRadiusRadians": 0.004606990437942518,
+        "tt": -2061.7805613425926
       },
       {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7837244912603,
         "moonRadiusRadians": 0.004344943287681772,
         "obscuration": 0.8894736711708832,
         "separationRadians": 6.206335383118183e-17,
+        "sourceDeltaTSeconds": null,
+        "sourceUT": null,
         "sunRadiusRadians": 0.004606993118574747,
-        "tt": -2061.783026999794,
-        "ut": -2061.7837244912603
+        "tt": -2061.783026999794
       }
     ],
     "published": [
@@ -120,28 +129,37 @@
   "release": {
     "area": [
       {
-        "moonRadiusRadians": 0.004344926637216907,
-        "obscuration": 0.8894664562179984,
-        "separationRadians": 3.925231146709438e-17,
-        "sunRadiusRadians": 0.004606994148717462,
-        "tt": -2061.7840335648148,
-        "ut": -2061.784722222222
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7847310562547,
+        "moonRadiusRadians": 0.004344926615857783,
+        "obscuration": 0.8894664439284661,
+        "separationRadians": 1.177569344012831e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.784722222222,
+        "sunRadiusRadians": 0.004606994157896881,
+        "tt": -2061.7840335648148
       },
       {
-        "moonRadiusRadians": 0.004344936836693048,
-        "obscuration": 0.8894720685590675,
-        "separationRadians": 1.1443916996305596e-16,
-        "sunRadiusRadians": 0.004606990428848717,
-        "tt": -2061.7805613425926,
-        "ut": -2061.78125
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7812588341244,
+        "moonRadiusRadians": 0.004344936785425717,
+        "obscuration": 0.8894720440572418,
+        "separationRadians": 2.387624894196368e-16,
+        "sourceDeltaTSeconds": 59.5,
+        "sourceUT": -2061.78125,
+        "sunRadiusRadians": 0.004606990437942518,
+        "tt": -2061.7805613425926
       },
       {
+        "deltaTModel": "espenakMeeus",
+        "modelUT": -2061.7837244912603,
         "moonRadiusRadians": 0.004344943287681772,
         "obscuration": 0.8894736711708832,
         "separationRadians": 6.206335383118183e-17,
+        "sourceDeltaTSeconds": null,
+        "sourceUT": null,
         "sunRadiusRadians": 0.004606993118574747,
-        "tt": -2061.783026999794,
-        "ut": -2061.7837244912603
+        "tt": -2061.783026999794
       }
     ],
     "published": [
@@ -231,21 +249,21 @@
       }
     ]
   },
-  "releaseExecutableBytes": 164520432,
+  "releaseExecutableBytes": 164521440,
   "releaseObjectBytes": {
     "EngineGeoidIntersection.o": 31608,
     "EngineGlobalSolarEvents.o": 94368
   },
   "resources": {
     "checksum": -2866939.3761416273,
-    "coldSeconds": 0.02928006649017334,
+    "coldSeconds": 0.03156590461730957,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 0.06869995594024658,
-    "peakAfterColdBytes": 161644544,
-    "peakAfterWorkloadBytes": 161660928,
-    "peakBeforeBytes": 47038464
+    "nextSeconds": 0.06948709487915039,
+    "peakAfterColdBytes": 161546240,
+    "peakAfterWorkloadBytes": 161562624,
+    "peakBeforeBytes": 46956544
   },
-  "runtimeBaseRevision": "095e0e73f5e3b8bce1f7aa3dbb2b0e97fe690b8d",
+  "runtimeBaseRevision": "d6f6de0e151815aa9ec92a2dcf97d65fdc2d4d73",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

@@ -5,6 +5,9 @@ import datetime
 import hashlib
 import html
 import json
+import os
+import shutil
+import tempfile
 import re
 import urllib.request
 from pathlib import Path
@@ -77,7 +80,55 @@ def build(blobs, recipes, catalog):
         if ratio != 0.9431 or fraction != 0.8895: raise ValueError('unexpected Table 4 source fields')
         epoch = tt(f'1994-05-10T17:{minute}:00')
         area.append({'ut': epoch, 'tt': epoch+59.5/86400, 'diameterRatio': ratio, 'obscuration': fraction, 'lower': fraction-0.00005, 'upper': fraction+0.00005})
-    return {'schemaVersion': 1, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestDiameterRatio': 0.94314, 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
+    boundary_lines = [line for line in text(blobs['nasa-solar-1901.html']).splitlines()
+                      if re.match(r'^\s*\d+\s+1986\s+Oct\s+03\s+', line)]
+    if len(boundary_lines) != 1: raise ValueError('missing or duplicate 1986 catalog row')
+    fields = boundary_lines[0].split()
+    if len(fields) != 17 or fields[4] != '19:06:15' or fields[8] != 'H' or fields[11] != '1.0000':
+        raise ValueError('1986 catalog semantics')
+    prose = ' '.join(text(blobs['rp1301-lunar-radius.html']).split())
+    claims = re.findall(r'eclipse of 3 October 1986\. The Astronomical Almanac identified this event as a total eclipse of 3 seconds duration when in it was in fact a (beaded annular) eclipse\.', prose)
+    if claims != ['beaded annular']: raise ValueError('1986 observed limb semantics')
+    boundary = {'date': '1986-10-03', 'tt': tt('1986-10-03T'+fields[4]), 'timeScale': 'TD',
+                'catalogSource': 'nasa-solar-1901.html', 'pathType': fields[8],
+                'printedMagnitude': fields[11], 'magnitude': float(fields[11]),
+                'observedLimbKind': claims[0], 'limbSource': 'rp1301-lunar-radius.html'}
+    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestDiameterRatio': 0.94314, 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
+
+
+def publish(files):
+    """Stage a complete set and restore prior files after an ordinary publication error.
+
+    This is not cross-file crash atomicity. If rollback itself fails, retain the
+    staged backups and report their directory for recovery.
+    """
+    files = {Path(path): data for path, data in files.items()}
+    for path in files: path.parent.mkdir(parents=True, exist_ok=True)
+    stage = Path(tempfile.mkdtemp(prefix='.global-solar-publish-', dir=os.path.commonpath([p.parent for p in files])))
+    previous = {}; pending = {}; published = []; retain = False
+    try:
+        for index, (path, data) in enumerate(files.items()):
+            pending[path] = stage/f'new-{index}'
+            pending[path].write_bytes(data)
+            previous[path] = stage/f'old-{index}' if path.exists() else None
+            if previous[path] is not None: previous[path].write_bytes(path.read_bytes())
+        try:
+            for path in files:
+                os.replace(pending[path], path)
+                published.append(path)
+        except Exception as error:
+            failures = []
+            for path in reversed(published):
+                try:
+                    if previous[path] is None: path.unlink()
+                    else: os.replace(previous[path], path)
+                except Exception as rollback_error: failures.append(str(rollback_error))
+            if failures:
+                retain = True
+                raise RuntimeError(f'publication failed; rollback incomplete; backups retained at {stage}: {failures}') from error
+            raise
+    finally:
+        if not retain: shutil.rmtree(stage)
 
 
 def refresh(download=urllib.request.urlopen, source=SOURCE, output=OUTPUT):
@@ -85,11 +136,10 @@ def refresh(download=urllib.request.urlopen, source=SOURCE, output=OUTPUT):
     blobs = {name: download(url, timeout=60).read() for name, (url, _, _) in SOURCES.items()}
     recipes = {name: recipe(name) for name in SOURCES}
     result = build(blobs, recipes, CATALOG.read_bytes())
-    source.mkdir(parents=True, exist_ok=True)
-    for name, data in blobs.items():
-        (source/name).write_bytes(data)
-        (source/(name+'.query.json')).write_bytes(encoded(recipes[name]))
-    output.write_bytes(encoded(result))
+    files = {source/name: data for name, data in blobs.items()}
+    files.update({source/(name+'.query.json'): encoded(value) for name,value in recipes.items()})
+    files[output] = encoded(result)
+    publish(files)
 
 
 def main():
@@ -106,7 +156,7 @@ def main():
         result = encoded(build(blobs, recipes, CATALOG.read_bytes()))
         if args.check:
             if OUTPUT.read_bytes()!=result: raise SystemExit('global references are stale')
-        else: OUTPUT.write_bytes(result)
+        else: publish({OUTPUT: result})
     print('global solar archives and references match')
 
 if __name__ == '__main__': main()

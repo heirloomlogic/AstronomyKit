@@ -150,13 +150,18 @@ struct EngineGlobalSolarEventTests {
             from: Data(contentsOf: Self.root.appendingPathComponent("Scripts/eclipse-data/global-references.json")))
         var rows: [[String: Any]] = []
         for sample in references.rp1301.samples {
-            let time = Engine.Time(ut: sample.ut, tt: sample.tt, deltaTModel: .espenakMeeus)
+            let time = Engine.Time(tt: sample.tt, deltaTModel: .espenakMeeus)
+            #expect(abs(time.adding(days: 0).tt - sample.tt) < 1e-10)
+            let backdated = time.adding(days: -0.005)
+            let expectedBackdated = Engine.Time(tt: sample.tt, deltaTModel: .espenakMeeus).adding(days: -0.005)
+            #expect(backdated.tt == expectedBackdated.tt)
             let surface = try Events.solarSurface(at: time)
             #expect(surface.kind == .annular)
             #expect(surface.obscuration >= sample.lower && surface.obscuration <= sample.upper)
             #expect(surface.separationRadians < 1e-12)
             rows.append([
-                "tt": time.tt, "ut": time.ut, "obscuration": surface.obscuration,
+                "tt": time.tt, "modelUT": time.ut, "sourceUT": sample.ut, "sourceDeltaTSeconds": 59.5,
+                "deltaTModel": "espenakMeeus", "obscuration": surface.obscuration,
                 "sunRadiusRadians": surface.sunRadiusRadians, "moonRadiusRadians": surface.moonRadiusRadians,
                 "separationRadians": surface.separationRadians,
             ])
@@ -165,7 +170,8 @@ struct EngineGlobalSolarEventTests {
         let surface = try Events.solarSurface(at: time)
         // Record the finer G0 discrepancy separately; the two-k report does not disclose its modified magnitude algebra.
         rows.append([
-            "tt": time.tt, "ut": time.ut, "obscuration": surface.obscuration,
+            "tt": time.tt, "modelUT": time.ut, "sourceUT": NSNull(), "sourceDeltaTSeconds": NSNull(),
+            "deltaTModel": "espenakMeeus", "obscuration": surface.obscuration,
             "sunRadiusRadians": surface.sunRadiusRadians, "moonRadiusRadians": surface.moonRadiusRadians,
             "separationRadians": surface.separationRadians,
         ])

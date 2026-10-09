@@ -1,4 +1,15 @@
 {
+  "boundary1986": {
+    "catalogSource": "nasa-solar-1901.html",
+    "date": "1986-10-03",
+    "limbSource": "rp1301-lunar-radius.html",
+    "magnitude": 1.0,
+    "observedLimbKind": "beaded annular",
+    "pathType": "H",
+    "printedMagnitude": "1.0000",
+    "timeScale": "TD",
+    "tt": -4837.703993055556
+  },
   "events": [
     {
       "catalogDeltaTSeconds": 69,

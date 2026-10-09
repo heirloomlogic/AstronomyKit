@@ -79,23 +79,28 @@ def validate_area(rows):
     report=json.loads(archive.OUTPUT.read_bytes())['rp1301']
     if len(rows)!=3: raise ValueError('area sample count')
     for i,row in enumerate(rows):
-        if set(row)!={'tt','ut','obscuration','sunRadiusRadians','moonRadiusRadians','separationRadians'}: raise ValueError('area schema')
+        if set(row)!={'tt','modelUT','sourceUT','sourceDeltaTSeconds','deltaTModel','obscuration','sunRadiusRadians','moonRadiusRadians','separationRadians'}: raise ValueError('area schema')
+        if row['deltaTModel']!='espenakMeeus': raise ValueError('area geometry model')
+        date=datetime.datetime(2000,1,1,12)+datetime.timedelta(days=row['modelUT'])
+        if abs(lunar.source_time_tt(date.isoformat())-row['tt'])>16*max(math.ulp(row['tt']),1e-12): raise ValueError('area model time relation')
         sr,mr,sep=row['sunRadiusRadians'],row['moonRadiusRadians'],row['separationRadians']
         if not 0<mr<sr or not 0<=sep<1e-12: raise ValueError('annular concentric geometry')
         if abs(row['obscuration']-(mr/sr)**2)>2e-14: raise ValueError('area is not diameter fraction')
         if i<2:
             sample=report['samples'][i]
-            if row['tt']!=sample['tt'] or row['ut']!=sample['ut']: raise ValueError('source area epoch')
+            if row['tt']!=sample['tt'] or row['sourceUT']!=sample['ut'] or row['sourceDeltaTSeconds']!=report['deltaTSeconds']: raise ValueError('source area epoch')
+            if row['tt']!=row['sourceUT']+row['sourceDeltaTSeconds']/86400: raise ValueError('source UT to geometry TT')
             if not sample['lower']<=row['obscuration']<=sample['upper']: raise ValueError('published area')
         elif row['tt']!=report['greatestTT']:
             raise ValueError('G0 epoch')
-        else:
-            date=datetime.datetime(2000,1,1,12)+datetime.timedelta(days=row['ut'])
-            if abs(lunar.source_time_tt(date.isoformat())-row['tt'])>16*max(math.ulp(row['tt']),1e-12): raise ValueError('G0 time relation')
+        elif row['sourceUT'] is not None or row['sourceDeltaTSeconds'] is not None:
+            raise ValueError('G0 has a source TT, not a Table 4 UT observation')
     return {'nativeG0Area':rows[2]['obscuration'], 'sourceG0AreaInterval':[report['ratioLower']**2,report['ratioUpper']**2], 'g0InsideDerivedInterval':report['ratioLower']**2<=rows[2]['obscuration']<=report['ratioUpper']**2, 'g0ResidualFromPrintedArea':rows[2]['obscuration']-report['greatestDiameterRatio']**2, 'g0ResidualBelowInterval':min(0,rows[2]['obscuration']-report['ratioLower']**2), 'directTable4SamplesQualified':2}
 
 
 def evidence(captures, bindings):
+    source_references=archive.build({name:(archive.SOURCE/name).read_bytes() for name in archive.SOURCES}, {name:json.loads((archive.SOURCE/(name+'.query.json')).read_bytes()) for name in archive.SOURCES}, archive.CATALOG.read_bytes())
+    if source_references!=json.loads(archive.OUTPUT.read_bytes()): raise ValueError('global source references differ')
     if not lunar.finite(captures): raise ValueError('nonfinite captures')
     for config in ['debug','release']:
         validate(captures[config]['published']);validate_area(captures[config]['area'])
@@ -108,10 +113,11 @@ def evidence(captures, bindings):
     if set(captures['releaseObjectBytes'])!={'EngineGlobalSolarEvents.o','EngineGeoidIntersection.o'} or captures['releaseExecutableBytes']<=0 or any(v<=0 for v in captures['releaseObjectBytes'].values()): raise ValueError('binary sizes')
     comparison=radii.build(json.loads((DATA/'radius-vectors.json').read_bytes()))
     if comparison != json.loads((DATA/'radius-comparison.json').read_bytes()): raise ValueError('radius comparison')
-    boundary=next(r for r in comparison if r['tt']==radii.EPOCHS[-1] and r['case']=='k2-959.63')
+    source_boundary=source_references['boundary1986']
+    boundary=next(r for r in comparison if r['tt']==source_boundary['tt'] and r['case']=='k2-959.63')
     builds={c:lunar.build_seconds(captures['buildReceipts'][c]) for c in ['debug','release']}
     if any(not math.isfinite(v) or v<0 for v in builds.values()):raise ValueError('build duration')
-    return {'schemaVersion':1,'runtimeBaseRevision':captures['runtimeBaseRevision'],'sourceHashes':bindings,'toolchain':captures['toolchain'],'residuals':validate(captures['release']['published']),'annularArea':validate_area(captures['release']['area']),'boundary1986':{'sourcePathType':'H','sourcePrintedMagnitude':1.0,'smoothDiscAtSourceEpoch':boundary,'qualification':'diagnostic only; rounded magnitude does not resolve kind; observed beaded-annular limb not modeled'},'resources':r,'buildSeconds':builds,'releaseObjectBytes':captures['releaseObjectBytes'],'releaseExecutableBytes':captures['releaseExecutableBytes'],'limitations':'Sampled native geometry and published events; public C remains unchanged under #96. RP1301 direct Table 4 areas pass conditional rounding intervals, but the finer G0 ratio-derived interval does not. The report does not disclose its modified two-k magnitude algebra. No radius was fitted to that interval. Host costs are observations, not portable gates.'}
+    return {'schemaVersion':1,'runtimeBaseRevision':captures['runtimeBaseRevision'],'sourceHashes':bindings,'toolchain':captures['toolchain'],'residuals':validate(captures['release']['published']),'annularArea':validate_area(captures['release']['area']),'boundary1986':{'source':source_boundary,'sourcePathType':source_boundary['pathType'],'sourcePrintedMagnitude':source_boundary['magnitude'],'smoothDiscAtSourceEpoch':boundary,'qualification':'diagnostic only; rounded magnitude does not resolve kind; observed beaded-annular limb not modeled'},'resources':r,'buildSeconds':builds,'releaseObjectBytes':captures['releaseObjectBytes'],'releaseExecutableBytes':captures['releaseExecutableBytes'],'limitations':'Sampled native geometry and published events; public C remains unchanged under #96. RP1301 direct Table 4 areas pass conditional rounding intervals, but the finer G0 ratio-derived interval does not. The report does not disclose its modified two-k magnitude algebra. No radius was fitted to that interval. Host costs are observations, not portable gates.'}
 
 
 def capture(directory):
@@ -130,8 +136,7 @@ def main():
     if args.check:
         if OUTPUT.read_bytes()!=result:raise SystemExit('global solar evidence differs')
     else:
-        if args.capture:CAPTURE.write_bytes(data)
-        OUTPUT.write_bytes(result)
+        archive.publish({**({CAPTURE: data} if args.capture else {}), OUTPUT: result})
     print('global solar evidence and recorded relations match')
 
 if __name__=='__main__':main()
