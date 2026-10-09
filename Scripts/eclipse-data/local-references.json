@@ -1,0 +1,147 @@
+{
+  "deltaTSeconds": 59.5,
+  "ephemeris": "DE200/LE200",
+  "events": [
+    {
+      "altitudeToleranceDegrees": 0.5,
+      "contacts": [
+        {
+          "altitude": 32.0,
+          "name": "partialBegin",
+          "tt": -2061.8943055555555,
+          "ut": -2061.894994212963
+        },
+        {
+          "altitude": 51.0,
+          "name": "peak",
+          "tt": -2061.838865740741,
+          "ut": -2061.8395543981483
+        },
+        {
+          "altitude": 74.0,
+          "name": "partialEnd",
+          "tt": -2061.769883101852,
+          "ut": -2061.7705717592594
+        }
+      ],
+      "diameterMagnitude": 0.535,
+      "heightMeters": 3,
+      "id": "Acapulco, MEXICO",
+      "kind": "partial",
+      "latitude": 16.85,
+      "longitude": -99.91666666666667,
+      "lower": 0.4205,
+      "obscuration": 0.421,
+      "source": "rp1301-table8.html",
+      "timeToleranceSeconds": 60,
+      "upper": 0.4215
+    },
+    {
+      "altitudeToleranceDegrees": 0.5,
+      "contacts": [
+        {
+          "altitude": 49.0,
+          "name": "partialBegin",
+          "tt": -2061.8622546296297,
+          "ut": -2061.862943287037
+        },
+        {
+          "altitude": 64.0,
+          "name": "totalBegin",
+          "tt": -2061.7955208333333,
+          "ut": -2061.7962094907407
+        },
+        {
+          "altitude": 65.0,
+          "name": "peak",
+          "tt": -2061.7933784722222,
+          "ut": -2061.7940671296296
+        },
+        {
+          "altitude": 65.0,
+          "name": "totalEnd",
+          "tt": -2061.7912349537037,
+          "ut": -2061.791923611111
+        },
+        {
+          "altitude": 65.0,
+          "name": "partialEnd",
+          "tt": -2061.718298611111,
+          "ut": -2061.7189872685185
+        }
+      ],
+      "diameterMagnitude": 0.943,
+      "heightMeters": 200,
+      "id": "Springfield, ILLINOIS",
+      "kind": "annular",
+      "latitude": 39.8,
+      "longitude": -89.65,
+      "lower": 0.8885000000000001,
+      "obscuration": 0.889,
+      "source": "rp1301-table10.html",
+      "timeToleranceSeconds": 60,
+      "upper": 0.8895
+    }
+  ],
+  "k1": 0.2725076,
+  "k2": 0.272281,
+  "maximumDefinition": {
+    "central": "mid-totality or mid-annularity",
+    "partial": "greatest occulted solar diameter fraction",
+    "source": "rp1301-footnotes.html"
+  },
+  "rounding": "Area intervals conditionally assume nearest 0.001 printing; no publisher rounding rule or uncertainty is asserted. They are source-print intervals, not an implementation tolerance.",
+  "schemaVersion": 1,
+  "sequence": {
+    "events": [
+      {
+        "altitude": 64.0,
+        "date": "2026-08-12",
+        "gmtCalendarDays": {
+          "partialBegin": 9720.220833333335,
+          "partialEnd": 9720.268750000001,
+          "peak": 9720.24513888889
+        },
+        "localKind": "partial",
+        "obscuration": 0.036,
+        "pathType": "T:p",
+        "sourceLocalClocks": [
+          "12:18",
+          "12:53",
+          "13:27"
+        ]
+      },
+      {
+        "altitude": 22.0,
+        "date": "2028-01-26",
+        "gmtCalendarDays": {
+          "partialBegin": 10252.086805555557,
+          "partialEnd": 10252.15138888889,
+          "peak": 10252.118055555557
+        },
+        "localKind": "partial",
+        "obscuration": 0.034,
+        "pathType": "A:p",
+        "sourceLocalClocks": [
+          "09:05",
+          "09:50",
+          "10:38"
+        ]
+      }
+    ],
+    "heightMeters": null,
+    "latitude": 38.88333333333333,
+    "localStandardOffsetHours": -5,
+    "longitude": -77.03333333333333,
+    "scope": "Consecutive visible-event identities only. Historical model and minute/GMT labels; no row-specific Delta T, elevation, refraction or timing uncertainty supplied. Tests use zero elevation explicitly, not as a source assertion."
+  },
+  "sourceHashes": {
+    "nasa-local-key.html": "fbcc4a0e6a17c861791b48aa94b5437e91d29d4c444a0d8132a28b8bba464fff",
+    "nasa-local-model.html": "0b806de9945ae29a8e6217cb59240b36b956a4592a08a3fc24deffc9110ff7f9",
+    "nasa-washington.html": "27ec610561a7868209b688176ede483dadac543d8d507202f3b6209b1a22af6b",
+    "rp1301-footnotes.html": "2a0e129f092b984d9eadbb96418c2a0a7d62db64f92a71ac932148878d0393dd",
+    "rp1301-table10.html": "3a3387559ec9b8a4664c09c1eb62f9d1927018f528ab1fcca388f9d82d7acbdc",
+    "rp1301-table8.html": "f91dee05f8bd8df4057882897a34698ca1a2d3252f3be6b70aa7517320ebf630"
+  },
+  "timeScale": "UT"
+}

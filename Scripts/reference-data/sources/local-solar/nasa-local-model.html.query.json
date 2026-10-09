@@ -1,0 +1,8 @@
+{
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "sha256": "0b806de9945ae29a8e6217cb59240b36b956a4592a08a3fc24deffc9110ff7f9",
+  "subject": "Washington DC consecutive visible solar eclipses; historical j=2 ephemerides",
+  "timeScale": "local standard GMT-5",
+  "url": "https://eclipse.gsfc.nasa.gov/SEcirc/SEpredictions.html"
+}

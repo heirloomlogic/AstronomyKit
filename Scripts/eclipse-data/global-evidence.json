@@ -41,11 +41,11 @@
     "sourcePrintedMagnitude": 1.0
   },
   "buildSeconds": {
-    "debug": 9.64,
-    "release": 112.41
+    "debug": 10.25,
+    "release": 117.72
   },
   "limitations": "Sampled native geometry and published events; public C remains unchanged under #96. RP1301 direct Table 4 areas pass conditional rounding intervals, but the finer G0 ratio-derived interval does not. The report does not disclose its modified two-k magnitude algebra. No radius was fitted to that interval. Host costs are observations, not portable gates.",
-  "releaseExecutableBytes": 164521440,
+  "releaseExecutableBytes": 164805360,
   "releaseObjectBytes": {
     "EngineGeoidIntersection.o": 31608,
     "EngineGlobalSolarEvents.o": 94368
@@ -89,20 +89,20 @@
   ],
   "resources": {
     "checksum": -2866939.3761416273,
-    "coldSeconds": 0.03156590461730957,
+    "coldSeconds": 0.029760003089904785,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 0.06948709487915039,
-    "peakAfterColdBytes": 161546240,
-    "peakAfterWorkloadBytes": 161562624,
-    "peakBeforeBytes": 46956544
+    "nextSeconds": 0.06953001022338867,
+    "peakAfterColdBytes": 161939456,
+    "peakAfterWorkloadBytes": 161939456,
+    "peakBeforeBytes": 47300608
   },
-  "runtimeBaseRevision": "d6f6de0e151815aa9ec92a2dcf97d65fdc2d4d73",
+  "runtimeBaseRevision": "ba32c6d983f983b3fab7d9bdb99f014c3292d910",
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/assess-global-solar-radii.py": "a23afc2a186c09466ef2db23ad8a14a55d84578fe90219d1f931bb0d0121d639",
     "Scripts/capture-global-solar.py": "5a7507b7681f194c6ea0cfe88a617bc0d04d4efa0f451595828098d72e0758c9",
-    "Scripts/eclipse-data/global-captures.json": "2fd50f9f6c77767f4a72026bdfa095e2cadf041e0cb3dd1b0c81e5cf248aceff",
+    "Scripts/eclipse-data/global-captures.json": "e541b9c8838154975027a1ed25125e9fe8f355dd7c1af81cd7f9f38c6f8a8b02",
     "Scripts/eclipse-data/global-references.json": "6e90a738764f4bd552159c390ceb11d5bc4bf7248a2e915a469cdf29bb972da6",
     "Scripts/eclipse-data/radius-comparison.json": "3e4d575e888cd84571991592888756fbcf20adcf1f147b1e3bc8b0afd063a4f5",
     "Scripts/eclipse-data/radius-vectors.json": "2c5652a64931eade4954fb89dc3981f3d76c48d38a9e45d9c0b4e6508dcc7394",
@@ -129,6 +129,7 @@
     "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "13abd22d2ae3102670acddd38428d08aa026f14d4394eac1520e49b6237ee691",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "7f1e9d1e130c2b4c61b610099488e74be40aabe87442dbd26c20528b768d7239",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "cef1841b577d2089425f5adfb51c254fccfe93d6623beed4ea35365fef505ab1",
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
@@ -213,7 +214,7 @@
     "Sources/AstronomyKit/Observer.swift": "733bc2a9748cf4d9cbb6b20b4fe67412b5fdd4ce47df86998f473c62dbdc2429",
     "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "6d62e47bb2d2b34d2b0ccff5b74d29b9117c266eec85ab0237f026cc3dc8763b",
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "93ba4b8e4784b25c4868a02e2d2f9e3d0219432a58a879f81248fbbb035b1728"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"

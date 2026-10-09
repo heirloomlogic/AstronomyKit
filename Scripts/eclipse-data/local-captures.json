@@ -1,0 +1,622 @@
+{
+  "buildReceipts": {
+    "debug": "Build complete! (10.25 sec)",
+    "release": "Build complete! (117.72 sec)"
+  },
+  "debug": {
+    "peak-definition": [
+      {
+        "area": 0.4214171598235893,
+        "magnitude": 0.5349310850576334,
+        "mode": 0,
+        "residualSeconds": 54.647698246117216,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.838224411632,
+        "ut": -2061.838921901641
+      },
+      {
+        "area": 0.4214172027751016,
+        "magnitude": 0.5349310896397595,
+        "mode": 1,
+        "residualSeconds": 55.03705229057232,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.8382199052194,
+        "ut": -2061.8389173952282
+      },
+      {
+        "area": 0.42141569090529757,
+        "magnitude": 0.5349301960855379,
+        "mode": 2,
+        "residualSeconds": 49.61809884844115,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.8382826245893,
+        "ut": -2061.838980114597
+      },
+      {
+        "area": 0.4214172734794332,
+        "magnitude": 0.5349310255052234,
+        "mode": 3,
+        "residualSeconds": 56.48906621936476,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.838203099502,
+        "ut": -2061.8389005895115
+      }
+    ],
+    "published": [
+      {
+        "contacts": [
+          {
+            "altitude": 67.92049492608258,
+            "formerUTCResidualSeconds": -0.9214874706231058,
+            "name": "partialBegin",
+            "source": "2024-04-08T17:48:08Z",
+            "sourceUT": 8864.24175925926,
+            "tt": 8864.242549599847,
+            "ut": 8864.241692759062
+          },
+          {
+            "altitude": 58.316148864070925,
+            "formerUTCResidualSeconds": -0.4764110839460045,
+            "name": "peak",
+            "source": "2024-04-08T19:04:48Z",
+            "sourceUT": 8864.295,
+            "tt": 8864.295795491933,
+            "ut": 8864.29493865015
+          },
+          {
+            "altitude": 44.07853274251986,
+            "formerUTCResidualSeconds": -0.2827468444593251,
+            "name": "partialEnd",
+            "source": "2024-04-08T20:18:34Z",
+            "sourceUT": 8864.346226851852,
+            "tt": 8864.34702458527,
+            "ut": 8864.346167742524
+          }
+        ],
+        "kind": "partial",
+        "latitude": 29.0181,
+        "longitude": -80.9481,
+        "obscuration": 0.585178655944429,
+        "physicalTT": 8864.295795491933
+      },
+      {
+        "contacts": [
+          {
+            "altitude": 56.28034738703752,
+            "formerUTCResidualSeconds": 0.2631490642670542,
+            "name": "partialBegin",
+            "source": "2024-04-08T17:55:52Z",
+            "sourceUT": 8864.24712962963,
+            "tt": 8864.24793368129,
+            "ut": 8864.247076840404
+          },
+          {
+            "altitude": 50.55160375564053,
+            "formerUTCResidualSeconds": -0.3851189569104463,
+            "name": "totalBegin",
+            "source": "2024-04-08T19:10:42Z",
+            "sourceUT": 8864.299097222221,
+            "tt": 8864.299893770778,
+            "ut": 8864.299036928916
+          },
+          {
+            "altitude": 50.330400652348544,
+            "formerUTCResidualSeconds": -0.18151886179111898,
+            "name": "peak",
+            "source": "2024-04-08T19:12:34Z",
+            "sourceUT": 8864.300393518519,
+            "tt": 8864.301192423556,
+            "ut": 8864.30033558167
+          },
+          {
+            "altitude": 50.106828329296995,
+            "formerUTCResidualSeconds": -1.307929091854021,
+            "name": "totalEnd",
+            "source": "2024-04-08T19:14:27Z",
+            "sourceUT": 8864.30170138889,
+            "tt": 8864.302487256771,
+            "ut": 8864.301630414862
+          },
+          {
+            "altitude": 39.63393761864123,
+            "formerUTCResidualSeconds": -0.03327971789985895,
+            "name": "partialEnd",
+            "source": "2024-04-08T20:26:37Z",
+            "sourceUT": 8864.35181712963,
+            "tt": 8864.352617750397,
+            "ut": 8864.351760907546
+          }
+        ],
+        "kind": "total",
+        "latitude": 41.0341,
+        "longitude": -83.6523,
+        "obscuration": 1,
+        "physicalTT": 8864.301192423556
+      },
+      {
+        "contacts": [
+          {
+            "altitude": 35.58915787797276,
+            "formerUTCResidualSeconds": 0.06345959845930338,
+            "name": "partialBegin",
+            "source": "2024-10-02T19:00:27Z",
+            "sourceUT": 9041.291979166666,
+            "tt": 9041.29278090257,
+            "ut": 9041.291920723945
+          },
+          {
+            "altitude": 24.12205769596511,
+            "formerUTCResidualSeconds": 0.20357369212433696,
+            "name": "totalBegin",
+            "source": "2024-10-02T20:22:16Z",
+            "sourceUT": 9041.348796296295,
+            "tt": 9041.349599653888,
+            "ut": 9041.348739474188
+          },
+          {
+            "altitude": 23.634651832525734,
+            "formerUTCResidualSeconds": 0.4749870509840548,
+            "name": "peak",
+            "source": "2024-10-02T20:25:26Z",
+            "sourceUT": 9041.35099537037,
+            "tt": 9041.351801869321,
+            "ut": 9041.35094168958
+          },
+          {
+            "altitude": 23.147400606629006,
+            "formerUTCResidualSeconds": 0.7927313796244562,
+            "name": "totalEnd",
+            "source": "2024-10-02T20:28:35Z",
+            "sourceUT": 9041.35318287037,
+            "tt": 9041.353993046918,
+            "ut": 9041.353132867134
+          },
+          {
+            "altitude": 11.251957943033347,
+            "formerUTCResidualSeconds": 1.7170642444398254,
+            "name": "partialEnd",
+            "source": "2024-10-02T21:42:37Z",
+            "sourceUT": 9041.404594907408,
+            "tt": 9041.40541578225,
+            "ut": 9041.404555601493
+          }
+        ],
+        "kind": "annular",
+        "latitude": -48.2051,
+        "longitude": -70.6549,
+        "obscuration": 0.8552179994481629,
+        "physicalTT": 9041.351801869321
+      }
+    ],
+    "report": [
+      {
+        "contacts": [
+          {
+            "altitude": 31.829341980985433,
+            "name": "partialBegin",
+            "sourceTT": -2061.8943055555555,
+            "sourceUT": -2061.894994212963,
+            "tt": -2061.894330423328,
+            "ut": -2061.8950279118553
+          },
+          {
+            "altitude": 50.908934218091645,
+            "name": "peak",
+            "sourceTT": -2061.838865740741,
+            "sourceUT": -2061.8395543981483,
+            "tt": -2061.8382244104146,
+            "ut": -2061.8389219004234
+          },
+          {
+            "altitude": 74.30076914361818,
+            "name": "partialEnd",
+            "sourceTT": -2061.769883101852,
+            "sourceUT": -2061.7705717592594,
+            "tt": -2061.7699103191394,
+            "ut": -2061.7706078109522
+          }
+        ],
+        "id": "Acapulco, MEXICO",
+        "kind": "partial",
+        "modelUT": -2061.839563230733,
+        "moonRadius": 0.004334941147867756,
+        "obscuration": 0.4214171598232008,
+        "separation": 0.004017254665296411,
+        "sourceEpochObscuration": 0.42130720376271247,
+        "sourceTT": -2061.838865740741,
+        "sourceUT": -2061.8395543981483,
+        "sunRadius": 0.004607024654179318
+      },
+      {
+        "contacts": [
+          {
+            "altitude": 49.46463834945168,
+            "name": "partialBegin",
+            "sourceTT": -2061.8622546296297,
+            "sourceUT": -2061.862943287037,
+            "tt": -2061.862275082797,
+            "ut": -2061.862972572171
+          },
+          {
+            "altitude": 64.19052371396728,
+            "name": "totalBegin",
+            "sourceTT": -2061.7955208333333,
+            "sourceUT": -2061.7962094907407,
+            "tt": -2061.795547265748,
+            "ut": -2061.796244756884
+          },
+          {
+            "altitude": 64.52842657143472,
+            "name": "peak",
+            "sourceTT": -2061.7933784722222,
+            "sourceUT": -2061.7940671296296,
+            "tt": -2061.7934057838856,
+            "ut": -2061.794103275078
+          },
+          {
+            "altitude": 64.8537285834565,
+            "name": "totalEnd",
+            "sourceTT": -2061.7912349537037,
+            "sourceUT": -2061.791923611111,
+            "tt": -2061.791261271952,
+            "ut": -2061.791958763201
+          },
+          {
+            "altitude": 65.43861678166476,
+            "name": "partialEnd",
+            "sourceTT": -2061.718298611111,
+            "sourceUT": -2061.7189872685185,
+            "tt": -2061.7183286079703,
+            "ut": -2061.719026101145
+          }
+        ],
+        "id": "Springfield, ILLINOIS",
+        "kind": "annular",
+        "modelUT": -2061.7940759634153,
+        "moonRadius": 0.004344221567622971,
+        "obscuration": 0.8891736572810371,
+        "separation": 7.675734983256738e-06,
+        "sourceEpochObscuration": 0.8891746809211878,
+        "sourceTT": -2061.7933784722222,
+        "sourceUT": -2061.7940671296296,
+        "sunRadius": 0.004607002241134739
+      }
+    ],
+    "sequence": [
+      {
+        "altitude": 64.3851987308301,
+        "date": "2026-08-12",
+        "gmtPeak": 9720.24513888889,
+        "kind": "partial",
+        "obscuration": 0.03598899456634032,
+        "tt": 9720.245933796656,
+        "ut": 9720.245060505806
+      },
+      {
+        "altitude": 22.532959819956773,
+        "date": "2028-01-26",
+        "gmtPeak": 10252.118055555557,
+        "kind": "partial",
+        "obscuration": 0.03349164216040733,
+        "tt": 10252.119084816657,
+        "ut": 10252.1182009391
+      }
+    ]
+  },
+  "release": {
+    "peak-definition": [
+      {
+        "area": 0.4214171598235893,
+        "magnitude": 0.5349310850576334,
+        "mode": 0,
+        "residualSeconds": 54.647698246117216,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.838224411632,
+        "ut": -2061.838921901641
+      },
+      {
+        "area": 0.4214172027751016,
+        "magnitude": 0.5349310896397595,
+        "mode": 1,
+        "residualSeconds": 55.03705229057232,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.8382199052194,
+        "ut": -2061.8389173952282
+      },
+      {
+        "area": 0.42141569090529757,
+        "magnitude": 0.5349301960855379,
+        "mode": 2,
+        "residualSeconds": 49.61809884844115,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.8382826245893,
+        "ut": -2061.838980114597
+      },
+      {
+        "area": 0.4214172734794332,
+        "magnitude": 0.5349310255052234,
+        "mode": 3,
+        "residualSeconds": 56.48906621936476,
+        "sourceUT": -2061.8395543981483,
+        "tt": -2061.838203099502,
+        "ut": -2061.8389005895115
+      }
+    ],
+    "published": [
+      {
+        "contacts": [
+          {
+            "altitude": 67.92049492608258,
+            "formerUTCResidualSeconds": -0.9214874706231058,
+            "name": "partialBegin",
+            "source": "2024-04-08T17:48:08Z",
+            "sourceUT": 8864.24175925926,
+            "tt": 8864.242549599847,
+            "ut": 8864.241692759062
+          },
+          {
+            "altitude": 58.316148864070925,
+            "formerUTCResidualSeconds": -0.4764110839460045,
+            "name": "peak",
+            "source": "2024-04-08T19:04:48Z",
+            "sourceUT": 8864.295,
+            "tt": 8864.295795491933,
+            "ut": 8864.29493865015
+          },
+          {
+            "altitude": 44.07853274251986,
+            "formerUTCResidualSeconds": -0.2827468444593251,
+            "name": "partialEnd",
+            "source": "2024-04-08T20:18:34Z",
+            "sourceUT": 8864.346226851852,
+            "tt": 8864.34702458527,
+            "ut": 8864.346167742524
+          }
+        ],
+        "kind": "partial",
+        "latitude": 29.0181,
+        "longitude": -80.9481,
+        "obscuration": 0.585178655944429,
+        "physicalTT": 8864.295795491933
+      },
+      {
+        "contacts": [
+          {
+            "altitude": 56.28034738703752,
+            "formerUTCResidualSeconds": 0.2631490642670542,
+            "name": "partialBegin",
+            "source": "2024-04-08T17:55:52Z",
+            "sourceUT": 8864.24712962963,
+            "tt": 8864.24793368129,
+            "ut": 8864.247076840404
+          },
+          {
+            "altitude": 50.55160375564053,
+            "formerUTCResidualSeconds": -0.3851189569104463,
+            "name": "totalBegin",
+            "source": "2024-04-08T19:10:42Z",
+            "sourceUT": 8864.299097222221,
+            "tt": 8864.299893770778,
+            "ut": 8864.299036928916
+          },
+          {
+            "altitude": 50.330400652348544,
+            "formerUTCResidualSeconds": -0.18151886179111898,
+            "name": "peak",
+            "source": "2024-04-08T19:12:34Z",
+            "sourceUT": 8864.300393518519,
+            "tt": 8864.301192423556,
+            "ut": 8864.30033558167
+          },
+          {
+            "altitude": 50.106828329296995,
+            "formerUTCResidualSeconds": -1.307929091854021,
+            "name": "totalEnd",
+            "source": "2024-04-08T19:14:27Z",
+            "sourceUT": 8864.30170138889,
+            "tt": 8864.302487256771,
+            "ut": 8864.301630414862
+          },
+          {
+            "altitude": 39.63393761864123,
+            "formerUTCResidualSeconds": -0.03327971789985895,
+            "name": "partialEnd",
+            "source": "2024-04-08T20:26:37Z",
+            "sourceUT": 8864.35181712963,
+            "tt": 8864.352617750397,
+            "ut": 8864.351760907546
+          }
+        ],
+        "kind": "total",
+        "latitude": 41.0341,
+        "longitude": -83.6523,
+        "obscuration": 1,
+        "physicalTT": 8864.301192423556
+      },
+      {
+        "contacts": [
+          {
+            "altitude": 35.58915787797276,
+            "formerUTCResidualSeconds": 0.06345959845930338,
+            "name": "partialBegin",
+            "source": "2024-10-02T19:00:27Z",
+            "sourceUT": 9041.291979166666,
+            "tt": 9041.29278090257,
+            "ut": 9041.291920723945
+          },
+          {
+            "altitude": 24.12205769596511,
+            "formerUTCResidualSeconds": 0.20357369212433696,
+            "name": "totalBegin",
+            "source": "2024-10-02T20:22:16Z",
+            "sourceUT": 9041.348796296295,
+            "tt": 9041.349599653888,
+            "ut": 9041.348739474188
+          },
+          {
+            "altitude": 23.634651832525734,
+            "formerUTCResidualSeconds": 0.4749870509840548,
+            "name": "peak",
+            "source": "2024-10-02T20:25:26Z",
+            "sourceUT": 9041.35099537037,
+            "tt": 9041.351801869321,
+            "ut": 9041.35094168958
+          },
+          {
+            "altitude": 23.147400606629006,
+            "formerUTCResidualSeconds": 0.7927313796244562,
+            "name": "totalEnd",
+            "source": "2024-10-02T20:28:35Z",
+            "sourceUT": 9041.35318287037,
+            "tt": 9041.353993046918,
+            "ut": 9041.353132867134
+          },
+          {
+            "altitude": 11.251957943033347,
+            "formerUTCResidualSeconds": 1.7170642444398254,
+            "name": "partialEnd",
+            "source": "2024-10-02T21:42:37Z",
+            "sourceUT": 9041.404594907408,
+            "tt": 9041.40541578225,
+            "ut": 9041.404555601493
+          }
+        ],
+        "kind": "annular",
+        "latitude": -48.2051,
+        "longitude": -70.6549,
+        "obscuration": 0.8552179994481629,
+        "physicalTT": 9041.351801869321
+      }
+    ],
+    "report": [
+      {
+        "contacts": [
+          {
+            "altitude": 31.829341980985433,
+            "name": "partialBegin",
+            "sourceTT": -2061.8943055555555,
+            "sourceUT": -2061.894994212963,
+            "tt": -2061.894330423328,
+            "ut": -2061.8950279118553
+          },
+          {
+            "altitude": 50.908934218091645,
+            "name": "peak",
+            "sourceTT": -2061.838865740741,
+            "sourceUT": -2061.8395543981483,
+            "tt": -2061.8382244104146,
+            "ut": -2061.8389219004234
+          },
+          {
+            "altitude": 74.30076914361818,
+            "name": "partialEnd",
+            "sourceTT": -2061.769883101852,
+            "sourceUT": -2061.7705717592594,
+            "tt": -2061.7699103191394,
+            "ut": -2061.7706078109522
+          }
+        ],
+        "id": "Acapulco, MEXICO",
+        "kind": "partial",
+        "modelUT": -2061.839563230733,
+        "moonRadius": 0.004334941147867756,
+        "obscuration": 0.4214171598232008,
+        "separation": 0.004017254665296411,
+        "sourceEpochObscuration": 0.42130720376271247,
+        "sourceTT": -2061.838865740741,
+        "sourceUT": -2061.8395543981483,
+        "sunRadius": 0.004607024654179318
+      },
+      {
+        "contacts": [
+          {
+            "altitude": 49.46463834945168,
+            "name": "partialBegin",
+            "sourceTT": -2061.8622546296297,
+            "sourceUT": -2061.862943287037,
+            "tt": -2061.862275082797,
+            "ut": -2061.862972572171
+          },
+          {
+            "altitude": 64.19052371396728,
+            "name": "totalBegin",
+            "sourceTT": -2061.7955208333333,
+            "sourceUT": -2061.7962094907407,
+            "tt": -2061.795547265748,
+            "ut": -2061.796244756884
+          },
+          {
+            "altitude": 64.52842657143472,
+            "name": "peak",
+            "sourceTT": -2061.7933784722222,
+            "sourceUT": -2061.7940671296296,
+            "tt": -2061.7934057838856,
+            "ut": -2061.794103275078
+          },
+          {
+            "altitude": 64.8537285834565,
+            "name": "totalEnd",
+            "sourceTT": -2061.7912349537037,
+            "sourceUT": -2061.791923611111,
+            "tt": -2061.791261271952,
+            "ut": -2061.791958763201
+          },
+          {
+            "altitude": 65.43861678166476,
+            "name": "partialEnd",
+            "sourceTT": -2061.718298611111,
+            "sourceUT": -2061.7189872685185,
+            "tt": -2061.7183286079703,
+            "ut": -2061.719026101145
+          }
+        ],
+        "id": "Springfield, ILLINOIS",
+        "kind": "annular",
+        "modelUT": -2061.7940759634153,
+        "moonRadius": 0.004344221567622971,
+        "obscuration": 0.8891736572810371,
+        "separation": 7.675734983256738e-06,
+        "sourceEpochObscuration": 0.8891746809211878,
+        "sourceTT": -2061.7933784722222,
+        "sourceUT": -2061.7940671296296,
+        "sunRadius": 0.004607002241134739
+      }
+    ],
+    "sequence": [
+      {
+        "altitude": 64.3851987308301,
+        "date": "2026-08-12",
+        "gmtPeak": 9720.24513888889,
+        "kind": "partial",
+        "obscuration": 0.03598899456634032,
+        "tt": 9720.245933796656,
+        "ut": 9720.245060505806
+      },
+      {
+        "altitude": 22.532959819956773,
+        "date": "2028-01-26",
+        "gmtPeak": 10252.118055555557,
+        "kind": "partial",
+        "obscuration": 0.03349164216040733,
+        "tt": 10252.119084816657,
+        "ut": 10252.1182009391
+      }
+    ]
+  },
+  "releaseExecutableBytes": 164805360,
+  "releaseObjectBytes": {
+    "EngineLocalSolarEvents.o": 72984
+  },
+  "resources": {
+    "checksum": 340147.3085316766,
+    "coldSeconds": 0.010688066482543945,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "nextCount": 19,
+    "nextSeconds": 0.09676599502563477,
+    "peakAfterColdBytes": 78954496,
+    "peakAfterWorkloadBytes": 78954496,
+    "peakBeforeBytes": 46694400
+  },
+  "runtimeBaseRevision": "ba32c6d983f983b3fab7d9bdb99f014c3292d910",
+  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+}

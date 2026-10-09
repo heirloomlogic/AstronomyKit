@@ -117016,11 +117016,11 @@
       "frame": "topocentric apparent solar altitude at local contacts",
       "license": "EclipseWise/Fred Espenak table with attribution; Upstream transformation files retain the Astronomy Engine MIT license archived with these fixtures",
       "origin": "named terrestrial longitude and latitude",
-      "recipe": "Pinned local_solar_eclipse.txt under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse",
+      "recipe": "Pinned local_solar_eclipse.txt under https://github.com/cosinekitty/astronomy/tree/865d3da7d8112bbc7911238052c6af4aaf877181/generate/eclipse, unchanged bytes. Its linked Google maps publish UT1 using DE430: April Delta T 69.2 s and October 70.7 s (SE2024Oct02Agmapx.html). These differ from the older April SEcirc calculator DE406/71.3 s. Source labels were verified through browser-readable primary text; direct HTTP capture returned 403. Archive time fields retain legacy UTC names, not UTC semantics.",
       "refraction": "source altitude convention retained; below-horizon altitudes are not asserted",
-      "timeScale": "UTC as serialized by the pinned table",
-      "units": "UTC calendar timestamps and degrees",
-      "url": "https://www.eclipsewise.com/solar/SEcirc/SEcirc.html",
+      "timeScale": "UT1 as explicitly labeled by the original 2024 Google map pages; decode calendar fields without UTC conversion",
+      "units": "UT1 calendar timestamps (legacy UTC keys and Z suffix) and degrees",
+      "url": "https://www.eclipsewise.com/solar/SEgmapx/2001-2100/SE2024Apr08Tgmapx.html",
       "version": "865d3da7d8112bbc7911238052c6af4aaf877181"
     },
     "espenakMoonNodes": {
