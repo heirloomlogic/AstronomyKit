@@ -138,4 +138,43 @@ struct MoonEventQualification: Decodable {
         }
         return result
     }
+
+    /// Production event discovery around each direct-source root, with every probe kept inside the accepted range.
+    func productionRoots(_ event: Event, matching sourceRoots: [Root]) throws -> [Root] {
+        var result: [Root] = []
+        func append(_ time: Engine.Time) throws {
+            let distance = try Engine.Moon.distance(at: time) * Engine.kilometersPerAU
+            result.append(Root(event: event, tt: time.tt, distanceKm: distance))
+        }
+
+        if let phase = event.phase {
+            for source in sourceRoots {
+                let start = max(-Engine.acceptedTTDays, source.tt - 1)
+                guard
+                    let time = try Engine.Events.searchMoonPhase(
+                        phase, after: Self.time(start), limitDays: min(2, Engine.acceptedTTDays - start))
+                else { throw Failure.missingRoot }
+                try append(time)
+            }
+            return result
+        }
+
+        if event == .ascending || event == .descending {
+            for source in sourceRoots {
+                let start = max(-Engine.acceptedTTDays, source.tt - 9.9)
+                let node = try Engine.Events.searchLunarNode(after: Self.time(start))
+                guard (event == .ascending) == (node.kind == .ascending) else { throw Failure.missingRoot }
+                try append(node.time)
+            }
+            return result
+        }
+
+        for source in sourceRoots {
+            let start = max(-Engine.acceptedTTDays, source.tt - 4.9)
+            let apsis = try Engine.Events.searchLunarApsis(after: Self.time(start))
+            guard (event == .pericenter) == (apsis.kind == .pericenter) else { throw Failure.missingRoot }
+            try append(apsis.time)
+        }
+        return result
+    }
 }

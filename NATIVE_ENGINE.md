@@ -890,7 +890,7 @@ The generated table contains all 357 VI/42 southern boundary segments and maps t
 
 ## Angular event searches
 
-In the tree: `Events/EngineAngularEvents.swift`. This first #92 link adds the shared event namespace, apparent solar-longitude search, seasons and heliocentric planetary relative-longitude search. Lunar, planetary apsis/visibility and observer event searches remain for later #92 links. The public event facades remain on the C engine until #96.
+In the tree: `Events/EngineAngularEvents.swift` and `Events/EngineLunarEvents.swift`. The first two #92 links add the shared event namespace, apparent solar-longitude search, seasons, heliocentric planetary relative-longitude search, and lunar phase, quarter, node and apsis searches. Planetary apsis/visibility and observer event searches remain for later #92 links. The public event facades remain on the C engine until #96.
 
 ```swift
 extension Engine.Events {
@@ -901,6 +901,14 @@ extension Engine.Events {
     static func searchSunLongitude(_ targetDegrees: Double, after start: Engine.Time, limitDays: Double) throws -> Engine.Time?
     static func seasons(year: Int, deltaTModel: DeltaTModel) throws -> Seasons
     static func searchRelativeLongitude(of body: CelestialBody, targetDegrees: Double, after start: Engine.Time) throws -> Engine.Time
+    static func moonPhaseAngle(at time: Engine.Time) throws -> Double
+    static func searchMoonPhase(_ targetDegrees: Double, after start: Engine.Time, limitDays: Double) throws -> Engine.Time?
+    static func searchMoonQuarter(after start: Engine.Time) throws -> LunarQuarter
+    static func nextMoonQuarter(after quarter: LunarQuarter) throws -> LunarQuarter
+    static func searchLunarNode(after start: Engine.Time) throws -> LunarNode
+    static func nextLunarNode(after node: LunarNode) throws -> LunarNode
+    static func searchLunarApsis(after start: Engine.Time) throws -> LunarApsis
+    static func nextLunarApsis(after apsis: LunarApsis) throws -> LunarApsis
 }
 ```
 
@@ -909,6 +917,10 @@ extension Engine.Events {
 `seasons` searches from modeled UT midnight on 10 March, June, September and December for 0°, 90°, 180° and 270° respectively, over 20 days. It rejects a year outside the `Int32` range and derives every search time with the explicit model it receives. `EngineAngularEventTests` checks all 924 seasonal crossings from 1900 through 2130 under both Delta T models against independently derived Horizons LT+S vectors rotated with ERFA; every root must be within 60 seconds. The seasonal fixture now contains only this independent reference. The former model-output columns and 10-millisecond regression test were retired because recorded engine output is not accuracy evidence.
 
 `searchRelativeLongitude` supports Mercury, Venus and Mars through Pluto. It follows the original definition: Earth's heliocentric longitude minus the planet's, positive for outer planets and negative for Mercury and Venus. The initial angular error is forced behind the target, so iteration advances from the supplied start; each step uses the body's mean synodic period and the near-root period correction from the original algorithm. It stops inside one second, caps iteration at 100, rejects a step that is not finite or cannot advance, and checks actual native ephemeris coverage after each step. Earth throws `earthNotAllowed`; every other unsupported body throws `invalidBody`. Tests bracket four independently sampled Mars and Venus conjunction/opposition roots derived from SOFA-transformed geometric Sun-centered vectors, exercise every supported planet, and retain target wrapping, body errors, forward ordering, model capture and range guards.
+
+The lunar phase angle is the Moon's true-ecliptic longitude east of the geocentric Sun. Its search predicts a bracket from the mean synodic month, clips that bracket to the caller's inclusive forward or backward window and refines the ascending crossing to 0.1 second. Quarter searches select the next multiple of 90 degrees and preserve the time's captured Delta T model. Node searches refine zero crossings of the Moon's true-ecliptic latitude. Apsis searches refine zero crossings of the analytic radial velocity from the native lunar state and report the model distance at the root. Both use bounded forward stepping, one-second root tolerances and checks for progress, alternation, finite values and actual ephemeris coverage.
+
+`EngineLunarEventTests` applies the existing published allowances to all 12 quarter references, six node references and six apsis references, including the two independent 1903 geometric cases, and checks direction, endpoints, ordering, model capture and range failures. The DE441 event harness now invokes these production searches around all 369 direct-source roots in its 20 frozen full-span and transition windows. The sampled source differences remain evidence about the native lunar model, not a continuous full-range event-accuracy claim. Public phase, quarter, node and apsis APIs continue to use the C engine until #96.
 
 ## Caches and reset
 

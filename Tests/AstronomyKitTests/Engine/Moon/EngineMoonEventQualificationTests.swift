@@ -111,7 +111,13 @@ extension EngineMoonEventQualificationTests {
         for window in fixture.windows {
             for event in Harness.Event.allCases {
                 let direct = try fixture.roots(event, start: window.startTT, end: window.endTT, direct: true)
-                let native = try fixture.roots(event, start: window.startTT, end: window.endTT, direct: false)
+                let native: [Harness.Root]
+                do {
+                    native = try fixture.productionRoots(event, matching: direct)
+                } catch {
+                    Issue.record("\(window.id) \(event.rawValue): \(error)")
+                    throw error
+                }
                 #expect(!direct.isEmpty && native.count == direct.count, "\(window.id) \(event.rawValue)")
                 for (a, b) in zip(direct, native) {
                     let residual = (b.tt - a.tt) * Engine.secondsPerDay
@@ -127,9 +133,9 @@ extension EngineMoonEventQualificationTests {
                     ])
                 }
                 if window.id.hasPrefix("blend") || ["uniform-00", "uniform-16", "source-segment"].contains(window.id) {
-                    for (coarse, isDirect) in [(direct, true), (native, false)] {
+                    for coarse in [direct] {
                         let fine = try fixture.roots(
-                            event, start: window.startTT, end: window.endTT, direct: isDirect, step: 0.25)
+                            event, start: window.startTT, end: window.endTT, direct: true, step: 0.25)
                         #expect(fine.count == coarse.count)
                         for (a, b) in zip(coarse, fine) {
                             // Numerical search agreement only; this is not an event-accuracy allowance.

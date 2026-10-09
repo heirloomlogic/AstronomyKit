@@ -88,16 +88,19 @@ def collect_results(prefix):
                                      "maximumAbsoluteResidualSeconds": max(abs(row["residualSeconds"]) for row in rows)}
     files = ["Scripts/generate-moon-events.py", "Scripts/moon-data/de441-event-fixtures.json",
              "Scripts/moon-data/de441-compact-evidence.json",
+             "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift",
+             "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift",
              "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift",
              "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift",
              "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift",
              "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json"]
-    result = {"schemaVersion": 1, "runtimeRevision": "805f90a366d832cca259654747e97e13b3ca6bf6",
+    result = {"schemaVersion": 1,
+              "runtimeBaseRevision": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
               "toolchain": subprocess.check_output(["swift", "--version"], text=True, stderr=subprocess.STDOUT).strip(),
               "sourceSHA256": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in files},
               "summaries": summaries, "results": results,
-              "scope": "Published tolerances retain their existing reference scope. Broad-window shifts isolate the Moon with shared Sun, frame and time models; no universal event-time or velocity bound is inferred.",
-              "remainingDependencies": ["#92 production search ports", "#96 public cutover", "#184 broader qualification and closure"]}
+              "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
+              "remainingDependencies": ["#92 planetary and observer search ports", "#96 public cutover", "#184 broader qualification and closure"]}
     path = ROOT / "Scripts/moon-data/de441-event-evidence.json"
     path.write_bytes(encoded(result))
     print("Recorded event evidence:", path.relative_to(ROOT))
