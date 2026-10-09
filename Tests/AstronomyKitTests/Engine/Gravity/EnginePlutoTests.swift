@@ -2,7 +2,7 @@
 //  EnginePlutoTests.swift
 //  AstronomyKit
 //
-//  Pluto's routing between DE440 and the integrated model, the model's
+//  Pluto's routing between DE440 and DE441, the legacy model's
 //  segments, seams and extrapolation, and the velocities.
 //
 
@@ -49,25 +49,25 @@ extension PlutoSegmentSuites {
             }
         }
 
-        @Test("Beyond the blends the state is the integrated model's, bit for bit")
+        @Test("Beyond the blends the state is the DE441 system barycenter's, bit for bit")
         func model() throws {
             for tt in [Moon.fullWeightStart - Moon.blendDays, -36_600, Moon.fullWeightEnd + Moon.blendDays, 47_900] {
                 let state = try Pluto.heliocentricState(at: Self.time(tt: tt))
-                let model = try Pluto.modelState(tt: tt, heliocentric: true)
+                let model = try Pluto.outerState(tt: tt, heliocentric: true)
                 #expect(Self.position(state) == model.position, "tt \(tt)")
                 #expect(Self.velocity(state) == model.velocity, "tt \(tt)")
             }
         }
 
         @Test(
-            "In a blend the state mixes DE440 into the model by the weight, and the velocity carries the weight's rate")
+            "In a blend the state mixes the DE440 center into the DE441 barycenter and differentiates the weight")
         func blend() throws {
             for tt in [-36_548.25, -36_540.5, 47_854.5, 47_870.75] {
                 let (weight, rate) = Moon.weight(tt: tt)
                 #expect(weight > 0 && weight < 1)
                 let state = try Pluto.heliocentricState(at: Self.time(tt: tt))
                 let (position, velocity) = try #require(Engine.PlutoEphemeris.heliocentricState(tt: tt))
-                let model = try Pluto.modelState(tt: tt, heliocentric: true)
+                let model = try Pluto.outerState(tt: tt, heliocentric: true)
                 let mixed = model.position + weight * (position - model.position)
                 let mixedVelocity =
                     model.velocity + weight * (velocity - model.velocity) + rate * (position - model.position)

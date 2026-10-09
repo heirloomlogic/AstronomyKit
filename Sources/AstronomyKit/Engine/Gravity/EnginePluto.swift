@@ -2,29 +2,16 @@
 //  EnginePluto.swift
 //  AstronomyKit
 //
-//  Pluto: DE440 and PLU060 from 1900 through 2130 TT, and elsewhere Astronomy
-//  Engine's integration from tabulated states, with its segment cache.
+//  Pluto: DE440/PLU060 center states from 1900 through 2130 TT, blended
+//  into a DE441 system-barycenter approximation outside that span.
 //
 
 import Foundation
 
 extension Engine {
-    /// Pluto's center.
+    /// Pluto's center in the central DE440/PLU060 span, and a system-barycenter approximation outside it.
     ///
-    /// From 1900-01-01 00:00 TT up to 2131-01-01 00:00 TT Pluto comes from
-    /// ``PlutoEphemeris``. Elsewhere it comes from Astronomy Engine's model:
-    /// 51 heliocentric states 29,200 days apart from TT −730,000 to +730,000
-    /// (0001 to 3998), integrated under the Sun and the giant planets with
-    /// ``Gravity``. Over the 32 days outside each end of the DE440 span the
-    /// two are blended with the Moon's weight,
-    /// ``Engine/MoonEphemeris/weight(tt:)``.
-    ///
-    /// Between two tabulated states the model is a segment of 201 steps, 146
-    /// days apart, integrated forward from the first state and backward from
-    /// the second and mixed linearly from one to the other. A segment is
-    /// computed on first use and kept in ``cache``. Up to 36,525 days beyond
-    /// the first or last state, the model integrates from that state to the
-    /// time on every call, without the cache.
+    /// The 32-day blends retain the central center offset with a smooth weight. DE441 supplies the outer barycenter without a physical-center correction; full-range center position and velocity accuracy remain unqualified. The legacy integrated model and its cache remain available through `modelState` for diagnostics.
     enum Pluto {}
 }
 
@@ -70,15 +57,13 @@ extension Engine.Pluto {
     /// Pluto's position in AU and velocity in AU per TT day relative to the
     /// Sun's center, on EQJ axes.
     ///
-    /// The velocity is the derivative of the position, including the motion
-    /// of the blends: the DE440 blend's weight rate, and in the model the
-    /// rate of the mix between the two steps either side.
+    /// The velocity differentiates the TT/TDB conversion and the DE440 blend weight. Outside the central span it is the system-barycenter rate, not Pluto's physical-center rate.
     ///
     /// - Throws: `AstronomyError.badTime` for a TT that is not finite, more
     ///   than ``crawlLimitDays`` before the first tabulated state or after
     ///   the last, or a result that is not finite.
     static func heliocentricState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.State<Engine.EQJ> {
-        try state(at: time, heliocentric: true, cache: cache)
+        try state(at: time, heliocentric: true)
     }
 
     /// Pluto's position in AU and velocity in AU per TT day relative to the
@@ -87,7 +72,7 @@ extension Engine.Pluto {
     ///
     /// - Throws: As ``heliocentricState(at:cache:)``.
     static func barycentricState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.State<Engine.EQJ> {
-        try state(at: time, heliocentric: false, cache: cache)
+        try state(at: time, heliocentric: false)
     }
 
     /// The position of ``heliocentricState(at:cache:)``, the same double for
@@ -96,11 +81,12 @@ extension Engine.Pluto {
         try heliocentricState(at: time, cache: cache).position
     }
 
-    /// The C engine's `CalcPluto`.
+    /// Retains the central center model and blends it into the outer system barycenter.
     private static func state(
-        at time: Engine.Time, heliocentric: Bool, cache: Cache
+        at time: Engine.Time, heliocentric: Bool
     ) throws -> Engine.State<Engine.EQJ> {
         let tt = time.tt
+        guard tt.isFinite, abs(tt) <= Engine.PlutoDE441.acceptedTTDays else { throw AstronomyError.badTime }
         let (weight, rate) = Engine.MoonEphemeris.weight(tt: tt)
         var position: SIMD3<Double>
         var velocity: SIMD3<Double>
@@ -112,18 +98,27 @@ extension Engine.Pluto {
                 velocity += sun.velocity
             }
             if weight < 1 {
-                let model = try modelState(tt: tt, heliocentric: heliocentric, cache: cache)
+                let model = try outerState(tt: tt, heliocentric: heliocentric)
                 velocity = model.velocity + weight * (velocity - model.velocity) + rate * (position - model.position)
                 position = model.position + weight * (position - model.position)
             }
         } else {
-            (position, velocity) = try modelState(tt: tt, heliocentric: heliocentric, cache: cache)
+            (position, velocity) = try outerState(tt: tt, heliocentric: heliocentric)
         }
         guard position.x.isFinite, position.y.isFinite, position.z.isFinite,
             velocity.x.isFinite, velocity.y.isFinite, velocity.z.isFinite
         else { throw AstronomyError.badTime }
         return Engine.State(
             x: position.x, y: position.y, z: position.z, vx: velocity.x, vy: velocity.y, vz: velocity.z, time: time)
+    }
+
+    /// DE441 heliocentric system barycenter, optionally translated into the existing MajorBodies origin.
+    static func outerState(tt: Double, heliocentric: Bool) throws -> (position: SIMD3<Double>, velocity: SIMD3<Double>)
+    {
+        guard let source = Engine.PlutoDE441.state(tt: tt) else { throw AstronomyError.badTime }
+        guard !heliocentric else { return source }
+        let sun = try Engine.Gravity.MajorBodies(tt: tt).sun
+        return (source.position + sun.position, source.velocity + sun.velocity)
     }
 
     // MARK: - The integrated model
