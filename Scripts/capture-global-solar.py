@@ -22,6 +22,7 @@ SOURCES = {
     'rp1301-parameters.html': ('https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/ephemerides.html', '2d34652d03f95e0ec8c4d0fff292f0b8ab3527044005acbadac70a0b0f0eb7c5', 'TDT'),
     'rp1301-lunar-radius.html': ('https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/mean-lunar-radius.html', 'feb45fb0f1951dd587e72060d1d4bf0998816ab4b0c7ca8013d6f44ccad1b956', 'geometry'),
     'nasa-solar-1901.html': ('https://eclipse.gsfc.nasa.gov/SEcat5/SE1901-2000.html', '1daf90d8b3f1763a09b45cc0d838150fc09edbef711fe1be80f2e0c0d8f6d5ff', 'TD'),
+    'nasa-jsex-program.js': ('https://eclipse.gsfc.nasa.gov/JSEX/program.js', '9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881', 'algorithm'),
 }
 CATALOG = ROOT / 'Scripts/reference-data/sources/solar_2001.html'
 CATALOG_HASH = '820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d'
@@ -53,6 +54,10 @@ def build(blobs, recipes, catalog):
     if hashlib.sha256(catalog).hexdigest() != CATALOG_HASH:
         raise ValueError('catalog digest mismatch')
     table1, table4 = text(blobs['rp1301-table1.html']), text(blobs['rp1301-table4.html'])
+    method = blobs['nasa-jsex-program.js'].decode('utf-8')
+    method_markers = ['GNU General Public License', 'either version 2', 'any later version.', 'circumstances[28] = circumstances[8] - circumstances[21] * elements[26+index]', 'circumstances[29] = circumstances[9] - circumstances[21] * elements[27+index]', 'mid[38] = (mid[28] - mid[29]) / (mid[28] + mid[29])', 'tmp=Math.atan(0.99664719*Math.tan(obsvconst[0]))']
+    if any(marker not in method for marker in method_markers):
+        raise ValueError('NASA JSEX method semantics missing')
     for marker in ['2449483.216973', '0.94314', '0.2725076', '0.2722810', '59.5', 'DE200/LE200', 'Terrestrial Dynamical Time']:
         if marker not in table1:
             raise ValueError('RP1301 semantics missing: ' + marker)
@@ -111,7 +116,8 @@ def build(blobs, recipes, catalog):
                 'catalogSource': 'nasa-solar-1901.html', 'pathType': fields[8],
                 'printedMagnitude': fields[11], 'magnitude': float(fields[11]),
                 'observedLimbKind': claims[0], 'limbSource': 'rp1301-lunar-radius.html'}
-    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestLabel': source_magnitude[0][0], 'greatestMagnitude': float(source_magnitude[0][1]), 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'besselian': besselian, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
+    method_source = {'source': 'nasa-jsex-program.js', 'url': SOURCES['nasa-jsex-program.js'][0], 'sha256': SOURCES['nasa-jsex-program.js'][1], 'license': 'GNU GPL version 2 or later', 'earthPolarToEquatorialRatio': 0.99664719, 'relation': "L'=l-zeta*tan(f); central Moon/Sun ratio=(L1'-L2')/(L1'+L2')"}
+    return {'schemaVersion': 1, 'boundary1986': boundary, 'events': rows, 'rp1301': {'greatestTT': 2449483.216973-2451545, 'deltaTSeconds': 59.5, 'model': 'DE200/LE200', 'k1': 0.2725076, 'k2': 0.272281, 'greatestLabel': source_magnitude[0][0], 'greatestMagnitude': float(source_magnitude[0][1]), 'ratioLower': 0.943135, 'ratioUpper': 0.943145, 'sunGeocentricSemidiameterArcseconds': 950.22, 'moonK1GeocentricSemidiameterArcseconds': 884.08, 'moonParallaxArcseconds': 3244.35, 'besselian': besselian, 'methodSource': method_source, 'samples': area}, 'rounding': 'conditional nearest-print intervals; no publisher rounding rule or uncertainty asserted', 'sourceHashes': {**{name: SOURCES[name][1] for name in SOURCES}, 'solar_2001.html': CATALOG_HASH}}
 
 
 def publish(files):

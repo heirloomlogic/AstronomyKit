@@ -46,9 +46,16 @@
   "schemaVersion": 1,
   "sourceConventions": {
     "centralMagnitude": "(L1'-L2')/(L1'+L2')",
-    "earthPolarToEquatorialRatio": 0.99664719,
-    "methodImplementation": "https://eclipse.gsfc.nasa.gov/JSEX/program.js",
+    "methodSource": {
+      "earthPolarToEquatorialRatio": 0.99664719,
+      "license": "GNU GPL version 2 or later",
+      "relation": "L'=l-zeta*tan(f); central Moon/Sun ratio=(L1'-L2')/(L1'+L2')",
+      "sha256": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
+      "source": "nasa-jsex-program.js",
+      "url": "https://eclipse.gsfc.nasa.gov/JSEX/program.js"
+    },
     "observerReduction": "L'=l-zeta*tan(f)",
+    "physicalCandidateEpochToleranceSeconds": 4.32e-05,
     "rp1301L1UsesK1": 0.2725076,
     "rp1301L2UsesK2": 0.272281
   },

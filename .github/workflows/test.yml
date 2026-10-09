@@ -79,6 +79,7 @@ jobs:
           python3 -m unittest Scripts/test_global_solar.py -v
           python3 Scripts/capture-global-solar.py --check
           python3 Scripts/assess-global-solar-radii.py --check
+          python3 Scripts/assess-rp1301-g0.py --check
           python3 Scripts/record-global-solar-evidence.py --check
           python3 -m unittest Scripts/test_local_solar.py -v
           python3 Scripts/capture-local-solar.py --check
