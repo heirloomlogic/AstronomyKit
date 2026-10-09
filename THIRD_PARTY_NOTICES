@@ -293,3 +293,9 @@ The tools require mpmath 1.3.0, by Fredrik Johansson and contributors, under its
 NASA/JPL DE441 derived Moon and Pluto tables
 
 The shared-node tables in Sources/AstronomyKit/Engine/Moon/Generated/DE441 and Sources/AstronomyKit/Engine/Gravity/Generated/DE441 are derived from NASA/JPL DE441 geometric ICRF coefficients, obtained from https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/de441.bsp. Scripts/moon-data/de441-compact-evidence.json and Scripts/pluto-data/de441-evidence.json record the official source identity, retrieved byte-range SHA-256 hashes, projection parameters, and derived payload digests. These are AstronomyKit's compact representations, not official JPL SPK kernels. The JPL reference and NAIF attribution/disclaimer link above apply to the source ephemeris data.
+
+-------------------------------------------------------------------------------
+
+NASA/JPL DE441 and SAT441 derived Saturn tables
+
+Sources/AstronomyKit/Engine/Planets/Generated/Saturn contains DE441 Saturn-system barycenter and Sun coefficients together with SAT441 Saturn-center offsets from https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/sat441.bsp. Scripts/saturn-data/assessment.json pins the source HTTP identities, retrieved byte-range SHA-256 hashes, segment descriptors and derived payload digests. All coefficients are retained; only the small satellite offset is rounded to Float32. The JPL reference and NAIF attribution/disclaimer link above apply. These packed arrays and their evaluator are AstronomyKit-derived representations, not official JPL SPK kernels or the CSPICE toolkit.

@@ -372,6 +372,48 @@ class RiseSetFixtureTests(unittest.TestCase):
                 self.builder.parse_rise_set()
 
 
+class SaturnApsisFixtureTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def test_planet_center_tt_semantics_and_directed_roots(self):
+        query = self.builder.saturn_apsis_query()
+        self.assertEqual("'699'", query["COMMAND"])
+        self.assertEqual("'500@10'", query["CENTER"])
+        self.assertEqual("'TT'", query["TIME_TYPE"])
+        self.assertEqual("'NONE'", query["VEC_CORR"])
+        references = self.builder.parse_saturn_apsis_events()
+        self.assertEqual(6, len(references))
+        self.assertEqual({"saturn"}, {row["body"] for row in references})
+        self.assertEqual({1.0}, {row["sourceToleranceSeconds"] for row in references})
+        self.assertEqual({60.0}, {row["acceptanceToleranceSeconds"] for row in references})
+        self.assertEqual({"pericenter", "apocenter"}, {row["kind"] for row in references})
+        source = self.builder.horizons_result("saturn-apsis-precision")
+        lines = source.split("$$SOE")[1].split("$$EOE")[0].strip().splitlines()
+        self.assertEqual([float(line.split(",")[10]) for line in lines[2::5]], [row["sourceRangeRateAUPerDay"] for row in references])
+
+    def test_time_units_and_nonfinite_values_are_rejected(self):
+        result = self.builder.horizons_result("saturn-apsis-precision")
+        for old, new in [("JDTT", "JDTDB"), ("Output units    : AU-D", "Output units    : KM-S")]:
+            with mock.patch.object(self.builder, "horizons_result", return_value=result.replace(old, new)):
+                with self.assertRaises(RuntimeError):
+                    self.builder.parse_saturn_apsis_events()
+        rows = self.builder.data_lines(result)
+        fields = rows[0].split(",")
+        fields[9] = "nan"
+        with mock.patch.object(self.builder, "data_lines", return_value=[",".join(fields), *rows[1:]]):
+            with self.assertRaisesRegex(RuntimeError, "finite-value"):
+                self.builder.parse_saturn_apsis_events()
+
+    def test_wrong_target_metadata_is_rejected(self):
+        result = self.builder.horizons_result("saturn-apsis-precision")
+        changed = result.replace("Target body name: Saturn (699)", "Target body name: Saturn Barycenter (6)")
+        with mock.patch.object(self.builder, "horizons_result", return_value=changed):
+            with self.assertRaisesRegex(RuntimeError, "target, center"):
+                self.builder.parse_saturn_apsis_events()
+
+
 if __name__ == "__main__":
     unittest.main()
 

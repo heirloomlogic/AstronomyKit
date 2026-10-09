@@ -890,7 +890,7 @@ The generated table contains all 357 VI/42 southern boundary segments and maps t
 
 ## Angular event searches
 
-In the tree: `Events/EngineAngularEvents.swift` and `Events/EngineLunarEvents.swift`. The first two #92 links add the shared event namespace, apparent solar-longitude search, seasons, heliocentric planetary relative-longitude search, and lunar phase, quarter, node and apsis searches. Planetary apsis/visibility and observer event searches remain for later #92 links. The public event facades remain on the C engine until #96.
+In the tree: `Events/EngineAngularEvents.swift`, `Events/EngineLunarEvents.swift` and `Events/EnginePlanetaryEvents.swift`. The first three #92 links add the shared event namespace; apparent solar-longitude search and seasons; heliocentric planetary relative-longitude search; lunar phase, quarter, node and apsis searches; and planetary maximum-elongation, peak-magnitude and apsis searches. Observer event searches remain for the final #92 link. The public event facades remain on the C engine until #96.
 
 ```swift
 extension Engine.Events {
@@ -909,6 +909,10 @@ extension Engine.Events {
     static func nextLunarNode(after node: LunarNode) throws -> LunarNode
     static func searchLunarApsis(after start: Engine.Time) throws -> LunarApsis
     static func nextLunarApsis(after apsis: LunarApsis) throws -> LunarApsis
+    static func searchMaximumElongation(of body: CelestialBody, after start: Engine.Time) throws -> Engine.Elongation
+    static func searchPeakMagnitude(of body: CelestialBody, after start: Engine.Time) throws -> Engine.Illumination
+    static func searchPlanetaryApsis(of body: CelestialBody, after start: Engine.Time) throws -> PlanetaryApsis
+    static func nextPlanetaryApsis(of body: CelestialBody, after apsis: PlanetaryApsis) throws -> PlanetaryApsis
 }
 ```
 
@@ -921,6 +925,16 @@ extension Engine.Events {
 The lunar phase angle is the Moon's true-ecliptic longitude east of the geocentric Sun. Its search predicts a bracket from the mean synodic month, clips that bracket to the caller's inclusive forward or backward window and refines the ascending crossing to 0.1 second. Quarter searches select the next multiple of 90 degrees and preserve the time's captured Delta T model. Node searches refine zero crossings of the Moon's true-ecliptic latitude. Apsis searches refine zero crossings of the analytic radial velocity from the native lunar state and report the model distance at the root. Both use bounded forward stepping, one-second root tolerances and checks for progress, alternation, finite values and actual ephemeris coverage.
 
 `EngineLunarEventTests` applies the existing published allowances to all 12 quarter references, six node references and six apsis references, including the two independent 1903 geometric cases, and checks direction, endpoints, ordering, model capture and range failures. The DE441 event harness now invokes these production searches around all 369 direct-source roots in its 20 frozen full-span and transition windows. The sampled source differences remain evidence about the native lunar model, not a continuous full-range event-accuracy claim. Public phase, quarter, node and apsis APIs continue to use the C engine until #96.
+
+Maximum-elongation and peak-magnitude searches retain the original heliocentric relative-longitude windows and central-difference observables. Mercury and Venus maximum elongation refine the descending derivative of apparent Sun separation to ten seconds; Venus peak magnitude refines the ascending derivative of visual magnitude to ten seconds. Each search tries no more than two candidate windows, preserves the start time's Delta T model, validates the final body evaluation against its actual source range and returns the first result at or after the supplied time. Published Horizons S-O-T brackets check both morning and evening maxima for both planets. The archived 2010–2030 Horizons APmag series checks a Venus peak against the actual magnitude minimum rather than a proxy such as illumination fraction.
+
+Planetary apsides are extrema of geometric planet-center distance from the Sun center. Mercury through Uranus retain the original one-second radial-slope root search, with steps of one sixth of the mean orbital period and a two-orbit bound. Neptune and Pluto retain the original bounded sampling search because their distance curves contain short-period structure: 100 samples over a 300-degree arc locate both candidate extrema, and ten-point refinements narrow the entire surviving interval below one minute and return its midpoint. Advancement skips one quarter orbit and requires a later event of the opposite kind. Every evaluation uses the input time's model and the body's actual native source coverage; a search that would sample outside that coverage throws rather than returning an out-of-domain event.
+
+`EnginePlanetaryEventTests` applies the archived Earth apsis time and distance allowances, checks all nine native sequences for order, alternation and exact reported model distance, and retains C algorithm comparisons for the six unchanged search/model paths. Saturn now combines DE441's Saturn-system barycenter and Sun with SAT441's physical-center offset. Native position, state and distance share this trajectory; analytic velocity includes the TT/TDB rate and blend derivative. The full-weight TT interval is `[-36524.5, 47846.5]` days from J2000, with 32-day exterior blends `[-36556.5, -36524.5]` and `[47846.5, 47878.5]`. This reversible source-window choice does not change the accepted range or establish a global accuracy policy. All six archived Saturn body-center roots now meet the unchanged 60-second target, with maximum sampled error below 0.58 seconds. The remaining accepted range retains the old trajectory.
+
+The independent eight-body diagnostic windows preserve every locally sampled source crossing and refine each to a sub-second bracket. Mercury, Venus, Earth, Mars and Pluto meet sixty seconds at the tested events. Jupiter, Uranus and Neptune still fail: their current native residuals from the nearest same-kind source crossing are about +19,895, −174,123 and +117,316 seconds. These are unresolved #92 qualification criteria, not approved tolerance exceptions. Multiple local extrema also leave principal orbital-event identity unqualified by these short windows. The API already defines closest/farthest orbital distance; no new canonicalization rule is selected here.
+
+The Neptune/Pluto sampled-refinement helper now stops on the entire surviving span and returns its midpoint. The former `span / 9` stop with a `span / 18` return offset produced a 194.13-second native Pluto error against the frozen source bracket; the correction reduces it to 2.85 seconds. The original public C helper still has this pre-existing defect until #96 cutover. See [the Saturn assessment](Scripts/saturn-data/ASSESSMENT.md), [source bounds and candidate sizes](Scripts/saturn-data/assessment.json), and [source-bound native measurements](Scripts/saturn-data/native-evidence.json) for provenance, costs, replay commands and qualification limits. Public planetary event APIs continue to use C; this native link does not complete #92 or #96.
 
 ## Caches and reset
 

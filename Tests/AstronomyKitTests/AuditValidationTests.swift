@@ -30,7 +30,8 @@ struct AuditValidationTests {
             Set(archive.provenance.keys) == [
                 "astronomyEngineApsides", "astronomyEngineGeocentricStates", "cdsConstellations",
                 "eclipseWiseLocalSolar", "espenakMoonNodes",
-                "jplAngularEvents", "jplElongation", "jplHorizontal", "jplObserver", "jplSaturnRings", "jplVectors",
+                "jplAngularEvents", "jplElongation", "jplHorizontal", "jplObserver", "jplSaturnApsides",
+                "jplSaturnRings", "jplVectors",
                 "nasaGlobalSolarEclipses", "nasaLunarEclipses",
                 "nasaPlanetaryTransits", "sofaFixedStar", "usnoRiseSet", "usnoSeasonsAndPhases",
             ])

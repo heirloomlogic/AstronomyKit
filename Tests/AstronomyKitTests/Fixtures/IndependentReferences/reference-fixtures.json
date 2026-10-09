@@ -117024,6 +117024,19 @@
       "units": "degrees, arcseconds/hour, AU, and km/s",
       "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
     },
+    "jplSaturnApsides": {
+      "aberration": "none (VEC_CORR=NONE)",
+      "domain": "six failure-selected Saturn body-center extrema from 1929 through 2062, each sampled at five instants over \u00b10.01 TT day",
+      "frame": "geometric ICRF vectors",
+      "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
+      "origin": "Saturn body center 699 relative to Sun body center 500@10",
+      "recipe": "The adjacent query records target 699, Sun-center origin, TT, geometric correction, exact sample epochs, and response SHA-256. These are failure-selected diagnostics from #81/#132, not a new accuracy holdout.",
+      "refraction": "not applicable",
+      "serviceVersion": "recorded in the archived response",
+      "timeScale": "TT",
+      "units": "Julian dates TT, AU, AU/day, and seconds",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
+    },
     "jplSaturnRings": {
       "aberration": "apparent sub-observer point with light time; S-T-O as Horizons defines it",
       "domain": "11 dates from 2010 to 2035, through the 2025 ring-plane crossing",
@@ -170368,6 +170381,62 @@
       "sourceLine": 5909,
       "timeToleranceSeconds": 70.8,
       "utc": "2022-09-25T04:13Z"
+    }
+  ],
+  "saturnApsides": [
+    {
+      "acceptanceToleranceSeconds": 60.0,
+      "body": "saturn",
+      "distanceAU": 10.04667499811983,
+      "julianDateTT": 2425931.5364708,
+      "kind": "apocenter",
+      "sourceRangeRateAUPerDay": 8.148453522703298e-14,
+      "sourceToleranceSeconds": 1.0
+    },
+    {
+      "acceptanceToleranceSeconds": 60.0,
+      "body": "saturn",
+      "distanceAU": 9.028848585007601,
+      "julianDateTT": 2431340.87455362,
+      "kind": "pericenter",
+      "sourceRangeRateAUPerDay": 4.79209996261333e-13,
+      "sourceToleranceSeconds": 1.0
+    },
+    {
+      "acceptanceToleranceSeconds": 60.0,
+      "body": "saturn",
+      "distanceAU": 9.015310923263133,
+      "julianDateTT": 2442055.64869819,
+      "kind": "pericenter",
+      "sourceRangeRateAUPerDay": 8.159403329905785e-13,
+      "sourceToleranceSeconds": 1.0
+    },
+    {
+      "acceptanceToleranceSeconds": 60.0,
+      "body": "saturn",
+      "distanceAU": 9.014917317213154,
+      "julianDateTT": 2463565.54855741,
+      "kind": "pericenter",
+      "sourceRangeRateAUPerDay": 3.5145443472243e-12,
+      "sourceToleranceSeconds": 1.0
+    },
+    {
+      "acceptanceToleranceSeconds": 60.0,
+      "body": "saturn",
+      "distanceAU": 10.04615629801997,
+      "julianDateTT": 2468907.28259141,
+      "kind": "apocenter",
+      "sourceRangeRateAUPerDay": 4.451012363232244e-13,
+      "sourceToleranceSeconds": 1.0
+    },
+    {
+      "acceptanceToleranceSeconds": 60.0,
+      "body": "saturn",
+      "distanceAU": 9.030954330076145,
+      "julianDateTT": 2474345.48053982,
+      "kind": "pericenter",
+      "sourceRangeRateAUPerDay": 8.033357806810229e-13,
+      "sourceToleranceSeconds": 1.0
     }
   ],
   "saturnRings": [

@@ -37,6 +37,13 @@ jobs:
       - name: Verify generated planet tables
         run: python3 Scripts/generate-planet-tables.py --check
 
+      - name: Verify Saturn source tables and planetary event archives
+        run: |
+          python3 -m unittest Scripts/test_saturn_ephemeris.py Scripts/reference-data/test_capture_planetary_apsides.py -v
+          python3 Scripts/generate-saturn-tables.py --check
+          python3 Scripts/reference-data/capture-planetary-apsides.py --check
+          python3 Scripts/record-planetary-event-evidence.py --check
+
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
 
@@ -101,6 +108,13 @@ jobs:
 
       - name: Verify generated planet tables
         run: python3 Scripts/generate-planet-tables.py --check
+
+      - name: Verify Saturn source tables and planetary event archives
+        run: |
+          python3 -m unittest Scripts/test_saturn_ephemeris.py Scripts/reference-data/test_capture_planetary_apsides.py -v
+          python3 Scripts/generate-saturn-tables.py --check
+          python3 Scripts/reference-data/capture-planetary-apsides.py --check
+          python3 Scripts/record-planetary-event-evidence.py --check
 
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
