@@ -15,7 +15,7 @@ extension Engine {
     /// with 13 coefficients per axis on ICRS axes.
     ///
     /// The engine uses it from 1900-01-01 00:00 TT up to 2131-01-01 00:00 TT
-    /// and blends it into the lunar series over the 32 days outside each end
+    /// and blends it into compact DE441 over the 32 days outside each end
     /// (see ``weight(tt:)``). The records reach a few days further, so the
     /// blend never reads past them.
     enum MoonEphemeris {}

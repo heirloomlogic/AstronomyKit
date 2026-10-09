@@ -2,7 +2,7 @@
 //  EngineMoonTests.swift
 //  AstronomyKit
 //
-//  The lunar model's routing between DE440 and the series, and the Moon's
+//  The lunar model's routing between DE440 and compact DE441, and the Moon's
 //  positions at the edges of their inputs.
 //
 
@@ -23,7 +23,7 @@ struct EngineMoonTests {
         return SIMD3(longitude, atan2(p.z, hypot(p.x, p.y)), (p.x * p.x + p.y * p.y + p.z * p.z).squareRoot())
     }
 
-    @Test("At full weight the model is DE440 alone; beyond the blends it is the series alone")
+    @Test("At full weight the model is DE440 alone; beyond the blends it is DE441 alone")
     func routing() throws {
         for tt in [Ephemeris.fullWeightStart, -10_000.5, 0, 30_000.25, Ephemeris.fullWeightEnd] {
             let t = tt / 36_525
@@ -34,11 +34,14 @@ struct EngineMoonTests {
             1_000_000,
         ] {
             let t = tt / 36_525
-            #expect(Engine.Moon.coordinates(centuries: t) == Engine.LunarSeries.coordinates(centuries: t))
+            #expect(
+                EngineMoonEphemerisTests.largest(
+                    Engine.Moon.rectangular(Engine.Moon.coordinates(centuries: t))
+                        - (try #require(Engine.Moon.meanEclipticPosition(tt: t * 36_525, compact: true)))) < 1e-17)
         }
     }
 
-    @Test("In a blend the position lies between the series and DE440 at the weight's fraction")
+    @Test("In a blend the position lies between DE441 and DE440 at the weight's fraction")
     func blend() throws {
         for tt in [
             Ephemeris.fullWeightStart - 24, Ephemeris.fullWeightStart - 3.5, Ephemeris.fullWeightEnd + 1.25,
@@ -48,7 +51,7 @@ struct EngineMoonTests {
             let weight = Ephemeris.weight(tt: t * 36_525).weight
             #expect(weight > 0 && weight < 1)
             let blended = Engine.Moon.rectangular(Engine.Moon.coordinates(centuries: t))
-            let series = Engine.Moon.rectangular(Engine.LunarSeries.coordinates(centuries: t))
+            let series = try #require(Engine.Moon.meanEclipticPosition(tt: t * 36_525, compact: true))
             let ephemeris = Engine.Moon.rectangular(try Self.ephemerisCoordinates(tt: t * 36_525))
             let expected = series + weight * (ephemeris - series)
             let error = EngineMoonEphemerisTests.largest(blended - expected)

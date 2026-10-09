@@ -8,10 +8,6 @@
 import Foundation
 
 extension Engine.Moon {
-    /// The half-width in TT days of the central difference that gives the
-    /// series' velocity, about 43 seconds, as in the C engine.
-    static let stateStepDays = 5.0e-4
-
     /// The Earth/Moon mass ratio the barycenter uses, the C engine's
     /// `EARTH_MOON_MASS_RATIO`.
     static let earthMoonMassRatio = 81.30056
@@ -19,16 +15,7 @@ extension Engine.Moon {
     /// The model's position and velocity on the mean ecliptic and equinox of
     /// date at `time`, and its distance and the distance's rate.
     ///
-    /// The position is ``coordinates(centuries:cache:)`` at `time` in
-    /// rectangular form. Where DE440 has weight, the velocity is its
-    /// analytic derivative carried through precession and the mean
-    /// obliquity at TT = (`time.tt` / 36,525) · 36,525. In a blend it is
-    /// mixed with a central difference of the series over
-    /// ±``stateStepDays``, plus the weight's rate times the difference of
-    /// the two positions; those series samples bypass the cache, as in the C
-    /// engine. Elsewhere the velocity and the distance's rate are central
-    /// differences of the model over ±``stateStepDays``, read through
-    /// `cache`, so a repeated state reads three cached epochs.
+    /// The cached position and both tables' analytic derivatives use the same TT. In each blend, the velocity includes the weight derivative times the difference in positions.
     static func meanEclipticState(
         at time: Engine.Time, cache: Cache = cache
     ) -> (state: Engine.State<Engine.ECM>, distance: Double, distanceRate: Double) {
@@ -38,35 +25,32 @@ extension Engine.Moon {
         let distanceRate: Double
         let sourceTT = time.tt / 36_525 * 36_525
         let (weight, weightRate) = Engine.MoonEphemeris.weight(tt: sourceTT)
-        if weight > 0, let source = meanEclipticSourceState(tt: sourceTT) {
-            let series = { (tt: Double) in rectangular(Engine.LunarSeries.coordinates(centuries: tt / 36_525)) }
-            if weight < 1 {
-                let difference =
-                    (series(sourceTT + stateStepDays) - series(sourceTT - stateStepDays)) / (2 * stateStepDays)
+        if weight == 1, let source = meanEclipticSourceState(tt: sourceTT) {
+            velocity = source.velocity
+        } else if let outer = meanEclipticSourceState(tt: sourceTT, compact: true) {
+            if weight > 0, let central = meanEclipticSourceState(tt: sourceTT) {
                 velocity =
-                    difference + weight * (source.velocity - difference) + weightRate
-                    * (source.position - series(sourceTT))
+                    outer.velocity + weight * (central.velocity - outer.velocity)
+                    + weightRate * (central.position - outer.position)
             } else {
-                velocity = source.velocity
+                velocity = outer.velocity
             }
-            distanceRate =
-                (position.x * velocity.x + position.y * velocity.y + position.z * velocity.z) / center.z
         } else {
-            let plus = coordinates(centuries: (time.tt + stateStepDays) / 36_525, cache: cache)
-            let minus = coordinates(centuries: (time.tt - stateStepDays) / 36_525, cache: cache)
-            velocity = (rectangular(plus) - rectangular(minus)) / (2 * stateStepDays)
-            distanceRate = (plus.z - minus.z) / (2 * stateStepDays)
+            velocity = SIMD3(repeating: .nan)
         }
+        distanceRate = (position.x * velocity.x + position.y * velocity.y + position.z * velocity.z) / center.z
         let state = Engine.State<Engine.ECM>(
             x: position.x, y: position.y, z: position.z, vx: velocity.x, vy: velocity.y, vz: velocity.z, time: time)
         return (state, center.z, distanceRate)
     }
 
-    /// The DE440 Moon's position and velocity at `tt` on the mean ecliptic
-    /// and equinox of date, with the rates of precession and of the mean
-    /// obliquity, or `nil` outside its records.
-    static func meanEclipticSourceState(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-        guard let source = Engine.MoonEphemeris.state(tt: tt) else { return nil }
+    /// The selected table's position and velocity on the mean ecliptic of date, including precession and obliquity rates.
+    static func meanEclipticSourceState(
+        tt: Double, compact: Bool = false
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+        guard let source = compact ? Engine.MoonDE441.state(tt: tt) : Engine.MoonEphemeris.state(tt: tt) else {
+            return nil
+        }
         let precession = Engine.Precession.rotation(tt: tt)
         let equator = precession.apply(to: source.position)
         let equatorVelocity =
