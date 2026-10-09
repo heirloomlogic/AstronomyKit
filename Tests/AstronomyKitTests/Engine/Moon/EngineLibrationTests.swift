@@ -191,7 +191,7 @@ struct EngineLibrationTests {
         #expect(phases.count == 12)
         let quarters = ["new": 0.0, "firstQuarter": 90, "full": 180, "lastQuarter": 270]
         for phase in phases {
-            let time = Self.time(phase.sourceTime)
+            let time = IndependentReferenceDate.engine(phase.sourceTime)
             let angle = Engine.normalizedLongitude(
                 try Engine.Moon.eclipticLongitude(at: time) - Self.sunLongitude(at: time))
             let error = abs(Engine.longitudeOffset(angle - (try #require(quarters[phase.phase])))) * 60
