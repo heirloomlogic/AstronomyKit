@@ -48,3 +48,25 @@ extension Horizon {
         )
     }
 }
+
+extension Equatorial {
+    init(_ coordinates: Engine.Equatorial, at time: AstroTime) {
+        self.init(
+            rightAscension: coordinates.rightAscension, declination: coordinates.declination,
+            distance: coordinates.distance, time: time)
+    }
+}
+
+extension Ecliptic {
+    init(_ coordinates: Engine.Ecliptic) throws {
+        self.init(latitude: coordinates.latitude, longitude: coordinates.longitude, distance: coordinates.vector.length)
+        guard latitude.isFinite, longitude.isFinite, distance.isFinite else { throw AstronomyError.badTime }
+    }
+}
+
+extension StateVector {
+    func engineState(at time: Engine.Time) -> Engine.State<Engine.EQJ> {
+        Engine.State(
+            x: position.x, y: position.y, z: position.z, vx: velocity.x, vy: velocity.y, vz: velocity.z, time: time)
+    }
+}

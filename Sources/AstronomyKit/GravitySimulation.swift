@@ -5,7 +5,6 @@
 //  N-body gravity simulation.
 //
 
-import CLibAstronomy
 import Synchronization
 
 // MARK: - Gravity Simulation
@@ -33,17 +32,13 @@ import Synchronization
 /// ```
 ///
 /// - Note: This uses a class (reference semantics) because the underlying
-///         C simulation object has state that must be managed across updates.
+///         simulation owns the current and previous integration states.
 public final class GravitySimulation: @unchecked Sendable {
-    private struct SimState: ~Copyable {
-        var handle: OpaquePointer?
+    private struct SimState {
+        let simulation: Engine.GravitySimulation
         var time: AstroTime
-
-        deinit {
-            if let handle {
-                Astronomy_GravSimFree(handle)
-            }
-        }
+        var currentTime: AstroTime
+        var previousTime: AstroTime
     }
 
     private let lock: Mutex<SimState>
@@ -74,26 +69,10 @@ public final class GravitySimulation: @unchecked Sendable {
         initialState: StateVector
     ) throws {
         self.origin = origin
-
-        var state = astro_state_vector_t(
-            status: ASTRO_SUCCESS,
-            x: initialState.position.x,
-            y: initialState.position.y,
-            z: initialState.position.z,
-            vx: initialState.velocity.x,
-            vy: initialState.velocity.y,
-            vz: initialState.velocity.z,
-            t: time.raw
-        )
-
-        var sim: OpaquePointer?
-        let status = Astronomy_GravSimInit(&sim, origin.raw, time.raw, 1, &state)
-
-        if let error = AstronomyError(status: status) {
-            throw error
-        }
-
-        self.lock = Mutex(SimState(handle: sim, time: time))
+        let nativeTime = time.coordinateTime
+        let simulation = try Engine.GravitySimulation(
+            origin: origin, time: nativeTime, states: [initialState.engineState(at: nativeTime)])
+        self.lock = Mutex(SimState(simulation: simulation, time: time, currentTime: time, previousTime: time))
     }
 
     /// Updates the simulation to a new time.
@@ -108,20 +87,14 @@ public final class GravitySimulation: @unchecked Sendable {
     ///   `AstronomyError` if the update fails.
     @discardableResult
     public func update(to newTime: AstroTime) throws -> StateVector {
-        try lock.withLock { simState in
-            guard let handle = simState.handle else {
-                throw AstronomyError.notInitialized
+        try lock.withLock { storage in
+            let result = try storage.simulation.update(to: newTime.coordinateTime)[0]
+            storage.previousTime = storage.currentTime
+            if newTime.terrestrialTime != storage.currentTime.terrestrialTime {
+                storage.currentTime = newTime
             }
-
-            var state = astro_state_vector_t()
-            let status = Astronomy_GravSimUpdate(handle, newTime.raw, 1, &state)
-
-            if let error = AstronomyError(status: status) {
-                throw error
-            }
-
-            simState.time = newTime
-            return try StateVector(state)
+            storage.time = newTime
+            return StateVector(result, at: newTime)
         }
     }
 
@@ -131,13 +104,8 @@ public final class GravitySimulation: @unchecked Sendable {
     /// - Returns: The current position and velocity.
     /// - Throws: `AstronomyError` if the state cannot be retrieved.
     public func state(of body: CelestialBody) throws -> StateVector {
-        try lock.withLock { simState in
-            guard let handle = simState.handle else {
-                throw AstronomyError.notInitialized
-            }
-
-            let result = Astronomy_GravSimBodyState(handle, body.raw)
-            return try StateVector(result)
+        try lock.withLock { storage in
+            StateVector(try storage.simulation.state(of: body), at: storage.currentTime)
         }
     }
 
@@ -145,22 +113,12 @@ public final class GravitySimulation: @unchecked Sendable {
     ///
     /// - Returns: The time of the simulation.
     public func currentTime() -> AstroTime {
-        lock.withLock { simState in
-            guard let handle = simState.handle else {
-                return simState.time
-            }
-
-            let t = Astronomy_GravSimTime(handle)
-            return AstroTime(raw: t)
-        }
+        lock.withLock { $0.currentTime }
     }
 
     /// The number of bodies being simulated.
     public var bodyCount: Int {
-        lock.withLock { simState in
-            guard let handle = simState.handle else { return 0 }
-            return Int(Astronomy_GravSimNumBodies(handle))
-        }
+        lock.withLock { $0.simulation.bodyCount }
     }
 
     /// Swaps the direction of the simulation.
@@ -168,9 +126,9 @@ public final class GravitySimulation: @unchecked Sendable {
     /// After calling this, time updates will move backward instead of forward
     /// (or vice versa).
     public func swap() {
-        lock.withLock { simState in
-            guard let handle = simState.handle else { return }
-            Astronomy_GravSimSwap(handle)
+        lock.withLock { storage in
+            storage.simulation.swap()
+            (storage.currentTime, storage.previousTime) = (storage.previousTime, storage.currentTime)
         }
     }
 }
@@ -180,7 +138,7 @@ extension GravitySimulation: CustomStringConvertible {
     public var description: String {
         // One lock acquisition so time and body count are a consistent snapshot.
         let (time, bodies) = lock.withLock { simState in
-            (simState.time, simState.handle.map { Int(Astronomy_GravSimNumBodies($0)) } ?? 0)
+            (simState.time, simState.simulation.bodyCount)
         }
         return "GravitySimulation(origin: \(origin), time: \(time), bodies: \(bodies))"
     }

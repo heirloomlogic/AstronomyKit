@@ -7326,7 +7326,7 @@
     "Scripts/solar-numerics/measure.py": "dc34e30725e1c67e8d934e999694c4dafe371772a3e9fd04b2ed045c2d6a31b9",
     "Scripts/solar-numerics/numerics.py": "9a5db9f8d47ffff6f8e5c1c849a0db983d1335d583af5b6eb7a7caada9f5b8fb",
     "Scripts/solar-numerics/reference.py": "b2fbb3c74f687637bbbdc2a14ad1d32b5761a777ee0a126ddfbc606b5fa62f64",
-    "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
+    "Sources/AstronomyKit/AstronomyKit.swift": "b7f836a026a0fb206df54fa43ac5d6664a92f23a915f3643038e188dc0b35f90",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",

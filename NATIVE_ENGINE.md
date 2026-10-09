@@ -762,7 +762,7 @@ Tests under `Tests/AstronomyKitTests/Engine/Positions/`:
 
 ## Jupiter's moons
 
-In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. Rotation axes are in the next section; Lagrange points, the rest of #90, are not in the tree yet.
+In the tree: `Bodies/EngineJupiterMoons.swift` and the generated `Bodies/Generated/JupiterMoonSeries.swift`. They port `Astronomy_JupiterMoons`. Rotation axes are in the next section. `Bodies/EngineLagrange.swift` now implements L1–L5 and fast state-based calculations, with mass-product lookup using the existing native gravity constants. The public Lagrange facade uses it; independent definition checks are in `NativeLagrangeDefinitionTests`, and existing public degenerate-input and bounded-convergence tests remain in `LagrangePointTests`.
 
 ```swift
 extension Engine {
@@ -1037,3 +1037,5 @@ Six NASA contact/minimum-separation cases retain the existing Mercury 642.6 s/0.
 ## Public geometry integration
 
 The first #96 integration link routes public rotation matrices, spherical/equatorial and horizon vector conversions, refraction, observer vectors/states/gravity, and the final horizontal conversion in body/star/Chiron horizon APIs through the native engine. It preserves the input `AstroTime` pair and its metadata. Time/default arithmetic, `AstroTime.siderealTime`, and position/state/ecliptic conversion remain on their existing paths until the dependent links. The operation inventory, public contract checks, inherited release-API differences and remaining acceptance are recorded in [NativeFacadeIntegration.md](Documentation/Migration/NativeFacadeIntegration.md).
+
+The second #96 link routes geometric heliocentric/barycentric states, fixed stars and auxiliary body values through native implementations, adds the missing native Lagrange solver, and gives the public gravity facade native ownership. Public reset clears both registries during the transition. Apparent positions and exact ecliptic-state conversion remain coupled to the final time/configuration cutover; public Chiron retains its original anchor convention while using native gravity. The integration note above records the measured numerical and runtime changes.

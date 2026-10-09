@@ -19,9 +19,13 @@ permissions:
   contents: read
 
 jobs:
+  # Public Chiron now exercises native gravity in Debug. The local full suite
+  # grew from 396s to 1333s; prior hosted Debug/TSan steps took 496/547/1504s.
+  # These limits include existing numerical setup and runner/sanitizer overhead.
+  # Release and platform-build limits remain tied to their separate workloads.
   test-macos:
     runs-on: macos-26
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -107,7 +111,7 @@ jobs:
 
   test-linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 40
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -175,7 +179,7 @@ jobs:
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 100
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

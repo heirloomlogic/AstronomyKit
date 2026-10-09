@@ -143,13 +143,9 @@ public enum LagrangePoint {
         majorBody: CelestialBody,
         minorBody: CelestialBody
     ) throws -> StateVector {
-        let result = Astronomy_LagrangePoint(
-            point.rawValue,
-            time.raw,
-            majorBody.raw,
-            minorBody.raw
-        )
-        return try StateVector(result)
+        StateVector(
+            try Engine.Lagrange.calculate(
+                point: point, at: time.coordinateTime, majorBody: majorBody, minorBody: minorBody), at: time)
     }
 
     /// Calculates a Lagrange point from pre-computed body states and masses.
@@ -184,33 +180,10 @@ public enum LagrangePoint {
         minorState: StateVector,
         minorMass: Double
     ) throws -> StateVector {
-        let majorRaw = astro_state_vector_t(
-            status: ASTRO_SUCCESS,
-            x: majorState.position.x,
-            y: majorState.position.y,
-            z: majorState.position.z,
-            vx: majorState.velocity.x,
-            vy: majorState.velocity.y,
-            vz: majorState.velocity.z,
-            t: majorState.time.raw
-        )
-        let minorRaw = astro_state_vector_t(
-            status: ASTRO_SUCCESS,
-            x: minorState.position.x,
-            y: minorState.position.y,
-            z: minorState.position.z,
-            vx: minorState.velocity.x,
-            vy: minorState.velocity.y,
-            vz: minorState.velocity.z,
-            t: minorState.time.raw
-        )
-        let result = Astronomy_LagrangePointFast(
-            point.rawValue,
-            majorRaw,
-            majorMass,
-            minorRaw,
-            minorMass
-        )
-        return try StateVector(result)
+        StateVector(
+            try Engine.Lagrange.calculateFast(
+                point: point, majorState: majorState.engineState(at: majorState.time.coordinateTime),
+                majorMass: majorMass, minorState: minorState.engineState(at: minorState.time.coordinateTime),
+                minorMass: minorMass), at: majorState.time)
     }
 }

@@ -56,6 +56,15 @@ public struct Illumination: Sendable, Equatable {
     /// This is 0 for all bodies except Saturn.
     public let ringTilt: Double
 
+    init(_ value: Engine.Illumination, at time: AstroTime) {
+        self.time = time
+        self.magnitude = value.magnitude
+        self.phaseAngle = value.phaseAngle
+        self.phaseFraction = value.phaseFraction
+        self.helioDistance = value.heliocentricDistance
+        self.ringTilt = value.ringTilt
+    }
+
     /// Creates an illumination result from the C structure.
     init(_ raw: astro_illum_t) throws {
         if let error = AstronomyError(status: raw.status) {
@@ -100,8 +109,7 @@ extension CelestialBody {
     /// print("Mars magnitude: \(mars.magnitude)")
     /// ```
     public func illumination(at time: AstroTime) throws -> Illumination {
-        let result = Astronomy_Illumination(raw, time.raw)
-        return try Illumination(result)
+        Illumination(try Engine.Positions.illumination(of: self, at: time.coordinateTime), at: time)
     }
 
     /// Searches for the time when this body reaches peak visual magnitude.
