@@ -40,6 +40,9 @@ jobs:
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
 
+      - name: Verify DE441 Moon assessment tooling
+        run: python3 -m unittest Scripts/test_assess_moon_de441.py -v
+
       - name: Verify generated Pluto tables
         run: python3 Scripts/generate-pluto-tables.py --check
 
@@ -93,6 +96,9 @@ jobs:
 
       - name: Verify generated Moon tables
         run: python3 Scripts/generate-moon-tables.py --check
+
+      - name: Verify DE441 Moon assessment tooling
+        run: python3 -m unittest Scripts/test_assess_moon_de441.py -v
 
       - name: Verify generated Pluto tables
         run: python3 Scripts/generate-pluto-tables.py --check

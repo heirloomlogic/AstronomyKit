@@ -1,0 +1,294 @@
+{
+  "acceptedRange": {
+    "tdbMarginDays": 2.2e-08,
+    "ttDaysFromJ2000Inclusive": [
+      -1461000.0,
+      1461000.0
+    ]
+  },
+  "assessment": {
+    "finding": "Direct storage adds 217.36 MiB as Float64 or 108.68 MiB as Float32 before source encoding. The 30-record Float32 check is sparse and cannot establish the accepted-range accuracy contract.",
+    "fullRangeQualified": false,
+    "nextStep": "Fit and fully qualify a compact DE441-derived representation against every source record, then compare its measured size and production runtime with the direct candidate before choosing the shipping model."
+  },
+  "directCandidate": {
+    "coefficientCount": 28489539,
+    "coefficientsPerAxis": 13,
+    "derivative": "analytic derivative of the same 13 Chebyshev coefficients; no additional table",
+    "float32Bytes": 113958156,
+    "float64Bytes": 227916312,
+    "recordCount": 730501,
+    "recordDays": 4.0,
+    "segments": [
+      {
+        "exclusiveEndJulianDateTDB": 2440432.5,
+        "firstRecord": 1022640,
+        "recordCount": 362472,
+        "startJulianDateTDB": 990544.999999978
+      },
+      {
+        "exclusiveEndJulianDateTDB": 3912545.000000022,
+        "firstRecord": 0,
+        "recordCount": 368029,
+        "startJulianDateTDB": 2440432.5
+      }
+    ]
+  },
+  "float32Sample": {
+    "fullRangeScanned": false,
+    "maximumAngularBoundArcminutesUsingSmallestSampledRange": 0.00031830712619755104,
+    "maximumCoefficientRoundingPositionComponentBoundAU": 1.2816836973799743e-10,
+    "maximumCoefficientRoundingRateComponentBoundAUPerDay": 2.6753090003964662e-11,
+    "sampleCount": 30
+  },
+  "independentReference": {
+    "archive": "Scripts/reference-data/sources/horizons/moon-vector.json",
+    "maximumPositionDifferenceKm": 1.4507102471321076e-10,
+    "maximumVelocityDifferenceKmPerSecond": 4.009913467169218e-16,
+    "records": [
+      {
+        "julianDateTDB": 990546.0,
+        "positionDifferenceKm": 6.687443809042408e-11,
+        "velocityDifferenceKmPerSecond": 2.1506592126787885e-16
+      },
+      {
+        "julianDateTDB": 990910.5,
+        "positionDifferenceKm": 3.626775617830269e-11,
+        "velocityDifferenceKmPerSecond": 1.9350242503016227e-16
+      },
+      {
+        "julianDateTDB": 1173170.5,
+        "positionDifferenceKm": 7.432678239017893e-11,
+        "velocityDifferenceKmPerSecond": 1.8918584280511605e-16
+      },
+      {
+        "julianDateTDB": 1355795.5,
+        "positionDifferenceKm": 6.687443809042408e-11,
+        "velocityDifferenceKmPerSecond": 1.8772492640294627e-16
+      },
+      {
+        "julianDateTDB": 1538420.5,
+        "positionDifferenceKm": 1.4507102471321076e-10,
+        "velocityDifferenceKmPerSecond": 1.0494142412703325e-16
+      },
+      {
+        "julianDateTDB": 1721045.5,
+        "positionDifferenceKm": 3.626775617830269e-11,
+        "velocityDifferenceKmPerSecond": 2.098828482540665e-16
+      },
+      {
+        "julianDateTDB": 1903670.5,
+        "positionDifferenceKm": 6.487773456485823e-11,
+        "velocityDifferenceKmPerSecond": 1.3274156845726888e-16
+      },
+      {
+        "julianDateTDB": 2086295.5,
+        "positionDifferenceKm": 6.487773456485823e-11,
+        "velocityDifferenceKmPerSecond": 1.407936948022097e-16
+      },
+      {
+        "julianDateTDB": 2268920.5,
+        "positionDifferenceKm": 5.6185766273150975e-11,
+        "velocityDifferenceKmPerSecond": 1.9350242503016227e-16
+      },
+      {
+        "julianDateTDB": 2341970.5,
+        "positionDifferenceKm": 3.2691313636724055e-11,
+        "velocityDifferenceKmPerSecond": 2.098828482540665e-16
+      },
+      {
+        "julianDateTDB": 2378495.5,
+        "positionDifferenceKm": 1.3076525454689622e-10,
+        "velocityDifferenceKmPerSecond": 1.9350242503016227e-16
+      },
+      {
+        "julianDateTDB": 2396758.5,
+        "positionDifferenceKm": 4.865830092364367e-11,
+        "velocityDifferenceKmPerSecond": 1.3274156845726888e-16
+      },
+      {
+        "julianDateTDB": 2414980.5,
+        "positionDifferenceKm": 1.2975546912971646e-10,
+        "velocityDifferenceKmPerSecond": 2.098828482540665e-16
+      },
+      {
+        "julianDateTDB": 2414996.5,
+        "positionDifferenceKm": 1.3076525454689622e-10,
+        "velocityDifferenceKmPerSecond": 2.815873896044194e-16
+      },
+      {
+        "julianDateTDB": 2415004.5,
+        "positionDifferenceKm": 3.626775617830269e-11,
+        "velocityDifferenceKmPerSecond": 1.878165665970317e-16
+      },
+      {
+        "julianDateTDB": 2415012.5,
+        "positionDifferenceKm": 1.3103217075515046e-10,
+        "velocityDifferenceKmPerSecond": 1.8772492640294627e-16
+      },
+      {
+        "julianDateTDB": 2415019.5,
+        "positionDifferenceKm": 0.0,
+        "velocityDifferenceKmPerSecond": 5.5343544178190926e-17
+      },
+      {
+        "julianDateTDB": 2415021.5,
+        "positionDifferenceKm": 1.6219433641214558e-11,
+        "velocityDifferenceKmPerSecond": 1.3274156845726888e-16
+      },
+      {
+        "julianDateTDB": 2499390.5,
+        "positionDifferenceKm": 6.487773456485823e-11,
+        "velocityDifferenceKmPerSecond": 4.009913467169218e-16
+      },
+      {
+        "julianDateTDB": 2499392.5,
+        "positionDifferenceKm": 4.865830092364367e-11,
+        "velocityDifferenceKmPerSecond": 1.407936948022097e-16
+      },
+      {
+        "julianDateTDB": 2499407.5,
+        "positionDifferenceKm": 1.6219433641214558e-11,
+        "velocityDifferenceKmPerSecond": 9.386246320147314e-17
+      },
+      {
+        "julianDateTDB": 2499422.5,
+        "positionDifferenceKm": 6.487773456485823e-11,
+        "velocityDifferenceKmPerSecond": 1.9350242503016227e-16
+      },
+      {
+        "julianDateTDB": 2499430.5,
+        "positionDifferenceKm": 7.298745138546551e-11,
+        "velocityDifferenceKmPerSecond": 1.8918584280511605e-16
+      },
+      {
+        "julianDateTDB": 2524595.5,
+        "positionDifferenceKm": 7.432678239017893e-11,
+        "velocityDifferenceKmPerSecond": 1.4840958525519754e-16
+      },
+      {
+        "julianDateTDB": 2634170.5,
+        "positionDifferenceKm": 9.175097211766424e-11,
+        "velocityDifferenceKmPerSecond": 2.299151408443719e-16
+      },
+      {
+        "julianDateTDB": 2816795.5,
+        "positionDifferenceKm": 4.865830092364367e-11,
+        "velocityDifferenceKmPerSecond": 1.347997000048082e-16
+      },
+      {
+        "julianDateTDB": 3182045.5,
+        "positionDifferenceKm": 9.731660184728735e-11,
+        "velocityDifferenceKmPerSecond": 1.0494142412703325e-16
+      },
+      {
+        "julianDateTDB": 3547295.5,
+        "positionDifferenceKm": 6.487773456485823e-11,
+        "velocityDifferenceKmPerSecond": 4.693123160073657e-17
+      },
+      {
+        "julianDateTDB": 3912180.5,
+        "positionDifferenceKm": 9.317355264332343e-11,
+        "velocityDifferenceKmPerSecond": 9.459292140255802e-17
+      },
+      {
+        "julianDateTDB": 3912544.0,
+        "positionDifferenceKm": 6.687443809042408e-11,
+        "velocityDifferenceKmPerSecond": 1.3274156845726888e-16
+      }
+    ],
+    "sampleCount": 30,
+    "selection": "the complete archived set: 19 long-span dates from 2002 BCE through 6000 CE and 11 dates at the existing DE440 transition regions"
+  },
+  "runtimeSample": {
+    "checksum": 18.528819757518356,
+    "evaluationsPerSecond": 85301.32976679807,
+    "evaluator": "three 13-term Chebyshev position and analytic-rate evaluations over sampled Float32 coefficients",
+    "iterations": 100000,
+    "language": "Python 3",
+    "productionRepresentative": false,
+    "seconds": 1.1723146669974085
+  },
+  "schemaVersion": 1,
+  "source": {
+    "bytes": 3307878400,
+    "etag": "\"5fe1446a-c52a3800\"",
+    "format": "little-endian DAF/SPK type 2",
+    "frame": "ICRF",
+    "globalDigestVerified": false,
+    "lastModified": "Tue, 22 Dec 2020 00:57:14 GMT",
+    "retrievedByteRangesSHA256": {
+      "0-1023": "71686c47d507ccdae25d47dfcf52830188bbbd1c390405eff6c4c02f35c38156",
+      "1655953176-1655953503": "aeeeb7243e100dcbedf03b1c5667b73d4e7459f6beaba1adf9de08dbc4c9742d",
+      "1655953504-1655953831": "27db698e83291fbc2e4579d0e5b7e39d811d6a4cfaf9ade7b57b6555f54bc98b",
+      "1655954488-1655954815": "7c77c3635c6ed721fdb1ddee995f2f6bd1e8811d3838e79c3e87fb883fe46334",
+      "1655955800-1655956127": "91ac8cbd849b0510527bec8a05c7c5b77193aca859fa3a31b62c273d8d4e3fe4",
+      "1655956456-1655956783": "e195cd2776af7b43e84f6a3b298cdbc0c8afe66765392dfc6e19d55bdcb41cb1",
+      "1658019904-1658020231": "e2ccc0b1b2bfd524fc1522e21be47d17e01f57f0c1376920d8fde3d2aae78cee",
+      "1667005136-1667005463": "aabbdc6da3d0ad4597f48829e41b3d066b1249c3e1b99c2264d4d090298a1ae2",
+      "1681980304-1681980631": "1a92f2dc3d27fd54e2bece4169e9b56dac0d392e5e63068851ea12c5afe50f4e",
+      "1711930968-1711931295": "7d0be178355e714d999d242fd52d32045a4975b2482ea6cb437aed5afd092f99",
+      "1741881304-1741881631": "a67108f10366d96c4998ade8bc5e152145966722f83716ebc7587bf598a5a40a",
+      "1771802120-1771802447": "6eac7a4a9c8485b2d0e962a02a64f8db6894d995e159354fc3c8e37aca7f2502",
+      "1771831640-1771831967": "07bbbffd4b59418765b21e09da9d6325392e6b6e4c3be0e6a68720a766126d40",
+      "2107004672-2107004703": "19e862dfae75aedefbcec480c2fb68b457f1ed14b318635dcbe8938f54060136",
+      "2111839096-2111839423": "e73b8c6007d44ee815f1f8d68bc21d89008960248e4cc2d5807046e1cc6aa862",
+      "2111839424-2111839751": "6de52fe5977c900f6e0fcb0d90c60ae199fc644efab5f6bf2534e9c548ac53d2",
+      "2111840408-2111840735": "0b416cfe5f18e0bb2a1285aafc166c5bad5585d97ccc533c4d336d365d12694c",
+      "2111841720-2111842047": "e1e8c633772c66c066082e1b48860a8edeee69dfac8b57df28a50592b132c5f2",
+      "2111842376-2111842703": "4862e0973ad6874f886091876f0270720a1a531717136a536b19a118b8fbf23f",
+      "2113905824-2113906151": "7a8fccacdcb9f9e9edfc550a0a5cd12b94429e2ef7127eceec6e1ce6e7e251d1",
+      "2122891056-2122891383": "1fd0c533f874f78e85d4c202bf657df6bb137436869ff9d3f70b6e38856300f4",
+      "2137866224-2137866551": "515fcb4cc7014a6e602287f60e29887835b0cc4caf8c3727b799f6bef2cee5f0",
+      "2167816888-2167817215": "4212913d96abde6b18ae8cb9aa504ea18a48506657b989d3fa0a3ebe46bd5d54",
+      "2197767224-2197767551": "212d8f493fcda1db835327bdd8325150b2804d745a5ae3b7befe17c0f1da7122",
+      "2227688040-2227688367": "0961626392576ebccaaf5dace6b329707990fc5b3ac3d00fb6d9d6a02a02dc86",
+      "2227717560-2227717887": "856e6072c0d9bcd18550a31129ada6ac733a836b1999460f57de4b6c086e3071",
+      "2562890592-2562890623": "19e862dfae75aedefbcec480c2fb68b457f1ed14b318635dcbe8938f54060136",
+      "2860328960-2860329983": "d52c057ae9b1fffeaa6130c91e56145fcb061e6904c76bb66d3242fc18629236",
+      "335490624-335490951": "97af94c0fdc132a32dedb81038d71f5554f6d609c11daa5bab01c3def5bb51f8",
+      "335520472-335520799": "6e03c9b33045f5ad7b7534162dbefffebd1e0a2c430abb243e12a02c9935d106",
+      "350465792-350466119": "8fcbc1cdde6fb1983798424d543ca34a31d96eca32e9c1f9cf489b4c680a26d4",
+      "365440960-365441287": "b41f66e8f84d0cf75b903ced22523787ce8701a503814e284eac66522a989ab3",
+      "380416456-380416783": "caaa3f8c2a7df3907898a6ef5d1b73fd0ac6cba1ed300c0536654a86d5429e7a",
+      "395391624-395391951": "b439775a75a025bc6a0a8e46537e04d4f267891fa1d74eb68ab40e725e64df17",
+      "410366792-410367119": "b684e316a45d6d24981b6e707ba56363e2a10c73c5bd865a565f9486a7ec8bba",
+      "425341960-425342287": "391bf5fef2d9f72702354bfe64082b9153fa9a2e652761f13a0c3d35c1ae64bc",
+      "440317456-440317783": "107b2d295baee8d74b334944d17320b48569582bf2c3890103f72532151b3c7c",
+      "446307392-446307719": "bddfdf2f0bcdc3c9ff77e32346ae38cbee60ef0edaee13b867cf611043fb0f8f",
+      "449302360-449302687": "72ec78bdcebb61da37c16d33c202221d615959720b9bc9e135fc36c31333fee1",
+      "450800008-450800335": "df765b2ef9b1047b0faf47fc9cce32ebcc073bf390a3aca0eaad8bc0d9d67f98",
+      "452294376-452294703": "9edbceed8a0ac4feed2201f7e5c069de9c0399616cbaedfe088f9ff263dafd7b",
+      "452295688-452296015": "1e83e5b543dadb0a9beede295825673971dcce89409c89da50bc4e87aa05501b",
+      "452296344-452296671": "abeba7972ce9b7991f8855b90ce4bba38ca69cd62a9b9c18d5ab1e9cd38f9b6e",
+      "452297000-452297327": "97d1b32957b291c15b6d5489d3e38acfcd3e11e5ce41cc23ec76c5e99c1a23c8",
+      "452297328-452297655": "1a86ec6379dcf91838e5f1fe1c1019dba46fab3f29a2c0a086da2866fb739230",
+      "452297656-452297983": "a4cd4270bfb2cc384d362e625502a351998c52149c17f2ba3b7bec140fc2f90e",
+      "454381440-454381471": "a1d6d563d98ced69c1fc8391c30c60a7c39a6ec03a5c926fd0c9bbed3d822639",
+      "62464-63487": "8f82a0ffd8f6977bc43f4d7d407b9044be8ed0789a6c92966586829d710813de",
+      "789807392-789807719": "7a07daae8e4b88042ae443df33d1358a78a2a858e6764de4a26fdbd2f44382cf",
+      "789837240-789837567": "4d41d3dc5dde1e2b38f10ba753fc8802311922a9d457e92b368d6dcb17130072",
+      "804782560-804782887": "0063af56de61c6f836dc0d85ca4e5ec945e3c238c2407c38d1e60a9d5652d377",
+      "819757728-819758055": "9d348e5497c897e8fb43cd108a10a5822a1f600ab1f3eec661eaf8f24e497d25",
+      "834733224-834733551": "f12e275d7ee59255648453b689c18f3911e862be8267299c030b69021197f9a2",
+      "849708392-849708719": "43458bab7f6591454754e939dc8969effce7281a76b8f03a917a9d7754735997",
+      "864683560-864683887": "01467e35e6045333bd95e9701485b7ada607197bad4b6b6ebafd7ced209a0e4c",
+      "879658728-879659055": "19489758421fad8845959e9c5019ff3bbbd370957f98907895bd75535756c30a",
+      "894634224-894634551": "22e4d9a35fec842e8f592e8be5a623176bd4b9922c9f85d595c1455f5b7dc7ba",
+      "900624160-900624487": "4e644fd14c1c6e54fdfb97dd67ef35a4463bade48df30a5b66726f2bbbcbe67b",
+      "903619128-903619455": "5115e012c47748446beee8b58fbf90e919c1bc833a8c0cfa18be1c745c5396c6",
+      "905116776-905117103": "04ae9ad82c06b578f2abd35d8f2f3d9edcd4f028353b9b59d97f1252b11a2f77",
+      "906611144-906611471": "985419c2bec60f326b7fd7976d703c69fa3eebbc6a6f441a04db9582adc7480b",
+      "906612456-906612783": "e9ecc4e36ac7f7829fa0763e90ddc4650b776b0fb4b0a3933c70035d90ba02fc",
+      "906613112-906613439": "32327d08016b7c5a41e13930b5eea6588bf46d3763e94e76ee198100a4e076e9",
+      "906613768-906614095": "9c8534f74786cbeb1e82312ec7c631e84288f24dbbdc5e03d565c13dc486cf1a",
+      "906614096-906614423": "df7c20728c9c333ac5a8b7a2002432822daaf4ede1c98f0a11c0320ecc7df99d",
+      "906614424-906614751": "ac4d37aa10700e69700718c07efc3c12ed12c802ff31dd14482e1757ae59474d",
+      "908698208-908698239": "a1d6d563d98ced69c1fc8391c30c60a7c39a6ec03a5c926fd0c9bbed3d822639"
+    },
+    "solution": "NASA/JPL DE441",
+    "state": "Moon (301) minus Earth (399), both relative to Earth-Moon barycenter (3); geometric",
+    "time": "TDB",
+    "url": "https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/de441.bsp"
+  }
+}
