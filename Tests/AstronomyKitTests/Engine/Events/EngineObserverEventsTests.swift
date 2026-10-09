@@ -175,6 +175,84 @@ struct EngineObserverEventsTests {
         }
     }
 
+    @Test("Ascent pruning retains a crossing inside equal negative endpoints")
+    func ascentHalfSpanBound() throws {
+        let lower = Engine.Time(ut: 0, deltaTModel: .espenakMeeus)
+        let upper = lower.adding(days: 0.42)
+        func value(_ time: Engine.Time) -> Double { cos(2 * .pi * (time.ut - 0.21)) - 0.95 }
+        let bracket = try #require(
+            try Engine.Events.altitudeAscent(
+                lower: lower, upper: upper, lowValue: value(lower), highValue: value(upper),
+                maximumSlope: 2 * .pi, evaluate: value))
+        let root = try #require(
+            try Engine.Search.ascendingRoot(
+                from: bracket.0, to: bracket.1, toleranceSeconds: 0.1, value))
+        #expect(abs(root.ut - (0.21 - acos(0.95) / (2 * .pi))) * 86_400 < 0.1)
+    }
+
+    @Test("A fixed-star high-altitude crossing survives a full scan step")
+    func stellarHighAltitude() throws {
+        let star = Engine.Events.ObserverTarget.star(Engine.Star(rightAscension: 0, declination: 0, distance: 1_000))
+        let site = Observer(latitude: 0, longitude: 0)
+        let culmination = try Engine.Events.searchHourAngle(
+            of: star, hourAngle: 0, after: start, from: site, direction: 1)
+        let lower = culmination.time.adding(days: -0.21)
+        func value(_ time: Engine.Time) throws -> Double {
+            try Engine.Events.altitudeResidual(of: star, at: time, from: site, bodyRadiusAU: 0, targetDegrees: 85)
+        }
+        #expect(try value(lower) < 0)
+        #expect(try value(lower.adding(days: 0.42)) < 0)
+        #expect(try value(culmination.time) > 0)
+        let expected = try #require(
+            try Engine.Search.ascendingRoot(
+                from: lower, to: culmination.time, toleranceSeconds: 0.001, value))
+        let event = try #require(
+            try Engine.Events.searchAltitude(
+                of: star, direction: .rise, after: lower, from: site, limitDays: 0.42, altitudeDegrees: 85))
+        #expect(abs(event.ut - expected.ut) * 86_400 < 0.1)
+    }
+
+    @Test("Native Sun ascent retains the crossing missed by the public C pruning bound")
+    func publicPruningCounterpart() throws {
+        let site = Observer(latitude: 0, longitude: 0)
+        let culmination = try Engine.Events.searchHourAngle(
+            of: .sun, hourAngle: 0, after: start, from: site, direction: 1)
+        let lower = culmination.time.adding(days: -0.21)
+        let native = try #require(
+            try Engine.Events.searchAltitude(
+                of: .sun, direction: .rise, after: lower, from: site, limitDays: 0.42, altitudeDegrees: 60))
+        #expect(native.ut > lower.ut && native.ut < culmination.time.ut)
+        let retained = try CelestialBody.sun.searchAltitude(
+            60, direction: .rise, after: AstroTime(tt: lower.tt, deltaTModel: .espenakMeeus),
+            from: site, limitDays: 0.42)
+        #expect(retained == nil)
+    }
+
+    @Test("Unsupported Earth identity precedes invalid search time")
+    func earthBeforeTime() throws {
+        let invalidObserver = Observer(latitude: .nan, longitude: 0)
+        #expect(throws: AstronomyError.invalidParameter) {
+            try Engine.Events.searchHourAngle(
+                of: .earth, hourAngle: 0, after: .invalid, from: invalidObserver, direction: 1)
+        }
+        #expect(throws: AstronomyError.invalidParameter) {
+            try Engine.Events.searchAltitude(
+                of: .earth, direction: .rise, after: .invalid, from: invalidObserver,
+                limitDays: 1, altitudeDegrees: 0)
+        }
+
+        #expect(throws: AstronomyError.earthNotAllowed) {
+            try Engine.Events.searchAltitude(
+                of: .earth, direction: .rise, after: .invalid,
+                from: observer, limitDays: 1, altitudeDegrees: 0)
+        }
+        #expect(throws: AstronomyError.earthNotAllowed) {
+            try Engine.Events.searchHourAngle(
+                of: .earth, hourAngle: 0, after: .invalid,
+                from: observer, direction: 1)
+        }
+    }
+
     @Test("Observer height and atmospheric horizon composition")
     func horizonHeight() throws {
         let ground = Observer(latitude: 35, longitude: -80, height: 500)

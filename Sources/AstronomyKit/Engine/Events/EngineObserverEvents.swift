@@ -99,6 +99,7 @@ extension Engine.Events {
             throw AstronomyError.invalidParameter
         }
         try validateObserver(observer)
+        if case .body(.earth) = source { throw AstronomyError.earthNotAllowed }
         try Engine.checkAcceptedTime(start)
         var time = start
         for iteration in 0..<100 {
@@ -169,7 +170,8 @@ extension Engine.Events {
         guard depth <= 17 else { throw AstronomyError.noConvergence }
         let halfSpan = (upper.ut - lower.ut) / 2
         if halfSpan * Engine.secondsPerDay < 1 { return nil }
-        if min(abs(lowValue), abs(highValue)) > maximumSlope * halfSpan / 2 { return nil }
+        // A same-sign excursion must reach zero and return within the full interval.
+        if min(abs(lowValue), abs(highValue)) > maximumSlope * halfSpan { return nil }
         let middle = lower.derived(ut: lower.ut + halfSpan)
         guard middle.ut > lower.ut, middle.ut < upper.ut else { throw AstronomyError.noConvergence }
         let middleValue = try evaluate(middle)
@@ -202,10 +204,10 @@ extension Engine.Events {
         guard limitDays.isFinite, altitudeDegrees.isFinite, abs(altitudeDegrees) <= 90 else {
             throw AstronomyError.invalidParameter
         }
+        let slope = try maximumAltitudeSlope(of: source, latitude: observer.latitude)
         try Engine.checkAcceptedTime(start)
         let end = start.adding(days: limitDays)
         try Engine.checkAcceptedTime(end)
-        let slope = try maximumAltitudeSlope(of: source, latitude: observer.latitude)
         func evaluate(_ time: Engine.Time) throws -> Double {
             try Double(direction.rawValue)
                 * altitudeResidual(

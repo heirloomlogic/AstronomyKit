@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Archive and validate native observer-event observations without portable runtime gates."""
 import argparse
+import ast
+import functools
 import datetime
 import hashlib
 import importlib.util
@@ -36,6 +38,8 @@ def sources(capture_bytes=None):
         'Scripts/test_observer_events.py', 'Scripts/observer-event-data/reference-fixtures.json',
         'Scripts/observer-event-data/native-captures.json', 'Sources/CLibAstronomy/astronomy.c',
         'Sources/AstronomyKit/RiseSet.swift', 'Sources/AstronomyKit/Time.swift',
+        'Sources/AstronomyKit/Observer.swift', 'Sources/AstronomyKit/CelestialBody.swift',
+        'Sources/AstronomyKit/AstronomyError.swift',
         'Tests/AstronomyKitTests/IndependentReferenceFixtures.swift',
         'Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json',
         'Fuzzing/corpus/fixed-riseset-infinite-limit', 'Fuzzing/corpus/fixed-riseset-stall',
@@ -47,6 +51,75 @@ def usno_references():
     return json.loads((ROOT/'Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json').read_bytes())['riseSet']
 
 
+def arithmetic(expression, variables):
+    node = ast.parse(expression.replace('p.u', 'u**'), mode='eval').body
+    def value(n):
+        if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)): return n.value
+        if isinstance(n, ast.Name): return variables[n.id]
+        if isinstance(n, ast.UnaryOp) and isinstance(n.op, ast.USub): return -value(n.operand)
+        if isinstance(n, ast.BinOp):
+            a, b = value(n.left), value(n.right)
+            if isinstance(n.op, ast.Add): return a+b
+            if isinstance(n.op, ast.Sub): return a-b
+            if isinstance(n.op, ast.Mult): return a*b
+            if isinstance(n.op, ast.Div): return a/b
+            if isinstance(n.op, ast.Pow): return a**b
+        raise ValueError('unrecognized Delta T expression')
+    return value(node)
+
+
+@functools.lru_cache(maxsize=1)
+def delta_pieces():
+    text = (ROOT/'Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift').read_text()
+    result = []
+    for stop, body in re.findall(r'if y < (-?\d+) \{(.*?)\n            \}', text, re.S):
+        result.append((int(stop), re.search(r'let u = ([^\n]+)', body)[1],
+                       ' '.join(re.search(r'return (.*)', body, re.S)[1].split())))
+    if [r[0] for r in result] != [-500,500,1600,1700,1800,1860,1900,1920,1941,1961,1986,2005,2050,2150]:
+        raise ValueError('changed Delta T layout')
+    return result
+
+
+def modeled_tt(ut, public_reference=False):
+    # The frozen USNO corpus is Gregorian, 1750–2050. Do not extrapolate this replay to other calendars.
+    date = datetime.datetime(2000,1,1,12)+datetime.timedelta(days=ut)
+    if not 1750 <= date.year <= 2051: raise ValueError('outside recorded USNO calendar scope')
+    start, end = datetime.datetime(date.year,1,1), datetime.datetime(date.year+1,1,1)
+    y = date.year+(date-start).total_seconds()/(end-start).total_seconds()
+    if public_reference:
+        y = 2000+(ut-14)/365.24217
+    for stop, origin, expression in delta_pieces():
+        if y < stop:
+            u = arithmetic(origin, {'y': y})
+            return ut+arithmetic(expression, {'y': y, 'u': u})/86400
+    raise ValueError('outside recorded Delta T scope')
+
+
+@functools.lru_cache(maxsize=16)
+def tdb_offset(tt):
+    text = (ROOT/'Sources/AstronomyKit/Engine/Moon/Generated/TDBTerms.swift').read_text()
+    groups = re.split(r'// t\^\d: \d+ terms\.', text)[1:]
+    terms = [[tuple(map(float, row)) for row in re.findall(r'Term\(([^,]+), ([^,]+), ([^)]+)\)', group)] for group in groups]
+    if list(map(len,terms)) != [474,205,85,20,3]: raise ValueError('changed TDB coefficient layout')
+    t = tt/365250
+    sums = [math.fsum(a*math.sin(f*t+p) for a,f,p in reversed(group)) for group in terms]
+    wf = t*(t*(t*(t*sums[4]+sums[3])+sums[2])+sums[1])+sums[0]
+    wj = .00065e-6*math.sin(6069.776754*t+4.021194)+.00033e-6*math.sin(213.299095*t+5.543132)-.00196e-6*math.sin(6208.294251*t+5.696701)-.00173e-6*math.sin(74.781599*t+2.435900)+.03638e-6*t*t
+    return wf+wj
+
+
+def same_time(a, b):
+    return abs(a-b) <= 4*max(math.ulp(a), math.ulp(b))
+
+
+def parity(a, b):
+    # Arithmetic/serialization comparison, not a new physical accuracy allowance.
+    if isinstance(a, dict): return a.keys() == b.keys() and all(parity(a[k], b[k]) for k in a)
+    if isinstance(a, list): return len(a) == len(b) and all(parity(x,y) for x,y in zip(a,b))
+    if isinstance(a, float): return isinstance(b, (int,float)) and abs(a-b) <= max(1e-10,16*math.ulp(a))
+    return a == b
+
+
 def validate_measurements(measured):
     if set(measured) != {'usno', 'points', 'semidiameters', 'polar'} or not finite(measured):
         raise ValueError('invalid measurement fields or nonfinite observation')
@@ -56,6 +129,10 @@ def validate_measurements(measured):
     if len(rows) != 5909 or [r['sourceLine'] for r in rows] != [r['sourceLine'] for r in expected]:
         raise ValueError('USNO row selection differs')
     for row, source in zip(rows, expected):
+        if set(row) != {'sourceLine','nativeTT','nativeUT','referenceTT','referenceUT','residualSeconds','direction'}:
+            raise ValueError('USNO observation fields differ')
+        if not same_time(row['nativeTT'], modeled_tt(row['nativeUT'])) or not same_time(row['referenceTT'], modeled_tt(row['referenceUT'], public_reference=True)):
+            raise ValueError('USNO recorded time scales disagree')
         ut = (datetime.datetime.fromisoformat(source['utc'].removesuffix('Z'))-datetime.datetime(2000, 1, 1, 12)).total_seconds()/86400
         residual = abs(row['nativeTT']-row['referenceTT'])*86400
         if row['referenceUT'] != ut or row['direction'] != source['direction']:
@@ -65,6 +142,11 @@ def validate_measurements(measured):
     if len(measured['points']) != len(fixture['rows']):
         raise ValueError('observer point count differs')
     for row, source in zip(measured['points'], fixture['rows']):
+        if set(row) != {'body','tt','ut','altitudeDegrees','hourAngleHours','altitudeErrorArcminutes','hourAngleErrorArcminutes'}:
+            raise ValueError('observer point fields differ')
+        ut = source['tt']-(source['tdbMinusUTSeconds']-tdb_offset(source['tt'])-(source['dut1Seconds'] or 0))/86400
+        if not same_time(row['ut'], ut):
+            raise ValueError('observer source UT1/TT relation differs')
         altitude_error = abs(row['altitudeDegrees']-source['altitudeDegrees'])*60
         ha_error = abs(((row['hourAngleHours']-source['hourAngleHours'])*15+180)%360-180)*60
         if row['body'] != source['body'] or row['tt'] != source['tt']:
@@ -76,6 +158,10 @@ def validate_measurements(measured):
     if len(measured['semidiameters']) != 3 or len(measured['polar']) != 4:
         raise ValueError('optical source sample count differs')
     for row, source in zip(measured['semidiameters'], fixture['semidiameters']):
+        if set(row) != {'universalTime','opticalDegrees','nominalDegrees','sourceDegrees','opticalResidualDegrees'}:
+            raise ValueError('semidiameter observation fields differ')
+        if not 0 < row['nominalDegrees'] < row['opticalDegrees'] < 1 or abs(math.sin(math.radians(row['nominalDegrees']))-math.sin(math.radians(row['opticalDegrees']))*695700/696000) > 1e-15:
+            raise ValueError('native limb radii do not share a distance')
         if row['universalTime'] != source['universalTime'] or row['sourceDegrees'] != source['semidiameterDegrees']:
             raise ValueError('semidiameter source selection differs')
         residual = row['opticalDegrees']-source['semidiameterDegrees']
@@ -84,6 +170,13 @@ def validate_measurements(measured):
         if abs(row['nominalDegrees']-row['sourceDegrees']) <= 100*fixture['semidiameterComparisonDegrees']:
             raise ValueError('nominal-radius negative control failed')
     for row, source in zip(measured['polar'], fixture['polar']):
+        if set(row) != {'tt','nativeAltitudeDegrees','sourceAltitudeDegrees','nativeDistanceAU','nativeApparentICRFDeg','sourceNominalResidualDegrees','sourceOpticalResidualDegrees'}:
+            raise ValueError('polar observation fields differ')
+        if abs(row['nativeAltitudeDegrees']-source['altitudeDegrees'])*60 > fixture['angularToleranceArcminutes']:
+            raise ValueError('polar source altitude criterion failed')
+        angles = row['nativeApparentICRFDeg']
+        if row['nativeDistanceAU'] <= 0 or len(angles) != 2 or not 0 <= angles[0] < 360 or not -90 <= angles[1] <= 90:
+            raise ValueError('invalid polar state observation')
         if row['tt'] != source['tt'] or row['sourceAltitudeDegrees'] != source['altitudeDegrees']:
             raise ValueError('polar source selection differs')
         for radius, key in [(695700, 'sourceNominalResidualDegrees'), (696000, 'sourceOpticalResidualDegrees')]:
@@ -104,6 +197,8 @@ def summary(measured):
 def evidence(captures, hashes):
     for configuration in ['debug', 'release']:
         validate_measurements(captures[configuration])
+    if not parity(captures['debug'], captures['release']):
+        raise ValueError('Debug/Release observer observations disagree')
     resources = captures['resources']
     if not finite(resources) or resources['eventsPerWorkload'] != 100:
         raise ValueError('invalid resource observation')

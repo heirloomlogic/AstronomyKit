@@ -573,7 +573,7 @@
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
-    "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "52e65ae51aca28d2a594197f6ec95135d0e000f52d8d81e9427452fdec6bbc10",
+    "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "d5872b4f262924ec859bd0849dc7f182b37d102d097df6bff1c14772e2bf8079",
     "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "32ca3a429bdabd8c6992264ee2cc2880a51d06ca57c44721ac873e7af56e8735",
     "Sources/AstronomyKit/Engine/Foundation/Engine.swift": "57d6d1ae8dbdacadc23daeab092445b9f27acf5baf021b900c21c5e59a09b38c",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",

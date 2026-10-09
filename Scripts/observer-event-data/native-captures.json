@@ -7,8 +7,8 @@
     "sha256": "f6a2b408dcb32a3ad1e8f57dcc16767f055d3f4bd93c675728a4a351bc9c5d6e"
   },
   "buildReceipts": {
-    "debug": "Build complete! (18.43 sec)",
-    "release": "Build complete! (105.53 sec)"
+    "debug": "Build complete! (25.00 sec)",
+    "release": "Build complete! (103.01 sec)"
   },
   "debug": {
     "points": [
@@ -53414,7 +53414,7 @@
       }
     ]
   },
-  "observerObjectBytes": 98368,
+  "observerObjectBytes": 98392,
   "release": {
     "points": [
       {
@@ -106819,20 +106819,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 163932992,
+  "releaseExecutableBytes": 163975312,
   "resources": {
     "checksum": 3257705.947319458,
-    "coldSunRiseSeconds": 0.002856016159057617,
+    "coldSunRiseSeconds": 0.002891063690185547,
     "eventsPerWorkload": 100,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterColdBytes": 56770560,
-    "peakAfterWorkloadsBytes": 79118336,
-    "peakBeforeBytes": 46710784,
+    "peakAfterColdBytes": 56475648,
+    "peakAfterWorkloadsBytes": 78774272,
+    "peakBeforeBytes": 46383104,
     "seconds": {
-      "moonRise": 0.014560937881469727,
-      "publicCSunRise": 0.0026869773864746094,
-      "sunHourAngle": 0.0015510320663452148,
-      "sunRise": 0.005049943923950195
+      "moonRise": 0.014757037162780762,
+      "publicCSunRise": 0.0025969743728637695,
+      "sunHourAngle": 0.0015009641647338867,
+      "sunRise": 0.005484938621520996
     }
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
