@@ -1,6 +1,6 @@
 # Native eclipse evidence
 
-The lunar records qualify the shared native shadow geometry and lunar-eclipse search added for issue #93. The separate global-solar records below cover its second link. The third link adds local circumstances below. Public eclipse facades and native transits remain outside these qualifications.
+The records below provide sampled qualifications for native lunar eclipses, global and local solar eclipses, and Mercury/Venus transits across the four issue #93 links. Each section records its source conventions, measured scope and remaining gaps. Public eclipse and transit facades remain C-backed under #96; the final acceptance matrix preserves the outstanding #93 qualifications.
 
 `native-captures.json` records Debug and Release results for six NASA lunar eclipses, a fresh-process Release workload of one cold search followed by 99 next-event searches, build receipts, object sizes, the test executable size, the tested base revision and the toolchain. `native-evidence.json` checks the existing peak and duration allowances, independently derives residuals from each captured native peak and source time, verifies Debug/Release agreement, and binds the resource observations to their exact call counts. The resource values describe one host and establish no portable ceiling.
 
