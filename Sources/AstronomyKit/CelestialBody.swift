@@ -124,16 +124,14 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
     /// Returns `nil` for bodies that don't orbit the Sun (Moon, etc.)
     /// or for the Sun itself.
     public var orbitalPeriod: Double? {
-        let period = Astronomy_PlanetOrbitalPeriod(raw)
-        return period > 0 ? period : nil
+        try? Engine.Events.orbitalPeriod(of: self)
     }
 
     /// The gravitational parameter (mass × G) in AU³/day².
     ///
     /// Returns `nil` for bodies without a defined mass.
     public var massProduct: Double? {
-        let massProduct = Astronomy_MassProduct(raw)
-        return massProduct > 0 ? massProduct : nil
+        Engine.Gravity.massProduct(of: self)
     }
 }
 

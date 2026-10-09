@@ -5,9 +5,6 @@
 //  Position calculations for user-defined fixed stars.
 //
 
-import CLibAstronomy
-import Synchronization
-
 /// A fixed star defined by its J2000 equatorial coordinates.
 ///
 /// Fixed stars are celestial objects whose positions are essentially constant
@@ -42,12 +39,7 @@ import Synchronization
 ///
 /// ## Concurrency
 ///
-/// The C library exposes eight user-defined star slots (`BODY_STAR1`…`BODY_STAR8`),
-/// each an independent record. Calculations map a star to a slot by a stable hash of
-/// its coordinates, so up to eight distinct stars can be computed fully in parallel.
-/// A slot is only redefined when the star currently loaded in it differs, so repeated
-/// calls for the same star skip the redefinition entirely. Stars whose hashes collide
-/// on the same slot serialize on that slot's mutex (correct, just slower).
+/// Each calculation reads this value's immutable catalog coordinates. Concurrent calls do not share mutable star definitions.
 public struct FixedStar: Sendable, Hashable {
     // MARK: - Properties
 
@@ -62,23 +54,6 @@ public struct FixedStar: Sendable, Hashable {
 
     /// Distance from Earth in light-years.
     public let distance: Double
-
-    // MARK: - Internal State
-
-    /// The coordinates currently loaded into a C star slot.
-    private struct StarDefinition: Equatable {
-        let rightAscension, declination, distance: Double
-    }
-
-    /// Boxes a per-slot mutex so it can live in an `Array` (`Mutex` is non-copyable and
-    /// cannot be stored in an array directly).
-    private final class Slot: Sendable {
-        /// The definition currently loaded in this C star slot, or `nil` if unused.
-        let mutex = Mutex<StarDefinition?>(nil)
-    }
-
-    /// One mutex per C star slot; the payload is the definition currently loaded in that slot.
-    private static let slots: [Slot] = (0..<8).map { _ in Slot() }
 
     // MARK: - Initialization
 
@@ -96,43 +71,8 @@ public struct FixedStar: Sendable, Hashable {
         self.distance = distance
     }
 
-    // MARK: - Private Helpers
-
-    /// Runs `body` with a C star slot configured for this star's coordinates.
-    ///
-    /// A slot index is chosen from a stable hash of the coordinates, so distinct stars
-    /// use distinct slots and can run concurrently. The slot is redefined only when it
-    /// currently holds a different star, so repeated calls for the same star skip the
-    /// `Astronomy_DefineStar` call.
-    private func withSlot<T>(_ body: (astro_body_t) throws -> T) throws -> T {
-        let definition = StarDefinition(
-            rightAscension: rightAscension,
-            declination: declination,
-            distance: distance
-        )
-        var hasher = Hasher()
-        hasher.combine(rightAscension)
-        hasher.combine(declination)
-        hasher.combine(distance)
-        // Map into 0..<8 without risking `abs(Int.min)`, which traps.
-        let index = ((hasher.finalize() % 8) + 8) % 8
-        let cBody = astro_body_t(rawValue: BODY_STAR1.rawValue + Int32(index))
-
-        return try Self.slots[index].mutex.withLock { cached in
-            if cached != definition {
-                let status = Astronomy_DefineStar(
-                    cBody,
-                    rightAscension,
-                    declination,
-                    distance
-                )
-                if let error = AstronomyError(status: status) {
-                    throw error
-                }
-                cached = definition
-            }
-            return try body(cBody)
-        }
+    private var native: Engine.Star {
+        Engine.Star(rightAscension: rightAscension, declination: declination, distance: distance)
     }
 
     // MARK: - Position Calculations
@@ -155,17 +95,7 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer = .geocentric,
         equatorDate: EquatorDate = .j2000
     ) throws -> Equatorial {
-        try withSlot { cBody in
-            var rawTime = time.raw
-            let result = Astronomy_Equator(
-                cBody,
-                &rawTime,
-                try observer.validatedRaw(),
-                equatorDate.raw,
-                ABERRATION
-            )
-            return try Equatorial(result, time: time)
-        }
+        Equatorial(try native.equatorial(at: time.coordinateTime, from: observer, equatorDate: equatorDate), at: time)
     }
 
     /// Calculates the star's ecliptic longitude at a given time.
@@ -206,11 +136,7 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        // Only the GeoVector call needs the star slot; convert frames outside the lock.
-        let geo = try withSlot { cBody in
-            Astronomy_GeoVector(cBody, time.raw, ABERRATION)
-        }
-        return try Ecliptic(Astronomy_Ecliptic(geo))
+        try Ecliptic(native.ecliptic(at: time.coordinateTime))
     }
 
     /// Calculates the star's horizontal coordinates for an observer.
@@ -228,16 +154,8 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer,
         refraction: Refraction = .normal
     ) throws -> Horizon {
-        let rawObserver = try observer.validatedRaw()
-        var rawTime = time.raw
-        let eq = try withSlot { cBody in
-            try Equatorial(Astronomy_Equator(cBody, &rawTime, rawObserver, EQUATOR_OF_DATE, ABERRATION), time: time)
-        }
-        return Horizon(
-            Engine.Horizontal(
-                time: time.coordinateTime, observer: observer,
-                rightAscension: eq.rightAscension, declination: eq.declination, refraction: refraction
-            ))
+        try observer.validate()
+        return Horizon(try native.horizontal(at: time.coordinateTime, from: observer, refraction: refraction))
     }
 
     /// Determines which constellation contains the star.
@@ -246,21 +164,8 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The constellation containing the star.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func constellation(at time: AstroTime) throws -> Constellation {
-        try withSlot { cBody in
-            var rawTime = time.raw
-            let result = Astronomy_Equator(
-                cBody,
-                &rawTime,
-                try Observer.geocentric.validatedRaw(),
-                EQUATOR_J2000,
-                ABERRATION
-            )
-            let eq = try Equatorial(result, time: time)
-            return try Constellation.find(
-                rightAscension: eq.rightAscension,
-                declination: eq.declination
-            )
-        }
+        let eq = try equatorial(at: time)
+        return try Constellation.find(rightAscension: eq.rightAscension, declination: eq.declination)
     }
 }
 

@@ -59,8 +59,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func heliocentricPosition(at time: AstroTime) throws -> Vector3D {
-        let result = Astronomy_HelioVector(raw, time.raw)
-        return try Vector3D(result)
+        Vector3D(try Engine.Positions.heliocentricPosition(of: self, at: time.coordinateTime), at: time)
     }
 
     /// Calculates the distance from the Sun to this body.
@@ -70,11 +69,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func distanceFromSun(at time: AstroTime) throws -> Double {
-        let result = Astronomy_HelioDistance(raw, time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.value
+        try Engine.Positions.heliocentricDistance(of: self, at: time.coordinateTime)
     }
 
     /// Calculates the equatorial coordinates of this body.
@@ -140,11 +135,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func eclipticLongitude(at time: AstroTime) throws -> Double {
-        let result = Astronomy_EclipticLongitude(raw, time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try Engine.Positions.eclipticLongitude(of: self, at: time.coordinateTime)
     }
 
     /// Calculates the angular separation from the Sun.
@@ -169,8 +160,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func barycentricState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_BaryState(raw, time.raw)
-        return try StateVector(result)
+        StateVector(try Engine.Positions.barycentricState(of: self, at: time.coordinateTime), at: time)
     }
 
     /// Calculates the heliocentric state vector (position and velocity relative
@@ -181,8 +171,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func heliocentricState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_HelioState(raw, time.raw)
-        return try StateVector(result)
+        StateVector(try Engine.Positions.heliocentricState(of: self, at: time.coordinateTime), at: time)
     }
 
     /// Calculates the geocentric state vector of the Earth-Moon Barycenter.
@@ -192,8 +181,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func earthMoonBaryState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_GeoEmbState(time.raw)
-        return try StateVector(result)
+        StateVector(try Engine.Moon.barycenterState(at: time.coordinateTime), at: time)
     }
 
     /// Returns the position this body actually occupied when it emitted the light

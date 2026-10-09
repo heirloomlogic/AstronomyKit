@@ -20,7 +20,7 @@
   "sourceSHA256": {
     "Package.swift": "9015473035c478da9e7022855be84b8c88867f123661c05d6bf4a8eb6a3b1139",
     "Scripts/solar-numerics/numerics.py": "9a5db9f8d47ffff6f8e5c1c849a0db983d1335d583af5b6eb7a7caada9f5b8fb",
-    "Sources/AstronomyKit/AstronomyKit.swift": "bd8ba02614a471a81c90022f3c1645c046454c84fa9c486001cb8f89ce9e33af",
+    "Sources/AstronomyKit/AstronomyKit.swift": "b7f836a026a0fb206df54fa43ac5d6664a92f23a915f3643038e188dc0b35f90",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",

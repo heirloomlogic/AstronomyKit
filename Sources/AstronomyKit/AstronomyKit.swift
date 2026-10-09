@@ -123,16 +123,14 @@ public enum AstronomyConfig {
         Astronomy_SetDeltaTFunction(model.function)
     }
 
-    /// Frees all dynamic memory allocated by the Astronomy Engine.
+    /// Clears the engine's calculation caches.
     ///
-    /// The engine allocates memory in only one place: a cache of orbit
-    /// segments that speeds up Pluto calculations. This purges that cache,
-    /// which slows down the next nearby Pluto calculation but releases the
-    /// memory (useful before running leak checkers). It does not affect the
-    /// Delta T model or any ``FixedStar`` definitions.
-    ///
-    /// This is safe to call concurrently with other calculations.
+    /// Later calls recompute removed entries. Immutable coefficient tables and
+    /// live gravity simulations remain allocated. This does not change the
+    /// Delta T model or fixed-star definitions and is safe to call concurrently
+    /// with calculations.
     public static func reset() {
+        Engine.resetCaches()
         Astronomy_Reset()
     }
 }

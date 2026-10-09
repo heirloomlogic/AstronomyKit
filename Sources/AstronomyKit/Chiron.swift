@@ -5,7 +5,6 @@
 //  Position calculations for 2060 Chiron using gravity simulation.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Chiron
@@ -341,10 +340,7 @@ public enum Chiron {
     /// reference epoch once its accumulated path would exceed twice the span
     /// of a fresh integration.
     ///
-    /// `@unchecked Sendable` lets an instance be captured by the `@Sendable`
-    /// light-travel closure. The C solver invokes that closure synchronously
-    /// and serially on the calling thread, so the instance is never touched
-    /// concurrently.
+    /// `@unchecked Sendable` permits capture by the synchronous, serial light-travel closure. Each instance belongs to one calculation.
     final class ReusableSimulation: @unchecked Sendable {
         private(set) var epochIndex: Int?
         private var simulation: GravitySimulation?

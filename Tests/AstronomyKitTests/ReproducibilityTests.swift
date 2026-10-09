@@ -402,14 +402,14 @@ struct ReproducibilityTests {
 
     // MARK: - 5. Chiron (Gravity-Simulated, Within Bounds)
 
-    @Test("Chiron ecliptic position at 2026-07-24T00:00Z (within 1900–2150 bounds)")
-    func chironEcliptic2026() throws {
-        // Chiron is integrated in half-day steps rather than a single long step.
-        expectEcliptic(
-            try Chiron.ecliptic(at: Self.t2026),
-            lon: 0x403e_d067_f549_56d8, lat: 0x3fd0_01bd_28a6_4e04, dist: 0x4032_421b_f154_458f,
-            "Chiron 2026"
-        )
+    // The frozen C distance is retired at native gravity integration. Published
+    // Chiron positions remain covered by AuditValidationTests and ChironTests.
+    @Test("Chiron positions repeat exactly across cache resets")
+    func chironReproducibility() throws {
+        let first = try Chiron.ecliptic(at: Self.t2026)
+        #expect(try Chiron.ecliptic(at: Self.t2026) == first)
+        AstronomyConfig.reset()
+        #expect(try Chiron.ecliptic(at: Self.t2026) == first)
     }
 
     // MARK: - 6. Geocentric Ecliptic Rates
