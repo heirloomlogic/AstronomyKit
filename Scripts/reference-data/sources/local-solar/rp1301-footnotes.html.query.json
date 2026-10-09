@@ -1,0 +1,11 @@
+{
+  "date": "1994-05-10",
+  "deltaTSeconds": 59.5,
+  "ephemeris": "DE200/LE200",
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "report": "RP1301",
+  "sha256": "2a0e129f092b984d9eadbb96418c2a0a7d62db64f92a71ac932148878d0393dd",
+  "timeScale": "UT",
+  "url": "https://eclipse.gsfc.nasa.gov/SEpubs/19940510/text/footnotes.html"
+}

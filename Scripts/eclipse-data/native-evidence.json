@@ -1,8 +1,8 @@
 {
-  "baselineRevision": "095e0e73f5e3b8bce1f7aa3dbb2b0e97fe690b8d",
+  "baselineRevision": "ba32c6d983f983b3fab7d9bdb99f014c3292d910",
   "buildSeconds": {
-    "debug": 10.29,
-    "release": 127.83
+    "debug": 10.25,
+    "release": 117.72
   },
   "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. Two NASA SVS Moon-disc obscurations fall inside intervals inferred from the printed percentages under a nearest-0.1-percentage-point rounding assumption. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
   "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. Both obscuration references come from one NASA SVS publisher and DE421/LOLA model family. The pages do not publish their exact rounding rule, lunar and shadow radii, or full-precision area algorithm, so interval agreement does not establish algorithm replication. Public eclipse facades remain C-backed until #96. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
@@ -16,27 +16,27 @@
     "obscurationRows": 2,
     "rows": 6
   },
-  "releaseExecutableBytes": 164520432,
+  "releaseExecutableBytes": 164805360,
   "releaseObjectBytes": {
     "EngineEclipseEvents.o": 92344,
     "EngineShadowGeometry.o": 31240
   },
   "resources": {
     "checksum": -2855994.8865676024,
-    "coldSeconds": 0.0293349027633667,
+    "coldSeconds": 0.032914042472839355,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 0.07986199855804443,
-    "peakAfterColdBytes": 163741696,
-    "peakAfterWorkloadBytes": 163758080,
-    "peakBeforeBytes": 49233920,
+    "nextEclipsesSeconds": 0.08024394512176514,
+    "peakAfterColdBytes": 164298752,
+    "peakAfterWorkloadBytes": 164315136,
+    "peakBeforeBytes": 49790976,
     "totalEclipseCount": 100
   },
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Scripts/eclipse-data/native-captures.json": "daf205b3e5de8dbd02f4d392f8c3c87ef6efe079c7a08fd60f4057d8ea5bd78c",
+    "Scripts/eclipse-data/native-captures.json": "9dc126785cab3d6f0574df7d2d0cbbeda54e5f0c2d19f590764405560b7ef372",
     "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
-    "Scripts/reference-data/build-fixtures.py": "3e5fc9e2e4a0ee8de5659f7b78bd5a493f626f20e1b7c72e3cc565f231a524e6",
+    "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
     "Scripts/reference-data/sources/lunar_1701.html": "15ed1e6e6b1153f6c85e724258aa91e23655fecb08ac7623fd6e2b4b1d8199f7",
     "Scripts/reference-data/sources/lunar_1901.html": "587cf5bf48e1b9f17b0e2b6d72d42fc81828f62e9a9252d7f661a747b95154ca",
     "Scripts/reference-data/sources/lunar_2001.html": "cf12604099d2ed7766180139a4e79633ae361dd9030e2bd618f8b3eadaefde72",
@@ -54,6 +54,7 @@
     "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "13abd22d2ae3102670acddd38428d08aa026f14d4394eac1520e49b6237ee691",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "7f1e9d1e130c2b4c61b610099488e74be40aabe87442dbd26c20528b768d7239",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "cef1841b577d2089425f5adfb51c254fccfe93d6623beed4ea35365fef505ab1",
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
@@ -137,7 +138,7 @@
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
     "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineEclipseEventTests.swift": "1abe935daa5f26ad25c2f454850f39c5774cf3e929259a350cb1bb199b38941d",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "6d62e47bb2d2b34d2b0ccff5b74d29b9117c266eec85ab0237f026cc3dc8763b",
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "93ba4b8e4784b25c4868a02e2d2f9e3d0219432a58a879f81248fbbb035b1728"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"

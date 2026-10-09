@@ -566,7 +566,7 @@
   "sourceSHA256": {
     "Scripts/capture-pluto-observers.py": "aa9486d3f0939ed310ae835cfd157e64c9e9e1f64db4f664088c1ef87f5e74f6",
     "Scripts/pluto-data/observer-fixtures.json": "e40632d54fdfdd97f334febd28a154b9afe9765bf00fe78ab48e50a72b2e3865",
-    "Scripts/reference-data/build-fixtures.py": "3e5fc9e2e4a0ee8de5659f7b78bd5a493f626f20e1b7c72e3cc565f231a524e6",
+    "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
     "Scripts/test_capture_pluto_observers.py": "ae2f59cdbeae9e87406aaf603cb5af59d62e17f4241e6adc3aa9367dc78d3324",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
@@ -574,6 +574,7 @@
     "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "13abd22d2ae3102670acddd38428d08aa026f14d4394eac1520e49b6237ee691",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "7f1e9d1e130c2b4c61b610099488e74be40aabe87442dbd26c20528b768d7239",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "cef1841b577d2089425f5adfb51c254fccfe93d6623beed4ea35365fef505ab1",
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",

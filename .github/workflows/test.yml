@@ -80,6 +80,9 @@ jobs:
           python3 Scripts/capture-global-solar.py --check
           python3 Scripts/assess-global-solar-radii.py --check
           python3 Scripts/record-global-solar-evidence.py --check
+          python3 -m unittest Scripts/test_local_solar.py -v
+          python3 Scripts/capture-local-solar.py --check
+          python3 Scripts/record-local-solar-evidence.py --check
 
       - name: Verify native solar numerical tools
         run: |
@@ -162,6 +165,9 @@ jobs:
           python3 Scripts/capture-global-solar.py --check
           python3 Scripts/assess-global-solar-radii.py --check
           python3 Scripts/record-global-solar-evidence.py --check
+          python3 -m unittest Scripts/test_local_solar.py -v
+          python3 Scripts/capture-local-solar.py --check
+          python3 Scripts/record-local-solar-evidence.py --check
 
       - name: Verify work-avoidance paths
         run: |

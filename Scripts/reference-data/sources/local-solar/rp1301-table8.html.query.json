@@ -1,0 +1,11 @@
+{
+  "date": "1994-05-10",
+  "deltaTSeconds": 59.5,
+  "ephemeris": "DE200/LE200",
+  "method": "GET",
+  "publisher": "NASA GSFC",
+  "report": "RP1301",
+  "sha256": "f91dee05f8bd8df4057882897a34698ca1a2d3252f3be6b70aa7517320ebf630",
+  "timeScale": "UT",
+  "url": "https://eclipse.gsfc.nasa.gov/SEpubs/19940510/tables/table.8"
+}

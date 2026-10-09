@@ -353,7 +353,7 @@ struct AuditValidationTests {
         "Published local solar eclipse contacts",
         arguments: IndependentReferenceArchive.shared.localSolarEclipses)
     func localSolarEclipse(reference: IndependentReferenceArchive.LocalSolarEclipse) throws {
-        let expectedPeak = IndependentReferenceDate.civil(reference.peakUTC)
+        let expectedPeak = IndependentReferenceDate.universal(reference.peakUTC, deltaTModel: .espenakMeeus)
         let observer = Observer(
             latitude: reference.latitudeDegrees, longitude: reference.longitudeDegrees)
         let actual = try Eclipse.searchLocalSolar(after: expectedPeak.addingDays(-10), from: observer)
@@ -593,7 +593,8 @@ struct AuditValidationTests {
         reference: IndependentReferenceArchive.LocalSolarEclipse
     ) {
         #expect(
-            IndependentReferenceDate.seconds(actual.time, IndependentReferenceDate.civil(utc))
+            IndependentReferenceDate.universalSeconds(
+                actual.time, IndependentReferenceDate.universal(utc, deltaTModel: .espenakMeeus))
                 <= reference.timeToleranceSeconds)
         if altitude >= 0 {
             #expect(abs(actual.altitude - altitude) <= reference.altitudeToleranceDegrees)
