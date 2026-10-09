@@ -7,8 +7,8 @@
     "sha256": "f6a2b408dcb32a3ad1e8f57dcc16767f055d3f4bd93c675728a4a351bc9c5d6e"
   },
   "buildSeconds": {
-    "debug": 0.93,
-    "release": 117.83
+    "debug": 1.04,
+    "release": 118.75
   },
   "criteria": "All 5909 archived USNO rows retain their source-specific allowance, including 70.8 TT seconds at line 2923. Sixteen sampled altitude/hour-angle points retain one arcminute. Three printed USNO semidiameters discriminate the optical convention at 0.000001 degree; this is not an asserted physical solar-radius accuracy.",
   "debug": {
@@ -61,20 +61,20 @@
       "sourceLine": 2923
     }
   },
-  "releaseExecutableBytes": 164170800,
+  "releaseExecutableBytes": 164252384,
   "resources": {
     "checksum": 3257705.947319458,
-    "coldSunRiseSeconds": 0.002819061279296875,
+    "coldSunRiseSeconds": 0.0031549930572509766,
     "eventsPerWorkload": 100,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterColdBytes": 56967168,
-    "peakAfterWorkloadsBytes": 79298560,
-    "peakBeforeBytes": 46858240,
+    "peakAfterColdBytes": 56606720,
+    "peakAfterWorkloadsBytes": 78938112,
+    "peakBeforeBytes": 46481408,
     "seconds": {
-      "moonRise": 0.01458895206451416,
-      "publicCSunRise": 0.002666950225830078,
-      "sunHourAngle": 0.0015090703964233398,
-      "sunRise": 0.005302906036376953
+      "moonRise": 0.01600790023803711,
+      "publicCSunRise": 0.003489971160888672,
+      "sunHourAngle": 0.001623988151550293,
+      "sunRise": 0.005674004554748535
     }
   },
   "schemaVersion": 1,
@@ -82,7 +82,7 @@
     "Fuzzing/corpus/fixed-riseset-infinite-limit": "6d88cbde5da0ca9da353a20326d522e27c88dde3714498e5d4bc6929753a4e02",
     "Fuzzing/corpus/fixed-riseset-stall": "ca78b6218e4c663f595a10afa5cb38a76a73ba5d15e81f3923c133d3454305c8",
     "Scripts/capture-observer-events.py": "7bd88e87e94c1baa4972970fbccc96426ed3a3d925b7c1c8dc8317e0edbc0875",
-    "Scripts/observer-event-data/native-captures.json": "98a4bfd365690fe3de98d4b7c14e6f8889580dbe6afc850b31d304d3c110aa67",
+    "Scripts/observer-event-data/native-captures.json": "1d4af023e89c3af111ce1099c6086a817b3432dee5b6e076fb8752af935b43a3",
     "Scripts/observer-event-data/reference-fixtures.json": "7f0fdbf7b72e6cd828f4301bacfd75a6505b4ba01bc594c4431e2a8fd116b638",
     "Scripts/observer-event-data/sources/horizons/horizons-sd-2000-01-03.json": "b1805e417fbcc5c4a63ae541b5946f87af4aa3aff905dc1c9e9f9b65f6885077",
     "Scripts/observer-event-data/sources/horizons/horizons-sd-2000-01-03.query.json": "aa5dca2f03c8552562289c7d799ab3512fc955dc14760511a74dea342ae0dbd6",
@@ -119,7 +119,7 @@
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "e4a5d5452f1b5f0161e4791d4730e095d351e26ca1960d5825318d331d5be8ff",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "318b4df049a1c834a7ad8046bf86522279a48d2839d89f4da0e9ac0f0df1a143",
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "c71a67fda7be5135cd2a9a5b7f7d28c3357f8136c5dc37041fc356f40de6a883",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",

@@ -17,10 +17,25 @@ extension Engine.Events {
     struct LunarEclipse: Sendable {
         let kind: LunarEclipseKind
         let peak: Engine.Time
+        let physicalPeak: Engine.Time
         let obscuration: Double
         let penumbralDurationMinutes: Double
         let partialDurationMinutes: Double
         let totalDurationMinutes: Double
+
+        init(
+            kind: LunarEclipseKind, peak: Engine.Time, obscuration: Double,
+            penumbralDurationMinutes: Double, partialDurationMinutes: Double, totalDurationMinutes: Double,
+            physicalPeak: Engine.Time? = nil
+        ) {
+            self.kind = kind
+            self.peak = peak
+            self.physicalPeak = physicalPeak ?? peak
+            self.obscuration = obscuration
+            self.penumbralDurationMinutes = penumbralDurationMinutes
+            self.partialDurationMinutes = partialDurationMinutes
+            self.totalDurationMinutes = totalDurationMinutes
+        }
     }
 
     static func searchLunarEclipse(after start: Engine.Time) throws -> LunarEclipse {
@@ -61,12 +76,41 @@ extension Engine.Events {
         throw AstronomyError.internalError
     }
 
-    private static func canonicalFullMoon(_ candidate: Engine.Time) throws -> Engine.Time {
-        let backwardDays = min(phaseCanonicalizationDays, candidate.tt + Engine.acceptedTTDays)
-        let forwardDays = min(phaseCanonicalizationDays, Engine.acceptedTTDays - candidate.tt)
-        return try searchMoonPhase(
-            180, after: candidate.adding(days: -backwardDays),
-            limitDays: backwardDays + forwardDays) ?? candidate
+    // Discovery estimates can depend on the caller's start. Phase signs select an absolute-TT daily bracket so every
+    // route to the same full moon refines identical endpoints. The neighboring days cover estimates near midnight.
+    static func canonicalFullMoon(
+        _ candidate: Engine.Time,
+        phaseOffset: (Engine.Time) throws -> Double = {
+            Engine.longitudeOffset(try Engine.Events.moonPhaseAngle(at: $0) - 180)
+        }
+    ) throws -> Engine.Time {
+        try Engine.checkAcceptedTime(candidate)
+        guard let model = candidate.deltaTModel else { throw AstronomyError.badTime }
+        func offset(_ time: Engine.Time) throws -> Double {
+            let value = try phaseOffset(time)
+            guard value.isFinite else { throw AstronomyError.badTime }
+            return value
+        }
+        let day = floor(candidate.tt)
+        for lower in [day - 1, day, day + 1] {
+            let firstTT = max(-Engine.acceptedTTDays, lower)
+            let lastTT = min(Engine.acceptedTTDays, lower + 1)
+            guard firstTT < lastTT else { continue }
+            let first = Engine.Time(tt: firstTT, deltaTModel: model)
+            let last = Engine.Time(tt: lastTT, deltaTModel: model)
+            let firstOffset = try offset(first)
+            let lastOffset = try offset(last)
+            if firstOffset == 0 { return first }
+            if lastOffset == 0 { return last }
+            if firstOffset < 0 && lastOffset > 0 {
+                guard
+                    let root = try Engine.Search.ascendingRoot(
+                        from: first, to: last, toleranceSeconds: 0.1, offset)
+                else { throw AstronomyError.searchFailure }
+                return root
+            }
+        }
+        throw AstronomyError.searchFailure
     }
 
     private static func lunarEclipse(near fullMoon: Engine.Time) throws -> LunarEclipse? {
@@ -84,17 +128,19 @@ extension Engine.Events {
     static func resolvedLunarEclipse(
         _ eclipse: LunarEclipse, atOrAfter start: Engine.Time
     ) -> LunarEclipse? {
-        let lagDays = start.tt - eclipse.peak.tt
-        guard lagDays <= peakSearchResolutionDays else { return nil }
-        guard lagDays > 0 else { return eclipse }
+        let physicalPeak = eclipse.physicalPeak
+        guard start.tt <= physicalPeak.tt + peakSearchResolutionDays else { return nil }
         guard let model = start.deltaTModel else { return nil }
+        let reportedTT = max(physicalPeak.tt, start.tt)
+        if reportedTT == eclipse.peak.tt { return eclipse }
 
-        // The peak root is resolved to one second. Inside that interval this is the same event, but its reported peak
-        // is clamped to the inclusive search boundary so a successful result never precedes the caller's start.
+        // Compare the represented endpoint directly: subtraction can move an exact +1-second input outside it.
+        // Retain the physical peak when clamping presentation, so resolving a clamped result cannot extend the window.
         return LunarEclipse(
-            kind: eclipse.kind, peak: Engine.Time(tt: start.tt, deltaTModel: model), obscuration: eclipse.obscuration,
+            kind: eclipse.kind, peak: Engine.Time(tt: reportedTT, deltaTModel: model), obscuration: eclipse.obscuration,
             penumbralDurationMinutes: eclipse.penumbralDurationMinutes,
-            partialDurationMinutes: eclipse.partialDurationMinutes, totalDurationMinutes: eclipse.totalDurationMinutes)
+            partialDurationMinutes: eclipse.partialDurationMinutes, totalDurationMinutes: eclipse.totalDurationMinutes,
+            physicalPeak: physicalPeak)
     }
 
     static func nextLunarEclipse(after eclipse: LunarEclipse) throws -> LunarEclipse {
@@ -237,7 +283,6 @@ extension Engine.Events {
     private static let peakWindowDays = 0.03
     static let peakSearchResolutionSeconds = 1.0
     private static let peakSearchResolutionDays = peakSearchResolutionSeconds / Engine.secondsPerDay
-    private static let phaseCanonicalizationDays = 1 / Engine.secondsPerDay
     private static let fullMoonLimit = 12
 
     private enum LunarShadowContact {

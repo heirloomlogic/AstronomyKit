@@ -200,6 +200,136 @@ struct EngineEclipseEventTests {
         #expect(Events.resolvedLunarEclipse(eclipse, atOrAfter: afterResolution) == nil)
     }
 
+    @Test("Lunar eclipse identity does not depend on the discovery start")
+    func lunarEclipseCanonicalIdentity() throws {
+        for model in [DeltaTModel.espenakMeeus, .jplHorizons] {
+            let starts = [18.0, 19.0, 19.5, 19.69]
+            let events = try starts.map {
+                try Events.searchLunarEclipse(after: Engine.Time(tt: $0, deltaTModel: model))
+            }
+            let first = try #require(events.first)
+            for event in events {
+                #expect(event.peak.tt.bitPattern == first.peak.tt.bitPattern)
+                #expect(event.peak.ut.bitPattern == first.peak.ut.bitPattern)
+                #expect(event.obscuration == first.obscuration)
+                #expect(event.penumbralDurationMinutes == first.penumbralDurationMinutes)
+                #expect(event.partialDurationMinutes == first.partialDurationMinutes)
+                #expect(event.totalDurationMinutes == first.totalDurationMinutes)
+            }
+        }
+    }
+
+    @Test("Lunar cutoff uses a represented endpoint and cannot advance through repeated clamps")
+    func lunarEclipseRepresentedCutoff() throws {
+        let second = 1 / Engine.secondsPerDay
+        for peakTT in [19.69759754046248, 197.08098727024625, -1_460_999.0, 1_460_999.0] {
+            let peak = Engine.Time(tt: peakTT, deltaTModel: .espenakMeeus)
+            let eclipse = Events.LunarEclipse(
+                kind: .partial, peak: peak, obscuration: 0.5, penumbralDurationMinutes: 90,
+                partialDurationMinutes: 45, totalDurationMinutes: 0)
+            let cutoff = peakTT + second
+            for startTT in [cutoff.nextDown, cutoff] {
+                let start = Engine.Time(tt: startTT, deltaTModel: .espenakMeeus)
+                let accepted = try #require(Events.resolvedLunarEclipse(eclipse, atOrAfter: start))
+                #expect(accepted.peak.tt == startTT)
+                let excluded = Engine.Time(tt: cutoff.nextUp, deltaTModel: .espenakMeeus)
+                #expect(Events.resolvedLunarEclipse(accepted, atOrAfter: excluded) == nil)
+                #expect(Events.resolvedLunarEclipse(eclipse, atOrAfter: excluded) == nil)
+            }
+        }
+    }
+
+    @Test("Canonical lunar phase brackets retain identity across midnight and exact zeros")
+    func canonicalLunarPhaseBrackets() throws {
+        for model in [DeltaTModel.espenakMeeus, .jplHorizons] {
+            for seed in [19.0, 197.0, 550.0, 7_993.0, 9_735.0] {
+                let phase = try #require(
+                    try Events.searchMoonPhase(180, after: Engine.Time(tt: seed - 2, deltaTModel: model), limitDays: 40)
+                )
+                let expected = try Events.canonicalFullMoon(phase)
+                let midnight = floor(phase.tt)
+                for candidateTT in [
+                    phase.tt - 0.9 / Engine.secondsPerDay, phase.tt, phase.tt + 0.9 / Engine.secondsPerDay,
+                    midnight.nextDown, midnight.nextUp,
+                ] {
+                    let actual = try Events.canonicalFullMoon(Engine.Time(tt: candidateTT, deltaTModel: model))
+                    #expect(actual.tt.bitPattern == expected.tt.bitPattern)
+                    #expect(actual.ut.bitPattern == expected.ut.bitPattern)
+                    #expect(actual.deltaTModel == model)
+                }
+            }
+            for rootTT in [-Engine.acceptedTTDays, 20.0, Engine.acceptedTTDays] {
+                for candidateTT in [rootTT.nextDown, rootTT, rootTT.nextUp]
+                where abs(candidateTT) <= Engine.acceptedTTDays {
+                    let actual = try Events.canonicalFullMoon(Engine.Time(tt: candidateTT, deltaTModel: model)) {
+                        #expect(abs($0.tt) <= Engine.acceptedTTDays)
+                        return $0.tt - rootTT
+                    }
+                    #expect(actual.tt == rootTT)
+                    #expect(actual.deltaTModel == model)
+                }
+            }
+        }
+    }
+
+    @Test("Canonical phase failures remain bounded and preserve input and callback errors")
+    func canonicalLunarPhaseErrors() throws {
+        let valid = Engine.Time(tt: 19, deltaTModel: .espenakMeeus)
+        var evaluations = 0
+        #expect(throws: AstronomyError.searchFailure) {
+            _ = try Events.canonicalFullMoon(valid) { _ in
+                evaluations += 1
+                return 1
+            }
+        }
+        #expect(evaluations == 6)
+        #expect(throws: AstronomyError.badTime) {
+            _ = try Events.canonicalFullMoon(valid) { _ in .nan }
+        }
+        #expect(throws: AstronomyError.noConvergence) {
+            _ = try Events.canonicalFullMoon(valid) { _ in throw AstronomyError.noConvergence }
+        }
+        for invalid in [Engine.Time.invalid, Engine.Time(tt: Engine.acceptedTTDays.nextUp, deltaTModel: .espenakMeeus)]
+        {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Events.canonicalFullMoon(invalid) { _ in
+                    Issue.record("Invalid candidate evaluated the phase callback")
+                    return 0
+                }
+            }
+        }
+    }
+
+    @Test("Repeated eclipse presentation clamps retain the physical cutoff and contacts")
+    func lunarEclipseClampedSearchBoundary() throws {
+        for model in [DeltaTModel.espenakMeeus, .jplHorizons] {
+            let first = try Events.searchLunarEclipse(after: Engine.Time(tt: 19, deltaTModel: model))
+            let cutoff = first.peak.tt + 1 / Engine.secondsPerDay
+            for startTT in [cutoff.nextDown, cutoff] {
+                let start = Engine.Time(tt: startTT, deltaTModel: model)
+                let event = try Events.searchLunarEclipse(after: start)
+                #expect(event.peak.tt == startTT)
+                #expect(event.physicalPeak.tt == first.physicalPeak.tt)
+                #expect(event.obscuration == first.obscuration)
+                #expect(event.kind == first.kind)
+                #expect(event.penumbralDurationMinutes == first.penumbralDurationMinutes)
+                #expect(event.partialDurationMinutes == first.partialDurationMinutes)
+                #expect(event.totalDurationMinutes == first.totalDurationMinutes)
+                #expect(event.peak.deltaTModel == model)
+                let repeated = try Events.searchLunarEclipse(after: event.peak)
+                #expect(repeated.peak.tt == event.peak.tt)
+                #expect(repeated.physicalPeak.tt == first.physicalPeak.tt)
+                let outside = Engine.Time(tt: cutoff.nextUp, deltaTModel: model)
+                #expect(Events.resolvedLunarEclipse(event, atOrAfter: outside) == nil)
+                let next = try Events.nextLunarEclipse(after: event)
+                #expect(next.peak.tt > cutoff)
+                #expect(next.peak.deltaTModel == model)
+            }
+            let excluded = try Events.searchLunarEclipse(after: Engine.Time(tt: cutoff.nextUp, deltaTModel: model))
+            #expect(excluded.physicalPeak.tt > cutoff)
+        }
+    }
+
     @Test(.enabled(if: ProcessInfo.processInfo.environment["ECLIPSE_EVENT_MEASUREMENT"] != nil))
     func resources() throws {
         func peakBytes() -> Int {
