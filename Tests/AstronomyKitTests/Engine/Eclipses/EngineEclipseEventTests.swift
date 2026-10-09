@@ -143,12 +143,15 @@ struct EngineEclipseEventTests {
         let second = 1 / Engine.secondsPerDay
         let january = try Events.searchLunarEclipse(after: fullMoon.adding(days: -second))
         #expect(fullMoon.tt < january.peak.tt)
+        let peakModel = try #require(january.peak.deltaTModel)
+        let firstRepresentableTTAfterPeak = Engine.Time(tt: january.peak.tt.nextUp, deltaTModel: peakModel)
 
         for start in [
             fullMoon,
             fullMoon.adding(days: second),
             january.peak.adding(days: -second),
             january.peak,
+            firstRepresentableTTAfterPeak,
         ] {
             let result = try Events.searchLunarEclipse(after: start)
             #expect(
@@ -157,8 +160,44 @@ struct EngineEclipseEventTests {
             #expect(result.peak.tt >= start.tt)
         }
 
-        let later = try Events.searchLunarEclipse(after: january.peak.adding(days: second))
+        let resolutionStart = Engine.Time(tt: january.peak.tt + second, deltaTModel: peakModel)
+        let atResolution = try Events.searchLunarEclipse(after: resolutionStart)
+        #expect(atResolution.peak.tt == resolutionStart.tt)
+        #expect(atResolution.kind == january.kind)
+
+        let later = try Events.searchLunarEclipse(after: january.peak.adding(days: 2 * second))
         #expect(later.peak.tt > january.peak.tt)
+    }
+
+    @Test("Lunar peak resolution defines the inclusive search boundary")
+    func lunarEclipsePeakResolutionBoundary() throws {
+        let model = DeltaTModel.espenakMeeus
+        let peak = Engine.Time(tt: 0, deltaTModel: model)
+        let eclipse = Events.LunarEclipse(
+            kind: .partial, peak: peak, obscuration: 0.5, penumbralDurationMinutes: 90,
+            partialDurationMinutes: 45, totalDurationMinutes: 0)
+        let resolutionDays = Events.peakSearchResolutionSeconds / Engine.secondsPerDay
+        let resolutionBoundaryTT = peak.tt + resolutionDays
+        let acceptedStarts = [
+            peak,
+            Engine.Time(tt: peak.tt.nextUp, deltaTModel: model),
+            Engine.Time(tt: resolutionBoundaryTT.nextDown, deltaTModel: model),
+            Engine.Time(tt: resolutionBoundaryTT, deltaTModel: model),
+        ]
+
+        for start in acceptedStarts {
+            let accepted = try #require(Events.resolvedLunarEclipse(eclipse, atOrAfter: start))
+            #expect(accepted.peak.tt == max(peak.tt, start.tt))
+            #expect(accepted.peak.deltaTModel == model)
+            #expect(accepted.kind == eclipse.kind)
+            #expect(accepted.obscuration == eclipse.obscuration)
+            #expect(accepted.penumbralDurationMinutes == eclipse.penumbralDurationMinutes)
+            #expect(accepted.partialDurationMinutes == eclipse.partialDurationMinutes)
+            #expect(accepted.totalDurationMinutes == eclipse.totalDurationMinutes)
+        }
+
+        let afterResolution = Engine.Time(tt: resolutionBoundaryTT.nextUp, deltaTModel: model)
+        #expect(Events.resolvedLunarEclipse(eclipse, atOrAfter: afterResolution) == nil)
     }
 
     @Test(.enabled(if: ProcessInfo.processInfo.environment["ECLIPSE_EVENT_MEASUREMENT"] != nil))

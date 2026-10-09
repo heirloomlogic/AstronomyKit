@@ -35,8 +35,10 @@ extension Engine.Events {
             let backwardFullMoon = try searchMoonPhase(180, after: start, limitDays: -lookbackDays)
         {
             let precedingFullMoon = try canonicalFullMoon(backwardFullMoon)
-            if let eclipse = try lunarEclipse(near: precedingFullMoon), eclipse.peak.tt >= start.tt {
-                return eclipse
+            if let eclipse = try lunarEclipse(near: precedingFullMoon),
+                let accepted = resolvedLunarEclipse(eclipse, atOrAfter: start)
+            {
+                return accepted
             }
             fullMoonStart = precedingFullMoon.adding(days: 10)
             guard fullMoonStart.tt > precedingFullMoon.tt else { throw AstronomyError.badTime }
@@ -47,8 +49,10 @@ extension Engine.Events {
                 throw AstronomyError.searchFailure
             }
             let fullMoon = try canonicalFullMoon(foundFullMoon)
-            if let eclipse = try lunarEclipse(near: fullMoon), eclipse.peak.tt >= start.tt {
-                return eclipse
+            if let eclipse = try lunarEclipse(near: fullMoon),
+                let accepted = resolvedLunarEclipse(eclipse, atOrAfter: start)
+            {
+                return accepted
             }
             let nextStart = fullMoon.adding(days: 10)
             guard nextStart.tt > fullMoon.tt else { throw AstronomyError.badTime }
@@ -75,6 +79,22 @@ extension Engine.Events {
             return nil
         }
         return try lunarEclipse(from: shadow)
+    }
+
+    static func resolvedLunarEclipse(
+        _ eclipse: LunarEclipse, atOrAfter start: Engine.Time
+    ) -> LunarEclipse? {
+        let lagDays = start.tt - eclipse.peak.tt
+        guard lagDays <= peakSearchResolutionDays else { return nil }
+        guard lagDays > 0 else { return eclipse }
+        guard let model = start.deltaTModel else { return nil }
+
+        // The peak root is resolved to one second. Inside that interval this is the same event, but its reported peak
+        // is clamped to the inclusive search boundary so a successful result never precedes the caller's start.
+        return LunarEclipse(
+            kind: eclipse.kind, peak: Engine.Time(tt: start.tt, deltaTModel: model), obscuration: eclipse.obscuration,
+            penumbralDurationMinutes: eclipse.penumbralDurationMinutes,
+            partialDurationMinutes: eclipse.partialDurationMinutes, totalDurationMinutes: eclipse.totalDurationMinutes)
     }
 
     static func nextLunarEclipse(after eclipse: LunarEclipse) throws -> LunarEclipse {
@@ -163,7 +183,8 @@ extension Engine.Events {
         let first = time.adding(days: -peakWindowDays)
         let last = time.adding(days: peakWindowDays)
         guard
-            let peak = try Engine.Search.ascendingRoot(from: first, to: last, toleranceSeconds: 1, shadowDistanceSlope)
+            let peak = try Engine.Search.ascendingRoot(
+                from: first, to: last, toleranceSeconds: peakSearchResolutionSeconds, shadowDistanceSlope)
         else {
             throw AstronomyError.searchFailure
         }
@@ -214,6 +235,8 @@ extension Engine.Events {
 
     private static let eclipseLatitudeLimitDegrees = 1.8
     private static let peakWindowDays = 0.03
+    static let peakSearchResolutionSeconds = 1.0
+    private static let peakSearchResolutionDays = peakSearchResolutionSeconds / Engine.secondsPerDay
     private static let phaseCanonicalizationDays = 1 / Engine.secondsPerDay
     private static let fullMoonLimit = 12
 
