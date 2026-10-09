@@ -71,19 +71,19 @@ extension Vector3D: CustomStringConvertible {
 extension Vector3D {
     /// Converts this Cartesian vector to spherical coordinates.
     public func toSpherical() -> Spherical {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let result = Astronomy_SphereFromVector(raw)
-        return Spherical(latitude: result.lat, longitude: result.lon, distance: result.dist)
+        guard let result = try? Engine.Spherical(engineVector(in: Engine.EQJ.self)) else {
+            return Spherical(latitude: .nan, longitude: .nan, distance: .nan)
+        }
+        return Spherical(result)
     }
 
     /// Converts this equatorial J2000 vector to equatorial coordinates.
     public func toEquatorial() -> Equatorial {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let result = Astronomy_EquatorFromVector(raw)
+        let sphere = toSpherical()
         return Equatorial(
-            rightAscension: result.ra,
-            declination: result.dec,
-            distance: result.dist,
+            rightAscension: sphere.longitude / 15,
+            declination: sphere.latitude,
+            distance: sphere.distance,
             time: time
         )
     }
@@ -104,14 +104,7 @@ extension Vector3D {
 
     /// Creates a Cartesian vector from spherical coordinates.
     public static func from(sphere: Spherical, at time: AstroTime) -> Vector3D {
-        let raw = astro_spherical_t(
-            status: ASTRO_SUCCESS,
-            lat: sphere.latitude,
-            lon: sphere.longitude,
-            dist: sphere.distance
-        )
-        let result = Astronomy_VectorFromSphere(raw, time.raw)
-        return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
+        Vector3D(Engine.Vector<Engine.EQJ>(sphere.engineSpherical, time: time.coordinateTime), at: time)
     }
 
     /// Creates a Cartesian vector from horizontal coordinates.
@@ -121,25 +114,17 @@ extension Vector3D {
         at time: AstroTime,
         refraction: Refraction = .normal
     ) -> Vector3D {
-        let raw = astro_spherical_t(
-            status: ASTRO_SUCCESS,
-            lat: horizon.latitude,
-            lon: horizon.longitude,
-            dist: horizon.distance
+        Vector3D(
+            Engine.Vector<Engine.HOR>(
+                horizon: horizon.engineSpherical, time: time.coordinateTime, refraction: refraction
+            ),
+            at: time
         )
-        let result = Astronomy_VectorFromHorizon(raw, time.raw, refraction.raw)
-        return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
     }
 
     /// Calculates the angle in degrees between this vector and another.
     public func angle(to other: Vector3D) throws -> Double {
-        let rawA = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let rawB = astro_vector_t(status: ASTRO_SUCCESS, x: other.x, y: other.y, z: other.z, t: other.time.raw)
-        let result = Astronomy_AngleBetween(rawA, rawB)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try engineVector(in: Engine.EQJ.self).angle(to: other.engineVector(in: Engine.EQJ.self))
     }
 }
 
@@ -149,9 +134,13 @@ extension Spherical {
         _ vector: Vector3D,
         refraction: Refraction = .normal
     ) -> Spherical {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: vector.x, y: vector.y, z: vector.z, t: vector.time.raw)
-        let result = Astronomy_HorizonFromVector(raw, refraction.raw)
-        return Spherical(latitude: result.lat, longitude: result.lon, distance: result.dist)
+        guard
+            let result = try? Engine.Spherical(
+                horizon: vector.engineVector(in: Engine.HOR.self), refraction: refraction)
+        else {
+            return Spherical(latitude: .nan, longitude: .nan, distance: .nan)
+        }
+        return Spherical(result)
     }
 }
 
@@ -509,7 +498,7 @@ public enum Refraction: Sendable {
     /// - Parameter altitude: The geometric altitude in degrees above the horizon.
     /// - Returns: The signed refraction offset in degrees.
     public func refractionAngle(at altitude: Double) -> Double {
-        Astronomy_Refraction(raw, altitude)
+        Engine.AtmosphericRefraction.angle(self, altitude: altitude)
     }
 
     /// Calculates the inverse atmospheric refraction for a given apparent altitude.
@@ -519,6 +508,6 @@ public enum Refraction: Sendable {
     /// - Parameter bentAltitude: The apparent altitude in degrees (after refraction).
     /// - Returns: The inverse refraction offset in degrees, or zero for a nonfinite or out-of-range altitude or an inversion that cannot converge.
     public func inverseRefractionAngle(at bentAltitude: Double) -> Double {
-        Astronomy_InverseRefraction(raw, bentAltitude)
+        Engine.AtmosphericRefraction.inverseAngle(self, altitude: bentAltitude)
     }
 }

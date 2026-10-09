@@ -70,20 +70,24 @@ public struct Observer: Sendable, Equatable, Hashable {
     ///   height is not finite, or if latitude is outside -90...90. Longitude
     ///   wraps in the underlying engine, so any finite longitude is accepted.
     func validatedRaw() throws -> astro_observer_t {
+        try validate()
+        return raw
+    }
+
+    func validate() throws {
         guard
             latitude.isFinite, longitude.isFinite, height.isFinite,
             (-90.0...90.0).contains(latitude)
         else {
             throw AstronomyError.invalidParameter
         }
-        return raw
     }
 
     /// The local gravitational acceleration in m/s².
     ///
     /// This accounts for latitude and altitude effects on gravity.
     public var gravity: Double {
-        Astronomy_ObserverGravity(latitude, height)
+        Engine.Observers.gravity(latitude: latitude, height: height)
     }
 }
 
@@ -140,9 +144,11 @@ extension Observer {
     /// - Returns: The position vector in AU.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func vector(at time: AstroTime, equator: EquatorDate = .j2000) throws -> Vector3D {
-        var rawTime = time.raw
-        let result = Astronomy_ObserverVector(&rawTime, try validatedRaw(), equator.raw)
-        return try Vector3D(result)
+        try validate()
+        switch equator {
+        case .j2000: return Vector3D(Engine.Observers.vector(self, at: time.coordinateTime), at: time)
+        case .ofDate: return Vector3D(Engine.Observers.vectorOfDate(self, at: time.coordinateTime), at: time)
+        }
     }
 
     /// Returns this observer's complete state (position and velocity).
@@ -156,9 +162,11 @@ extension Observer {
     /// - Returns: The state vector with position in AU and velocity in AU/day.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func state(at time: AstroTime, equator: EquatorDate = .j2000) throws -> StateVector {
-        var rawTime = time.raw
-        let result = Astronomy_ObserverState(&rawTime, try validatedRaw(), equator.raw)
-        return try StateVector(result)
+        try validate()
+        switch equator {
+        case .j2000: return StateVector(Engine.Observers.state(self, at: time.coordinateTime), at: time)
+        case .ofDate: return StateVector(Engine.Observers.stateOfDate(self, at: time.coordinateTime), at: time)
+        }
     }
 
     /// Computes an observer's geographic location from an equatorial position vector.
@@ -175,13 +183,7 @@ extension Observer {
         vector: Vector3D,
         equatorDate: EquatorDate = .j2000
     ) -> Observer {
-        // The inverse reads this pair but never derives another time. An
-        // unnamed C Delta T function can therefore use either named model here.
-        let time = Engine.Time(
-            ut: vector.time.universalTime,
-            tt: vector.time.terrestrialTime,
-            deltaTModel: vector.time.deltaTModel ?? .espenakMeeus
-        )
+        let time = vector.time.coordinateTime
         switch equatorDate {
         case .j2000:
             return Engine.Observers.observer(
