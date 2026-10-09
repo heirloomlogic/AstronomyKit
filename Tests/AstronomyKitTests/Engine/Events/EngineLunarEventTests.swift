@@ -6,14 +6,25 @@ import Testing
 struct EngineLunarEventTests {
     typealias Events = Engine.Events
 
-    static func time(_ utc: String, model: DeltaTModel = .espenakMeeus) -> Engine.Time {
+    static func universalTime(_ utc: String, model: DeltaTModel = .espenakMeeus) -> Engine.Time {
         Engine.Time(ut: IndependentReferenceDate.universal(utc, deltaTModel: model).universalTime, deltaTModel: model)
+    }
+
+    static func eventTime(_ utc: String) -> Engine.Time {
+        Engine.Time(tt: IndependentReferenceDate.civil(utc).terrestrialTime, deltaTModel: .espenakMeeus)
+    }
+
+    @Test("Published node and apsis UTC labels retain civil-time semantics")
+    func publishedEventTimeSemantics() {
+        for utc in ["2100-01-01T21:13Z", "2100-01-17T10:48Z"] {
+            #expect(Self.eventTime(utc).tt == IndependentReferenceDate.civil(utc).terrestrialTime)
+        }
     }
 
     @Test("Published quarters retain their 90-second allowances and ordering")
     func publishedQuarters() throws {
         for reference in IndependentReferenceArchive.shared.lunarPhases {
-            let expected = Self.time(reference.sourceTime)
+            let expected = Self.universalTime(reference.sourceTime)
             let actual = try Events.searchMoonQuarter(after: expected.adding(days: -2))
             let phase: Events.LunarPhase =
                 switch reference.phase {
@@ -31,7 +42,7 @@ struct EngineLunarEventTests {
     @Test("Published true-ecliptic nodes retain direction and their time allowances")
     func publishedNodes() throws {
         for reference in IndependentReferenceArchive.shared.lunarNodes {
-            let expected = Self.time(reference.utc)
+            let expected = Self.eventTime(reference.utc)
             let actual = try Events.searchLunarNode(after: expected.adding(days: -5))
             #expect(actual.kind == (reference.kind == "ascending" ? .ascending : .descending))
             #expect(abs(actual.time.tt - expected.tt) * Engine.secondsPerDay <= reference.timeToleranceSeconds)
@@ -43,7 +54,7 @@ struct EngineLunarEventTests {
     @Test("Published lunar apsides retain kind, time, and distance allowances")
     func publishedApsides() throws {
         for reference in IndependentReferenceArchive.shared.lunarApsides {
-            let expected = Self.time(reference.utc)
+            let expected = Self.eventTime(reference.utc)
             let actual = try Events.searchLunarApsis(after: expected.adding(days: -5))
             #expect(actual.kind == (reference.kind == "pericenter" ? .pericenter : .apocenter))
             #expect(abs(actual.time.tt - expected.tt) * Engine.secondsPerDay <= reference.timeToleranceSeconds)
@@ -55,7 +66,7 @@ struct EngineLunarEventTests {
 
     @Test("Phase windows preserve direction, endpoints, nil, and the captured model")
     func phaseWindows() throws {
-        let expected = Self.time("2025-01-13T22:27:00.000Z", model: .jplHorizons)
+        let expected = Self.universalTime("2025-01-13T22:27:00.000Z", model: .jplHorizons)
         let forward = try #require(
             try Events.searchMoonPhase(180, after: expected.adding(days: -2), limitDays: 4))
         let backward = try #require(
@@ -72,7 +83,7 @@ struct EngineLunarEventTests {
 
     @Test("Quarter, node, and apsis advancement preserves alternation and progress")
     func advancement() throws {
-        let start = Self.time("2025-01-01T00:00:00.000Z", model: .jplHorizons)
+        let start = Self.universalTime("2025-01-01T00:00:00.000Z", model: .jplHorizons)
         let quarter = try Events.searchMoonQuarter(after: start)
         let nextQuarter = try Events.nextMoonQuarter(after: quarter)
         #expect(nextQuarter.phase.rawValue == (quarter.phase.rawValue + 1) % 4)
@@ -91,7 +102,7 @@ struct EngineLunarEventTests {
 
     @Test("Lunar searches reject nonfinite inputs and evaluations beyond the accepted range")
     func invalidInputs() {
-        let start = Self.time("2025-01-01T00:00:00.000Z")
+        let start = Self.universalTime("2025-01-01T00:00:00.000Z")
         for value in [Double.nan, .infinity, -.infinity] {
             #expect(throws: AstronomyError.invalidParameter) {
                 _ = try Events.searchMoonPhase(value, after: start, limitDays: 30)

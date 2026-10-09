@@ -3359,7 +3359,7 @@
       }
     ]
   },
-  "runtimeBaseRevision": "c9f41422f6dc78df45bdcacb767b9059f231fe5a",
+  "runtimeBaseRevision": "6120981589b268a3b63aee9daa8688cff895bcd7",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
@@ -3367,7 +3367,7 @@
     "Scripts/moon-data/de441-compact-evidence.json": "2b5d686303a7b638ae0ee6512574124ef22e7e1c77f9cf871397bbfc82307182",
     "Scripts/moon-data/de441-event-fixtures.json": "94f77aad56bb3e136edcd7a04c04113f723cbd10371ea88c586f4504d2375ea6",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
-    "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "4ea6de62213d8da1a29ae596280f69d7f3a9f15aa2158d81e8203157466ba3c1",
+    "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "fca8ff53fe5a393fb1df218c028d235d1dd2a36021bd47bf85702c56b14e6c8e",
     "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift": "4a9eadfaae13399368825e926d9ff5667a6d26b21bf0d9f80f71b061c959dc33",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "61ce567d8bdd7beda0107d61d5e57778275dd4fcc5dce0e7478580f31a5e585b",
     "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift": "8b87b34d50a9d91842c0730149d3525f4bb6aa70c2d637cdd645fe38332250f9",
