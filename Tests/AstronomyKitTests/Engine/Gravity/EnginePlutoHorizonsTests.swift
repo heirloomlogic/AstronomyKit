@@ -156,10 +156,8 @@ extension PlutoSegmentSuites {
             }
         }
 
-        /// Through the blends and the integrated model from 1840 to 2159,
-        /// including a segment seam on 1840-02-09 and 2159-11-23, and step seams
-        /// a day apart. The largest angle is 16.6″, in 2159.
-        @Test("Through the blends and the model's seams from 1840 to 2159 within 1′")
+        /// Center references through both blends and the outer barycenter approximation from 1840 to 2159.
+        @Test("Through the blends and outer barycenter approximation from 1840 to 2159 within 1′")
         func modelVectors() throws {
             let others = Self.vectors.filter { reference in
                 !Self.de440.contains { $0.julianDateTDB == reference.julianDateTDB }
@@ -173,22 +171,19 @@ extension PlutoSegmentSuites {
 
         /// Horizons' Pluto system barycenter (9) from
         /// `sources/horizons/pluto-barycenter-vector.json`, where Horizons has no
-        /// Pluto center: 15 dates from 100 BCE to 4098 CE. Pluto's center is
-        /// within about 2,100 km of the barycenter, under 0.1″ at these
-        /// distances.
+        /// Pluto center: 15 dates from 100 BCE to 4098 CE. These references qualify barycenter directions; the full-range physical-center offset remains unqualified.
         static let barycenterVectors = IndependentReferenceArchive.shared.vectors.filter {
             $0.body == "pluto-barycenter"
         }
 
-        /// The integrated model is 1.3′ to 5.1′ from DE441 at every one of these
-        /// dates (#190).
-        @Test("Far from J2000 the integrated model misses 1′ (#190)", arguments: barycenterVectors.map(\.julianDateTDB))
+        /// Native DE441 agrees with the archived system-barycenter directions; this does not certify full-range center motion.
+        @Test(
+            "Far from J2000 the native barycenter approximation meets 1′",
+            arguments: barycenterVectors.map(\.julianDateTDB))
         func farFromJ2000(julianDateTDB: Double) throws {
             let reference = try #require(Self.barycenterVectors.first { $0.julianDateTDB == julianDateTDB })
             let arcminutes = try Self.arcminutes(EnginePlutoTests.position(try Self.state(reference)), reference)
-            withKnownIssue("#190: Pluto's integrated model is more than 1′ from DE441 far from J2000") {
-                #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
-            }
+            #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
         }
 
         @Test("The checks fail a day off, and with the barycentric state")
