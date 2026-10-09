@@ -16,9 +16,9 @@ struct EngineNutationCacheTests {
 
     /// A cache like the shared one, with its own registry, so its counts
     /// are not disturbed by other suites.
-    static func makeCache() -> (Cache, Engine.CacheRegistry) {
+    static func makeCache(capacity: Int = Engine.Nutation.cache.capacity) -> (Cache, Engine.CacheRegistry) {
         let registry = Engine.CacheRegistry()
-        return (Cache(capacity: Engine.Nutation.cache.capacity, registry: registry), registry)
+        return (Cache(capacity: capacity, registry: registry), registry)
     }
 
     static func time(tt: Double) -> Engine.Time {
@@ -39,6 +39,18 @@ struct EngineNutationCacheTests {
             #expect(Engine.Nutation.angles(tt: tt, cache: cache) == expected)
         }
         #expect(cache.statistics == .init(hits: 5, misses: 5))
+    }
+
+    @Test("A cache with no capacity evaluates every lookup without retaining state")
+    func disabledCache() {
+        let (cache, _) = Self.makeCache(capacity: 0)
+        let tt = 9_496.375
+        let expected = Engine.Nutation.evaluate(centuries: tt / 36525)
+        let first = Engine.Nutation.angles(tt: tt, cache: cache)
+        let second = Engine.Nutation.angles(tt: tt, cache: cache)
+        #expect(first == expected && second == expected)
+        #expect(cache.statistics == .init(hits: 0, misses: 2))
+        #expect(cache.count == 0)
     }
 
     @Test("Angle, rate, tilt and sidereal-time callers at one instant share one evaluation")
