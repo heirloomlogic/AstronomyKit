@@ -87,12 +87,12 @@ swift test --no-parallel --sanitize=thread
 python3 Scripts/generate-time-table.py --check
 python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
 python3 Scripts/reference-data/build-fixtures.py --check
-sh Scripts/performance/test-vsop-cache.sh
-sh Scripts/performance/test-nutation-cache.sh
-sh Scripts/performance/test-moon-cache.sh
+swift test --filter 'EngineStateOwnershipTests|EngineVSOP87BCacheTests|EngineNutationCacheTests|EngineMoonCacheTests|EnginePlutoCacheTests|EngineCacheTests|DeltaTThreadSafetyTests|EngineStarConcurrencyTests|EngineGravitySimulationTests'
 ```
 
-Plain `swift test` is enough locally. The Delta T thread-safety test swaps the process-global model, but only between two functions that return identical results, so suites running in parallel get the same values. A time created during a swap can carry the stand-in, whose `deltaTModel` is `nil`, so tests outside that suite compare values rather than `deltaTModel` for times made under the default. CI still passes `--no-parallel`.
+Plain `swift test` is enough locally. `DeltaTThreadSafetyTests` alternates the two public named models and restores Espenak-Meeus after each test; each constructed time must capture one complete named model and its matching TT. CI still passes `--no-parallel` so suites that intentionally update process-wide configuration cannot interfere with other suites.
+
+For an opt-in Release observation of integrated serial and contended workload time and process peak resident bytes, set `CACHE_OWNERSHIP_MEASUREMENT_OUTPUT` to a JSON output path and filter to `EngineStateOwnershipTests.measurement`. The serial pass runs first from cold caches and warms them for the larger contended pass, so its elapsed times do not establish a speedup. Peak resident bytes are a finite process observation, not evidence that memory cannot leak. The observation has no resource threshold; compare runs only when the host, toolchain, configuration, and workload are the same.
 
 The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert against JPL Horizons and audit reference positions to roughly ±1 arcminute; a regression there requires investigation before release. `ReproducibilityTests` holds tight numerical regression budgets against frozen reference bits; tolerance failures also require investigation. Do not widen budgets or regenerate independent reference data to make a change pass.
 

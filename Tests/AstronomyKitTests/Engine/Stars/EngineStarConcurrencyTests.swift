@@ -1,15 +1,6 @@
-import CLibAstronomy
-import Synchronization
 import Testing
 
 @testable import AstronomyKit
-
-private let starConcurrencyDeltaTCalls = Atomic<Int>(0)
-
-private let starConcurrencyDeltaT: astro_deltat_func = { universalTime in
-    starConcurrencyDeltaTCalls.add(1, ordering: .relaxed)
-    return Astronomy_DeltaT_EspenakMeeus(universalTime)
-}
 
 @Suite("Native fixed-star concurrency")
 struct EngineStarConcurrencyTests {
@@ -58,7 +49,7 @@ struct EngineStarConcurrencyTests {
         let references = try times.map { time in
             try stars.map { star in try snapshot(star: star, time: time) }
         }
-        let callsBefore = starConcurrencyDeltaTCalls.load(ordering: .relaxed)
+        let modelCreations = EngineBoundedCacheTests.Counter()
 
         try await withThrowingTaskGroup(of: Void.self) { group in
             for repetition in 0..<4 {
@@ -74,12 +65,10 @@ struct EngineStarConcurrencyTests {
             for _ in 0..<2 {
                 group.addTask {
                     for iteration in 0..<200 {
-                        if iteration.isMultiple(of: 2) {
-                            Astronomy_SetDeltaTFunction(starConcurrencyDeltaT)
-                        } else {
-                            AstronomyConfig.setDeltaTModel(.espenakMeeus)
-                        }
-                        _ = AstroTime(ut: 18_250)
+                        let model: DeltaTModel = iteration.isMultiple(of: 2) ? .espenakMeeus : .jplHorizons
+                        AstronomyConfig.setDeltaTModel(model)
+                        #expect(AstroTime(ut: 18_250).deltaTModel != nil)
+                        modelCreations.record()
                         await Task.yield()
                     }
                 }
@@ -87,6 +76,6 @@ struct EngineStarConcurrencyTests {
             try await group.waitForAll()
         }
 
-        #expect(starConcurrencyDeltaTCalls.load(ordering: .relaxed) > callsBefore)
+        #expect(modelCreations.count == 400)
     }
 }

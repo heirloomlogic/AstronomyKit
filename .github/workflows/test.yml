@@ -102,12 +102,6 @@ jobs:
           .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-debug.json
           .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
 
-      - name: Verify work-avoidance paths
-        run: |
-          sh Scripts/performance/test-vsop-cache.sh
-          sh Scripts/performance/test-nutation-cache.sh
-          sh Scripts/performance/test-moon-cache.sh
-
       - name: Test
         run: swift test --no-parallel
 
@@ -175,12 +169,6 @@ jobs:
           python3 -m unittest Scripts/test_transit_evidence.py -v
           python3 Scripts/capture-transit-references.py --check
           python3 Scripts/record-transit-evidence.py --check
-
-      - name: Verify work-avoidance paths
-        run: |
-          sh Scripts/performance/test-vsop-cache.sh
-          sh Scripts/performance/test-nutation-cache.sh
-          sh Scripts/performance/test-moon-cache.sh
 
       - name: Test
         run: swift test --no-parallel
