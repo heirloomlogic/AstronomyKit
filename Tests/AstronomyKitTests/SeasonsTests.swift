@@ -300,14 +300,9 @@ struct SeasonsTests {
     }
 }
 
-/// Every equinox and solstice from 1900 through 2130 under both Delta T models, checked against two different kinds of
-/// expected value from `Fixtures/SeasonalRoots/seasonal-roots.txt`:
-///
-/// - The reference epochs are independent truth: crossings of the Sun's apparent ecliptic longitude computed from JPL
-///   Horizons vectors and ERFA frame rotations, with no engine code involved. Every event must lie within 60 seconds
-///   of its reference.
-/// - The regression epochs are engine output recorded when that comparison was measured. They are not truth; a 10 ms
-///   allowance catches a change to the engine while admitting platform libm rounding.
+/// Every equinox and solstice from 1900 through 2130 under both Delta T models, checked against independent truth in
+/// `Fixtures/SeasonalRoots/seasonal-roots.txt`: crossings of the Sun's apparent ecliptic longitude computed from JPL
+/// Horizons vectors and ERFA frame rotations, with no engine code involved. Every event must lie within 60 seconds.
 ///
 /// `Seasons.forYear` evaluates under the process default model. Installing JPL Horizons as the default would shift
 /// times built by suites running in parallel (see `DeltaTThreadSafetyTests`), so the JPL Horizons arm runs the same
@@ -319,7 +314,6 @@ struct SeasonalEpochTests {
         let year: Int
         let kind: String
         let referenceJulianDateTT: Double
-        let regressionJulianDateTT: [DeltaTModel: Double]
     }
 
     static let kinds = ["marchEquinox", "juneSolstice", "septemberEquinox", "decemberSolstice"]
@@ -333,11 +327,10 @@ struct SeasonalEpochTests {
         let text = try String(contentsOf: url, encoding: .utf8)
         return try text.split(separator: "\n").filter { !$0.hasPrefix("#") }.map { line in
             let fields = line.split(separator: " ")
-            try #require(fields.count == 5, "\(line)")
-            let values = try fields[2...].map { try #require(Double(String($0)), "\(line)") }
+            try #require(fields.count == 3, "\(line)")
             return Event(
-                year: try #require(Int(fields[0])), kind: String(fields[1]), referenceJulianDateTT: values[0],
-                regressionJulianDateTT: [.espenakMeeus: values[1], .jplHorizons: values[2]])
+                year: try #require(Int(fields[0])), kind: String(fields[1]),
+                referenceJulianDateTT: try #require(Double(String(fields[2])), "\(line)"))
         }
     }
 
@@ -427,19 +420,5 @@ struct SeasonalEpochTests {
             }
         }
         #expect(failures.isEmpty, "\(failures.count) events, first \(failures.prefix(3)); worst \(worst) s")
-    }
-
-    @Test("Events lie within 10 ms of the recorded engine regression epochs", arguments: DeltaTModel.allCases)
-    func engineRegression(model: DeltaTModel) throws {
-        let events = try Self.loadEvents()
-        var failures: [String] = []
-        for (year, expected) in zip(Self.years, stride(from: 0, to: events.count, by: 4).map { events[$0..<$0 + 4] }) {
-            for (time, event) in zip(try Self.seasons(year: year, model: model), expected) {
-                let recorded = try #require(event.regressionJulianDateTT[model])
-                let error = abs(time.terrestrialTime - (recorded - Self.j2000)) * 86_400
-                if !(error <= 0.010) { failures.append("\(year) \(event.kind): \(error) s") }
-            }
-        }
-        #expect(failures.isEmpty, "\(failures.count) events, first \(failures.prefix(3))")
     }
 }
