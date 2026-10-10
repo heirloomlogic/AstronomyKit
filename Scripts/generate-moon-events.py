@@ -7,12 +7,30 @@ import json
 import math
 import struct
 import subprocess
+import urllib.parse
+import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "Scripts/moon-data/de441-compact-evidence.json"
 OUTPUT = ROOT / "Scripts/moon-data/de441-event-fixtures.json"
 FIXTURE_SHA256 = "94f77aad56bb3e136edcd7a04c04113f723cbd10371ea88c586f4504d2375ea6"
+APPARENT_PHASE_OUTPUT = ROOT / "Scripts/moon-data/apparent-phase-references.json"
+APPARENT_PHASE_SOURCES = {
+    "sun": ROOT / "Scripts/moon-data/horizons-apparent-phase-sun.json",
+    "moon": ROOT / "Scripts/moon-data/horizons-apparent-phase-moon.json",
+}
+APPARENT_PHASE_RESPONSES_SHA256 = {
+    "sun": "ca66b540ea33705ca5a320270eb13b036f6e1af1a10428f32142420c78f90329",
+    "moon": "3bdcddda7d80323e80f392b0624dd9baed84129e601c89ad525935ee8aae95a8",
+}
+APPARENT_PHASE_EVENTS = [
+    ("firstQuarter", 90, 2_460_682.497_222_222),
+    ("full", 180, 2_460_689.435_416_667),
+    ("lastQuarter", 270, 2_460_697.354_861_111),
+    ("new", 0, 2_460_705.025),
+]
 
 
 def windows():
@@ -36,6 +54,97 @@ def required_records(selected, start):
 
 def encoded(value):
     return (json.dumps(value, indent=2, sort_keys=True) + "\n").encode()
+
+
+def apparent_phase_query(command):
+    dates = [round(center + minute / 1440, 9) for _, _, center in APPARENT_PHASE_EVENTS for minute in range(-3, 4)]
+    return {
+        "COMMAND": f"'{command}'", "OBJ_DATA": "'NO'", "MAKE_EPHEM": "'YES'", "EPHEM_TYPE": "'OBSERVER'",
+        "CENTER": "'500@399'", "TLIST": f"'{','.join(str(value) for value in dates)}'", "QUANTITIES": "'31'",
+        "REF_SYSTEM": "'ICRF'", "CAL_FORMAT": "'CAL'", "TIME_DIGITS": "'SECONDS'", "ANG_FORMAT": "'DEG'",
+        "APPARENT": "'AIRLESS'", "RANGE_UNITS": "'AU'", "CSV_FORMAT": "'YES'", "EXTRA_PREC": "'YES'",
+    }
+
+
+def parse_apparent_longitudes(data):
+    result = json.loads(data)["result"]
+    rows = result[result.index("$$SOE") + len("$$SOE"):result.index("$$EOE")].strip().splitlines()
+    parsed = []
+    for row in rows:
+        columns = [column.strip() for column in row.split(",")]
+        parsed.append((datetime.strptime(columns[0], "%Y-%b-%d %H:%M:%S.%f").replace(tzinfo=timezone.utc), float(columns[3])))
+    return parsed
+
+
+def apparent_phase_references(source_data=None):
+    if source_data is None:
+        source_data = {name: path.read_bytes() for name, path in APPARENT_PHASE_SOURCES.items()}
+    sun = parse_apparent_longitudes(source_data["sun"])
+    moon = parse_apparent_longitudes(source_data["moon"])
+    if len(sun) != 28 or [row[0] for row in sun] != [row[0] for row in moon]:
+        raise ValueError("Apparent phase source samples differ")
+    roots = []
+    for index, (phase, target, _) in enumerate(APPARENT_PHASE_EVENTS):
+        samples = []
+        for sample in range(index * 7, index * 7 + 7):
+            offset = (moon[sample][1] - sun[sample][1] - target + 180) % 360 - 180
+            samples.append((sun[sample][0], offset))
+        brackets = [(first, last) for first, last in zip(samples, samples[1:]) if first[1] <= 0 <= last[1]]
+        if len(brackets) != 1 or brackets[0][1][1] <= brackets[0][0][1]:
+            raise ValueError(f"Apparent {phase} samples do not contain one ascending root")
+        first, last = brackets[0]
+        fraction = -first[1] / (last[1] - first[1])
+        root = first[0] + fraction * (last[0] - first[0])
+        roots.append({
+            "phase": phase, "targetDegrees": target, "utc": root.isoformat(timespec="milliseconds").replace("+00:00", "Z"),
+            "lowerUTC": first[0].isoformat(timespec="milliseconds").replace("+00:00", "Z"),
+            "upperUTC": last[0].isoformat(timespec="milliseconds").replace("+00:00", "Z"),
+            "samplingAllowanceSeconds": 1.0,
+        })
+    return roots
+
+
+def apparent_phase_document(source_data):
+    return {
+        "schemaVersion": 1,
+        "source": "NASA/JPL Horizons API",
+        "frame": "Earth-centered IAU76/80 apparent ecliptic and equinox of date",
+        "corrections": "Horizons quantity 31 includes light time, gravitational deflection, and stellar aberration",
+        "timeScale": "UTC",
+        "method": "Linear interpolation of one-minute apparent longitude-difference brackets; the one-second allowance covers sampling and printed precision",
+        "responseSHA256": {name: hashlib.sha256(data).hexdigest() for name, data in source_data.items()},
+        "roots": apparent_phase_references(source_data),
+    }
+
+
+def check_apparent_phase_sources():
+    source_data = {name: path.read_bytes() for name, path in APPARENT_PHASE_SOURCES.items()}
+    for name, data in source_data.items():
+        if hashlib.sha256(data).hexdigest() != APPARENT_PHASE_RESPONSES_SHA256[name]:
+            raise ValueError(f"Apparent phase {name} response digest differs")
+        query_path = APPARENT_PHASE_SOURCES[name].with_suffix(".query.json")
+        query = json.loads(query_path.read_bytes())
+        response_sha = query.pop("_responseSHA256", None)
+        if query != apparent_phase_query("10" if name == "sun" else "301") or response_sha != hashlib.sha256(data).hexdigest():
+            raise ValueError(f"Apparent phase {name} query differs")
+    if encoded(apparent_phase_document(source_data)) != APPARENT_PHASE_OUTPUT.read_bytes():
+        raise ValueError("Apparent phase derived references differ")
+
+
+def capture_apparent_phase_sources():
+    source_data = {}
+    for name, command in (("sun", "10"), ("moon", "301")):
+        query = apparent_phase_query(command)
+        url = "https://ssd.jpl.nasa.gov/api/horizons.api?" + urllib.parse.urlencode({"format": "json", **query})
+        request = urllib.request.Request(url, headers={"User-Agent": "AstronomyKit apparent lunar phase reference capture"})
+        with urllib.request.urlopen(request, timeout=30) as response:
+            data = response.read()
+        APPARENT_PHASE_SOURCES[name].write_bytes(data)
+        query["_responseSHA256"] = hashlib.sha256(data).hexdigest()
+        APPARENT_PHASE_SOURCES[name].with_suffix(".query.json").write_bytes(encoded(query))
+        source_data[name] = data
+        print(f"{name} response SHA-256: {hashlib.sha256(data).hexdigest()}")
+    APPARENT_PHASE_OUTPUT.write_bytes(encoded(apparent_phase_document(source_data)))
 
 
 def generate(cache):
@@ -78,9 +187,9 @@ def check(data):
 
 def collect_results(prefix):
     results = {name: json.loads(Path(str(prefix) + "-" + name + ".json").read_bytes())
-               for name in ("published", "source", "transitions")}
+               for name in ("apparent", "published", "source", "transitions")}
     summaries = {}
-    for name in ("published", "source"):
+    for name in ("apparent", "published", "source"):
         summaries[name] = {}
         for event in sorted({row["event"] for row in results[name]}):
             rows = [row for row in results[name] if row["event"] == event]
@@ -88,6 +197,12 @@ def collect_results(prefix):
                                      "maximumAbsoluteResidualSeconds": max(abs(row["residualSeconds"]) for row in rows)}
     files = ["Scripts/generate-moon-events.py", "Scripts/moon-data/de441-event-fixtures.json",
              "Scripts/moon-data/de441-compact-evidence.json",
+             "Scripts/moon-data/apparent-phase-references.json",
+             "Scripts/moon-data/horizons-apparent-phase-moon.json",
+             "Scripts/moon-data/horizons-apparent-phase-moon.query.json",
+             "Scripts/moon-data/horizons-apparent-phase-sun.json",
+             "Scripts/moon-data/horizons-apparent-phase-sun.query.json",
+             "Scripts/test_generate_moon_events.py",
              "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift",
              "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift",
              "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift",
@@ -98,6 +213,7 @@ def collect_results(prefix):
               "runtimeBaseRevision": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
               "toolchain": subprocess.check_output(["swift", "--version"], text=True, stderr=subprocess.STDOUT).strip(),
               "sourceSHA256": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in files},
+              "apparentPhaseReferences": json.loads(APPARENT_PHASE_OUTPUT.read_bytes()),
               "summaries": summaries, "results": results,
               "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
               "remainingDependencies": ["#92 planetary and observer search ports", "#96 public cutover", "#184 broader qualification and closure"]}
@@ -112,12 +228,17 @@ def main():
     parser.add_argument("--check", action="store_true", help="verify the pinned committed fixture offline")
     parser.add_argument("--check-source", action="store_true", help="rebuild against the verified source cache and compare")
     parser.add_argument("--collect-results", type=Path, metavar="PREFIX", help="record PREFIX-published/source/transitions.json emitted by Swift tests")
+    parser.add_argument("--capture-apparent-phases", action="store_true", help="capture the pinned Horizons apparent-phase samples")
     args = parser.parse_args()
     if args.collect_results:
         collect_results(args.collect_results)
         return
+    if args.capture_apparent_phases:
+        capture_apparent_phase_sources()
+        return
     if args.check:
         check(OUTPUT.read_bytes())
+        check_apparent_phase_sources()
     elif args.check_source:
         if generate(args.cache) != OUTPUT.read_bytes():
             raise ValueError("Direct event fixture differs from verified source records")

@@ -45,11 +45,14 @@ extension Engine.Events {
         var distanceKilometers: Double { distanceAU * Engine.kilometersPerAU }
     }
 
-    /// The Moon's true-ecliptic longitude east of the geocentric Sun, in degrees from 0 up to 360.
+    /// The Moon's apparent true-ecliptic longitude east of the apparent geocentric Sun, in degrees from 0 up to 360.
     static func moonPhaseAngle(at time: Engine.Time) throws -> Double {
-        let moon = try Engine.Moon.eclipticLongitude(at: time)
-        let earth = try Engine.Planet.earth.heliocentricPosition(at: time)
-        let sun = Engine.Ecliptic(Engine.Vector(x: -earth.x, y: -earth.y, z: -earth.z, time: time)).longitude
+        let moon = Engine.Ecliptic(
+            try Engine.LightTravel.correct(at: time) {
+                try Engine.Moon.geocentricPosition(at: $0)
+            }
+        ).longitude
+        let sun = try Engine.Positions.sunPosition(at: time).longitude
         let angle = Engine.normalizedLongitude(moon - sun)
         guard angle.isFinite else { throw AstronomyError.badTime }
         return angle
@@ -64,10 +67,23 @@ extension Engine.Events {
         guard targetDegrees.isFinite, limitDays.isFinite else { throw AstronomyError.invalidParameter }
         try Engine.checkAcceptedTime(start)
 
-        var offset = try moonPhaseOffset(targetDegrees, at: start)
-        if offset == 0 { return start }
+        let searchStart: Engine.Time
+        let searchLimit: Double
+        if start.tt < earliestApparentTT {
+            guard limitDays >= 0, let model = start.deltaTModel else { return nil }
+            let requestedEnd = start.adding(days: limitDays)
+            guard requestedEnd.tt >= earliestApparentTT else { return nil }
+            searchStart = Engine.Time(tt: earliestApparentTT, deltaTModel: model)
+            searchLimit = requestedEnd.tt - searchStart.tt
+        } else {
+            searchStart = start
+            searchLimit = limitDays
+        }
+
+        var offset = try moonPhaseOffset(targetDegrees, at: searchStart)
+        if offset == 0 { return searchStart }
         let estimate: Double
-        if limitDays < 0 {
+        if searchLimit < 0 {
             if offset < 0 { offset += 360 }
             estimate = -meanSynodicMonth * offset / 360
         } else {
@@ -77,18 +93,18 @@ extension Engine.Events {
 
         var lower = estimate - phaseUncertaintyDays
         var upper = estimate + phaseUncertaintyDays
-        if limitDays < 0 {
-            if upper < limitDays { return nil }
-            lower = max(lower, limitDays)
+        if searchLimit < 0 {
+            if upper < searchLimit { return nil }
+            lower = max(lower, searchLimit)
             upper = min(upper, 0)
         } else {
-            if lower > limitDays { return nil }
+            if lower > searchLimit { return nil }
             lower = max(lower, 0)
-            upper = min(upper, limitDays)
+            upper = min(upper, searchLimit)
         }
 
-        let first = start.adding(days: lower)
-        let last = start.adding(days: upper)
+        let first = searchStart.adding(days: lower)
+        let last = searchStart.adding(days: upper)
         try Engine.checkAcceptedTime(first)
         try Engine.checkAcceptedTime(last)
         guard
@@ -103,7 +119,15 @@ extension Engine.Events {
     }
 
     static func searchMoonQuarter(after start: Engine.Time) throws -> LunarQuarter {
-        let angle = try moonPhaseAngle(at: start)
+        try Engine.checkAcceptedTime(start)
+        let angleTime: Engine.Time
+        if start.tt < earliestApparentTT {
+            guard let model = start.deltaTModel else { throw AstronomyError.badTime }
+            angleTime = Engine.Time(tt: earliestApparentTT, deltaTModel: model)
+        } else {
+            angleTime = start
+        }
+        let angle = try moonPhaseAngle(at: angleTime)
         let rawValue = (Int(floor(angle / 90)) + 1) % LunarPhase.allCases.count
         guard let phase = LunarPhase(rawValue: rawValue),
             let time = try searchMoonPhase(phase.targetDegrees, after: start, limitDays: 10)
@@ -192,6 +216,7 @@ extension Engine.Events {
 
     private static let meanSynodicMonth = 29.530588
     private static let phaseUncertaintyDays = 1.5
+    private static let earliestApparentTT = (-Engine.acceptedTTDays + 1 / Engine.speedOfLightAUPerDay).nextUp
     private static let nodeStepDays = 10.0
     private static let nodeStepLimit = 4
     private static let apsisStepDays = 5.0
