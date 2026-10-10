@@ -232,7 +232,59 @@ class GlobalSolarEvidenceTests(unittest.TestCase):
             self.assertEqual(output.read_bytes(),b'old evidence')
 
     def test_recorded_replay(self):
-        self.assertEqual(archive.encoded(recorder.evidence(self.captures,recorder.hashes())),recorder.OUTPUT.read_bytes())
+        self.check_replay(json.loads(recorder.OUTPUT.read_bytes()), recorder.hashes())
+
+    def check_replay(self, value, bindings):
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp)/'evidence.json'
+            output.write_bytes(archive.encoded(value))
+            with mock.patch.object(recorder, 'OUTPUT', output), mock.patch.object(recorder, 'hashes', return_value=bindings), mock.patch('sys.argv', ['record', '--check']):
+                recorder.main()
+
+    def test_replay_accepts_only_observed_location_roundoff(self):
+        bindings = {'raw-capture': 'a'*64}
+        value = recorder.evidence(self.captures, bindings)
+        # Linux libm reproduces this location one binary64 step above macOS.
+        for direction in (-math.inf, math.inf):
+            changed = copy.deepcopy(value)
+            location = changed['residuals'][0]['locationDegrees']
+            changed['residuals'][0]['locationDegrees'] = math.nextafter(location, direction)
+            with self.subTest(direction=direction):
+                self.check_replay(changed, bindings)
+
+    def test_replay_rejects_changes_outside_location_roundoff(self):
+        bindings = {'raw-capture': 'a'*64}
+        value = recorder.evidence(self.captures, bindings)
+        location = value['residuals'][0]['locationDegrees']
+        changes = [
+            (('residuals', 0, 'locationDegrees'), math.nextafter(math.nextafter(location, math.inf), math.inf)),
+            (('residuals', 0, 'locationDegrees'), location + 1e-8),
+            (('residuals', 0, 'locationDegrees'), float('inf')),
+            (('residuals', 0, 'locationDegrees'), None),
+            (('residuals', 0, 'id'), 'different event'),
+            (('residuals', 0, 'peakSeconds'), math.nextafter(value['residuals'][0]['peakSeconds'], math.inf)),
+            (('sourceHashes', 'raw-capture'), 'b'*64),
+            (('schemaVersion',), True),
+            (('resources', 'coldSeconds'), math.nextafter(value['resources']['coldSeconds'], math.inf)),
+            (('annularArea', 'nativeG0PhysicalArea'), math.nextafter(value['annularArea']['nativeG0PhysicalArea'], math.inf)),
+            (('annularArea', 'directTable4SamplesQualified'), 2.0),
+        ]
+        for path, replacement in changes:
+            changed = copy.deepcopy(value)
+            parent = changed
+            for key in path[:-1]:
+                parent = parent[key]
+            parent[path[-1]] = replacement
+            with self.subTest(path=path, replacement=replacement), self.assertRaises((SystemExit, ValueError)):
+                self.check_replay(changed, bindings)
+        for mutation in ('missing-field', 'extra-field', 'missing-row', 'row-order'):
+            changed = copy.deepcopy(value)
+            if mutation == 'missing-field': del changed['residuals'][0]['peakSeconds']
+            if mutation == 'extra-field': changed['residuals'][0]['extra'] = 0
+            if mutation == 'missing-row': changed['residuals'].pop()
+            if mutation == 'row-order': changed['residuals'].reverse()
+            with self.subTest(mutation=mutation), self.assertRaises(SystemExit):
+                self.check_replay(changed, bindings)
 
     def test_objective_relations_reject_corruption(self):
         changes=[('published','ut',1.0),('published','tt',1.0),('published','sourceTT',1.0),('published','latitude',2.0),('published','obscuration',0.2),('published','physicalTT',1.0),('area','tt',1.0),('area','modelUT',1.0),('area','sourceUT',1.0),('area','sourceDeltaTSeconds',1.0),('area','obscuration',0.01),('area','sunRadiusRadians',0.001),('area','separationRadians',0.01)]
