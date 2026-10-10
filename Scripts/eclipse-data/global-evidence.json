@@ -41,75 +41,75 @@
     "sourcePrintedMagnitude": 1.0
   },
   "buildSeconds": {
-    "debug": 1.0,
-    "release": 117.34
+    "debug": 0.87,
+    "release": 119.73
   },
   "limitations": "Sampled native geometry and published events; public C remains unchanged under #96. RP1301 direct Table 4 areas pass conditional rounding intervals. G0 is a mixed-k Besselian magnitude, so its square is retained only as a diagnostic beside physical single-radius area. No radius was fitted. Host costs are observations, not portable gates.",
-  "releaseExecutableBytes": 165038480,
+  "releaseExecutableBytes": 165224752,
   "releaseObjectBytes": {
-    "EngineGeoidIntersection.o": 31608,
-    "EngineGlobalSolarEvents.o": 94368
+    "EngineGeoidIntersection.o": 31576,
+    "EngineGlobalSolarEvents.o": 94312
   },
   "residuals": [
     {
       "id": "1800-04-24T00:24:00Z",
-      "locationDegrees": 0.03160818696970167,
-      "peakSeconds": 2.5796229019761086
+      "locationDegrees": 0.03160126552766403,
+      "peakSeconds": 2.5809933431446552
     },
     {
       "id": "2024-04-08T18:18:29Z",
-      "locationDegrees": 0.019055984091138758,
-      "peakSeconds": 0.304017128655687
+      "locationDegrees": 0.020148301856579374,
+      "peakSeconds": 0.4921570129226893
     },
     {
       "id": "2099-03-21T22:54:32Z",
-      "locationDegrees": 0.04381831963037191,
-      "peakSeconds": 1.6062431735917926
+      "locationDegrees": 0.04394985590432288,
+      "peakSeconds": 1.6343567054718733
     },
     {
       "id": "2014-04-29",
-      "locationDegrees": 0.11270701364281666,
-      "peakSeconds": 1.5927769389236346
+      "locationDegrees": 0.11270738716326108,
+      "peakSeconds": 1.5928275446640328
     },
     {
       "id": "2023-04-20",
-      "locationDegrees": 0.005697393682075864,
-      "peakSeconds": 1.5329721907619387
+      "locationDegrees": 0.005687029730764895,
+      "peakSeconds": 1.579432189464569
     },
     {
       "id": "2025-03-29",
       "locationDegrees": null,
-      "peakSeconds": 1.265578530728817
+      "peakSeconds": 1.2656404520384967
     },
     {
       "id": "2043-04-09",
-      "locationDegrees": 0.18392894447167468,
-      "peakSeconds": 0.9661272342782468
+      "locationDegrees": 0.18392800376645524,
+      "peakSeconds": 0.9662223164923489
     }
   ],
   "resources": {
-    "checksum": -2866939.3761416273,
-    "coldSeconds": 0.030381083488464355,
+    "checksum": -2866939.3761060787,
+    "coldSeconds": 0.0300600528717041,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 0.07255995273590088,
-    "peakAfterColdBytes": 161464320,
-    "peakAfterWorkloadBytes": 161480704,
-    "peakBeforeBytes": 46841856
+    "nextSeconds": 0.11727499961853027,
+    "peakAfterColdBytes": 161792000,
+    "peakAfterWorkloadBytes": 161808384,
+    "peakBeforeBytes": 47169536
   },
-  "runtimeBaseRevision": "39954da87cb083ef9e39ee5bddb4a4bc895bd5e7",
+  "runtimeBaseRevision": "2d1252dc472dd71ddaa8222ed69b2adf0f3078ad",
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/assess-global-solar-radii.py": "a23afc2a186c09466ef2db23ad8a14a55d84578fe90219d1f931bb0d0121d639",
     "Scripts/assess-rp1301-g0.py": "36dad831724e3c611793009c382c333eb80bdc8f625b16a65d9b92638be60882",
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
-    "Scripts/eclipse-data/global-captures.json": "245a6f9ef25246982eccc58c14d0b3d40cbb92c1e67b8e63264f009424199f55",
+    "Scripts/eclipse-data/global-captures.json": "87aa819419a4fe565502ba01052ed60321d44e0323bfbc9dc3adf8aae06a9b94",
     "Scripts/eclipse-data/global-references.json": "cff3956935437c3b24bcb17695e15bc743520f8e31f7f4c7cf6ee7a017acb207",
     "Scripts/eclipse-data/radius-comparison.json": "3e4d575e888cd84571991592888756fbcf20adcf1f147b1e3bc8b0afd063a4f5",
     "Scripts/eclipse-data/radius-vectors.json": "2c5652a64931eade4954fb89dc3981f3d76c48d38a9e45d9c0b4e6508dcc7394",
     "Scripts/eclipse-data/rp1301-g0-decomposition.json": "7c16b4e7be4d10644362babfa5647135d37b0d2a589d8462b5eae8e541496c19",
     "Scripts/global-solar-radius-probe.swift": "4148e4c7451b832c3e3bb4f782b5088835694c48bcadf5e68fb8a53c8ce19329",
-    "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
+    "Scripts/record-eclipse-event-evidence.py": "0ca64c5e512b05739476311a6434fdd51662cf9b4479a070f7066a5831f490f9",
     "Scripts/record-global-solar-evidence.py": "e08921d7b507b0ff768148f40aac15ebacc71d565d792f553c845ce69c849fbc",
     "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
     "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0.query.json": "94a0287ea73d9baeef2c602d2a46c62d0f795ed48bf32e52044f56f2a359fbc0",
