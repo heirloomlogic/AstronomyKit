@@ -35,7 +35,7 @@ struct EngineLunarEventTests {
     /// USNO's 1800 and 2000 labels keep their 90-second allowance. For January 2100, whose USNO labels rest on an
     /// undocumented Delta T, the gate is the JPL Horizons TT root within 2 seconds; those USNO rows are not checked here
     /// and their residuals are recorded as diagnostics by `EngineMoonEventQualificationTests`.
-    @Test("Published quarters meet USNO's 90-second and January 2100 Horizons 2-second allowances in order")
+    @Test("Published quarters match phase and meet USNO 90-second or January 2100 Horizons 2-second allowances")
     func publishedQuarters() throws {
         let archive = IndependentReferenceArchive.shared
         let replaced = Set(archive.apparentLunarPhases.map(\.usnoSourceTime))
