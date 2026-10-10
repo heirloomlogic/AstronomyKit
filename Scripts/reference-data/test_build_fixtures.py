@@ -436,6 +436,61 @@ class SaturnApsisFixtureTests(unittest.TestCase):
                 self.builder.parse_saturn_apsis_events()
 
 
+class ApparentLunarPhaseFixtureTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.builder = load_builder()
+
+    def changed_result(self, source_name, mutation):
+        original_horizons_result = self.builder.horizons_result
+
+        def result(name):
+            original = original_horizons_result(name)
+            return mutation(original) if name == source_name else original
+
+        return result
+
+    def test_queries_request_tt_apparent_ecliptic_longitudes(self):
+        acquisitions = dict(self.builder.horizons_acquisitions())
+        for name, command in [("moon-apparent-phase-2100", "'301'"), ("sun-apparent-phase-2100", "'10'")]:
+            query = acquisitions[name]
+            self.assertEqual(command, query["COMMAND"])
+            self.assertEqual("'500@399'", query["CENTER"])
+            self.assertEqual("'31'", query["QUANTITIES"])
+            self.assertEqual("'TT'", query["TIME_TYPE"])
+            self.assertEqual("'AIRLESS'", query["APPARENT"])
+
+    def test_roots_lie_inside_their_source_brackets_and_name_each_2100_usno_label(self):
+        rows = self.builder.parse_apparent_lunar_phases()
+        self.assertEqual(["new", "firstQuarter", "full", "lastQuarter"], [row["phase"] for row in rows])
+        usno_2100 = {row["sourceTime"]: row["phase"] for row in self.builder.parse_upstream_events()["lunarPhases"] if row["sourceTime"].startswith("2100")}
+        self.assertEqual(usno_2100, {row["usnoSourceTime"]: row["phase"] for row in rows})
+        for row in rows:
+            self.assertLessEqual(row["lowerOffsetDegrees"], 0)
+            self.assertGreater(row["upperOffsetDegrees"], 0)
+            self.assertLess(row["lowerJulianDateTT"], row["julianDateTT"])
+            self.assertLess(row["julianDateTT"], row["upperJulianDateTT"])
+            self.assertEqual(60.0, row["sampleResolutionSeconds"])
+            self.assertEqual(2.0, row["toleranceSeconds"])
+
+    def test_timestamp_mismatch_and_wrong_time_scale_are_rejected(self):
+        mutations = {
+            "timestamp mismatch": lambda result: result.replace("2100-Jan-03 13:06:04.561", "2100-Jan-03 13:06:05.561"),
+            "lacks": lambda result: result.replace("Date__(TT)", "Date__(UT)"),
+        }
+        for message, mutation in mutations.items():
+            with self.subTest(message=message):
+                with mock.patch.object(self.builder, "horizons_result", side_effect=self.changed_result("sun-apparent-phase-2100", mutation)):
+                    with self.assertRaisesRegex(RuntimeError, message):
+                        self.builder.parse_apparent_lunar_phases()
+
+    def test_samples_that_do_not_bracket_the_target_are_rejected(self):
+        swapped = lambda result: result.replace(" 193.1930654,", " 193.2128502,")
+        with mock.patch.object(self.builder, "horizons_result", side_effect=self.changed_result("moon-apparent-phase-2100", swapped)):
+            with self.assertRaisesRegex(RuntimeError, "do not bracket"):
+                self.builder.parse_apparent_lunar_phases()
+
+
 if __name__ == "__main__":
     unittest.main()
 

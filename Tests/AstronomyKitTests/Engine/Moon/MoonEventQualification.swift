@@ -89,22 +89,32 @@ struct MoonEventQualification: Decodable {
     }
 
     func value(_ event: Event, at time: Engine.Time, direct: Bool, meanNode: Bool = false) throws -> Double {
-        let state = try state(at: time, direct: direct)
+        if let phase = event.phase {
+            let moon = Engine.Ecliptic(
+                try Engine.LightTravel.correct(at: time) { backdated in
+                    let state = try state(at: backdated, direct: direct)
+                    let position = state.position / Engine.kilometersPerAU
+                    return Engine.Vector(x: position.x, y: position.y, z: position.z, time: backdated)
+                }
+            ).longitude
+            let sun = try Engine.Positions.sunPosition(at: time).longitude
+            return Engine.longitudeOffset(moon - sun - phase)
+        }
+        let current = try state(at: time, direct: direct)
         if event == .pericenter || event == .apocenter {
-            let slope = (state.position * state.velocity).sum() / (state.position * state.position).sum().squareRoot()
+            let slope =
+                (current.position * current.velocity).sum()
+                / (current.position * current.position).sum().squareRoot()
             return event == .pericenter ? slope : -slope
         }
         if meanNode {
             let mean = Engine.Moon.meanEquatorToEcliptic(tt: time.tt).apply(
-                to: Engine.Precession.rotation(tt: time.tt).apply(to: state.position))
+                to: Engine.Precession.rotation(tt: time.tt).apply(to: current.position))
             return event == .ascending ? mean.z : -mean.z
         }
-        let position = state.position / Engine.kilometersPerAU
+        let position = current.position / Engine.kilometersPerAU
         let vector = Engine.Vector<Engine.EQJ>(x: position.x, y: position.y, z: position.z, time: time)
         let angles = Engine.Moon.eclipticAngles(Engine.FrameRotation.eqjToEct(time).apply(to: vector))
-        if let phase = event.phase {
-            return Engine.longitudeOffset(try angles.longitude - EngineLibrationTests.sunLongitude(at: time) - phase)
-        }
         return event == .ascending ? angles.latitude : -angles.latitude
     }
 

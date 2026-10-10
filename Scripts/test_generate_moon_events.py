@@ -31,6 +31,12 @@ class MoonEventFixtureTests(unittest.TestCase):
         chosen = self.tool.required_records([{"startTT": -0.5, "endTT": 3.5}], -0.5)
         self.assertEqual({-1, 0, 1}, chosen)
 
+    def test_apparent_phase_references_are_source_bound(self):
+        references = self.tool.apparent_phase_references()
+        self.assertEqual(["firstQuarter", "full", "lastQuarter", "new"], [row["phase"] for row in references])
+        self.assertTrue(all(row["samplingAllowanceSeconds"] == 1.0 for row in references))
+        self.tool.check_apparent_phase_sources()
+
 
 if __name__ == "__main__":
     unittest.main()
