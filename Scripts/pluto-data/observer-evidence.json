@@ -566,7 +566,7 @@
   "sourceSHA256": {
     "Scripts/capture-pluto-observers.py": "aa9486d3f0939ed310ae835cfd157e64c9e9e1f64db4f664088c1ef87f5e74f6",
     "Scripts/pluto-data/observer-fixtures.json": "e40632d54fdfdd97f334febd28a154b9afe9765bf00fe78ab48e50a72b2e3865",
-    "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
+    "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/test_capture_pluto_observers.py": "ae2f59cdbeae9e87406aaf603cb5af59d62e17f4241e6adc3aa9367dc78d3324",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",

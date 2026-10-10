@@ -242,7 +242,7 @@
     "Scripts/eclipse-data/transit-references.json": "cc822496e688ba73e8d9e83d1aaab071d436bebf24c964bb4ca4537218d543bb",
     "Scripts/record-eclipse-event-evidence.py": "0ca64c5e512b05739476311a6434fdd51662cf9b4479a070f7066a5831f490f9",
     "Scripts/record-transit-evidence.py": "76dc2d1a795e4e02daf0766cecf9fef89959b18809e6d571ce4bfef2b0bcfb64",
-    "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
+    "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/sources/mercury.html": "e29ff3e1ada11eaee343032f0c5b927ccf9a9b2cacad8e006a2bd6b4fc71ba40",
     "Scripts/reference-data/sources/nasa-oh2001.html": "09a0c66a75942e594f7cd1d7b02c85a4e7f73594b8e64669a0a324926d6cb873",
     "Scripts/reference-data/sources/solar_2001.html": "820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d",
@@ -360,11 +360,11 @@
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
     "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "ffcd7f57aeb09966520e36a87893bdcf174fdd255250ea308eb4e6e532a62192",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "cac8760f257c53c899ce64d16e96a4c5485c066d83cf8dc7db207a71fb713682",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineTransitEventTests.swift": "b7dea2ea02bc5f8484509a2c32b010c7970d37b0be5c80ac017222dff77ca02c",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "93ba4b8e4784b25c4868a02e2d2f9e3d0219432a58a879f81248fbbb035b1728"
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

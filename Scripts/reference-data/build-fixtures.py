@@ -152,6 +152,20 @@ MAX_ELONGATION_QUERIES = {
     "venus-max-2025-06": {"body": "venus", "command": "299", "startUTC": "2025-01-11T00:00:00Z", "dates": julian_grid(2460827.125, 2460828.125, 1.0)},
 }
 
+# The January 2100 lunar quarters from the apparent geocentric ecliptic longitudes (quantity 31) of the Moon and the Sun,
+# requested in TT. USNO prints these quarters as minute-rounded UT labels and does not document the Delta T behind its
+# 2100 values, so for these four rows the native phase suites gate on the Horizons TT roots instead (owner decision on
+# #247, 2026-10-10); the USNO labels stay in lunarPhases. Each pair of samples is 60 s apart and brackets one root.
+APPARENT_LUNAR_PHASE_EVENTS = [
+    {"phase": "new", "targetDegrees": 0.0, "usnoSourceTime": "2100-01-10T12:57:00.000Z", "dates": [2488079.0405637105, 2488079.041258155]},
+    {"phase": "firstQuarter", "targetDegrees": 90.0, "usnoSourceTime": "2100-01-18T12:35:00.000Z", "dates": [2488087.025321844, 2488087.0260162884]},
+    {"phase": "full", "targetDegrees": 180.0, "usnoSourceTime": "2100-01-26T02:51:00.000Z", "dates": [2488094.619685392, 2488094.6203798363]},
+    {"phase": "lastQuarter", "targetDegrees": 270.0, "usnoSourceTime": "2100-01-03T13:05:00.000Z", "dates": [2488072.045886119, 2488072.0465805633]},
+]
+APPARENT_LUNAR_PHASE_QUERIES = {"moon-apparent-phase-2100": "301", "sun-apparent-phase-2100": "10"}
+# Owner-approved for these four rows only; native roots fall 0.66 to 0.82 s before the Horizons roots.
+APPARENT_LUNAR_PHASE_TOLERANCE_SECONDS = 2.0
+
 # Six Saturn body-center extrema from the source-bound #81/#132 diagnosis. Each reference is sampled at ±0.01 and ±0.005 TT days around the resolved root. The native port replays the unchanged sixty-second target; target 699 is the public planet-center semantic, never system barycenter 6.
 SATURN_APSIS_REFERENCES = [
     ("apocenter", 2425931.53647080),
@@ -344,6 +358,17 @@ def angular_elongation_query(command: str, julian_dates: list[float]) -> dict[st
     return parameters
 
 
+def apparent_lunar_phase_query(command: str) -> dict[str, str]:
+    parameters = geocentric_query(command, "31", [date for event in APPARENT_LUNAR_PHASE_EVENTS for date in event["dates"]])
+    parameters.update({
+        "APPARENT": quoted("AIRLESS"),
+        "RANGE_UNITS": quoted("AU"),
+        "REF_SYSTEM": quoted("ICRF"),
+        "TIME_TYPE": quoted("TT"),
+    })
+    return parameters
+
+
 def horizontal_query(command: str, apparent: str, julian_dates: list[float]) -> dict[str, str]:
     return {
         "COMMAND": quoted(command),
@@ -388,6 +413,10 @@ def horizons_acquisitions() -> list[tuple[str, dict[str, str]]]:
     acquisitions.extend(
         (name, angular_elongation_query(event["command"], event["dates"]))
         for name, event in MAX_ELONGATION_QUERIES.items()
+    )
+    acquisitions.extend(
+        (name, apparent_lunar_phase_query(command))
+        for name, command in APPARENT_LUNAR_PHASE_QUERIES.items()
     )
     acquisitions.append(("saturn-apsis-precision", saturn_apsis_query()))
     acquisitions.append(("saturn-rings", geocentric_query("699", "14,19,20,24", SATURN_RING_DATES)))
@@ -810,10 +839,10 @@ def wrapped_degrees(value: float) -> float:
     return (value + 180) % 360 - 180
 
 
-def validate_horizons_ut_timestamp(name: str, row_index: int, timestamp: str, julian_date_ut: float) -> None:
+def validate_horizons_ut_timestamp(name: str, row_index: int, timestamp: str, julian_date_ut: float, label: str = "maximum-elongation", scale: str = "UT") -> None:
     match = re.fullmatch(r"\d{4}-[A-Z][a-z]{2}-\d{2} \d{2}:\d{2}:\d{2}\.(\d+)", timestamp)
     if match is None:
-        raise RuntimeError(f"unreadable maximum-elongation timestamp in {name} row {row_index}: {timestamp!r}")
+        raise RuntimeError(f"unreadable {label} timestamp in {name} row {row_index}: {timestamp!r}")
     returned = datetime.datetime.strptime(timestamp, "%Y-%b-%d %H:%M:%S.%f")
     j2000 = datetime.datetime(2000, 1, 1, 12)
     returned_seconds = (returned - j2000).total_seconds()
@@ -821,8 +850,8 @@ def validate_horizons_ut_timestamp(name: str, row_index: int, timestamp: str, ju
     displayed_precision_seconds = 10 ** -len(match.group(1))
     if abs(returned_seconds - requested_seconds) > displayed_precision_seconds / 2 + 1e-6:
         raise RuntimeError(
-            f"maximum-elongation timestamp mismatch in {name} row {row_index}: "
-            f"requested JD UT {julian_date_ut}, returned {timestamp}"
+            f"{label} timestamp mismatch in {name} row {row_index}: "
+            f"requested JD {scale} {julian_date_ut}, returned {timestamp}"
         )
 
 
@@ -963,6 +992,50 @@ def parse_saturn_apsis_events() -> list[dict[str, object]]:
             "acceptanceToleranceSeconds": 60.0,
         })
     return events
+
+
+def parse_apparent_lunar_phases() -> list[dict[str, object]]:
+    """Linear roots of the Moon's apparent longitude less the Sun's across each archived TT bracket."""
+    dates = sorted(date for event in APPARENT_LUNAR_PHASE_EVENTS for date in event["dates"])
+    longitudes: dict[tuple[str, float], float] = {}
+    for name, command in APPARENT_LUNAR_PHASE_QUERIES.items():
+        result = horizons_result(name)
+        target = {"301": "Target body name: Moon (301)", "10": "Target body name: Sun (10)"}[command]
+        for required in (target, "Center-site name: GEOCENTRIC", " Date__(TT)__HR:MN:SC.fff", "ObsEcLon"):
+            if required not in result:
+                raise RuntimeError(f"apparent lunar phase response {name} lacks {required!r}")
+        lines = data_lines(result)
+        if len(lines) != len(dates):
+            raise RuntimeError(f"unexpected apparent lunar phase row count in {name}")
+        for row_index, (date, line) in enumerate(zip(dates, lines), start=1):
+            columns = [column.strip() for column in line.split(",")]
+            validate_horizons_ut_timestamp(name, row_index, columns[0], date, label="apparent lunar phase", scale="TT")
+            longitude = float(columns[3])
+            if not math.isfinite(longitude) or not 0 <= longitude < 360:
+                raise RuntimeError(f"invalid apparent longitude in {name} row {row_index}")
+            longitudes[(command, date)] = longitude
+    phases = []
+    for event in APPARENT_LUNAR_PHASE_EVENTS:
+        lower, upper = event["dates"]
+        lower_offset, upper_offset = (
+            wrapped_degrees(longitudes[("301", date)] - longitudes[("10", date)] - event["targetDegrees"])
+            for date in (lower, upper)
+        )
+        if not lower_offset <= 0 < upper_offset:
+            raise RuntimeError(f"apparent {event['phase']} samples do not bracket one ascending root")
+        phases.append({
+            "phase": event["phase"],
+            "targetDegrees": event["targetDegrees"],
+            "usnoSourceTime": event["usnoSourceTime"],
+            "lowerJulianDateTT": lower,
+            "upperJulianDateTT": upper,
+            "lowerOffsetDegrees": lower_offset,
+            "upperOffsetDegrees": upper_offset,
+            "julianDateTT": lower + (upper - lower) * -lower_offset / (upper_offset - lower_offset),
+            "sampleResolutionSeconds": round((upper - lower) * 86_400, 3),
+            "toleranceSeconds": APPARENT_LUNAR_PHASE_TOLERANCE_SECONDS,
+        })
+    return phases
 
 
 def jupiter_moon_relative_tolerance(julian_date_tdb: float) -> float | None:
@@ -1332,6 +1405,7 @@ def build_archive(constellations: dict[str, list[dict[str, object]]] | None = No
     archive.update(parse_horizons())
     archive.update(parse_angular_events())
     archive["saturnApsides"] = parse_saturn_apsis_events()
+    archive["apparentLunarPhases"] = parse_apparent_lunar_phases()
     archive.update(parse_geocentric_states())
     return archive
 
@@ -1347,6 +1421,7 @@ def source_catalog() -> dict[str, dict[str, str]]:
         "sofaFixedStar": {"version": "2023-10-11", "frame": "ICRS/J2000, IAU 2006/2000A true equator and ecliptic of date, and topocentric horizon", "origin": "Sun center for the catalog definition, Earth center for geocentric coordinates, and the published geodetic site for topocentric coordinates", "units": "sidereal hours, degrees, metres, Julian dates, parallax-derived light-years, and arcseconds", "timeScale": "UTC, TT, and UT1 with UT1-UTC set to zero for the archived row", "aberration": "SOFA iauAtci13 relativistic annual aberration and light deflection; AstronomyKit retains its linear annual-aberration approximation", "refraction": "none", "domain": "one star and instant from the official SOFA astrometry example; proper motion is archived but set to zero by the recipe because FixedStar stores no proper-motion terms", "license": "IAU SOFA software and data terms; attribution retained and no endorsement implied", "url": "https://www.iausofa.org/2023_1011_C.html", "recipe": "The official sofa_ast_example.c is pinned unchanged; sofa-fixed-star-reference.c generates fixed-star-reference.json against SOFA release 2023-10-11. The 0.5 arcsec limit is twice the 0.246 arcsec sampled maximum rounded up, a regression margin rather than a published accuracy."},
         "jplObserver": {"serviceVersion": "recorded in every archived response", "frame": "ICRF/J2000 equatorial and IAU76/80 true ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "degrees, arcseconds/hour, AU, and km/s", "timeScale": "UT/UTC calendar output", "aberration": "apparent AIRLESS observer solution with down-leg light time and response-listed corrections", "refraction": "none (AIRLESS)", "domain": "1900, 2000, and 2100 samples, plus a three-day 2025 Mercury station bracket and 2060 Chiron at 1900-01-01 03:00 UT, 1950, 2000, 2026-01-02, 2050 and 2100", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplHorizontal": {"serviceVersion": "recorded in every archived response", "frame": "topocentric apparent horizon: azimuth east of north and elevation", "origin": "geodetic site 35.595 N, 82.5572 W, height 0 (coord@399)", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent position with light time, gravitational deflection and stellar aberration", "refraction": "none (AIRLESS) and Horizons' yellow-light refraction model (REFRACTED)", "domain": "the Sun, the Moon and Mars every three hours on 2026-01-02 and 2026-07-02 UT, above and below the horizon", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
+        "jplApparentLunarPhases": {"serviceVersion": "recorded in every archived response", "frame": "Earth-centered IAU76/80 apparent ecliptic and equinox of date", "origin": "Earth center 500@399", "units": "Julian dates TT, degrees, and seconds", "timeScale": "TT (TIME_TYPE=TT); roots are TT Julian dates and need no Delta T", "aberration": "Horizons quantity 31: light time, gravitational deflection, and stellar aberration", "refraction": "none (AIRLESS)", "domain": "the four January 2100 lunar quarters whose USNO labels are in lunarPhases, one 60-second TT bracket each", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256. build-fixtures.py takes the Moon's apparent longitude less the Sun's at each sample and linearly interpolates the target crossing; the 2-second allowance is an owner decision for these four rows on #247, against native residuals of 0.66 to 0.82 seconds"},
         "jplElongation": {"serviceVersion": "recorded in every archived response", "frame": "geocentric Sun-observer-target angle and IAU76/80 ecliptic of date", "origin": "Earth center 500@399", "units": "degrees", "timeScale": "UTC calendar output", "aberration": "apparent positions with light time, gravitational deflection and stellar aberration", "refraction": "none", "domain": "the Moon, Mercury, Venus, Mars and Jupiter every 46 days from 2026-01-02 UT", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256"},
         "jplAngularEvents": {"serviceVersion": "recorded in every archived response", "frame": "simultaneous geometric ICRF vectors transformed by official SOFA IAU 1976/1980 precession-nutation to true ecliptic of date for relative longitude; apparent full-sky Sun-observer-target angle for maximum elongation", "origin": "Sun center 500@10 for Earth, Mars, and Venus vectors; Earth center 500@399 for Mercury and Venus elongation", "units": "Julian dates TDB, UTC calendar timestamps, degrees, and seconds", "timeScale": "TDB for geometric vectors and UTC for apparent elongation tables; the 0.002-second TDB-minus-TT bound is included in relative-longitude allowances", "aberration": "none for VEC_CORR=NONE relative-longitude vectors; Horizons apparent light time, gravitational deflection, and stellar aberration for S-O-T elongation", "refraction": "none (AIRLESS)", "domain": "Mars opposition and superior conjunction, Venus inferior and superior conjunction, and two successive maximum elongations for each of Mercury and Venus in 2025", "license": "NASA/JPL factual output and IAU SOFA software/data terms; attribution retained and no endorsement implied", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "Adjacent *.query.json files contain every Horizons API parameter and response SHA-256. build-fixtures.py applies Scripts/reference-data/sofa-angular-events.c to simultaneous geometric vectors, derives sign-change or sampled-maximum brackets, and records the source sampling resolution as an allowance rather than a published accuracy."},
         "jplSaturnApsides": {"serviceVersion": "recorded in the archived response", "frame": "geometric ICRF vectors", "origin": "Saturn body center 699 relative to Sun body center 500@10", "units": "Julian dates TT, AU, AU/day, and seconds", "timeScale": "TT", "aberration": "none (VEC_CORR=NONE)", "refraction": "not applicable", "domain": "six failure-selected Saturn body-center extrema from 1929 through 2062, each sampled at five instants over ±0.01 TT day", "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement", "url": "https://ssd.jpl.nasa.gov/horizons/manual.html", "recipe": "The adjacent query records target 699, Sun-center origin, TT, geometric correction, exact sample epochs, and response SHA-256. These are failure-selected diagnostics from #81/#132, not a new accuracy holdout."},
