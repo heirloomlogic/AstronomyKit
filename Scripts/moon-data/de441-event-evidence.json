@@ -3497,7 +3497,7 @@
       }
     ]
   },
-  "runtimeBaseRevision": "045457c15fb770b14d946c077cf275a00e9b6d42",
+  "runtimeBaseRevision": "6a4cac9d14524cb79566e5bafb8b37dd56e35c4f",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
@@ -3511,7 +3511,7 @@
     "Scripts/moon-data/horizons-apparent-phase-sun.query.json": "592710fbc080ca3dd80be60feac5d3da957a35fd44a3041124b54bd88767d38c",
     "Scripts/test_generate_moon_events.py": "503376c732b9f23c2b24d29c14f0f261f2d4d104ed9e73196e2b776a85cfba66",
     "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "f35841fbd3d428fa36736e8731b7a94fe61f76ad82f84555d103609ba33c778d",
-    "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "80a0d07bc5e912d66799efe4fbab0be09bf85a144474e18221dd4bc62068b927",
+    "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "8eae705bc10b7870b4494c880c3e0524637e5b45e9fb210710df9d28a05968ea",
     "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift": "4a9eadfaae13399368825e926d9ff5667a6d26b21bf0d9f80f71b061c959dc33",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "4e94e32dd5b782fa1fd922697d4cfa359493808d46975369304beb5bda671a6c",
     "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift": "8b324e0ca7d53a21ba63b51f51474f3520880cf34f970421b04d8d4e7bb94d97",
