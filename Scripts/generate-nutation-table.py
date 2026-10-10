@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 """Generate the IAU 2006/2000A nutation tables and the equation of the equinoxes complementary terms offline from the checksummed ERFA sources."""
 import argparse
+import base64
 import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'Scripts/orientation-data'
 GENERATED = ROOT / 'Sources/AstronomyKit/Engine/Orientation/Generated'
 OUTPUT = GENERATED / 'IAU2000ATerms.swift'
 COMPLEMENTARY_OUTPUT = GENERATED / 'EquinoxComplementaryTerms.swift'
+LINE = 128
 
 INTEGER = r'\s*(-?\d+)\s*,'
 COEFFICIENT = r'\s*(-?\d+\.0)\s*'
@@ -43,18 +46,29 @@ def series(source, name, row, count, opening='{', extra=1):
     return rows
 
 
+def packed_terms(name, kind, rows):
+    """A `static let` that decodes `rows` from a packed literal; as 1,365 initializer calls they took the type checker 16 GB in a Debug build."""
+    width = len(rows[0])
+    values = [float(value) for row in rows for value in row]
+    text = base64.b64encode(struct.pack(f'<{len(values)}d', *values)).decode('ascii')
+    lines = '\n'.join(text[i:i + LINE] for i in range(0, len(text), LINE))
+    arguments = ', '.join(f'v[i + {index}]' if index else 'v[i]' for index in range(width))
+    return f'''    static let {name}: [{kind}] = {{
+        let v = Engine.unpackDoubles(
+            count: {len(values):_},
+            """
+{lines}
+"""
+        )
+        return stride(from: 0, to: v.count, by: {width}).map {{ i in {kind}({arguments}) }}
+    }}()'''
+
+
 def generate():
     source = (DATA/'nut00a.c').read_text()
-    luni_solar = []
-    for row in series(source, 'xls', LUNI_SOLAR_ROW, 678):
-        multipliers = ', '.join(row[:5])
-        coefficients = ', '.join(f'{int(value[:-2]):_}' for value in row[5:])
-        luni_solar.append(f'        LuniSolarTerm({multipliers}, {coefficients}),')
-    planetary = []
-    for row in series(source, 'xpl', PLANETARY_ROW, 687):
-        multipliers = ', '.join(row[:13])
-        coefficients = ', '.join(f'{int(value):_}' for value in row[13:])
-        planetary.append(f'        PlanetaryTerm({multipliers}, {coefficients}),')
+    luni_solar = [[int(value) for value in row[:5]] + [int(value[:-2]) for value in row[5:]]
+                  for row in series(source, 'xls', LUNI_SOLAR_ROW, 678)]
+    planetary = [[int(value) for value in row] for row in series(source, 'xpl', PLANETARY_ROW, 687)]
     adjustment = ADJUSTMENT.search((DATA/'nut06a.c').read_text())
     if not adjustment:
         raise ValueError('Expected the IAU 2006 adjustment in nut06a.c')
@@ -63,6 +77,7 @@ def generate():
 // The IAU 2000A luni-solar and planetary series from ERFA 2.0.1 nut00a.c, and
 // the IAU 2006 adjustment factors from nut06a.c.
 // Source URL and SHA-256: Scripts/orientation-data/manifest.json.
+// swift-format-ignore-file
 
 extension Engine.Nutation {{
     /// `iauNut06a` multiplies Δψ by 1 + {longitude_factor} + j2Rate·t and Δε by
@@ -70,12 +85,13 @@ extension Engine.Nutation {{
     static let longitudeFactor = {longitude_factor}
     static let j2Rate = {j2_rate}
 
-    static let luniSolarTerms: [LuniSolarTerm] = [
-''' + '\n'.join(luni_solar) + '''
-    ]
+    /// The 678 rows of `xls`, each in `LuniSolarTerm` argument order.
+{packed_terms('luniSolarTerms', 'LuniSolarTerm', luni_solar)}
 
-    static let planetaryTerms: [PlanetaryTerm] = [
-''' + '\n'.join(planetary) + '\n    ]\n}\n'
+    /// The 687 rows of `xpl`, each in `PlanetaryTerm` argument order.
+{packed_terms('planetaryTerms', 'PlanetaryTerm', planetary)}
+}}
+'''
 
 
 def complementary_series(source, name, count):

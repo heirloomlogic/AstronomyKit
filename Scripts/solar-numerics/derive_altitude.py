@@ -8,7 +8,7 @@ import re
 
 from intervals import Interval as I, DeltaT, equatorial_matrix, expression, year_start
 from certify_light_time import constants as convergence_constants, C
-from numerics import ROOT, ENGINE, record, earth_model, sqrt_interval, upward, downward, BINDINGS, source_hashes, check_hashes
+from numerics import ROOT, ENGINE, record, earth_model, sqrt_interval, upward, downward, BINDINGS, source_hashes, check_hashes, unpack
 
 
 def pi_interval():
@@ -48,8 +48,11 @@ def frame_rates():
     p0,p1 = [Q(value.replace('_','')) for value in match.groups()]
     planetary_rates.append(p0+2*p1*t)
     table = (ROOT/(ENGINE+'Orientation/Generated/IAU2000ATerms.swift')).read_text()
-    luni_solar = [coefficients(row) for row in re.findall(r'LuniSolarTerm\(([^)]+)\)', table)]
-    planetary = [coefficients(row) for row in re.findall(r'PlanetaryTerm\(([^)]+)\)', table)]
+    def rows(block, width):
+        values = [Q(value) for value in unpack(block)]
+        return [values[i:i+width] for i in range(0, len(values), width)]
+    luni_solar_block, planetary_block = table.split('static let planetaryTerms', 1)
+    luni_solar, planetary = rows(luni_solar_block, 11), rows(planetary_block, 17)
     factor, j2 = [abs(Q(re.search(r'static let '+name+r' = (\S+)\n', table)[1])) for name in ['longitudeFactor','j2Rate']]
     if len(luni_solar_rates) != 5 or len(planetary_rates) != 13 or len(luni_solar) != 678 or len(planetary) != 687:
         raise ValueError('Nutation data layout changed')

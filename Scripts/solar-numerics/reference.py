@@ -62,13 +62,13 @@ def era(ut):
 def nutation_tables(root=ROOT):
     """The generated IAU 2000A rows and the IAU 2006 factors, read as exact integers and decimals."""
     text = (root / (ENGINE + "Orientation/Generated/IAU2000ATerms.swift")).read_text()
-    def rows(name, width):
-        found = [tuple(int(value.strip().replace("_", "")) for value in row.split(","))
-                 for row in re.findall(name + r"\(([^)]+)\)", text)]
-        if any(len(row) != width for row in found):
+    def rows(block, width):
+        values = unpack(block)
+        if len(values) % width or not all(value.is_integer() for value in values):
             raise ValueError("IAU 2000A table shape changed")
-        return found
-    luni_solar, planetary = rows("LuniSolarTerm", 11), rows("PlanetaryTerm", 17)
+        return [tuple(int(value) for value in values[i:i + width]) for i in range(0, len(values), width)]
+    luni_solar_block, planetary_block = text.split("static let planetaryTerms", 1)
+    luni_solar, planetary = rows(luni_solar_block, 11), rows(planetary_block, 17)
     factors = [re.search(r"static let " + name + r" = (\S+)\n", text) for name in ["longitudeFactor", "j2Rate"]]
     if len(luni_solar) != 678 or len(planetary) != 687 or not all(factors):
         raise ValueError("IAU 2000A table shape changed")
