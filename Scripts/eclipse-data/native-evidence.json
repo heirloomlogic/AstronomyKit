@@ -1,41 +1,41 @@
 {
-  "baselineRevision": "39954da87cb083ef9e39ee5bddb4a4bc895bd5e7",
+  "baselineRevision": "2d1252dc472dd71ddaa8222ed69b2adf0f3078ad",
   "buildSeconds": {
-    "debug": 1.0,
-    "release": 117.34
+    "debug": 0.87,
+    "release": 119.73
   },
   "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. Two NASA SVS Moon-disc obscurations fall inside intervals inferred from the printed percentages under a nearest-0.1-percentage-point rounding assumption. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
   "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. Both obscuration references come from one NASA SVS publisher and DE421/LOLA model family. The pages do not publish their exact rounding rule, lunar and shadow radii, or full-precision area algorithm, so interval agreement does not establish algorithm replication. Public eclipse facades remain C-backed until #96. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
   "published": {
-    "maximumObscurationResidualFromPrintedFraction": 0.0004997639053458958,
-    "maximumPartialDurationResidualMinutes": 0.9746688231825829,
-    "maximumPeakResidualSeconds": 31.450777204531732,
-    "maximumPenumbralDurationResidualMinutes": 0.023154153821451473,
-    "maximumTotalDurationResidualMinutes": 0.4741875727273168,
-    "minimumObscurationMarginInsidePrintInterval": 2.3609465404916818e-07,
+    "maximumObscurationResidualFromPrintedFraction": 0.0004997642666744184,
+    "maximumPartialDurationResidualMinutes": 0.9746688127052039,
+    "maximumPeakResidualSeconds": 31.837591345697547,
+    "maximumPenumbralDurationResidualMinutes": 0.02315415373959695,
+    "maximumTotalDurationResidualMinutes": 0.47418757043539017,
+    "minimumObscurationMarginInsidePrintInterval": 2.3573332552651038e-07,
     "obscurationRows": 2,
     "rows": 6
   },
-  "releaseExecutableBytes": 165038480,
+  "releaseExecutableBytes": 165224752,
   "releaseObjectBytes": {
-    "EngineEclipseEvents.o": 106824,
-    "EngineShadowGeometry.o": 31240
+    "EngineEclipseEvents.o": 106784,
+    "EngineShadowGeometry.o": 31208
   },
   "resources": {
-    "checksum": -2855994.8865676024,
-    "coldSeconds": 0.030810952186584473,
+    "checksum": -2855994.886539329,
+    "coldSeconds": 0.030303001403808594,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 0.07674300670623779,
-    "peakAfterColdBytes": 163758080,
-    "peakAfterWorkloadBytes": 163758080,
-    "peakBeforeBytes": 49233920,
+    "nextEclipsesSeconds": 0.12974190711975098,
+    "peakAfterColdBytes": 163840000,
+    "peakAfterWorkloadBytes": 163856384,
+    "peakBeforeBytes": 49283072,
     "totalEclipseCount": 100
   },
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Scripts/eclipse-data/native-captures.json": "938d7daed54acd2c303e9b45df58c4ad914b9922bb6db6bf95928add79c60147",
-    "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
+    "Scripts/eclipse-data/native-captures.json": "ad70b38ff2c62172869a38615ed5cd3cb468048c8fa616b4767c47ff4491eb56",
+    "Scripts/record-eclipse-event-evidence.py": "0ca64c5e512b05739476311a6434fdd51662cf9b4479a070f7066a5831f490f9",
     "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
     "Scripts/reference-data/sources/lunar_1701.html": "15ed1e6e6b1153f6c85e724258aa91e23655fecb08ac7623fd6e2b4b1d8199f7",
     "Scripts/reference-data/sources/lunar_1901.html": "587cf5bf48e1b9f17b0e2b6d72d42fc81828f62e9a9252d7f661a747b95154ca",
@@ -45,7 +45,7 @@
     "Scripts/reference-data/sources/nasa-shadow-enlargement.html": "95b466d625a292a16f3d6f1a3aa9e7e4fb5224a2e13b4fd9a5252ff5de20841f",
     "Scripts/reference-data/sources/nasa-svs-4953.html": "e58a5ce4ebe1b59779dc931f374d8e44c5b299beaa9db5fea024065c39d61f8e",
     "Scripts/reference-data/sources/nasa-svs-5672.html": "58c3f58627ad6846c41391280f8fbb90e5c7cff2623f229cfa465d5bc620af4e",
-    "Scripts/test_eclipse_event_evidence.py": "8cdae1d2a32496c387f23a597a8d6ce51b9dc5a902e7674b7424cd3676ed1fc4",
+    "Scripts/test_eclipse_event_evidence.py": "c313987defa14f24f17382d54c31e0b449b69d3ef5e74102e193d65b8ab571e3",
     "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
     "Sources/AstronomyKit/CelestialBody.swift": "745a84f7d97eef35ea945829649b1ea6ab5bed2c86846eecea5e891867b60cc7",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",

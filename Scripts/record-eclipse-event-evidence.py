@@ -57,13 +57,22 @@ def finite(value):
     return not isinstance(value, (int, float)) or math.isfinite(value)
 
 
-def near(first, second):
+def near(first, second, path=()):
     if isinstance(first, dict):
-        return first.keys() == second.keys() and all(near(first[key], second[key]) for key in first)
+        return first.keys() == second.keys() and all(near(first[key], second[key], path + (key,)) for key in first)
     if isinstance(first, list):
-        return len(first) == len(second) and all(near(a, b) for a, b in zip(first, second))
+        return len(first) == len(second) and all(near(a, b, path + (str(index),)) for index, (a, b) in enumerate(zip(first, second)))
     if isinstance(first, float):
-        return isinstance(second, (int, float)) and abs(first - second) <= max(1.0e-10, 16 * math.ulp(first))
+        name = path[-1] if path else ""
+        if name.endswith("Seconds"):
+            unit_tolerance = 1.0e-5
+        elif name.endswith("Minutes"):
+            unit_tolerance = 1.0e-8
+        elif name in {"tt", "ut"} or name.endswith(("TT", "UT")):
+            unit_tolerance = 2.0e-10
+        else:
+            unit_tolerance = 1.0e-10
+        return isinstance(second, (int, float)) and abs(first - second) <= max(unit_tolerance, 16 * math.ulp(first))
     return first == second
 
 

@@ -1,7 +1,7 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (1.00 sec)",
-    "release": "Build complete! (117.34 sec)"
+    "debug": "Build complete! (0.87 sec)",
+    "release": "Build complete! (119.73 sec)"
   },
   "debug": {
     "area": [
@@ -41,88 +41,88 @@
     ],
     "published": [
       {
-        "distanceKm": 3906.827761278141,
+        "distanceKm": 3906.8277612515644,
         "id": "1800-04-24T00:24:00Z",
         "kind": "annular",
-        "latitude": 45.711472048222035,
-        "longitude": 151.3421752786847,
-        "obscuration": 0.8868074430690518,
-        "physicalTT": -72935.48336319008,
+        "latitude": 45.71146535507018,
+        "longitude": 151.34216837229178,
+        "obscuration": 0.8868074431920843,
+        "physicalTT": -72935.48336320595,
         "sourceTT": -72935.48333333334,
-        "tt": -72935.48336319008,
-        "ut": -72935.48352080396
+        "tt": -72935.48336320595,
+        "ut": -72935.48352081982
       },
       {
-        "distanceKm": 2188.50535468373,
+        "distanceKm": 2188.505308549991,
         "id": "2024-04-08T18:18:29Z",
         "kind": "total",
-        "latitude": 25.29183129421714,
-        "longitude": -104.11904225666002,
+        "latitude": 25.290937183917777,
+        "longitude": -104.11990339370212,
         "obscuration": 1,
-        "physicalTT": 8864.26283212943,
+        "physicalTT": 8864.262829951886,
         "sourceTT": 8864.262835648147,
-        "tt": 8864.26283212943,
-        "ut": 8864.261975288266
+        "tt": 8864.262829951886,
+        "ut": 8864.26197311072
       },
       {
-        "distanceKm": 2561.7974750725302,
+        "distanceKm": 2561.7974756612753,
         "id": "2099-03-21T22:54:32Z",
         "kind": "annular",
-        "latitude": -20.021914843052723,
-        "longitude": -149.04038250148312,
-        "obscuration": 0.8681975814164765,
-        "physicalTT": 36239.45451844626,
+        "latitude": -20.022033206225796,
+        "longitude": -149.04047137006114,
+        "obscuration": 0.8681975791345439,
+        "physicalTT": 36239.454518120874,
         "sourceTT": 36239.45453703704,
-        "tt": 36239.45451844626,
-        "ut": 36239.45219318048
+        "tt": 36239.454518120874,
+        "ut": 36239.45219285509
       },
       {
-        "distanceKm": 6377.93620192099,
+        "distanceKm": 6377.936201918645,
         "id": "2014-04-29",
         "kind": "annular",
-        "latitude": -70.69724180354977,
-        "longitude": 131.12803691518383,
-        "obscuration": 0.9686646084576606,
-        "physicalTT": 5231.753141287304,
+        "latitude": -70.6972420863425,
+        "longitude": 131.12803614077174,
+        "obscuration": 0.9686646084692624,
+        "physicalTT": 5231.753141286718,
         "sourceTT": 5231.753159722222,
-        "tt": 5231.753141287304,
-        "ut": 5231.752346362685
+        "tt": 5231.753141286718,
+        "ut": 5231.752346362099
       },
       {
-        "distanceKm": 2520.429937455561,
+        "distanceKm": 2520.4299394630907,
         "id": "2023-04-20",
         "kind": "total",
-        "latitude": -9.595781127425113,
-        "longitude": 125.79611661918563,
+        "latitude": -9.595961993009846,
+        "longitude": 125.79593854926338,
         "obscuration": 1,
-        "physicalTT": 8509.679102627637,
+        "physicalTT": 8509.679102089905,
         "sourceTT": 8509.67912037037,
-        "tt": 8509.679102627637,
-        "ut": 8509.67825239315
+        "tt": 8509.679102089905,
+        "ut": 8509.67825185542
       },
       {
-        "distanceKm": 6636.575519141165,
+        "distanceKm": 6636.57551914333,
         "id": "2025-03-29",
         "kind": "partial",
         "latitude": null,
         "longitude": null,
         "obscuration": null,
-        "physicalTT": 9218.950402018767,
+        "physicalTT": 9218.95040201805,
         "sourceTT": 9218.950416666667,
-        "tt": 9218.950402018767,
-        "ut": 9218.949538455843
+        "tt": 9218.95040201805,
+        "ut": 9218.949538455126
       },
       {
-        "distanceKm": 6398.117540987323,
+        "distanceKm": 6398.117540986229,
         "id": "2043-04-09",
         "kind": "total",
-        "latitude": 61.459792519729845,
-        "longitude": 151.80984572509294,
+        "latitude": 61.459791684755324,
+        "longitude": 151.80984663530216,
         "obscuration": 1,
-        "physicalTT": 15804.290139280934,
+        "physicalTT": 15804.290139279834,
         "sourceTT": 15804.290150462963,
-        "tt": 15804.290139280934,
-        "ut": 15804.289128574119
+        "tt": 15804.290139279834,
+        "ut": 15804.289128573018
       }
     ]
   },
@@ -164,106 +164,106 @@
     ],
     "published": [
       {
-        "distanceKm": 3906.827761278141,
+        "distanceKm": 3906.8277612515644,
         "id": "1800-04-24T00:24:00Z",
         "kind": "annular",
-        "latitude": 45.711472048222035,
-        "longitude": 151.3421752786847,
-        "obscuration": 0.8868074430690518,
-        "physicalTT": -72935.48336319008,
+        "latitude": 45.71146535507018,
+        "longitude": 151.34216837229178,
+        "obscuration": 0.8868074431920843,
+        "physicalTT": -72935.48336320595,
         "sourceTT": -72935.48333333334,
-        "tt": -72935.48336319008,
-        "ut": -72935.48352080396
+        "tt": -72935.48336320595,
+        "ut": -72935.48352081982
       },
       {
-        "distanceKm": 2188.50535468373,
+        "distanceKm": 2188.505308549991,
         "id": "2024-04-08T18:18:29Z",
         "kind": "total",
-        "latitude": 25.29183129421714,
-        "longitude": -104.11904225666002,
+        "latitude": 25.290937183917777,
+        "longitude": -104.11990339370212,
         "obscuration": 1,
-        "physicalTT": 8864.26283212943,
+        "physicalTT": 8864.262829951886,
         "sourceTT": 8864.262835648147,
-        "tt": 8864.26283212943,
-        "ut": 8864.261975288266
+        "tt": 8864.262829951886,
+        "ut": 8864.26197311072
       },
       {
-        "distanceKm": 2561.7974750725302,
+        "distanceKm": 2561.7974756612753,
         "id": "2099-03-21T22:54:32Z",
         "kind": "annular",
-        "latitude": -20.021914843052723,
-        "longitude": -149.04038250148312,
-        "obscuration": 0.8681975814164765,
-        "physicalTT": 36239.45451844626,
+        "latitude": -20.022033206225796,
+        "longitude": -149.04047137006114,
+        "obscuration": 0.8681975791345439,
+        "physicalTT": 36239.454518120874,
         "sourceTT": 36239.45453703704,
-        "tt": 36239.45451844626,
-        "ut": 36239.45219318048
+        "tt": 36239.454518120874,
+        "ut": 36239.45219285509
       },
       {
-        "distanceKm": 6377.93620192099,
+        "distanceKm": 6377.936201918645,
         "id": "2014-04-29",
         "kind": "annular",
-        "latitude": -70.69724180354977,
-        "longitude": 131.12803691518383,
-        "obscuration": 0.9686646084576606,
-        "physicalTT": 5231.753141287304,
+        "latitude": -70.6972420863425,
+        "longitude": 131.12803614077174,
+        "obscuration": 0.9686646084692624,
+        "physicalTT": 5231.753141286718,
         "sourceTT": 5231.753159722222,
-        "tt": 5231.753141287304,
-        "ut": 5231.752346362685
+        "tt": 5231.753141286718,
+        "ut": 5231.752346362099
       },
       {
-        "distanceKm": 2520.429937455561,
+        "distanceKm": 2520.4299394630907,
         "id": "2023-04-20",
         "kind": "total",
-        "latitude": -9.595781127425113,
-        "longitude": 125.79611661918563,
+        "latitude": -9.595961993009846,
+        "longitude": 125.79593854926338,
         "obscuration": 1,
-        "physicalTT": 8509.679102627637,
+        "physicalTT": 8509.679102089905,
         "sourceTT": 8509.67912037037,
-        "tt": 8509.679102627637,
-        "ut": 8509.67825239315
+        "tt": 8509.679102089905,
+        "ut": 8509.67825185542
       },
       {
-        "distanceKm": 6636.575519141165,
+        "distanceKm": 6636.57551914333,
         "id": "2025-03-29",
         "kind": "partial",
         "latitude": null,
         "longitude": null,
         "obscuration": null,
-        "physicalTT": 9218.950402018767,
+        "physicalTT": 9218.95040201805,
         "sourceTT": 9218.950416666667,
-        "tt": 9218.950402018767,
-        "ut": 9218.949538455843
+        "tt": 9218.95040201805,
+        "ut": 9218.949538455126
       },
       {
-        "distanceKm": 6398.117540987323,
+        "distanceKm": 6398.117540986229,
         "id": "2043-04-09",
         "kind": "total",
-        "latitude": 61.459792519729845,
-        "longitude": 151.80984572509294,
+        "latitude": 61.459791684755324,
+        "longitude": 151.80984663530216,
         "obscuration": 1,
-        "physicalTT": 15804.290139280934,
+        "physicalTT": 15804.290139279834,
         "sourceTT": 15804.290150462963,
-        "tt": 15804.290139280934,
-        "ut": 15804.289128574119
+        "tt": 15804.290139279834,
+        "ut": 15804.289128573018
       }
     ]
   },
-  "releaseExecutableBytes": 165038480,
+  "releaseExecutableBytes": 165224752,
   "releaseObjectBytes": {
-    "EngineGeoidIntersection.o": 31608,
-    "EngineGlobalSolarEvents.o": 94368
+    "EngineGeoidIntersection.o": 31576,
+    "EngineGlobalSolarEvents.o": 94312
   },
   "resources": {
-    "checksum": -2866939.3761416273,
-    "coldSeconds": 0.030381083488464355,
+    "checksum": -2866939.3761060787,
+    "coldSeconds": 0.0300600528717041,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 0.07255995273590088,
-    "peakAfterColdBytes": 161464320,
-    "peakAfterWorkloadBytes": 161480704,
-    "peakBeforeBytes": 46841856
+    "nextSeconds": 0.11727499961853027,
+    "peakAfterColdBytes": 161792000,
+    "peakAfterWorkloadBytes": 161808384,
+    "peakBeforeBytes": 47169536
   },
-  "runtimeBaseRevision": "39954da87cb083ef9e39ee5bddb4a4bc895bd5e7",
+  "runtimeBaseRevision": "2d1252dc472dd71ddaa8222ed69b2adf0f3078ad",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }
