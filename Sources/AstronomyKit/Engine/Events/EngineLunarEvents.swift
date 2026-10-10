@@ -74,7 +74,7 @@ extension Engine.Events {
             let requestedEnd = start.adding(days: limitDays)
             guard requestedEnd.tt >= earliestApparentTT else { return nil }
             searchStart = Engine.Time(tt: earliestApparentTT, deltaTModel: model)
-            searchLimit = requestedEnd.tt - searchStart.tt
+            searchLimit = requestedEnd.ut - searchStart.ut
         } else {
             searchStart = start
             searchLimit = limitDays

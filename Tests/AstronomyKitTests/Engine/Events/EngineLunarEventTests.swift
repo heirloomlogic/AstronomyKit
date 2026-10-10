@@ -116,6 +116,12 @@ struct EngineLunarEventTests {
         let lowerResult = try #require(
             try Events.searchMoonPhase(0, after: lowerEndpoint, limitDays: 40))
         #expect(lowerResult.tt >= lowerEndpoint.tt && lowerResult.deltaTModel == .jplHorizons)
+        let lowerRequestedEnd = lowerEndpoint.adding(days: 5)
+        let lowerEndTarget = try Events.moonPhaseAngle(at: lowerRequestedEnd)
+        let lowerEndResult = try #require(
+            try Events.searchMoonPhase(lowerEndTarget, after: lowerEndpoint, limitDays: 5))
+        #expect(abs(lowerEndResult.ut - lowerRequestedEnd.ut) * Engine.secondsPerDay < 0.2)
+        #expect(lowerEndResult.deltaTModel == .jplHorizons)
         let lowerQuarter = try Events.searchMoonQuarter(after: lowerEndpoint)
         #expect(lowerQuarter.time.tt >= lowerEndpoint.tt && lowerQuarter.time.deltaTModel == .jplHorizons)
         #expect(
