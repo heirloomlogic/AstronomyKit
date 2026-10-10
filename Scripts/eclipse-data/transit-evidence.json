@@ -1,7 +1,7 @@
 {
   "buildSeconds": {
-    "debug": 0.87,
-    "release": 119.73
+    "debug": 28.94,
+    "release": 151.59
   },
   "limitations": "Sampled independent UT contacts/angular minima and published next identities, not full-domain accuracy. Physical spheres use NASA fact-sheet mean radii; these are not attributed to the Meeus catalog. Apparent vectors retain engine light-time/aberration conventions. OH2001 December penumbral contacts remain outside 120 s; matching Danjon diagrams are separately qualified. Global G0/1986 and local peak limitations remain in their evidence owners. Public routing stays C under #96; host costs are not portable gates.",
   "published": [
@@ -98,47 +98,47 @@
       "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html"
     }
   },
-  "releaseExecutableBytes": 165224752,
+  "releaseExecutableBytes": 165415264,
   "releaseObjectBytes": {
-    "EngineTransitEvents.o": 45624
+    "EngineTransitEvents.o": 45936
   },
   "resources": {
     "checksum": 537515.4328593763,
-    "coldSeconds": 0.005599021911621094,
+    "coldSeconds": 0.01185595989227295,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 0.39264702796936035,
-    "peakAfterColdBytes": 63537152,
-    "peakAfterWorkloadBytes": 64290816,
-    "peakBeforeBytes": 46694400
+    "nextSeconds": 1.3884220123291016,
+    "peakAfterColdBytes": 64176128,
+    "peakAfterWorkloadBytes": 64978944,
+    "peakBeforeBytes": 47169536
   },
-  "runtimeBaseRevision": "2d1252dc472dd71ddaa8222ed69b2adf0f3078ad",
+  "runtimeBaseRevision": "b8e384aaad33442f9e8360fa14f5e6b5f2b2794d",
   "schemaVersion": 1,
   "sequences": {
     "global": [
       {
         "date": "2024-04-08",
-        "seconds": -0.4921570129226893
+        "seconds": -0.492144440067932
       },
       {
         "date": "2024-10-02",
-        "seconds": -1.092159259133041
+        "seconds": -1.0921550157945603
       },
       {
         "date": "2025-03-29",
-        "seconds": -1.2656404520384967
+        "seconds": -1.2656619830522686
       }
     ],
     "penumbralContacts": [
       {
         "danjonDiagramResidualSeconds": {
-          "penumbralBegin": -1.4976695643781568,
-          "penumbralEnd": -1.3941816405349527
+          "penumbralBegin": -1.4976699130784255,
+          "penumbralEnd": -1.3941819892352214
         },
         "date": "2001-01-09",
         "oh2001ResidualSeconds": {
-          "penumbralBegin": 94.50233043717162,
-          "penumbralEnd": -86.39418163929804
+          "penumbralBegin": 94.50233008847135,
+          "penumbralEnd": -86.39418198799831
         },
         "oh2001Within120Seconds": {
           "penumbralBegin": true,
@@ -150,12 +150,12 @@
       {
         "danjonDiagramResidualSeconds": {
           "penumbralBegin": -0.056056583707686514,
-          "penumbralEnd": -2.714022642976488
+          "penumbralEnd": -2.7140228001371725
         },
         "date": "2001-07-05",
         "oh2001ResidualSeconds": {
           "penumbralBegin": 119.94394341454608,
-          "penumbralEnd": -110.7140226453339
+          "penumbralEnd": -110.71402280249458
         },
         "oh2001Within120Seconds": {
           "penumbralBegin": true,
@@ -166,13 +166,13 @@
       },
       {
         "danjonDiagramResidualSeconds": {
-          "penumbralBegin": 0.8778253642958589,
-          "penumbralEnd": -3.900673083990114
+          "penumbralBegin": 0.8778249026363483,
+          "penumbralEnd": -3.9006733688438544
         },
         "date": "2001-12-30",
         "oh2001ResidualSeconds": {
-          "penumbralBegin": 131.87782536042505,
-          "penumbralEnd": -122.90067308422294
+          "penumbralBegin": 131.87782489876554,
+          "penumbralEnd": -122.90067336907669
         },
         "oh2001Within120Seconds": {
           "penumbralBegin": false,
@@ -238,9 +238,9 @@
   "sourceHashes": {
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-transit-references.py": "353dbde0ada3434cb96205cffc0aeda8fff46142b876c99015246c805daee224",
-    "Scripts/eclipse-data/transit-captures.json": "24d230142724c20d7504de8d7e48aa63bf5e78cd2173a937602974a1d82e43d8",
+    "Scripts/eclipse-data/transit-captures.json": "c2cfaef9a8d2d98e331c4be490b1f0f062d5b678e897cde75c633b9e6399cbbc",
     "Scripts/eclipse-data/transit-references.json": "cc822496e688ba73e8d9e83d1aaab071d436bebf24c964bb4ca4537218d543bb",
-    "Scripts/record-eclipse-event-evidence.py": "0ca64c5e512b05739476311a6434fdd51662cf9b4479a070f7066a5831f490f9",
+    "Scripts/record-eclipse-event-evidence.py": "ebdbaebf9e2b88c1154a2e10bb937bdb5b02f7edd5d9232bcc8e2f379dd4c58a",
     "Scripts/record-transit-evidence.py": "76dc2d1a795e4e02daf0766cecf9fef89959b18809e6d571ce4bfef2b0bcfb64",
     "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/sources/mercury.html": "e29ff3e1ada11eaee343032f0c5b927ccf9a9b2cacad8e006a2bd6b4fc71ba40",
@@ -267,7 +267,7 @@
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",
-    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
+    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "d9fd0b02d56f3ebaff5283aadf56ca6b41993c42e6e4ac2804ad43c8caebc858",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
     "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "851f9e384e46bcea481d665ca6fb44fe2f9e4e5ed2ace8c0f5e2ee84a3d3f3b8",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
@@ -318,16 +318,16 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineAtmosphere.swift": "597cf1e08dc7e8de30c21983549f3ea3fe0467a823f7bdfe87abb0003532b8bf",
     "Sources/AstronomyKit/Engine/Orientation/EngineCoordinates.swift": "10136541491835563c124727f046015c9dc8a554a1bb12c711c797ff812ce385",
     "Sources/AstronomyKit/Engine/Orientation/EngineEarthRotation.swift": "8da0ccef9811c6a6af993429e2772e07488ed09dea16d77f790b40efd3828a01",
-    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "00bae4b6e220398fe02081fa8d585fd56dfbc9a15776e71e488609c9583e8644",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "8a8e64fb4955949b25c91d287f7e685bab0a02ff9395179ee79213e6f49c4a4c",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "661a2547f2e7b1eeb6dcf57f679fc8bc9837964e30df84f78871c07d58f5ddeb",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
     "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
-    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift": "889f639ad72ca00cd69b59f1178d6ca024c9c5172b3008902fb46f4ddb8021ab",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "c300a2513193aa7d2b1ab9ed771ecc621cf0d1d0b3cde4717befaa04f7d2d138",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",

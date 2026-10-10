@@ -14,8 +14,8 @@
     ]
   ],
   "buildSeconds": {
-    "debug": 1.0,
-    "release": 117.34
+    "debug": 28.94,
+    "release": 151.59
   },
   "debug": {
     "coefficients": {
@@ -412,23 +412,23 @@
       }
     ]
   },
-  "releaseExecutableBytes": 165038480,
+  "releaseExecutableBytes": 165415264,
   "resourceScope": "macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.",
   "resources": {
-    "centerColdSeconds": 0.00645291805267334,
+    "centerColdSeconds": 0.007008075714111328,
     "checksum": -443.8575980663478,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.041998982429504395,
+    "eventSeconds": 0.04394102096557617,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 75923456,
-    "peakAfterRetainedBytes": 52363264,
-    "peakAfterWorkloadsBytes": 76529664,
-    "peakBeforeBytes": 47316992,
-    "retainedColdSeconds": 0.0015130043029785156,
+    "peakAfterCenterBytes": 75546624,
+    "peakAfterRetainedBytes": 51937280,
+    "peakAfterWorkloadsBytes": 76136448,
+    "peakBeforeBytes": 46825472,
+    "retainedColdSeconds": 0.0016779899597167969,
     "seconds": {
-      "center": 0.03259098529815674,
-      "retained": 0.012837052345275879
+      "center": 0.035354018211364746,
+      "retained": 0.013057947158813477
     }
   },
   "schemaVersion": 2,
@@ -475,13 +475,13 @@
     "Scripts/saturn-data/barycenter-reference.json": "218c6a9cda702a969c6eecb4cb6927aa735f5d6af9f7c81a5d41f180104c9041",
     "Scripts/saturn-data/barycenter-reference.query.json": "a12f1e6346ba1016f68c4d9eabf51ba11a71896b8122381f70151c6a02c1ab78",
     "Scripts/saturn-data/direct-fixtures.json": "09fc0c61567cb69fd7953712827029c8fe10399b8db5ed0fea8885676a0a0524",
-    "Scripts/saturn-data/native-captures.json": "3c5f7f3818c7dd66b41701e01862e0dbe21602f894cbb2eae21453427c22f977",
+    "Scripts/saturn-data/native-captures.json": "23c6945b5105b23def87d597bc379b95ae2727751b8d2c8a97844fd7358c3c8a",
     "Scripts/test_saturn_ephemeris.py": "c4e6e58d90210c1aaa01014eedcbb037076a3a552929bf922ffcb7d6e3b94c4a",
     "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
     "Sources/AstronomyKit/CelestialBody.swift": "745a84f7d97eef35ea945829649b1ea6ab5bed2c86846eecea5e891867b60cc7",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",
-    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
+    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "d9fd0b02d56f3ebaff5283aadf56ca6b41993c42e6e4ac2804ad43c8caebc858",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
     "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "851f9e384e46bcea481d665ca6fb44fe2f9e4e5ed2ace8c0f5e2ee84a3d3f3b8",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
@@ -532,16 +532,16 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineAtmosphere.swift": "597cf1e08dc7e8de30c21983549f3ea3fe0467a823f7bdfe87abb0003532b8bf",
     "Sources/AstronomyKit/Engine/Orientation/EngineCoordinates.swift": "10136541491835563c124727f046015c9dc8a554a1bb12c711c797ff812ce385",
     "Sources/AstronomyKit/Engine/Orientation/EngineEarthRotation.swift": "8da0ccef9811c6a6af993429e2772e07488ed09dea16d77f790b40efd3828a01",
-    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "00bae4b6e220398fe02081fa8d585fd56dfbc9a15776e71e488609c9583e8644",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "8a8e64fb4955949b25c91d287f7e685bab0a02ff9395179ee79213e6f49c4a4c",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "661a2547f2e7b1eeb6dcf57f679fc8bc9837964e30df84f78871c07d58f5ddeb",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
     "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
-    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift": "889f639ad72ca00cd69b59f1178d6ca024c9c5172b3008902fb46f4ddb8021ab",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "c300a2513193aa7d2b1ab9ed771ecc621cf0d1d0b3cde4717befaa04f7d2d138",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",

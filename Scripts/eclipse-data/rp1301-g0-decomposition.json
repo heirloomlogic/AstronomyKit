@@ -20,27 +20,27 @@
   "physicalDiscCandidates": [
     {
       "case": "retained",
-      "diameterRatio": 0.9431605820037319,
-      "physicalOverlapArea": 0.8895518834456182,
-      "ratioResidualFromPrintedMagnitude": 2.0582003731894893e-05
+      "diameterRatio": 0.9431605820038156,
+      "physicalOverlapArea": 0.8895518834457762,
+      "ratioResidualFromPrintedMagnitude": 2.058200381560571e-05
     },
     {
       "case": "k2-nominal",
-      "diameterRatio": 0.9435112332685376,
-      "physicalOverlapArea": 0.8902134473039167,
-      "ratioResidualFromPrintedMagnitude": 0.0003712332685376074
+      "diameterRatio": 0.9435112332686214,
+      "physicalOverlapArea": 0.8902134473040749,
+      "ratioResidualFromPrintedMagnitude": 0.00037123326862142925
     },
     {
       "case": "k2-695992",
-      "diameterRatio": 0.9431153850000756,
-      "physicalOverlapArea": 0.8894666294238409,
-      "ratioResidualFromPrintedMagnitude": -2.4614999924343905e-05
+      "diameterRatio": 0.9431153850001593,
+      "physicalOverlapArea": 0.8894666294239988,
+      "ratioResidualFromPrintedMagnitude": -2.461499984063309e-05
     },
     {
       "case": "k2-959.63",
-      "diameterRatio": 0.9431191182294412,
-      "physicalOverlapArea": 0.8894736711698786,
-      "ratioResidualFromPrintedMagnitude": -2.0881770558811574e-05
+      "diameterRatio": 0.943119118229525,
+      "physicalOverlapArea": 0.8894736711700367,
+      "ratioResidualFromPrintedMagnitude": -2.0881770474989736e-05
     }
   ],
   "schemaVersion": 1,

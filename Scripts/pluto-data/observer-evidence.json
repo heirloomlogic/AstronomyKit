@@ -5,7 +5,7 @@
     "rows": [
       {
         "aberrationDisplacementArcminutes": 0.3333520236633047,
-        "apparentEQDArcminutes": 0.06105617541742911,
+        "apparentEQDArcminutes": 0.05740752126693804,
         "apparentICRFArcminutes": 0.00042430594080752074,
         "astrometricArcminutes": 9.334573656381022e-05,
         "emissionTT": -766524.2867708751,
@@ -18,7 +18,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.33180255731924546,
-        "apparentEQDArcminutes": 0.04976291552057827,
+        "apparentEQDArcminutes": 0.05209391830446166,
         "apparentICRFArcminutes": 0.00017560401051656483,
         "astrometricArcminutes": 0.000285670901980918,
         "emissionTT": -600000.2832965183,
@@ -31,7 +31,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3304791560387812,
-        "apparentEQDArcminutes": 0.040981501412788106,
+        "apparentEQDArcminutes": 0.04036796360555868,
         "apparentICRFArcminutes": 0.00037499057300966393,
         "astrometricArcminutes": 2.874502449517415e-05,
         "emissionTT": -400000.26875481475,
@@ -44,7 +44,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1992319355828259,
-        "apparentEQDArcminutes": 0.02385321420543321,
+        "apparentEQDArcminutes": 0.023855071988205623,
         "apparentICRFArcminutes": 0.0004427384208024734,
         "astrometricArcminutes": 0.0001829988586486446,
         "emissionTT": -200000.2160094757,
@@ -57,7 +57,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2662662319782636,
-        "apparentEQDArcminutes": 0.028545489564692772,
+        "apparentEQDArcminutes": 0.028816248775384804,
         "apparentICRFArcminutes": 0.00042423213246041555,
         "astrometricArcminutes": 4.511985389218311e-05,
         "emissionTT": 199999.7630699337,
@@ -70,7 +70,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1552193956336515,
-        "apparentEQDArcminutes": 0.06450189928682745,
+        "apparentEQDArcminutes": 0.06324215401431807,
         "apparentICRFArcminutes": 0.0007468634634392325,
         "astrometricArcminutes": 0.00011523341653324648,
         "emissionTT": 399999.71426675515,
@@ -83,7 +83,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.06766882803592808,
-        "apparentEQDArcminutes": 0.10692984819375562,
+        "apparentEQDArcminutes": 0.10948501903608718,
         "apparentICRFArcminutes": 0.0006860232776343712,
         "astrometricArcminutes": 0.00010525594781586469,
         "emissionTT": 599999.7317423942,
@@ -96,7 +96,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.09103250870895253,
-        "apparentEQDArcminutes": 0.15296879250787368,
+        "apparentEQDArcminutes": 0.14912829668503041,
         "apparentICRFArcminutes": 0.00072639855165094,
         "astrometricArcminutes": 8.414434201471051e-05,
         "emissionTT": 766523.7145711281,
@@ -109,7 +109,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.20217381381159774,
-        "apparentEQDArcminutes": 0.007617737933955007,
+        "apparentEQDArcminutes": 0.007580657332735855,
         "apparentICRFArcminutes": 0.0008799844352622259,
         "astrometricArcminutes": 0.0004311750052029281,
         "emissionTT": -58400.279925327115,
@@ -122,7 +122,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3433154744045054,
-        "apparentEQDArcminutes": 0.0035110595820311025,
+        "apparentEQDArcminutes": 0.003520431483300594,
         "apparentICRFArcminutes": 0.0007351497225635709,
         "astrometricArcminutes": 0.0004568091506291165,
         "emissionTT": -36556.76573078303,
@@ -135,7 +135,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3435358159283563,
-        "apparentEQDArcminutes": 0.0033825414968472614,
+        "apparentEQDArcminutes": 0.003394223773297872,
         "apparentICRFArcminutes": 0.0006996114762499511,
         "astrometricArcminutes": 0.0004102692902767969,
         "emissionTT": -36556.51572696428,
@@ -148,7 +148,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34324731757244753,
-        "apparentEQDArcminutes": 0.004385241236657534,
+        "apparentEQDArcminutes": 0.004396938573794728,
         "apparentICRFArcminutes": 0.0003459774279329104,
         "astrometricArcminutes": 0.0004217549390932415,
         "emissionTT": -36540.765708631625,
@@ -161,7 +161,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3164071779006328,
-        "apparentEQDArcminutes": 0.004380148966136033,
+        "apparentEQDArcminutes": 0.004387715409178096,
         "apparentICRFArcminutes": 0.00033908231592422053,
         "astrometricArcminutes": 0.00015627357317457094,
         "emissionTT": -36524.76612920309,
@@ -174,7 +174,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.30588914050281624,
-        "apparentEQDArcminutes": 0.0008137264419092112,
+        "apparentEQDArcminutes": 0.0008082148818503041,
         "apparentICRFArcminutes": 5.3964708367100065e-05,
         "astrometricArcminutes": 0.00013902873986595268,
         "emissionTT": -0.17941278047890682,
@@ -187,7 +187,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2784772588096581,
-        "apparentEQDArcminutes": 0.004185007370000096,
+        "apparentEQDArcminutes": 0.004194102929463,
         "apparentICRFArcminutes": 0.00052205090963343,
         "astrometricArcminutes": 0.00010648957772029099,
         "emissionTT": 47846.22297951076,
@@ -200,7 +200,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2775876834997023,
-        "apparentEQDArcminutes": 0.004180990792542488,
+        "apparentEQDArcminutes": 0.004189853910662081,
         "apparentICRFArcminutes": 0.0005247728528088623,
         "astrometricArcminutes": 0.00010649062021441793,
         "emissionTT": 47846.47296461382,
@@ -213,7 +213,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.21342890154485616,
-        "apparentEQDArcminutes": 0.003892731226728487,
+        "apparentEQDArcminutes": 0.0038985317047984754,
         "apparentICRFArcminutes": 0.0009508019243028402,
         "astrometricArcminutes": 0.00045026287730777617,
         "emissionTT": 47862.22186934051,
@@ -226,7 +226,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1387055510975637,
-        "apparentEQDArcminutes": 0.004372468374310011,
+        "apparentEQDArcminutes": 0.0043735086279762915,
         "apparentICRFArcminutes": 0.0010035379663290934,
         "astrometricArcminutes": 0.0009796853717224158,
         "emissionTT": 47878.22050272533,
@@ -239,7 +239,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.13754907654461765,
-        "apparentEQDArcminutes": 0.00425103240113251,
+        "apparentEQDArcminutes": 0.004251894742957946,
         "apparentICRFArcminutes": 0.0009900515112284372,
         "astrometricArcminutes": 0.000864219820606359,
         "emissionTT": 47878.47047991257,
@@ -252,7 +252,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2982574956301082,
-        "apparentEQDArcminutes": 0.005628134893934138,
+        "apparentEQDArcminutes": 0.005620165810181935,
         "apparentICRFArcminutes": 0.0007674616985093998,
         "astrometricArcminutes": 0.001052711037558454,
         "emissionTT": 58399.74447120854,
@@ -302,7 +302,7 @@
     "rows": [
       {
         "aberrationDisplacementArcminutes": 0.3333520236633047,
-        "apparentEQDArcminutes": 0.06105617541742911,
+        "apparentEQDArcminutes": 0.05740752126693804,
         "apparentICRFArcminutes": 0.00042430594080752074,
         "astrometricArcminutes": 9.334573656381022e-05,
         "emissionTT": -766524.2867708751,
@@ -315,7 +315,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.33180255731924546,
-        "apparentEQDArcminutes": 0.04976291552057827,
+        "apparentEQDArcminutes": 0.05209391830446166,
         "apparentICRFArcminutes": 0.00017560401051656483,
         "astrometricArcminutes": 0.000285670901980918,
         "emissionTT": -600000.2832965183,
@@ -328,7 +328,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3304791560387812,
-        "apparentEQDArcminutes": 0.040981501412788106,
+        "apparentEQDArcminutes": 0.04036796360555868,
         "apparentICRFArcminutes": 0.00037499057300966393,
         "astrometricArcminutes": 2.874502449517415e-05,
         "emissionTT": -400000.26875481475,
@@ -341,7 +341,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1992319355828259,
-        "apparentEQDArcminutes": 0.02385321420543321,
+        "apparentEQDArcminutes": 0.023855071988205623,
         "apparentICRFArcminutes": 0.0004427384208024734,
         "astrometricArcminutes": 0.0001829988586486446,
         "emissionTT": -200000.2160094757,
@@ -354,7 +354,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2662662319782636,
-        "apparentEQDArcminutes": 0.028545489564692772,
+        "apparentEQDArcminutes": 0.028816248775384804,
         "apparentICRFArcminutes": 0.00042423213246041555,
         "astrometricArcminutes": 4.511985389218311e-05,
         "emissionTT": 199999.7630699337,
@@ -367,7 +367,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1552193956336515,
-        "apparentEQDArcminutes": 0.06450189928682745,
+        "apparentEQDArcminutes": 0.06324215401431807,
         "apparentICRFArcminutes": 0.0007468634634392325,
         "astrometricArcminutes": 0.00011523341653324648,
         "emissionTT": 399999.71426675515,
@@ -380,7 +380,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.06766882803592808,
-        "apparentEQDArcminutes": 0.10692984819375562,
+        "apparentEQDArcminutes": 0.10948501903608718,
         "apparentICRFArcminutes": 0.0006860232776343712,
         "astrometricArcminutes": 0.00010525594781586469,
         "emissionTT": 599999.7317423942,
@@ -393,7 +393,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.09103250870895253,
-        "apparentEQDArcminutes": 0.15296879250787368,
+        "apparentEQDArcminutes": 0.14912829668503041,
         "apparentICRFArcminutes": 0.00072639855165094,
         "astrometricArcminutes": 8.414434201471051e-05,
         "emissionTT": 766523.7145711281,
@@ -406,7 +406,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.20217381381159774,
-        "apparentEQDArcminutes": 0.007617737933955007,
+        "apparentEQDArcminutes": 0.007580657332735855,
         "apparentICRFArcminutes": 0.0008799844352622259,
         "astrometricArcminutes": 0.0004311750052029281,
         "emissionTT": -58400.279925327115,
@@ -419,7 +419,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3433154744045054,
-        "apparentEQDArcminutes": 0.0035110595820311025,
+        "apparentEQDArcminutes": 0.003520431483300594,
         "apparentICRFArcminutes": 0.0007351497225635709,
         "astrometricArcminutes": 0.0004568091506291165,
         "emissionTT": -36556.76573078303,
@@ -432,7 +432,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3435358159283563,
-        "apparentEQDArcminutes": 0.0033825414968472614,
+        "apparentEQDArcminutes": 0.003394223773297872,
         "apparentICRFArcminutes": 0.0006996114762499511,
         "astrometricArcminutes": 0.0004102692902767969,
         "emissionTT": -36556.51572696428,
@@ -445,7 +445,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34324731757244753,
-        "apparentEQDArcminutes": 0.004385241236657534,
+        "apparentEQDArcminutes": 0.004396938573794728,
         "apparentICRFArcminutes": 0.0003459774279329104,
         "astrometricArcminutes": 0.0004217549390932415,
         "emissionTT": -36540.765708631625,
@@ -458,7 +458,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3164071779006328,
-        "apparentEQDArcminutes": 0.004380148966136033,
+        "apparentEQDArcminutes": 0.004387715409178096,
         "apparentICRFArcminutes": 0.00033908231592422053,
         "astrometricArcminutes": 0.00015627357317457094,
         "emissionTT": -36524.76612920309,
@@ -471,7 +471,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.30588914050281624,
-        "apparentEQDArcminutes": 0.0008137264419092112,
+        "apparentEQDArcminutes": 0.0008082148818503041,
         "apparentICRFArcminutes": 5.3964708367100065e-05,
         "astrometricArcminutes": 0.00013902873986595268,
         "emissionTT": -0.17941278047890682,
@@ -484,7 +484,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2784772588096581,
-        "apparentEQDArcminutes": 0.004185007370000096,
+        "apparentEQDArcminutes": 0.004194102929463,
         "apparentICRFArcminutes": 0.00052205090963343,
         "astrometricArcminutes": 0.00010648957772029099,
         "emissionTT": 47846.22297951076,
@@ -497,7 +497,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2775876834997023,
-        "apparentEQDArcminutes": 0.004180990792542488,
+        "apparentEQDArcminutes": 0.004189853910662081,
         "apparentICRFArcminutes": 0.0005247728528088623,
         "astrometricArcminutes": 0.00010649062021441793,
         "emissionTT": 47846.47296461382,
@@ -510,7 +510,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.21342890154485616,
-        "apparentEQDArcminutes": 0.003892731226728487,
+        "apparentEQDArcminutes": 0.0038985317047984754,
         "apparentICRFArcminutes": 0.0009508019243028402,
         "astrometricArcminutes": 0.00045026287730777617,
         "emissionTT": 47862.22186934051,
@@ -523,7 +523,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1387055510975637,
-        "apparentEQDArcminutes": 0.004372468374310011,
+        "apparentEQDArcminutes": 0.0043735086279762915,
         "apparentICRFArcminutes": 0.0010035379663290934,
         "astrometricArcminutes": 0.0009796853717224158,
         "emissionTT": 47878.22050272533,
@@ -536,7 +536,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.13754907654461765,
-        "apparentEQDArcminutes": 0.00425103240113251,
+        "apparentEQDArcminutes": 0.0042518947428306425,
         "apparentICRFArcminutes": 0.0009900515112284372,
         "astrometricArcminutes": 0.000864219820606359,
         "emissionTT": 47878.47047991257,
@@ -549,7 +549,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2982574956301082,
-        "apparentEQDArcminutes": 0.005628134893934138,
+        "apparentEQDArcminutes": 0.005620165810181935,
         "apparentICRFArcminutes": 0.0007674616985093998,
         "astrometricArcminutes": 0.001052711037558454,
         "emissionTT": 58399.74447120854,
@@ -570,7 +570,7 @@
     "Scripts/test_capture_pluto_observers.py": "ae2f59cdbeae9e87406aaf603cb5af59d62e17f4241e6adc3aa9367dc78d3324",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",
-    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "06ff8caa29c6f2ba56452c6d9936cd09419e3470d248215cc8b33414631d4f09",
+    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "d9fd0b02d56f3ebaff5283aadf56ca6b41993c42e6e4ac2804ad43c8caebc858",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
     "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "851f9e384e46bcea481d665ca6fb44fe2f9e4e5ed2ace8c0f5e2ee84a3d3f3b8",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
@@ -621,16 +621,16 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineAtmosphere.swift": "597cf1e08dc7e8de30c21983549f3ea3fe0467a823f7bdfe87abb0003532b8bf",
     "Sources/AstronomyKit/Engine/Orientation/EngineCoordinates.swift": "10136541491835563c124727f046015c9dc8a554a1bb12c711c797ff812ce385",
     "Sources/AstronomyKit/Engine/Orientation/EngineEarthRotation.swift": "8da0ccef9811c6a6af993429e2772e07488ed09dea16d77f790b40efd3828a01",
-    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "00bae4b6e220398fe02081fa8d585fd56dfbc9a15776e71e488609c9583e8644",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "8a8e64fb4955949b25c91d287f7e685bab0a02ff9395179ee79213e6f49c4a4c",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "661a2547f2e7b1eeb6dcf57f679fc8bc9837964e30df84f78871c07d58f5ddeb",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
     "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
-    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift": "889f639ad72ca00cd69b59f1178d6ca024c9c5172b3008902fb46f4ddb8021ab",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "c300a2513193aa7d2b1ab9ed771ecc621cf0d1d0b3cde4717befaa04f7d2d138",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",

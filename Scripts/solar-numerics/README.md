@@ -55,9 +55,9 @@ The independent Python implementation is AstronomyKit code. mpmath is a developm
 
 The primitive report in each configuration records 162 rows: a 33-point coverage grid, six fallback epochs, four polynomial seams with adjacent doubles, nine Delta T piece boundaries with adjacent doubles, and the held-model boundary, for both models. Files contain all requests, native bits, extended values, signed differences, inverse residuals, source/data hashes, compiler identity and process measurements. There is no error threshold inferred from these maxima. `gitHead` is the checkout revision at measurement time; source hashes identify the evaluated working-tree candidate precisely.
 
-The Debug and Release reports differ by one ULP in nutation longitude at the 2101 fallback sample for both models. Their sampled maxima are identical; the reports retain the individual results.
+The Debug and Release primitive reports are bit-identical in this recording, so their sampled maxima are identical too; the reports retain the individual results.
 
-The full-altitude reports differ in 11 altitude results: ten supported rows differ by at most four ULP, and one excluded fallback row differs by eight ULP. Their sampled maxima are identical. Paired-altitude identity is asserted within a configuration, not between configurations.
+The full-altitude reports differ in 10 altitude results: eight supported rows differ by at most eight ULP, and two excluded rows at the 1860 Delta T boundary differ by four ULP. Their sampled maxima are identical. Paired-altitude identity is asserted within a configuration, not between configurations.
 
 The process timing and RSS include SwiftPM and the test runner in a fresh invocation after the build. They are not library-only latency or retained library memory. Release library build time and library artifact size are reported separately on the PR. `evidence/production-macos-arm64.json` retains the production build/section-size logs, standalone public client source and command, call trials and process RSS, with the retained link-1 artifact for context.
 
