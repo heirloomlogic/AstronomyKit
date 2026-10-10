@@ -36,9 +36,9 @@ extension Engine.Nutation {
         /// `iauFal03`, `iauFalp03`, `iauFaf03`, `iauFad03`, `iauFaom03`,
         /// `iauFave03`, `iauFae03` and `iauFapa03`; IERS Conventions 2003).
         ///
-        /// The Delaunay arguments here carry the full IERS 2003 polynomials;
-        /// ``evaluate(centuries:)`` uses the linear forms IAU 2000B
-        /// specifies, whose constants differ in the last digit.
+        /// ``evaluate(centuries:)`` reads the same polynomials for l, F and
+        /// Ω, but MHB2000's for l′ and D, whose constant terms differ from
+        /// these in the last digit, as `iauNut00a` does.
         init(centuries t: Double) {
             // The polynomial in arcseconds, reduced to one turn.
             func turn(_ c0: Double, _ c1: Double, _ c2: Double, _ c3: Double, _ c4: Double) -> Double {

@@ -1,9 +1,13 @@
 {
-  "retrieved": "2026-10-06",
+  "retrieved": "2026-10-10",
   "files": {
-    "nut00b.c": {
-      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/nut00b.c",
-      "sha256": "a5246d525e987eb587bbe786b2846160e01be85b5d12af573870b89235695f49"
+    "nut00a.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/nut00a.c",
+      "sha256": "a1538ec0277745db974ab76ca4b678a7602249bccecf9474e2b0268f9c2032ef"
+    },
+    "nut06a.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/nut06a.c",
+      "sha256": "819c36a689c28e50aaf71ec6d9774da5130df09657a07ab07520ae3712414d07"
     },
     "eect00.c": {
       "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/eect00.c",

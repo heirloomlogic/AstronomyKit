@@ -87,11 +87,13 @@ struct PolarSunriseReconciliationTests {
                 + "tolerances=\(existingRoots.map(Self.signedTTResidual)), "
                 + "bisection=\(Self.signedTTResidual(bisection))")
 
+        // The public search runs on the C engine's IAU 2000B nutation and the
+        // native controls on IAU 2006/2000A, which moved them 0.011 s earlier
+        // and leaves the native upper-limb control 0.035 s before the public one.
         #expect(abs(publicResidual - 75.985_957_542) < 0.001)
-        #expect(abs(nativeResidual - 75.961_503_026) < 0.001)
-        #expect(abs(fixedCenterResidual - -220.637_220_290) < 0.001)
-        #expect(abs(geocentricResidual - -759.641_944_652) < 0.001)
-        #expect(abs(publicResidual - nativeResidual) < 0.03)
+        #expect(abs(nativeResidual - 75.950_547_197) < 0.001)
+        #expect(abs(fixedCenterResidual - -220.648_209_279) < 0.001)
+        #expect(abs(geocentricResidual - -759.652_990_219) < 0.001)
         #expect(abs(nativeResidual) > 70.8)
         #expect(abs(fixedCenterResidual) > 70.8)
         #expect(abs(geocentricResidual) > 70.8)

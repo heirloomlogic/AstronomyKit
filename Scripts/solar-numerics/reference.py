@@ -1,4 +1,5 @@
 """Independent high-precision definitions; values are measurements, never interval bounds."""
+from functools import lru_cache
 import re
 import mpmath as mp
 
@@ -57,26 +58,59 @@ def era(ut):
     return mp.fmod(mp.mpf("0.7790572732640") + mp.mpf("1.00273781191135448") * ut, 1) * 360
 
 
+@lru_cache(maxsize=None)
+def nutation_tables(root=ROOT):
+    """The generated IAU 2000A rows and the IAU 2006 factors, read as exact integers and decimals."""
+    text = (root / (ENGINE + "Orientation/Generated/IAU2000ATerms.swift")).read_text()
+    def rows(name, width):
+        found = [tuple(int(value.strip().replace("_", "")) for value in row.split(","))
+                 for row in re.findall(name + r"\(([^)]+)\)", text)]
+        if any(len(row) != width for row in found):
+            raise ValueError("IAU 2000A table shape changed")
+        return found
+    luni_solar, planetary = rows("LuniSolarTerm", 11), rows("PlanetaryTerm", 17)
+    factors = [re.search(r"static let " + name + r" = (\S+)\n", text) for name in ["longitudeFactor", "j2Rate"]]
+    if len(luni_solar) != 678 or len(planetary) != 687 or not all(factors):
+        raise ValueError("IAU 2000A table shape changed")
+    return tuple(luni_solar), tuple(planetary), tuple(match[1] for match in factors)
+
+
 def nutation(tt, root=ROOT):
-    """IAU 2000B, 77 published terms and fixed planetary offsets, in degrees."""
+    """IAU 2006/2000A (SOFA nut06a definition), all published terms, in degrees."""
     t = tt / 36525
-    arguments = [("485868.249036", "1717915923.2178"), ("1287104.79305", "129596581.0481"),
-                 ("335779.526232", "1739527262.8478"), ("1072260.70369", "1602961601.2090"),
-                 ("450160.398036", "-6962890.5431")]
-    angles = [(mp.mpf(a) + mp.mpf(b) * t) * mp.pi / 648000 for a, b in arguments]
-    text = (root / (ENGINE + "Orientation/Generated/IAU2000BTerms.swift")).read_text()
-    terms = [[int(value.strip().replace("_", "")) for value in row.split(",")]
-             for row in re.findall(r"Term\(([^)]+)\)", text)]
-    if len(terms) != 77 or any(len(row) != 11 for row in terms):
-        raise ValueError("IAU 2000B table shape changed")
+    arcsecond = mp.pi / 648000
+    def power_series(coefficients):
+        return mp.fsum(mp.mpf(c) * t**k for k, c in enumerate(coefficients)) * arcsecond
+    # l, l', F, D and Omega: IERS 2003 for l, F and Omega, MHB2000 for l' and D.
+    delaunay = [power_series(c) for c in [
+        ["485868.249036", "1717915923.2178", "31.8792", "0.051635", "-0.00024470"],
+        ["1287104.79305", "129596581.0481", "-0.5532", "0.000136", "-0.00001149"],
+        ["335779.526232", "1739527262.8478", "-12.7512", "-0.001037", "0.00000417"],
+        ["1072260.70369", "1602961601.2090", "-6.3706", "0.006593", "-0.00003169"],
+        ["450160.398036", "-6962890.5431", "7.4722", "0.007702", "-0.00005939"]]]
+    # l, F, D, Omega and Neptune from MHB2000, Mercury to Uranus from IERS 2003, then p_A.
+    planets = [mp.mpf(a) + mp.mpf(b) * t for a, b in [
+        ("2.35555598", "8328.6914269554"), ("1.627905234", "8433.466158131"), ("5.198466741", "7771.3771468121"),
+        ("2.18243920", "-33.757045"), ("4.402608842", "2608.7903141574"), ("3.176146697", "1021.3285546211"),
+        ("1.753470314", "628.3075849991"), ("6.203480913", "334.0612426700"), ("0.599546497", "52.9690962641"),
+        ("0.874016757", "21.3299104960"), ("5.481293872", "7.4781598567"), ("5.321159000", "3.8127774000")]]
+    planets.append((mp.mpf("0.024381750") + mp.mpf("0.00000538691") * t) * t)
+    luni_solar, planetary, factors = nutation_tables(root)
+    longitude_factor, j2_rate = map(mp.mpf, factors)
     longitude, obliquity = [], []
-    for row in terms:
-        angle = mp.fsum(n * a for n, a in zip(row[:5], angles))
+    for row in luni_solar:
+        cos, sin = mp.cos_sin(mp.fsum(n * a for n, a in zip(row[:5], delaunay) if n))
         ps, pst, pc, ec, ect, es = row[5:]
-        longitude.append((ps + pst * t) * mp.sin(angle) + pc * mp.cos(angle))
-        obliquity.append((ec + ect * t) * mp.cos(angle) + es * mp.sin(angle))
-    return [(mp.fsum(longitude) * mp.mpf("1e-7") - mp.mpf("0.000135")) / 3600,
-            (mp.fsum(obliquity) * mp.mpf("1e-7") + mp.mpf("0.000388")) / 3600]
+        longitude.append((ps + pst * t) * sin + pc * cos)
+        obliquity.append((ec + ect * t) * cos + es * sin)
+    for row in planetary:
+        cos, sin = mp.cos_sin(mp.fsum(n * a for n, a in zip(row[:13], planets) if n))
+        ps, pc, es, ec = row[13:]
+        longitude.append(ps * sin + pc * cos)
+        obliquity.append(es * sin + ec * cos)
+    j2 = j2_rate * t
+    unit = mp.mpf("1e-7") / 3600
+    return [mp.fsum(longitude) * unit * (1 + longitude_factor + j2), mp.fsum(obliquity) * unit * (1 + j2)]
 
 
 def polynomial(coefficients, x):
