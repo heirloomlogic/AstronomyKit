@@ -2,7 +2,7 @@
 //  EngineNutationTests.swift
 //  AstronomyKit
 //
-//  IAU 2000B nutation and Earth's tilt against SOFA, and their rates.
+//  IAU 2006/2000A nutation and Earth's tilt against SOFA, and their rates.
 //
 
 import Foundation
@@ -14,38 +14,73 @@ import Testing
 struct EngineNutationTests {
     typealias Published = PublishedOrientation
 
-    /// SOFA's own tolerance for `eraNut00b` is 1e-13 rad. The series agrees
-    /// with it to about 1e-16 rad from 1600 to 2500, so this is tighter.
+    /// SOFA's own tolerance for `eraNut06a` is 1e-13 rad. The series agrees
+    /// with pyerfa within 1e-15 rad at every epoch here, from about −2000 to
+    /// 6000, so this is tighter.
     static let tolerance = 1e-15
 
     static func radians(_ angles: Engine.Nutation.Angles) -> (dpsi: Double, deps: Double) {
         (angles.longitude * Engine.radiansPerDegree, angles.obliquity * Engine.radiansPerDegree)
     }
 
-    @Test("The table holds the 77 luni-solar terms, largest first")
-    func table() {
-        #expect(Engine.Nutation.terms.count == 77)
-        let first = Engine.Nutation.terms[0]
+    @Test("The tables hold the 678 luni-solar and 687 planetary terms of nut00a")
+    func tables() {
+        #expect(Engine.Nutation.luniSolarTerms.count == 678)
+        let first = Engine.Nutation.luniSolarTerms[0]
         #expect([first.nl, first.nlp, first.nf, first.nd, first.nom] == [0, 0, 0, 0, 1])
         #expect([first.ps, first.pst, first.pc] == [-172_064_161, -174_666, 33_386])
         #expect([first.ec, first.ect, first.es] == [92_052_331, 9_086, 15_377])
-        let amplitudes = Engine.Nutation.terms.map { abs($0.ps) }
+        let last = Engine.Nutation.luniSolarTerms[677]
+        #expect([last.nl, last.nlp, last.nf, last.nd, last.nom] == [2, 0, 2, 4, 1])
+        #expect([last.ps, last.pst, last.pc, last.ec, last.ect, last.es] == [-3, 0, 0, 2, 0, 0])
+        let amplitudes = Engine.Nutation.luniSolarTerms.map { abs($0.ps) }
         #expect(amplitudes[0] == amplitudes.max())
+
+        #expect(Engine.Nutation.planetaryTerms.count == 687)
+        let planetary = Engine.Nutation.planetaryTerms[0]
+        let multipliers = [
+            planetary.nl, planetary.nf, planetary.nd, planetary.nom, planetary.nme, planetary.nve, planetary.nea,
+            planetary.nma, planetary.nju, planetary.nsa, planetary.nur, planetary.nne, planetary.npa,
+        ]
+        #expect(multipliers == [0, 0, 0, 0, 0, 0, 8, -16, 4, 5, 0, 0, 0])
+        #expect([planetary.ps, planetary.pc, planetary.es, planetary.ec] == [1_440, 0, 0, 0])
+        let lastPlanetary = Engine.Nutation.planetaryTerms[686]
+        #expect([lastPlanetary.ps, lastPlanetary.pc, lastPlanetary.es, lastPlanetary.ec] == [3, 0, 0, -1])
+
+        #expect(Engine.Nutation.longitudeFactor == 0.4697e-6)
+        #expect(Engine.Nutation.j2Rate == -2.7774e-6)
     }
 
-    @Test("ERFA t_nut00b reference")
+    @Test("ERFA t_nut06a reference")
     func erfaReference() {
-        let tt = Published.days(mjd: Published.nut00b.mjd)
+        let tt = Published.days(mjd: Published.nut06a.mjd)
         let (dpsi, deps) = Self.radians(Engine.Nutation.evaluate(centuries: tt / 36525))
-        #expect(abs(dpsi - Published.nut00b.dpsi) <= Self.tolerance)
-        #expect(abs(deps - Published.nut00b.deps) <= Self.tolerance)
+        #expect(abs(dpsi - Published.nut06a.dpsi) <= Self.tolerance)
+        #expect(abs(deps - Published.nut06a.deps) <= Self.tolerance)
     }
 
-    @Test("SOFA nut00b from 1600 to 2500", arguments: Published.references)
+    @Test("SOFA nut06a from 1600 to 2500", arguments: Published.references)
     func sofaEpochs(reference: Published.Reference) {
         let (dpsi, deps) = Self.radians(Engine.Nutation.evaluate(centuries: reference.tt / 36525))
         #expect(abs(dpsi - reference.dpsi) <= Self.tolerance)
         #expect(abs(deps - reference.deps) <= Self.tolerance)
+    }
+
+    /// pyerfa 2.0.1.5 `nut06a` at the ends of the range the engine serves,
+    /// TT −1,460,999.625 and 1,461,000.375 days from J2000 (about the years
+    /// −2000 and 6000), as `(tt, dpsi, deps)`.
+    static let rangeEnds: [(tt: Double, dpsi: Double, deps: Double)] = [
+        (-1_460_999.625, -8.200195399007985e-05, -4.476640340698103e-06),
+        (1_461_000.375, -1.9211453841435325e-05, -4.378413524869428e-05),
+    ]
+
+    @Test("SOFA nut06a at the ends of the engine's range")
+    func sofaRangeEnds() {
+        for reference in Self.rangeEnds {
+            let (dpsi, deps) = Self.radians(Engine.Nutation.evaluate(centuries: reference.tt / 36525))
+            #expect(abs(dpsi - reference.dpsi) <= Self.tolerance, "\(reference.tt): \(dpsi - reference.dpsi)")
+            #expect(abs(deps - reference.deps) <= Self.tolerance, "\(reference.tt): \(deps - reference.deps)")
+        }
     }
 
     /// Rates reach about 5e-5 degrees per day. The five-point difference

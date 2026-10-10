@@ -24,7 +24,7 @@ BINDINGS = [
     ENGINE + "Planets/EngineVSOP87B.swift", ENGINE + "Planets/EnginePlanets.swift",
     ENGINE + "Planets/Generated/VSOP87BTerms.swift", EARTH, COVERAGE,
     ENGINE + "Orientation/EngineEarthRotation.swift", ENGINE + "Orientation/EngineNutation.swift",
-    ENGINE + "Orientation/Generated/IAU2000BTerms.swift",
+    ENGINE + "Orientation/Generated/IAU2000ATerms.swift",
     "Sources/AstronomyKit/CivilTime.swift", "Sources/AstronomyKit/UTCOffsetTable.swift",
     "Scripts/solar-numerics/numerics.py",
 ]

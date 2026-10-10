@@ -39,12 +39,13 @@ extension Engine {
     /// Over the accepted range TDB − TT stays under 1.85 ms, which moves W by
     /// under 1.9e-5°.
     ///
-    /// Earth keeps the C engine's model. Its pole is the true pole of date
-    /// from the IAU 2006 precession and IAU 2000B nutation
-    /// (``Engine/FrameRotation``). Its W is ``earthSpinAtJ2000`` plus
-    /// ``earthSpinRate`` per UT day: the 2009 report's W at J2000,
-    /// 190.147°, moved onto UT with a Delta T of about 63.85 s, turning at the
-    /// rate of the Earth rotation angle (IAU 2000 Resolution B1.8).
+    /// Earth keeps the C engine's construction. Its pole is the true pole of
+    /// date from the IAU 2006 precession and IAU 2006/2000A nutation
+    /// (``Engine/FrameRotation``), where the C engine takes IAU 2000B. Its W
+    /// is ``earthSpinAtJ2000`` plus ``earthSpinRate`` per UT day: the 2009
+    /// report's W at J2000, 190.147°, moved onto UT with a Delta T of about
+    /// 63.85 s, turning at the rate of the Earth rotation angle (IAU 2000
+    /// Resolution B1.8).
     enum RotationAxis {}
 }
 

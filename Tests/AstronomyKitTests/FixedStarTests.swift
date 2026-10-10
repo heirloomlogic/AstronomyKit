@@ -180,8 +180,9 @@ struct FixedStarTests {
     /// `ab` with Earth's barycentric velocity, the IAU 2006/2000A
     /// bias-precession-nutation matrix `pnm06a`, and a rotation by the true
     /// obliquity (`obl06` plus the `nut06a` obliquity nutation). The engine
-    /// uses IAU 1976 precession and IAU 2000B nutation; measured residuals
-    /// against these references are at most 0.023″. The references take the
+    /// uses IAU 2006 precession without the frame bias and IAU 2006/2000A
+    /// nutation; measured residuals against these references are at most
+    /// 0.023″. The references take the
     /// calendar instants as TT; the engine's Delta T (up to 203 s at 2100)
     /// moves a star by far less than that.
     @Suite("Ecliptic of Date")

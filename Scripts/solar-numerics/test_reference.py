@@ -27,8 +27,8 @@ class DefinitionTests(unittest.TestCase):
     def test_sofa_published_nutation(self):
         mp = reference.mp
         dpsi, deps = reference.nutation(mp.mpf("2191.5"))
-        self.assertLess(abs(dpsi * mp.pi / 180 - mp.mpf("-0.9632552291148362783e-5")), mp.mpf("1e-13"))
-        self.assertLess(abs(deps * mp.pi / 180 - mp.mpf("0.4063197106621159367e-4")), mp.mpf("1e-13"))
+        self.assertLess(abs(dpsi * mp.pi / 180 - mp.mpf("-0.9630912025820308797e-5")), mp.mpf("1e-13"))
+        self.assertLess(abs(deps * mp.pi / 180 - mp.mpf("0.4063238496887249798e-4")), mp.mpf("1e-13"))
 
     def test_imcce_published_earth_at_j2000(self):
         mp = reference.mp
