@@ -4,8 +4,8 @@
     "scope": "previous link3 candidate release executable before Saturn integration"
   },
   "buildReceipts": {
-    "debug": "Build complete! (1.00 sec)",
-    "release": "Build complete! (117.34 sec)"
+    "debug": "Build complete! (28.94 sec)",
+    "release": "Build complete! (151.59 sec)"
   },
   "debug": {
     "coefficients": {
@@ -359,22 +359,22 @@
       }
     ]
   },
-  "releaseExecutableBytes": 165038480,
+  "releaseExecutableBytes": 165415264,
   "resources": {
-    "centerColdSeconds": 0.00645291805267334,
+    "centerColdSeconds": 0.007008075714111328,
     "checksum": -443.8575980663478,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.041998982429504395,
+    "eventSeconds": 0.04394102096557617,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 75923456,
-    "peakAfterRetainedBytes": 52363264,
-    "peakAfterWorkloadsBytes": 76529664,
-    "peakBeforeBytes": 47316992,
-    "retainedColdSeconds": 0.0015130043029785156,
+    "peakAfterCenterBytes": 75546624,
+    "peakAfterRetainedBytes": 51937280,
+    "peakAfterWorkloadsBytes": 76136448,
+    "peakBeforeBytes": 46825472,
+    "retainedColdSeconds": 0.0016779899597167969,
     "seconds": {
-      "center": 0.03259098529815674,
-      "retained": 0.012837052345275879
+      "center": 0.035354018211364746,
+      "retained": 0.013057947158813477
     }
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
