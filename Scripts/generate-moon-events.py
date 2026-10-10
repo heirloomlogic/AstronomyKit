@@ -192,7 +192,8 @@ def collect_results(prefix):
     for name in ("apparent", "published", "source"):
         summaries[name] = {}
         for event in sorted({row["event"] for row in results[name]}):
-            rows = [row for row in results[name] if row["event"] == event]
+            # Non-gating diagnostic rows (the January 2100 USNO phase labels) stay in results only.
+            rows = [row for row in results[name] if row["event"] == event and row.get("gating", True)]
             summaries[name][event] = {"count": len(rows),
                                      "maximumAbsoluteResidualSeconds": max(abs(row["residualSeconds"]) for row in rows)}
     files = ["Scripts/generate-moon-events.py", "Scripts/moon-data/de441-event-fixtures.json",

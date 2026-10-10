@@ -22,23 +22,40 @@ struct EngineLunarEventTests {
         }
     }
 
-    @Test("Published quarters retain their 90-second allowances and ordering")
+    static func lunarPhase(_ name: String) throws -> Events.LunarPhase {
+        switch name {
+        case "new": .new
+        case "firstQuarter": .firstQuarter
+        case "full": .full
+        case "lastQuarter": .lastQuarter
+        default: throw AstronomyError.internalError
+        }
+    }
+
+    /// USNO's 1800 and 2000 labels keep their 90-second allowance. For January 2100, whose USNO labels rest on an
+    /// undocumented Delta T, the gate is the JPL Horizons TT root within 2 seconds; those USNO rows are not checked here
+    /// and their residuals are recorded as diagnostics by `EngineMoonEventQualificationTests`.
+    @Test("Published quarters meet USNO's 90-second and January 2100 Horizons 2-second allowances in order")
     func publishedQuarters() throws {
-        for reference in IndependentReferenceArchive.shared.lunarPhases {
+        let archive = IndependentReferenceArchive.shared
+        let replaced = Set(archive.apparentLunarPhases.map(\.usnoSourceTime))
+        #expect(archive.apparentLunarPhases.count == 4 && replaced.count == 4)
+        #expect(replaced.isSubset(of: archive.lunarPhases.map(\.sourceTime)))
+        for reference in archive.lunarPhases where !replaced.contains(reference.sourceTime) {
             let expected = Self.universalTime(reference.sourceTime)
             let actual = try Events.searchMoonQuarter(after: expected.adding(days: -2))
-            let phase: Events.LunarPhase =
-                switch reference.phase {
-                case "new": .new
-                case "firstQuarter": .firstQuarter
-                case "full": .full
-                case "lastQuarter": .lastQuarter
-                default: throw AstronomyError.internalError
-                }
-            #expect(actual.phase == phase)
+            #expect(actual.phase == (try Self.lunarPhase(reference.phase)))
             #expect(
                 abs(actual.time.tt - expected.tt) * Engine.secondsPerDay <= reference.toleranceSeconds,
                 "\(reference.phase) \(reference.sourceTime)")
+        }
+        for reference in archive.apparentLunarPhases {
+            let expected = Engine.Time(tt: reference.julianDateTT - 2_451_545, deltaTModel: .espenakMeeus)
+            let actual = try Events.searchMoonQuarter(after: expected.adding(days: -2))
+            #expect(actual.phase == (try Self.lunarPhase(reference.phase)))
+            #expect(
+                abs(actual.time.tt - expected.tt) * Engine.secondsPerDay <= reference.toleranceSeconds,
+                "\(reference.phase) Horizons TT \(reference.julianDateTT)")
         }
     }
 

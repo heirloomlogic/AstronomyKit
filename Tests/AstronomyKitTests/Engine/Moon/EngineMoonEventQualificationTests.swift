@@ -45,22 +45,25 @@ extension EngineMoonEventQualificationTests {
         }
     }
 
-    @Test("Native event roots retain the established published time and distance allowances")
+    /// The January 2100 USNO phase labels are non-gating diagnostics; their Horizons TT roots carry the 2-second gate.
+    @Test("Native event roots meet published allowances, with January 2100 phases gated on Horizons TT roots")
     func publishedRoots() throws {
         let fixture = try Harness.load()
         var rows: [[String: Any]] = []
         func check(
             _ event: Harness.Event, tt: Double, seconds: Double, distance: Double? = nil,
-            distanceAllowance: Double? = nil, meanNode: Bool = false
+            distanceAllowance: Double? = nil, meanNode: Bool = false, gating: Bool = true
         ) throws {
             let roots = try fixture.roots(event, start: tt - 2, end: tt + 2, direct: false, meanNode: meanNode)
             #expect(roots.count == 1)
             let actual = try #require(roots.first)
             let residual = (actual.tt - tt) * Engine.secondsPerDay
-            #expect(abs(residual) <= seconds, "\(event.rawValue) TT \(tt): \(residual) s")
+            if gating {
+                #expect(abs(residual) <= seconds, "\(event.rawValue) TT \(tt): \(residual) s")
+            }
             var row: [String: Any] = [
                 "event": event.rawValue, "referenceTT": tt, "nativeTT": actual.tt, "residualSeconds": residual,
-                "timeAllowanceSeconds": seconds, "meanNode": meanNode,
+                "timeAllowanceSeconds": seconds, "meanNode": meanNode, "gating": gating,
             ]
             if let distance, let distanceAllowance {
                 #expect(abs(actual.distanceKm - distance) <= distanceAllowance)
@@ -73,10 +76,19 @@ extension EngineMoonEventQualificationTests {
         #expect(
             references.lunarPhases.count == 12 && references.lunarNodes.count == 6 && references.lunarApsides.count == 6
         )
+        let replaced = Set(references.apparentLunarPhases.map(\.usnoSourceTime))
+        #expect(references.apparentLunarPhases.count == 4 && replaced.count == 4)
+        #expect(replaced.isSubset(of: references.lunarPhases.map(\.sourceTime)))
         for reference in references.lunarPhases {
             try check(
                 try #require(Harness.Event(rawValue: reference.phase)),
-                tt: IndependentReferenceDate.engine(reference.sourceTime).tt, seconds: reference.toleranceSeconds)
+                tt: IndependentReferenceDate.engine(reference.sourceTime).tt, seconds: reference.toleranceSeconds,
+                gating: !replaced.contains(reference.sourceTime))
+        }
+        for reference in references.apparentLunarPhases {
+            try check(
+                try #require(Harness.Event(rawValue: reference.phase)),
+                tt: reference.julianDateTT - 2_451_545, seconds: reference.toleranceSeconds)
         }
         for reference in references.lunarNodes {
             try check(

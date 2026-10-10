@@ -84,6 +84,7 @@
     "published": [
       {
         "event": "new",
+        "gating": true,
         "meanNode": false,
         "nativeTT": -73024.36021446854,
         "referenceTT": -73024.36025812448,
@@ -92,6 +93,7 @@
       },
       {
         "event": "firstQuarter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": -73046.54338902186,
         "referenceTT": -73046.54359122433,
@@ -100,6 +102,7 @@
       },
       {
         "event": "full",
+        "gating": true,
         "meanNode": false,
         "nativeTT": -73038.4027816438,
         "referenceTT": -73038.40261908786,
@@ -108,6 +111,7 @@
       },
       {
         "event": "lastQuarter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": -73031.17176811387,
         "referenceTT": -73031.17136916397,
@@ -116,6 +120,7 @@
       },
       {
         "event": "new",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 5.260202149914641,
         "referenceTT": 5.260461403345642,
@@ -124,6 +129,7 @@
       },
       {
         "event": "firstQuarter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 13.066138150905239,
         "referenceTT": 13.066017040682027,
@@ -132,6 +138,7 @@
       },
       {
         "event": "full",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 19.695484716189647,
         "referenceTT": 19.695183776306614,
@@ -140,6 +147,7 @@
       },
       {
         "event": "lastQuarter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 26.831757871688485,
         "referenceTT": 26.83198940559072,
@@ -148,6 +156,7 @@
       },
       {
         "event": "new",
+        "gating": false,
         "meanNode": false,
         "nativeTT": 36534.04091093271,
         "referenceTT": 36534.041930573454,
@@ -156,6 +165,7 @@
       },
       {
         "event": "firstQuarter",
+        "gating": false,
         "meanNode": false,
         "nativeTT": 36542.02566906622,
         "referenceTT": 36542.026653391964,
@@ -164,6 +174,7 @@
       },
       {
         "event": "full",
+        "gating": false,
         "meanNode": false,
         "nativeTT": 36549.620032614126,
         "referenceTT": 36549.62109840358,
@@ -172,6 +183,7 @@
       },
       {
         "event": "lastQuarter",
+        "gating": false,
         "meanNode": false,
         "nativeTT": 36527.04623334088,
         "referenceTT": 36527.047485606716,
@@ -179,7 +191,44 @@
         "timeAllowanceSeconds": 90
       },
       {
+        "event": "new",
+        "gating": true,
+        "meanNode": false,
+        "nativeTT": 36534.04091093327,
+        "referenceTT": 36534.040919548366,
+        "residualSeconds": -0.7443444337695837,
+        "timeAllowanceSeconds": 2
+      },
+      {
+        "event": "firstQuarter",
+        "gating": true,
+        "meanNode": false,
+        "nativeTT": 36542.02566906458,
+        "referenceTT": 36542.02567853825,
+        "residualSeconds": -0.8185255341231823,
+        "timeAllowanceSeconds": 2
+      },
+      {
+        "event": "full",
+        "gating": true,
+        "meanNode": false,
+        "nativeTT": 36549.620032615065,
+        "referenceTT": 36549.62004022114,
+        "residualSeconds": -0.6571648875251412,
+        "timeAllowanceSeconds": 2
+      },
+      {
+        "event": "lastQuarter",
+        "gating": true,
+        "meanNode": false,
+        "nativeTT": 36527.046233341025,
+        "referenceTT": 36527.04624143522,
+        "residualSeconds": -0.6993386428803205,
+        "timeAllowanceSeconds": 2
+      },
+      {
         "event": "ascending",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 374.07933661133234,
         "referenceTT": 374.07921509259256,
@@ -188,6 +237,7 @@
       },
       {
         "event": "descending",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 387.43300983586835,
         "referenceTT": 387.4326873148148,
@@ -196,6 +246,7 @@
       },
       {
         "event": "descending",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 18265.639111882992,
         "referenceTT": 18265.639689629632,
@@ -204,6 +255,7 @@
       },
       {
         "event": "ascending",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 18280.23195332337,
         "referenceTT": 18280.232050740742,
@@ -212,6 +264,7 @@
       },
       {
         "event": "descending",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 36525.38541373522,
         "referenceTT": 36525.384828518516,
@@ -220,6 +273,7 @@
       },
       {
         "event": "ascending",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 36538.664761284934,
         "referenceTT": 36538.66468962963,
@@ -230,6 +284,7 @@
         "distanceAllowanceKm": 25,
         "distanceResidualKm": -1.8183746453141794,
         "event": "pericenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 374.8758171025725,
         "referenceTT": 374.8750484259259,
@@ -240,6 +295,7 @@
         "distanceAllowanceKm": 25,
         "distanceResidualKm": -2.5619022691389546,
         "event": "apocenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 389.29479720034993,
         "referenceTT": 389.2937984259259,
@@ -250,6 +306,7 @@
         "distanceAllowanceKm": 25,
         "distanceResidualKm": -0.8404637155472301,
         "event": "apocenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 18272.609279502507,
         "referenceTT": 18272.609134074075,
@@ -260,6 +317,7 @@
         "distanceAllowanceKm": 25,
         "distanceResidualKm": -0.8343365826876834,
         "event": "pericenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 18285.28629385473,
         "referenceTT": 18285.285522962964,
@@ -270,6 +328,7 @@
         "distanceAllowanceKm": 25,
         "distanceResidualKm": 9.985324950015638,
         "event": "pericenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 36526.87397932898,
         "referenceTT": 36526.873717407405,
@@ -280,6 +339,7 @@
         "distanceAllowanceKm": 25,
         "distanceResidualKm": -3.24312180042034,
         "event": "apocenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": 36540.95204547349,
         "referenceTT": 36540.950800740735,
@@ -288,6 +348,7 @@
       },
       {
         "event": "pericenter",
+        "gating": true,
         "meanNode": false,
         "nativeTT": -35225.0158176436,
         "referenceTT": -35225.01581769623,
@@ -296,6 +357,7 @@
       },
       {
         "event": "ascending",
+        "gating": true,
         "meanNode": true,
         "nativeTT": -35220.305024489964,
         "referenceTT": -35220.30502454005,
@@ -3435,11 +3497,11 @@
       }
     ]
   },
-  "runtimeBaseRevision": "eea1ed161cf28c5e69027a8c8764b7ef6aa537e0",
+  "runtimeBaseRevision": "045457c15fb770b14d946c077cf275a00e9b6d42",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
-    "Scripts/generate-moon-events.py": "668f45558f22913b8bd074ae0a470274e86d0f230a4ec9610c5f26a4c81fa350",
+    "Scripts/generate-moon-events.py": "c01bccf692017bdcdec1b7393efef5e39ab9685182cf982119ed34b7ca114745",
     "Scripts/moon-data/apparent-phase-references.json": "9b8f30dd4201424391e4722ee9a78e2bd7f5dd2802b485cc878f35bd65c8241d",
     "Scripts/moon-data/de441-compact-evidence.json": "2b5d686303a7b638ae0ee6512574124ef22e7e1c77f9cf871397bbfc82307182",
     "Scripts/moon-data/de441-event-fixtures.json": "94f77aad56bb3e136edcd7a04c04113f723cbd10371ea88c586f4504d2375ea6",
@@ -3448,12 +3510,12 @@
     "Scripts/moon-data/horizons-apparent-phase-sun.json": "ca66b540ea33705ca5a320270eb13b036f6e1af1a10428f32142420c78f90329",
     "Scripts/moon-data/horizons-apparent-phase-sun.query.json": "592710fbc080ca3dd80be60feac5d3da957a35fd44a3041124b54bd88767d38c",
     "Scripts/test_generate_moon_events.py": "503376c732b9f23c2b24d29c14f0f261f2d4d104ed9e73196e2b776a85cfba66",
-    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "d5eeede3f091fb6181c60bc9959aed02f3adb46b320beaab43460448026d323b",
-    "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "2bc8033cf17e2a104b956686f0641dc85dfa98bc4586cdf4fb736c74fb3d2eb3",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "f35841fbd3d428fa36736e8731b7a94fe61f76ad82f84555d103609ba33c778d",
+    "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "80a0d07bc5e912d66799efe4fbab0be09bf85a144474e18221dd4bc62068b927",
     "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift": "4a9eadfaae13399368825e926d9ff5667a6d26b21bf0d9f80f71b061c959dc33",
-    "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "35db3057e877e8e6b42dfb72f369ffe927d1a5bbaa0b0c41178d6eeecd4cbea8",
+    "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "4e94e32dd5b782fa1fd922697d4cfa359493808d46975369304beb5bda671a6c",
     "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift": "8b324e0ca7d53a21ba63b51f51474f3520880cf34f970421b04d8d4e7bb94d97",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776"
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab"
   },
   "summaries": {
     "apparent": {
@@ -3489,19 +3551,19 @@
       },
       "firstQuarter": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 85.04574419930577
+        "maximumAbsoluteResidualSeconds": 17.47029349207878
       },
       "full": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 92.0842087129131
+        "maximumAbsoluteResidualSeconds": 26.001205894044688
       },
       "lastQuarter": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 108.19576825015247
+        "maximumAbsoluteResidualSeconds": 34.46927089244127
       },
       "new": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 88.09696042444557
+        "maximumAbsoluteResidualSeconds": 22.399496438436017
       },
       "pericenter": {
         "count": 4,
