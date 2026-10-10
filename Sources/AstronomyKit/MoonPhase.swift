@@ -5,7 +5,6 @@
 //  Moon phase calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Moon Phase
@@ -65,16 +64,13 @@ public struct MoonQuarter: Sendable, Equatable {
     /// The time when this phase occurs.
     public let time: AstroTime
 
-    /// Creates a moon quarter from the C structure.
-    init(_ raw: astro_moon_quarter_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        guard let phase = MoonPhase(rawValue: Int(raw.quarter)) else {
+    /// Creates a moon quarter from the engine's.
+    init(_ quarter: Engine.Events.LunarQuarter) throws {
+        guard let phase = MoonPhase(rawValue: quarter.phase.rawValue) else {
             throw AstronomyError.internalError
         }
         self.phase = phase
-        self.time = AstroTime(raw: raw.time)
+        self.time = AstroTime(quarter.time)
     }
 }
 
@@ -100,11 +96,8 @@ public enum Moon {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func phaseAngle(at time: AstroTime) throws -> Double {
-        let result = Astronomy_MoonPhase(time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try Engine.checkAcceptedTime(time.engine)
+        return try Engine.Events.moonPhaseAngle(at: time.engine)
     }
 
     private static func normalizedAngle(_ angle: Double) -> Double {
@@ -183,20 +176,15 @@ public enum Moon {
     ///   - limitDays: Maximum days to search. Defaults to 60.
     /// - Returns: The time when the phase occurs, or `nil` if it does not
     ///   occur within `limitDays`.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.invalidParameter` if `limitDays` is not
+    ///   finite, or another `AstronomyError` if the calculation fails.
     public static func searchPhase(
         _ phase: MoonPhase,
         after startTime: AstroTime,
         limitDays: Double = 60
     ) throws -> AstroTime? {
-        let result = Astronomy_SearchMoonPhase(phase.longitude, startTime.raw, limitDays)
-        if result.status == ASTRO_NO_MOON_QUARTER {
-            return nil
-        }
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return AstroTime(raw: result.time)
+        try Engine.Events.searchMoonPhase(phase.longitude, after: startTime.engine, limitDays: limitDays)
+            .map(AstroTime.init)
     }
 
     /// Searches for the next moon quarter (new, first, full, or third).
@@ -205,8 +193,7 @@ public enum Moon {
     /// - Returns: The next moon quarter event.
     /// - Throws: `AstronomyError` if the search fails.
     public static func searchQuarter(after startTime: AstroTime) throws -> MoonQuarter {
-        let result = Astronomy_SearchMoonQuarter(startTime.raw)
-        return try MoonQuarter(result)
+        try MoonQuarter(Engine.Events.searchMoonQuarter(after: startTime.engine))
     }
 
     /// Finds the next moon quarter after a given quarter.
@@ -215,13 +202,10 @@ public enum Moon {
     /// - Returns: The next quarter event.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextQuarter(after quarter: MoonQuarter) throws -> MoonQuarter {
-        let raw = astro_moon_quarter_t(
-            status: ASTRO_SUCCESS,
-            quarter: Int32(quarter.phase.rawValue),
-            time: quarter.time.raw
-        )
-        let result = Astronomy_NextMoonQuarter(raw)
-        return try MoonQuarter(result)
+        guard let phase = Engine.Events.LunarPhase(rawValue: quarter.phase.rawValue) else {
+            throw AstronomyError.internalError
+        }
+        return try MoonQuarter(Engine.Events.nextMoonQuarter(after: phase, at: quarter.time.engine))
     }
 
     /// Returns all moon quarters within a date range.
@@ -253,8 +237,7 @@ public enum Moon {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
-        let result = Astronomy_GeoMoon(time.raw)
-        return try Vector3D(result)
+        Vector3D(try Engine.Moon.geocentricPosition(at: time.engine), at: time)
     }
 
     /// Calculates the Moon's ecliptic coordinates.
@@ -267,21 +250,20 @@ public enum Moon {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        let result = Astronomy_EclipticGeoMoon(time.raw)
-        return try Ecliptic(result)
+        let sphere = try Engine.Moon.eclipticPosition(at: time.engine)
+        return Ecliptic(latitude: sphere.latitude, longitude: sphere.longitude, distance: sphere.distance)
     }
 
     /// Calculates the Moon's ecliptic position and velocity.
     ///
-    /// The position fields are bit-identical to ``ecliptic(at:)``. Throughout 1900–2130 TT, the rates use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, the rates use a central difference of the legacy lunar series over about 43 seconds of Terrestrial Time. All paths include the analytic rotation rates of mean obliquity, nutation, and true obliquity. These conventions do not establish independent rate accuracy.
+    /// The position fields are bit-identical to ``ecliptic(at:)``. The rates are analytic derivatives of the bundled coefficients: DE440 from 1900 through 2130 TT and the compact DE441 representation elsewhere in the accepted range, with the 32-day transitions between them including the derivative of the blend weight. All paths include the analytic rotation rates of mean obliquity, nutation, and true obliquity. These conventions do not establish independent rate accuracy.
     ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The ecliptic position and velocity of the Moon.
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func eclipticState(at time: AstroTime) throws -> EclipticState {
-        let result = Astronomy_MoonEclipticState(time.raw)
-        return try EclipticState(result)
+        EclipticState(try Engine.Moon.eclipticState(at: time.engine), at: time)
     }
 
     /// Calculates the Moon's geocentric state (position and velocity).
@@ -302,7 +284,6 @@ public enum Moon {
     /// print("Moon velocity: \(state.velocity)")
     /// ```
     public static func geoState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_GeoMoonState(time.raw)
-        return try StateVector(result)
+        StateVector(try Engine.Moon.geocentricState(at: time.engine), at: time)
     }
 }

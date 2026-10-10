@@ -1,6 +1,6 @@
 # ``AstronomyKit``
 
-Swift bindings for Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) library.
+A Swift astronomy library: positions, events and coordinate transforms from published models.
 
 @Metadata {
     @DisplayName("AstronomyKit")
@@ -11,7 +11,7 @@ Swift bindings for Don Cross' [Astronomy Engine](https://github.com/cosinekitty/
 
 ![AstronomyKit logo — a bronze armillary sphere](AstronomyKit-logo)
 
-AstronomyKit wraps Don Cross's [Astronomy Engine](https://github.com/cosinekitty/astronomy) and exposes the underlying C functionality through idiomatic Swift APIs.
+AstronomyKit began as Swift bindings for Don Cross's [Astronomy Engine](https://github.com/cosinekitty/astronomy). Its engine is now Swift, written against the published models and compared with JPL Horizons, USNO, NASA and SOFA values rather than with the C output.
 
 ### Features
 

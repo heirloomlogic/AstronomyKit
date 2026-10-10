@@ -1,7 +1,7 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (28.94 sec)",
-    "release": "Build complete! (151.59 sec)"
+    "debug": "Build complete! (6.19 sec)",
+    "release": "Build complete! (119.43 sec)"
   },
   "debug": {
     "peak-definition": [
@@ -47,7 +47,7 @@
         "contacts": [
           {
             "altitude": 67.92049495669319,
-            "formerUTCResidualSeconds": -0.9214852703735232,
+            "formerUTCResidualSeconds": -0.8985710854176432,
             "name": "partialBegin",
             "source": "2024-04-08T17:48:08Z",
             "sourceUT": 8864.24175925926,
@@ -56,7 +56,7 @@
           },
           {
             "altitude": 58.316145131101806,
-            "formerUTCResidualSeconds": -0.47510963631793857,
+            "formerUTCResidualSeconds": -0.452195608522743,
             "name": "peak",
             "source": "2024-04-08T19:04:48Z",
             "sourceUT": 8864.295,
@@ -65,7 +65,7 @@
           },
           {
             "altitude": 44.07853277936591,
-            "formerUTCResidualSeconds": -0.28275438817217946,
+            "formerUTCResidualSeconds": -0.2598403603769839,
             "name": "partialEnd",
             "source": "2024-04-08T20:18:34Z",
             "sourceUT": 8864.346226851852,
@@ -83,7 +83,7 @@
         "contacts": [
           {
             "altitude": 56.28034742027116,
-            "formerUTCResidualSeconds": 0.26315173599869013,
+            "formerUTCResidualSeconds": 0.28606607811525464,
             "name": "partialBegin",
             "source": "2024-04-08T17:55:52Z",
             "sourceUT": 8864.24712962963,
@@ -92,7 +92,7 @@
           },
           {
             "altitude": 50.551603787438545,
-            "formerUTCResidualSeconds": -0.3851216286420822,
+            "formerUTCResidualSeconds": -0.36220744368620217,
             "name": "totalBegin",
             "source": "2024-04-08T19:10:42Z",
             "sourceUT": 8864.299097222221,
@@ -101,7 +101,7 @@
           },
           {
             "altitude": 50.330400382652094,
-            "formerUTCResidualSeconds": -0.1813697163015604,
+            "formerUTCResidualSeconds": -0.15845568850636482,
             "name": "peak",
             "source": "2024-04-08T19:12:34Z",
             "sourceUT": 8864.300393518519,
@@ -110,7 +110,7 @@
           },
           {
             "altitude": 50.106828347239066,
-            "formerUTCResidualSeconds": -1.3079250056762248,
+            "formerUTCResidualSeconds": -1.2850108207203448,
             "name": "totalEnd",
             "source": "2024-04-08T19:14:27Z",
             "sourceUT": 8864.30170138889,
@@ -119,7 +119,7 @@
           },
           {
             "altitude": 39.63393763742842,
-            "formerUTCResidualSeconds": -0.03327940357849002,
+            "formerUTCResidualSeconds": -0.01036537578329444,
             "name": "partialEnd",
             "source": "2024-04-08T20:26:37Z",
             "sourceUT": 8864.35181712963,
@@ -137,7 +137,7 @@
         "contacts": [
           {
             "altitude": 35.58915783806209,
-            "formerUTCResidualSeconds": 0.0634636846370995,
+            "formerUTCResidualSeconds": 0.08598606800660491,
             "name": "partialBegin",
             "source": "2024-10-02T19:00:27Z",
             "sourceUT": 9041.291979166666,
@@ -146,7 +146,7 @@
           },
           {
             "altitude": 24.122057656860335,
-            "formerUTCResidualSeconds": 0.20357699249871075,
+            "formerUTCResidualSeconds": 0.2260992187075317,
             "name": "totalBegin",
             "source": "2024-10-02T20:22:16Z",
             "sourceUT": 9041.348796296295,
@@ -155,7 +155,7 @@
           },
           {
             "altitude": 23.63650269270198,
-            "formerUTCResidualSeconds": -0.2458360861055553,
+            "formerUTCResidualSeconds": -0.22331385989673436,
             "name": "peak",
             "source": "2024-10-02T20:25:26Z",
             "sourceUT": 9041.35099537037,
@@ -164,7 +164,7 @@
           },
           {
             "altitude": 23.147400567475245,
-            "formerUTCResidualSeconds": 0.79273467999883,
+            "formerUTCResidualSeconds": 0.8152569062076509,
             "name": "totalEnd",
             "source": "2024-10-02T20:28:35Z",
             "sourceUT": 9041.35318287037,
@@ -173,7 +173,7 @@
           },
           {
             "altitude": 11.251957907132692,
-            "formerUTCResidualSeconds": 1.717066130368039,
+            "formerUTCResidualSeconds": 1.7395881994161755,
             "name": "partialEnd",
             "source": "2024-10-02T21:42:37Z",
             "sourceUT": 9041.404594907408,
@@ -347,7 +347,7 @@
         "contacts": [
           {
             "altitude": 67.92049495669319,
-            "formerUTCResidualSeconds": -0.9214852703735232,
+            "formerUTCResidualSeconds": -0.8985710854176432,
             "name": "partialBegin",
             "source": "2024-04-08T17:48:08Z",
             "sourceUT": 8864.24175925926,
@@ -356,7 +356,7 @@
           },
           {
             "altitude": 58.316145131101806,
-            "formerUTCResidualSeconds": -0.47510963631793857,
+            "formerUTCResidualSeconds": -0.452195608522743,
             "name": "peak",
             "source": "2024-04-08T19:04:48Z",
             "sourceUT": 8864.295,
@@ -365,7 +365,7 @@
           },
           {
             "altitude": 44.07853277936591,
-            "formerUTCResidualSeconds": -0.28275438817217946,
+            "formerUTCResidualSeconds": -0.2598403603769839,
             "name": "partialEnd",
             "source": "2024-04-08T20:18:34Z",
             "sourceUT": 8864.346226851852,
@@ -383,7 +383,7 @@
         "contacts": [
           {
             "altitude": 56.28034742027116,
-            "formerUTCResidualSeconds": 0.26315173599869013,
+            "formerUTCResidualSeconds": 0.28606607811525464,
             "name": "partialBegin",
             "source": "2024-04-08T17:55:52Z",
             "sourceUT": 8864.24712962963,
@@ -392,7 +392,7 @@
           },
           {
             "altitude": 50.551603787438545,
-            "formerUTCResidualSeconds": -0.3851216286420822,
+            "formerUTCResidualSeconds": -0.36220744368620217,
             "name": "totalBegin",
             "source": "2024-04-08T19:10:42Z",
             "sourceUT": 8864.299097222221,
@@ -401,7 +401,7 @@
           },
           {
             "altitude": 50.330400382652094,
-            "formerUTCResidualSeconds": -0.1813697163015604,
+            "formerUTCResidualSeconds": -0.15845568850636482,
             "name": "peak",
             "source": "2024-04-08T19:12:34Z",
             "sourceUT": 8864.300393518519,
@@ -410,7 +410,7 @@
           },
           {
             "altitude": 50.106828347239066,
-            "formerUTCResidualSeconds": -1.3079250056762248,
+            "formerUTCResidualSeconds": -1.2850108207203448,
             "name": "totalEnd",
             "source": "2024-04-08T19:14:27Z",
             "sourceUT": 8864.30170138889,
@@ -419,7 +419,7 @@
           },
           {
             "altitude": 39.63393763742842,
-            "formerUTCResidualSeconds": -0.03327940357849002,
+            "formerUTCResidualSeconds": -0.01036537578329444,
             "name": "partialEnd",
             "source": "2024-04-08T20:26:37Z",
             "sourceUT": 8864.35181712963,
@@ -437,7 +437,7 @@
         "contacts": [
           {
             "altitude": 35.58915783806209,
-            "formerUTCResidualSeconds": 0.0634636846370995,
+            "formerUTCResidualSeconds": 0.08598606800660491,
             "name": "partialBegin",
             "source": "2024-10-02T19:00:27Z",
             "sourceUT": 9041.291979166666,
@@ -446,7 +446,7 @@
           },
           {
             "altitude": 24.122057656860335,
-            "formerUTCResidualSeconds": 0.20357699249871075,
+            "formerUTCResidualSeconds": 0.2260992187075317,
             "name": "totalBegin",
             "source": "2024-10-02T20:22:16Z",
             "sourceUT": 9041.348796296295,
@@ -455,7 +455,7 @@
           },
           {
             "altitude": 23.63650269270198,
-            "formerUTCResidualSeconds": -0.2458360861055553,
+            "formerUTCResidualSeconds": -0.22331385989673436,
             "name": "peak",
             "source": "2024-10-02T20:25:26Z",
             "sourceUT": 9041.35099537037,
@@ -464,7 +464,7 @@
           },
           {
             "altitude": 23.147400567475245,
-            "formerUTCResidualSeconds": 0.79273467999883,
+            "formerUTCResidualSeconds": 0.8152569062076509,
             "name": "totalEnd",
             "source": "2024-10-02T20:28:35Z",
             "sourceUT": 9041.35318287037,
@@ -473,7 +473,7 @@
           },
           {
             "altitude": 11.251957907132692,
-            "formerUTCResidualSeconds": 1.717066130368039,
+            "formerUTCResidualSeconds": 1.7395881994161755,
             "name": "partialEnd",
             "source": "2024-10-02T21:42:37Z",
             "sourceUT": 9041.404594907408,
@@ -603,20 +603,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 165415264,
+  "releaseExecutableBytes": 133273632,
   "releaseObjectBytes": {
-    "EngineLocalSolarEvents.o": 73256
+    "EngineLocalSolarEvents.o": 74080
   },
   "resources": {
     "checksum": 340147.3085339592,
-    "coldSeconds": 0.03647005558013916,
+    "coldSeconds": 0.022935986518859863,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 1.70585298538208,
-    "peakAfterColdBytes": 79101952,
-    "peakAfterWorkloadBytes": 79118336,
-    "peakBeforeBytes": 46743552
+    "nextSeconds": 0.8380460739135742,
+    "peakAfterColdBytes": 79609856,
+    "peakAfterWorkloadBytes": 79626240,
+    "peakBeforeBytes": 46759936
   },
-  "runtimeBaseRevision": "b8e384aaad33442f9e8360fa14f5e6b5f2b2794d",
+  "runtimeBaseRevision": "976da4bbcbdb2f38d484be46be2bd098b252fe23",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

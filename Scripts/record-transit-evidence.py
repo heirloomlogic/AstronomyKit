@@ -33,16 +33,20 @@ def relation(tt,ut):
     if abs(tt-expected)>32*max(math.ulp(tt),1e-12):raise ValueError('model TT/UT relation')
 
 
+def native_delta_t_days(ut):
+    """Delta T in days at modeled UT1 `ut`, under the engine's Espenak-Meeus pieces and decimal year."""
+    text=(EPOCH+datetime.timedelta(days=ut)).isoformat()
+    rounded=(datetime.datetime.fromisoformat(text)-EPOCH).total_seconds()/86400
+    return lunar.source_time_tt(text)-rounded
+
+
 def legacy_reference_ut(source,ut):
+    # The former helper read the UT label as civil UTC: TT fixed by the leap-second offset of its year, UT from the
+    # engine's Delta T inverse, which the public AstroTime(Date) path uses.
     year=int(source[:4]);offset=64.184 if year==2003 else 66.184 if year==2012 else 69.184
     tt=ut+offset/86400;value=ut
-    for _ in range(3):
-        y=2000+(value-14)/365.24217;u=y-2000
-        if y<2005:delta=63.86+.3345*u-.060374*u*u+.0017275*u**3+.000651814*u**4+.00002373599*u**5
-        elif y<2050:delta=62.92+.32217*u+.005589*u*u
-        elif y<2150:delta=-20+32*((y-1820)/100)**2-.5628*(2150-y)
-        else:raise ValueError('legacy diagnostic outside sampled range')
-        value=tt-delta/86400
+    for _ in range(4):
+        value=tt-native_delta_t_days(value)
     return value
 
 
@@ -123,7 +127,7 @@ def evidence(captures,bindings):
     if captures['releaseExecutableBytes']<=0 or set(captures['releaseObjectBytes'])!={'EngineTransitEvents.o'} or captures['releaseObjectBytes']['EngineTransitEvents.o']<=0:raise ValueError('binary observation')
     builds={c:lunar.build_seconds(captures['buildReceipts'][c]) for c in ['debug','release']}
     if any(not math.isfinite(v) or v<0 for v in builds.values()):raise ValueError('build observation')
-    return {'schemaVersion':1,'runtimeBaseRevision':captures['runtimeBaseRevision'],'sourceHashes':bindings,'published':published(captures['release']['published']),'sequences':sequences(captures['release'],refs),'radiusConventions':refs['radiusConventions'],'resources':r,'releaseObjectBytes':captures['releaseObjectBytes'],'releaseExecutableBytes':captures['releaseExecutableBytes'],'buildSeconds':builds,'toolchain':captures['toolchain'],'limitations':'Sampled independent UT contacts/angular minima and published next identities, not full-domain accuracy. Physical spheres use NASA fact-sheet mean radii; these are not attributed to the Meeus catalog. Apparent vectors retain engine light-time/aberration conventions. OH2001 December penumbral contacts remain outside 120 s; matching Danjon diagrams are separately qualified. Global G0/1986 and local peak limitations remain in their evidence owners. Public routing stays C under #96; host costs are not portable gates.'}
+    return {'schemaVersion':1,'runtimeBaseRevision':captures['runtimeBaseRevision'],'sourceHashes':bindings,'published':published(captures['release']['published']),'sequences':sequences(captures['release'],refs),'radiusConventions':refs['radiusConventions'],'resources':r,'releaseObjectBytes':captures['releaseObjectBytes'],'releaseExecutableBytes':captures['releaseExecutableBytes'],'buildSeconds':builds,'toolchain':captures['toolchain'],'limitations':'Sampled independent UT contacts/angular minima and published next identities, not full-domain accuracy. Physical spheres use NASA fact-sheet mean radii; these are not attributed to the Meeus catalog. Apparent vectors retain engine light-time/aberration conventions. OH2001 December penumbral contacts remain outside 120 s; matching Danjon diagrams are separately qualified. Global G0/1986 and local peak limitations remain in their evidence owners. The public facade runs on these searches since the #96 cutover; host costs are not portable gates.'}
 
 
 def capture(directory):

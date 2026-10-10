@@ -1,7 +1,7 @@
 {
   "buildSeconds": {
-    "debug": 28.94,
-    "release": 151.59
+    "debug": 6.19,
+    "release": 119.43
   },
   "centralMidpointDifferencesSeconds": {
     "Springfield, ILLINOIS": 0.18312331521883607
@@ -9,97 +9,97 @@
   "eclipseWiseContacts": [
     {
       "altitudeDegrees": 0.020494956693184463,
-      "formerUTCSeconds": -0.9214852703735232,
+      "formerUTCSeconds": -0.8985710854176432,
       "latitude": 29.0181,
       "name": "partialBegin",
       "seconds": -5.745614832267165
     },
     {
       "altitudeDegrees": 0.016145131101808374,
-      "formerUTCSeconds": -0.47510963631793857,
+      "formerUTCSeconds": -0.452195608522743,
       "latitude": 29.0181,
       "name": "peak",
       "seconds": -5.299325636588037
     },
     {
       "altitudeDegrees": 0.07853277936590786,
-      "formerUTCSeconds": -0.28275438817217946,
+      "formerUTCSeconds": -0.2598403603769839,
       "latitude": 29.0181,
       "name": "partialEnd",
       "seconds": -5.107053526444361
     },
     {
       "altitudeDegrees": -0.019652579728834496,
-      "formerUTCSeconds": 0.26315173599869013,
+      "formerUTCSeconds": 0.28606607811525464,
       "latitude": 41.0341,
       "name": "partialBegin",
       "seconds": -4.5609864697325975
     },
     {
       "altitudeDegrees": 0.05160378743854466,
-      "formerUTCSeconds": -0.3851216286420822,
+      "formerUTCSeconds": -0.36220744368620217,
       "latitude": 41.0341,
       "name": "totalBegin",
       "seconds": -5.209344229660928
     },
     {
       "altitudeDegrees": 0.03040038265209688,
-      "formerUTCSeconds": -0.1813697163015604,
+      "formerUTCSeconds": -0.15845568850636482,
       "latitude": 41.0341,
       "name": "peak",
       "seconds": -5.005594517569989
     },
     {
       "altitudeDegrees": 0.006828347239064669,
-      "formerUTCSeconds": -1.3079250056762248,
+      "formerUTCSeconds": -1.2850108207203448,
       "latitude": 41.0341,
       "name": "totalEnd",
       "seconds": -6.1321518500335515
     },
     {
       "altitudeDegrees": 0.03393763742841571,
-      "formerUTCSeconds": -0.03327940357849002,
+      "formerUTCSeconds": -0.01036537578329444,
       "latitude": 41.0341,
       "name": "partialEnd",
       "seconds": -4.85758765717037
     },
     {
       "altitudeDegrees": -0.010842161937908656,
-      "formerUTCSeconds": 0.0634636846370995,
+      "formerUTCSeconds": 0.08598606800660491,
       "latitude": -48.2051,
       "name": "partialBegin",
       "seconds": -5.049447063356638
     },
     {
       "altitudeDegrees": 0.022057656860333452,
-      "formerUTCSeconds": 0.20357699249871075,
+      "formerUTCSeconds": 0.2260992187075317,
       "latitude": -48.2051,
       "name": "totalBegin",
       "seconds": -4.909426794620231
     },
     {
       "altitudeDegrees": 0.03650269270197981,
-      "formerUTCSeconds": -0.2458360861055553,
+      "formerUTCSeconds": -0.22331385989673436,
       "latitude": -48.2051,
       "name": "peak",
       "seconds": -5.35884348792024
     },
     {
       "altitudeDegrees": 0.04740056747524335,
-      "formerUTCSeconds": 0.79273467999883,
+      "formerUTCSeconds": 0.8152569062076509,
       "latitude": -48.2051,
       "name": "totalEnd",
       "seconds": -4.320276336511597
     },
     {
       "altitudeDegrees": 0.05195790713269233,
-      "formerUTCSeconds": 1.717066130368039,
+      "formerUTCSeconds": 1.7395881994161755,
       "latitude": -48.2051,
       "name": "partialEnd",
       "seconds": -3.396029124269262
     }
   ],
-  "limitations": "Native sampled local circumstances; public C routing remains under #96. EclipseWise original map timestamps are UT1 despite legacy UTC keys. RP1301 areas are direct printed local values with conditional rounding intervals; they do not resolve the finer global G0 ratio or 1986 limb qualifications. Washington proves consecutive visible calendar identities under a historical published model, not a modern timing/area allowance. Resource values are host observations, not portable gates.",
+  "limitations": "Native sampled local circumstances, which the public facade uses since the #96 cutover. EclipseWise original map timestamps are UT1 despite legacy UTC keys. RP1301 areas are direct printed local values with conditional rounding intervals; they do not resolve the finer global G0 ratio or 1986 limb qualifications. Washington proves consecutive visible calendar identities under a historical published model, not a modern timing/area allowance. Resource values are host observations, not portable gates.",
   "localAreaSamples": [
     {
       "id": "Acapulco, MEXICO",
@@ -173,19 +173,19 @@
       "source": "rp1301-footnotes.html"
     }
   },
-  "releaseExecutableBytes": 165415264,
+  "releaseExecutableBytes": 133273632,
   "releaseObjectBytes": {
-    "EngineLocalSolarEvents.o": 73256
+    "EngineLocalSolarEvents.o": 74080
   },
   "resources": {
     "checksum": 340147.3085339592,
-    "coldSeconds": 0.03647005558013916,
+    "coldSeconds": 0.022935986518859863,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 1.70585298538208,
-    "peakAfterColdBytes": 79101952,
-    "peakAfterWorkloadBytes": 79118336,
-    "peakBeforeBytes": 46743552
+    "nextSeconds": 0.8380460739135742,
+    "peakAfterColdBytes": 79609856,
+    "peakAfterWorkloadBytes": 79626240,
+    "peakBeforeBytes": 46759936
   },
   "rp1301Contacts": [
     {
@@ -237,7 +237,7 @@
       "seconds": -3.3551216518389992
     }
   ],
-  "runtimeBaseRevision": "b8e384aaad33442f9e8360fa14f5e6b5f2b2794d",
+  "runtimeBaseRevision": "976da4bbcbdb2f38d484be46be2bd098b252fe23",
   "schemaVersion": 1,
   "sequence": [
     {
@@ -262,11 +262,11 @@
   "sourceHashes": {
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-local-solar.py": "c65a5f544352fddd7ef75e8ed3d8da374c94dfce78672fc8d3c2f6b066d3877a",
-    "Scripts/eclipse-data/local-captures.json": "349f9dfb716066e3e8d6a2741d781940b7f9ebe46b2e6241b23251091326a4d3",
+    "Scripts/eclipse-data/local-captures.json": "250cc5b70123dc9e42bd4f71793bbd38fde4b213b9660e7d70d4501d714059ba",
     "Scripts/eclipse-data/local-references.json": "7d2301230ee722952c2654f1ae8d067c3d8a615ab3d2061adc606df9fc7bced0",
     "Scripts/local-solar-peak-probe.swift": "d7f46ceb60aa765d0db551f16736d8c77ce8743cb0242432eececf8c91bfe520",
-    "Scripts/record-eclipse-event-evidence.py": "ebdbaebf9e2b88c1154a2e10bb937bdb5b02f7edd5d9232bcc8e2f379dd4c58a",
-    "Scripts/record-local-solar-evidence.py": "104ef3f6bc8896d44116b4eb578c2006be7a4d5e9651e5cd1b4fdb95ae9f6903",
+    "Scripts/record-eclipse-event-evidence.py": "4b3e1caed85fbc32c5baac868214cd7b83404b04efcdd4bc67b3353d80ecddf4",
+    "Scripts/record-local-solar-evidence.py": "271e9c164a4123044c727290abaf1ff3d12ccb0bc9b37f75c68529f7876af042",
     "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
     "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0.query.json": "94a0287ea73d9baeef2c602d2a46c62d0f795ed48bf32e52044f56f2a359fbc0",
@@ -297,24 +297,24 @@
     "Scripts/reference-data/sources/local_solar_eclipse.txt": "1273c79b53122d6e5efc264b3c64e571e9a47d777103eaffbcdf5fb44c7743f0",
     "Scripts/reference-data/sources/solar_2001.html": "820b7a9e4a04881ff212ee59603f03fb3ebdcb72e340414494b1fb84271efc9d",
     "Scripts/test_local_solar.py": "bb3fc67cf148916781859dbee0b863f3efdd1e30c1748cba320f80e43d01ab77",
-    "Sources/AstronomyKit/AstronomyError.swift": "5b5fd88d6640947da63a3310dfc7de124727f1334a6b885e959207b83c5fbb57",
-    "Sources/AstronomyKit/AstronomyKit.swift": "b7f836a026a0fb206df54fa43ac5d6664a92f23a915f3643038e188dc0b35f90",
-    "Sources/AstronomyKit/CelestialBody.swift": "745a84f7d97eef35ea945829649b1ea6ab5bed2c86846eecea5e891867b60cc7",
+    "Sources/AstronomyKit/AstronomyError.swift": "7122525f8f8796baaef9e6a3baff8c2332d0a0f817927af6c98d83b4a81c7746",
+    "Sources/AstronomyKit/AstronomyKit.swift": "0286b5b438eab83063b404a6d79b202997ab35bb237ab45e56b86efa6f59615b",
+    "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",
     "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "d9fd0b02d56f3ebaff5283aadf56ca6b41993c42e6e4ac2804ad43c8caebc858",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "851f9e384e46bcea481d665ca6fb44fe2f9e4e5ed2ace8c0f5e2ee84a3d3f3b8",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "903e3c76490a9c555d7754f6c3672bf978b1de96671587e6bb9db35034e43f23",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "7f1e9d1e130c2b4c61b610099488e74be40aabe87442dbd26c20528b768d7239",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "cef1841b577d2089425f5adfb51c254fccfe93d6623beed4ea35365fef505ab1",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "4aed9d0f7ada4c80bed32bb1b0695678f43e06ffee2ce77be39ae7faf09b0bd8",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "ab6e5fd47cf894e215c67fc067ae8ef56bb9f6a5f38eb58516c441deea61360a",
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineTransitEvents.swift": "cabca6e10109128fb3710dc3339e21c66f1bf89151c02432249cc60bd6fcbfb0",
-    "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
-    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "f35841fbd3d428fa36736e8731b7a94fe61f76ad82f84555d103609ba33c778d",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineTransitEvents.swift": "503c0755300101a3cb69d2c8f95b68ec46db79e973ddf5bb4dfd99a858109815",
+    "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "f1feb33c09113778035da88c28a4997cef331d1e99e626d3edd15103e6c27f5e",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "385c5d018a7d1ded918a215775b32977003803b797e83be20d7796c43856d88b",
     "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "d5872b4f262924ec859bd0849dc7f182b37d102d097df6bff1c14772e2bf8079",
-    "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "32ca3a429bdabd8c6992264ee2cc2880a51d06ca57c44721ac873e7af56e8735",
+    "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "0afeceb2ab8fff4295e853116f2ed7794c17e8772397836b2e234d9ce2bdac91",
     "Sources/AstronomyKit/Engine/Foundation/Engine.swift": "57d6d1ae8dbdacadc23daeab092445b9f27acf5baf021b900c21c5e59a09b38c",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
@@ -391,12 +391,12 @@
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "1e7d556d94b09301aac6535d71347adfae546d437140867c19aa59601602efe8",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
-    "Sources/AstronomyKit/Observer.swift": "8198f9e5412d937a23aac6925417f279a811d319478b010cb5e40c89ca8516e6",
-    "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
+    "Sources/AstronomyKit/Observer.swift": "5bd1ff1f613cec548aabdf724cd3167186568c84583b6eb350112c8891946677",
+    "Sources/AstronomyKit/Time.swift": "ecd767601f767df2a71be69b504663935d4cf77374bfe3a2ed9786fc158b16a7",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
     "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "cac8760f257c53c899ce64d16e96a4c5485c066d83cf8dc7db207a71fb713682",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "5590fd73ddbdc7774485ad5f466bd4d42ef49cd62f6b4d6634e2ecd0f57304c1",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineLocalSolarEventTests.swift": "628985689f4f2ea1603bcbfa0ab06a9abc0d1db56f56585642b981e0859e622a",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",

@@ -5,7 +5,6 @@
 //  Swift error types for astronomy calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 /// Errors that can occur during astronomy calculations.
@@ -66,46 +65,6 @@ public enum AstronomyError: Error, Equatable, Hashable, Sendable {
 
     /// An unknown error occurred.
     case unknown(Int32)
-
-    /// Creates an error from a C status code.
-    init?(status: astro_status_t) {
-        switch status {
-        case ASTRO_SUCCESS:
-            return nil
-        case ASTRO_NOT_INITIALIZED:
-            self = .notInitialized
-        case ASTRO_INVALID_BODY:
-            self = .invalidBody
-        case ASTRO_NO_CONVERGE:
-            self = .noConvergence
-        case ASTRO_BAD_TIME:
-            self = .badTime
-        case ASTRO_BAD_VECTOR:
-            self = .badVector
-        case ASTRO_SEARCH_FAILURE:
-            self = .searchFailure
-        case ASTRO_EARTH_NOT_ALLOWED:
-            self = .earthNotAllowed
-        case ASTRO_NO_MOON_QUARTER:
-            self = .noMoonQuarter
-        case ASTRO_WRONG_MOON_QUARTER:
-            self = .wrongMoonQuarter
-        case ASTRO_INTERNAL_ERROR:
-            self = .internalError
-        case ASTRO_INVALID_PARAMETER:
-            self = .invalidParameter
-        case ASTRO_FAIL_APSIS:
-            self = .failApsis
-        case ASTRO_BUFFER_TOO_SMALL:
-            self = .bufferTooSmall
-        case ASTRO_OUT_OF_MEMORY:
-            self = .outOfMemory
-        case ASTRO_INCONSISTENT_TIMES:
-            self = .inconsistentTimes
-        default:
-            self = .unknown(Int32(bitPattern: status.rawValue))
-        }
-    }
 }
 
 extension AstronomyError: CustomStringConvertible {

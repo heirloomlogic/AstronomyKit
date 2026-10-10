@@ -76,8 +76,13 @@ extension Engine.Events {
     }
 
     static func nextGlobalSolarEclipse(after event: GlobalSolarEclipse) throws -> GlobalSolarEclipse {
-        let next = try searchGlobalSolarEclipse(after: event.peak.adding(days: 10))
-        guard next.peak.tt > event.peak.tt else { throw AstronomyError.internalError }
+        try nextGlobalSolarEclipse(afterPeak: event.peak)
+    }
+
+    /// The global solar eclipse after the one whose reported peak is `peak`.
+    static func nextGlobalSolarEclipse(afterPeak peak: Engine.Time) throws -> GlobalSolarEclipse {
+        let next = try searchGlobalSolarEclipse(after: peak.adding(days: 10))
+        guard next.peak.tt > peak.tt else { throw AstronomyError.internalError }
         return next
     }
 

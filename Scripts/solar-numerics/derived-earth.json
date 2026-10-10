@@ -18,9 +18,9 @@
   "kind": "derived-native-polynomial-terms",
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Package.swift": "9015473035c478da9e7022855be84b8c88867f123661c05d6bf4a8eb6a3b1139",
+    "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
     "Scripts/solar-numerics/numerics.py": "7dac12895e73786b85dd960977f027817d05f66007621f28a4d4dd9f1ef9b0d9",
-    "Sources/AstronomyKit/AstronomyKit.swift": "b7f836a026a0fb206df54fa43ac5d6664a92f23a915f3643038e188dc0b35f90",
+    "Sources/AstronomyKit/AstronomyKit.swift": "0286b5b438eab83063b404a6d79b202997ab35bb237ab45e56b86efa6f59615b",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",

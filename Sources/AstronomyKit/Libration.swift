@@ -98,6 +98,6 @@ extension Moon {
     /// }
     /// ```
     public static func libration(at time: AstroTime) -> Libration {
-        Libration(Engine.Moon.libration(at: time.coordinateTime))
+        Libration(Engine.Moon.libration(at: time.engine))
     }
 }

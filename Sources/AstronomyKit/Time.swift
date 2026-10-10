@@ -5,7 +5,6 @@
 //  Time representation for astronomical calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 /// Represents a moment in time for astronomical calculations.
@@ -60,37 +59,35 @@ import Foundation
 /// the Moon's state vectors, searches) can throw within a short distance of either
 /// edge. See <doc:TimeAndObservers>.
 public struct AstroTime: Sendable {
-    /// The underlying C time structure.
-    var raw: astro_time_t
+    /// The engine's time value: both scales and the model that relates them.
+    let engine: Engine.Time
 
     /// Universal Time days since noon on January 1, 2000.
     ///
     /// This value is appropriate for calculations involving Earth's rotation,
     /// such as rise/set times and sidereal time.
-    public var universalTime: Double { raw.ut }
+    public var universalTime: Double { engine.ut }
 
     /// Terrestrial Time days since noon on January 1, 2000.
     ///
     /// This value is used for calculations not involving Earth's rotation,
     /// such as planetary orbits.
-    public var terrestrialTime: Double { raw.tt }
+    public var terrestrialTime: Double { engine.tt }
 
     /// The Delta T model this time carries; see "Delta T Model" above.
     ///
     /// `nil` for an invalid time, whose ``universalTime`` or
-    /// ``terrestrialTime`` is not finite, or when the engine's Delta T
-    /// function was replaced through the C API with one AstronomyKit does not
-    /// name.
-    public var deltaTModel: DeltaTModel? { DeltaTModel(function: raw.deltat_func) }
+    /// ``terrestrialTime`` is not finite.
+    public var deltaTModel: DeltaTModel? { engine.deltaTModel }
 
     /// The current time.
     public static var now: AstroTime {
         AstroTime(Date())
     }
 
-    /// Creates a time from the underlying C structure.
-    init(raw: astro_time_t) {
-        self.raw = raw
+    /// Wraps an engine time.
+    init(_ engine: Engine.Time) {
+        self.engine = engine
     }
 
     /// Seconds from the Unix epoch (1970-01-01 00:00 UTC) to the J2000
@@ -127,9 +124,9 @@ public struct AstroTime: Sendable {
     ///     default at this moment.
     ///
     /// Out-of-range components are tolerated and treated as calendar
-    /// arithmetic (for example, February 31 rolls over into March).
-    /// Components are clamped to the `Int32` range; the underlying engine
-    /// produces meaningful results for years roughly within ±999,999.
+    /// arithmetic in the proleptic Gregorian calendar: February 31 rolls over
+    /// into March, month 0 is December of the previous year, and month 15 is
+    /// March of the next. Components are clamped to the `Int32` range.
     /// Ephemeris calculations accept a much narrower span, roughly the years
     /// −2000 to +6000; see "Accepted Range" under ``AstroTime``.
     public init(
@@ -141,24 +138,15 @@ public struct AstroTime: Sendable {
         second: Double = 0,
         deltaTModel: DeltaTModel? = nil
     ) {
-        let calendar = Astronomy_MakeTime(
-            Int32(clamping: year),
-            Int32(clamping: month),
-            Int32(clamping: day),
-            Int32(clamping: hour),
-            Int32(clamping: minute),
-            second
-        )
-        self = Self.civil(days: calendar.ut, deltaTModel: deltaTModel).time
+        let days = Engine.Time.days(year: year, month: month, day: day, hour: hour, minute: minute, second: second)
+        self = Self.civil(days: days, deltaTModel: deltaTModel).time
     }
 
     /// The time of a civil day count, and whether the bundled UTC table
     /// converted it to TT (`true`) or it was taken as UT1 (`false`, before 1961).
     static func civil(days: Double, deltaTModel: DeltaTModel?) -> (time: AstroTime, fromTable: Bool) {
-        if let tt = CivilTime.terrestrialTime(utcDays: days) {
-            return (AstroTime(tt: tt, deltaTModel: deltaTModel), true)
-        }
-        return (AstroTime(ut: days, deltaTModel: deltaTModel), false)
+        let civil = Engine.Time.civil(utcDays: days, deltaTModel: deltaTModel ?? AstronomyConfig.deltaTModel)
+        return (AstroTime(civil.time), civil.fromTable)
     }
 
     /// Creates a time from modeled UT1 days since J2000.
@@ -169,7 +157,7 @@ public struct AstroTime: Sendable {
     ///   - deltaTModel: The Delta T model that derives TT and that derived
     ///     times use. `nil` captures the process default at this moment.
     public init(ut: Double, deltaTModel: DeltaTModel? = nil) {
-        self.raw = Astronomy_TimeFromDaysWithDeltaT(ut, deltaTModel?.function)
+        self.engine = Engine.Time(ut: ut, deltaTModel: deltaTModel ?? AstronomyConfig.deltaTModel)
     }
 
     /// Creates a time from Terrestrial Time days since J2000.
@@ -192,7 +180,7 @@ public struct AstroTime: Sendable {
     ///   - deltaTModel: The Delta T model that derives UT and that derived
     ///     times use. `nil` captures the process default at this moment.
     public init(tt: Double, deltaTModel: DeltaTModel? = nil) {
-        self.raw = Astronomy_TerrestrialTimeWithDeltaT(tt, deltaTModel?.function)
+        self.engine = Engine.Time(tt: tt, deltaTModel: deltaTModel ?? AstronomyConfig.deltaTModel)
     }
 
     /// Creates a time from both scales, stored exactly as given.
@@ -210,7 +198,7 @@ public struct AstroTime: Sendable {
     ///   - deltaTModel: The Delta T model that derived times use. `nil`
     ///     captures the process default at this moment.
     public init(tt: Double, ut: Double, deltaTModel: DeltaTModel? = nil) {
-        self.raw = Astronomy_TimeFromPair(ut, tt, deltaTModel?.function)
+        self.engine = Engine.Time.fromPair(ut: ut, tt: tt, deltaTModel: deltaTModel ?? AstronomyConfig.deltaTModel)
     }
 
     /// Converts TT to a civil UTC `Date` using the bundled offset table.
@@ -219,8 +207,7 @@ public struct AstroTime: Sendable {
     /// cannot represent them. At overlapping historical UTC steps, the later
     /// civil occurrence wins. Such instants cannot round-trip through `Date`.
     public var date: Date {
-        let civilDays = CivilTime.utcDays(terrestrialTime: raw.tt, universalTime: raw.ut)
-        return Date(timeIntervalSince1970: civilDays * 86_400 + Self.j2000UnixOffset)
+        Date(timeIntervalSince1970: engine.utcDays * 86_400 + Self.j2000UnixOffset)
     }
 
     /// Returns a new time by adding the specified number of UT1 days.
@@ -228,12 +215,13 @@ public struct AstroTime: Sendable {
     /// This preserves native search arithmetic. It is not civil calendar
     /// arithmetic or a count of uniform TT days across leap-second transitions.
     /// The result derives its TT with this time's ``deltaTModel`` and carries
-    /// the same model.
+    /// the same model. A time derived from an invalid time is invalid: it
+    /// keeps the summed UT, has a NaN TT and no model.
     ///
     /// - Parameter days: The number of days to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given days.
     public func addingDays(_ days: Double) -> AstroTime {
-        AstroTime(raw: Astronomy_AddDays(raw, days))
+        AstroTime(engine.adding(days: days))
     }
 
     /// Returns a new time by adding the specified number of UT1 hours.
@@ -247,10 +235,11 @@ public struct AstroTime: Sendable {
     /// The sidereal time at the prime meridian (Greenwich).
     ///
     /// Sidereal time is the hour angle of the vernal equinox,
-    /// measured in sidereal hours (0 to 24).
+    /// measured in sidereal hours (0 to 24). This is Greenwich apparent
+    /// sidereal time, including the complementary terms of the equation of
+    /// the equinoxes.
     public var siderealTime: Double {
-        var copy = raw
-        return Astronomy_SiderealTime(&copy)
+        Engine.EarthRotation.apparentSiderealTime(engine)
     }
 
     /// The local sidereal time at a given geographic longitude.

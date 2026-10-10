@@ -228,7 +228,7 @@ struct SearchTests {
                 throw TestError()
             }
         }
-        #expect(counter.count == 1, "C search must abort on the first thrown error")
+        #expect(counter.count == 1, "the search must abort on the first thrown error")
     }
 
     @Test(
@@ -259,8 +259,7 @@ struct SearchTests {
 ///
 /// Every window starts from a time built with an explicit model, so these tests never depend on the process default.
 /// Every callback goes through ``Visits/record(_:)``, which throws after a 128-visit cap, so a
-/// solver that stopped terminating fails its test instead of stalling the run; `.timeLimit` cannot interrupt a loop
-/// inside the C engine.
+/// solver that stopped terminating fails its test instead of stalling the run.
 @Suite("Search callback contract", .timeLimit(.minutes(1)))
 struct SearchCallbackContractTests {
     struct CallbackFailure: Error, Equatable {
@@ -450,11 +449,14 @@ struct SearchCallbackContractTests {
         #expect(visits.count == visit)
     }
 
-    /// 173.14463268466929 AU is the double nearest one light-day; the next double above it is rejected.
+    /// `Engine.speedOfLightAUPerDay` is the double nearest one light-day; the next double above it is rejected.
     @Test(
         "Fixed positions within one light-day return the position",
         arguments: DeltaTModel.allCases,
-        [[1.0, 0, 0], [-1, 0, 0], [0, 0, 0], [173.144_632_684_669_26, 0, 0], [173.144_632_684_669_29, 0, 0]])
+        [
+            [1.0, 0, 0], [-1, 0, 0], [0, 0, 0], [Engine.speedOfLightAUPerDay.nextDown, 0, 0],
+            [Engine.speedOfLightAUPerDay, 0, 0],
+        ])
     func fixedPosition(model: DeltaTModel, xyz: [Double]) throws {
         let start = AstroTime(ut: Self.baseUT, deltaTModel: model)
         let corrected = try Self.correct(model) { _ in xyz }
@@ -465,7 +467,7 @@ struct SearchCallbackContractTests {
 
     @Test(
         "Positions beyond one light-day are invalid parameters",
-        arguments: DeltaTModel.allCases, [Double.infinity, 1e308, 173.144_632_684_669_32])
+        arguments: DeltaTModel.allCases, [Double.infinity, 1e308, Engine.speedOfLightAUPerDay.nextUp])
     func distantPosition(model: DeltaTModel, x: Double) {
         #expect(throws: AstronomyError.invalidParameter) {
             try Self.correct(model) { _ in [x, 0, 0] }

@@ -322,7 +322,7 @@ public enum Chiron {
         try observer.validate()
         return Horizon(
             Engine.Horizontal(
-                time: time.coordinateTime, observer: observer,
+                time: time.engine, observer: observer,
                 rightAscension: ofDate.rightAscension, declination: ofDate.declination, refraction: refraction
             ))
     }

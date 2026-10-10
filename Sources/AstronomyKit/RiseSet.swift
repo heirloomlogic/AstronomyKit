@@ -5,8 +5,6 @@
 //  Rise, set, and culmination time calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Direction
 
 /// The direction of motion for rise/set searches.
@@ -16,10 +14,6 @@ public enum RiseSetDirection: Int32, Sendable {
 
     /// Setting below the horizon.
     case set = -1
-
-    var raw: astro_direction_t {
-        astro_direction_t(rawValue: rawValue)
-    }
 }
 
 // MARK: - Rise/Set Results
@@ -46,25 +40,12 @@ extension CelestialBody {
         limitDays: Double = 366,
         metersAboveGround: Double = 0
     ) throws -> AstroTime? {
-        let result = Astronomy_SearchRiseSetEx(
-            raw,
-            try observer.validatedRaw(),
-            direction.raw,
-            startTime.raw,
-            limitDays,
-            metersAboveGround
+        try observer.validate()
+        return try Engine.Events.searchRiseSet(
+            of: self, direction: direction, after: startTime.engine, from: observer, limitDays: limitDays,
+            heightAboveGround: metersAboveGround
         )
-
-        // ASTRO_SEARCH_FAILURE means no event found in the time range
-        if result.status == ASTRO_SEARCH_FAILURE {
-            return nil
-        }
-
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-
-        return AstroTime(raw: result.time)
+        .map(AstroTime.init)
     }
 
     /// Finds the next time this body rises above the horizon.
@@ -153,25 +134,12 @@ extension CelestialBody {
         from observer: Observer,
         limitDays: Double = 366
     ) throws -> AstroTime? {
-        let result = Astronomy_SearchAltitude(
-            raw,
-            try observer.validatedRaw(),
-            direction.raw,
-            startTime.raw,
-            limitDays,
-            altitude
+        try observer.validate()
+        return try Engine.Events.searchAltitude(
+            of: self, direction: direction, after: startTime.engine, from: observer, limitDays: limitDays,
+            altitudeDegrees: altitude
         )
-
-        // ASTRO_SEARCH_FAILURE means no event found in the time range
-        if result.status == ASTRO_SEARCH_FAILURE {
-            return nil
-        }
-
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-
-        return AstroTime(raw: result.time)
+        .map(AstroTime.init)
     }
 }
 
@@ -185,13 +153,10 @@ public struct HourAngleEvent: Sendable, Equatable {
     /// The horizontal coordinates at that time.
     public let horizon: Horizon
 
-    /// Creates an event from the C structure.
-    init(_ raw: astro_hour_angle_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.time = AstroTime(raw: raw.time)
-        self.horizon = Horizon(raw.hor)
+    /// Creates an event from the engine's.
+    init(_ event: Engine.Events.HourAngleEvent) {
+        self.time = AstroTime(event.time)
+        self.horizon = Horizon(event.horizon)
     }
 }
 
@@ -211,14 +176,10 @@ extension CelestialBody {
         from observer: Observer,
         direction: Int32 = 1
     ) throws -> HourAngleEvent {
-        let result = Astronomy_SearchHourAngleEx(
-            raw,
-            try observer.validatedRaw(),
-            hourAngle,
-            startTime.raw,
-            direction
-        )
-        return try HourAngleEvent(result)
+        try observer.validate()
+        return HourAngleEvent(
+            try Engine.Events.searchHourAngle(
+                of: self, hourAngle: hourAngle, after: startTime.engine, from: observer, direction: Int(direction)))
     }
 
     /// Returns the hour angle of this body at the given time and location.
@@ -232,12 +193,8 @@ extension CelestialBody {
     /// - Returns: The hour angle in sidereal hours (0–24).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func hourAngle(at time: AstroTime, from observer: Observer) throws -> Double {
-        var rawTime = time.raw
-        let result = Astronomy_HourAngle(raw, &rawTime, try observer.validatedRaw())
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.value
+        try observer.validate()
+        return try Engine.Events.hourAngle(of: self, at: time.engine, from: observer)
     }
 
     /// Finds the next upper culmination (transit/meridian crossing).

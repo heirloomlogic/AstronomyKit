@@ -119,8 +119,16 @@ extension Engine.Events {
     }
 
     static func nextTransit(after transit: Transit) throws -> Transit {
-        let next = try searchTransit(of: transit.body, after: transit.peak.adding(days: 100))
-        guard next.physicalPeak.tt > transit.physicalPeak.tt else { throw AstronomyError.internalError }
+        try nextTransit(of: transit.body, afterPeak: transit.peak, physicalPeak: transit.physicalPeak)
+    }
+
+    /// The transit of `body` after the one whose reported peak is `peak`; `physicalPeak` is the peak the
+    /// progress check compares, the reported peak where no earlier physical peak is known.
+    static func nextTransit(
+        of body: CelestialBody, afterPeak peak: Engine.Time, physicalPeak: Engine.Time? = nil
+    ) throws -> Transit {
+        let next = try searchTransit(of: body, after: peak.adding(days: 100))
+        guard next.physicalPeak.tt > (physicalPeak ?? peak).tt else { throw AstronomyError.internalError }
         return next
     }
 }

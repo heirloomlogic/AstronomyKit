@@ -19,8 +19,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "AstronomyKit",
-            dependencies: ["CLibAstronomy"]
+            name: "AstronomyKit"
         ),
         .target(
             name: "CLibAstronomy",

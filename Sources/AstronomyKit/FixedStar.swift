@@ -95,7 +95,7 @@ public struct FixedStar: Sendable, Hashable {
         from observer: Observer = .geocentric,
         equatorDate: EquatorDate = .j2000
     ) throws -> Equatorial {
-        Equatorial(try native.equatorial(at: time.coordinateTime, from: observer, equatorDate: equatorDate), at: time)
+        Equatorial(try native.equatorial(at: time.engine, from: observer, equatorDate: equatorDate), at: time)
     }
 
     /// Calculates the star's ecliptic longitude at a given time.
@@ -136,7 +136,7 @@ public struct FixedStar: Sendable, Hashable {
     /// - Returns: The ecliptic coordinates (longitude, latitude, distance).
     /// - Throws: `AstronomyError` if the calculation fails.
     public func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        try Ecliptic(native.ecliptic(at: time.coordinateTime))
+        try Ecliptic(native.ecliptic(at: time.engine))
     }
 
     /// Calculates the star's horizontal coordinates for an observer.
@@ -155,7 +155,7 @@ public struct FixedStar: Sendable, Hashable {
         refraction: Refraction = .normal
     ) throws -> Horizon {
         try observer.validate()
-        return Horizon(try native.horizontal(at: time.coordinateTime, from: observer, refraction: refraction))
+        return Horizon(try native.horizontal(at: time.engine, from: observer, refraction: refraction))
     }
 
     /// Determines which constellation contains the star.

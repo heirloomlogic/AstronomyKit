@@ -2,8 +2,8 @@
 //  AstronomyKit.swift
 //  AstronomyKit
 //
-//  AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) library by
-//  Don Cross, exposing the underlying C functionality through idiomatic Swift APIs for calculating:
+//  AstronomyKit is a Swift astronomy library. Its engine follows the published
+//  models recorded in NATIVE_ENGINE.md and calculates:
 //
 //  - Positions for the Sun, Moon, planets, and Jupiter's moons
 //  - Moon phase angles, quarters, illumination, and libration
@@ -38,7 +38,7 @@
 //  ```
 //
 
-import CLibAstronomy
+import Synchronization
 
 // MARK: - Delta T Models
 
@@ -52,29 +52,6 @@ public enum DeltaTModel: Sendable, CaseIterable {
     case jplHorizons
 }
 
-extension DeltaTModel {
-    /// The engine function that evaluates this model.
-    var function: astro_deltat_func {
-        switch self {
-        case .espenakMeeus: Astronomy_DeltaT_EspenakMeeus
-        case .jplHorizons: Astronomy_DeltaT_JplHorizons
-        }
-    }
-
-    /// The model that `function` evaluates, or `nil` for a function
-    /// AstronomyKit does not name, such as one installed through the C API.
-    init?(function: astro_deltat_func?) {
-        guard let function else { return nil }
-        // C function pointers are not Equatable in Swift; compare addresses.
-        let address = unsafeBitCast(function, to: UnsafeRawPointer.self)
-        let named = Self.allCases.first { model in
-            unsafeBitCast(model.function, to: UnsafeRawPointer.self) == address
-        }
-        guard let named else { return nil }
-        self = named
-    }
-}
-
 // MARK: - Module-Level Functions
 
 /// Module-level configuration and utility functions.
@@ -85,13 +62,25 @@ public enum AstronomyConfig {
     /// OS, and toolchain: native math does not guarantee identical output bits.
     public static let ephemerisVersion = "3.0.0+vsop87b-comp.poly-v2.iau2000b.utc-c72.native-libm"
 
+    /// The index into ``DeltaTModel/allCases`` of the process default model.
+    ///
+    /// `setDeltaTModel` stores a whole index and a time being created reads a
+    /// whole index, so a concurrent swap gives either the old or the new model.
+    private static let defaultModelIndex = Atomic<Int>(0)
+
+    /// The process default Delta T model, read once per public call that is
+    /// given no model.
+    static var deltaTModel: DeltaTModel {
+        DeltaTModel.allCases[defaultModelIndex.load(ordering: .relaxed)]
+    }
+
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the Espenak-Meeus model.
     ///
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTEspenakMeeus(universalTime: Double) -> Double {
-        Astronomy_DeltaT_EspenakMeeus(universalTime)
+        Engine.DeltaT.espenakMeeus(ut: universalTime)
     }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
@@ -100,7 +89,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTJplHorizons(universalTime: Double) -> Double {
-        Astronomy_DeltaT_JplHorizons(universalTime)
+        Engine.DeltaT.jplHorizons(ut: universalTime)
     }
 
     /// Selects the Delta T model for times created afterwards.
@@ -120,7 +109,8 @@ public enum AstronomyConfig {
     ///
     /// - Parameter model: The Delta T model to use.
     public static func setDeltaTModel(_ model: DeltaTModel) {
-        Astronomy_SetDeltaTFunction(model.function)
+        let index = DeltaTModel.allCases.firstIndex(of: model) ?? 0
+        defaultModelIndex.store(index, ordering: .relaxed)
     }
 
     /// Clears the engine's calculation caches.
@@ -131,6 +121,5 @@ public enum AstronomyConfig {
     /// with calculations.
     public static func reset() {
         Engine.resetCaches()
-        Astronomy_Reset()
     }
 }

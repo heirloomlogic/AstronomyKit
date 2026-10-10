@@ -1,10 +1,10 @@
-# Native sunrise meets the polar allowance; the public C facade is unchanged
+# Native sunrise meets the polar allowance
 
-The new native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. Its South Pole residual is +50.539200607 TT seconds, within the unchanged 70.8-second allowance. The public facade remains on C until [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96), so its known-issue assertion and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) remain open.
+The native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. Its South Pole residual is +50.539200607 TT seconds, within the unchanged 70.8-second allowance. Since the [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96) cutover the public `searchRiseSet` is this search, `AuditValidationTests` asserts row 2,923 without a known-issue wrapper, and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) closes with it.
 
-The retained public failure is the Sun rising at the South Pole on 2022-09-20 at 21:52 Universal Time. The public C search at AstronomyKit revision `e3d3d85c804aacf1c13be8249f4350e5013da48e` is +75.985957542 seconds from that minute after the fixture converts both values to TT with Espenak-Meeus. The archived allowance is 70.8 seconds.
+The former public failure was the Sun rising at the South Pole on 2022-09-20 at 21:52 Universal Time. The public C search at AstronomyKit revision `e3d3d85c804aacf1c13be8249f4350e5013da48e` was +75.985957542 seconds from that minute after the fixture converts both values to TT with Espenak-Meeus. The archived allowance is 70.8 seconds.
 
-`Tests/AstronomyKitTests/Engine/Events/PolarSunriseReconciliationTests.swift` retains the reconstruction. It runs the public search and three native controls, checks the archived row and allowance, repeats the native root search at four tolerances, and compares the finest result with independent bisection. Those controls retain the old nominal-radius observable; the new native event path is tested separately in `EngineObserverEventsTests` and `EngineObserverSourceTests`.
+`Tests/AstronomyKitTests/Engine/Events/PolarSunriseReconciliationTests.swift` retains the reconstruction. It runs the public search, which now meets the allowance, and three native controls, checks the archived row and allowance, repeats the control root search at four tolerances, and compares the finest result with independent bisection. The controls retain the old nominal-radius observable; the event path itself is tested in `EngineObserverEventsTests` and `EngineObserverSourceTests`.
 
 ## Sources and time convention
 
@@ -18,15 +18,16 @@ The official [USNO rise/set definition](https://aa.usno.navy.mil/faq/RST_defs) s
 
 ## Observable controls
 
-The public search calls `Astronomy_SearchRiseSetEx`. At sea level its zero is unrefracted topocentric center altitude plus `asin(695700 km / topocentric distance)` plus 34 arcminutes. The first native control evaluates that same distance-dependent upper-limb expression with `Engine.Positions.equatorial`, native observer subtraction, precession and nutation, `Engine.Horizontal`, `Engine.Time`, and `Engine.Search`.
+The public C search called `Astronomy_SearchRiseSetEx`. At sea level its zero was unrefracted topocentric center altitude plus `asin(695700 km / topocentric distance)` plus 34 arcminutes. The first native control evaluates that same distance-dependent upper-limb expression with `Engine.Positions.equatorial`, native observer subtraction, precession and nutation, `Engine.Horizontal`, `Engine.Time`, and `Engine.Search`.
 
 The second native control keeps the topocentric coordinates but replaces the varying solar radius with USNO's published fixed 50-arcminute center depression. The third uses a geocentric solar direction, rotates it into the South Pole horizon, and applies the same fixed center depression. The geocentric case is a control, not a proposed rise/set implementation.
 
-All native searches start at 2022-01-01 00:00 UT, carry Espenak-Meeus through every derived `Engine.Time`, scan at the C search's 0.42-day interval for at most 366 days, and solve the ascending root. The test exercises tolerances of 10, 0.1, 0.01, and 0.001 seconds. Forty bisection steps provide a separate root calculation on the same bracket.
+All native searches start at 2022-01-01 00:00 UT, carry Espenak-Meeus through every derived `Engine.Time`, scan at the search's 0.42-day interval for at most 366 days, and solve the ascending root. The test exercises tolerances of 10, 0.1, 0.01, and 0.001 seconds. Forty bisection steps provide a separate root calculation on the same bracket.
 
 | Control | Signed TT residual from the archived minute |
 | --- | ---: |
-| Public C rise search | +75.985957542 s |
+| Public C rise search, before the cutover | +75.985957542 s |
+| Public rise search, since the cutover (native, 696,000 km limb) | +50.539200607 s |
 | Native control, 695,700 km distance-dependent upper limb | +75.950547197 s |
 | Native topocentric, USNO fixed 50-arcminute center depression | -220.648209279 s |
 | Native geocentric direction, USNO fixed 50-arcminute center depression | -759.652990219 s |
@@ -37,7 +38,7 @@ The native nominal-radius control roots at 10, 0.1, and 0.01-second tolerances a
 
 The newest #124 comment reports a bounded diagnostic at `861b142bf40d14a8735f50d6f8f0919ded81a39b` and refers to PR [#211](https://github.com/heirloomlogic/AstronomyKit/pull/211). That commit changes only `Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift` and `Tests/AstronomyKitTests/Engine/Stars/EngineConstellationTests.swift`. The merged PR contains constellation source, tests, fixtures, and provenance files, but no polar sunrise test, report, or raw diagnostic. The comment's measurements were transient evidence from the #92 investigation.
 
-Before #250 the native result was about 0.022 seconds earlier than the transient value reported for `861b142b`. No diagnostic from that revision was retained, and the intervening commits do not change the native Sun position, orientation, horizontal, time, search, rise/set, or vendored C implementations used here. The available evidence therefore does not identify the cause of the difference. The public C result is unchanged. This report first bound the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above. #250 then moved nutation from IAU 2000B to IAU 2006/2000A, which moved each native control about 0.011 seconds earlier; the table above gives the values after that change. The public C result, still on IAU 2000B, did not move.
+Before #250 the native result was about 0.022 seconds earlier than the transient value reported for `861b142b`. No diagnostic from that revision was retained, and the intervening commits do not change the native Sun position, orientation, horizontal, time, search, rise/set, or vendored C implementations used here. The available evidence therefore does not identify the cause of the difference. This report first bound the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above. #250 then moved nutation from IAU 2000B to IAU 2006/2000A, which moved each native control about 0.011 seconds earlier; the table above gives the values after that change. The public C result, on IAU 2000B, did not move before it was replaced.
 
 ## Independent optical-limb evidence
 
@@ -57,7 +58,7 @@ The native rise/set path therefore retains its distance-dependent angular radius
 
 With the optical radius, the same four Horizons points give an interpolated polar crossing about +52.15501 seconds from the reference TT. The native root is +50.539200607 seconds with the original 0.1-second search tolerance. These are sampled comparisons under specified conventions, not a continuous event-time bound or a prediction of actual atmospheric refraction.
 
-Exact queries, raw responses, digests and derived fixtures are under [`Scripts/observer-event-data`](../../Scripts/observer-event-data/README.md). The complete native Debug/Release captures and source-bound summary preserve every USNO row and the independent observables. The old controls, archived minute, tolerance and public known issue remain intact.
+Exact queries, raw responses, digests and derived fixtures are under [`Scripts/observer-event-data`](../../Scripts/observer-event-data/README.md). The complete native Debug/Release captures and source-bound summary preserve every USNO row and the independent observables. The old controls, archived minute and tolerance remain intact; the public known issue is gone.
 
 ## Reproduction
 

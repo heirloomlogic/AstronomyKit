@@ -5,13 +5,10 @@
 //  Tests for Observer vector/state functionality.
 //
 
-import CLibAstronomy
 import Foundation
 import Testing
 
 @testable import AstronomyKit
-
-private let observerVectorCustomDeltaT: astro_deltat_func = { _ in 123.456 }
 
 @Suite("Observer Vector Tests")
 struct ObserverVectorTests {
@@ -259,22 +256,6 @@ struct ObserverVectorTests {
         let vector = try original.vector(at: time, equator: equator)
         let restored = Observer.from(vector: vector, equatorDate: equator)
 
-        #expect(vector.time.universalTime.bitPattern == time.universalTime.bitPattern)
-        #expect(vector.time.terrestrialTime.bitPattern == time.terrestrialTime.bitPattern)
-        #expect(abs(restored.latitude - original.latitude) < 1e-8)
-        #expect(abs(restored.longitude - original.longitude) < 1e-6)
-        #expect(abs(restored.height - original.height) < 1e-3)
-    }
-
-    @Test(
-        "Vector-to-observer accepts a time with an unnamed Delta T function", arguments: [EquatorDate.j2000, .ofDate])
-    func vectorObserverAcceptsUnnamedDeltaT(equator: EquatorDate) throws {
-        let time = AstroTime(raw: Astronomy_TimeFromDaysWithDeltaT(9_496.375, observerVectorCustomDeltaT))
-        let original = Observer(latitude: 35.6, longitude: -82.55, height: 650)
-        let vector = try original.vector(at: time, equator: equator)
-        let restored = Observer.from(vector: vector, equatorDate: equator)
-
-        #expect(time.deltaTModel == nil)
         #expect(vector.time.universalTime.bitPattern == time.universalTime.bitPattern)
         #expect(vector.time.terrestrialTime.bitPattern == time.terrestrialTime.bitPattern)
         #expect(abs(restored.latitude - original.latitude) < 1e-8)

@@ -23,6 +23,13 @@ lunar=load('lunar_binding','record-eclipse-event-evidence.py')
 EPOCH=datetime.datetime(2000,1,1,12)
 
 
+def native_delta_t_days(ut):
+    """Delta T in days at modeled UT1 `ut`, under the engine's Espenak-Meeus pieces and decimal year."""
+    text=(EPOCH+datetime.timedelta(days=ut)).isoformat()
+    rounded=(datetime.datetime.fromisoformat(text)-EPOCH).total_seconds()/86400
+    return lunar.source_time_tt(text)-rounded
+
+
 def hashes(capture_bytes=None):
     paths=list((ROOT/'Sources/AstronomyKit/Engine').rglob('*.swift'))
     paths += [ROOT/p for p in ['Sources/AstronomyKit/AstronomyError.swift','Sources/AstronomyKit/AstronomyKit.swift','Sources/AstronomyKit/Time.swift','Sources/AstronomyKit/CivilTime.swift','Sources/AstronomyKit/UTCOffsetTable.swift','Sources/CLibAstronomy/astronomy.c','Sources/CLibAstronomy/include/astronomy.h','Sources/AstronomyKit/CelestialBody.swift','Sources/AstronomyKit/Observer.swift','Tests/AstronomyKitTests/IndependentReferenceFixtures.swift','Tests/AstronomyKitTests/AuditValidationTests.swift','Tests/AstronomyKitTests/Engine/Eclipses/EngineLocalSolarEventTests.swift','Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift','Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json','Scripts/reference-data/build-fixtures.py','Scripts/reference-data/sources/local_solar_eclipse.txt','Scripts/reference-data/sources/solar_2001.html','Scripts/capture-local-solar.py','Scripts/capture-global-solar.py','Scripts/record-eclipse-event-evidence.py','Scripts/record-local-solar-evidence.py','Scripts/local-solar-peak-probe.swift','Scripts/test_local_solar.py','Scripts/eclipse-data/local-references.json']]
@@ -69,13 +76,11 @@ def published(rows):
             time_relation(c['tt'],c['ut'])
             seconds=(c['ut']-ut)*86400;altitude=c['altitude']-source[name+'AltitudeDegrees']
             if abs(seconds)>source['timeToleranceSeconds'] or abs(altitude)>source['altitudeToleranceDegrees']:raise ValueError('published contact accuracy')
-            # Former helper interpreted these modern calendar fields as UTC, fixing TT-UTC at 69.184 s.
+            # Former helper interpreted these modern calendar fields as UTC, fixing TT-UTC at 69.184 s; UT then follows
+            # the engine's Delta T inverse, as the public AstroTime(Date) path does.
             old_tt=ut+69.184/86400;old_ut=ut
-            for _ in range(3):
-                year=2000+(old_ut-14)/365.24217
-                if not 2005<=year<2050:raise ValueError('former UTC diagnostic outside retained C polynomial')
-                u=year-2000
-                old_ut=old_tt-(62.92+.32217*u+.005589*u*u)/86400
+            for _ in range(4):
+                old_ut=old_tt-native_delta_t_days(old_ut)
             if abs(c['formerUTCResidualSeconds']-(c['ut']-old_ut)*86400)>32*max(math.ulp(ut),1e-12)*86400:raise ValueError('former UTC diagnostic')
             if name=='peak' and row['physicalTT']!=c['tt']:raise ValueError('physical peak')
             residuals.append({'latitude':row['latitude'],'name':name,'seconds':seconds,'altitudeDegrees':altitude,'formerUTCSeconds':c['formerUTCResidualSeconds']})
@@ -149,7 +154,7 @@ def evidence(captures,bindings):
     if captures['releaseExecutableBytes']<=0 or set(captures['releaseObjectBytes'])!={'EngineLocalSolarEvents.o'} or captures['releaseObjectBytes']['EngineLocalSolarEvents.o']<=0:raise ValueError('binary observations')
     builds={c:lunar.build_seconds(captures['buildReceipts'][c]) for c in ['debug','release']}
     if any(not math.isfinite(v) or v<0 for v in builds.values()):raise ValueError('build duration')
-    return {'schemaVersion':1,'runtimeBaseRevision':captures['runtimeBaseRevision'],'sourceHashes':bindings,'toolchain':captures['toolchain'],'eclipseWiseContacts':published(captures['release']['published']),'rp1301Contacts':report(captures['release']['report'],refs),'localAreaSamples':[{'id':r['id'],'sourceEpochArea':r['sourceEpochObscuration'],'searchPeakArea':r['obscuration'],'interval':[s['lower'],s['upper']]} for r,s in zip(captures['release']['report'],refs['events'])],'sequence':captures['release']['sequence'],'peakDefinition':peak_definition(captures['release']['peak-definition'],refs),'centralMidpointDifferencesSeconds':{r['id']:((next(c['tt'] for c in r['contacts'] if c['name']=='totalBegin')+next(c['tt'] for c in r['contacts'] if c['name']=='totalEnd'))/2-next(c['tt'] for c in r['contacts'] if c['name']=='peak'))*86400 for r in captures['release']['report'] if r['kind']!='partial'},'resources':resource,'releaseObjectBytes':captures['releaseObjectBytes'],'releaseExecutableBytes':captures['releaseExecutableBytes'],'buildSeconds':builds,'limitations':'Native sampled local circumstances; public C routing remains under #96. EclipseWise original map timestamps are UT1 despite legacy UTC keys. RP1301 areas are direct printed local values with conditional rounding intervals; they do not resolve the finer global G0 ratio or 1986 limb qualifications. Washington proves consecutive visible calendar identities under a historical published model, not a modern timing/area allowance. Resource values are host observations, not portable gates.'}
+    return {'schemaVersion':1,'runtimeBaseRevision':captures['runtimeBaseRevision'],'sourceHashes':bindings,'toolchain':captures['toolchain'],'eclipseWiseContacts':published(captures['release']['published']),'rp1301Contacts':report(captures['release']['report'],refs),'localAreaSamples':[{'id':r['id'],'sourceEpochArea':r['sourceEpochObscuration'],'searchPeakArea':r['obscuration'],'interval':[s['lower'],s['upper']]} for r,s in zip(captures['release']['report'],refs['events'])],'sequence':captures['release']['sequence'],'peakDefinition':peak_definition(captures['release']['peak-definition'],refs),'centralMidpointDifferencesSeconds':{r['id']:((next(c['tt'] for c in r['contacts'] if c['name']=='totalBegin')+next(c['tt'] for c in r['contacts'] if c['name']=='totalEnd'))/2-next(c['tt'] for c in r['contacts'] if c['name']=='peak'))*86400 for r in captures['release']['report'] if r['kind']!='partial'},'resources':resource,'releaseObjectBytes':captures['releaseObjectBytes'],'releaseExecutableBytes':captures['releaseExecutableBytes'],'buildSeconds':builds,'limitations':'Native sampled local circumstances, which the public facade uses since the #96 cutover. EclipseWise original map timestamps are UT1 despite legacy UTC keys. RP1301 areas are direct printed local values with conditional rounding intervals; they do not resolve the finer global G0 ratio or 1986 limb qualifications. Washington proves consecutive visible calendar identities under a historical published model, not a modern timing/area allowance. Resource values are host observations, not portable gates.'}
 
 
 def capture(directory):

@@ -3450,12 +3450,12 @@
   ],
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Package.swift": "9015473035c478da9e7022855be84b8c88867f123661c05d6bf4a8eb6a3b1139",
+    "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
     "Scripts/solar-numerics/certify_light_time.py": "0948cd14b3a04f9750a6c04c03a6e8f5446323598d2c98f88198a11d755ce3fb",
-    "Scripts/solar-numerics/derived-earth.json": "b9c6559b076c2c9cf704b6ad5a898c730ff47161572d73bbbc466fda403ea965",
+    "Scripts/solar-numerics/derived-earth.json": "866b7c137f38b2b1ad0aa1755e58a8abe3ed3d3f54b99e90ac4758b2c80f7d66",
     "Scripts/solar-numerics/intervals.py": "f311ffea878782dd46cb55a79486615626bbf8d8fb351c4186f9c22dfff297c1",
     "Scripts/solar-numerics/numerics.py": "7dac12895e73786b85dd960977f027817d05f66007621f28a4d4dd9f1ef9b0d9",
-    "Sources/AstronomyKit/AstronomyKit.swift": "b7f836a026a0fb206df54fa43ac5d6664a92f23a915f3643038e188dc0b35f90",
+    "Sources/AstronomyKit/AstronomyKit.swift": "0286b5b438eab83063b404a6d79b202997ab35bb237ab45e56b86efa6f59615b",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
@@ -3478,7 +3478,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialCoverage.swift": "c1c74a4ea6b29371b0b53884b7b0849d57e3830efe81aea097c8ffaa5be32133",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
-    "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
+    "Sources/AstronomyKit/Time.swift": "ecd767601f767df2a71be69b504663935d4cf77374bfe3a2ed9786fc158b16a7",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5"
   }
 }

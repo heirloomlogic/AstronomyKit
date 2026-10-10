@@ -8,7 +8,7 @@
 import Foundation
 
 extension Engine {
-    /// Native event searches. Public event facades remain on the C engine until the native cutover.
+    /// Event searches: solar longitude, seasons, relative longitude, lunar, observer, planetary, eclipse and transit events.
     enum Events {}
 }
 

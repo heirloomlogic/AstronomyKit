@@ -19,13 +19,15 @@ permissions:
   contents: read
 
 jobs:
-  # Public Chiron now exercises native gravity in Debug. The local full suite
-  # grew from 396s to 1333s; prior hosted Debug/TSan steps took 496/547/1504s.
-  # These limits include existing numerical setup and runner/sanitizer overhead.
-  # Release and platform-build limits remain tied to their separate workloads.
+  # The public API runs on the native engine in Debug. The local full suite
+  # grew from 1258s to 1358s at the cutover; the hosted macOS job took 39 to
+  # 42 minutes against its old 45-minute limit before it, and the Linux and
+  # Thread Sanitizer jobs 14 to 18 and 70 to 73 minutes. These limits include
+  # existing numerical setup and runner/sanitizer overhead. Release and
+  # platform-build limits remain tied to their separate workloads.
   test-macos:
     runs-on: macos-26
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

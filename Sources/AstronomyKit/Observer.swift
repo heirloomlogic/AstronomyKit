@@ -5,8 +5,6 @@
 //  Geographic observer location.
 //
 
-import CLibAstronomy
-
 /// A geographic location for observing celestial objects.
 ///
 /// An `Observer` represents a point on Earth's surface from which
@@ -59,21 +57,11 @@ public struct Observer: Sendable, Equatable, Hashable {
     /// surface, which puts the observer exactly at the center.
     public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_136.6)
 
-    /// The underlying C observer structure. Callers go through ``validatedRaw()``.
-    private var raw: astro_observer_t {
-        astro_observer_t(latitude: latitude, longitude: longitude, height: height)
-    }
-
-    /// The underlying C observer structure, validating the coordinates first.
+    /// Checks the coordinates before a calculation.
     ///
     /// - Throws: ``AstronomyError/invalidParameter`` if latitude, longitude, or
     ///   height is not finite, or if latitude is outside -90...90. Longitude
-    ///   wraps in the underlying engine, so any finite longitude is accepted.
-    func validatedRaw() throws -> astro_observer_t {
-        try validate()
-        return raw
-    }
-
+    ///   wraps in the engine, so any finite longitude is accepted.
     func validate() throws {
         guard
             latitude.isFinite, longitude.isFinite, height.isFinite,
@@ -146,8 +134,8 @@ extension Observer {
     public func vector(at time: AstroTime, equator: EquatorDate = .j2000) throws -> Vector3D {
         try validate()
         switch equator {
-        case .j2000: return Vector3D(Engine.Observers.vector(self, at: time.coordinateTime), at: time)
-        case .ofDate: return Vector3D(Engine.Observers.vectorOfDate(self, at: time.coordinateTime), at: time)
+        case .j2000: return Vector3D(Engine.Observers.vector(self, at: time.engine), at: time)
+        case .ofDate: return Vector3D(Engine.Observers.vectorOfDate(self, at: time.engine), at: time)
         }
     }
 
@@ -164,8 +152,8 @@ extension Observer {
     public func state(at time: AstroTime, equator: EquatorDate = .j2000) throws -> StateVector {
         try validate()
         switch equator {
-        case .j2000: return StateVector(Engine.Observers.state(self, at: time.coordinateTime), at: time)
-        case .ofDate: return StateVector(Engine.Observers.stateOfDate(self, at: time.coordinateTime), at: time)
+        case .j2000: return StateVector(Engine.Observers.state(self, at: time.engine), at: time)
+        case .ofDate: return StateVector(Engine.Observers.stateOfDate(self, at: time.engine), at: time)
         }
     }
 
@@ -183,7 +171,7 @@ extension Observer {
         vector: Vector3D,
         equatorDate: EquatorDate = .j2000
     ) -> Observer {
-        let time = vector.time.coordinateTime
+        let time = vector.time.engine
         switch equatorDate {
         case .j2000:
             return Engine.Observers.observer(

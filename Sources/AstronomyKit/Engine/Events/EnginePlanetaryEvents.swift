@@ -118,9 +118,18 @@ extension Engine.Events {
         of body: CelestialBody,
         after apsis: PlanetaryApsis
     ) throws -> PlanetaryApsis {
-        let start = apsis.time.adding(days: try orbitalPeriod(of: body) / 4)
+        try nextPlanetaryApsis(of: body, after: apsis.kind, at: apsis.time)
+    }
+
+    /// The apsis of `body` after its `kind` apsis at `time`: the other kind, later than `time`.
+    static func nextPlanetaryApsis(
+        of body: CelestialBody,
+        after kind: PlanetaryApsisKind,
+        at time: Engine.Time
+    ) throws -> PlanetaryApsis {
+        let start = time.adding(days: try orbitalPeriod(of: body) / 4)
         let next = try searchPlanetaryApsis(of: body, after: start)
-        guard next.kind != apsis.kind, next.time.tt > apsis.time.tt else {
+        guard next.kind != kind, next.time.tt > time.tt else {
             throw AstronomyError.internalError
         }
         return next

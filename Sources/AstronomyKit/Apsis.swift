@@ -5,8 +5,6 @@
 //  Apsis (perigee/apogee, perihelion/aphelion) calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Apsis Kind
 
 /// The type of apsis: closest or farthest approach.
@@ -17,14 +15,16 @@ public enum ApsisKind: Sendable, Equatable, Hashable, Codable {
     /// The body is at its farthest distance (apogee for Moon, aphelion for planets).
     case apocenter
 
-    init(_ raw: astro_apsis_kind_t) {
-        switch raw {
-        case APSIS_PERICENTER:
-            self = .pericenter
-        default:
-            self = .apocenter
-        }
+    init(_ kind: Engine.Events.LunarApsisKind) {
+        self = kind == .pericenter ? .pericenter : .apocenter
     }
+
+    init(_ kind: Engine.Events.PlanetaryApsisKind) {
+        self = kind == .pericenter ? .pericenter : .apocenter
+    }
+
+    var lunar: Engine.Events.LunarApsisKind { self == .pericenter ? .pericenter : .apocenter }
+    var planetary: Engine.Events.PlanetaryApsisKind { self == .pericenter ? .pericenter : .apocenter }
 
     /// A human-readable name for the Moon's apsis.
     public var lunarName: String {
@@ -76,15 +76,20 @@ public struct Apsis: Sendable, Equatable {
     /// The distance between the centers of the bodies in kilometers.
     public let distanceKM: Double
 
-    /// Creates an apsis from the C structure.
-    init(_ raw: astro_apsis_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.kind = ApsisKind(raw.kind)
-        self.time = AstroTime(raw: raw.time)
-        self.distanceAU = raw.dist_au
-        self.distanceKM = raw.dist_km
+    /// Creates an apsis from the engine's lunar apsis.
+    init(_ apsis: Engine.Events.LunarApsis) {
+        self.kind = ApsisKind(apsis.kind)
+        self.time = AstroTime(apsis.time)
+        self.distanceAU = apsis.distanceAU
+        self.distanceKM = apsis.distanceKilometers
+    }
+
+    /// Creates an apsis from the engine's planetary apsis.
+    init(_ apsis: Engine.Events.PlanetaryApsis) {
+        self.kind = ApsisKind(apsis.kind)
+        self.time = AstroTime(apsis.time)
+        self.distanceAU = apsis.distanceAU
+        self.distanceKM = apsis.distanceKilometers
     }
 }
 
@@ -106,8 +111,7 @@ extension Moon {
     ///   the accepted time range (see ``AstroTime``), or another `AstronomyError` if the
     ///   search fails.
     public static func searchApsis(after startTime: AstroTime) throws -> Apsis {
-        let result = Astronomy_SearchLunarApsis(startTime.raw)
-        return try Apsis(result)
+        Apsis(try Engine.Events.searchLunarApsis(after: startTime.engine))
     }
 
     /// Finds the next lunar apsis after a given apsis.
@@ -118,15 +122,7 @@ extension Moon {
     /// - Returns: The next apsis event.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextApsis(after apsis: Apsis) throws -> Apsis {
-        let raw = astro_apsis_t(
-            status: ASTRO_SUCCESS,
-            time: apsis.time.raw,
-            kind: apsis.kind == .pericenter ? APSIS_PERICENTER : APSIS_APOCENTER,
-            dist_au: apsis.distanceAU,
-            dist_km: apsis.distanceKM
-        )
-        let result = Astronomy_NextLunarApsis(raw)
-        return try Apsis(result)
+        Apsis(try Engine.Events.nextLunarApsis(after: apsis.kind.lunar, at: apsis.time.engine))
     }
 
     /// Returns all lunar apsides within a date range.
@@ -169,8 +165,7 @@ extension CelestialBody {
     /// print("Mars \(apsis.kind.solarName): \(apsis.time)")
     /// ```
     public func searchApsis(after startTime: AstroTime) throws -> Apsis {
-        let result = Astronomy_SearchPlanetApsis(raw, startTime.raw)
-        return try Apsis(result)
+        Apsis(try Engine.Events.searchPlanetaryApsis(of: self, after: startTime.engine))
     }
 
     /// Finds the next planetary apsis after a given apsis.
@@ -179,15 +174,7 @@ extension CelestialBody {
     /// - Returns: The next apsis event.
     /// - Throws: `AstronomyError` if the search fails.
     public func nextApsis(after apsis: Apsis) throws -> Apsis {
-        let raw = astro_apsis_t(
-            status: ASTRO_SUCCESS,
-            time: apsis.time.raw,
-            kind: apsis.kind == .pericenter ? APSIS_PERICENTER : APSIS_APOCENTER,
-            dist_au: apsis.distanceAU,
-            dist_km: apsis.distanceKM
-        )
-        let result = Astronomy_NextPlanetApsis(self.raw, raw)
-        return try Apsis(result)
+        Apsis(try Engine.Events.nextPlanetaryApsis(of: self, after: apsis.kind.planetary, at: apsis.time.engine))
     }
 
     /// Returns all planetary apsides within a date range.

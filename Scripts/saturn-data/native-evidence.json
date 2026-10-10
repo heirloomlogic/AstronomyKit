@@ -14,8 +14,8 @@
     ]
   ],
   "buildSeconds": {
-    "debug": 28.94,
-    "release": 151.59
+    "debug": 6.19,
+    "release": 119.43
   },
   "debug": {
     "coefficients": {
@@ -56,10 +56,10 @@
           "kind": "pericenter"
         }
       ],
-      "maximumElongationParitySeconds": 0.00010152580216526985,
-      "peakMagnitudeParitySeconds": 2.986053004860878e-06,
+      "maximumElongationParitySeconds": 0,
+      "peakMagnitudeParitySeconds": 0,
       "planetaryApsisBodies": 6,
-      "planetaryApsisParitySeconds": 9.131002449430525,
+      "planetaryApsisParitySeconds": 0,
       "planetaryApsisWorstBody": "Uranus"
     },
     "saturn": [
@@ -124,7 +124,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460695.0845825057,
         "nativeMinusSourceSeconds": -0.3296703100204468,
-        "publicCMinusSourceSeconds": -0.3296703100204468,
+        "publicMinusSourceSeconds": -0.3296703100204468,
         "sourceLowerJDTT": 2460695.084582506,
         "sourceUpperJDTT": 2460695.084590137
       },
@@ -133,7 +133,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460726.3289744984,
         "nativeMinusSourceSeconds": -22.08251953125,
-        "publicCMinusSourceSeconds": -22.084088623523712,
+        "publicMinusSourceSeconds": -22.08251953125,
         "sourceLowerJDTT": 2460726.329226268,
         "sourceUpperJDTT": 2460726.329233898
       },
@@ -142,7 +142,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460680.0618358366,
         "nativeMinusSourceSeconds": -12.194985151290894,
-        "publicCMinusSourceSeconds": -12.193778157234192,
+        "publicMinusSourceSeconds": -12.194985151290894,
         "sourceLowerJDTT": 2460680.061973167,
         "sourceUpperJDTT": 2460680.061980797
       },
@@ -151,7 +151,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460782.4260232407,
         "nativeMinusSourceSeconds": 0.32958984375,
-        "publicCMinusSourceSeconds": 0.33075660467147827,
+        "publicMinusSourceSeconds": 0.32958984375,
         "sourceLowerJDTT": 2460782.426015611,
         "sourceUpperJDTT": 2460782.426023241
       },
@@ -160,7 +160,7 @@
         "localCrossings": 3,
         "nativeJDTT": 2462133.6140703936,
         "nativeMinusSourceSeconds": 19895.031617581844,
-        "publicCMinusSourceSeconds": 19895.08186876774,
+        "publicMinusSourceSeconds": 19895.031617581844,
         "sourceLowerJDTT": 2462133.383800009,
         "sourceUpperJDTT": 2462133.383807639
       },
@@ -169,7 +169,7 @@
         "localCrossings": 3,
         "nativeJDTT": 2470035.695252181,
         "nativeMinusSourceSeconds": -174123.3030617237,
-        "publicCMinusSourceSeconds": -174114.1720712185,
+        "publicMinusSourceSeconds": -174123.3030617237,
         "sourceLowerJDTT": 2470037.710564374,
         "sourceUpperJDTT": 2470037.710572003
       },
@@ -178,7 +178,7 @@
         "localCrossings": 2,
         "nativeJDTT": 2467133.445785323,
         "nativeMinusSourceSeconds": 117316.19380563498,
-        "publicCMinusSourceSeconds": 117251.88600718975,
+        "publicMinusSourceSeconds": 117316.19380563498,
         "sourceLowerJDTT": 2467132.087955191,
         "sourceUpperJDTT": 2467132.087962821
       },
@@ -187,7 +187,7 @@
         "localCrossings": 3,
         "nativeJDTT": 2493228.9734084043,
         "nativeMinusSourceSeconds": -2.854420244693756,
-        "publicCMinusSourceSeconds": -194.22312676906586,
+        "publicMinusSourceSeconds": -2.854420244693756,
         "sourceLowerJDTT": 2493228.973437627,
         "sourceUpperJDTT": 2493228.973445256
       }
@@ -233,7 +233,7 @@
   "limitations": [
     "Six Saturn source roots and eight native-selected diagnostic windows, not a continuous event-time bound or an orbital event census.",
     "Jupiter, Uranus and Neptune fail the unchanged sixty-second comparison and remain owned by #92.",
-    "Public C searches are unchanged until #96, including the pre-existing sampled-refinement stopping defect.",
+    "The public searches run on these native searches since the #96 cutover; the parity rows record the facade conversion, not a comparison with the former C searches.",
     "Outside the Saturn source window the retained model remains; global physical-center and event accuracy are not established."
   ],
   "release": {
@@ -275,10 +275,10 @@
           "kind": "pericenter"
         }
       ],
-      "maximumElongationParitySeconds": 0.00010152580216526985,
-      "peakMagnitudeParitySeconds": 2.986053004860878e-06,
+      "maximumElongationParitySeconds": 0,
+      "peakMagnitudeParitySeconds": 0,
       "planetaryApsisBodies": 6,
-      "planetaryApsisParitySeconds": 9.131002449430525,
+      "planetaryApsisParitySeconds": 0,
       "planetaryApsisWorstBody": "Uranus"
     },
     "saturn": [
@@ -343,7 +343,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460695.0845825057,
         "nativeMinusSourceSeconds": -0.3296703100204468,
-        "publicCMinusSourceSeconds": -0.3296703100204468,
+        "publicMinusSourceSeconds": -0.3296703100204468,
         "sourceLowerJDTT": 2460695.084582506,
         "sourceUpperJDTT": 2460695.084590137
       },
@@ -352,7 +352,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460726.3289744984,
         "nativeMinusSourceSeconds": -22.08251953125,
-        "publicCMinusSourceSeconds": -22.084088623523712,
+        "publicMinusSourceSeconds": -22.08251953125,
         "sourceLowerJDTT": 2460726.329226268,
         "sourceUpperJDTT": 2460726.329233898
       },
@@ -361,7 +361,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460680.0618358366,
         "nativeMinusSourceSeconds": -12.194985151290894,
-        "publicCMinusSourceSeconds": -12.193778157234192,
+        "publicMinusSourceSeconds": -12.194985151290894,
         "sourceLowerJDTT": 2460680.061973167,
         "sourceUpperJDTT": 2460680.061980797
       },
@@ -370,7 +370,7 @@
         "localCrossings": 1,
         "nativeJDTT": 2460782.4260232407,
         "nativeMinusSourceSeconds": 0.32958984375,
-        "publicCMinusSourceSeconds": 0.33075660467147827,
+        "publicMinusSourceSeconds": 0.32958984375,
         "sourceLowerJDTT": 2460782.426015611,
         "sourceUpperJDTT": 2460782.426023241
       },
@@ -379,7 +379,7 @@
         "localCrossings": 3,
         "nativeJDTT": 2462133.6140703936,
         "nativeMinusSourceSeconds": 19895.031617581844,
-        "publicCMinusSourceSeconds": 19895.08186876774,
+        "publicMinusSourceSeconds": 19895.031617581844,
         "sourceLowerJDTT": 2462133.383800009,
         "sourceUpperJDTT": 2462133.383807639
       },
@@ -388,7 +388,7 @@
         "localCrossings": 3,
         "nativeJDTT": 2470035.695252181,
         "nativeMinusSourceSeconds": -174123.3030617237,
-        "publicCMinusSourceSeconds": -174114.1720712185,
+        "publicMinusSourceSeconds": -174123.3030617237,
         "sourceLowerJDTT": 2470037.710564374,
         "sourceUpperJDTT": 2470037.710572003
       },
@@ -397,7 +397,7 @@
         "localCrossings": 2,
         "nativeJDTT": 2467133.445785323,
         "nativeMinusSourceSeconds": 117316.19380563498,
-        "publicCMinusSourceSeconds": 117251.88600718975,
+        "publicMinusSourceSeconds": 117316.19380563498,
         "sourceLowerJDTT": 2467132.087955191,
         "sourceUpperJDTT": 2467132.087962821
       },
@@ -406,29 +406,29 @@
         "localCrossings": 3,
         "nativeJDTT": 2493228.9734084043,
         "nativeMinusSourceSeconds": -2.854420244693756,
-        "publicCMinusSourceSeconds": -194.22312676906586,
+        "publicMinusSourceSeconds": -2.854420244693756,
         "sourceLowerJDTT": 2493228.973437627,
         "sourceUpperJDTT": 2493228.973445256
       }
     ]
   },
-  "releaseExecutableBytes": 165415264,
+  "releaseExecutableBytes": 133273632,
   "resourceScope": "macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.",
   "resources": {
-    "centerColdSeconds": 0.007008075714111328,
+    "centerColdSeconds": 0.006206035614013672,
     "checksum": -443.8575980663478,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.04394102096557617,
+    "eventSeconds": 0.046339988708496094,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 75546624,
-    "peakAfterRetainedBytes": 51937280,
-    "peakAfterWorkloadsBytes": 76136448,
-    "peakBeforeBytes": 46825472,
-    "retainedColdSeconds": 0.0016779899597167969,
+    "peakAfterCenterBytes": 75759616,
+    "peakAfterRetainedBytes": 52232192,
+    "peakAfterWorkloadsBytes": 76382208,
+    "peakBeforeBytes": 47185920,
+    "retainedColdSeconds": 0.0014380216598510742,
     "seconds": {
-      "center": 0.035354018211364746,
-      "retained": 0.013057947158813477
+      "center": 0.033370018005371094,
+      "retained": 0.012359976768493652
     }
   },
   "schemaVersion": 2,
@@ -440,7 +440,7 @@
     "Scripts/generate-moon-tables.py": "674afcfcfc28b1a9d0ede7716e2540de132afe573cbdf95cb167690cb88026e0",
     "Scripts/generate-saturn-tables.py": "ddc05f7fa1d7ee48c42d1fb1400d975538947d66a809dd6d9298c743e83ffce4",
     "Scripts/qualify-moon-de441.py": "69521b985aa7d5f577ca8b1d89712d11b5e3453d042059f498bfaaebd24667be",
-    "Scripts/record-planetary-event-evidence.py": "6eff79b2d3543e2dfb5963a07aadac55a70ea129e00fb7a5c7ba694753bfc129",
+    "Scripts/record-planetary-event-evidence.py": "d4c055fb702cbca0fa670219cfbbd6dbbad41ff75659c663454bc0b7e6bf2a62",
     "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/capture-planetary-apsides.py": "3789be611d1bc5219d2e55d82ad4429188ced595c6b88d51cdd421de6b0b0eba",
     "Scripts/reference-data/planetary-apsis-evidence.json": "9cb0ab7430beef2029dc69cabe34010231609c702bfe621b8856feb521aea684",
@@ -475,24 +475,24 @@
     "Scripts/saturn-data/barycenter-reference.json": "218c6a9cda702a969c6eecb4cb6927aa735f5d6af9f7c81a5d41f180104c9041",
     "Scripts/saturn-data/barycenter-reference.query.json": "a12f1e6346ba1016f68c4d9eabf51ba11a71896b8122381f70151c6a02c1ab78",
     "Scripts/saturn-data/direct-fixtures.json": "09fc0c61567cb69fd7953712827029c8fe10399b8db5ed0fea8885676a0a0524",
-    "Scripts/saturn-data/native-captures.json": "23c6945b5105b23def87d597bc379b95ae2727751b8d2c8a97844fd7358c3c8a",
+    "Scripts/saturn-data/native-captures.json": "631cc182c5cbddb794c38a0fd4ff6aa45dc19a0822266048ea417db233266ec3",
     "Scripts/test_saturn_ephemeris.py": "c4e6e58d90210c1aaa01014eedcbb037076a3a552929bf922ffcb7d6e3b94c4a",
-    "Sources/AstronomyKit/Apsis.swift": "433577a44872fd38439330252868ff40a55aa8ab66902f8fd1d72c52b260d24c",
-    "Sources/AstronomyKit/CelestialBody.swift": "745a84f7d97eef35ea945829649b1ea6ab5bed2c86846eecea5e891867b60cc7",
+    "Sources/AstronomyKit/Apsis.swift": "846e96c10636302634649bb827e843e3b6debf9b1d3f948f0b412f8e26dcece6",
+    "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
     "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",
     "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "d9fd0b02d56f3ebaff5283aadf56ca6b41993c42e6e4ac2804ad43c8caebc858",
     "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "851f9e384e46bcea481d665ca6fb44fe2f9e4e5ed2ace8c0f5e2ee84a3d3f3b8",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "903e3c76490a9c555d7754f6c3672bf978b1de96671587e6bb9db35034e43f23",
     "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "7f1e9d1e130c2b4c61b610099488e74be40aabe87442dbd26c20528b768d7239",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "cef1841b577d2089425f5adfb51c254fccfe93d6623beed4ea35365fef505ab1",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "4aed9d0f7ada4c80bed32bb1b0695678f43e06ffee2ce77be39ae7faf09b0bd8",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "ab6e5fd47cf894e215c67fc067ae8ef56bb9f6a5f38eb58516c441deea61360a",
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
-    "Sources/AstronomyKit/Engine/Eclipses/EngineTransitEvents.swift": "cabca6e10109128fb3710dc3339e21c66f1bf89151c02432249cc60bd6fcbfb0",
-    "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
-    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "f35841fbd3d428fa36736e8731b7a94fe61f76ad82f84555d103609ba33c778d",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineTransitEvents.swift": "503c0755300101a3cb69d2c8f95b68ec46db79e973ddf5bb4dfd99a858109815",
+    "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "f1feb33c09113778035da88c28a4997cef331d1e99e626d3edd15103e6c27f5e",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "385c5d018a7d1ded918a215775b32977003803b797e83be20d7796c43856d88b",
     "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "d5872b4f262924ec859bd0849dc7f182b37d102d097df6bff1c14772e2bf8079",
-    "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "32ca3a429bdabd8c6992264ee2cc2880a51d06ca57c44721ac873e7af56e8735",
+    "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "0afeceb2ab8fff4295e853116f2ed7794c17e8772397836b2e234d9ce2bdac91",
     "Sources/AstronomyKit/Engine/Foundation/Engine.swift": "57d6d1ae8dbdacadc23daeab092445b9f27acf5baf021b900c21c5e59a09b38c",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
@@ -569,10 +569,10 @@
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "1e7d556d94b09301aac6535d71347adfae546d437140867c19aa59601602efe8",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
-    "Sources/AstronomyKit/Time.swift": "fb93ddbdfc870b98a4b53cb3eb572b14e97dc55964fb768f09e412fb3eb6e87c",
+    "Sources/AstronomyKit/Time.swift": "ecd767601f767df2a71be69b504663935d4cf77374bfe3a2ed9786fc158b16a7",
     "Sources/CLibAstronomy/EphemerisTime/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
-    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "a449b460ac97417041952e32a096208250ef3c95e8835e19a2119c57a0141176",
+    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "1686346d62961daebe8c17e829ad1cd13768c642695b5eb6dd57a7afa0246a9d",
     "Tests/AstronomyKitTests/Engine/Gravity/EngineGravityTests.swift": "70a588e2c3a0b8d719655410d888ae58df8bbd6bd3586f4d4018a6542873291c",
     "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnEphemerisTests.swift": "57b0cbf2a03a52b053a9d6a1c10ee5bd95621d4ce0daeedd1f5d42243c081bdf",
     "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnMeasurementTests.swift": "2ef055c4a9f6e61bb14373c3c8aacfdb010d5b9d818521bc2e5e74e6991a3453",

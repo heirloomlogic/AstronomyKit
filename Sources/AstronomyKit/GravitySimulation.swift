@@ -69,7 +69,7 @@ public final class GravitySimulation: @unchecked Sendable {
         initialState: StateVector
     ) throws {
         self.origin = origin
-        let nativeTime = time.coordinateTime
+        let nativeTime = time.engine
         let simulation = try Engine.GravitySimulation(
             origin: origin, time: nativeTime, states: [initialState.engineState(at: nativeTime)])
         self.lock = Mutex(SimState(simulation: simulation, time: time, currentTime: time, previousTime: time))
@@ -88,7 +88,7 @@ public final class GravitySimulation: @unchecked Sendable {
     @discardableResult
     public func update(to newTime: AstroTime) throws -> StateVector {
         try lock.withLock { storage in
-            let result = try storage.simulation.update(to: newTime.coordinateTime)[0]
+            let result = try storage.simulation.update(to: newTime.engine)[0]
             storage.previousTime = storage.currentTime
             if newTime.terrestrialTime != storage.currentTime.terrestrialTime {
                 storage.currentTime = newTime

@@ -5,8 +5,6 @@
 //  Enumeration of celestial bodies.
 //
 
-import CLibAstronomy
-
 /// A celestial body in the solar system.
 ///
 /// This enum represents the Sun, Moon, planets, and select moons
@@ -77,11 +75,6 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
 
     /// Callisto, moon of Jupiter.
     case callisto = 24
-
-    /// The underlying C body enum value.
-    var raw: astro_body_t {
-        astro_body_t(rawValue: rawValue)
-    }
 
     /// The human-readable name of this body.
     public var name: String {
