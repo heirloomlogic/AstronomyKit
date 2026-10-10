@@ -70,13 +70,13 @@ struct DeltaTModelCaptureTests {
         #expect(abs(utShiftSeconds - expectedShift) < 1e-6)
         #expect(utShiftSeconds > 22 && utShiftSeconds < 24)
 
-        // Geometric solar altitude at 40N 0E near local noon: the UT shift
-        // turns the Earth by 23 s of rotation, about 5e-4 degrees of altitude
-        // there (#49 measured 5.216e-4 on the C engine). A sanity bound, not a pin.
+        // Geometric solar altitude at 40N 0E near local noon, measured with
+        // the native engine. The 1e-7 degree tolerance admits platform libm
+        // differences while retaining the precision of this regression.
         let emAltitude = try CelestialBody.sun.horizon(at: em, from: Self.observer40N, refraction: .none).altitude
         let jplAltitude = try CelestialBody.sun.horizon(at: jpl, from: Self.observer40N, refraction: .none).altitude
         let altitudeShift = emAltitude - jplAltitude
-        #expect(altitudeShift > 4e-4 && altitudeShift < 7e-4, "\(altitudeShift)")
+        #expect(abs(altitudeShift - 0.000_521_824_936) < 1e-7, "\(altitudeShift)")
 
         // Calendar components reach the same value.
         let components = AstroTime(year: 2_049, month: 12, day: 21, hour: 12, deltaTModel: .jplHorizons)
