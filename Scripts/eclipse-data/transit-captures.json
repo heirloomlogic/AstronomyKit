@@ -1,56 +1,56 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (0.87 sec)",
-    "release": "Build complete! (119.73 sec)"
+    "debug": "Build complete! (28.94 sec)",
+    "release": "Build complete! (151.59 sec)"
   },
   "debug": {
     "global-sequence": [
       {
         "date": "2024-04-08",
         "kind": "total",
-        "tt": 8864.262829951886,
-        "ut": 8864.26197311072
+        "tt": 8864.262829952031,
+        "ut": 8864.261973110866
       },
       {
         "date": "2024-10-02",
         "kind": "annular",
-        "tt": 9041.282082266674,
-        "ut": 9041.281222088253
+        "tt": 9041.282082266724,
+        "ut": 9041.281222088302
       },
       {
         "date": "2025-03-29",
         "kind": "partial",
-        "tt": 9218.95040201805,
-        "ut": 9218.949538455126
+        "tt": 9218.950402017801,
+        "ut": 9218.949538454877
       }
     ],
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556088636384,
-        "ingressUT": 374.23961229549116,
+        "egressUT": 374.45560886363774,
+        "ingressUT": 374.2396122954866,
         "kind": "total",
-        "semiDurationMinutes": 155.51752906602815,
-        "tt": 374.34836483168385,
-        "ut": 374.3476224489039
+        "semiDurationMinutes": 155.5175290688112,
+        "tt": 374.3483648316754,
+        "ut": 374.34762244889544
       },
       {
         "date": "2001-07-05",
-        "egressUT": 551.2345982173312,
-        "ingressUT": 551.0088650919337,
+        "egressUT": 551.2345982173324,
+        "ingressUT": 551.0088650919351,
         "kind": "partial",
-        "semiDurationMinutes": 162.52785028618746,
-        "tt": 551.1224485524403,
-        "ut": 551.1217050720279
+        "semiDurationMinutes": 162.52785028602375,
+        "tt": 551.1224485522262,
+        "ut": 551.1217050718137
       },
       {
         "date": "2001-12-30",
-        "egressUT": 729.0215636496171,
-        "ingressUT": 728.8524985859417,
+        "egressUT": 729.0215636496138,
+        "ingressUT": 728.8524985859364,
         "kind": "penumbral",
-        "semiDurationMinutes": 121.7268458462604,
-        "tt": 728.9378039378245,
-        "ut": 728.9370595868115
+        "semiDurationMinutes": 121.72684584773378,
+        "tt": 728.9378039377822,
+        "ut": 728.9370595867692
       }
     ],
     "published": [
@@ -204,49 +204,49 @@
       {
         "date": "2024-04-08",
         "kind": "total",
-        "tt": 8864.262829951886,
-        "ut": 8864.26197311072
+        "tt": 8864.262829952031,
+        "ut": 8864.261973110866
       },
       {
         "date": "2024-10-02",
         "kind": "annular",
-        "tt": 9041.282082266674,
-        "ut": 9041.281222088253
+        "tt": 9041.282082266724,
+        "ut": 9041.281222088302
       },
       {
         "date": "2025-03-29",
         "kind": "partial",
-        "tt": 9218.95040201805,
-        "ut": 9218.949538455126
+        "tt": 9218.950402017801,
+        "ut": 9218.949538454877
       }
     ],
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556088636384,
-        "ingressUT": 374.23961229549116,
+        "egressUT": 374.4556088636344,
+        "ingressUT": 374.2396122954871,
         "kind": "total",
         "semiDurationMinutes": 155.51752906602815,
-        "tt": 374.34836483168385,
-        "ut": 374.3476224489039
+        "tt": 374.34836483179623,
+        "ut": 374.3476224490163
       },
       {
         "date": "2001-07-05",
-        "egressUT": 551.2345982173305,
+        "egressUT": 551.2345982173287,
         "ingressUT": 551.0088650919377,
         "kind": "partial",
-        "semiDurationMinutes": 162.52785028283142,
-        "tt": 551.122448552384,
-        "ut": 551.1217050719715
+        "semiDurationMinutes": 162.52785028152175,
+        "tt": 551.1224485521612,
+        "ut": 551.1217050717488
       },
       {
         "date": "2001-12-30",
-        "egressUT": 729.0215636496171,
-        "ingressUT": 728.8524985859417,
+        "egressUT": 729.0215636496138,
+        "ingressUT": 728.8524985859364,
         "kind": "penumbral",
-        "semiDurationMinutes": 121.7268458462604,
-        "tt": 728.9378039378245,
-        "ut": 728.9370595868115
+        "semiDurationMinutes": 121.72684584773378,
+        "tt": 728.9378039377822,
+        "ut": 728.9370595867692
       }
     ],
     "published": [
@@ -395,20 +395,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 165224752,
+  "releaseExecutableBytes": 165415264,
   "releaseObjectBytes": {
-    "EngineTransitEvents.o": 45624
+    "EngineTransitEvents.o": 45936
   },
   "resources": {
     "checksum": 537515.4328593763,
-    "coldSeconds": 0.005599021911621094,
+    "coldSeconds": 0.01185595989227295,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 0.39264702796936035,
-    "peakAfterColdBytes": 63537152,
-    "peakAfterWorkloadBytes": 64290816,
-    "peakBeforeBytes": 46694400
+    "nextSeconds": 1.3884220123291016,
+    "peakAfterColdBytes": 64176128,
+    "peakAfterWorkloadBytes": 64978944,
+    "peakBeforeBytes": 47169536
   },
-  "runtimeBaseRevision": "2d1252dc472dd71ddaa8222ed69b2adf0f3078ad",
+  "runtimeBaseRevision": "b8e384aaad33442f9e8360fa14f5e6b5f2b2794d",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

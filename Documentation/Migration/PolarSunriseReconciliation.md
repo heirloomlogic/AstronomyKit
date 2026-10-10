@@ -1,6 +1,6 @@
 # Native sunrise meets the polar allowance; the public C facade is unchanged
 
-The new native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. Its South Pole residual is +50.550159736 TT seconds, within the unchanged 70.8-second allowance. The public facade remains on C until [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96), so its known-issue assertion and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) remain open.
+The new native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. Its South Pole residual is +50.539200607 TT seconds, within the unchanged 70.8-second allowance. The public facade remains on C until [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96), so its known-issue assertion and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) remain open.
 
 The retained public failure is the Sun rising at the South Pole on 2022-09-20 at 21:52 Universal Time. The public C search at AstronomyKit revision `e3d3d85c804aacf1c13be8249f4350e5013da48e` is +75.985957542 seconds from that minute after the fixture converts both values to TT with Espenak-Meeus. The archived allowance is 70.8 seconds.
 
@@ -27,21 +27,21 @@ All native searches start at 2022-01-01 00:00 UT, carry Espenak-Meeus through ev
 | Control | Signed TT residual from the archived minute |
 | --- | ---: |
 | Public C rise search | +75.985957542 s |
-| Native control, 695,700 km distance-dependent upper limb | +75.961503026 s |
-| Native topocentric, USNO fixed 50-arcminute center depression | -220.637220290 s |
-| Native geocentric direction, USNO fixed 50-arcminute center depression | -759.641944652 s |
+| Native control, 695,700 km distance-dependent upper limb | +75.950547197 s |
+| Native topocentric, USNO fixed 50-arcminute center depression | -220.648209279 s |
+| Native geocentric direction, USNO fixed 50-arcminute center depression | -759.652990219 s |
 
-The native nominal-radius control roots at 10, 0.1, and 0.01-second tolerances are +75.963882124 seconds; the 0.001-second root is +75.961503026 seconds. Their 0.002379-second spread is below the coarsest requested precision, and the 40-step bisection result matches the finest root at the displayed precision. Root convergence does not account for the allowance failure.
+The native nominal-radius control roots at 10, 0.1, and 0.01-second tolerances are +75.952925824 seconds; the 0.001-second root is +75.950547197 seconds. Their 0.002379-second spread is below the coarsest requested precision, and the 40-step bisection result matches the finest root at the displayed precision. Root convergence does not account for the allowance failure.
 
 ## PR #211 did not retain the earlier diagnostic
 
 The newest #124 comment reports a bounded diagnostic at `861b142bf40d14a8735f50d6f8f0919ded81a39b` and refers to PR [#211](https://github.com/heirloomlogic/AstronomyKit/pull/211). That commit changes only `Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift` and `Tests/AstronomyKitTests/Engine/Stars/EngineConstellationTests.swift`. The merged PR contains constellation source, tests, fixtures, and provenance files, but no polar sunrise test, report, or raw diagnostic. The comment's measurements were transient evidence from the #92 investigation.
 
-The current native result is about 0.022 seconds earlier than the transient value reported for `861b142b`. No diagnostic from that revision was retained, and the intervening commits do not change the native Sun position, orientation, horizontal, time, search, rise/set, or vendored C implementations used here. The available evidence therefore does not identify the cause of the difference. The public C result is unchanged. This report binds the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above.
+Before #250 the native result was about 0.022 seconds earlier than the transient value reported for `861b142b`. No diagnostic from that revision was retained, and the intervening commits do not change the native Sun position, orientation, horizontal, time, search, rise/set, or vendored C implementations used here. The available evidence therefore does not identify the cause of the difference. The public C result is unchanged. This report first bound the retained measurements to `e3d3d85c804aacf1c13be8249f4350e5013da48e` and the test above. #250 then moved nutation from IAU 2000B to IAU 2006/2000A, which moved each native control about 0.011 seconds earlier; the table above gives the values after that change. The public C result, still on IAU 2000B, did not move.
 
 ## Independent optical-limb evidence
 
-Four archived [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/manual.html) responses near the polar minute use Sun center 10, Earth center 399, the geodetic South Pole, TT input and no atmospheric refraction. At the reference TT, the native airless center altitude is only 0.000007645458 degrees above Horizons. Linear interpolation of the source altitude plus the existing 695,700 km radius and 34-arcminute refraction gives approximately +77.59094 seconds from the reference TT. Moving the trajectory toward this source would make the old timing residual larger.
+Four archived [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/manual.html) responses near the polar minute use Sun center 10, Earth center 399, the geodetic South Pole, TT input and no atmospheric refraction. At the reference TT, the native airless center altitude is only 0.000007694801 degrees above Horizons. Linear interpolation of the source altitude plus the existing 695,700 km radius and 34-arcminute refraction gives approximately +77.59094 seconds from the reference TT. Moving the trajectory toward this source would make the old timing residual larger.
 
 A separate [USNO celestial-navigation API](https://aa.usno.navy.mil/data/api) comparison identifies the limb convention. At three dates, its printed apparent semidiameter and a Horizons topocentric distance imply these radii:
 
@@ -55,7 +55,7 @@ All three agree with 696,000 km within the six-decimal-degree printing resolutio
 
 The native rise/set path therefore retains its distance-dependent angular radius and 34-arcminute refraction, using 696,000 km for the Sun's apparent limb. No other solar-radius consumer changes. This is a source-supported event convention, not a fit to the polar timestamp or a claim about the Sun's physical radius at every wavelength. The three native semidiameters match the printed USNO values within 0.000001 degree; the nominal-radius controls miss that comparison by over a factor of 100. The current USNO one-day service independently reproduces the archived 21:52 entry. Its rise/set implementation is unavailable, and the navigation service's convention does not prove which internal calculation produced that entry.
 
-With the optical radius, the same four Horizons points give an interpolated polar crossing about +52.15501 seconds from the reference TT. The native root is +50.550159736 seconds with the original 0.1-second search tolerance. These are sampled comparisons under specified conventions, not a continuous event-time bound or a prediction of actual atmospheric refraction.
+With the optical radius, the same four Horizons points give an interpolated polar crossing about +52.15501 seconds from the reference TT. The native root is +50.539200607 seconds with the original 0.1-second search tolerance. These are sampled comparisons under specified conventions, not a continuous event-time bound or a prediction of actual atmospheric refraction.
 
 Exact queries, raw responses, digests and derived fixtures are under [`Scripts/observer-event-data`](../../Scripts/observer-event-data/README.md). The complete native Debug/Release captures and source-bound summary preserve every USNO row and the independent observables. The old controls, archived minute, tolerance and public known issue remain intact.
 

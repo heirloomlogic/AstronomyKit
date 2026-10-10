@@ -174,11 +174,11 @@ unmodified subset of ERFA 2.0.1, commit
 9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3, https://github.com/liberfa/erfa.
 Each file retains its original notice. The AstronomyKit wrapper
 (ephemeris_time.c and include/ephemeris_time.h) is separate from the official
-routines. The IAU 2000B nutation coefficients in
-Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000BTerms.swift are
-generated from nut00b.c of the same ERFA commit, kept unmodified in
-Scripts/orientation-data. The complementary terms of the equation of the
-equinoxes in
+routines. The IAU 2000A nutation coefficients and the IAU 2006 adjustment
+factors in Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift
+are generated from nut00a.c and nut06a.c of the same ERFA commit, kept
+unmodified in Scripts/orientation-data. The complementary terms of the
+equation of the equinoxes in
 Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift
 are generated from eect00.c of the same commit, kept there unmodified too. The
 TDB - TT series in
@@ -284,7 +284,7 @@ https://naif.jpl.nasa.gov/naif/rules.html.
 
 Native numerical measurement tools
 
-Scripts/solar-numerics/reference.py and solar_reference.py evaluate the NASA Espenak-Meeus Delta T polynomials, IAU Earth Rotation Angle, IAU 2006 precession and mean sidereal time, IAU 2000B with the existing ERFA-derived coefficient and full complementary-term tables, the IERS observer ellipsoid, and VSOP87B with the existing native generated table. The data retain the source attribution and licenses above. The Python evaluator is AstronomyKit-authored and is not software provided by or endorsed by NASA, SOFA, ERFA or IMCCE.
+Scripts/solar-numerics/reference.py and solar_reference.py evaluate the NASA Espenak-Meeus Delta T polynomials, IAU Earth Rotation Angle, IAU 2006 precession and mean sidereal time, IAU 2006/2000A nutation with the generated ERFA-derived coefficient and full complementary-term tables, the IERS observer ellipsoid, and VSOP87B with the existing native generated table. The data retain the source attribution and licenses above. The Python evaluator is AstronomyKit-authored and is not software provided by or endorsed by NASA, SOFA, ERFA or IMCCE.
 
 The tools require mpmath 1.3.0, by Fredrik Johansson and contributors, under its BSD license: https://github.com/mpmath/mpmath/blob/1.3.0/LICENSE. mpmath is installed separately for development and is not distributed with the AstronomyKit library.
 

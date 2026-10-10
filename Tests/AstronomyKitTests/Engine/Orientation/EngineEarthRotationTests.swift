@@ -54,26 +54,45 @@ struct EngineEarthRotationTests {
         #expect(abs(Published.wrapped(difference - expected)) <= Self.tolerance)
     }
 
-    /// The engine evaluates `iauEe00` with IAU 2000B nutation. McCarthy and
-    /// Luzum (2003) give IAU 2000B as within 1 mas of IAU 2000A from 1995 to
-    /// 2050, and that is the bound here: 1 mas, 4.85e-9 rad.
-    @Test("ERFA t_gst06a reference, within the nutation-model difference")
+    /// The engine forms apparent sidereal time as `iauGmst06` plus `iauEe00`
+    /// with IAU 2006/2000A nutation. SOFA's `iauGst06a` instead goes through
+    /// the CIO locator and the full precession-nutation matrix; the two
+    /// equations of the equinoxes differ by 8.4e-13 rad at this instant, and
+    /// ERFA's own tolerance, 1e-12 rad, is the bound here.
+    @Test("ERFA t_gst06a reference")
     func erfaApparentSiderealTime() {
         let days = Published.days(mjd: Published.gst06a.mjd)
         let hours = Self.apparent(Self.time(ut: days, tt: days))
         let difference = abs(Published.wrapped(hours * Engine.radiansPerHour - Published.gst06a.value))
-        #expect(difference <= Published.radiansPerMilliarcsecond)
+        #expect(difference <= 1e-12)
     }
 
-    @Test("ERFA t_ee00b reference for the equation of the equinoxes")
+    /// `iauEe06a` is `iauGst06a` less `iauGmst06`, so the engine's equation of
+    /// the equinoxes differs from it by the 8.4e-13 rad described above.
+    @Test("ERFA t_ee06a reference for the equation of the equinoxes")
     func erfaEquationOfEquinoxes() {
-        let days = Published.days(mjd: Published.ee00b.mjd)
+        let days = Published.days(mjd: Published.ee06a.mjd)
         let time = Self.time(ut: days, tt: days)
         let difference = (Self.apparent(time) - Engine.EarthRotation.meanSiderealTime(time)) * Engine.radiansPerHour
-        // SOFA's ee00b takes the IAU 1980 obliquity plus the IAU 2000 precession
-        // correction and the engine takes the IAU 2006 one. They differ by 2.03e-7
-        // rad here, which moves the product by about 7.8e-13.
-        #expect(abs(Published.wrapped(difference - Published.ee00b.value)) <= 1e-12)
+        #expect(abs(Published.wrapped(difference - Published.ee06a.value)) <= 1e-12)
+    }
+
+    @Test("ERFA t_ee00 reference for Δψ·cos εA plus the complementary terms")
+    func erfaEquationOfEquinoxesFormula() {
+        let degrees = Engine.degreesPerRadian
+        let nutation = Engine.Nutation.Angles(
+            longitude: Published.ee00.dpsi * degrees,
+            obliquity: 0,
+            longitudeRate: 0,
+            obliquityRate: 0
+        )
+        let tilt = Engine.EarthTilt(
+            tt: Published.days(mjd: Published.ee00.mjd),
+            nutation: nutation,
+            meanObliquity: Published.ee00.epsa * degrees,
+            meanObliquityRate: 0
+        )
+        #expect(abs(tilt.equationOfEquinoxes * Engine.radiansPerDegree - Published.ee00.value) <= 1e-18)
     }
 
     @Test(

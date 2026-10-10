@@ -258,7 +258,7 @@ struct EngineRotationAxisTests {
     /// 1600 to 2500, with UT1 and TT apart. The pole of date on J2000 axes is
     /// the third row of N·P. The engine's matrix matches that one within
     /// 2e-15 in each element, so the pole is within √3 · 2e-15 radians.
-    @Test("Earth's pole is the true pole of date from the IAU 2006/2000B orientation")
+    @Test("Earth's pole is the true pole of date from the IAU 2006/2000A orientation")
     func earthPole() throws {
         let times = PublishedOrientation.references.map(\.tt)
         #expect(times.contains { $0 < 0 } && times.contains { $0 > 0 })
