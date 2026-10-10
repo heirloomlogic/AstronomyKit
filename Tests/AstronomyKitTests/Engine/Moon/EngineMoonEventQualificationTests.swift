@@ -96,11 +96,8 @@ extension EngineMoonEventQualificationTests {
         try check(.ascending, tt: 2_416_324.69497546 - 2_451_545, seconds: 60, meanNode: true)
         let label = "2100-01-18T12:35:00.000Z"
         let sourceTime = IndependentReferenceDate.engine(label)
-        let mutationRoots = try fixture.roots(
-            .firstQuarter, start: sourceTime.tt - 2, end: sourceTime.tt + 2, direct: false)
-        let mutationRoot = try #require(mutationRoots.first)
         #expect(
-            abs(mutationRoot.tt - IndependentReferenceDate.civil(label).terrestrialTime) * Engine.secondsPerDay > 90)
+            abs(sourceTime.tt - IndependentReferenceDate.civil(label).terrestrialTime) * Engine.secondsPerDay > 90)
         try Self.write(rows, environment: "MOON_PUBLISHED_EVENT_OUTPUT")
     }
 

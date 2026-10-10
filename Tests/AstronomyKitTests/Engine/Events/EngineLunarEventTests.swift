@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 
 @testable import AstronomyKit
@@ -35,7 +36,38 @@ struct EngineLunarEventTests {
                 default: throw AstronomyError.internalError
                 }
             #expect(actual.phase == phase)
-            #expect(abs(actual.time.tt - expected.tt) * Engine.secondsPerDay <= reference.toleranceSeconds)
+            #expect(
+                abs(actual.time.tt - expected.tt) * Engine.secondsPerDay <= reference.toleranceSeconds,
+                "\(reference.phase) \(reference.sourceTime)")
+        }
+    }
+
+    @Test("Apparent quarter roots match JPL Horizons within 15 seconds")
+    func apparentQuarterRoots() throws {
+        var rows: [[String: Any]] = []
+        for reference in try ApparentPhaseReferences.load().roots {
+            let phase: Events.LunarPhase =
+                switch reference.phase {
+                case "new": .new
+                case "firstQuarter": .firstQuarter
+                case "full": .full
+                case "lastQuarter": .lastQuarter
+                default: throw AstronomyError.internalError
+                }
+            let expected = Self.universalTime(reference.utc, model: .jplHorizons)
+            let actual = try #require(
+                try Events.searchMoonPhase(
+                    phase.targetDegrees, after: expected.adding(days: -1), limitDays: 2))
+            let residual = (actual.tt - expected.tt) * Engine.secondsPerDay
+            #expect(abs(residual) <= 15)
+            rows.append([
+                "event": reference.phase, "referenceUTC": reference.utc, "nativeTT": actual.tt,
+                "residualSeconds": residual, "timeAllowanceSeconds": 15,
+            ])
+        }
+        if let path = ProcessInfo.processInfo.environment["MOON_APPARENT_PHASE_OUTPUT"] {
+            try JSONSerialization.data(withJSONObject: rows, options: [.prettyPrinted, .sortedKeys]).write(
+                to: URL(fileURLWithPath: path))
         }
     }
 
@@ -79,6 +111,16 @@ struct EngineLunarEventTests {
         let target = try Events.moonPhaseAngle(at: endpoint)
         let same = try #require(try Events.searchMoonPhase(target, after: endpoint, limitDays: 0))
         #expect(same.tt == endpoint.tt && same.deltaTModel == .jplHorizons)
+
+        let lowerEndpoint = Engine.Time(tt: -Engine.acceptedTTDays, deltaTModel: .jplHorizons)
+        let lowerResult = try #require(
+            try Events.searchMoonPhase(0, after: lowerEndpoint, limitDays: 40))
+        #expect(lowerResult.tt >= lowerEndpoint.tt && lowerResult.deltaTModel == .jplHorizons)
+        let lowerQuarter = try Events.searchMoonQuarter(after: lowerEndpoint)
+        #expect(lowerQuarter.time.tt >= lowerEndpoint.tt && lowerQuarter.time.deltaTModel == .jplHorizons)
+        #expect(
+            try Events.searchMoonPhase(
+                0, after: lowerEndpoint, limitDays: 0.5 / Engine.speedOfLightAUPerDay) == nil)
     }
 
     @Test("Quarter, node, and apsis advancement preserves alternation and progress")
@@ -118,5 +160,23 @@ struct EngineLunarEventTests {
         let nearEnd = Engine.Time(tt: Engine.acceptedTTDays - 1, deltaTModel: .espenakMeeus)
         #expect(throws: AstronomyError.badTime) { _ = try Events.searchLunarNode(after: nearEnd) }
         #expect(throws: AstronomyError.badTime) { _ = try Events.searchLunarApsis(after: nearEnd) }
+    }
+}
+
+private struct ApparentPhaseReferences: Decodable {
+    struct Root: Decodable {
+        let phase: String
+        let utc: String
+    }
+
+    let roots: [Root]
+
+    static func load() throws -> Self {
+        let root = (0..<5).reduce(URL(fileURLWithPath: #filePath)) {
+            url, _ in url.deletingLastPathComponent()
+        }
+        let data = try Data(
+            contentsOf: root.appendingPathComponent("Scripts/moon-data/apparent-phase-references.json"))
+        return try JSONDecoder().decode(Self.self, from: data)
     }
 }
