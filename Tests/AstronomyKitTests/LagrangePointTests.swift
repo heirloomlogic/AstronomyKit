@@ -316,6 +316,21 @@ struct LagrangePointTests {
             }
         }
 
+        @Test(
+            "A separation whose square underflows to zero throws invalidParameter",
+            arguments: LagrangePointID.allCases,
+            [1e-200, 1e-170, Double.leastNonzeroMagnitude]
+        )
+        func underflowingSeparationThrowsInvalidParameter(point: LagrangePointID, separation: Double) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: separation, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime)
+                )
+            }
+        }
+
         /// A relative velocity that leaves the L4/L5 tangent zero, or makes its
         /// squared length underflow to zero or overflow to infinity, for a minor
         /// body at (1, 0, 0).
