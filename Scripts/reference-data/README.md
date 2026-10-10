@@ -71,8 +71,8 @@ AstronomyKit fails these published values today. Each has an open issue and a te
 | --- | --- | --- | --- |
 | #124 | The 2022 South Pole sunrise is 75.985957542 s TT from the USNO coordinate against the 70.8 s allowance | `withKnownIssue` on source line 2,923 in `AuditValidationTests.riseSet` | #92 |
 | #175 | Above 32 km the atmosphere keeps the 20 to 32 km layer (+1 K/km), where the 1976 standard changes layer; at 47 km it gives 243.65 K against 270.65 K | No test; `AtmosphereTests` covers 0 to 32 km | Owner decision on #175 |
-| #184 | The lunar series the Moon uses before 1900 and after 2130 is up to 52.3 arcmin and 530 km from Horizons (DE441) between 2002 BCE and 6000 CE; within 1 arcmin only from about 1500 to 2500 | `withKnownIssue` in `EngineMoonHorizonsTests.farFromJ2000` (13 dates) | Owner decision on #184 |
-| #190 | Pluto's integrated model, used before 1900 and after 2130, is 1.3 to 5.1 arcmin from Horizons (DE441) at the 15 dates sampled from 100 BCE to 4098 CE; from 1840 to 2159 it is within 17 arcsec | `withKnownIssue` in `EnginePlutoHorizonsTests.farFromJ2000` (15 dates) | Owner decision on #190 |
+| #184 | The lunar series that the public C APIs still use before 1900 and after 2130 is up to 52.3 arcmin and 530 km from Horizons (DE441) between 2002 BCE and 6000 CE, and within 1 arcmin only from about 1500 to 2500. The native engine uses compact DE441 there | `withKnownIssue` on the legacy series in `EngineMoonHorizonsTests.farFromJ2000` (13 dates) | Public cutover in #96 |
+| #190 | Pluto's integrated model, which the public C APIs still use before 1900 and after 2130, is 1.3 to 5.1 arcmin from Horizons (DE441) at the 15 dates sampled from 100 BCE to 4098 CE, and within 17 arcsec from 1840 to 2159. The native engine uses DE441 there and meets 1 arcmin at all 15 dates in `EnginePlutoHorizonsTests.farFromJ2000` | No test records the public deviation | Public cutover in #96 |
 
 ## Regenerate and check
 
