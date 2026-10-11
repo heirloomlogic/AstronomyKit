@@ -39,6 +39,17 @@ class EclipseEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Debug and Release"):
             RECORD.evidence(self.captures, {})
 
+    def test_debug_release_time_roundoff_uses_field_units(self):
+        self.assertTrue(RECORD.near({"peakResidualSeconds": 1.0}, {"peakResidualSeconds": 1.000001}))
+        self.assertTrue(RECORD.near({"semiDurationMinutes": 1.0}, {"semiDurationMinutes": 1.000000001}))
+        self.assertTrue(RECORD.near({"nativePeakTT": 8_000.0}, {"nativePeakTT": 8_000.0 + 1.5e-10}))
+        self.assertFalse(RECORD.near({"peakResidualSeconds": 1.0}, {"peakResidualSeconds": 1.0001}))
+        self.assertFalse(RECORD.near({"semiDurationMinutes": 1.0}, {"semiDurationMinutes": 1.0000001}))
+        self.assertFalse(RECORD.near({"nativePeakTT": 8_000.0}, {"nativePeakTT": 8_000.0 + 3e-10}))
+        self.assertFalse(RECORD.near({"obscuration": 0.5}, {"obscuration": 0.50001}))
+        self.assertTrue(RECORD.near({"kind": "total"}, {"kind": "total"}))
+        self.assertFalse(RECORD.near({"kind": "total"}, {"kind": "partial"}))
+
     def test_obscuration_outside_print_interval_is_rejected(self):
         for configuration in ("debug", "release"):
             self.captures[configuration]["obscurations"][0]["obscuration"] = 0.99

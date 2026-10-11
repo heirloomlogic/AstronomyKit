@@ -48,6 +48,26 @@ def angle(lat1, lon1, lat2, lon2):
     return 2*math.asin(math.sqrt(min(1,max(0,a))))/r
 
 
+def evidence_matches(first, second, path=()):
+    """Compare replayed evidence, allowing the measured one-ULP libm location difference."""
+    if type(first) is not type(second):
+        return False
+    if isinstance(first, dict):
+        return first.keys() == second.keys() and all(
+            evidence_matches(first[key], second[key], path + (key,)) for key in first)
+    if isinstance(first, list):
+        return len(first) == len(second) and all(
+            evidence_matches(a, b, path + (index,)) for index, (a, b) in enumerate(zip(first, second)))
+    if isinstance(first, float):
+        if not math.isfinite(first) or not math.isfinite(second):
+            return False
+        # This derived angle differs by one ULP between macOS and Linux libm. Source hashes, source values,
+        # captures, time residuals, identities and scientific criteria remain exact.
+        if len(path) == 3 and path[0] == 'residuals' and isinstance(path[1], int) and path[2] == 'locationDegrees':
+            return first == second or math.nextafter(first, second) == second
+    return first == second
+
+
 def validate(rows):
     refs = references()
     if len(rows)!=len(refs) or {r['id'] for r in rows}!=set(refs): raise ValueError('event identities')
@@ -134,7 +154,7 @@ def main():
     data=archive.encoded(values)
     result=archive.encoded(evidence(values,hashes(data if args.capture else None)))
     if args.check:
-        if OUTPUT.read_bytes()!=result:raise SystemExit('global solar evidence differs')
+        if not evidence_matches(json.loads(OUTPUT.read_bytes()), json.loads(result)):raise SystemExit('global solar evidence differs')
     else:
         archive.publish({**({CAPTURE: data} if args.capture else {}), OUTPUT: result})
     print('global solar evidence and recorded relations match')

@@ -30,8 +30,8 @@ struct AuditValidationTests {
             Set(archive.provenance.keys) == [
                 "astronomyEngineApsides", "astronomyEngineGeocentricStates", "cdsConstellations",
                 "eclipseWiseLocalSolar", "espenakMoonNodes",
-                "jplAngularEvents", "jplElongation", "jplHorizontal", "jplObserver", "jplSaturnApsides",
-                "jplSaturnRings", "jplVectors",
+                "jplAngularEvents", "jplApparentLunarPhases", "jplElongation", "jplHorizontal", "jplObserver",
+                "jplSaturnApsides", "jplSaturnRings", "jplVectors",
                 "nasaGlobalSolarEclipses", "nasaLunarEclipseObscuration", "nasaLunarEclipses",
                 "nasaPlanetaryTransits", "sofaFixedStar", "usnoRiseSet", "usnoSeasonsAndPhases",
             ])
@@ -52,6 +52,7 @@ struct AuditValidationTests {
         #expect(archive.relativeLongitudeEvents.count == 4)
         #expect(archive.maximumElongationEvents.count == 4)
         #expect(archive.saturnRings.count == 11)
+        #expect(archive.apparentLunarPhases.count == 4)
         #expect(archive.geocentricStates.count == 6_392)
         #expect(archive.localSolarEclipses.count == 3)
         #expect(archive.riseSet.count == 5_909)

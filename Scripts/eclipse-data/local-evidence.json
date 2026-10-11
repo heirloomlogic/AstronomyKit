@@ -1,32 +1,32 @@
 {
   "buildSeconds": {
-    "debug": 1.0,
-    "release": 117.34
+    "debug": 0.87,
+    "release": 119.73
   },
   "centralMidpointDifferencesSeconds": {
-    "Springfield, ILLINOIS": 0.13089905551169068
+    "Springfield, ILLINOIS": 0.18311474996153265
   },
   "eclipseWiseContacts": [
     {
-      "altitudeDegrees": 0.02049492608257708,
-      "formerUTCSeconds": -0.9214874706231058,
+      "altitudeDegrees": 0.02049492682260734,
+      "formerUTCSeconds": -0.9214882564265281,
       "latitude": 29.0181,
       "name": "partialBegin",
-      "seconds": -5.745617032516748
+      "seconds": -5.74561781832017
     },
     {
-      "altitudeDegrees": 0.01614886407092797,
-      "formerUTCSeconds": -0.4764110839460045,
+      "altitudeDegrees": 0.016144958645313068,
+      "formerUTCSeconds": -0.47505620168522,
       "latitude": 29.0181,
       "name": "peak",
-      "seconds": -5.300627084216103
+      "seconds": -5.2992722019553185
     },
     {
-      "altitudeDegrees": 0.07853274251986164,
-      "formerUTCSeconds": -0.2827468444593251,
+      "altitudeDegrees": 0.07853274468352112,
+      "formerUTCSeconds": -0.28274747310206294,
       "latitude": 29.0181,
       "name": "partialEnd",
-      "seconds": -5.107045982731506
+      "seconds": -5.107046611374244
     },
     {
       "altitudeDegrees": -0.019652612962474336,
@@ -36,32 +36,32 @@
       "seconds": -4.560989141464233
     },
     {
-      "altitudeDegrees": 0.05160375564052799,
-      "formerUTCSeconds": -0.3851189569104463,
+      "altitudeDegrees": 0.05160375625601432,
+      "formerUTCSeconds": -0.3851192712318152,
       "latitude": 41.0341,
       "name": "totalBegin",
-      "seconds": -5.209341557929292
+      "seconds": -5.209341872250661
     },
     {
-      "altitudeDegrees": 0.03040065234854694,
-      "formerUTCSeconds": -0.18151886179111898,
+      "altitudeDegrees": 0.030400362839934303,
+      "formerUTCSeconds": -0.1813730166759342,
       "latitude": 41.0341,
       "name": "peak",
-      "seconds": -5.0057436630595475
+      "seconds": -5.005597817944363
     },
     {
-      "altitudeDegrees": 0.006828329296993729,
-      "formerUTCSeconds": -1.307929091854021,
+      "altitudeDegrees": 0.006828330561916118,
+      "formerUTCSeconds": -1.3079297204967588,
       "latitude": 41.0341,
       "name": "totalEnd",
-      "seconds": -6.132155936211348
+      "seconds": -6.1321565648540854
     },
     {
-      "altitudeDegrees": 0.03393761864122524,
-      "formerUTCSeconds": -0.03327971789985895,
+      "altitudeDegrees": 0.0339376194999943,
+      "formerUTCSeconds": -0.033280032221227884,
       "latitude": 41.0341,
       "name": "partialEnd",
-      "seconds": -4.857587971491739
+      "seconds": -4.857588285813108
     },
     {
       "altitudeDegrees": -0.010842122027241885,
@@ -78,18 +78,18 @@
       "seconds": -4.909430094994605
     },
     {
-      "altitudeDegrees": 0.03465183252573212,
-      "formerUTCSeconds": 0.4749870509840548,
+      "altitudeDegrees": 0.03650272537432642,
+      "formerUTCSeconds": -0.24583687190897763,
       "latitude": -48.2051,
       "name": "peak",
-      "seconds": -4.6380203508306295
+      "seconds": -5.358844273723662
     },
     {
-      "altitudeDegrees": 0.04740060662900447,
-      "formerUTCSeconds": 0.7927313796244562,
+      "altitudeDegrees": 0.047400606223071406,
+      "formerUTCSeconds": 0.7927315367851406,
       "latitude": -48.2051,
       "name": "totalEnd",
-      "seconds": -4.320279636885971
+      "seconds": -4.320279479725286
     },
     {
       "altitudeDegrees": 0.05195794303334722,
@@ -107,7 +107,7 @@
         0.4205,
         0.4215
       ],
-      "searchPeakArea": 0.4214171598232008,
+      "searchPeakArea": 0.4214172181908671,
       "sourceEpochArea": 0.42130720376271247
     },
     {
@@ -116,12 +116,12 @@
         0.8885000000000001,
         0.8895
       ],
-      "searchPeakArea": 0.8891736572810371,
+      "searchPeakArea": 0.8891736346237405,
       "sourceEpochArea": 0.8891746809211878
     }
   ],
   "peakDefinition": {
-    "diameterMaximumMinusAxisMinimumSeconds": 0.3893540444551036,
+    "diameterMaximumMinusAxisMinimumSeconds": 0.38914368487894535,
     "modes": [
       "axis-distance minimum",
       "diameter-fraction maximum",
@@ -130,22 +130,22 @@
     ],
     "observations": [
       {
-        "area": 0.4214171598235893,
-        "magnitude": 0.5349310850576334,
+        "area": 0.42141715986607414,
+        "magnitude": 0.53493108507533,
         "mode": 0,
-        "residualSeconds": 54.647698246117216,
+        "residualSeconds": 54.6479344193358,
         "sourceUT": -2061.8395543981483,
-        "tt": -2061.838224411632,
-        "ut": -2061.838921901641
+        "tt": -2061.8382244088984,
+        "ut": -2061.8389218989073
       },
       {
-        "area": 0.4214172027751016,
-        "magnitude": 0.5349310896397595,
+        "area": 0.42141720281767303,
+        "magnitude": 0.5349310896761273,
         "mode": 1,
-        "residualSeconds": 55.03705229057232,
+        "residualSeconds": 55.03707810421474,
         "sourceUT": -2061.8395543981483,
-        "tt": -2061.8382199052194,
-        "ut": -2061.8389173952282
+        "tt": -2061.8382199049206,
+        "ut": -2061.8389173949295
       },
       {
         "area": 0.42141569090529757,
@@ -157,13 +157,13 @@
         "ut": -2061.838980114597
       },
       {
-        "area": 0.4214172734794332,
-        "magnitude": 0.5349310255052234,
+        "area": 0.42141727345811547,
+        "magnitude": 0.5349310254835088,
         "mode": 3,
-        "residualSeconds": 56.48906621936476,
+        "residualSeconds": 56.48909293668112,
         "sourceUT": -2061.8395543981483,
-        "tt": -2061.838203099502,
-        "ut": -2061.8389005895115
+        "tt": -2061.838203099193,
+        "ut": -2061.8389005892022
       }
     ],
     "scope": "Acapulco diagnostic only. The retained axis-distance peak approximates, but is not identical to, maximum occulted diameter. This small sampled difference does not explain the larger printed-source residual.",
@@ -173,38 +173,38 @@
       "source": "rp1301-footnotes.html"
     }
   },
-  "releaseExecutableBytes": 165038480,
+  "releaseExecutableBytes": 165224752,
   "releaseObjectBytes": {
-    "EngineLocalSolarEvents.o": 72984
+    "EngineLocalSolarEvents.o": 72936
   },
   "resources": {
-    "checksum": 340147.3085316766,
-    "coldSeconds": 0.01017606258392334,
+    "checksum": 340147.30853395344,
+    "coldSeconds": 0.01096200942993164,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 0.09230601787567139,
-    "peakAfterColdBytes": 78872576,
-    "peakAfterWorkloadBytes": 78888960,
-    "peakBeforeBytes": 46661632
+    "nextSeconds": 0.14656400680541992,
+    "peakAfterColdBytes": 78807040,
+    "peakAfterWorkloadBytes": 78823424,
+    "peakBeforeBytes": 46596096
   },
   "rp1301Contacts": [
     {
-      "altitudeDegrees": -0.17065801901456723,
+      "altitudeDegrees": -0.17065920647888788,
       "id": "Acapulco, MEXICO",
       "name": "partialBegin",
-      "seconds": -2.911584300454706
+      "seconds": -2.911887581285555
     },
     {
-      "altitudeDegrees": -0.09106578190835535,
+      "altitudeDegrees": -0.0888644998028667,
       "id": "Acapulco, MEXICO",
       "name": "peak",
-      "seconds": 54.647803425905295
+      "seconds": 55.20476171805058
     },
     {
-      "altitudeDegrees": 0.30076914361818297,
+      "altitudeDegrees": 0.300768880899696,
       "id": "Acapulco, MEXICO",
       "name": "partialEnd",
-      "seconds": -3.1148662630585022
+      "seconds": -3.1149324669968337
     },
     {
       "altitudeDegrees": 0.4646383494516826,
@@ -213,61 +213,61 @@
       "seconds": -2.5302355890744366
     },
     {
-      "altitudeDegrees": 0.19052371396728063,
+      "altitudeDegrees": 0.19052371250521105,
       "id": "Springfield, ILLINOIS",
       "name": "totalBegin",
-      "seconds": -3.046994771284517
+      "seconds": -3.0469955570879392
     },
     {
-      "altitudeDegrees": -0.4715734285652786,
+      "altitudeDegrees": -0.4716669719969957,
       "id": "Springfield, ILLINOIS",
       "name": "peak",
-      "seconds": -3.122966756927781
+      "seconds": -3.175182529957965
     },
     {
-      "altitudeDegrees": -0.14627141654349884,
+      "altitudeDegrees": -0.14627141546267808,
       "id": "Springfield, ILLINOIS",
       "name": "totalEnd",
-      "seconds": -3.0371405606274493
+      "seconds": -3.0371399319847114
     },
     {
-      "altitudeDegrees": 0.4386167816647628,
+      "altitudeDegrees": 0.43861678178826935,
       "id": "Springfield, ILLINOIS",
       "name": "partialEnd",
-      "seconds": -3.3551389395142905
+      "seconds": -3.3551390180946328
     }
   ],
-  "runtimeBaseRevision": "39954da87cb083ef9e39ee5bddb4a4bc895bd5e7",
+  "runtimeBaseRevision": "2d1252dc472dd71ddaa8222ed69b2adf0f3078ad",
   "schemaVersion": 1,
   "sequence": [
     {
-      "altitude": 64.3851987308301,
+      "altitude": 64.3851959500375,
       "date": "2026-08-12",
       "gmtPeak": 9720.24513888889,
       "kind": "partial",
-      "obscuration": 0.03598899456634032,
-      "tt": 9720.245933796656,
-      "ut": 9720.245060505806
+      "obscuration": 0.03598899470973372,
+      "tt": 9720.24593382232,
+      "ut": 9720.24506053147
     },
     {
-      "altitude": 22.532959819956773,
+      "altitude": 22.532963030368094,
       "date": "2028-01-26",
       "gmtPeak": 10252.118055555557,
       "kind": "partial",
-      "obscuration": 0.03349164216040733,
-      "tt": 10252.119084816657,
-      "ut": 10252.1182009391
+      "obscuration": 0.03349164200644791,
+      "tt": 10252.119084834994,
+      "ut": 10252.118200957437
     }
   ],
   "sourceHashes": {
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-local-solar.py": "c65a5f544352fddd7ef75e8ed3d8da374c94dfce78672fc8d3c2f6b066d3877a",
-    "Scripts/eclipse-data/local-captures.json": "9ec152c1f0cbfefd091566b82d8c99d661575caed71d925d442f0042e628f51f",
+    "Scripts/eclipse-data/local-captures.json": "1f3401334a6c76c277ef68d124d9251c4a38af93415ea0a4984babe054e1f3cd",
     "Scripts/eclipse-data/local-references.json": "7d2301230ee722952c2654f1ae8d067c3d8a615ab3d2061adc606df9fc7bced0",
     "Scripts/local-solar-peak-probe.swift": "d7f46ceb60aa765d0db551f16736d8c77ce8743cb0242432eececf8c91bfe520",
-    "Scripts/record-eclipse-event-evidence.py": "4fb5cb954cb8030714c355080f2cb558562c847339a9c826d724fed9da3b85a9",
+    "Scripts/record-eclipse-event-evidence.py": "0ca64c5e512b05739476311a6434fdd51662cf9b4479a070f7066a5831f490f9",
     "Scripts/record-local-solar-evidence.py": "104ef3f6bc8896d44116b4eb578c2006be7a4d5e9651e5cd1b4fdb95ae9f6903",
-    "Scripts/reference-data/build-fixtures.py": "f7149e077921d8429250d0e614d6b5a3b176d6d111f877b1f6a537c7a865d41b",
+    "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0": "edaef632cbb643e4e7a221717a6c441a4c1a7c918e6e4d56debc3d8739b233f6",
     "Scripts/reference-data/sources/global-solar/COPYING.GPL-2.0.query.json": "94a0287ea73d9baeef2c602d2a46c62d0f795ed48bf32e52044f56f2a359fbc0",
     "Scripts/reference-data/sources/global-solar/nasa-jsex-program.js": "9676f7922ced83c47fc088af5b8f53f7f51cc13563e527ee53910c54ed61c881",
@@ -312,7 +312,7 @@
     "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
     "Sources/AstronomyKit/Engine/Eclipses/EngineTransitEvents.swift": "cabca6e10109128fb3710dc3339e21c66f1bf89151c02432249cc60bd6fcbfb0",
     "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "038267f01e51a25f3fd931e73df32f6266675ede025c08293db1cf9488d6c550",
-    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "cfd09161b57467827b2a2e0267768ac83a1afb9913a08db31810130c9a6b8a66",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "f35841fbd3d428fa36736e8731b7a94fe61f76ad82f84555d103609ba33c778d",
     "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "d5872b4f262924ec859bd0849dc7f182b37d102d097df6bff1c14772e2bf8079",
     "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "32ca3a429bdabd8c6992264ee2cc2880a51d06ca57c44721ac873e7af56e8735",
     "Sources/AstronomyKit/Engine/Foundation/Engine.swift": "57d6d1ae8dbdacadc23daeab092445b9f27acf5baf021b900c21c5e59a09b38c",
@@ -396,11 +396,11 @@
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
     "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "ffcd7f57aeb09966520e36a87893bdcf174fdd255250ea308eb4e6e532a62192",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "cac8760f257c53c899ce64d16e96a4c5485c066d83cf8dc7db207a71fb713682",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
     "Tests/AstronomyKitTests/Engine/Eclipses/EngineLocalSolarEventTests.swift": "628985689f4f2ea1603bcbfa0ab06a9abc0d1db56f56585642b981e0859e622a",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "bb81c9a1d33b755cde9499d649a81a6c83a8c7fc7f3ce4f84005461dfd684776",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "93ba4b8e4784b25c4868a02e2d2f9e3d0219432a58a879f81248fbbb035b1728"
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

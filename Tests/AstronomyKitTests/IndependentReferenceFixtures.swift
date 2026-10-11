@@ -24,6 +24,7 @@ struct IndependentReferenceArchive: Decodable {
     let geocentricStates: [GeocentricState]
     let seasons: [Season]
     let lunarPhases: [LunarPhase]
+    let apparentLunarPhases: [ApparentLunarPhase]
     let lunarNodes: [LunarNode]
     let lunarApsides: [Apsis]
     let earthApsides: [Apsis]
@@ -221,6 +222,20 @@ struct IndependentReferenceArchive: Decodable {
     struct LunarPhase: Decodable {
         let phase: String
         let sourceTime: String
+        let toleranceSeconds: Double
+    }
+
+    /// A JPL Horizons TT root that replaces one January 2100 USNO label as the native phase acceptance reference.
+    struct ApparentLunarPhase: Decodable {
+        let phase: String
+        let targetDegrees: Double
+        let usnoSourceTime: String
+        let lowerJulianDateTT: Double
+        let upperJulianDateTT: Double
+        let lowerOffsetDegrees: Double
+        let upperOffsetDegrees: Double
+        let julianDateTT: Double
+        let sampleResolutionSeconds: Double
         let toleranceSeconds: Double
     }
 

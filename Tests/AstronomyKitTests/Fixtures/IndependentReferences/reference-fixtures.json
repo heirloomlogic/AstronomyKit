@@ -1,4 +1,54 @@
 {
+  "apparentLunarPhases": [
+    {
+      "julianDateTT": 2488079.0409195484,
+      "lowerJulianDateTT": 2488079.0405637105,
+      "lowerOffsetDegrees": -0.004367599999966387,
+      "phase": "new",
+      "sampleResolutionSeconds": 60.0,
+      "targetDegrees": 0.0,
+      "toleranceSeconds": 2.0,
+      "upperJulianDateTT": 2488079.041258155,
+      "upperOffsetDegrees": 0.004156099999988783,
+      "usnoSourceTime": "2100-01-10T12:57:00.000Z"
+    },
+    {
+      "julianDateTT": 2488087.0256785383,
+      "lowerJulianDateTT": 2488087.025321844,
+      "lowerOffsetDegrees": -0.00386559999998326,
+      "phase": "firstQuarter",
+      "sampleResolutionSeconds": 60.0,
+      "targetDegrees": 90.0,
+      "toleranceSeconds": 2.0,
+      "upperJulianDateTT": 2488087.0260162884,
+      "upperOffsetDegrees": 0.003660300000035477,
+      "usnoSourceTime": "2100-01-18T12:35:00.000Z"
+    },
+    {
+      "julianDateTT": 2488094.620040221,
+      "lowerJulianDateTT": 2488094.619685392,
+      "lowerOffsetDegrees": -0.004643400000020392,
+      "phase": "full",
+      "sampleResolutionSeconds": 60.0,
+      "targetDegrees": 180.0,
+      "toleranceSeconds": 2.0,
+      "upperJulianDateTT": 2488094.6203798363,
+      "upperOffsetDegrees": 0.004444300000045587,
+      "usnoSourceTime": "2100-01-26T02:51:00.000Z"
+    },
+    {
+      "julianDateTT": 2488072.046241435,
+      "lowerJulianDateTT": 2488072.045886119,
+      "lowerOffsetDegrees": -0.004644299999995383,
+      "phase": "lastQuarter",
+      "sampleResolutionSeconds": 60.0,
+      "targetDegrees": 270.0,
+      "toleranceSeconds": 2.0,
+      "upperJulianDateTT": 2488072.0465805633,
+      "upperOffsetDegrees": 0.004432699999995293,
+      "usnoSourceTime": "2100-01-03T13:05:00.000Z"
+    }
+  ],
   "chironObservations": [
     {
       "angularToleranceArcminutes": 1.0,
@@ -117047,6 +117097,19 @@
       "serviceVersion": "recorded in every archived response",
       "timeScale": "TDB for geometric vectors and UTC for apparent elongation tables; the 0.002-second TDB-minus-TT bound is included in relative-longitude allowances",
       "units": "Julian dates TDB, UTC calendar timestamps, degrees, and seconds",
+      "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
+    },
+    "jplApparentLunarPhases": {
+      "aberration": "Horizons quantity 31: light time, gravitational deflection, and stellar aberration",
+      "domain": "the four January 2100 lunar quarters whose USNO labels are in lunarPhases, one 60-second TT bracket each",
+      "frame": "Earth-centered IAU76/80 apparent ecliptic and equinox of date",
+      "license": "NASA/JPL factual output; acknowledge NASA and do not imply endorsement",
+      "origin": "Earth center 500@399",
+      "recipe": "Adjacent *.query.json files contain every Horizons API parameter and the response SHA-256. build-fixtures.py takes the Moon's apparent longitude less the Sun's at each sample and linearly interpolates the target crossing; the 2-second allowance is an owner decision for these four rows on #247, against native residuals of 0.66 to 0.82 seconds",
+      "refraction": "none (AIRLESS)",
+      "serviceVersion": "recorded in every archived response",
+      "timeScale": "TT (TIME_TYPE=TT); roots are TT Julian dates and need no Delta T",
+      "units": "Julian dates TT, degrees, and seconds",
       "url": "https://ssd.jpl.nasa.gov/horizons/manual.html"
     },
     "jplElongation": {
