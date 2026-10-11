@@ -658,7 +658,7 @@
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "1e7d556d94b09301aac6535d71347adfae546d437140867c19aa59601602efe8",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
-    "Tests/AstronomyKitTests/Engine/Positions/EnginePlutoConsumerQualificationTests.swift": "c07393d099fa45652a52c047721f820086bc318274fd67cc05b521f4ac15e3c8"
+    "Tests/AstronomyKitTests/Engine/Positions/EnginePlutoConsumerQualificationTests.swift": "78bffc10f985013f82effc88dcd4883e12c2936f2c8a929e42ab5dd102df3fe5"
   },
   "toleranceArcminutes": 1
 }

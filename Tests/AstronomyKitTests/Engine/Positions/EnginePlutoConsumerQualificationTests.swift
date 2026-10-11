@@ -44,8 +44,11 @@ struct EnginePlutoConsumerQualificationTests {
         var omittedFrameFailures = 0
         for row in fixture.rows {
             let time = Engine.Time(tt: row.tt, deltaTModel: .jplHorizons)
-            let astrometric = try Engine.Positions.geocentricPosition(of: .pluto, at: time, aberration: .none)
-            let apparent = try Engine.Positions.geocentricPosition(of: .pluto, at: time, aberration: .corrected)
+            let publicTime = AstroTime(time)
+            let astrometric = try CelestialBody.pluto.geocentricPosition(at: publicTime, aberration: .none)
+                .engineVector(in: Engine.EQJ.self)
+            let apparent = try CelestialBody.pluto.geocentricPosition(at: publicTime, aberration: .corrected)
+                .engineVector(in: Engine.EQJ.self)
             let eqd = Engine.FrameRotation.eqjToEqd(time).apply(to: apparent)
             let expectedAstrometric = Engine.FrameBias.icrsToEqj.apply(to: Self.direction(row.astrometricICRFDeg))
             let expectedApparent = Engine.FrameBias.icrsToEqj.apply(to: Self.direction(row.apparentICRFDeg))
