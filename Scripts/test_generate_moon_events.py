@@ -1,14 +1,28 @@
+import hashlib
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
 
 class MoonEventFixtureTests(unittest.TestCase):
+    evidence_files = (
+        "Scripts/moon-data/de441-event-evidence.json",
+        "Scripts/moon-data/de441-native-evidence.json",
+    )
+
     @classmethod
     def setUpClass(cls):
         spec = importlib.util.spec_from_file_location("moon_events", Path(__file__).with_name("generate-moon-events.py"))
         cls.tool = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(cls.tool)
+
+    def write_evidence(self, root, evidence_name, source_hashes):
+        evidence = root / evidence_name
+        evidence.parent.mkdir(parents=True)
+        evidence.write_text(json.dumps({"sourceSHA256": source_hashes}))
+        return evidence
 
     def test_frozen_windows_cover_both_ends_blends_and_source_transition(self):
         windows = self.tool.windows()
@@ -36,6 +50,39 @@ class MoonEventFixtureTests(unittest.TestCase):
         self.assertEqual(["firstQuarter", "full", "lastQuarter", "new"], [row["phase"] for row in references])
         self.assertTrue(all(row["samplingAllowanceSeconds"] == 1.0 for row in references))
         self.tool.check_apparent_phase_sources()
+
+    def test_committed_event_and_native_evidence_bind_all_named_sources(self):
+        counts = [self.tool.check_source_hashes(self.tool.ROOT / name) for name in self.evidence_files]
+        self.assertEqual([15, 11], counts)
+
+    def test_event_and_native_evidence_reject_stale_source_digest(self):
+        for evidence_name in self.evidence_files:
+            with self.subTest(evidence=evidence_name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                source = root / "Sources/current.swift"
+                source.parent.mkdir(parents=True)
+                source.write_text("current")
+                evidence = self.write_evidence(root, evidence_name, {"Sources/current.swift": "0" * 64})
+                with self.assertRaisesRegex(ValueError, "source digest differs for Sources/current.swift"):
+                    self.tool.check_source_hashes(evidence, root)
+
+    def test_event_and_native_evidence_reject_missing_named_source(self):
+        for evidence_name in self.evidence_files:
+            with self.subTest(evidence=evidence_name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                evidence = self.write_evidence(
+                    root, evidence_name, {"Sources/missing.swift": hashlib.sha256(b"").hexdigest()}
+                )
+                with self.assertRaisesRegex(ValueError, "named source is missing: Sources/missing.swift"):
+                    self.tool.check_source_hashes(evidence, root)
+
+    def test_event_and_native_evidence_reject_malformed_source_map(self):
+        for evidence_name in self.evidence_files:
+            with self.subTest(evidence=evidence_name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                evidence = self.write_evidence(root, evidence_name, [])
+                with self.assertRaisesRegex(ValueError, "sourceSHA256 must be a non-empty object"):
+                    self.tool.check_source_hashes(evidence, root)
 
 
 if __name__ == "__main__":
