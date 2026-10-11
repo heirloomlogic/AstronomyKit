@@ -23,6 +23,8 @@ SWIFT
 cat >"$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift" <<'SWIFT'
 import Testing
 
+func topLevelRegex() { _ = /[}]/ }
+
 @Suite("inverse", .timeLimit(.minutes(1)))
 struct InverseRefractionTests {}
 
@@ -224,6 +226,7 @@ path.write_text(path.read_text().replace(', .timeLimit(.minutes(1))', '', 1))
 PYTHON
 cat >"$temporary_directory/Tests/AstronomyKitTests/Nested.swift" <<'SWIFT'
 import Testing
+func braceRegex() { _ = /[}]/ }
 struct Container {
     @Suite("nested", .timeLimit(.minutes(1)))
     struct InverseRefractionTests {}

@@ -83,12 +83,32 @@ def closing_parenthesis(source: str, opening: int) -> int:
     raise ValueError("unterminated attribute argument list")
 
 
+def top_level_types(path: pathlib.Path) -> set[tuple[int, int, str]]:
+    """Use Swift's parser for scope; literals can contain arbitrary braces.
+
+    Accept only the compiler's direct source-file children. The parse dump is
+    deliberately fail-closed: an unfamiliar compiler format cannot prove that
+    a timed declaration is top-level and requires updating this guard.
+    """
+    result = subprocess.run(
+        ["swiftc", "-frontend", "-swift-version", "6", "-dump-parse", str(path)],
+        capture_output=True, text=True, check=True,
+    )
+    pattern = (
+        r'^  \((?:struct|class|enum)_decl\b[^\n]*\brange=\['
+        + re.escape(str(path))
+        + r':(\d+):(\d+) - [^\n]*\] "([^"\n]+)"'
+    )
+    return {(int(line), int(column), name) for line, column, name in re.findall(pattern, result.stdout, re.MULTILINE)}
+
+
 def timed_declarations(path: pathlib.Path) -> tuple[list[str], list[str]]:
     source = path.read_text()
     clean = code_only(source)
     consumed: set[int] = set()
     suites: list[str] = []
     tests: list[str] = []
+    parsed_types: set[tuple[int, int, str]] | None = None
     for attribute in re.finditer(r"@(Suite|Test)\b", clean):
         opening = attribute.end()
         while opening < len(clean) and clean[opening].isspace():
@@ -105,15 +125,19 @@ def timed_declarations(path: pathlib.Path) -> tuple[list[str], list[str]]:
         consumed.add(occurrence)
         following = clean[closing + 1:]
         if attribute.group(1) == "Suite":
-            declaration = re.match(r"\s*(?:(?:public|package|internal|private|fileprivate|final|indirect)\s+)*(?:struct|class|actor|enum)\s+([A-Za-z_][A-Za-z0-9_]*)\b", following)
+            declaration = re.match(r"\s*(?:(?:public|package|internal|private|fileprivate|final|indirect)\s+)*(?P<keyword>struct|class|actor|enum)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b", following)
             if not declaration:
                 raise ValueError(f"{path}: timed @Suite must be followed directly by a named type declaration")
-            # The manifest identifies top-level suites. A nested type has a
-            # different runtime identity even when its simple name is identical.
-            prefix = clean[:attribute.start()]
-            if prefix.count("{") != prefix.count("}"):
-                raise ValueError(f"{path}: nested timed suites are not supported by the sanitizer isolation manifest")
-            suites.append(declaration.group(1))
+            if parsed_types is None:
+                parsed_types = top_level_types(path)
+            offset = closing + 1 + declaration.start("keyword")
+            line = source.count("\n", 0, offset) + 1
+            line_start = source.rfind("\n", 0, offset) + 1
+            column = len(source[line_start:offset].encode("utf-8")) + 1
+            name = declaration.group("name")
+            if (line, column, name) not in parsed_types:
+                raise ValueError(f"{path}:{line}: timed suite is not a compiler-verified top-level type; nested timed suites and unsupported parse shapes are not supported")
+            suites.append(name)
         else:
             declaration = re.match(r"\s*(?:(?:public|package|internal|private|fileprivate|static|class|mutating|nonmutating)\s+)*func\s+([A-Za-z_][A-Za-z0-9_]*)\b", following)
             name = declaration.group(1) if declaration else "<unparsed>"
