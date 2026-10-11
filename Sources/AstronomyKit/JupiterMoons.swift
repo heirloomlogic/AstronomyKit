@@ -77,6 +77,6 @@ public enum Jupiter {
     /// }
     /// ```
     public static func moons(at time: AstroTime) throws -> JupiterMoons {
-        JupiterMoons(try Engine.JupiterMoons.states(at: time.coordinateTime), at: time)
+        JupiterMoons(try Engine.JupiterMoons.states(at: time.engine), at: time)
     }
 }

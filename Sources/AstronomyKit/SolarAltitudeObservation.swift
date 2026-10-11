@@ -148,7 +148,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
     public static let maximumObserverHeight = SolarAltitudeBounds.observerHeightMeters
 
     init(time: AstroTime, reference: Reference, observer: Observer, deltaTModel: DeltaTModel) throws {
-        _ = try observer.validatedRaw()
+        try observer.validate()
         guard abs(observer.height) <= SolarAltitudeBounds.observerHeightMeters else {
             throw Unsupported.observerHeightOutsideBudget
         }

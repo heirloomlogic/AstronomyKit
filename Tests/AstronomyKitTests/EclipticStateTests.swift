@@ -1,8 +1,9 @@
 // Contract tests for the apparent geocentric ecliptic state API:
 // positions bit-identical to the position functions each state mirrors,
-// rates equal to the derivative of those positions.
+// rates equal to the derivative of those positions. The engine's own frame,
+// nutation and polynomial-seam rate checks are in EngineEclipticStateTests,
+// EngineNutationTests and EnginePlanetPolynomialTests.
 
-import CLibAstronomy
 import Testing
 
 @testable import AstronomyKit
@@ -234,144 +235,6 @@ struct EclipticStateTests {
         #expect(worst.longitude <= 5e-7, "longitude worst \(worst.longitude)")
         #expect(worst.latitude <= 5e-7, "latitude worst \(worst.latitude)")
         #expect(worst.distance <= 1e-9, "distance worst \(worst.distance)")
-    }
-
-    // MARK: - 3. Frame rotation rate
-
-    @Test("Analytic EQJ→ECT rotation rate matches the differenced rotation matrix")
-    func frameRate() throws {
-        let h = Self.narrowStep
-        var worst = 0.0
-        for tt in Self.grid(count: 60, from: -40_000, to: 40_000) {
-            for axis in 0..<3 {
-                var basis = [0.0, 0.0, 0.0]
-                basis[axis] = 1
-                let zero = [0.0, 0.0, 0.0]
-                let state = _Astronomy_EclipticStateFromEqj(basis, zero, AstroTime(tt: tt).raw)
-                #expect(state.status == ASTRO_SUCCESS)
-
-                func column(_ t: Double) -> [Double] {
-                    var raw = AstroTime(tt: t).raw
-                    let rot = Astronomy_Rotation_EQJ_ECT(&raw)
-                    let vector = astro_vector_t(status: ASTRO_SUCCESS, x: basis[0], y: basis[1], z: basis[2], t: raw)
-                    let rotated = Astronomy_RotateVector(rot, vector)
-                    return [rotated.x, rotated.y, rotated.z]
-                }
-                let plus2 = column(tt + 2 * h)
-                let plus1 = column(tt + h)
-                let minus1 = column(tt - h)
-                let minus2 = column(tt - 2 * h)
-                var expected = [0.0, 0.0, 0.0]
-                for k in 0..<3 {
-                    let numerator = -plus2[k] + 8 * plus1[k] - 8 * minus1[k] + minus2[k]
-                    expected[k] = numerator / (12 * h)
-                }
-                let actual = [state.vx, state.vy, state.vz]
-                let here = column(tt)
-                #expect(here[0].bitPattern == state.x.bitPattern)
-                #expect(here[1].bitPattern == state.y.bitPattern)
-                #expect(here[2].bitPattern == state.z.bitPattern)
-                for k in 0..<3 {
-                    worst = max(worst, abs(expected[k] - actual[k]))
-                }
-            }
-        }
-        #expect(worst <= 1e-12, "worst \(worst) rad/day")
-    }
-
-    // MARK: - 4. Nutation rates
-
-    @Test("Nutation angle rates match differenced psi/eps, values untouched")
-    func nutationRates() {
-        var worst = 0.0
-        for tt in Self.grid(count: 100, from: -40_000, to: 40_000) {
-            var time = AstroTime(tt: tt).raw
-            var dpsi = 0.0
-            var deps = 0.0
-            _Astronomy_Iau2000bRates(&time, &dpsi, &deps)
-
-            var check = AstroTime(tt: tt).raw
-            _ = Astronomy_Rotation_EQJ_EQD(&check)
-            #expect(check.psi.bitPattern == time.psi.bitPattern)
-            #expect(check.eps.bitPattern == time.eps.bitPattern)
-
-            func angles(_ t: Double) -> (Double, Double) {
-                var raw = AstroTime(tt: t).raw
-                _ = Astronomy_Rotation_EQJ_EQD(&raw)
-                return (raw.psi, raw.eps)
-            }
-            let h = Self.narrowStep
-            let p2 = angles(tt + 2 * h)
-            let p1 = angles(tt + h)
-            let m1 = angles(tt - h)
-            let m2 = angles(tt - 2 * h)
-            let psiRate = (-p2.0 + 8 * p1.0 - 8 * m1.0 + m2.0) / (12 * h)
-            let epsRate = (-p2.1 + 8 * p1.1 - 8 * m1.1 + m2.1) / (12 * h)
-            let psiError = abs(psiRate - dpsi)
-            let epsError = abs(epsRate - deps)
-            worst = max(worst, psiError, epsError)
-        }
-        #expect(worst <= 1e-9, "worst \(worst) arcsec/day")
-    }
-
-    // MARK: - 5. Light-time iteration-count switch
-
-    @Test("Mercury rate is smooth across a light-time iteration-count transition")
-    func iterationSwitch() throws {
-        let center = 19_590.68873
-        let step = 1e-4
-        var previous: Double? = nil
-        var worst = 0.0
-        var tt = center - 0.03
-        while tt <= center + 0.03 {
-            let rate = try CelestialBody.mercury.geocentricEclipticState(at: AstroTime(tt: tt)).longitudeRate
-            if let previous {
-                worst = max(worst, abs(rate - previous))
-            }
-            previous = rate
-            tt += step
-        }
-        // Mercury's acceleration stays below 0.2 deg/day^2, so adjacent samples differ by at most 2e-5 from curvature.
-        #expect(worst <= 2e-5, "worst adjacent difference \(worst)")
-
-        var second = 0.0
-        var t2 = center - 0.03
-        while t2 <= center + 0.03 {
-            let d = 2e-5
-            let a = try CelestialBody.mercury.geocentricEclipticState(at: AstroTime(tt: t2 - d)).longitudeRate
-            let b = try CelestialBody.mercury.geocentricEclipticState(at: AstroTime(tt: t2)).longitudeRate
-            let c = try CelestialBody.mercury.geocentricEclipticState(at: AstroTime(tt: t2 + d)).longitudeRate
-            second = max(second, abs(a - 2 * b + c))
-            t2 += 1e-3
-        }
-        #expect(second <= 1e-9, "worst second difference \(second) deg/day")
-    }
-
-    // MARK: - 6. Polynomial seams
-
-    @Test("Heliocentric velocity is continuous across every polynomial segment boundary")
-    func polynomialSeams() {
-        let widths: [(astro_body_t, Double)] = [
-            (BODY_MERCURY, 8), (BODY_VENUS, 32), (BODY_EARTH, 8), (BODY_MARS, 32),
-            (BODY_JUPITER, 32), (BODY_SATURN, 16), (BODY_URANUS, 32), (BODY_NEPTUNE, 16),
-        ]
-        let start = -36_524.5
-        let stop = 36_889.5
-        for (body, width) in widths {
-            var worst = 0.0
-            var boundary = start
-            while boundary <= stop {
-                let below = Astronomy_HelioState(body, AstroTime(tt: boundary.nextDown).raw)
-                let above = Astronomy_HelioState(body, AstroTime(tt: boundary.nextUp).raw)
-                #expect(below.status == ASTRO_SUCCESS && above.status == ASTRO_SUCCESS)
-                let jumpX = abs(below.vx - above.vx)
-                let jumpY = abs(below.vy - above.vy)
-                let jumpZ = abs(below.vz - above.vz)
-                worst = max(worst, jumpX, jumpY, jumpZ)
-                boundary += width
-            }
-            #expect(worst <= 1e-12, "body \(body.rawValue): worst seam velocity jump \(worst) AU/day")
-        }
     }
 
     // MARK: - 8. Stations

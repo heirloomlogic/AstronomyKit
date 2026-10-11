@@ -142,7 +142,7 @@ struct EnginePlanetaryEventTests {
             measurements.append([
                 "body": reference.body, "nativeJDTT": jd, "sourceLowerJDTT": nearest.lowerJDTT,
                 "sourceUpperJDTT": nearest.upperJDTT, "nativeMinusSourceSeconds": seconds,
-                "publicCMinusSourceSeconds":
+                "publicMinusSourceSeconds":
                     (original.time.terrestrialTime + 2_451_545 - (nearest.lowerJDTT + nearest.upperJDTT) / 2)
                     * Engine.secondsPerDay,
                 "localCrossings": reference.roots.count,
@@ -186,7 +186,9 @@ struct EnginePlanetaryEventTests {
         #expect(throws: AstronomyError.invalidBody) { _ = try Events.searchPeakMagnitude(of: .mercury, after: start) }
     }
 
-    @Test("Unchanged trajectories retain the original search classifications and times")
+    /// Since the #96 cutover the public searches are these searches, so the parity is the facade's
+    /// time and kind conversion: zero seconds and the same classification.
+    @Test("Public searches return the engine's classifications and times")
     func originalAlgorithmParity() throws {
         let start = Self.time("2025-01-01T00:00:00Z", model: .espenakMeeus)
         let publicStart = AstroTime(tt: start.tt, ut: start.ut, deltaTModel: .espenakMeeus)
@@ -215,7 +217,7 @@ struct EnginePlanetaryEventTests {
                 "kind": native.kind == .pericenter ? "pericenter" : "apocenter",
             ])
             let seconds = abs(native.time.tt - original.time.terrestrialTime) * Engine.secondsPerDay
-            if seconds > maximumApsisSeconds {
+            if seconds >= maximumApsisSeconds {
                 maximumApsisSeconds = seconds
                 worstApsisBody = body.name
             }

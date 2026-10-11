@@ -172,8 +172,14 @@ extension Engine.Events {
     static func nextLocalSolarEclipse(
         after event: LocalSolarEclipse, from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let next = try searchLocalSolarEclipse(after: event.peak.time.adding(days: 10), from: observer)
-        guard next.peak.time.tt > event.peak.time.tt else { throw AstronomyError.internalError }
+        try nextLocalSolarEclipse(afterPeak: event.peak.time, from: observer)
+    }
+
+    /// The local solar eclipse at `observer` after the one whose reported peak is `peak`.
+    static func nextLocalSolarEclipse(afterPeak peak: Engine.Time, from observer: Observer) throws -> LocalSolarEclipse
+    {
+        let next = try searchLocalSolarEclipse(after: peak.adding(days: 10), from: observer)
+        guard next.peak.time.tt > peak.tt else { throw AstronomyError.internalError }
         return next
     }
 }

@@ -12,20 +12,13 @@ import Testing
 struct EngineContractTests {
     enum NativeEngineViolationKind: Equatable {
         case cImport
+        case cEntryPoint
         case mutex
     }
 
-    struct NativeEngineViolation {
+    struct NativeEngineViolation: Equatable {
         let line: Int
         let kind: NativeEngineViolationKind
-    }
-
-    struct EntryPointReference {
-        let name: String
-        let file: String
-        let line: Int
-
-        var location: String { "\(file):\(line)" }
     }
 
     static let root = URL(fileURLWithPath: #filePath)
@@ -50,15 +43,22 @@ struct EngineContractTests {
             .filter { line in !line.text.drop { $0 == " " }.hasPrefix("//") }
     }
 
+    /// Code lines that import the C engine, name one of its `Astronomy_`
+    /// entry points, or use `Mutex`. Comments may still name C entry points
+    /// where a function records which one it replaced.
     static func nativeEngineViolations(in source: String) -> [NativeEngineViolation] {
         // Simple word boundaries, so `CLibAstronomy.x` and `Synchronization.Mutex`
         // still match; Unicode boundaries do not break at a period between letters.
         let cImport = #/\bimport\b.*\bCLibAstronomy\b/#.wordBoundaryKind(.simple)
+        let cEntryPoint = #/\bAstronomy_\w+/#.wordBoundaryKind(.simple)
         let mutex = #/\bMutex\b/#.wordBoundaryKind(.simple)
         var violations: [NativeEngineViolation] = []
         for line in codeLines(in: source) {
             if line.text.contains("CLibAstronomy"), line.text.firstMatch(of: cImport) != nil {
                 violations.append(NativeEngineViolation(line: line.number, kind: .cImport))
+            }
+            if line.text.contains("Astronomy_"), line.text.firstMatch(of: cEntryPoint) != nil {
+                violations.append(NativeEngineViolation(line: line.number, kind: .cEntryPoint))
             }
             if line.text.contains("Mutex"), line.text.firstMatch(of: mutex) != nil {
                 violations.append(NativeEngineViolation(line: line.number, kind: .mutex))
@@ -69,74 +69,41 @@ struct EngineContractTests {
 
     static func nativeEngineViolations(in file: URL) throws -> [NativeEngineViolation] {
         let data = try Data(contentsOf: file, options: .mappedIfSafe)
-        let hasCImport = data.range(of: Data("CLibAstronomy".utf8)) != nil
-        let hasMutex = data.range(of: Data("Mutex".utf8)) != nil
-        guard hasCImport || hasMutex else { return [] }
+        let prefilters = ["CLibAstronomy", "Astronomy_", "Mutex"].map { Data($0.utf8) }
+        guard prefilters.contains(where: { data.range(of: $0) != nil }) else { return [] }
         return nativeEngineViolations(in: try String(contentsOf: file, encoding: .utf8))
     }
 
-    static func entryPointReferences(in source: String, file: String) -> [EntryPointReference] {
-        guard source.contains("Astronomy_") else { return [] }
-        var references: [EntryPointReference] = []
-        for (offset, line) in source.split(separator: "\n", omittingEmptySubsequences: false).enumerated()
-        where line.contains("Astronomy_") {
-            references.append(
-                contentsOf: line.matches(of: #/\bAstronomy_\w+/#).map {
-                    EntryPointReference(name: String($0.0), file: file, line: offset + 1)
-                })
+    @Test("No shipping source imports the C engine or calls a C entry point")
+    func shippingSourcesAreNative() throws {
+        let files = try Self.swiftFiles(under: Self.sources)
+        #expect(files.count > 50)
+        for file in files {
+            for violation in try Self.nativeEngineViolations(in: file) where violation.kind != .mutex {
+                #expect(violation.kind == .mutex, "\(file.lastPathComponent):\(violation.line) \(violation.kind)")
+            }
         }
-        return references
     }
 
-    static func entryPointReferences(in file: URL) throws -> [EntryPointReference] {
-        let data = try Data(contentsOf: file, options: .mappedIfSafe)
-        guard data.range(of: Data("Astronomy_".utf8)) != nil else { return [] }
-        let source = try String(contentsOf: file, encoding: .utf8)
-        return entryPointReferences(in: source, file: file.lastPathComponent)
-    }
-
-    static func ownershipDiagnostic(
-        for name: String, owners: [String], references: [EntryPointReference]
-    ) -> String {
-        let locations = references.filter { $0.name == name }.map(\.location).sorted().joined(separator: ", ")
-        return "\(name) at \(locations): \(owners)"
-    }
-
-    @Test("Engine sources neither import the C engine nor use Mutex")
-    func engineIsNative() throws {
+    @Test("Engine sources do not use Mutex")
+    func engineUsesNoMutex() throws {
         let files = try Self.swiftFiles(under: Self.sources.appendingPathComponent("Engine"))
         #expect(!files.isEmpty)
         for file in files {
-            for violation in try Self.nativeEngineViolations(in: file) {
-                let location = "\(file.lastPathComponent):\(violation.line)"
-                #expect(violation.kind != .cImport, "\(location)")
+            for violation in try Self.nativeEngineViolations(in: file) where violation.kind == .mutex {
                 // Linux ThreadSanitizer does not model Mutex; see NATIVE_ENGINE.md.
-                #expect(violation.kind != .mutex, "\(location)")
+                #expect(violation.kind != .mutex, "\(file.lastPathComponent):\(violation.line)")
             }
         }
     }
 
-    @Test("Every C entry point the Swift layer names has exactly one owner in the contract")
-    func everyEntryPointHasOneOwner() throws {
-        let contract = try String(contentsOf: Self.root.appendingPathComponent("NATIVE_ENGINE.md"), encoding: .utf8)
-        // Owner lines look like "- #86: `Astronomy_Pivot`, ...".
-        var owners: [String: [String]] = [:]
-        for line in contract.split(separator: "\n") {
-            guard line.hasPrefix("- #"), let owner = line.dropFirst(2).split(separator: ":").first else { continue }
-            for name in line.matches(of: #/`(Astronomy_\w+)`/#) {
-                owners[String(name.1), default: []].append(String(owner))
-            }
-        }
-        var references: [EntryPointReference] = []
-        for file in try Self.swiftFiles(under: Self.sources) {
-            references.append(contentsOf: try Self.entryPointReferences(in: file))
-        }
-        #expect(!references.isEmpty)
-        for name in Set(references.map(\.name)).sorted() {
-            let listedOwners = owners[name] ?? []
-            let diagnostic = Self.ownershipDiagnostic(for: name, owners: listedOwners, references: references)
-            #expect(listedOwners.count == 1, "\(diagnostic)")
-        }
+    @Test("The shipping target declares no dependency on the C target")
+    func shippingTargetHasNoCDependency() throws {
+        let manifest = try String(contentsOf: Self.root.appendingPathComponent("Package.swift"), encoding: .utf8)
+        let target = try #require(manifest.firstRange(of: ".target(\n            name: \"AstronomyKit\""))
+        let declaration = manifest[target.lowerBound...].prefix { $0 != ")" }
+        #expect(!declaration.contains("dependencies"), "\(declaration)")
+        #expect(!declaration.contains("CLibAstronomy"), "\(declaration)")
     }
 
     @Test("Literal prefilters retain every contract guard")
@@ -155,13 +122,11 @@ struct EngineContractTests {
         defer { try? FileManager.default.removeItem(at: fixture) }
 
         let violations = try Self.nativeEngineViolations(in: fixture)
-        #expect(violations.map(\.line) == [2, 3])
-        #expect(violations.map(\.kind) == [.cImport, .mutex])
-        let references = try Self.entryPointReferences(in: fixture)
-        #expect(references.map(\.name) == ["Astronomy_Commented", "Astronomy_Unlisted"])
-        #expect(references.map(\.line) == [1, 5])
-        let diagnostic = Self.ownershipDiagnostic(
-            for: "Astronomy_Unlisted", owners: [], references: references)
-        #expect(diagnostic == "Astronomy_Unlisted at \(fixture.lastPathComponent):5: []")
+        #expect(
+            violations == [
+                NativeEngineViolation(line: 2, kind: .cImport),
+                NativeEngineViolation(line: 3, kind: .mutex),
+                NativeEngineViolation(line: 5, kind: .cEntryPoint),
+            ])
     }
 }

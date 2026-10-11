@@ -218,26 +218,41 @@ struct AuditValidationTests {
         #expect(IndependentReferenceDate.seconds(actual, expected) <= reference.toleranceSeconds)
     }
 
+    private static func moonPhase(named name: String) -> MoonPhase {
+        switch name {
+        case "new": .new
+        case "firstQuarter": .firstQuarter
+        case "full": .full
+        case "lastQuarter": .thirdQuarter
+        default: fatalError("unexpected phase \(name)")
+        }
+    }
+
+    /// The four January 2100 USNO labels are minute-rounded with an undocumented Delta T; as the owner approved for
+    /// those rows only, their Horizons TT roots carry the gate (`lunarQuarterHorizons`) and the labels are checked
+    /// for phase identity alone.
     @Test("Published lunar quarters", arguments: IndependentReferenceArchive.shared.lunarPhases)
     func lunarQuarter(reference: IndependentReferenceArchive.LunarPhase) throws {
         let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let actual = try Moon.searchQuarter(after: expected.addingDays(-2))
-        let phase: MoonPhase =
-            switch reference.phase {
-            case "new": .new
-            case "firstQuarter": .firstQuarter
-            case "full": .full
-            case "lastQuarter": .thirdQuarter
-            default: fatalError("unexpected phase \(reference.phase)")
-            }
-        #expect(actual.phase == phase)
-        let error = IndependentReferenceDate.terrestrialSeconds(actual.time, expected)
-        #expect(error <= reference.toleranceSeconds)
-        if reference.sourceTime == "2100-01-18T12:35:00.000Z" {
-            let civilTime = IndependentReferenceDate.civil(reference.sourceTime)
-            // Named sanity check: finite only, not an accuracy comparison.
-            #expect(IndependentReferenceDate.seconds(actual.time, civilTime).isFinite)
+        #expect(actual.phase == Self.moonPhase(named: reference.phase))
+        let replaced = Set(archive.apparentLunarPhases.map(\.usnoSourceTime))
+        #expect(replaced.count == 4 && replaced.isSubset(of: archive.lunarPhases.map(\.sourceTime)))
+        if !replaced.contains(reference.sourceTime) {
+            let error = IndependentReferenceDate.terrestrialSeconds(actual.time, expected)
+            #expect(error <= reference.toleranceSeconds)
         }
+    }
+
+    @Test(
+        "January 2100 lunar quarters against Horizons TT roots",
+        arguments: IndependentReferenceArchive.shared.apparentLunarPhases)
+    func lunarQuarterHorizons(reference: IndependentReferenceArchive.ApparentLunarPhase) throws {
+        let expected = AstroTime(tt: reference.julianDateTT - 2_451_545, deltaTModel: .espenakMeeus)
+        let actual = try Moon.searchQuarter(after: expected.addingDays(-2))
+        #expect(actual.phase == Self.moonPhase(named: reference.phase))
+        let error = IndependentReferenceDate.terrestrialSeconds(actual.time, expected)
+        #expect(error <= reference.toleranceSeconds, "\(reference.phase) Horizons TT \(reference.julianDateTT)")
     }
 
     @Test("Archived lunar coordinates use their specified Delta T model")
@@ -306,13 +321,9 @@ struct AuditValidationTests {
         for (event, reference) in zip(actual, stream.events) {
             let comparison = try riseSetComparison(event, reference: reference)
             #expect(comparison.directionMatches)
-            if reference.sourceLine == 2_923 {
-                withKnownIssue("#124: source line 2,923 exceeds the pinned allowance") {
-                    #expect(comparison.timeErrorSeconds <= reference.timeToleranceSeconds)
-                }
-            } else {
-                #expect(comparison.timeErrorSeconds <= reference.timeToleranceSeconds)
-            }
+            #expect(
+                comparison.timeErrorSeconds <= reference.timeToleranceSeconds,
+                "source line \(reference.sourceLine): \(comparison.timeErrorSeconds) s")
         }
     }
 
@@ -419,19 +430,15 @@ struct AuditValidationTests {
         #expect(mutatedError > reference.angularToleranceArcminutes)
     }
 
+    /// Reading a 2100 Universal Time label as civil UTC moves it by the difference between the modeled Delta T and
+    /// the held leap-second offset, more than the phase allowance, so the two interpretations cannot both pass.
     @Test("Civil UTC mutation exceeds the source-compatible event tolerance")
     func timeScaleMutationFails() throws {
         let reference = try #require(
             archive.lunarPhases.first { $0.sourceTime == "2100-01-18T12:35:00.000Z" })
-        let expected = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
-        let correct = try Moon.searchQuarter(after: expected.addingDays(-2))
+        let universal = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
         let misreadAsCivil = IndependentReferenceDate.civil(reference.sourceTime)
-        #expect(
-            IndependentReferenceDate.terrestrialSeconds(correct.time, expected)
-                <= reference.toleranceSeconds)
-        #expect(
-            IndependentReferenceDate.seconds(correct.time, misreadAsCivil)
-                > reference.toleranceSeconds)
+        #expect(IndependentReferenceDate.terrestrialSeconds(universal, misreadAsCivil) > reference.toleranceSeconds)
     }
 
     @Test("Sign and unit mutations exceed archived tolerances")

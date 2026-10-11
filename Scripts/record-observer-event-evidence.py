@@ -80,14 +80,13 @@ def delta_pieces():
     return result
 
 
-def modeled_tt(ut, public_reference=False):
+def modeled_tt(ut):
     # The frozen USNO corpus is Gregorian, 1750–2050. Do not extrapolate this replay to other calendars.
+    # The native and public reference pairs both use the engine's calendar decimal year.
     date = datetime.datetime(2000,1,1,12)+datetime.timedelta(days=ut)
     if not 1750 <= date.year <= 2051: raise ValueError('outside recorded USNO calendar scope')
     start, end = datetime.datetime(date.year,1,1), datetime.datetime(date.year+1,1,1)
     y = date.year+(date-start).total_seconds()/(end-start).total_seconds()
-    if public_reference:
-        y = 2000+(ut-14)/365.24217
     for stop, origin, expression in delta_pieces():
         if y < stop:
             u = arithmetic(origin, {'y': y})
@@ -131,7 +130,7 @@ def validate_measurements(measured):
     for row, source in zip(rows, expected):
         if set(row) != {'sourceLine','nativeTT','nativeUT','referenceTT','referenceUT','residualSeconds','direction'}:
             raise ValueError('USNO observation fields differ')
-        if not same_time(row['nativeTT'], modeled_tt(row['nativeUT'])) or not same_time(row['referenceTT'], modeled_tt(row['referenceUT'], public_reference=True)):
+        if not same_time(row['nativeTT'], modeled_tt(row['nativeUT'])) or not same_time(row['referenceTT'], modeled_tt(row['referenceUT'])):
             raise ValueError('USNO recorded time scales disagree')
         ut = (datetime.datetime.fromisoformat(source['utc'].removesuffix('Z'))-datetime.datetime(2000, 1, 1, 12)).total_seconds()/86400
         residual = abs(row['nativeTT']-row['referenceTT'])*86400
@@ -217,7 +216,7 @@ def evidence(captures, hashes):
                 resources=resources, buildSeconds=build, toolchain=captures['toolchain'],
                 releaseExecutableBytes=captures['releaseExecutableBytes'], observerObjectBytes=captures['observerObjectBytes'], baseline=captures['baseline'],
                 criteria='All 5909 archived USNO rows retain their source-specific allowance, including 70.8 TT seconds at line 2923. Sixteen sampled altitude/hour-angle points retain one arcminute. Three printed USNO semidiameters discriminate the optical convention at 0.000001 degree; this is not an asserted physical solar-radius accuracy.',
-                limitations='USNO navigation output supports the chosen optical limb; the rise/set service implementation is unavailable. Horizon refraction remains a conventional atmosphere, not a prediction of weather. Public observer APIs remain C-backed until #96. Existing planetary apsis source gaps remain in #92. Resource values are host observations, not portable ceilings.')
+                limitations='USNO navigation output supports the chosen optical limb; the rise/set service implementation is unavailable. Horizon refraction remains a conventional atmosphere, not a prediction of weather. The public observer APIs run on these searches since the #96 cutover. Existing planetary apsis source gaps remain in #92. Resource values are host observations, not portable ceilings.')
 
 
 def capture(directory):

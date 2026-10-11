@@ -60,12 +60,11 @@ struct EngineObserverEventsTests {
             of: .sun, direction: .rise, after: time,
             from: Observer(latitude: 90, longitude: 0), limitDays: 0.0005, altitudeDegrees: 90)
         #expect(result == nil)
-        #expect(throws: AstronomyError.badTime) {
+        #expect(
             try CelestialBody.sun.searchAltitude(
                 90, direction: .rise,
                 after: AstroTime(tt: time.tt, deltaTModel: .espenakMeeus),
-                from: Observer(latitude: 90, longitude: 0), limitDays: 0.0005)
-        }
+                from: Observer(latitude: 90, longitude: 0), limitDays: 0.0005) == nil)
     }
 
     @Test("Directions, clipped windows, and captured models")
@@ -212,7 +211,7 @@ struct EngineObserverEventsTests {
         #expect(abs(event.ut - expected.ut) * 86_400 < 0.1)
     }
 
-    @Test("Native Sun ascent retains the crossing missed by the public C pruning bound")
+    @Test("Native Sun ascent retains the crossing the C pruning bound missed, and the public search finds it")
     func publicPruningCounterpart() throws {
         let site = Observer(latitude: 0, longitude: 0)
         let culmination = try Engine.Events.searchHourAngle(
@@ -222,10 +221,11 @@ struct EngineObserverEventsTests {
             try Engine.Events.searchAltitude(
                 of: .sun, direction: .rise, after: lower, from: site, limitDays: 0.42, altitudeDegrees: 60))
         #expect(native.ut > lower.ut && native.ut < culmination.time.ut)
-        let retained = try CelestialBody.sun.searchAltitude(
-            60, direction: .rise, after: AstroTime(tt: lower.tt, deltaTModel: .espenakMeeus),
-            from: site, limitDays: 0.42)
-        #expect(retained == nil)
+        let retained = try #require(
+            try CelestialBody.sun.searchAltitude(
+                60, direction: .rise, after: AstroTime(tt: lower.tt, deltaTModel: .espenakMeeus),
+                from: site, limitDays: 0.42))
+        #expect(abs(retained.universalTime - native.ut) * 86_400 < 0.1)
     }
 
     @Test("Unsupported Earth identity precedes invalid search time")

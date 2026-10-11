@@ -217,7 +217,7 @@ def collect_results(prefix):
               "apparentPhaseReferences": json.loads(APPARENT_PHASE_OUTPUT.read_bytes()),
               "summaries": summaries, "results": results,
               "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
-              "remainingDependencies": ["#92 planetary and observer search ports", "#96 public cutover", "#184 broader qualification and closure"]}
+              "remainingDependencies": ["#92 planetary and observer search ports", "#184 broader qualification and closure"]}
     path = ROOT / "Scripts/moon-data/de441-event-evidence.json"
     path.write_bytes(encoded(result))
     print("Recorded event evidence:", path.relative_to(ROOT))

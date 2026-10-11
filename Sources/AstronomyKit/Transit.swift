@@ -5,7 +5,6 @@
 //  Mercury and Venus transit calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Transit
@@ -50,16 +49,13 @@ public struct Transit: Sendable, Equatable {
         finish.date.timeIntervalSince(start.date)
     }
 
-    /// Creates a transit from the C structure.
-    init(body: CelestialBody, _ raw: astro_transit_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.body = body
-        self.start = AstroTime(raw: raw.start)
-        self.peak = AstroTime(raw: raw.peak)
-        self.finish = AstroTime(raw: raw.finish)
-        self.separation = raw.separation
+    /// Creates a transit from the engine's.
+    init(_ transit: Engine.Events.Transit) {
+        self.body = transit.body
+        self.start = AstroTime(transit.start)
+        self.peak = AstroTime(transit.peak)
+        self.finish = AstroTime(transit.finish)
+        self.separation = transit.separationArcminutes
     }
 }
 
@@ -94,8 +90,7 @@ extension Transit {
     /// print("Mercury transit: \(transit.peak)")
     /// ```
     public static func search(body: CelestialBody, after startTime: AstroTime) throws -> Transit {
-        let result = Astronomy_SearchTransit(body.raw, startTime.raw)
-        return try Transit(body: body, result)
+        Transit(try Engine.Events.searchTransit(of: body, after: startTime.engine))
     }
 
     /// Finds the next transit after a given transit.
@@ -106,8 +101,7 @@ extension Transit {
     /// - Returns: The next transit.
     /// - Throws: `AstronomyError` if the search fails.
     public static func next(body: CelestialBody, after transit: Transit) throws -> Transit {
-        let result = Astronomy_NextTransit(body.raw, transit.peak.raw)
-        return try Transit(body: body, result)
+        Transit(try Engine.Events.nextTransit(of: body, afterPeak: transit.peak.engine))
     }
 
     /// Finds all transits within a date range.

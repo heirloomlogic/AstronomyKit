@@ -12,7 +12,7 @@ struct DeltaTModelCaptureTests {
 
     /// The TT the engine derives from `ut` under `model`.
     private static func tt(ut: Double, under model: DeltaTModel) -> Double {
-        ut + model.function(ut) / 86_400
+        ut + Engine.DeltaT.seconds(ut: ut, model: model) / 86_400
     }
 
     /// True when `time` carries `model` and its TT was derived from its UT by
@@ -39,8 +39,7 @@ struct DeltaTModelCaptureTests {
     @Test("The TT inverse runs under the value's model")
     func terrestrialInverse() {
         let tt = 36_525.0
-        // Astronomy_TerrestrialTime accepts 2 ulp of |tt| as converged.
-        let tolerance = 2 * Double.ulpOfOne * tt
+        let tolerance = Engine.Time.inverseTolerance(tt: tt)
 
         let jpl = AstroTime(tt: tt, deltaTModel: .jplHorizons)
         #expect(jpl.terrestrialTime == tt)
@@ -61,17 +60,23 @@ struct DeltaTModelCaptureTests {
         #expect(em.deltaTModel == .espenakMeeus)
         #expect(jpl.deltaTModel == .jplHorizons)
 
-        // Civil UTC fixes TT through the offset table; only UT follows the model.
+        // Civil UTC fixes TT through the offset table; only UT follows the model:
+        // the UT shift is the difference of the two Delta T values, about 23 s in 2049.
         #expect(em.terrestrialTime == jpl.terrestrialTime)
         let utShiftSeconds = (jpl.universalTime - em.universalTime) * 86_400
-        #expect(abs(utShiftSeconds - 22.950380633) < 1e-6)
+        let expectedShift =
+            AstronomyConfig.deltaTEspenakMeeus(universalTime: em.universalTime)
+            - AstronomyConfig.deltaTJplHorizons(universalTime: jpl.universalTime)
+        #expect(abs(utShiftSeconds - expectedShift) < 1e-6)
+        #expect(utShiftSeconds > 22 && utShiftSeconds < 24)
 
-        // Geometric solar altitude at 40N 0E. Measured here as 5.216569e-4
-        // degrees; #49 reports 5.21646698e-4 at an earlier revision. The
-        // tolerance admits native-libm differences between platforms.
+        // Geometric solar altitude at 40N 0E near local noon, measured with
+        // the native engine. The 1e-7 degree tolerance admits platform libm
+        // differences while retaining the precision of this regression.
         let emAltitude = try CelestialBody.sun.horizon(at: em, from: Self.observer40N, refraction: .none).altitude
         let jplAltitude = try CelestialBody.sun.horizon(at: jpl, from: Self.observer40N, refraction: .none).altitude
-        #expect(abs((emAltitude - jplAltitude) - 0.000_521_657) < 1e-7)
+        let altitudeShift = emAltitude - jplAltitude
+        #expect(abs(altitudeShift - 0.000_521_824_936) < 1e-7, "\(altitudeShift)")
 
         // Calendar components reach the same value.
         let components = AstroTime(year: 2_049, month: 12, day: 21, hour: 12, deltaTModel: .jplHorizons)
@@ -165,7 +170,7 @@ struct DeltaTModelCaptureTests {
         let start = AstroTime(year: 2_030, month: 6, day: 1, deltaTModel: .jplHorizons)
         #expect(Self.derived(start.addingHours(6), under: .jplHorizons))
 
-        // Astronomy_Search: bisection and quadratic interpolation steps.
+        // The root search: bisection and quadratic interpolation steps.
         let rise = try #require(try CelestialBody.sun.riseTime(after: start, from: .greenwich))
         #expect(Self.derived(rise, under: .jplHorizons))
         let mars = try CelestialBody.mars.searchApsis(after: start)

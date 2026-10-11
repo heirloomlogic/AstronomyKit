@@ -56,7 +56,7 @@ struct PolarSunriseReconciliationTests {
         #expect(lines[2_922] == "Sun     0 -90 2022-09-20T21:52Z r")
     }
 
-    @Test("Public and native apparent-horizon controls reproduce the unresolved residual")
+    @Test("The public search meets the allowance and the retained controls reproduce their residuals")
     func residuals() throws {
         let expected = IndependentReferenceDate.universal(
             "2022-09-20T21:52Z", deltaTModel: .espenakMeeus)
@@ -87,10 +87,15 @@ struct PolarSunriseReconciliationTests {
                 + "tolerances=\(existingRoots.map(Self.signedTTResidual)), "
                 + "bisection=\(Self.signedTTResidual(bisection))")
 
-        // The public search runs on the C engine's IAU 2000B nutation and the
-        // native controls on IAU 2006/2000A, which moved them 0.011 s earlier
-        // and leaves the native upper-limb control 0.035 s before the public one.
-        #expect(abs(publicResidual - 75.985_957_542) < 0.001)
+        // The public search is the native rise/set search with its 696,000 km
+        // optical limb, scanned from 2022-01-01 here; the archived row 2,923
+        // capture, scanned on from the previous event, roots 0.022 s later at
+        // +50.539200607 s, inside the search's 0.1 s tolerance. The three
+        // controls keep the 695,700 km nominal radius and the fixed-depression
+        // definitions that do not meet the allowance.
+        #expect(abs(publicResidual - 50.517_121_574) < 0.001)
+        #expect(abs(publicResidual - 50.539_200_607) < 0.1)
+        #expect(abs(publicResidual) <= 70.8)
         #expect(abs(nativeResidual - 75.950_547_197) < 0.001)
         #expect(abs(fixedCenterResidual - -220.648_209_279) < 0.001)
         #expect(abs(geocentricResidual - -759.652_990_219) < 0.001)

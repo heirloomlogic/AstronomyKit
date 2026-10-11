@@ -99,7 +99,7 @@ extension RotationMatrix {
     public static func equatorialJ2000ToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.eqjToEqd(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.eqjToEqd(time.engine))
     }
 
     /// Creates a rotation from equatorial-of-date to J2000 equatorial coordinates.
@@ -110,7 +110,7 @@ extension RotationMatrix {
     public static func equatorialOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.eqdToEqj(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.eqdToEqj(time.engine))
     }
 
     /// Creates a rotation from J2000 equatorial to horizontal coordinates.
@@ -125,7 +125,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         try observer.validate()
-        return RotationMatrix(Engine.FrameRotation.eqjToHor(time.coordinateTime, observer: observer))
+        return RotationMatrix(Engine.FrameRotation.eqjToHor(time.engine, observer: observer))
     }
 
     /// Creates a rotation from horizontal to J2000 equatorial coordinates.
@@ -140,7 +140,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         try observer.validate()
-        return RotationMatrix(Engine.FrameRotation.horToEqj(time.coordinateTime, observer: observer))
+        return RotationMatrix(Engine.FrameRotation.horToEqj(time.engine, observer: observer))
     }
 
     /// Creates a rotation from J2000 equatorial to galactic coordinates.
@@ -167,7 +167,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         try observer.validate()
-        return RotationMatrix(Engine.FrameRotation.eclToHor(time.coordinateTime, observer: observer))
+        return RotationMatrix(Engine.FrameRotation.eclToHor(time.engine, observer: observer))
     }
 
     /// Creates a rotation from horizontal to ecliptic coordinates.
@@ -176,7 +176,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         try observer.validate()
-        return RotationMatrix(Engine.FrameRotation.horToEcl(time.coordinateTime, observer: observer))
+        return RotationMatrix(Engine.FrameRotation.horToEcl(time.engine, observer: observer))
     }
 
     // MARK: Equatorial of Date (EQD) conversions
@@ -187,7 +187,7 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         try observer.validate()
-        return RotationMatrix(Engine.FrameRotation.eqdToHor(time.coordinateTime, observer: observer))
+        return RotationMatrix(Engine.FrameRotation.eqdToHor(time.engine, observer: observer))
     }
 
     /// Creates a rotation from horizontal to equatorial-of-date coordinates.
@@ -196,17 +196,17 @@ extension RotationMatrix {
         from observer: Observer
     ) throws -> RotationMatrix {
         try observer.validate()
-        return RotationMatrix(Engine.FrameRotation.horToEqd(time.coordinateTime, observer: observer))
+        return RotationMatrix(Engine.FrameRotation.horToEqd(time.engine, observer: observer))
     }
 
     /// Creates a rotation from equatorial-of-date to ecliptic coordinates.
     public static func equatorialOfDateToEcliptic(at time: AstroTime) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.eqdToEcl(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.eqdToEcl(time.engine))
     }
 
     /// Creates a rotation from ecliptic to equatorial-of-date coordinates.
     public static func eclipticToEquatorialOfDate(at time: AstroTime) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.eclToEqd(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.eclToEqd(time.engine))
     }
 
     // MARK: Ecliptic of Date (ECT) conversions
@@ -215,28 +215,28 @@ extension RotationMatrix {
     public static func equatorialJ2000ToEclipticOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.eqjToEct(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.eqjToEct(time.engine))
     }
 
     /// Creates a rotation from ecliptic-of-date to J2000 equatorial coordinates.
     public static func eclipticOfDateToEquatorialJ2000(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.ectToEqj(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.ectToEqj(time.engine))
     }
 
     /// Creates a rotation from equatorial-of-date to ecliptic-of-date coordinates.
     public static func equatorialOfDateToEclipticOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.eqdToEct(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.eqdToEct(time.engine))
     }
 
     /// Creates a rotation from ecliptic-of-date to equatorial-of-date coordinates.
     public static func eclipticOfDateToEquatorialOfDate(
         at time: AstroTime
     ) throws -> RotationMatrix {
-        RotationMatrix(Engine.FrameRotation.ectToEqd(time.coordinateTime))
+        RotationMatrix(Engine.FrameRotation.ectToEqd(time.engine))
     }
 }
 
@@ -265,7 +265,7 @@ extension StateVector {
         let state = Engine.State<RotationMatrix.Frame>(
             x: position.x, y: position.y, z: position.z,
             vx: velocity.x, vy: velocity.y, vz: velocity.z,
-            time: time.coordinateTime
+            time: time.engine
         )
         return StateVector(rotation.storage.apply(to: state), at: time)
     }

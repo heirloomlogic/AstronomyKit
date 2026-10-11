@@ -2,21 +2,21 @@
 //  NativeCoordinateValues.swift
 //  AstronomyKit
 //
-
-extension AstroTime {
-    /// The stored scales for coordinate operations, which do not derive another time.
-    var coordinateTime: Engine.Time {
-        Engine.Time(ut: universalTime, tt: terrestrialTime, deltaTModel: deltaTModel ?? .espenakMeeus)
-    }
-}
+//  Conversions between the public value types and the engine's.
+//
 
 extension Vector3D {
     func engineVector<F: Engine.Frame>(in frame: F.Type) -> Engine.Vector<F> {
-        Engine.Vector(x: x, y: y, z: z, time: time.coordinateTime)
+        Engine.Vector(x: x, y: y, z: z, time: time.engine)
     }
 
     init<F>(_ vector: Engine.Vector<F>, at time: AstroTime) {
         self.init(x: vector.x, y: vector.y, z: vector.z, time: time)
+    }
+
+    /// The vector with the engine vector's own time.
+    init<F>(_ vector: Engine.Vector<F>) {
+        self.init(vector, at: AstroTime(vector.time))
     }
 }
 
@@ -38,6 +38,11 @@ extension StateVector {
             time: time
         )
     }
+
+    func engineState(at time: Engine.Time) -> Engine.State<Engine.EQJ> {
+        Engine.State(
+            x: position.x, y: position.y, z: position.z, vx: velocity.x, vy: velocity.y, vz: velocity.z, time: time)
+    }
 }
 
 extension Horizon {
@@ -58,15 +63,19 @@ extension Equatorial {
 }
 
 extension Ecliptic {
+    /// The coordinates, or `AstronomyError.badTime` when one is not finite.
     init(_ coordinates: Engine.Ecliptic) throws {
         self.init(latitude: coordinates.latitude, longitude: coordinates.longitude, distance: coordinates.vector.length)
         guard latitude.isFinite, longitude.isFinite, distance.isFinite else { throw AstronomyError.badTime }
     }
 }
 
-extension StateVector {
-    func engineState(at time: Engine.Time) -> Engine.State<Engine.EQJ> {
-        Engine.State(
-            x: position.x, y: position.y, z: position.z, vx: velocity.x, vy: velocity.y, vz: velocity.z, time: time)
+extension EclipticState {
+    /// The state at `time`, the public time it was requested for.
+    init(_ state: Engine.EclipticState, at time: AstroTime) {
+        self.init(
+            longitude: state.longitude, latitude: state.latitude, distance: state.distance,
+            longitudeRate: state.longitudeRate, latitudeRate: state.latitudeRate, distanceRate: state.distanceRate,
+            time: time)
     }
 }

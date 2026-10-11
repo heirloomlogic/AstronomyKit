@@ -150,8 +150,13 @@ extension Engine.Events {
     }
 
     static func nextLunarEclipse(after eclipse: LunarEclipse) throws -> LunarEclipse {
-        let next = try searchLunarEclipse(after: eclipse.peak.adding(days: 10))
-        guard next.peak.tt > eclipse.peak.tt else { throw AstronomyError.internalError }
+        try nextLunarEclipse(afterPeak: eclipse.peak)
+    }
+
+    /// The lunar eclipse after the one whose reported peak is `peak`.
+    static func nextLunarEclipse(afterPeak peak: Engine.Time) throws -> LunarEclipse {
+        let next = try searchLunarEclipse(after: peak.adding(days: 10))
+        guard next.peak.tt > peak.tt else { throw AstronomyError.internalError }
         return next
     }
 

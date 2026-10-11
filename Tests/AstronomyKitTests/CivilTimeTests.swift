@@ -130,34 +130,25 @@ struct CivilTimeTests {
         }
     }
 
+    /// The Espenak-Meeus pieces meet at 1 January 0:00 UT of their years; the
+    /// engine's jump table (`EngineTimeConversionTests.jumps`) straddles each one.
+    private static func jump(at year: Double) throws -> EngineTimeConversionTests.Jump {
+        try #require(EngineTimeConversionTests.jumps.first { $0.model == .espenakMeeus && $0.boundary == year })
+    }
+
     @Test("TT inverse defines both signs of Delta T discontinuity")
     func deltaTJumpBoundaries() throws {
         AstronomyConfig.setDeltaTModel(.espenakMeeus)
         defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
 
-        func surroundingTimes(year: Double) -> (beforeUT: Double, beforeTT: Double, afterUT: Double, afterTT: Double) {
-            let boundary = 14 + (year - 2_000) * 365.24217
-            // Stay close to the jump while clearing cancellation in the
-            // decimal-year conversion used by the piecewise model.
-            let beforeUT = boundary - 1e-9
-            let afterUT = boundary + 1e-9
-            return (
-                beforeUT,
-                beforeUT + AstronomyConfig.deltaTEspenakMeeus(universalTime: beforeUT) / 86_400,
-                afterUT,
-                afterUT + AstronomyConfig.deltaTEspenakMeeus(universalTime: afterUT) / 86_400
-            )
-        }
-
         // The 1986 positive jump has no UT solution for TT values in its gap.
         // Such values clamp to the first representable UT after the jump.
-        let positive = surroundingTimes(year: 1_986)
-        #expect(positive.afterTT > positive.beforeTT)
+        let positive = try Self.jump(at: 1_986)
+        #expect(positive.isGap)
         let gapTT = positive.beforeTT + (positive.afterTT - positive.beforeTT) / 2
         let clamped = AstroTime(tt: gapTT)
         #expect(clamped.terrestrialTime == gapTT)
-        #expect(clamped.universalTime > positive.beforeUT)
-        #expect(clamped.universalTime < positive.afterUT)
+        #expect(clamped.universalTime == positive.afterUT)
         let restored = try JSONDecoder().decode(
             AstroTime.self,
             from: JSONEncoder().encode(clamped)
@@ -167,37 +158,36 @@ struct CivilTimeTests {
 
         // At 2005 the positive Delta T seed starts after the negative jump,
         // so fixed-point iteration reaches the later solution first.
-        let negative = surroundingTimes(year: 2_005)
-        #expect(negative.afterTT < negative.beforeTT)
+        let negative = try Self.jump(at: 2_005)
+        #expect(negative.isOverlap)
         let overlapTT = negative.afterTT + (negative.beforeTT - negative.afterTT) / 2
         let later = AstroTime(tt: overlapTT)
         let modeledTT =
             later.universalTime
             + AstronomyConfig.deltaTEspenakMeeus(universalTime: later.universalTime) / 86_400
         #expect(later.terrestrialTime == overlapTT)
-        #expect(later.universalTime > negative.beforeUT)
-        #expect(abs(modeledTT - overlapTT) <= 1e-12)
+        #expect(later.universalTime >= negative.afterUT)
+        #expect(abs(modeledTT - overlapTT) <= Engine.Time.inverseTolerance(tt: overlapTT))
     }
 
     @Test("Negative-Delta-T overlap follows the TT-seeded inverse")
-    func negativeDeltaTOverlap() {
+    func negativeDeltaTOverlap() throws {
         AstronomyConfig.setDeltaTModel(.espenakMeeus)
         defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
 
-        let requestedTT = -36_510.21703178009
-        let earlierUT = -36_510.21700051158
-        let laterUT = -36_510.216999488424
+        // 1900 is the only overlap where Delta T is negative: the initial
+        // ut = tt estimate lies before the jump, so iteration reaches the
+        // earlier solution first.
+        let jump = try Self.jump(at: 1_900)
+        #expect(jump.isOverlap)
+        #expect(AstronomyConfig.deltaTEspenakMeeus(universalTime: jump.afterUT) < 0)
+        let requestedTT = jump.afterTT + (jump.beforeTT - jump.afterTT) / 2
         let overlap = AstroTime(tt: requestedTT)
-
-        // Delta T is negative here, so the initial ut=tt estimate lies before
-        // the 1900 jump and iteration reaches the earlier solution first.
-        #expect(overlap.universalTime == earlierUT)
         #expect(overlap.terrestrialTime == requestedTT)
-        for validUT in [earlierUT, laterUT] {
-            let modeledTT =
-                validUT
-                + AstronomyConfig.deltaTEspenakMeeus(universalTime: validUT) / 86_400
-            #expect(modeledTT == requestedTT)
-        }
+        #expect(overlap.universalTime <= jump.beforeUT)
+        let modeledTT =
+            overlap.universalTime
+            + AstronomyConfig.deltaTEspenakMeeus(universalTime: overlap.universalTime) / 86_400
+        #expect(abs(modeledTT - requestedTT) <= Engine.Time.inverseTolerance(tt: requestedTT))
     }
 }

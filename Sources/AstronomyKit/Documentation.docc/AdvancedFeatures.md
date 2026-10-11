@@ -169,7 +169,7 @@ print("Pressure: \(Int(everest.pressure)) mbar")  // ~314 mbar (vs 1013 at sea l
 
 ## Fixed Stars
 
-> Note: `FixedStar` is an AstronomyKit addition. It wraps Astronomy Engine's `Astronomy_DefineStar()` with a thread-safe, Swift-idiomatic value type and mutex-protected calculation slots.
+> Note: `FixedStar` is an AstronomyKit addition: an immutable value type that carries its own catalog coordinates, so any number of stars can be used from any thread.
 
 Define and track fixed stars by their J2000 catalog coordinates.
 

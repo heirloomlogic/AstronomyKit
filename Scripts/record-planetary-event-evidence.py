@@ -150,7 +150,7 @@ def metadata():
     return dict(decodedPayloadBytes=10618464,
                 resourceScope='macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.',
                 fullWeightTT=[-36524.5,47846.5], blendTT=[[-36556.5,-36524.5],[47846.5,47878.5]],
-                limitations=['Six Saturn source roots and eight native-selected diagnostic windows, not a continuous event-time bound or an orbital event census.', 'Jupiter, Uranus and Neptune fail the unchanged sixty-second comparison and remain owned by #92.', 'Public C searches are unchanged until #96, including the pre-existing sampled-refinement stopping defect.', 'Outside the Saturn source window the retained model remains; global physical-center and event accuracy are not established.'])
+                limitations=['Six Saturn source roots and eight native-selected diagnostic windows, not a continuous event-time bound or an orbital event census.', 'Jupiter, Uranus and Neptune fail the unchanged sixty-second comparison and remain owned by #92.', 'The public searches run on these native searches since the #96 cutover; the parity rows record the facade conversion, not a comparison with the former C searches.', 'Outside the Saturn source window the retained model remains; global physical-center and event accuracy are not established.'])
 
 
 def main():
@@ -168,7 +168,7 @@ def main():
             raise ValueError('native evidence source bindings differ; recapture after source changes')
     else:
         release = args.capture/'saturn-assessment/measurement-release.json'
-        executable = ROOT/'.build/release/AstronomyKitTests.xctest/Contents/MacOS/AstronomyKitTests'
+        executable = ROOT/'.build/out/Products/Release/AstronomyKitTests.xctest/Contents/MacOS/AstronomyKitTests'
         captures = dict(debug=measurements(args.capture, 'debug'), release=measurements(args.capture, 'release'),
                         resources=json.loads(release.read_bytes()),
                         buildReceipts={c: re.search(r'Build complete! \([^\n]+', (args.capture/f'link3-full-{c}.log').read_text()).group(0) for c in ['debug', 'release']},

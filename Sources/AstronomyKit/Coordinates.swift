@@ -5,7 +5,6 @@
 //  Coordinate types for astronomical calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Vector3D
@@ -30,17 +29,6 @@ public struct Vector3D: Sendable, Equatable, Hashable {
         self.y = y
         self.z = z
         self.time = time
-    }
-
-    /// Creates a vector from the C structure.
-    init(_ raw: astro_vector_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.x = raw.x
-        self.y = raw.y
-        self.z = raw.z
-        self.time = AstroTime(raw: raw.t)
     }
 
     /// The magnitude (length) of the vector in AU.
@@ -97,14 +85,12 @@ extension Vector3D {
     ///   finite, and for a vector longer than about 1e154 AU, whose distance
     ///   overflows.
     public func toEcliptic() throws -> Ecliptic {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let result = Astronomy_Ecliptic(raw)
-        return try Ecliptic(result)
+        try Ecliptic(Engine.Ecliptic(engineVector(in: Engine.EQJ.self)))
     }
 
     /// Creates a Cartesian vector from spherical coordinates.
     public static func from(sphere: Spherical, at time: AstroTime) -> Vector3D {
-        Vector3D(Engine.Vector<Engine.EQJ>(sphere.engineSpherical, time: time.coordinateTime), at: time)
+        Vector3D(Engine.Vector<Engine.EQJ>(sphere.engineSpherical, time: time.engine), at: time)
     }
 
     /// Creates a Cartesian vector from horizontal coordinates.
@@ -116,7 +102,7 @@ extension Vector3D {
     ) -> Vector3D {
         Vector3D(
             Engine.Vector<Engine.HOR>(
-                horizon: horizon.engineSpherical, time: time.coordinateTime, refraction: refraction
+                horizon: horizon.engineSpherical, time: time.engine, refraction: refraction
             ),
             at: time
         )
@@ -163,16 +149,6 @@ public struct Spherical: Sendable, Equatable, Hashable {
         self.longitude = longitude
         self.distance = distance
     }
-
-    /// Creates coordinates from the C structure.
-    init(_ raw: astro_spherical_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.latitude = raw.lat
-        self.longitude = raw.lon
-        self.distance = raw.dist
-    }
 }
 
 extension Spherical: CustomStringConvertible {
@@ -206,17 +182,6 @@ public struct Equatorial: Sendable, Equatable, Hashable {
         self.rightAscension = rightAscension
         self.declination = declination
         self.distance = distance
-        self.time = time
-    }
-
-    /// Creates coordinates from the C structure.
-    init(_ raw: astro_equatorial_t, time: AstroTime) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.rightAscension = raw.ra
-        self.declination = raw.dec
-        self.distance = raw.dist
         self.time = time
     }
 
@@ -272,38 +237,6 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.longitude = longitude
         self.distance = distance
     }
-
-    /// Creates coordinates from the C structure, throwing
-    /// `AstronomyError.badTime` if a coordinate is not finite.
-    ///
-    /// Far from J2000 the rotation into the ecliptic of date is not finite, and
-    /// the series return vectors long enough that the distance, computed here
-    /// by squaring the components, overflows (#62).
-    init(_ raw: astro_ecliptic_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.latitude = raw.elat
-        self.longitude = raw.elon
-        self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
-        guard latitude.isFinite, longitude.isFinite, distance.isFinite else {
-            throw AstronomyError.badTime
-        }
-    }
-
-    /// Creates coordinates from a spherical C structure.
-    ///
-    /// Some engine functions (such as `Astronomy_EclipticGeoMoon`) report
-    /// ecliptic coordinates as a spherical triple rather than an
-    /// `astro_ecliptic_t`; the latitude, longitude, and distance map directly.
-    init(_ raw: astro_spherical_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.latitude = raw.lat
-        self.longitude = raw.lon
-        self.distance = raw.dist
-    }
 }
 
 extension Ecliptic: CustomStringConvertible {
@@ -317,7 +250,7 @@ extension Ecliptic: CustomStringConvertible {
 
 /// Geocentric ecliptic position and velocity in the true ecliptic and equinox of date.
 ///
-/// The position fields are bit-identical to the position function each state function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``, ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields are the time derivative of that position with respect to Terrestrial Time days, holding Delta T fixed. For the Sun and planets they are analytic and include the light-time derivative, the observer's motion under the engine's aberration approximation, and the rotation of the true ecliptic and equinox of date. Throughout 1900–2130 TT, Moon and Pluto states use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, Moon rates use a central difference of the legacy lunar series, and Pluto rates use the derivative of its legacy interpolant. These conventions do not establish independent rate accuracy.
+/// The position fields are bit-identical to the position function each state function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``, ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields are the time derivative of that position with respect to Terrestrial Time days, holding Delta T fixed. For the Sun and planets they are analytic and include the light-time derivative, the observer's motion under the engine's aberration approximation, and the rotation of the true ecliptic and equinox of date. Throughout 1900–2130 TT, Moon and Pluto states use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, Moon rates use the derivative of the lunar series, and Pluto rates use the derivative of its model's interpolant. These conventions do not establish independent rate accuracy.
 public struct EclipticState: Sendable, Equatable, Hashable {
     /// Ecliptic longitude in degrees (0 to 360).
     public let longitude: Double
@@ -357,20 +290,6 @@ public struct EclipticState: Sendable, Equatable, Hashable {
         self.latitudeRate = latitudeRate
         self.distanceRate = distanceRate
         self.time = time
-    }
-
-    /// Creates a state from the C structure.
-    init(_ raw: astro_ecliptic_state_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.longitude = raw.elon
-        self.latitude = raw.elat
-        self.distance = raw.dist
-        self.longitudeRate = raw.elon_rate
-        self.latitudeRate = raw.elat_rate
-        self.distanceRate = raw.dist_rate
-        self.time = AstroTime(raw: raw.t)
     }
 
     /// The position part of the state.
@@ -423,14 +342,6 @@ public struct Horizon: Sendable, Equatable, Hashable {
         self.declination = declination
     }
 
-    /// Creates coordinates from the C structure.
-    init(_ raw: astro_horizon_t) {
-        self.altitude = raw.altitude
-        self.azimuth = raw.azimuth
-        self.rightAscension = raw.ra
-        self.declination = raw.dec
-    }
-
     /// Whether the object is currently above the horizon.
     public var isAboveHorizon: Bool {
         altitude > 0
@@ -480,14 +391,6 @@ public enum Refraction: Sendable {
 
     /// JPL Horizons compatibility mode.
     case jplHorizons
-
-    var raw: astro_refraction_t {
-        switch self {
-        case .none: return REFRACTION_NONE
-        case .normal: return REFRACTION_NORMAL
-        case .jplHorizons: return REFRACTION_JPLHOR
-        }
-    }
 
     /// Calculates the atmospheric refraction offset for a given altitude.
     ///

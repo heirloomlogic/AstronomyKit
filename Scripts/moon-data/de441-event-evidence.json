@@ -47,7 +47,6 @@
   },
   "remainingDependencies": [
     "#92 planetary and observer search ports",
-    "#96 public cutover",
     "#184 broader qualification and closure"
   ],
   "results": {
@@ -3497,11 +3496,11 @@
       }
     ]
   },
-  "runtimeBaseRevision": "b8e384aaad33442f9e8360fa14f5e6b5f2b2794d",
+  "runtimeBaseRevision": "976da4bbcbdb2f38d484be46be2bd098b252fe23",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
-    "Scripts/generate-moon-events.py": "c01bccf692017bdcdec1b7393efef5e39ab9685182cf982119ed34b7ca114745",
+    "Scripts/generate-moon-events.py": "d24bbde8b8271e6e7f00ae01ffac081d0be86a81e890e90b2429096958c07932",
     "Scripts/moon-data/apparent-phase-references.json": "9b8f30dd4201424391e4722ee9a78e2bd7f5dd2802b485cc878f35bd65c8241d",
     "Scripts/moon-data/de441-compact-evidence.json": "2b5d686303a7b638ae0ee6512574124ef22e7e1c77f9cf871397bbfc82307182",
     "Scripts/moon-data/de441-event-fixtures.json": "94f77aad56bb3e136edcd7a04c04113f723cbd10371ea88c586f4504d2375ea6",
@@ -3510,7 +3509,7 @@
     "Scripts/moon-data/horizons-apparent-phase-sun.json": "ca66b540ea33705ca5a320270eb13b036f6e1af1a10428f32142420c78f90329",
     "Scripts/moon-data/horizons-apparent-phase-sun.query.json": "592710fbc080ca3dd80be60feac5d3da957a35fd44a3041124b54bd88767d38c",
     "Scripts/test_generate_moon_events.py": "503376c732b9f23c2b24d29c14f0f261f2d4d104ed9e73196e2b776a85cfba66",
-    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "f35841fbd3d428fa36736e8731b7a94fe61f76ad82f84555d103609ba33c778d",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "385c5d018a7d1ded918a215775b32977003803b797e83be20d7796c43856d88b",
     "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "8eae705bc10b7870b4494c880c3e0524637e5b45e9fb210710df9d28a05968ea",
     "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift": "4a9eadfaae13399368825e926d9ff5667a6d26b21bf0d9f80f71b061c959dc33",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "4e94e32dd5b782fa1fd922697d4cfa359493808d46975369304beb5bda671a6c",

@@ -5,8 +5,6 @@
 //  Seasonal equinox and solstice calculations.
 //
 
-import CLibAstronomy
-
 /// The four seasonal events (equinoxes and solstices) for a calendar year.
 public struct Seasons: Sendable, Equatable {
     /// The March equinox (spring in the Northern Hemisphere).
@@ -21,28 +19,25 @@ public struct Seasons: Sendable, Equatable {
     /// The December solstice (winter in the Northern Hemisphere).
     public let decemberSolstice: AstroTime
 
-    /// Creates a seasons instance from the C structure.
-    init(_ raw: astro_seasons_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.marchEquinox = AstroTime(raw: raw.mar_equinox)
-        self.juneSolstice = AstroTime(raw: raw.jun_solstice)
-        self.septemberEquinox = AstroTime(raw: raw.sep_equinox)
-        self.decemberSolstice = AstroTime(raw: raw.dec_solstice)
+    /// Creates a seasons instance from the engine's.
+    init(_ seasons: Engine.Events.Seasons) {
+        self.marchEquinox = AstroTime(seasons.marchEquinox)
+        self.juneSolstice = AstroTime(seasons.juneSolstice)
+        self.septemberEquinox = AstroTime(seasons.septemberEquinox)
+        self.decemberSolstice = AstroTime(seasons.decemberSolstice)
     }
 
     /// Calculates the seasonal events for a given year.
     ///
+    /// The four times carry the process default Delta T model at the moment
+    /// of the call.
+    ///
     /// - Parameter year: The calendar year (e.g., 2025).
     /// - Returns: The four seasonal events for that year.
-    /// - Throws: `AstronomyError` if the calculation fails.
+    /// - Throws: `AstronomyError.invalidParameter` if `year` is outside the
+    ///   `Int32` range, or another `AstronomyError` if the calculation fails.
     public static func forYear(_ year: Int) throws -> Seasons {
-        guard let cYear = Int32(exactly: year) else {
-            throw AstronomyError.invalidParameter
-        }
-        let result = Astronomy_Seasons(cYear)
-        return try Seasons(result)
+        Seasons(try Engine.Events.seasons(year: year, deltaTModel: AstronomyConfig.deltaTModel))
     }
 
     /// Returns all four events as an array, in chronological order.

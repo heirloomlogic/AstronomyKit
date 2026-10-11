@@ -136,9 +136,13 @@ extension Engine.Events {
     }
 
     static func nextMoonQuarter(after quarter: LunarQuarter) throws -> LunarQuarter {
-        let next = try searchMoonQuarter(after: quarter.time.adding(days: 6))
-        guard next.phase.rawValue == (quarter.phase.rawValue + 1) % LunarPhase.allCases.count,
-            next.time.tt > quarter.time.tt
+        try nextMoonQuarter(after: quarter.phase, at: quarter.time)
+    }
+
+    /// The quarter after the quarter `phase` at `time`: the next phase in order, later than `time`.
+    static func nextMoonQuarter(after phase: LunarPhase, at time: Engine.Time) throws -> LunarQuarter {
+        let next = try searchMoonQuarter(after: time.adding(days: 6))
+        guard next.phase.rawValue == (phase.rawValue + 1) % LunarPhase.allCases.count, next.time.tt > time.tt
         else { throw AstronomyError.internalError }
         return next
     }
@@ -169,8 +173,13 @@ extension Engine.Events {
     }
 
     static func nextLunarNode(after node: LunarNode) throws -> LunarNode {
-        let next = try searchLunarNode(after: node.time.adding(days: nodeStepDays))
-        guard next.kind != node.kind, next.time.tt > node.time.tt else { throw AstronomyError.internalError }
+        try nextLunarNode(after: node.kind, at: node.time)
+    }
+
+    /// The node after the `kind` crossing at `time`: the other kind, later than `time`.
+    static func nextLunarNode(after kind: LunarNodeKind, at time: Engine.Time) throws -> LunarNode {
+        let next = try searchLunarNode(after: time.adding(days: nodeStepDays))
+        guard next.kind != kind, next.time.tt > time.tt else { throw AstronomyError.internalError }
         return next
     }
 
@@ -209,8 +218,13 @@ extension Engine.Events {
     }
 
     static func nextLunarApsis(after apsis: LunarApsis) throws -> LunarApsis {
-        let next = try searchLunarApsis(after: apsis.time.adding(days: 11))
-        guard next.kind != apsis.kind, next.time.tt > apsis.time.tt else { throw AstronomyError.internalError }
+        try nextLunarApsis(after: apsis.kind, at: apsis.time)
+    }
+
+    /// The apsis after the `kind` apsis at `time`: the other kind, later than `time`.
+    static func nextLunarApsis(after kind: LunarApsisKind, at time: Engine.Time) throws -> LunarApsis {
+        let next = try searchLunarApsis(after: time.adding(days: 11))
+        guard next.kind != kind, next.time.tt > time.tt else { throw AstronomyError.internalError }
         return next
     }
 

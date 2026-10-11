@@ -5,8 +5,6 @@
 //  Lagrange point calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Lagrange Point ID
 
 /// Identifies one of the five Lagrange points.
@@ -73,28 +71,6 @@ public struct StateVector: Sendable, Equatable {
         self.velocity = velocity
         self.time = time
     }
-
-    /// Creates a state vector from the C structure.
-
-    init(_ raw: astro_state_vector_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        let t = AstroTime(raw: raw.t)
-        self.time = t
-        self.position = Vector3D(
-            x: raw.x,
-            y: raw.y,
-            z: raw.z,
-            time: t
-        )
-        self.velocity = Vector3D(
-            x: raw.vx,
-            y: raw.vy,
-            z: raw.vz,
-            time: t
-        )
-    }
 }
 
 extension StateVector: CustomStringConvertible {
@@ -145,7 +121,7 @@ public enum LagrangePoint {
     ) throws -> StateVector {
         StateVector(
             try Engine.Lagrange.calculate(
-                point: point, at: time.coordinateTime, majorBody: majorBody, minorBody: minorBody), at: time)
+                point: point, at: time.engine, majorBody: majorBody, minorBody: minorBody), at: time)
     }
 
     /// Calculates a Lagrange point from pre-computed body states and masses.
@@ -182,8 +158,8 @@ public enum LagrangePoint {
     ) throws -> StateVector {
         StateVector(
             try Engine.Lagrange.calculateFast(
-                point: point, majorState: majorState.engineState(at: majorState.time.coordinateTime),
-                majorMass: majorMass, minorState: minorState.engineState(at: minorState.time.coordinateTime),
+                point: point, majorState: majorState.engineState(at: majorState.time.engine),
+                majorMass: majorMass, minorState: minorState.engineState(at: minorState.time.engine),
                 minorMass: minorMass), at: majorState.time)
     }
 }
