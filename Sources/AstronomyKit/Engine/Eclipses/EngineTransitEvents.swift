@@ -1,6 +1,16 @@
 import Foundation
 
 extension Engine.Events {
+    private struct TransitConjunctionTimeKey: Hashable {
+        let utBits: UInt64
+        let ttBits: UInt64
+
+        init(_ time: Engine.Time) {
+            utBits = time.ut.bitPattern
+            ttBits = time.tt.bitPattern
+        }
+    }
+
     struct Transit: Sendable {
         let body: CelestialBody
         let start: Engine.Time
@@ -44,12 +54,27 @@ extension Engine.Events {
         return result
     }
 
-    static func canonicalTransitConjunction(of body: CelestialBody, near candidate: Engine.Time) throws -> Engine.Time {
+    static func canonicalTransitConjunction(
+        of body: CelestialBody, near candidate: Engine.Time,
+        relativeLongitude: ((Engine.Time) throws -> Double)? = nil
+    ) throws -> Engine.Time {
         _ = try transitRadius(of: body)
+        let evaluate =
+            relativeLongitude ?? { time in
+                let planet = try Engine.Positions.eclipticLongitude(of: body, at: time)
+                let earth = try Engine.Positions.eclipticLongitude(of: .earth, at: time)
+                return Engine.longitudeOffset(planet - earth)
+            }
+        var latest: (key: TransitConjunctionTimeKey, value: Double)?
+        var previous: (key: TransitConjunctionTimeKey, value: Double)?
         return try canonicalEclipsePhase(candidate) { time in
-            let planet = try Engine.Positions.eclipticLongitude(of: body, at: time)
-            let earth = try Engine.Positions.eclipticLongitude(of: .earth, at: time)
-            return Engine.longitudeOffset(planet - earth)
+            let key = TransitConjunctionTimeKey(time)
+            if let latest, latest.key == key { return latest.value }
+            if let previous, previous.key == key { return previous.value }
+            let value = try evaluate(time)
+            previous = latest
+            latest = (key, value)
+            return value
         }
     }
 

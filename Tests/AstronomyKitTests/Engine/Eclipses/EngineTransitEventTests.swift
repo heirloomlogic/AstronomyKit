@@ -13,6 +13,16 @@ import Glibc
 struct EngineTransitEventTests {
     typealias Events = Engine.Events
 
+    private struct TimeBits: Hashable {
+        let ut: UInt64
+        let tt: UInt64
+
+        init(_ time: Engine.Time) {
+            ut = time.ut.bitPattern
+            tt = time.tt.bitPattern
+        }
+    }
+
     static func body(_ name: String) -> CelestialBody { name == "mercury" ? .mercury : .venus }
 
     @Test("NASA UT contacts and geocentric minimum separation retain their allowances")
@@ -246,6 +256,34 @@ struct EngineTransitEventTests {
                     #expect(first.tt == other.tt)
                 }
             }
+        }
+    }
+
+    @Test("Canonical transit refinement reuses exact longitude evaluations")
+    func conjunctionMemoization() throws {
+        for body in [CelestialBody.mercury, .venus] {
+            let found = try Events.searchRelativeLongitude(
+                of: body, targetDegrees: 0, after: Engine.Time(tt: 0, deltaTModel: .espenakMeeus))
+            func longitude(_ time: Engine.Time) throws -> Double {
+                let planet = try Engine.Positions.eclipticLongitude(of: body, at: time)
+                let earth = try Engine.Positions.eclipticLongitude(of: .earth, at: time)
+                return Engine.longitudeOffset(planet - earth)
+            }
+            var directCalls: [TimeBits: Int] = [:]
+            let direct = try Events.canonicalEclipsePhase(found) { time in
+                directCalls[TimeBits(time), default: 0] += 1
+                return try longitude(time)
+            }
+            var memoizedCalls: [TimeBits: Int] = [:]
+            let memoized = try Events.canonicalTransitConjunction(of: body, near: found) { time in
+                memoizedCalls[TimeBits(time), default: 0] += 1
+                return try longitude(time)
+            }
+            #expect(memoized.tt == direct.tt)
+            #expect(directCalls.values.contains { $0 > 1 })
+            #expect(memoizedCalls.values.allSatisfy { $0 == 1 })
+            #expect(Set(memoizedCalls.keys) == Set(directCalls.keys))
+            #expect(memoizedCalls.values.reduce(0, +) < directCalls.values.reduce(0, +))
         }
     }
 

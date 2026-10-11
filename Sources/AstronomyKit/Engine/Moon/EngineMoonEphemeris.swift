@@ -76,10 +76,13 @@ extension Engine.MoonEphemeris {
     /// the velocity is scaled by ``Engine/TDB/rate(tt:)``, and both are
     /// rotated by ``Engine/FrameBias/icrsToEqj``.
     static func state(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-        guard let (position, velocity) = evaluate(tt: tt) else { return nil }
-        let rate = Engine.TDB.rate(tt: tt)
+        guard tt.isFinite else { return nil }
+        let tdb = Engine.TDB.offsetAndRate(tt: tt)
+        guard let (position, velocity) = evaluate(tdb: tt + tdb.offsetSeconds / Engine.secondsPerDay) else {
+            return nil
+        }
         let bias = Engine.FrameBias.icrsToEqj
-        return (bias.apply(to: position), bias.apply(to: velocity * rate))
+        return (bias.apply(to: position), bias.apply(to: velocity * tdb.rate))
     }
 
     /// The position of ``state(tt:)`` alone, without the TDB rate it needs

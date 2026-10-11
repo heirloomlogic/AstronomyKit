@@ -39,19 +39,22 @@ extension Engine.TDB {
     /// The time argument is TT, not TDB; the difference this makes is below
     /// a picosecond.
     static func offsetSeconds(tt: Double) -> Double {
-        offsetSeconds(date1: 2_451_545, date2: tt, ut: 0, longitude: 0, u: 0, v: 0)
+        fairheadAndJPL(at: tt / 365_250, derivative: false).offsetSeconds
     }
 
-    /// The derivative of TDB with respect to TT at `tt` days of TT: one plus
-    /// the change of ``offsetSeconds(tt:)`` across ±0.01 day, divided by
-    /// 0.02 day in seconds.
+    /// The derivative of TDB with respect to TT at `tt` days of TT.
     ///
-    /// It scales a velocity per TDB day to one per TT day. The largest term
-    /// has a period of a year, so the 0.01-day step loses less than 1e-16 of
-    /// the rate to truncation.
+    /// It scales a velocity per TDB day to one per TT day. The derivative is
+    /// evaluated with the offset in the same pass through the periodic series.
     static func rate(tt: Double) -> Double {
-        let step = 0.01
-        return 1 + (offsetSeconds(tt: tt + step) - offsetSeconds(tt: tt - step)) / (2 * step * Engine.secondsPerDay)
+        offsetAndRate(tt: tt).rate
+    }
+
+    /// The geocentric TDB − TT offset and TDB/TT rate from one series evaluation.
+    static func offsetAndRate(tt: Double) -> (offsetSeconds: Double, rate: Double) {
+        let t = tt / 365_250
+        let series = fairheadAndJPL(at: t, derivative: true)
+        return (series.offsetSeconds, 1 + series.ratePerMillennium / (365_250 * Engine.secondsPerDay))
     }
 
     /// TDB − TT in seconds, `iauDtdb` in full.
@@ -93,20 +96,55 @@ extension Engine.TDB {
         wt -= 1.31840e-10 * v * cos(elsun)
         wt += 3.17679e-10 * u * sin(tsol)
 
+        return wt + fairheadAndJPL(at: t, derivative: false).offsetSeconds
+    }
+
+    /// The geocentric periodic offset and its derivative with respect to Julian millennia.
+    private static func fairheadAndJPL(
+        at t: Double, derivative needsDerivative: Bool
+    ) -> (offsetSeconds: Double, ratePerMillennium: Double) {
         // Fairhead and Bretagnon, each power's terms summed last to first, as SOFA does.
-        let sums = terms.map { group in
-            group.reversed().reduce(0.0) { $0 + $1.amplitude * sin($1.frequency * t + $1.phase) }
+        func sum(_ group: [Term]) -> (value: Double, derivative: Double) {
+            var value = 0.0
+            var derivative = 0.0
+            for term in group.reversed() {
+                let argument = term.frequency * t + term.phase
+                value += term.amplitude * sin(argument)
+                if needsDerivative { derivative += term.amplitude * term.frequency * cos(argument) }
+            }
+            return (value, derivative)
         }
-        let wf = t * (t * (t * (t * sums[4] + sums[3]) + sums[2]) + sums[1]) + sums[0]
+        let s0 = sum(terms[0])
+        let s1 = sum(terms[1])
+        let s2 = sum(terms[2])
+        let s3 = sum(terms[3])
+        let s4 = sum(terms[4])
+        func include(_ component: (value: Double, derivative: Double), in value: inout Double, rate: inout Double) {
+            rate = rate * t + value + component.derivative
+            value = value * t + component.value
+        }
+        var wf = s4.value
+        var wfRate = s4.derivative
+        include(s3, in: &wf, rate: &wfRate)
+        include(s2, in: &wf, rate: &wfRate)
+        include(s1, in: &wf, rate: &wfRate)
+        include(s0, in: &wf, rate: &wfRate)
 
         // JPL planetary masses instead of IAU.
-        var wj = 0.00065e-6 * sin(6069.776754 * t + 4.021194)
-        wj += 0.00033e-6 * sin(213.299095 * t + 5.543132)
-        wj += -0.00196e-6 * sin(6208.294251 * t + 5.696701)
-        wj += -0.00173e-6 * sin(74.781599 * t + 2.435900)
+        var wj = 0.0
+        var wjRate = 0.0
+        func addJPL(_ amplitude: Double, _ frequency: Double, _ phase: Double) {
+            let argument = frequency * t + phase
+            wj += amplitude * sin(argument)
+            if needsDerivative { wjRate += amplitude * frequency * cos(argument) }
+        }
+        addJPL(0.00065e-6, 6069.776754, 4.021194)
+        addJPL(0.00033e-6, 213.299095, 5.543132)
+        addJPL(-0.00196e-6, 6208.294251, 5.696701)
+        addJPL(-0.00173e-6, 74.781599, 2.435900)
         wj += 0.03638e-6 * t * t
-
-        return wt + wf + wj
+        wjRate += 2 * 0.03638e-6 * t
+        return (wf + wj, wfRate + wjRate)
     }
 
     // ERFA's 2π, the same double as 2 * Double.pi.

@@ -37,12 +37,13 @@ extension Engine.PlutoEphemeris {
     /// order above, as the Moon's records are read.
     static func heliocentricState(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         guard tt.isFinite else { return nil }
-        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
         guard let pluto = barycenter.evaluate(tdb: tdb),
             let sun = barycenterFromSun.evaluate(tdb: tdb),
             let offset = center.evaluate(tdb: tdb)
         else { return nil }
-        let rate = Engine.TDB.rate(tt: tt)
+        let rate = conversion.rate
         let bias = Engine.FrameBias.icrsToEqj
         return (
             bias.apply(to: pluto.position) + bias.apply(to: sun.position) + bias.apply(to: offset.position),
