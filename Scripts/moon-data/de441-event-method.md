@@ -1,6 +1,6 @@
 # Bounded native Moon event qualification
 
-This final #184 chain link tests actual roots of native Moon event functions. It adds no production search API: #92 owns those ports, and #96 owns the public C-to-Swift cutover. #184 stays open. The tests establish agreement at published events and in twenty fixed windows; they do not establish full-range event completeness or absolute velocity accuracy.
+This #184 chain link tests actual roots of native Moon event functions. It added no production search API; #92 owned those ports, and #96 owned the public C-to-Swift cutover. The tests establish agreement at published events and in twenty fixed windows; they do not establish full-range event completeness or absolute velocity accuracy.
 
 ## Source and windows
 
@@ -47,4 +47,4 @@ MOON_PUBLISHED_EVENT_OUTPUT="$PWD/.context/issue-184/link4-published.json" MOON_
 python3 Scripts/generate-moon-events.py --collect-results .context/issue-184/link4
 ```
 
-The source replay needs the verified link-2 cache; ordinary CI uses the pinned fixture offline. Runtime measurements from link 3 remain applicable to unchanged production code. Production search behavior, public API integration and a decision about broader absolute state/event accuracy remain acceptance work for #92, #96 and #184.
+The source replay needs the verified link-2 cache; ordinary CI uses the pinned fixture offline. Runtime measurements from link 3 remain applicable to unchanged production code. The public API integration and archived position gates are complete. Broader absolute state and event accuracy remains outside the evidence recorded here.
