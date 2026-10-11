@@ -8,7 +8,7 @@ import re
 
 from intervals import Interval as I, DeltaT, equatorial_matrix, expression, year_start
 from certify_light_time import constants as convergence_constants, C
-from numerics import ROOT, ENGINE, record, earth_model, sqrt_interval, upward, downward, BINDINGS, source_hashes, check_hashes
+from numerics import ROOT, ENGINE, record, earth_model, sqrt_interval, upward, downward, BINDINGS, source_hashes, check_hashes, unpack
 
 
 def pi_interval():
@@ -40,21 +40,45 @@ def frame_rates():
     obliquity = rate(polys[0], t)/3600/36525
     precession = sum(rate(poly,t) for poly in polys[1:])/3600/36525
     text = (ROOT/(ENGINE+'Orientation/EngineNutation.swift')).read_text()
-    arguments = text.split('delaunayArguments:',1)[1].split('    ]',1)[0]
-    frequencies = [coefficients(row)[1]*pi/648000 for row in re.findall(r'\(([-+0-9_., ]+)\)', arguments)]
-    table = (ROOT/(ENGINE+'Orientation/Generated/IAU2000BTerms.swift')).read_text()
-    terms = [coefficients(row) for row in re.findall(r'Term\(([^)]+)\)', table)]
-    if len(frequencies) != 5 or len(terms) != 77:
+    arguments = text.split('luniSolarArguments: [[Double]] = [',1)[1].split('    ]',1)[0]
+    luni_solar_rates = [rate(coefficients(row),t)*pi/648000 for row in re.findall(r'\[([-+0-9_., ]+)\]', arguments)]
+    arguments = text.split('planetaryArguments:',1)[1].split('    ]',1)[0]
+    planetary_rates = [abs(coefficients(row)[1]) for row in re.findall(r'\(([-+0-9_., ]+)\),', arguments)]
+    match = re.search(r'generalPrecession = \(linear: ([0-9_.]+), quadratic: ([0-9_.]+)\)', text)
+    p0,p1 = [Q(value.replace('_','')) for value in match.groups()]
+    planetary_rates.append(p0+2*p1*t)
+    table = (ROOT/(ENGINE+'Orientation/Generated/IAU2000ATerms.swift')).read_text()
+    def rows(block, width):
+        values = [Q(value) for value in unpack(block)]
+        return [values[i:i+width] for i in range(0, len(values), width)]
+    luni_solar_block, planetary_block = table.split('static let planetaryTerms', 1)
+    luni_solar, planetary = rows(luni_solar_block, 11), rows(planetary_block, 17)
+    factor, j2 = [abs(Q(re.search(r'static let '+name+r' = (\S+)\n', table)[1])) for name in ['longitudeFactor','j2Rate']]
+    if len(luni_solar_rates) != 5 or len(planetary_rates) != 13 or len(luni_solar) != 678 or len(planetary) != 687:
         raise ValueError('Nutation data layout changed')
-    longitude, oblique, amplitude = Q(0), Q(0), Q('.000135')/3600
-    for row in terms:
-        argument_rate = sum(abs(n*w) for n,w in zip(row[:5],frequencies))
+    # IAU 2000A in 0.1 microarcsecond and per century: value and rate bounds.
+    longitude00, oblique00, amplitude00, obliquity_amplitude00 = Q(0), Q(0), Q(0), Q(0)
+    for row in luni_solar:
+        argument_rate = sum(abs(n*w) for n,w in zip(row[:5],luni_solar_rates) if n)
         ps,pst,pc,ec,ect,es = row[5:]
         p = abs(ps)+abs(pst)*t+abs(pc)
         e = abs(ec)+abs(ect)*t+abs(es)
-        longitude += (p*argument_rate+abs(pst))*Q('1e-7')/3600/36525
-        oblique += (e*argument_rate+abs(ect))*Q('1e-7')/3600/36525
-        amplitude += p*Q('1e-7')/3600
+        longitude00 += p*argument_rate+abs(pst)
+        oblique00 += e*argument_rate+abs(ect)
+        amplitude00 += p
+        obliquity_amplitude00 += e
+    for row in planetary:
+        argument_rate = sum(abs(n*w) for n,w in zip(row[:13],planetary_rates) if n)
+        ps,pc,es,ec = row[13:]
+        longitude00 += (abs(ps)+abs(pc))*argument_rate
+        oblique00 += (abs(es)+abs(ec))*argument_rate
+        amplitude00 += abs(ps)+abs(pc)
+        obliquity_amplitude00 += abs(es)+abs(ec)
+    # The IAU 2006 factors 1 + factor + j2·t and 1 + j2·t, and their t derivative j2.
+    unit = Q('1e-7')/3600
+    longitude = ((longitude00*(1+factor+j2*t)+amplitude00*j2)*unit/36525)
+    oblique = ((oblique00*(1+j2*t)+obliquity_amplitude00*j2)*unit/36525)
+    amplitude = amplitude00*(1+factor+j2*t)*unit
     text = (ROOT/(ENGINE+'Orientation/EngineEquationOfEquinoxes.swift')).read_text()
     argument_polys = [coefficients(row) for row in re.findall(r'= turn\(([^)]+)\)',text)]
     argument_rates = [rate(poly,t)*pi/648000 for poly in argument_polys]

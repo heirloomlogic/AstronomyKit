@@ -2,7 +2,7 @@
 
 Twenty fresh Horizons observation epochs test the native geocentric consumer beyond the direct state samples in the [integration evidence](de441-native-method.md). All three direction comparisons use the owner's 1′ target. The existing 1.5′ allowances for older fixtures do not apply here. The per-epoch measurements and source bindings are in [observer-evidence.json](observer-evidence.json).
 
-Debug and release produce identical residuals. Their maxima are 0.001053′ for astrometric ICRF, 0.001004′ for apparent ICRF, and 0.152969′ for apparent equator-of-date directions. These are sampled results. They do not establish continuous full-range physical-center accuracy, velocity accuracy, event timing, or public API behavior. #190 remains open; #96 owns public cutover and #92 owns production searches.
+Debug and release produce identical residuals. Their maxima are 0.001053′ for astrometric ICRF, 0.001004′ for apparent ICRF, and 0.149128′ for apparent equator-of-date directions. These are sampled results. They do not establish continuous full-range physical-center accuracy, velocity accuracy, event timing, or public API behavior. #190 remains open; #96 owns public cutover and #92 owns production searches.
 
 ## Sources and time scales
 

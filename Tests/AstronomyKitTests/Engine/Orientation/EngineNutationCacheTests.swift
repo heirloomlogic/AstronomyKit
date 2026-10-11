@@ -126,4 +126,52 @@ struct EngineNutationCacheTests {
         #expect(mismatches.count == 0)
         #expect(cache.statistics.hits + cache.statistics.misses == lookups)
     }
+
+    /// Per-call and cached latency, written to the JSON file that
+    /// `NUTATION_LATENCY_OUTPUT` names and never asserted. Run it in Release:
+    /// `NUTATION_LATENCY_OUTPUT=<file> swift test -c release --filter EngineNutationCacheTests/latency`.
+    ///
+    /// Each of five rounds evaluates the series at 4,096 instants spread from
+    /// about −2000 to 6000, through a cache with no capacity, then reads 32
+    /// cached instants 2²⁰ times in all.
+    @Test(.enabled(if: ProcessInfo.processInfo.environment["NUTATION_LATENCY_OUTPUT"] != nil))
+    func latency() throws {
+        func nanoseconds(_ duration: Duration) -> Double {
+            Double(duration.components.seconds) * 1e9 + Double(duration.components.attoseconds) * 1e-9
+        }
+        let clock = ContinuousClock()
+        let instants = (0..<4_096).map { -1_460_999.625 + Double($0) * 713.5 }
+        let (uncached, _) = Self.makeCache(capacity: 0)
+        let (cached, _) = Self.makeCache()
+        for tt in instants.prefix(32) {
+            _ = Engine.Nutation.angles(tt: tt, cache: cached)
+        }
+        let lookups = 1 << 20
+        var checksum = 0.0
+        var series: [Double] = []
+        var hits: [Double] = []
+        for _ in 0..<5 {
+            let seriesTime = clock.measure {
+                for tt in instants {
+                    checksum += Engine.Nutation.angles(tt: tt, cache: uncached).longitude
+                }
+            }
+            series.append(nanoseconds(seriesTime) / Double(instants.count))
+            let hitTime = clock.measure {
+                for index in 0..<lookups {
+                    checksum += Engine.Nutation.angles(tt: instants[index & 31], cache: cached).longitude
+                }
+            }
+            hits.append(nanoseconds(hitTime) / Double(lookups))
+        }
+        #expect(cached.statistics.misses == 32)
+        let result: [String: Any] = [
+            "schemaVersion": 1, "seriesCalls": instants.count, "cachedLookups": lookups,
+            "seriesNanosecondsPerCall": series, "cachedNanosecondsPerLookup": hits,
+            "checksum": checksum, "host": ProcessInfo.processInfo.operatingSystemVersionString,
+        ]
+        let path = try #require(ProcessInfo.processInfo.environment["NUTATION_LATENCY_OUTPUT"])
+        try JSONSerialization.data(withJSONObject: result, options: [.prettyPrinted, .sortedKeys]).write(
+            to: URL(fileURLWithPath: path))
+    }
 }

@@ -57,6 +57,10 @@ def finite(value):
     return not isinstance(value, (int, float)) or math.isfinite(value)
 
 
+# Debug and Release libm rounding moves a native event time by up to this many days.
+TIME_TOLERANCE_DAYS = 2.0e-10
+
+
 def near(first, second, path=()):
     if isinstance(first, dict):
         return first.keys() == second.keys() and all(near(first[key], second[key], path + (key,)) for key in first)
@@ -64,12 +68,14 @@ def near(first, second, path=()):
         return len(first) == len(second) and all(near(a, b, path + (str(index),)) for index, (a, b) in enumerate(zip(first, second)))
     if isinstance(first, float):
         name = path[-1] if path else ""
+        # A residual in seconds is a peak time differenced from a source time,
+        # so it gets the same allowance as the peak time itself.
         if name.endswith("Seconds"):
-            unit_tolerance = 1.0e-5
+            unit_tolerance = TIME_TOLERANCE_DAYS * 86_400
         elif name.endswith("Minutes"):
             unit_tolerance = 1.0e-8
         elif name in {"tt", "ut"} or name.endswith(("TT", "UT")):
-            unit_tolerance = 2.0e-10
+            unit_tolerance = TIME_TOLERANCE_DAYS
         else:
             unit_tolerance = 1.0e-10
         return isinstance(second, (int, float)) and abs(first - second) <= max(unit_tolerance, 16 * math.ulp(first))

@@ -41,6 +41,8 @@ class EclipseEvidenceTests(unittest.TestCase):
 
     def test_debug_release_time_roundoff_uses_field_units(self):
         self.assertTrue(RECORD.near({"peakResidualSeconds": 1.0}, {"peakResidualSeconds": 1.000001}))
+        self.assertTrue(RECORD.near({"peakResidualSeconds": 1.0}, {"peakResidualSeconds": 1.000015}))
+        self.assertFalse(RECORD.near({"peakResidualSeconds": 1.0}, {"peakResidualSeconds": 1.00002}))
         self.assertTrue(RECORD.near({"semiDurationMinutes": 1.0}, {"semiDurationMinutes": 1.000000001}))
         self.assertTrue(RECORD.near({"nativePeakTT": 8_000.0}, {"nativePeakTT": 8_000.0 + 1.5e-10}))
         self.assertFalse(RECORD.near({"peakResidualSeconds": 1.0}, {"peakResidualSeconds": 1.0001}))
