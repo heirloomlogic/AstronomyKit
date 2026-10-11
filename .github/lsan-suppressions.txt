@@ -7,8 +7,19 @@
 # None of it is AstronomyKit's memory: the 579 tests all pass, then LSan fails
 # the job at teardown.
 #
-# The job exists to catch memory errors — out-of-bounds reads and writes in the
-# vendored C, use-after-free, bad frees. Suppressing this harness leak keeps all
-# of that; it only silences the one allocation site the package does not own.
+# The job exists to catch memory errors in native Swift storage and unsafe
+# implementation boundaries. Suppressing this harness leak keeps that signal;
+# it only silences the one allocation site the package does not own.
 # Drop this file if swift-corelibs-xctest ever stops leaking.
 leak:libXCTest.so
+
+# Swift 6.2.1 on Linux reports lazily initialized Foundation Data storage as
+# leaked at process exit even while it remains reachable through its static
+# initializer. These six entries name the generated packed-table initializers;
+# they do not suppress Engine.unpackBytes, Foundation, or unrelated storage.
+leak:MoonDE441O4data_WZ
+leak:PlutoDE441O5pluto_WZ
+leak:PlutoDE441O3sun_WZ
+leak:SaturnEphemerisO10barycenter_WZ
+leak:SaturnEphemerisO6offset_WZ
+leak:SaturnEphemerisO3sun_WZ
