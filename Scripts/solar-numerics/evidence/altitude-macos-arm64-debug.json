@@ -5,12 +5,12 @@
     "continuous arithmetic or libm bounds",
     "other compilers or architectures"
   ],
-  "gitHead": "976da4bbcbdb2f38d484be46be2bd098b252fe23",
-  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite NativeAltitudeProbe started.\n\udbc1\udfc8  Test export() started.\n\udbc4\udc5b  Test export() passed after 0.395 seconds.\n\udbc4\udc5b  Suite NativeAltitudeProbe passed after 0.395 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.396 seconds.\n        2.62 real         1.56 user         0.62 sys\n           120700928  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n               62978  page reclaims\n                2572  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 152  voluntary context switches\n               11636  involuntary context switches\n          4856794601  instructions retired\n          1845303559  cycles elapsed\n            26985168  peak memory footprint\n",
-  "nativeProcessSecondsIncludingRunner": 2.658484374987893,
-  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "gitHead": "3945a67950aa9754b41254a905daae276eb40987",
+  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite NativeAltitudeProbe started.\n\udbc1\udfc8  Test export() started.\n\udbc4\udc5b  Test export() passed after 0.230 seconds.\n\udbc4\udc5b  Suite NativeAltitudeProbe passed after 0.231 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.231 seconds.\n        3.14 real         2.26 user         0.80 sys\n           121094144  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n              131410  page reclaims\n                2358  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 203  voluntary context switches\n                3350  involuntary context switches\n          5161594785  instructions retired\n          1729438567  cycles elapsed\n            27050704  peak memory footprint\n",
+  "nativeProcessSecondsIncludingRunner": 3.1577632499975152,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
   "precisionDecimalDigits": 80,
-  "pythonVersion": "3.14.7",
+  "pythonVersion": "3.12.12",
   "referenceLibrary": "mpmath 1.3.0",
   "requests": [
     {
@@ -131190,7 +131190,7 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "661a2547f2e7b1eeb6dcf57f679fc8bc9837964e30df84f78871c07d58f5ddeb",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "b215e909949db0a0e2fabd91faead196eb92d00dc88147290a96f64c41e38079",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
     "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",

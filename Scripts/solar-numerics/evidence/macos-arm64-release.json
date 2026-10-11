@@ -9,12 +9,12 @@
     "continuous arithmetic or libm bounds",
     "other compilers or architectures"
   ],
-  "gitHead": "976da4bbcbdb2f38d484be46be2bd098b252fe23",
-  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite \"Native numerical measurement export\" started.\n\udbc1\udfc8  Test \"Export native primitives for independent extended-precision comparison\" started.\n\udbc4\udc5b  Test \"Export native primitives for independent extended-precision comparison\" passed after 0.020 seconds.\n\udbc4\udc5b  Suite \"Native numerical measurement export\" passed after 0.020 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.020 seconds.\n        4.90 real         1.43 user         0.78 sys\n           120504320  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n               61950  page reclaims\n                2199  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                1599  voluntary context switches\n               17962  involuntary context switches\n          4949793170  instructions retired\n          2088058336  cycles elapsed\n            26903224  peak memory footprint\n",
-  "nativeProcessSecondsIncludingRunner": 4.925490499997977,
-  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
+  "gitHead": "3945a67950aa9754b41254a905daae276eb40987",
+  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite \"Native numerical measurement export\" started.\n\udbc1\udfc8  Test \"Export native primitives for independent extended-precision comparison\" started.\n\udbc4\udc5b  Test \"Export native primitives for independent extended-precision comparison\" passed after 0.015 seconds.\n\udbc4\udc5b  Suite \"Native numerical measurement export\" passed after 0.015 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.016 seconds.\n        3.08 real         2.06 user         0.82 sys\n           120717312  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n              128819  page reclaims\n                4301  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 289  voluntary context switches\n                4341  involuntary context switches\n          5165710728  instructions retired\n          1734529835  cycles elapsed\n            26297064  peak memory footprint\n",
+  "nativeProcessSecondsIncludingRunner": 3.098715792002622,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
   "precisionDecimalDigits": 80,
-  "pythonVersion": "3.14.7",
+  "pythonVersion": "3.12.12",
   "referenceLibrary": "mpmath 1.3.0",
   "requests": [
     {
@@ -7339,7 +7339,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
     "Sources/AstronomyKit/Engine/Orientation/EngineCoordinates.swift": "10136541491835563c124727f046015c9dc8a554a1bb12c711c797ff812ce385",
     "Sources/AstronomyKit/Engine/Orientation/EngineEarthRotation.swift": "8da0ccef9811c6a6af993429e2772e07488ed09dea16d77f790b40efd3828a01",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "661a2547f2e7b1eeb6dcf57f679fc8bc9837964e30df84f78871c07d58f5ddeb",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "b215e909949db0a0e2fabd91faead196eb92d00dc88147290a96f64c41e38079",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
