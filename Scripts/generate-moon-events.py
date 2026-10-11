@@ -31,6 +31,10 @@ APPARENT_PHASE_EVENTS = [
     ("lastQuarter", 270, 2_460_697.354_861_111),
     ("new", 0, 2_460_705.025),
 ]
+SOURCE_HASH_EVIDENCE = (
+    ROOT / "Scripts/moon-data/de441-event-evidence.json",
+    ROOT / "Scripts/moon-data/de441-native-evidence.json",
+)
 
 
 def windows():
@@ -185,6 +189,30 @@ def check(data):
         raise ValueError("Direct event fixture coverage differs")
 
 
+def check_source_hashes(evidence_path, root=ROOT):
+    evidence_path = Path(evidence_path)
+    try:
+        evidence = json.loads(evidence_path.read_bytes())
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"Cannot read evidence JSON: {evidence_path}") from error
+    source_hashes = evidence.get("sourceSHA256")
+    if not isinstance(source_hashes, dict) or not source_hashes:
+        raise ValueError(f"{evidence_path}: sourceSHA256 must be a non-empty object")
+    for source_name, expected in sorted(source_hashes.items()):
+        relative = Path(source_name)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(f"{evidence_path}: named source must be repository-relative: {source_name}")
+        if not isinstance(expected, str) or len(expected) != 64 or any(character not in "0123456789abcdef" for character in expected):
+            raise ValueError(f"{evidence_path}: invalid SHA-256 for {source_name}")
+        source = root / relative
+        if not source.is_file():
+            raise ValueError(f"{evidence_path}: named source is missing: {source_name}")
+        actual = hashlib.sha256(source.read_bytes()).hexdigest()
+        if actual != expected:
+            raise ValueError(f"{evidence_path}: source digest differs for {source_name}: recorded {expected}, actual {actual}")
+    return len(source_hashes)
+
+
 def collect_results(prefix):
     results = {name: json.loads(Path(str(prefix) + "-" + name + ".json").read_bytes())
                for name in ("apparent", "published", "source", "transitions")}
@@ -240,6 +268,8 @@ def main():
     if args.check:
         check(OUTPUT.read_bytes())
         check_apparent_phase_sources()
+        for evidence_path in SOURCE_HASH_EVIDENCE:
+            check_source_hashes(evidence_path)
     elif args.check_source:
         if generate(args.cache) != OUTPUT.read_bytes():
             raise ValueError("Direct event fixture differs from verified source records")
