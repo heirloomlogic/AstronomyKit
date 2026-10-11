@@ -7,7 +7,9 @@ on:
       - ".github/workflows/sanitizers.yml"
       - "Package.swift"
       - "Scripts/test-lsan-suppressions.sh"
+      - "Scripts/test-test-isolation-wrapper.sh"
       - "Scripts/test-with-isolated-default-model.sh"
+      - "Scripts/validate-test-isolation.py"
       - "Sources/AstronomyKit/**"
       - "Tests/**"
   schedule:
@@ -51,4 +53,5 @@ jobs:
           LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan-suppressions.txt
         run: |
           Scripts/test-lsan-suppressions.sh
+          Scripts/test-test-isolation-wrapper.sh
           Scripts/test-with-isolated-default-model.sh --sanitize=address
