@@ -67,6 +67,18 @@ struct EngineNutationCacheTests {
         #expect(cache.count == 1)
     }
 
+    @Test("The cached nutation result carries the complementary equinox terms")
+    func cachedComplementaryTerms() {
+        let (cache, _) = Self.makeCache()
+        let tt = 9_496.375
+        let angles = Engine.Nutation.angles(tt: tt, cache: cache)
+        #expect(
+            angles.complementaryEquationOfEquinoxes
+                == Engine.Nutation.complementaryEquationOfEquinoxes(centuries: tt / 36525))
+        _ = Engine.EarthRotation.apparentSiderealTime(Self.time(tt: tt), cache: cache)
+        #expect(cache.statistics == .init(hits: 1, misses: 1))
+    }
+
     @Test("Signed zeros are different keys with equal results")
     func signedZeros() {
         let (cache, _) = Self.makeCache()
@@ -150,6 +162,7 @@ struct EngineNutationCacheTests {
         var checksum = 0.0
         var series: [Double] = []
         var hits: [Double] = []
+        var apparent: [Double] = []
         for _ in 0..<5 {
             let seriesTime = clock.measure {
                 for tt in instants {
@@ -163,11 +176,19 @@ struct EngineNutationCacheTests {
                 }
             }
             hits.append(nanoseconds(hitTime) / Double(lookups))
+            let apparentTime = clock.measure {
+                for index in 0..<lookups {
+                    checksum += Engine.EarthRotation.apparentSiderealTime(
+                        Self.time(tt: instants[index & 31]), cache: cached)
+                }
+            }
+            apparent.append(nanoseconds(apparentTime) / Double(lookups))
         }
         #expect(cached.statistics.misses == 32)
         let result: [String: Any] = [
             "schemaVersion": 1, "seriesCalls": instants.count, "cachedLookups": lookups,
             "seriesNanosecondsPerCall": series, "cachedNanosecondsPerLookup": hits,
+            "apparentSiderealNanosecondsPerCall": apparent,
             "checksum": checksum, "host": ProcessInfo.processInfo.operatingSystemVersionString,
         ]
         let path = try #require(ProcessInfo.processInfo.environment["NUTATION_LATENCY_OUTPUT"])

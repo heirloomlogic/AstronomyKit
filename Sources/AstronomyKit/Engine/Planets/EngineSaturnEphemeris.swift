@@ -78,7 +78,8 @@ extension Engine.SaturnEphemeris {
     ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         let tt = time.tt
         guard tt.isFinite, weight(tt: tt).weight > 0 else { return nil }
-        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
         guard let b = barycenter.evaluate(tdb: tdb), let s = sun.evaluate(tdb: tdb) else { return nil }
         var c = (position: SIMD3<Double>.zero, velocity: SIMD3<Double>.zero)
         if physicalCenter {
@@ -86,7 +87,7 @@ extension Engine.SaturnEphemeris {
             c = center
         }
         let position = (b.position - s.position + c.position) / Engine.kilometersPerAU
-        let velocity = (b.velocity - s.velocity + c.velocity) * Engine.TDB.rate(tt: tt) / Engine.kilometersPerAU
+        let velocity = (b.velocity - s.velocity + c.velocity) * conversion.rate / Engine.kilometersPerAU
         let p = Engine.FrameBias.icrsToEqj.apply(to: position)
         let v = Engine.FrameBias.icrsToEqj.apply(to: velocity)
         let state = Engine.State<Engine.EQJ>(x: p.x, y: p.y, z: p.z, vx: v.x, vy: v.y, vz: v.z, time: time)

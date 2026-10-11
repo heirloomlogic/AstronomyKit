@@ -11,12 +11,13 @@ extension Engine.PlutoDE441 {
     /// The heliocentric system-barycenter state wherever both compiled source tables cover `tt`.
     private static func sourceState(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         guard tt.isFinite else { return nil }
-        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
         guard let p = pluto.evaluate(tdb: tdb), let s = sun.evaluate(tdb: tdb) else { return nil }
         let bias = Engine.FrameBias.icrsToEqj
         return (
             bias.apply(to: p.position - s.position),
-            bias.apply(to: (p.velocity - s.velocity) * Engine.TDB.rate(tt: tt))
+            bias.apply(to: (p.velocity - s.velocity) * conversion.rate)
         )
     }
 

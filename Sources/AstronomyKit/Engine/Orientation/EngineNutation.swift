@@ -70,6 +70,7 @@ extension Engine.Nutation {
         var obliquity: Double
         var longitudeRate: Double
         var obliquityRate: Double
+        var complementaryEquationOfEquinoxes: Double? = nil
     }
 
     /// The Delaunay arguments of the luni-solar series as polynomials in
@@ -118,12 +119,25 @@ extension Engine.Nutation {
     /// the same expressions.
     static func evaluate(centuries t: Double) -> Angles {
         // Luni-solar arguments in radians, and their rates per century.
-        let angle = luniSolarArguments.map { c in
-            fmod(c[0] + t * (c[1] + t * (c[2] + t * (c[3] + t * c[4]))), 1_296_000) * Engine.radiansPerArcsecond
+        func angle(_ index: Int) -> Double {
+            let c = luniSolarArguments[index]
+            return fmod(c[0] + t * (c[1] + t * (c[2] + t * (c[3] + t * c[4]))), 1_296_000)
+                * Engine.radiansPerArcsecond
         }
-        let rate = luniSolarArguments.map { c in
-            (c[1] + t * (2 * c[2] + t * (3 * c[3] + t * 4 * c[4]))) * Engine.radiansPerArcsecond
+        func rate(_ index: Int) -> Double {
+            let c = luniSolarArguments[index]
+            return (c[1] + t * (2 * c[2] + t * (3 * c[3] + t * 4 * c[4]))) * Engine.radiansPerArcsecond
         }
+        let l = angle(0)
+        let lp = angle(1)
+        let f = angle(2)
+        let d = angle(3)
+        let om = angle(4)
+        let lRate = rate(0)
+        let lpRate = rate(1)
+        let fRate = rate(2)
+        let dRate = rate(3)
+        let omRate = rate(4)
 
         var dp = 0.0
         var de = 0.0
@@ -131,12 +145,11 @@ extension Engine.Nutation {
         var deRate = 0.0
         for term in luniSolarTerms.reversed() {
             let argument = fmod(
-                term.nl * angle[0] + term.nlp * angle[1] + term.nf * angle[2] + term.nd * angle[3]
-                    + term.nom * angle[4],
+                term.nl * l + term.nlp * lp + term.nf * f + term.nd * d + term.nom * om,
                 2 * Double.pi
             )
             let argumentRate =
-                term.nl * rate[0] + term.nlp * rate[1] + term.nf * rate[2] + term.nd * rate[3] + term.nom * rate[4]
+                term.nl * lRate + term.nlp * lpRate + term.nf * fRate + term.nd * dRate + term.nom * omRate
             let s = sin(argument)
             let c = cos(argument)
             let p = term.ps + term.pst * t
@@ -148,7 +161,7 @@ extension Engine.Nutation {
         }
 
         // Planetary arguments: the linear ones, then the general precession.
-        let planetary = planetaryArguments.map { fmod($0.atJ2000 + $0.perCentury * t, 2 * Double.pi) }
+        let planetary = PlanetaryArguments(t: t)
         let pa = (generalPrecession.linear + generalPrecession.quadratic * t) * t
         let paRate = generalPrecession.linear + 2 * generalPrecession.quadratic * t
 
@@ -158,7 +171,7 @@ extension Engine.Nutation {
         var peRate = 0.0
         for term in planetaryTerms.reversed() {
             let argument = fmod(combination(term, planetary, pa), 2 * Double.pi)
-            let argumentRate = combination(term, planetaryRates, paRate)
+            let argumentRate = combinationRate(term, paRate)
             let s = sin(argument)
             let c = cos(argument)
             pp += term.ps * s + term.pc * c
@@ -185,27 +198,58 @@ extension Engine.Nutation {
             longitude: dpsi * Engine.degreesPerRadian,
             obliquity: deps * Engine.degreesPerRadian,
             longitudeRate: dpsiRate * perDay,
-            obliquityRate: depsRate * perDay
+            obliquityRate: depsRate * perDay,
+            complementaryEquationOfEquinoxes: complementaryEquationOfEquinoxes(centuries: t)
         )
+    }
+
+    private struct PlanetaryArguments {
+        let l, f, d, om, me, ve, e, ma, ju, sa, ur, ne: Double
+
+        init(t: Double) {
+            func value(_ index: Int) -> Double {
+                let argument = planetaryArguments[index]
+                return fmod(argument.atJ2000 + argument.perCentury * t, 2 * Double.pi)
+            }
+            (l, f, d, om) = (value(0), value(1), value(2), value(3))
+            (me, ve, e, ma) = (value(4), value(5), value(6), value(7))
+            (ju, sa, ur, ne) = (value(8), value(9), value(10), value(11))
+        }
     }
 
     /// The multipliers of `term` applied to the twelve linear planetary
     /// arguments `a` and the general precession `pa`, summed in the order
     /// `iauNut00a` sums them.
-    private static func combination(_ term: PlanetaryTerm, _ a: [Double], _ pa: Double) -> Double {
-        var sum = term.nl * a[0]
-        sum += term.nf * a[1]
-        sum += term.nd * a[2]
-        sum += term.nom * a[3]
-        sum += term.nme * a[4]
-        sum += term.nve * a[5]
-        sum += term.nea * a[6]
-        sum += term.nma * a[7]
-        sum += term.nju * a[8]
-        sum += term.nsa * a[9]
-        sum += term.nur * a[10]
-        sum += term.nne * a[11]
+    private static func combination(_ term: PlanetaryTerm, _ a: PlanetaryArguments, _ pa: Double) -> Double {
+        var sum = term.nl * a.l
+        sum += term.nf * a.f
+        sum += term.nd * a.d
+        sum += term.nom * a.om
+        sum += term.nme * a.me
+        sum += term.nve * a.ve
+        sum += term.nea * a.e
+        sum += term.nma * a.ma
+        sum += term.nju * a.ju
+        sum += term.nsa * a.sa
+        sum += term.nur * a.ur
+        sum += term.nne * a.ne
         return sum + term.npa * pa
+    }
+
+    private static func combinationRate(_ term: PlanetaryTerm, _ paRate: Double) -> Double {
+        var sum = term.nl * planetaryRates[0]
+        sum += term.nf * planetaryRates[1]
+        sum += term.nd * planetaryRates[2]
+        sum += term.nom * planetaryRates[3]
+        sum += term.nme * planetaryRates[4]
+        sum += term.nve * planetaryRates[5]
+        sum += term.nea * planetaryRates[6]
+        sum += term.nma * planetaryRates[7]
+        sum += term.nju * planetaryRates[8]
+        sum += term.nsa * planetaryRates[9]
+        sum += term.nur * planetaryRates[10]
+        sum += term.nne * planetaryRates[11]
+        return sum + term.npa * paRate
     }
 
     /// The nutation shared by every engine caller: 32 entries keyed by the
@@ -255,11 +299,11 @@ extension Engine {
         /// The equation of the equinoxes in degrees: Δψ·cos εA plus the
         /// complementary terms of IAU 1994 Resolution C7 (SOFA `iauEe00`).
         ///
-        /// The complementary series is evaluated at each access, not stored
-        /// with the cached nutation, so the rotations that never read this
-        /// property do not pay for it.
+        /// The complementary series is stored with an evaluated nutation cache entry. A manually constructed set of angles without that value evaluates it on demand.
         var equationOfEquinoxes: Double {
-            let complementary = Nutation.complementaryEquationOfEquinoxes(centuries: tt / 36525)
+            let complementary =
+                nutation.complementaryEquationOfEquinoxes
+                ?? Nutation.complementaryEquationOfEquinoxes(centuries: tt / 36525)
             return nutation.longitude * cos(meanObliquity * Engine.radiansPerDegree)
                 + complementary * Engine.degreesPerRadian
         }

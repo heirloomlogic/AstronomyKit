@@ -56,10 +56,11 @@ extension Engine.MoonDE441 {
     /// Transforms the ICRF/TDB polynomial state into EQJ coordinates with rates per TT day.
     static func state(tt: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         guard tt.isFinite else { return nil }
-        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
         guard let source = evaluate(tdb: tdb) else { return nil }
         let bias = Engine.FrameBias.icrsToEqj
-        return (bias.apply(to: source.position), bias.apply(to: source.velocity * Engine.TDB.rate(tt: tt)))
+        return (bias.apply(to: source.position), bias.apply(to: source.velocity * conversion.rate))
     }
 
     static func position(tt: Double) -> SIMD3<Double>? {
