@@ -6,7 +6,10 @@ script_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_directory
 temporary_directory="$(mktemp -d)"
 trap 'rm -rf "$temporary_directory"' EXIT
-mkdir -p "$temporary_directory/bin" "$temporary_directory/Tests/OtherTarget"
+mkdir -p "$temporary_directory/bin" "$temporary_directory/Tests/OtherTarget" "$temporary_directory/Tests/AstronomyKitTests"
+REAL_SWIFT="$(command -v swift)"
+export REAL_SWIFT
+printf 'struct Placeholder {}\n' >"$temporary_directory/Tests/OtherTarget/Placeholder.swift"
 
 cat >"$temporary_directory/Package.swift" <<'SWIFT'
 // swift-tools-version: 6.2
@@ -17,7 +20,7 @@ let package = Package(name: "IsolationControls", targets: [
 ])
 SWIFT
 
-cat >"$temporary_directory/Tests/TimedSuites.swift" <<'SWIFT'
+cat >"$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift" <<'SWIFT'
 import Testing
 
 @Suite("inverse", .timeLimit(.minutes(1)))
@@ -33,6 +36,13 @@ SWIFT
 cat >"$temporary_directory/bin/swift" <<'FAKE'
 #!/usr/bin/env bash
 set -euo pipefail
+if [[ "$1" == package ]]; then
+    if [[ "${FAKE_PACKAGE_MODE:-valid}" == failed ]]; then
+        echo 'intentional package-description failure' >&2
+        exit 47
+    fi
+    exec "$REAL_SWIFT" "$@"
+fi
 printf '%s\n' "$*" >>"$FAKE_SWIFT_LOG"
 for argument in "$@"; do
     if [[ "$argument" == "list" ]]; then
@@ -107,6 +117,22 @@ fi
 grep -Fq -- '--skip ' "$FAKE_SWIFT_LOG"
 grep -Fq 'SeasonalEpochTests/' "$FAKE_SWIFT_LOG"
 
+# Directory names are not module names: a valid target may use a custom path.
+cp "$temporary_directory/Package.swift" "$temporary_directory/Package.saved"
+mv "$temporary_directory/Tests/AstronomyKitTests" "$temporary_directory/Tests/CustomDirectory"
+python3 - "$temporary_directory/Package.swift" <<'PYTHON'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+path.write_text(path.read_text().replace('.testTarget(name: "AstronomyKitTests")', '.testTarget(name: "AstronomyKitTests", path: "Tests/CustomDirectory")'))
+PYTHON
+if ! "$script_directory/test-with-isolated-default-model.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
+    cat "$temporary_directory/output.log" >&2
+    echo "error: valid custom target path was rejected" >&2
+    exit 1
+fi
+mv "$temporary_directory/Tests/CustomDirectory" "$temporary_directory/Tests/AstronomyKitTests"
+mv "$temporary_directory/Package.saved" "$temporary_directory/Package.swift"
+
 : >"$FAKE_SWIFT_LOG"
 if ! env FAKE_LIST_MODE=prefix_sibling "$script_directory/test-with-isolated-default-model.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
     cat "$temporary_directory/output.log" >&2
@@ -146,6 +172,77 @@ if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     exit 1
 fi
 rm "$temporary_directory/Tests/OtherTarget/Duplicate.swift"
+
+# The correct target still lists ten untimed tests with the same suite name.
+# A timed declaration in another module must not borrow that runtime selection.
+cp "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift" "$temporary_directory/TimedSuites.saved"
+python3 - "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift" <<'PYTHON'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+path.write_text(path.read_text().replace(', .timeLimit(.minutes(1))', '', 1))
+PYTHON
+cat >"$temporary_directory/Tests/OtherTarget/Collision.swift" <<'SWIFT'
+import Testing
+@Suite("same name, different module", .timeLimit(.minutes(1)))
+struct InverseRefractionTests {}
+SWIFT
+expect_failure "timed owner in another module borrows untimed suite selector" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+if [[ -s "$FAKE_SWIFT_LOG" ]]; then
+    echo "error: target-owner collision reached Swift tests" >&2
+    exit 1
+fi
+rm "$temporary_directory/Tests/OtherTarget/Collision.swift"
+mv "$temporary_directory/TimedSuites.saved" "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift"
+
+# Resolve custom paths using the manifest, including sources outside Tests.
+cp "$temporary_directory/Package.swift" "$temporary_directory/Package.saved"
+mkdir -p "$temporary_directory/CustomTimedTarget"
+cat >"$temporary_directory/CustomTimedTarget/Outside.swift" <<'SWIFT'
+import Testing
+@Suite("outside Tests", .timeLimit(.minutes(1)))
+struct OutsideTimedSuite {}
+SWIFT
+python3 - "$temporary_directory/Package.swift" <<'PYTHON'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+path.write_text(path.read_text().replace('.testTarget(name: "OtherTarget"),', '.testTarget(name: "OtherTarget"), .testTarget(name: "CustomTarget", path: "CustomTimedTarget"),'))
+PYTHON
+expect_failure "custom-path timed suite outside Tests" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+if [[ -s "$FAKE_SWIFT_LOG" ]]; then
+    echo "error: custom-path timed suite reached Swift tests" >&2
+    exit 1
+fi
+grep -Fq 'CustomTarget.OutsideTimedSuite' "$temporary_directory/output.log"
+mv "$temporary_directory/Package.saved" "$temporary_directory/Package.swift"
+
+# A nested suite cannot borrow the selector of an untimed top-level suite.
+cp "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift" "$temporary_directory/TimedSuites.saved"
+python3 - "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift" <<'PYTHON'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+path.write_text(path.read_text().replace(', .timeLimit(.minutes(1))', '', 1))
+PYTHON
+cat >"$temporary_directory/Tests/AstronomyKitTests/Nested.swift" <<'SWIFT'
+import Testing
+struct Container {
+    @Suite("nested", .timeLimit(.minutes(1)))
+    struct InverseRefractionTests {}
+}
+SWIFT
+expect_failure "nested timed suite borrows a top-level selector" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+if [[ -s "$FAKE_SWIFT_LOG" ]]; then
+    echo "error: nested timed suite reached Swift tests" >&2
+    exit 1
+fi
+grep -Fq 'nested timed suites' "$temporary_directory/output.log"
+rm "$temporary_directory/Tests/AstronomyKitTests/Nested.swift"
+mv "$temporary_directory/TimedSuites.saved" "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift"
+
+expect_failure "SwiftPM ownership unavailable" env FAKE_PACKAGE_MODE=failed "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+if [[ -s "$FAKE_SWIFT_LOG" ]]; then
+    echo "error: unavailable SwiftPM ownership reached Swift tests" >&2
+    exit 1
+fi
 
 cat >"$temporary_directory/Tests/Individual.swift" <<'SWIFT'
 import Testing

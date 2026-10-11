@@ -2,8 +2,10 @@
 """Fail closed when Swift Testing time-limit traits are not isolated by the sanitizer wrapper."""
 
 import argparse
+import json
 import pathlib
 import re
+import subprocess
 import sys
 
 
@@ -106,6 +108,11 @@ def timed_declarations(path: pathlib.Path) -> tuple[list[str], list[str]]:
             declaration = re.match(r"\s*(?:(?:public|package|internal|private|fileprivate|final|indirect)\s+)*(?:struct|class|actor|enum)\s+([A-Za-z_][A-Za-z0-9_]*)\b", following)
             if not declaration:
                 raise ValueError(f"{path}: timed @Suite must be followed directly by a named type declaration")
+            # The manifest identifies top-level suites. A nested type has a
+            # different runtime identity even when its simple name is identical.
+            prefix = clean[:attribute.start()]
+            if prefix.count("{") != prefix.count("}"):
+                raise ValueError(f"{path}: nested timed suites are not supported by the sanitizer isolation manifest")
             suites.append(declaration.group(1))
         else:
             declaration = re.match(r"\s*(?:(?:public|package|internal|private|fileprivate|static|class|mutating|nonmutating)\s+)*func\s+([A-Za-z_][A-Za-z0-9_]*)\b", following)
@@ -119,33 +126,58 @@ def timed_declarations(path: pathlib.Path) -> tuple[list[str], list[str]]:
     return suites, tests
 
 
+def test_source_owners(root: pathlib.Path) -> dict[pathlib.Path, str]:
+    """Resolve module ownership through SwiftPM, including custom source paths."""
+    result = subprocess.run(
+        ["swift", "package", "--package-path", str(root.parent), "describe", "--type", "json"],
+        capture_output=True, text=True, check=True,
+    )
+    description = json.loads(result.stdout)
+    package_root = pathlib.Path(description["path"])
+    owners: dict[pathlib.Path, str] = {}
+    for target in description["targets"]:
+        if target["type"] != "test":
+            continue
+        module = target["c99name"]
+        for source in target["sources"]:
+            path = (package_root / target["path"] / source).resolve()
+            if path.suffix != ".swift":
+                continue
+            if path in owners:
+                raise ValueError(f"test source belongs to multiple targets: {path}")
+            owners[path] = module
+    return owners
+
+
 def validate(root: pathlib.Path, expected: set[str]) -> None:
-    expected_by_name: dict[str, str] = {}
-    for selector in expected:
-        name = selector.rsplit(".", 1)[-1]
-        if name in expected_by_name:
-            raise ValueError(f"duplicate timed suite name in the manifest is ambiguous: {name}")
-        expected_by_name[name] = selector
+    root = root.resolve()
+    owners = test_source_owners(root)
     discovered: set[str] = set()
     timed_tests: list[str] = []
-    for path in sorted(root.rglob("*.swift")):
+    # Keep the full Tests-tree guard and include registered test sources outside
+    # it. Never infer a module from a directory name or a matching runtime count.
+    paths = {path.resolve() for path in root.rglob("*.swift")} | set(owners)
+    for path in sorted(paths):
         try:
             suites, tests = timed_declarations(path)
         except ValueError as error:
             raise ValueError(f"cannot conservatively inventory timed tests: {error}") from error
         for name in suites:
-            if name in discovered:
-                raise ValueError(f"duplicate timed suite declaration is ambiguous: {name}")
-            discovered.add(name)
+            if path not in owners:
+                raise ValueError(f"timed suite has no SwiftPM test target owner: {path}:{name}")
+            selector = f"{owners[path]}.{name}"
+            if selector in discovered:
+                raise ValueError(f"duplicate timed suite declaration is ambiguous: {selector}")
+            discovered.add(selector)
         timed_tests.extend(tests)
     if timed_tests:
         raise ValueError("individual @Test time limits are not supported by the sanitizer isolation manifest: " + ", ".join(timed_tests))
-    missing = sorted(set(expected_by_name) - discovered)
-    unlisted = sorted(discovered - set(expected_by_name))
+    missing = sorted(expected - discovered)
+    unlisted = sorted(discovered - expected)
     if missing or unlisted:
         details = []
         if missing:
-            details.append("manifest entries without a timed suite: " + ", ".join(expected_by_name[name] for name in missing))
+            details.append("manifest entries without a timed suite: " + ", ".join(missing))
         if unlisted:
             details.append("timed suites missing from the manifest: " + ", ".join(unlisted))
         raise ValueError("; ".join(details))
@@ -158,7 +190,7 @@ def main() -> None:
     arguments = parser.parse_args()
     try:
         validate(arguments.tests_root, set(arguments.suite))
-    except ValueError as error:
+    except (ValueError, OSError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f"error: {error}", file=sys.stderr)
         raise SystemExit(1) from error
     print(f"Verified {len(arguments.suite)} timed suites in the sanitizer isolation manifest")
