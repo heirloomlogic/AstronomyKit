@@ -33,8 +33,12 @@ struct NativeSafetyTests {
         var replayed = 0
         for url in urls {
             let data = try Data(contentsOf: url)
-            if NativeSafetyHarness.replay(data, label: url.lastPathComponent, includeSearches: true) {
+            let coverage = NativeSafetyHarness.replay(data, label: url.lastPathComponent, includeSearches: true)
+            if coverage.completed {
                 replayed += 1
+            }
+            if url.lastPathComponent == "fixed-riseset-infinite-limit" {
+                #expect(coverage.fixedStarRiseSet == .rejectedInvalidParameter)
             }
         }
         #expect(replayed == urls.count)
@@ -82,6 +86,13 @@ private struct DeterministicBytes {
 }
 
 private enum NativeSafetyHarness {
+    enum RiseSetReplayOutcome {
+        case notRun
+        case completed
+        case rejectedInvalidParameter
+        case rejectedOther
+    }
+
     private enum BodySelection {
         case body(CelestialBody)
         case star(slot: Int)
@@ -151,8 +162,13 @@ private enum NativeSafetyHarness {
         }
     }
 
-    static func replay(_ data: Data, label: String, includeSearches: Bool) -> Bool {
+    static func replay(
+        _ data: Data,
+        label: String,
+        includeSearches: Bool
+    ) -> (completed: Bool, fixedStarRiseSet: RiseSetReplayOutcome) {
         let input = Input(data)
+        var fixedStarRiseSet = RiseSetReplayOutcome.notRun
         let vectors = stride(from: 0, to: input.rotationValues.count, by: 3).map { offset in
             Vector3D(
                 x: input.rotationValues[offset],
@@ -193,7 +209,7 @@ private enum NativeSafetyHarness {
         case .body(let body):
             exercise(body, input: input, label: label, includeSearches: includeSearches)
         case .star(let slot):
-            exerciseStar(slot: slot, input: input, label: label, includeSearches: includeSearches)
+            fixedStarRiseSet = exerciseStar(slot: slot, input: input, label: label, includeSearches: includeSearches)
         case .invalid:
             _ = input.time.siderealTime(longitude: input.observer.longitude)
         }
@@ -208,7 +224,7 @@ private enum NativeSafetyHarness {
                 #expect(node.time.terrestrialTime.isFinite, "\(label) produced a nonfinite lunar node")
             }
         }
-        return true
+        return (completed: true, fixedStarRiseSet: fixedStarRiseSet)
     }
 
     private static func exercise(_ body: CelestialBody, input: Input, label: String, includeSearches: Bool) {
@@ -266,7 +282,17 @@ private enum NativeSafetyHarness {
         }
     }
 
-    private static func exerciseStar(slot: Int, input: Input, label: String, includeSearches: Bool) {
+    private static func exerciseStar(
+        slot: Int,
+        input: Input,
+        label: String,
+        includeSearches: Bool
+    ) -> RiseSetReplayOutcome {
+        let nativeStar = Engine.Star(
+            rightAscension: input.starRightAscension,
+            declination: input.starDeclination,
+            distance: input.starDistance
+        )
         let star = FixedStar(
             name: "fuzz-star-\(slot)",
             rightAscension: input.starRightAscension,
@@ -279,16 +305,27 @@ private enum NativeSafetyHarness {
                 result.rightAscension.isFinite && result.declination.isFinite && result.distance.isFinite,
                 "\(label) produced invalid fixed-star coordinates")
         }
-        if includeSearches {
-            observe(label, "fixed-star altitude search") {
-                _ = try AstroSearch.find(
-                    from: input.time,
-                    to: input.time.addingDays(input.limitDays)
-                ) { time in
-                    try star.horizon(at: time, from: input.observer).altitude
-                }
-            }
+        guard includeSearches else { return .notRun }
+        do {
+            _ = try Engine.Events.searchRiseSet(
+                of: .star(nativeStar),
+                direction: input.direction,
+                after: input.time.engine,
+                from: input.observer,
+                limitDays: input.limitDays,
+                heightAboveGround: input.metersAboveGround
+            )
+            return .completed
+        } catch AstronomyError.invalidParameter {
+            return .rejectedInvalidParameter
+        } catch AstronomyError.unknown(let status) {
+            Issue.record("\(label) fixed-star rise/set returned unknown status \(status)")
+        } catch is AstronomyError {
+            return .rejectedOther
+        } catch {
+            Issue.record("\(label) fixed-star rise/set threw unexpected error: \(error)")
         }
+        return .rejectedOther
     }
 
     static func expectFinite(_ vector: Vector3D, label: String) {
