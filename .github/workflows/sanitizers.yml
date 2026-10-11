@@ -6,6 +6,7 @@ on:
       - ".github/lsan-suppressions.txt"
       - ".github/workflows/sanitizers.yml"
       - "Package.swift"
+      - "Scripts/test-with-isolated-default-model.sh"
       - "Sources/AstronomyKit/**"
       - "Tests/**"
   schedule:
