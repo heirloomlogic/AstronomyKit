@@ -120,6 +120,12 @@ def timed_declarations(path: pathlib.Path) -> tuple[list[str], list[str]]:
 
 
 def validate(root: pathlib.Path, expected: set[str]) -> None:
+    expected_by_name: dict[str, str] = {}
+    for selector in expected:
+        name = selector.rsplit(".", 1)[-1]
+        if name in expected_by_name:
+            raise ValueError(f"duplicate timed suite name in the manifest is ambiguous: {name}")
+        expected_by_name[name] = selector
     discovered: set[str] = set()
     timed_tests: list[str] = []
     for path in sorted(root.rglob("*.swift")):
@@ -128,19 +134,18 @@ def validate(root: pathlib.Path, expected: set[str]) -> None:
         except ValueError as error:
             raise ValueError(f"cannot conservatively inventory timed tests: {error}") from error
         for name in suites:
-            selector = f"AstronomyKitTests.{name}"
-            if selector in discovered:
-                raise ValueError(f"duplicate timed suite declaration is ambiguous: {selector}")
-            discovered.add(selector)
+            if name in discovered:
+                raise ValueError(f"duplicate timed suite declaration is ambiguous: {name}")
+            discovered.add(name)
         timed_tests.extend(tests)
     if timed_tests:
         raise ValueError("individual @Test time limits are not supported by the sanitizer isolation manifest: " + ", ".join(timed_tests))
-    missing = sorted(expected - discovered)
-    unlisted = sorted(discovered - expected)
+    missing = sorted(set(expected_by_name) - discovered)
+    unlisted = sorted(discovered - set(expected_by_name))
     if missing or unlisted:
         details = []
         if missing:
-            details.append("manifest entries without a timed suite: " + ", ".join(missing))
+            details.append("manifest entries without a timed suite: " + ", ".join(expected_by_name[name] for name in missing))
         if unlisted:
             details.append("timed suites missing from the manifest: " + ", ".join(unlisted))
         raise ValueError("; ".join(details))

@@ -12,10 +12,20 @@ readonly default_mutator_tests=(
     "AstronomyKitTests.DeltaTThreadSafetyTests/concurrentModelSwapIsSafe"
     "AstronomyKitTests.EngineStarConcurrencyTests/distinctStarsAndModelUpdates"
 )
-readonly skip_pattern='^(AstronomyKitTests\.(InverseRefractionTests|SearchCallbackContractTests|SeasonalEpochTests)/|AstronomyKitTests\.DeltaTThreadSafetyTests/(calculationKeepsCapturedModel|concurrentModelSwapIsSafe).*|AstronomyKitTests\.EngineStarConcurrencyTests/distinctStarsAndModelUpdates.*)'
 script_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_directory
-readonly tests_root="${ASTRONOMYKIT_TEST_ISOLATION_ROOT:-${script_directory}/../Tests/AstronomyKitTests}"
+readonly tests_root="${ASTRONOMYKIT_TEST_ISOLATION_ROOT:-${script_directory}/../Tests}"
+
+selector_pattern() {
+    local escaped_name="${1//./\\.}"
+    local terminator="$2"
+    printf '^%s%s' "$escaped_name" "$terminator"
+}
+
+count_matches() {
+    local pattern="$1"
+    grep -Ec -- "$pattern" <<<"$test_list" || true
+}
 
 manifest_arguments=()
 for suite_entry in "${timed_suites[@]}"; do
@@ -25,31 +35,38 @@ python3 "${script_directory}/validate-test-isolation.py" --tests-root "$tests_ro
 
 test_list="$(swift test "$@" list)"
 readonly test_list
+skip_alternatives=()
 for suite_entry in "${timed_suites[@]}"; do
     suite_name="${suite_entry%%:*}"
     expected_tests="${suite_entry##*:}"
-    matching_tests="$(awk -v prefix="${suite_name}/" 'index($0, prefix) == 1 { count++ } END { print count + 0 }' <<<"$test_list")"
+    suite_pattern="$(selector_pattern "$suite_name" '/')"
+    matching_tests="$(count_matches "$suite_pattern")"
     if [[ "$matching_tests" != "$expected_tests" ]]; then
         echo "error: timed suite selector matched $matching_tests tests instead of $expected_tests: $suite_name" >&2
         exit 1
     fi
+    skip_alternatives+=("${suite_pattern#^}")
 done
 for test_name in "${default_mutator_tests[@]}"; do
-    matching_tests="$(awk -v expected="${test_name}()" '$0 == expected { count++ } END { print count + 0 }' <<<"$test_list")"
+    test_pattern="$(selector_pattern "$test_name" '\(')"
+    matching_tests="$(count_matches "$test_pattern")"
     if [[ "$matching_tests" != 1 ]]; then
         echo "error: isolated default-model selector matched $matching_tests tests instead of 1: $test_name" >&2
         exit 1
     fi
+    skip_alternatives+=("${test_pattern#^}")
 done
+skip_pattern="^($(IFS='|'; echo "${skip_alternatives[*]}"))"
+readonly skip_pattern
 
 swift test "$@" --skip-build --skip "$skip_pattern"
 
 for suite_entry in "${timed_suites[@]}"; do
     suite_name="${suite_entry%%:*}"
     expected_tests="${suite_entry##*:}"
-    escaped_suite="${suite_name//./\\.}"
+    suite_pattern="$(selector_pattern "$suite_name" '/')"
     output_file="$(mktemp)"
-    if ! swift test "$@" --skip-build --filter "^${escaped_suite}/" 2>&1 | tee "$output_file"; then
+    if ! swift test "$@" --skip-build --filter "$suite_pattern" 2>&1 | tee "$output_file"; then
         rm -f "$output_file"
         exit 1
     fi
@@ -61,9 +78,9 @@ for suite_entry in "${timed_suites[@]}"; do
     rm -f "$output_file"
 done
 for test_name in "${default_mutator_tests[@]}"; do
-    escaped_test="${test_name//./\\.}"
+    test_pattern="$(selector_pattern "$test_name" '\(')"
     output_file="$(mktemp)"
-    if ! swift test "$@" --skip-build --filter "^${escaped_test}.*" 2>&1 | tee "$output_file"; then
+    if ! swift test "$@" --skip-build --filter "$test_pattern" 2>&1 | tee "$output_file"; then
         rm -f "$output_file"
         exit 1
     fi
