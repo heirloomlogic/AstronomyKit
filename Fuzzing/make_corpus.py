@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Writes the seed corpus for Fuzzing/fuzz_bridge.c.
+"""Writes the seed corpus for the native Swift safety harness.
 
 Each seed encodes one set of harness fields in the input format decoded by
-fuzz_bridge.c. The times, bodies, observers, and coordinates come from the
+NativeSafetyTests.swift. The times, bodies, observers, and coordinates come from the
 package's reference tests (JPLValidationTests, AuditValidationTests,
 RiseSetTests, FixedStarTests, RotationTests), plus a few seeds at the edges the
 engine guards: the Pluto table and crawl limits, the accepted time range, a
@@ -21,7 +21,7 @@ from pathlib import Path
 
 CORPUS = Path(__file__).resolve().parent / "corpus"
 
-# The start of BodyValues in fuzz_bridge.c; a body's index is its byte.
+# The historical body table order stays stable so existing corpus files retain meaning.
 BODIES = ("mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus",
           "neptune", "pluto", "sun", "moon", "emb", "ssb", "star1", "star2")
 

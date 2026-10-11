@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - ".github/workflows/codeql.yml"
-      - "Sources/CLibAstronomy/**"
+      - "Package.swift"
+      - "Sources/AstronomyKit/**"
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:
@@ -15,29 +16,30 @@ permissions:
 
 jobs:
   analyze:
-    name: Analyze C/C++
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    name: Analyze Swift
+    runs-on: macos-26
+    timeout-minutes: 30
     steps:
-      - name: Checkout repository
+      - name: Checkout candidate revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      - name: Install Swift
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4
         with:
-          languages: c-cpp
+          languages: swift
           build-mode: manual
           queries: security-and-quality
 
-      - name: Build vendored C target
-        run: swift build --target CLibAstronomy
+      - name: Build native Swift target
+        run: swift build --target AstronomyKit --arch arm64
 
-      - name: Analyze C/C++
+      - name: Analyze Swift
         uses: github/codeql-action/analyze@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4

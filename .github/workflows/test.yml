@@ -33,6 +33,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Verify generated time table
         run: python3 Scripts/generate-time-table.py --check
@@ -119,6 +125,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Install Swift
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
@@ -187,6 +199,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Install Swift
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
@@ -194,11 +212,6 @@ jobs:
           swift-version: "6.2"
 
       - name: Test (Thread Sanitizer)
-        # Synchronization.Mutex is not modeled by ThreadSanitizer on Linux, so
-        # Mutex-guarded state is falsely reported as racing under contention.
-        # The suppressions file documents these known false positives.
-        env:
-          TSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/tsan-suppressions.txt
         run: swift test --no-parallel --sanitize=thread
 
   test-release-macos:
@@ -209,6 +222,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Test (release)
         run: swift test --no-parallel -c release
@@ -221,6 +240,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Install Swift
         uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
@@ -233,8 +258,8 @@ jobs:
   # The macOS jobs above exercise the shared source, but the iOS/tvOS/watchOS
   # SDKs compile differently (availability, unavailable APIs). Build the library
   # for each declared Apple platform so a platform-specific break is caught here
-  # rather than in a consumer's app. Build-only: running would require booting a
-  # simulator, and the behavior is already covered by the macOS test jobs.
+  # rather than in a consumer's app. These jobs are build-only. The separate iOS
+  # runtime job below boots a simulator and checks a published numerical value.
   build-apple-platforms:
     runs-on: macos-26
     timeout-minutes: 15
@@ -247,9 +272,77 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
       - name: Build (${{ matrix.platform }})
         run: |
           xcodebuild build \
             -scheme AstronomyKit \
             -destination "generic/platform=${{ matrix.platform }}"
+
+  build-clean-consumer:
+    name: Build clean downstream consumer
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Build consumer without repository development tooling
+        run: |
+          test ! -e .dev-tooling
+          swift build --package-path Tests/Consumer
+
+  test-ios-runtime:
+    name: Test iOS runtime published value
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Verify candidate revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Select an available iOS Simulator
+        id: simulator
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          import subprocess
+
+          devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
+          for runtime in sorted(devices, reverse=True):
+              if "iOS" not in runtime:
+                  continue
+              for device in devices[runtime]:
+                  if device.get("isAvailable"):
+                      print(f"udid={device['udid']}")
+                      raise SystemExit
+          raise SystemExit("No available iOS Simulator")
+          PY
+
+      - name: Run published-value smoke on iOS
+        run: |
+          xcodebuild test \
+            -scheme AstronomyKit \
+            -destination "platform=iOS Simulator,id=${{ steps.simulator.outputs.udid }}" \
+            -only-testing:AstronomyKitTests/IOSRuntimeSmokeTests

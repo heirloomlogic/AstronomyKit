@@ -7,8 +7,8 @@
 # None of it is AstronomyKit's memory: the 579 tests all pass, then LSan fails
 # the job at teardown.
 #
-# The job exists to catch memory errors — out-of-bounds reads and writes in the
-# vendored C, use-after-free, bad frees. Suppressing this harness leak keeps all
-# of that; it only silences the one allocation site the package does not own.
+# The job exists to catch memory errors in native Swift storage and unsafe
+# implementation boundaries. Suppressing this harness leak keeps that signal;
+# it only silences the one allocation site the package does not own.
 # Drop this file if swift-corelibs-xctest ever stops leaking.
 leak:libXCTest.so
