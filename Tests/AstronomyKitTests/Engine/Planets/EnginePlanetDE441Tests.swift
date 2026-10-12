@@ -30,6 +30,21 @@ struct EnginePlanetDE441Tests {
         #expect(table.evaluate(tdb: .nan) == nil)
     }
 
+    @Test("Malformed compiled records fail closed")
+    func malformedRecords() {
+        let invalidBase64 = Engine.DirectChebyshevTable(
+            start: 0, days: 1, recordCount: 1, coefficientCount: 1, recordsPerChunk: 1,
+            chunks: ["AAAAAAAA8D8AAAAAAAAAQAAAAAAA!AhA"])
+        let truncated = Engine.DirectChebyshevTable(
+            start: 0, days: 1, recordCount: 1, coefficientCount: 1, recordsPerChunk: 1, chunks: [""])
+        let nonfinite = Engine.DirectChebyshevTable(
+            start: 0, days: 1, recordCount: 1, coefficientCount: 1, recordsPerChunk: 1,
+            chunks: ["AAAAAAAA8H8AAAAAAAAAQAAAAAAAAAhA"])
+        #expect(invalidBase64.evaluate(tdb: 0.5) == nil)
+        #expect(truncated.evaluate(tdb: 0.5) == nil)
+        #expect(nonfinite.evaluate(tdb: 0.5) == nil)
+    }
+
     @Test("Every generated component matches retained direct-source recurrence fixtures")
     func sourceFixtures() throws {
         struct Row: Decodable {
@@ -48,7 +63,7 @@ struct EnginePlanetDE441Tests {
         #expect(fixture.rows.count >= Source.components.count * 9)
         for row in fixture.rows {
             let table = try #require(Source.components[row.component])
-            let actual = table.evaluate(record: row.record, x: row.x)
+            let actual = try #require(table.evaluate(record: row.record, x: row.x))
             let expectedPosition = SIMD3(row.positionKm[0], row.positionKm[1], row.positionKm[2])
             let expectedVelocity = SIMD3(
                 row.velocityKmPerTDBDay[0], row.velocityKmPerTDBDay[1], row.velocityKmPerTDBDay[2])

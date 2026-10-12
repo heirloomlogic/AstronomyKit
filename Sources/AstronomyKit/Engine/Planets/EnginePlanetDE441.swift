@@ -7,7 +7,15 @@ extension Engine {
 
 extension Engine.PlanetDE441 {
     /// The shared DE441 Sun table already used by Saturn. Keeping one copy avoids changing the current Saturn route in this foundation link.
-    static var sun: Engine.DirectChebyshevTable { Engine.SaturnEphemeris.sun }
+    static let sun = direct(Engine.SaturnEphemeris.sun)
+    private static let saturnBarycenter = direct(Engine.SaturnEphemeris.barycenter)
+    private static let saturnOffset = direct(Engine.SaturnEphemeris.offset)
+
+    private static func direct(_ table: Engine.SaturnEphemeris.Table) -> Engine.DirectChebyshevTable {
+        Engine.DirectChebyshevTable(
+            start: table.start, days: table.days, recordCount: table.recordCount,
+            coefficientCount: table.coefficientCount, scalarBytes: table.scalarBytes, data: table.data)
+    }
 
     /// Generated tables owned by the issue 248 generator. Saturn retains its separately qualified tables until runtime integration.
     static var components: [String: Engine.DirectChebyshevTable] {
@@ -60,7 +68,7 @@ extension Engine.PlanetDE441 {
         case .earth: (earthBarycenter, earthOffset)
         case .mars: (marsBarycenter, nil)
         case .jupiter: (jupiterBarycenter, jupiterOffset)
-        case .saturn: (Engine.SaturnEphemeris.barycenter, Engine.SaturnEphemeris.offset)
+        case .saturn: (saturnBarycenter, saturnOffset)
         case .uranus: (uranusBarycenter, uranusOffset)
         case .neptune: (neptuneBarycenter, neptuneOffset)
         }

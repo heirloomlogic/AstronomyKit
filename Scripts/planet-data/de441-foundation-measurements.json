@@ -9,7 +9,12 @@
     "finalTreeIncremental": {
       "maximumResidentSetBytes": 8234041344,
       "reportedBuildSeconds": 260.54,
+      "revision": "b03633e39ae9f36b4da8216e307f788a6a6913c7",
       "wallSecondsIncludingTests": 278.03
+    },
+    "repairTreeFocused": {
+      "reportedBuildSeconds": 183.23,
+      "scope": "Focused Release build and 27-test affected suite after review repairs"
     }
   },
   "generated": {
@@ -22,12 +27,12 @@
     "swift": "Apple Swift 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)"
   },
   "latency": {
-    "coldJupiterPhysicalCenterSeconds": 0.0041882083169184625,
-    "meanMixedPlanetPhysicalCenterMicroseconds": 18.813975004013628,
+    "coldJupiterPhysicalCenterSeconds": 0.0023097916273400187,
+    "meanMixedPlanetPhysicalCenterMicroseconds": 16.19547083391808,
     "mixedPlanetIterations": 10000
   },
   "products": {
-    "releaseStaticLibraryBytes": 458935552,
-    "releaseTestExecutableBytes": 480617312
+    "releaseStaticLibraryBytes": 458944160,
+    "releaseTestExecutableBytes": 480642592
   }
 }

@@ -53,7 +53,7 @@ extension Engine {
         }
 
         /// Clenshaw value and analytic derivative, in source units per TDB day.
-        func evaluate(record: Int, x: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>) {
+        func evaluate(record: Int, x: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
             precondition((0..<recordCount).contains(record) && x.isFinite && (-1...1).contains(x))
             if chunks.isEmpty {
                 return data.withUnsafeBytes { raw in
@@ -75,39 +75,44 @@ extension Engine {
             let encodedRecordBytes = coefficientCount * 32
             return chunks[record / recordsPerChunk].withUTF8Buffer { bytes in
                 let base = local * (encodedRecordBytes + 1)
-                precondition(base + encodedRecordBytes <= bytes.count)
-                func sextet(_ byte: UInt8) -> UInt64 {
+                guard base + encodedRecordBytes <= bytes.count else { return nil }
+                func sextet(_ byte: UInt8) -> UInt64? {
                     switch byte {
                     case 65...90: UInt64(byte - 65)
                     case 97...122: UInt64(byte - 71)
                     case 48...57: UInt64(byte + 4)
                     case 43: 62
                     case 47: 63
-                    default: preconditionFailure("A generated table contains invalid base64")
+                    default: nil
                     }
                 }
-                func coefficient(_ index: Int) -> Double {
-                    let raw = index * 8
-                    var bits: UInt64 = 0
-                    for byteIndex in 0..<8 {
-                        let byte = raw + byteIndex
-                        let group = base + (byte / 3) * 4
-                        let slot = byte % 3
-                        let a = sextet(bytes[group + slot])
-                        let b = sextet(bytes[group + slot + 1])
-                        let value: UInt64
-                        if slot == 0 {
-                            value = (a << 2) | (b >> 4)
-                        } else if slot == 1 {
-                            value = ((a << 4) | (b >> 2)) & 255
-                        } else {
-                            value = ((a << 6) | b) & 255
+                return withUnsafeTemporaryAllocation(of: Double.self, capacity: 3 * coefficientCount) {
+                    coefficients in
+                    for index in coefficients.indices {
+                        let raw = index * 8
+                        var bits: UInt64 = 0
+                        for byteIndex in 0..<8 {
+                            let byte = raw + byteIndex
+                            let group = base + (byte / 3) * 4
+                            let slot = byte % 3
+                            guard let a = sextet(bytes[group + slot]), let b = sextet(bytes[group + slot + 1])
+                            else { return nil }
+                            let value: UInt64
+                            if slot == 0 {
+                                value = (a << 2) | (b >> 4)
+                            } else if slot == 1 {
+                                value = ((a << 4) | (b >> 2)) & 255
+                            } else {
+                                value = ((a << 6) | b) & 255
+                            }
+                            bits |= value << (byteIndex * 8)
                         }
-                        bits |= value << (byteIndex * 8)
+                        let value = Double(bitPattern: bits)
+                        guard value.isFinite else { return nil }
+                        coefficients[index] = value
                     }
-                    return Double(bitPattern: bits)
+                    return evaluate(record: 0, x: x) { coefficients[$0] }
                 }
-                return evaluate(record: 0, x: x, coefficient: coefficient)
             }
         }
 

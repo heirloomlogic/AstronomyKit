@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 import math
+import os
 from pathlib import Path
 import shutil
 import struct
@@ -315,6 +316,12 @@ def build(cache):
         }
         if name != "sun":
             rendered[output_name(name)] = render(name, data, records)
+    fixture = {
+        "schemaVersion": 1,
+        "selection": "First, middle and last source record at x=-1, 0 and 1 for every component.",
+        "rows": rows,
+    }
+    fixture_bytes = (json.dumps(fixture, indent=2, sort_keys=True) + "\n").encode()
     manifest = {
         "schemaVersion": 1,
         "generatorBindings": {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in source_bindings()},
@@ -331,8 +338,9 @@ def build(cache):
             for name, source in SOURCES.items()
         },
         "generatedBytes": sum(row["encodedBytes"] for name, row in reports.items() if name != "sun"),
+        "directFixturesSHA256": hashlib.sha256(fixture_bytes).hexdigest(),
     }
-    return rendered, manifest, {"schemaVersion": 1, "selection": "First, middle and last source record at x=-1, 0 and 1 for every component.", "rows": rows}
+    return rendered, manifest, fixture
 
 
 def verify_embedded(manifest, fixture):
@@ -356,10 +364,39 @@ def verify_embedded(manifest, fixture):
         if len(data) != report["encodedBytes"] or hashlib.sha256(data).hexdigest() != report["sha256"]:
             raise ValueError(f"generated payload digest differs: {name}")
     rows = fixture.get("rows", [])
+    fixture_bytes = (json.dumps(fixture, indent=2, sort_keys=True) + "\n").encode()
+    if manifest.get("directFixturesSHA256") != hashlib.sha256(fixture_bytes).hexdigest():
+        raise ValueError("direct fixture digest differs")
     if fixture.get("schemaVersion") != 1 or len(rows) != len(COMPONENTS) * 9:
         raise ValueError("direct fixture inventory differs")
     if {row["component"] for row in rows} != set(COMPONENTS):
         raise ValueError("direct fixture component inventory differs")
+
+
+def atomic_write(path, data):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def atomic_copy(source, target):
+    target.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(prefix=f".{target.name}.", dir=target.parent)
+    os.close(descriptor)
+    temporary = Path(temporary_name)
+    try:
+        shutil.copyfile(source, temporary)
+        os.replace(temporary, target)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def publish(rendered, manifest, fixture):
@@ -374,11 +411,11 @@ def publish(rendered, manifest, fixture):
         for path in stage.iterdir():
             target = OUTPUT / path.name
             if not target.exists() or target.read_bytes() != path.read_bytes():
-                shutil.copyfile(path, target)
+                atomic_copy(path, target)
         for path in set(OUTPUT.glob("*.swift")) - output_paths():
             path.unlink()
-    MANIFEST.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-    FIXTURES.write_text(json.dumps(fixture, indent=2, sort_keys=True) + "\n")
+    atomic_write(FIXTURES, (json.dumps(fixture, indent=2, sort_keys=True) + "\n").encode())
+    atomic_write(MANIFEST, (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode())
 
 
 def main():
