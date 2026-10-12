@@ -20,7 +20,8 @@ ROOT = direct.ROOT
 OUTPUT = ROOT / 'Scripts/pluto-data/de441-evidence.json'
 PLU060_SHA = 'dfbb102491a26ed41ae08ca3f8963f22f0219df1d8f265ab87b9ad825a826fc6'
 PLU060_URL = 'https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp'
-TT_LIMIT = 766525.
+TT_LIMIT = 1461000.
+LIGHT_TIME_MARGIN_DAYS = 1.
 CANDIDATES = ('direct-float64', 'direct-float32', 'cubic-float64', 'cubic-float32')
 up, down = shared.up, shared.down
 norm = direct.norm
@@ -256,7 +257,7 @@ def build(cache, plu060, output_dir):
     reader = shared.CachedReader(cache, saved.get('source', {}).get('retrievedByteRangesSHA256'))
     segments = [(s, direct.read_metadata(reader, s)) for s in direct.read_segments(reader) if (s.target, s.center) in ((9, 0), (10, 0))]
     margin = direct.TDB_TT_MARGIN_DAYS
-    start, end = direct.J2000 - TT_LIMIT - margin, direct.J2000 + TT_LIMIT + margin
+    start, end = direct.J2000 - TT_LIMIT - LIGHT_TIME_MARGIN_DAYS - margin, direct.J2000 + TT_LIMIT + margin
     layouts = {target: windows(segments, target, start, end) for target in (9, 10)}
     source = {target: load_records(reader, layout) for target, layout in layouts.items()}
     print('DE441 records retrieved: ' + str({k: len(v) for k, v in source.items()}), flush=True)
@@ -301,7 +302,7 @@ def build(cache, plu060, output_dir):
                 row['candidates'][name] = {'barycenterProxy': compare(state, reference), 'withAvailableCenterOffset': compare(corrected, reference)}
             archived.append(row)
     # Freeze regular full-span, accepted endpoints, source join, central/blend, and integrator-grid samples.
-    epochs = sorted(set([-TT_LIMIT, TT_LIMIT, *[float(t) for t in range(-730000, 730001, 29200)], -11112.5, *[edge + delta for edge in (-36524.5, 47846.5) for delta in (-32., -24., -16., -8., 0., 8., 16., 24., 32.)]]))
+    epochs = sorted(set([-TT_LIMIT, TT_LIMIT, *[float(t) for t in range(-1460000, 1460001, 58400)], -11112.5, *[edge + delta for edge in (-36524.5, 47846.5) for delta in (-32., -24., -16., -8., 0., 8., 16., 24., 32.)]]))
     samples = [{'tdbDaysFromJ2000': epoch, 'candidates': {name: compare(heliocentric(tables[name], direct.J2000 + epoch), heliocentric(source, direct.J2000 + epoch)) for name in CANDIDATES}} for epoch in epochs]
     runtime = {}
     for name in CANDIDATES:
@@ -315,7 +316,7 @@ def build(cache, plu060, output_dir):
         elapsed = time.perf_counter() - before
         runtime[name] = {'iterations': 10000, 'seconds': elapsed, 'evaluationsPerSecond': 10000/elapsed, 'checksum': checksum, 'scanAndEncodingSeconds': scan_seconds[name]}
     provenance_paths = [Path(__file__), ROOT/'Scripts/qualify-moon-de441.py', ROOT/'Scripts/assess-moon-de441.py']
-    return {'schemaVersion': 1, 'source': {'url': direct.SOURCE_URL, 'identity': shared.identity(), 'retrievedByteRangesSHA256': dict(sorted(reader.ranges.items())), 'globalDigestVerified': False, 'state': 'Pluto barycenter (9) minus Sun (10), each relative to SSB (0); geometric ICRF; km and km/TDB day', 'segments': {str(t): [{'segment': s._asdict(), 'metadata': m._asdict(), 'firstRecord': first, 'recordCount': count} for s, m, first, count in layout] for t, layout in layouts.items()}}, 'acceptedRange': {'ttDaysFromJ2000Inclusive': [-TT_LIMIT, TT_LIMIT], 'tdbMarginDays': margin}, 'candidates': results, 'centerOffset': {'url': PLU060_URL, 'sha256': PLU060_SHA, 'wholeFileDigestVerified': True, 'startJDTDB': center_start, 'endJDTDB': center_end, 'recordCount': len(center), 'positionNormBoundKmOverAvailableCoverage': center_max, 'fullAcceptedRangeQualified': False, 'treatment': 'Barycenter proxy outside retained central model; measured PLU060 center correction is available only over 1800–2199. No extrapolation or full-range center-offset bound is asserted.'}, 'referenceArchivesSHA256': archives, 'archivedReferences': archived, 'fixedSamples': samples, 'sourceCodeSHA256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in provenance_paths}, 'runtimeObservation': {'evaluator': 'Packed little-endian bytes, index, decode, cubic reconstruction where applicable, and analytic Chebyshev value/rate for both bodies', 'python': platform.python_version(), 'platform': platform.platform(), 'totalSeconds': time.perf_counter()-started, 'candidates': runtime, 'productionRepresentative': False}, 'assessment': {'barycenterRepresentationFullRangeScanned': True, 'absoluteFullRangeAccuracyQualified': False, 'productionIntegrated': False, 'choiceForNextExperiment': 'cubic-float64', 'remaining': 'Validate Swift decoding, TT/TDB and frame transformations, retained central model and blends, and actual state consumers. DE441 representation bounds do not certify source ephemeris accuracy or the unavailable full-range Pluto-center correction; #92/#96 public paths remain separate.'}}
+    return {'schemaVersion': 1, 'source': {'url': direct.SOURCE_URL, 'identity': shared.identity(), 'retrievedByteRangesSHA256': dict(sorted(reader.ranges.items())), 'globalDigestVerified': False, 'state': 'Pluto barycenter (9) minus Sun (10), each relative to SSB (0); geometric ICRF; km and km/TDB day', 'segments': {str(t): [{'segment': s._asdict(), 'metadata': m._asdict(), 'firstRecord': first, 'recordCount': count} for s, m, first, count in layout] for t, layout in layouts.items()}}, 'acceptedRange': {'ttDaysFromJ2000Inclusive': [-TT_LIMIT, TT_LIMIT], 'tdbMarginDays': margin, 'retardedTimeMarginDays': LIGHT_TIME_MARGIN_DAYS}, 'candidates': results, 'centerOffset': {'url': PLU060_URL, 'sha256': PLU060_SHA, 'wholeFileDigestVerified': True, 'startJDTDB': center_start, 'endJDTDB': center_end, 'recordCount': len(center), 'positionNormBoundKmOverAvailableCoverage': center_max, 'fullAcceptedRangeQualified': False, 'treatment': 'Barycenter proxy outside retained central model; measured PLU060 center correction is available only over 1800–2199. No extrapolation or full-range center-offset bound is asserted.'}, 'referenceArchivesSHA256': archives, 'archivedReferences': archived, 'fixedSamples': samples, 'sourceCodeSHA256': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in provenance_paths}, 'runtimeObservation': {'evaluator': 'Packed little-endian bytes, index, decode, cubic reconstruction where applicable, and analytic Chebyshev value/rate for both bodies', 'python': platform.python_version(), 'platform': platform.platform(), 'totalSeconds': time.perf_counter()-started, 'candidates': runtime, 'productionRepresentative': False}, 'assessment': {'barycenterRepresentationFullRangeScanned': True, 'absoluteFullRangeAccuracyQualified': False, 'productionIntegrated': False, 'choiceForNextExperiment': 'cubic-float64', 'remaining': 'Native integration and observer qualification are recorded separately. These representation bounds do not certify source ephemeris accuracy or physical-center accuracy outside PLU060 coverage. Issue #252 retains the physical-center expansion; search qualification remains separate.'}}
 
 
 def deterministic(value):

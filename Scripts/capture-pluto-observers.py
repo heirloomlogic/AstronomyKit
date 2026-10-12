@@ -15,7 +15,7 @@ SPEC = importlib.util.spec_from_file_location('references', ROOT / 'Scripts/refe
 references = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(references)
 EPOCHS = {
-    9: [-766524., -600000., -400000., -200000., 200000., 400000., 600000., 766524.],
+    9: [-1461000., -1460999., -1100000., -766524., -600000., -400000., -200000., 200000., 400000., 600000., 766524., 1100000., 1460999., 1461000.],
     999: [-58400., -36556.5, -36556.25, -36540.5, -36524.5, 0., 47846.5, 47846.75, 47862.5, 47878.5, 47878.75, 58400.],
 }
 
@@ -78,7 +78,7 @@ def fixture():
         sources.append(dict(path=str(path.relative_to(ROOT)), sha256=hashlib.sha256(data).hexdigest(),
                             query=query(target), url=references.horizons_url(query(target))))
     return dict(schemaVersion=1, observationTimeScale='JD TT', angularToleranceArcminutes=1,
-                selection='Frozen before retrieval: eight outer barycenter epochs and twelve center epochs including both 32-day blends.',
+                selection='Frozen before retrieval: fourteen outer barycenter epochs, including both engine endpoints and twelve center epochs including both 32-day blends.',
                 sources=sources, rows=rows)
 
 
@@ -118,14 +118,17 @@ def native_evidence(debug, release):
     return dict(schemaVersion=1, sourceSHA256=source_hashes(), debug=debug, release=release,
                 observationTimeScale='TT, inverted to modeled UT with jplHorizons for the native UT light-time iteration',
                 toleranceArcminutes=1,
-                domain=dict(acceptedHeliocentricTTDays=[-766525, 766525],
-                            retardedSourceTDBInterval=dict(lowerInclusive=-766536.5, upperExclusive=766535.5),
-                            successfulGeocentricTTDays=[-766525, -766524.9, -766524, 766524, 766525],
+                domain=dict(acceptedHeliocentricTTDays=[-1461000, 1461000],
+                            retardedSourceTDBInterval=dict(lowerInclusive=-1461016.5, upperExclusive=1461015.5),
+                            retardedEarthTTDaysLowerInclusive=-1461001,
+                            earthPaddingScope="Validated Pluto corrected-aberration evaluations only; public Earth range is unchanged",
+                            successfulGeocentricTTDays=[-1461000, -1460999.9, -1460999, 1460999, 1461000],
                             modes=['none', 'corrected'], issue='https://github.com/heirloomlogic/AstronomyKit/issues/227',
                             preexistingBase='00119ad33521b67fa365b33d940404d5739e356b'),
-                limitations=['Twenty sampled native directions, not a full-range bound.',
+                limitations=['Twenty-six sampled public directions, not a full-range bound.',
                              'Outer target 9 references do not qualify the physical center 999.',
-                             'Endpoint tests cover velocity composition, not independent velocity accuracy; event and public API qualification remain with #92/#96.',
+                             'Sun-dependent angles retain the separate Sun light-time restriction at the lower engine endpoint.',
+                             'Endpoint tests cover velocity composition, not independent velocity accuracy; event qualification remains separate.',
                              'Horizons apparent coordinates include gravitational deflection and barycentric light time; native uses heliocentric light time and first-order aberration.',
                              'Native and Horizons equator-of-date precession/nutation conventions differ.'])
 
@@ -153,7 +156,7 @@ def main():
         evidence = json.loads((DATA / 'observer-evidence.json').read_bytes())
         if evidence != native_evidence(evidence['debug'], evidence['release']):
             raise SystemExit('native evidence source bindings or metadata differ; rerun native qualification')
-        print('20 Pluto observer epochs, both archive digests, and native evidence bindings verified')
+        print('26 Pluto observer epochs, both archive digests, and native evidence bindings verified')
     else:
         output.write_bytes(encoded)
     if args.record_native:

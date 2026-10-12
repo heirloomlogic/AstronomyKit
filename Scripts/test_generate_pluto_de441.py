@@ -55,10 +55,10 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
         evidence = json.loads((g.ROOT/'Scripts/pluto-data/de441-native-evidence.json').read_bytes())
         for path, expected in evidence['sourceSHA256'].items():
             self.assertEqual(expected, hashlib.sha256((g.ROOT/path).read_bytes()).hexdigest(), path)
-        self.assertEqual(6898944, evidence['nativeStorage']['decodedPayloadBytes'])
-        self.assertEqual(143724, evidence['everyBoundaryRelease']['count'])
-        self.assertEqual(4305, evidence['directSourceRelease']['bodySamples'])
-        self.assertEqual(48, evidence['directSourceRelease']['integratedSamples'])
+        self.assertEqual(13149264, evidence['nativeStorage']['decodedPayloadBytes'])
+        self.assertEqual(273939, evidence['everyBoundaryRelease']['count'])
+        self.assertEqual(4320, evidence['directSourceRelease']['bodySamples'])
+        self.assertEqual(50, evidence['directSourceRelease']['integratedSamples'])
         self.assertEqual(44, len(evidence['archivedReferences']))
 
     def test_direct_fixture_provenance_and_selection(self):

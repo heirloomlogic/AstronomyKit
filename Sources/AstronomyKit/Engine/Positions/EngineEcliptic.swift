@@ -84,7 +84,11 @@ extension Engine.Positions {
         let velocity: SIMD3<Double>
         switch aberration {
         case .corrected:
-            let relative = target - (try heliocentricState(of: .earth, at: vector.time).velocityVector)
+            let earth =
+                try body == .pluto && vector.time.tt < -Engine.acceptedTTDays
+                ? Engine.Pluto.earthState(forLightTimeAt: vector.time, observedAt: time)
+                : heliocentricState(of: .earth, at: vector.time)
+            let relative = target - earth.velocityVector
             velocity = relative * (1 / (1 + (direction * relative).sum() / c))
         case .none:
             let earth = try heliocentricState(of: .earth, at: time).velocityVector

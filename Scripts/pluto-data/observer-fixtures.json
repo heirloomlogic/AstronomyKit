@@ -4,6 +4,57 @@
   "rows": [
     {
       "apparentEQDDeg": [
+        88.494591773,
+        33.37214057
+      ],
+      "apparentICRFDeg": [
+        150.017394225,
+        22.67304208
+      ],
+      "astrometricICRFDeg": [
+        150.011942704,
+        22.675274706
+      ],
+      "lightTimeMinutes": 286.11105124,
+      "target": 9,
+      "tt": -1461000.0
+    },
+    {
+      "apparentEQDDeg": [
+        88.467141143,
+        33.374602167
+      ],
+      "apparentICRFDeg": [
+        149.995217959,
+        22.683737655
+      ],
+      "astrometricICRFDeg": [
+        149.989728783,
+        22.685965608
+      ],
+      "lightTimeMinutes": 286.06254496,
+      "target": 9,
+      "tt": -1460999.0
+    },
+    {
+      "apparentEQDDeg": [
+        107.273871047,
+        33.2939579
+      ],
+      "apparentICRFDeg": [
+        152.590825864,
+        22.622139778
+      ],
+      "astrometricICRFDeg": [
+        152.591846929,
+        22.620722951
+      ],
+      "lightTimeMinutes": 290.83034456,
+      "target": 9,
+      "tt": -1100000.0
+    },
+    {
+      "apparentEQDDeg": [
         33.12517333,
         -0.768524782
       ],
@@ -72,8 +123,8 @@
     },
     {
       "apparentEQDDeg": [
-        354.809474599,
-        -16.945172444
+        354.809474598,
+        -16.94517244
       ],
       "apparentICRFDeg": [
         347.622499238,
@@ -89,8 +140,8 @@
     },
     {
       "apparentEQDDeg": [
-        50.641388736,
-        1.414136067
+        50.641388741,
+        1.414136053
       ],
       "apparentICRFDeg": [
         36.607101692,
@@ -106,8 +157,8 @@
     },
     {
       "apparentEQDDeg": [
-        106.702505457,
-        14.265718166
+        106.702505462,
+        14.265718146
       ],
       "apparentICRFDeg": [
         83.144085214,
@@ -123,8 +174,8 @@
     },
     {
       "apparentEQDDeg": [
-        74.637260142,
-        6.742003253
+        74.637260148,
+        6.742003235
       ],
       "apparentICRFDeg": [
         46.794754086,
@@ -137,6 +188,57 @@
       "lightTimeMinutes": 411.01758094,
       "target": 9,
       "tt": 766524.0
+    },
+    {
+      "apparentEQDDeg": [
+        356.883232433,
+        -8.704405104
+      ],
+      "apparentICRFDeg": [
+        315.754282112,
+        -23.67654083
+      ],
+      "astrometricICRFDeg": [
+        315.748412776,
+        -23.67813209
+      ],
+      "lightTimeMinutes": 297.79124343,
+      "target": 9,
+      "tt": 1100000.0
+    },
+    {
+      "apparentEQDDeg": [
+        358.702941419,
+        -4.760327949
+      ],
+      "apparentICRFDeg": [
+        303.598170971,
+        -23.466548228
+      ],
+      "astrometricICRFDeg": [
+        303.602296716,
+        -23.465426866
+      ],
+      "lightTimeMinutes": 299.20159649,
+      "target": 9,
+      "tt": 1460999.0
+    },
+    {
+      "apparentEQDDeg": [
+        358.724791384,
+        -4.751068508
+      ],
+      "apparentICRFDeg": [
+        303.623306219,
+        -23.461469142
+      ],
+      "astrometricICRFDeg": [
+        303.627509074,
+        -23.460336282
+      ],
+      "lightTimeMinutes": 299.31122898,
+      "target": 9,
+      "tt": 1461000.0
     },
     {
       "apparentEQDDeg": [
@@ -344,7 +446,7 @@
     }
   ],
   "schemaVersion": 1,
-  "selection": "Frozen before retrieval: eight outer barycenter epochs and twelve center epochs including both 32-day blends.",
+  "selection": "Frozen before retrieval: fourteen outer barycenter epochs, including both engine endpoints and twelve center epochs including both 32-day blends.",
   "sources": [
     {
       "path": "Scripts/pluto-data/observer-sources/horizons-9.json",
@@ -364,11 +466,11 @@
         "REF_SYSTEM": "'ICRF'",
         "TIME_DIGITS": "'SECONDS'",
         "TIME_TYPE": "'TT'",
-        "TLIST": "'1685021.0,1851545.0,2051545.0,2251545.0,2651545.0,2851545.0,3051545.0,3218069.0'",
+        "TLIST": "'990545.0,990546.0,1351545.0,1685021.0,1851545.0,2051545.0,2251545.0,2651545.0,2851545.0,3051545.0,3218069.0,3551545.0,3912544.0,3912545.0'",
         "TLIST_TYPE": "'JD'"
       },
-      "sha256": "43e6a84a28b8cebe8bbd21ff6630b02c9e8c44fbaa5160466e4a05f1ad77fded",
-      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%279%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27500%40399%27&TLIST=%271685021.0%2C1851545.0%2C2051545.0%2C2251545.0%2C2651545.0%2C2851545.0%2C3051545.0%2C3218069.0%27&QUANTITIES=%271%2C2%2C21%2C45%27&REF_SYSTEM=%27ICRF%27&CAL_FORMAT=%27JD%27&TIME_DIGITS=%27SECONDS%27&ANG_FORMAT=%27DEG%27&APPARENT=%27AIRLESS%27&RANGE_UNITS=%27AU%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TT%27&TLIST_TYPE=%27JD%27&EXTRA_PREC=%27YES%27"
+      "sha256": "df688c8bdbfce947b85b90521d7552ecfcbb0f843f09252c6d57fb121670dfff",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%279%27&OBJ_DATA=%27NO%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27500%40399%27&TLIST=%27990545.0%2C990546.0%2C1351545.0%2C1685021.0%2C1851545.0%2C2051545.0%2C2251545.0%2C2651545.0%2C2851545.0%2C3051545.0%2C3218069.0%2C3551545.0%2C3912544.0%2C3912545.0%27&QUANTITIES=%271%2C2%2C21%2C45%27&REF_SYSTEM=%27ICRF%27&CAL_FORMAT=%27JD%27&TIME_DIGITS=%27SECONDS%27&ANG_FORMAT=%27DEG%27&APPARENT=%27AIRLESS%27&RANGE_UNITS=%27AU%27&CSV_FORMAT=%27YES%27&TIME_TYPE=%27TT%27&TLIST_TYPE=%27JD%27&EXTRA_PREC=%27YES%27"
     },
     {
       "path": "Scripts/pluto-data/observer-sources/horizons-999.json",

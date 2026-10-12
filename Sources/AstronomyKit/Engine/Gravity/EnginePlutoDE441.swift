@@ -6,7 +6,7 @@ extension Engine {
 }
 
 extension Engine.PlutoDE441 {
-    static let acceptedTTDays = 766_525.0
+    static let acceptedTTDays = Engine.acceptedTTDays
 
     /// Shared endpoint positions in ICRF km and analytic derivatives in km per TDB day.
     struct Table: Sendable {

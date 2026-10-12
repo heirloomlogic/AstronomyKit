@@ -157,13 +157,9 @@ struct AcceptedTimeRangeTests {
 
     // MARK: - Pluto
 
-    /// Pluto's own range (the state table plus about 100 years) lies inside the
-    /// accepted range, and the new check does not widen it.
-    @Test("Pluto keeps its narrower range", arguments: [800_000.0, -800_000.0, 1_400_000.0])
-    func plutoRangeUnchanged(tt: Double) throws {
-        #expect(throws: AstronomyError.badTime) {
-            _ = try CelestialBody.pluto.heliocentricPosition(at: AstroTime(tt: tt))
-        }
+    @Test("Pluto accepts the engine range", arguments: [800_000.0, -800_000.0, 1_400_000.0])
+    func plutoEngineRange(tt: Double) throws {
+        _ = try CelestialBody.pluto.heliocentricPosition(at: AstroTime(tt: tt))
         _ = try CelestialBody.mars.heliocentricPosition(at: AstroTime(tt: tt))
     }
 

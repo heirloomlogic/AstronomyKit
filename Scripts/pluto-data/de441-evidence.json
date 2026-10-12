@@ -1,9 +1,10 @@
 {
   "acceptedRange": {
+    "retardedTimeMarginDays": 1.0,
     "tdbMarginDays": 2.2e-08,
     "ttDaysFromJ2000Inclusive": [
-      -766525.0,
-      766525.0
+      -1461000.0,
+      1461000.0
     ]
   },
   "archivedReferences": [
@@ -1589,14 +1590,14 @@
         },
         "cubic-float64": {
           "barycenterProxy": {
-            "angularDifferenceArcseconds": 1.978829139487124e-06,
-            "positionDifferenceKm": 0.08553388651065685,
-            "velocityDifferenceKmPerSecond": 3.1822609970220423e-07
+            "angularDifferenceArcseconds": 1.9788298093857672e-06,
+            "positionDifferenceKm": 0.085533893421623,
+            "velocityDifferenceKmPerSecond": 3.1822610603179007e-07
           },
           "withAvailableCenterOffset": {
-            "angularDifferenceArcseconds": 1.978829139487124e-06,
-            "positionDifferenceKm": 0.08553388651065685,
-            "velocityDifferenceKmPerSecond": 3.1822609970220423e-07
+            "angularDifferenceArcseconds": 1.9788298093857672e-06,
+            "positionDifferenceKm": 0.085533893421623,
+            "velocityDifferenceKmPerSecond": 3.1822610603179007e-07
           }
         },
         "direct-float32": {
@@ -2389,185 +2390,185 @@
     "barycenterRepresentationFullRangeScanned": true,
     "choiceForNextExperiment": "cubic-float64",
     "productionIntegrated": false,
-    "remaining": "Validate Swift decoding, TT/TDB and frame transformations, retained central model and blends, and actual state consumers. DE441 representation bounds do not certify source ephemeris accuracy or the unavailable full-range Pluto-center correction; #92/#96 public paths remain separate."
+    "remaining": "Native integration and observer qualification are recorded separately. These representation bounds do not certify source ephemeris accuracy or physical-center accuracy outside PLU060 coverage. Issue #252 retains the physical-center expansion; search qualification remains separate."
   },
   "candidates": {
     "cubic-float32": {
-      "analyticRateBoundKmPerTDBDay": 45.983208929877414,
-      "angularRepresentationBoundArcminutes": 0.0003363662721902262,
+      "analyticRateBoundKmPerTDBDay": 46.005105783919575,
+      "angularRepresentationBoundArcminutes": 0.0003386845034240863,
       "bodies": {
         "10": {
           "analyticRateBoundKmPerTDBDay": 0.1397289651094931,
-          "encodedBytes": 2299632,
-          "endJDTDB": 3218080.5,
+          "encodedBytes": 4383072,
+          "endJDTDB": 3912560.5,
           "maximumDecodedBoundaryPositionJumpKm": 0.0,
           "maximumDecodedBoundaryRateJumpKmPerTDBDay": 0.0,
           "maximumSourceBoundaryPositionJumpKm": 5.214379887087537e-10,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 4.823324033076557e-13,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 5.084229945850415e-13,
           "maximumSourceRadiusKm": 1558127.4517743655,
           "minimumSourceRadiusKm": 206.94491965631184,
           "positionBoundKm": 0.28617648233929105,
-          "recordCount": 95817,
+          "recordCount": 182627,
           "recordDays": 16.0,
-          "sha256": "e59b9fa05f52b99bcb06a5617371b72a53282a1937de7190a9086c8bf77e9452",
-          "sourceBoundaryCount": 95816,
-          "startJDTDB": 1685008.5,
+          "sha256": "2618d96aa8390a0e59e87a1576b3b7079b874dfd22b248efd831b4c8026bf096",
+          "sourceBoundaryCount": 182626,
+          "startJDTDB": 990528.5,
           "worstRecordIndices": [
-            85963,
-            65598
+            129368,
+            109003
           ]
         },
         "9": {
-          "analyticRateBoundKmPerTDBDay": 45.843479964767916,
-          "encodedBytes": 1149840,
-          "endJDTDB": 3218096.5,
+          "analyticRateBoundKmPerTDBDay": 45.86537681881008,
+          "encodedBytes": 2191560,
+          "endJDTDB": 3912560.5,
           "maximumDecodedBoundaryPositionJumpKm": 0.0,
           "maximumDecodedBoundaryRateJumpKmPerTDBDay": 0.0,
-          "maximumSourceBoundaryPositionJumpKm": 2.6975629358002243e-06,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.771811463096808e-10,
-          "maximumSourceRadiusKm": 7397662876.667618,
-          "minimumSourceRadiusKm": 4424966047.54134,
-          "positionBoundKm": 432.5220934873297,
-          "recordCount": 47909,
+          "maximumSourceBoundaryPositionJumpKm": 2.698056768836087e-06,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.863554421996479e-10,
+          "maximumSourceRadiusKm": 7400759360.138967,
+          "minimumSourceRadiusKm": 4421112670.520806,
+          "positionBoundKm": 435.1253693870572,
+          "recordCount": 91314,
           "recordDays": 32.0,
-          "sha256": "0e71e6022c5c80ed8814a0692d91a6aa304ee68c51ce4a2333399832dd826eae",
-          "sourceBoundaryCount": 47908,
-          "startJDTDB": 1685008.5,
+          "sha256": "021dd51a283c433d7127e5bf8aa4080028be4e00cf8442f55614438007558061",
+          "sourceBoundaryCount": 91313,
+          "startJDTDB": 990512.5,
           "worstRecordIndices": [
-            42148,
-            45065
+            89387,
+            4586
           ]
         }
       },
-      "centerOffsetBudgetKmAtOneArcminute": 1286284.3796565158,
-      "encodedBytes": 3449472,
-      "minimumHeliocentricDistanceKm": 4423407920.089564,
-      "positionBoundKm": 432.808269969669
+      "centerOffsetBudgetKmAtOneArcminute": 1285160.874457607,
+      "encodedBytes": 6574632,
+      "minimumHeliocentricDistanceKm": 4419554543.069031,
+      "positionBoundKm": 435.41154586939655
     },
     "cubic-float64": {
-      "analyticRateBoundKmPerTDBDay": 0.13419953681023006,
-      "angularRepresentationBoundArcminutes": 1.8256788865628315e-07,
+      "analyticRateBoundKmPerTDBDay": 0.13438373568237572,
+      "angularRepresentationBoundArcminutes": 1.8298370059014674e-07,
       "bodies": {
         "10": {
-          "analyticRateBoundKmPerTDBDay": 0.1334899587996782,
-          "encodedBytes": 4599264,
-          "endJDTDB": 3218080.5,
-          "maximumDecodedBoundaryPositionJumpKm": 4.808741983101443e-10,
+          "analyticRateBoundKmPerTDBDay": 0.13367415767182386,
+          "encodedBytes": 8766144,
+          "endJDTDB": 3912560.5,
+          "maximumDecodedBoundaryPositionJumpKm": 4.835091451484521e-10,
           "maximumDecodedBoundaryRateJumpKmPerTDBDay": 5.209785393794664e-13,
           "maximumSourceBoundaryPositionJumpKm": 5.214379887087537e-10,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 4.823324033076557e-13,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 5.084229945850415e-13,
           "maximumSourceRadiusKm": 1558127.4517743655,
           "minimumSourceRadiusKm": 206.94491965631184,
-          "positionBoundKm": 0.23207321066765046,
-          "recordCount": 95817,
+          "positionBoundKm": 0.23240313625267972,
+          "recordCount": 182627,
           "recordDays": 16.0,
-          "sha256": "c3c2a59262f8e5df12c695699c3fafc7fb0d407938cae25646624e4710579de5",
-          "sourceBoundaryCount": 95816,
-          "startJDTDB": 1685008.5,
+          "sha256": "1138dc5c9a6c6f796c81ad92f97d8f9af0d580e6fba3c303fd3998674d303b1a",
+          "sourceBoundaryCount": 182626,
+          "startJDTDB": 990528.5,
           "worstRecordIndices": [
-            45783,
-            27062
+            17438,
+            17438
           ]
         },
         "9": {
           "analyticRateBoundKmPerTDBDay": 0.000709578010551815,
-          "encodedBytes": 2299680,
-          "endJDTDB": 3218096.5,
-          "maximumDecodedBoundaryPositionJumpKm": 2.6974394634149533e-06,
-          "maximumDecodedBoundaryRateJumpKmPerTDBDay": 1.646461752807754e-10,
-          "maximumSourceBoundaryPositionJumpKm": 2.6975629358002243e-06,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.771811463096808e-10,
-          "maximumSourceRadiusKm": 7397662876.667618,
-          "minimumSourceRadiusKm": 4424966047.54134,
+          "encodedBytes": 4383120,
+          "endJDTDB": 3912560.5,
+          "maximumDecodedBoundaryPositionJumpKm": 2.698056768836087e-06,
+          "maximumDecodedBoundaryRateJumpKmPerTDBDay": 1.6718877731292825e-10,
+          "maximumSourceBoundaryPositionJumpKm": 2.698056768836087e-06,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.863554421996479e-10,
+          "maximumSourceRadiusKm": 7400759360.138967,
+          "minimumSourceRadiusKm": 4421112670.520806,
           "positionBoundKm": 0.0028400329427390545,
-          "recordCount": 47909,
+          "recordCount": 91314,
           "recordDays": 32.0,
-          "sha256": "e7474b95b79ac199701af2135905b79b0c0f9bdce51636981cb0333fd1fa6bfb",
-          "sourceBoundaryCount": 47908,
-          "startJDTDB": 1685008.5,
+          "sha256": "c20af15dae88d319beefb6f48cbf55f6bbf8615ff499eca0634f4020672c1735",
+          "sourceBoundaryCount": 91313,
+          "startJDTDB": 990512.5,
           "worstRecordIndices": [
-            15363,
-            15363
+            37066,
+            37066
           ]
         }
       },
-      "centerOffsetBudgetKmAtOneArcminute": 1286716.9530132418,
-      "encodedBytes": 6898944,
-      "minimumHeliocentricDistanceKm": 4423407920.089564,
-      "positionBoundKm": 0.23491324361038954
+      "centerOffsetBudgetKmAtOneArcminute": 1285596.0507603073,
+      "encodedBytes": 13149264,
+      "minimumHeliocentricDistanceKm": 4419554543.069031,
+      "positionBoundKm": 0.2352431691954188
     },
     "direct-float32": {
-      "analyticRateBoundKmPerTDBDay": 0.02251392616678551,
-      "angularRepresentationBoundArcminutes": 0.0002790341327905257,
+      "analyticRateBoundKmPerTDBDay": 0.023047210897588877,
+      "angularRepresentationBoundArcminutes": 0.0002792787957252915,
       "bodies": {
         "10": {
           "analyticRateBoundKmPerTDBDay": 6.939504051582504e-05,
-          "encodedBytes": 12647844,
-          "endJDTDB": 3218080.5,
+          "encodedBytes": 24106764,
+          "endJDTDB": 3912560.5,
           "maximumDecodedBoundaryPositionJumpKm": 0.13211006288269966,
           "maximumDecodedBoundaryRateJumpKmPerTDBDay": 0.00012781567605005788,
           "maximumSourceBoundaryPositionJumpKm": 5.214379887087537e-10,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 4.823324033076557e-13,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 5.084229945850415e-13,
           "maximumSourceRadiusKm": 1558127.4517743655,
           "minimumSourceRadiusKm": 206.94491965631184,
-          "positionBoundKm": 0.0708641748307352,
-          "recordCount": 95817,
+          "positionBoundKm": 0.07263203908318641,
+          "recordCount": 182627,
           "recordDays": 16.0,
-          "sha256": "afbdadaad414cc1481db34bd6bf73acee9968f3f9e5466364ea9caa704e2a829",
-          "sourceBoundaryCount": 95816,
-          "startJDTDB": 1685008.5,
+          "sha256": "565d877cd3401924a02844dbc9567fb891549296b5eb0a9bb26689bf4f533c02",
+          "sourceBoundaryCount": 182626,
+          "startJDTDB": 990528.5,
           "worstRecordIndices": [
-            55148,
-            59784
+            173834,
+            103189
           ]
         },
         "9": {
-          "analyticRateBoundKmPerTDBDay": 0.02244453112626968,
-          "encodedBytes": 3449448,
-          "endJDTDB": 3218096.5,
-          "maximumDecodedBoundaryPositionJumpKm": 655.4177632896497,
+          "analyticRateBoundKmPerTDBDay": 0.022977815857073047,
+          "encodedBytes": 6574608,
+          "endJDTDB": 3912560.5,
+          "maximumDecodedBoundaryPositionJumpKm": 663.659712630227,
           "maximumDecodedBoundaryRateJumpKmPerTDBDay": 0.04073847634323786,
-          "maximumSourceBoundaryPositionJumpKm": 2.6975629358002243e-06,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.771811463096808e-10,
-          "maximumSourceRadiusKm": 7397662876.667618,
-          "minimumSourceRadiusKm": 4424966047.54134,
+          "maximumSourceBoundaryPositionJumpKm": 2.698056768836087e-06,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.863554421996479e-10,
+          "maximumSourceRadiusKm": 7400759360.138967,
+          "minimumSourceRadiusKm": 4421112670.520806,
           "positionBoundKm": 358.96715556828997,
-          "recordCount": 47909,
+          "recordCount": 91314,
           "recordDays": 32.0,
-          "sha256": "109b9a3e176ce36f452fa29f15811dc27c1e9c2f014a9d445502e8162502a4a0",
-          "sourceBoundaryCount": 47908,
-          "startJDTDB": 1685008.5,
+          "sha256": "996a2f524811c1dae1b6ea76e73f7fd9b8780f8fd0e51828c9bf7835601e5013",
+          "sourceBoundaryCount": 91313,
+          "startJDTDB": 990512.5,
           "worstRecordIndices": [
-            39273,
-            38046
+            60976,
+            8808
           ]
         }
       },
-      "centerOffsetBudgetKmAtOneArcminute": 1286358.1499067424,
-      "encodedBytes": 16097292,
-      "minimumHeliocentricDistanceKm": 4423407920.089564,
-      "positionBoundKm": 359.03801974312074
+      "centerOffsetBudgetKmAtOneArcminute": 1285237.2462158692,
+      "encodedBytes": 30681372,
+      "minimumHeliocentricDistanceKm": 4419554543.069031,
+      "positionBoundKm": 359.0397876073732
     },
     "direct-float64": {
       "analyticRateBoundKmPerTDBDay": 8.891034997940314e-162,
-      "angularRepresentationBoundArcminutes": 6.909859412759366e-168,
+      "angularRepresentationBoundArcminutes": 6.915884068234655e-168,
       "bodies": {
         "10": {
           "analyticRateBoundKmPerTDBDay": 4.445517498970156e-162,
-          "encodedBytes": 25295688,
-          "endJDTDB": 3218080.5,
+          "encodedBytes": 48213528,
+          "endJDTDB": 3912560.5,
           "maximumDecodedBoundaryPositionJumpKm": 5.214379887087537e-10,
-          "maximumDecodedBoundaryRateJumpKmPerTDBDay": 4.823324033076557e-13,
+          "maximumDecodedBoundaryRateJumpKmPerTDBDay": 5.084229945850415e-13,
           "maximumSourceBoundaryPositionJumpKm": 5.214379887087537e-10,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 4.823324033076557e-13,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 5.084229945850415e-13,
           "maximumSourceRadiusKm": 1558127.4517743655,
           "minimumSourceRadiusKm": 206.94491965631184,
           "positionBoundKm": 4.445517498970156e-162,
-          "recordCount": 95817,
+          "recordCount": 182627,
           "recordDays": 16.0,
-          "sha256": "392992c0ae3f77795c4d449b98567bc9d0a5d002b34882995b801cabbfd2b424",
-          "sourceBoundaryCount": 95816,
-          "startJDTDB": 1685008.5,
+          "sha256": "a5a84821be9e3c72f22f2d2cd6452afff0e45246037e46f2869cb3d20b8bad6e",
+          "sourceBoundaryCount": 182626,
+          "startJDTDB": 990528.5,
           "worstRecordIndices": [
             0,
             0
@@ -2575,29 +2576,29 @@
         },
         "9": {
           "analyticRateBoundKmPerTDBDay": 4.445517498970156e-162,
-          "encodedBytes": 6898896,
-          "endJDTDB": 3218096.5,
-          "maximumDecodedBoundaryPositionJumpKm": 2.6975629358002243e-06,
-          "maximumDecodedBoundaryRateJumpKmPerTDBDay": 1.771811463096808e-10,
-          "maximumSourceBoundaryPositionJumpKm": 2.6975629358002243e-06,
-          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.771811463096808e-10,
-          "maximumSourceRadiusKm": 7397662876.667618,
-          "minimumSourceRadiusKm": 4424966047.54134,
+          "encodedBytes": 13149216,
+          "endJDTDB": 3912560.5,
+          "maximumDecodedBoundaryPositionJumpKm": 2.698056768836087e-06,
+          "maximumDecodedBoundaryRateJumpKmPerTDBDay": 1.863554421996479e-10,
+          "maximumSourceBoundaryPositionJumpKm": 2.698056768836087e-06,
+          "maximumSourceBoundaryRateJumpKmPerTDBDay": 1.863554421996479e-10,
+          "maximumSourceRadiusKm": 7400759360.138967,
+          "minimumSourceRadiusKm": 4421112670.520806,
           "positionBoundKm": 4.445517498970156e-162,
-          "recordCount": 47909,
+          "recordCount": 91314,
           "recordDays": 32.0,
-          "sha256": "cdd2899417559522f36c22203a0e061096e5590c0a67eb7db53ee97b9846cd0e",
-          "sourceBoundaryCount": 47908,
-          "startJDTDB": 1685008.5,
+          "sha256": "66e9a25f90e299390112cd7732c0bfcb0cf3fde13088bc29feb27191ef2f956e",
+          "sourceBoundaryCount": 91313,
+          "startJDTDB": 990512.5,
           "worstRecordIndices": [
             0,
             0
           ]
         }
       },
-      "centerOffsetBudgetKmAtOneArcminute": 1286717.1879264854,
-      "encodedBytes": 32194584,
-      "minimumHeliocentricDistanceKm": 4423407920.089564,
+      "centerOffsetBudgetKmAtOneArcminute": 1285596.2860034765,
+      "encodedBytes": 61362744,
+      "minimumHeliocentricDistanceKm": 4419554543.069031,
       "positionBoundKm": 8.891034997940314e-162
     }
   },
@@ -2616,19 +2617,19 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.002452960399714564,
-          "positionDifferenceKm": 119.47473002818909,
-          "velocityDifferenceKmPerSecond": 9.177237889236913e-05
+          "angularDifferenceArcseconds": 0.003002245128888261,
+          "positionDifferenceKm": 103.79979311070187,
+          "velocityDifferenceKmPerSecond": 3.3572183690222586e-06
         },
         "cubic-float64": {
-          "angularDifferenceArcseconds": 2.308368644553946e-06,
-          "positionDifferenceKm": 0.09874094968162947,
-          "velocityDifferenceKmPerSecond": 2.953627534852883e-07
+          "angularDifferenceArcseconds": 1.7146654173328395e-08,
+          "positionDifferenceKm": 0.0005222255705165356,
+          "velocityDifferenceKmPerSecond": 2.33797224469346e-08
         },
         "direct-float32": {
-          "angularDifferenceArcseconds": 0.004369779450157282,
-          "positionDifferenceKm": 183.2459928760068,
-          "velocityDifferenceKmPerSecond": 1.7883467736898774e-07
+          "angularDifferenceArcseconds": 0.00516196247021117,
+          "positionDifferenceKm": 137.43222680911978,
+          "velocityDifferenceKmPerSecond": 8.846410369456072e-08
         },
         "direct-float64": {
           "angularDifferenceArcseconds": 0.0,
@@ -2636,24 +2637,24 @@
           "velocityDifferenceKmPerSecond": 0.0
         }
       },
-      "tdbDaysFromJ2000": -766525.0
+      "tdbDaysFromJ2000": -1461000.0
     },
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.004159947684969391,
-          "positionDifferenceKm": 97.81812321332244,
-          "velocityDifferenceKmPerSecond": 4.8954953298677295e-05
+          "angularDifferenceArcseconds": 0.002062648466612124,
+          "positionDifferenceKm": 57.44091763142377,
+          "velocityDifferenceKmPerSecond": 0.00012532667199325026
         },
         "cubic-float64": {
-          "angularDifferenceArcseconds": 1.202143696336939e-06,
-          "positionDifferenceKm": 0.11820501234180099,
-          "velocityDifferenceKmPerSecond": 7.054196511886633e-08
+          "angularDifferenceArcseconds": 1.3212835817102958e-06,
+          "positionDifferenceKm": 0.0738714023371209,
+          "velocityDifferenceKmPerSecond": 1.4099492083584704e-08
         },
         "direct-float32": {
-          "angularDifferenceArcseconds": 0.0006745253014171925,
-          "positionDifferenceKm": 64.0812506012415,
-          "velocityDifferenceKmPerSecond": 1.6972315730606805e-07
+          "angularDifferenceArcseconds": 0.004585656250173896,
+          "positionDifferenceKm": 130.89942496849758,
+          "velocityDifferenceKmPerSecond": 1.7347595646232645e-07
         },
         "direct-float64": {
           "angularDifferenceArcseconds": 0.0,
@@ -2661,7 +2662,307 @@
           "velocityDifferenceKmPerSecond": 0.0
         }
       },
-      "tdbDaysFromJ2000": -730000.0
+      "tdbDaysFromJ2000": -1460000.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.006806794753479327,
+          "positionDifferenceKm": 264.20084546068995,
+          "velocityDifferenceKmPerSecond": 0.00010377009698465817
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 9.303128233495952e-07,
+          "positionDifferenceKm": 0.03816459473908781,
+          "velocityDifferenceKmPerSecond": 1.0829631691257528e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0027108830085927097,
+          "positionDifferenceKm": 189.41319589121733,
+          "velocityDifferenceKmPerSecond": 9.535375340966862e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1401600.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.003883780618502185,
+          "positionDifferenceKm": 109.93658939974925,
+          "velocityDifferenceKmPerSecond": 8.93478168689965e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 7.057107260184654e-07,
+          "positionDifferenceKm": 0.03651420913420765,
+          "velocityDifferenceKmPerSecond": 1.385398991925044e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.004135505153847743,
+          "positionDifferenceKm": 174.14543387932824,
+          "velocityDifferenceKmPerSecond": 9.859620210218339e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1343200.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0036131814878481395,
+          "positionDifferenceKm": 102.71287791437871,
+          "velocityDifferenceKmPerSecond": 8.549646605872766e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 1.2046908501415669e-06,
+          "positionDifferenceKm": 0.04418250393197735,
+          "velocityDifferenceKmPerSecond": 1.9501812092398805e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0038323337948489157,
+          "positionDifferenceKm": 108.17765233768912,
+          "velocityDifferenceKmPerSecond": 7.270956001440443e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1284800.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.00019462581627359516,
+          "positionDifferenceKm": 39.28824920810943,
+          "velocityDifferenceKmPerSecond": 8.061916986323008e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 8.317916798540188e-07,
+          "positionDifferenceKm": 0.06981345469736301,
+          "velocityDifferenceKmPerSecond": 3.551467203785204e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.006816298093830647,
+          "positionDifferenceKm": 259.07780489277275,
+          "velocityDifferenceKmPerSecond": 3.784579256204526e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1226400.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0017399680773692832,
+          "positionDifferenceKm": 42.05947893016734,
+          "velocityDifferenceKmPerSecond": 6.479192874967664e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 5.810362809237601e-06,
+          "positionDifferenceKm": 0.1455529064091197,
+          "velocityDifferenceKmPerSecond": 8.56862994229703e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0014261501255202797,
+          "positionDifferenceKm": 55.76730373686533,
+          "velocityDifferenceKmPerSecond": 8.978142112593031e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1168000.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.005758941040304518,
+          "positionDifferenceKm": 217.85592374485446,
+          "velocityDifferenceKmPerSecond": 5.0374873122176294e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 3.18238517740748e-06,
+          "positionDifferenceKm": 0.19215727036489225,
+          "velocityDifferenceKmPerSecond": 9.704055129622254e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0008945706737081259,
+          "positionDifferenceKm": 106.0772802794287,
+          "velocityDifferenceKmPerSecond": 1.7322205300289206e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1109600.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0009869619203389274,
+          "positionDifferenceKm": 95.92863005269176,
+          "velocityDifferenceKmPerSecond": 3.0980357550090695e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 1.6355410155370658e-06,
+          "positionDifferenceKm": 0.0819275710771345,
+          "velocityDifferenceKmPerSecond": 2.6004108053675122e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0030757769052831394,
+          "positionDifferenceKm": 136.39816330887265,
+          "velocityDifferenceKmPerSecond": 1.1881189360806624e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -1051200.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0010050894500586794,
+          "positionDifferenceKm": 129.50087221124048,
+          "velocityDifferenceKmPerSecond": 0.0001912110573844619
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 3.616167492117169e-07,
+          "positionDifferenceKm": 0.009118286531388131,
+          "velocityDifferenceKmPerSecond": 9.228593536791069e-09
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0017693202598991799,
+          "positionDifferenceKm": 56.45991477880826,
+          "velocityDifferenceKmPerSecond": 1.5678419894117493e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -992800.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0002836935933290315,
+          "positionDifferenceKm": 80.21907415184504,
+          "velocityDifferenceKmPerSecond": 0.00015446269952482865
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 6.963005707097756e-07,
+          "positionDifferenceKm": 0.022725495058758285,
+          "velocityDifferenceKmPerSecond": 1.0546515811660745e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0020456263796763937,
+          "positionDifferenceKm": 74.14196511784456,
+          "velocityDifferenceKmPerSecond": 8.91617937827528e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -934400.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.003000874505026275,
+          "positionDifferenceKm": 121.68371012398633,
+          "velocityDifferenceKmPerSecond": 0.00016208656819294469
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 5.82402970085121e-07,
+          "positionDifferenceKm": 0.03507913904801505,
+          "velocityDifferenceKmPerSecond": 1.4958248645539685e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.00017110500948126854,
+          "positionDifferenceKm": 6.574745258026426,
+          "velocityDifferenceKmPerSecond": 1.516452573879762e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -876000.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.004520780108174987,
+          "positionDifferenceKm": 104.30897581166118,
+          "velocityDifferenceKmPerSecond": 5.1545230017396476e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 2.230933067949004e-06,
+          "positionDifferenceKm": 0.04969147124714852,
+          "velocityDifferenceKmPerSecond": 2.1593183508429097e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0022630524422170093,
+          "positionDifferenceKm": 108.69554249948543,
+          "velocityDifferenceKmPerSecond": 1.3419856839989377e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -817600.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0010406144332679918,
+          "positionDifferenceKm": 44.10037296167583,
+          "velocityDifferenceKmPerSecond": 7.897428398080951e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 7.721783861834091e-07,
+          "positionDifferenceKm": 0.08687241602933984,
+          "velocityDifferenceKmPerSecond": 4.640430693353309e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0015115539371527787,
+          "positionDifferenceKm": 76.12359482763613,
+          "velocityDifferenceKmPerSecond": 1.6780382829961283e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": -759200.0
     },
     {
       "candidates": {
@@ -2691,31 +2992,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0006716242740872387,
-          "positionDifferenceKm": 204.5800115835092,
-          "velocityDifferenceKmPerSecond": 3.993096739901539e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.4244640926794734e-06,
-          "positionDifferenceKm": 0.14986865852826908,
-          "velocityDifferenceKmPerSecond": 9.151982874084925e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.00398180434008178,
-          "positionDifferenceKm": 140.14365819457353,
-          "velocityDifferenceKmPerSecond": 9.709513773188196e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -671600.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.00030149942374690263,
           "positionDifferenceKm": 47.34231991404352,
           "velocityDifferenceKmPerSecond": 9.995334188795374e-05
@@ -2737,31 +3013,6 @@
         }
       },
       "tdbDaysFromJ2000": -642400.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0017428831546292011,
-          "positionDifferenceKm": 53.88487748652504,
-          "velocityDifferenceKmPerSecond": 3.968690993177616e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.5051107322250174e-06,
-          "positionDifferenceKm": 0.09017480996513796,
-          "velocityDifferenceKmPerSecond": 4.50383669530536e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.002177479438365338,
-          "positionDifferenceKm": 89.92051891414039,
-          "velocityDifferenceKmPerSecond": 1.8248568062444517e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -613200.0
     },
     {
       "candidates": {
@@ -2791,31 +3042,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0014331105023495648,
-          "positionDifferenceKm": 140.797213559069,
-          "velocityDifferenceKmPerSecond": 2.947431671289701e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.341260289331296e-06,
-          "positionDifferenceKm": 0.046317540020128264,
-          "velocityDifferenceKmPerSecond": 1.9949115932001336e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0034060748787069664,
-          "positionDifferenceKm": 96.66875837113474,
-          "velocityDifferenceKmPerSecond": 8.197215591534258e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -554800.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0014726603653830242,
           "positionDifferenceKm": 139.65111312667835,
           "velocityDifferenceKmPerSecond": 5.615446271528226e-05
@@ -2837,31 +3063,6 @@
         }
       },
       "tdbDaysFromJ2000": -525600.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.00046201785598309436,
-          "positionDifferenceKm": 48.242234752529946,
-          "velocityDifferenceKmPerSecond": 8.458625174587642e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 8.988313400796696e-07,
-          "positionDifferenceKm": 0.03225641225741674,
-          "velocityDifferenceKmPerSecond": 1.2247122522512402e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0023550463942681394,
-          "positionDifferenceKm": 152.12406114635135,
-          "velocityDifferenceKmPerSecond": 8.339164971900734e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -496400.0
     },
     {
       "candidates": {
@@ -2891,31 +3092,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.006652094325419674,
-          "positionDifferenceKm": 241.3670733227348,
-          "velocityDifferenceKmPerSecond": 0.00013684636931577413
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 9.190022843891359e-07,
-          "positionDifferenceKm": 0.027104957072119917,
-          "velocityDifferenceKmPerSecond": 1.0842670811590846e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.002789654994436956,
-          "positionDifferenceKm": 220.69553854515897,
-          "velocityDifferenceKmPerSecond": 1.6564513711587775e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -438000.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.008046664399002682,
           "positionDifferenceKm": 287.0985552398426,
           "velocityDifferenceKmPerSecond": 5.6602608743382265e-05
@@ -2937,31 +3113,6 @@
         }
       },
       "tdbDaysFromJ2000": -408800.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0022946754004418957,
-          "positionDifferenceKm": 91.3419231945702,
-          "velocityDifferenceKmPerSecond": 0.000101343644530637
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 6.631273772313271e-07,
-          "positionDifferenceKm": 0.02640355100584912,
-          "velocityDifferenceKmPerSecond": 1.1113920247752626e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0045372817574570075,
-          "positionDifferenceKm": 126.14056187128723,
-          "velocityDifferenceKmPerSecond": 8.83445788673343e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -379600.0
     },
     {
       "candidates": {
@@ -2991,31 +3142,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.00020734196507919968,
-          "positionDifferenceKm": 96.2430326771886,
-          "velocityDifferenceKmPerSecond": 0.00015567383778603282
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 8.523905578944414e-07,
-          "positionDifferenceKm": 0.046394350210068006,
-          "velocityDifferenceKmPerSecond": 2.98580611200754e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0034006911714188296,
-          "positionDifferenceKm": 180.14993653250033,
-          "velocityDifferenceKmPerSecond": 6.527896455946395e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -321200.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.004177060920823929,
           "positionDifferenceKm": 118.19894939336143,
           "velocityDifferenceKmPerSecond": 0.00012067532396938527
@@ -3037,31 +3163,6 @@
         }
       },
       "tdbDaysFromJ2000": -292000.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0017709591725060825,
-          "positionDifferenceKm": 59.535291261946455,
-          "velocityDifferenceKmPerSecond": 2.738931685810768e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.7795734200005283e-06,
-          "positionDifferenceKm": 0.11963879719104387,
-          "velocityDifferenceKmPerSecond": 8.684792460330185e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0025030249620907573,
-          "positionDifferenceKm": 66.02117995171177,
-          "velocityDifferenceKmPerSecond": 1.6929489043686492e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -262800.0
     },
     {
       "candidates": {
@@ -3091,31 +3192,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.002995068839355117,
-          "positionDifferenceKm": 89.52735641207,
-          "velocityDifferenceKmPerSecond": 8.532150085598426e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 5.600181488138818e-06,
-          "positionDifferenceKm": 0.16420065567496647,
-          "velocityDifferenceKmPerSecond": 8.869433374010142e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.00310011377988705,
-          "positionDifferenceKm": 156.2235676395844,
-          "velocityDifferenceKmPerSecond": 1.0983798550231556e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -204400.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0020914374669673908,
           "positionDifferenceKm": 51.983445109199344,
           "velocityDifferenceKmPerSecond": 6.0932594140491646e-05
@@ -3141,31 +3217,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.002093891281674578,
-          "positionDifferenceKm": 196.85472314768026,
-          "velocityDifferenceKmPerSecond": 0.0001788011342377134
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 2.7365286001478343e-06,
-          "positionDifferenceKm": 0.09898713808136324,
-          "velocityDifferenceKmPerSecond": 3.1682108422383104e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.002714349932694918,
-          "positionDifferenceKm": 97.00743265380612,
-          "velocityDifferenceKmPerSecond": 1.2858589907586643e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -146000.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0045232471280198605,
           "positionDifferenceKm": 143.25938404339632,
           "velocityDifferenceKmPerSecond": 0.00012625577891055149
@@ -3187,31 +3238,6 @@
         }
       },
       "tdbDaysFromJ2000": -116800.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.00027450519155345336,
-          "positionDifferenceKm": 92.7071507420671,
-          "velocityDifferenceKmPerSecond": 0.0001282834244927576
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.3984618306543851e-06,
-          "positionDifferenceKm": 0.054740918272707675,
-          "velocityDifferenceKmPerSecond": 1.578231886520904e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0002634698725387678,
-          "positionDifferenceKm": 34.29415791898502,
-          "velocityDifferenceKmPerSecond": 1.5353855508847408e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -87600.0
     },
     {
       "candidates": {
@@ -3466,31 +3492,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.003160736489544898,
-          "positionDifferenceKm": 105.67143982577218,
-          "velocityDifferenceKmPerSecond": 0.00011121141082211415
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.134404534854372e-06,
-          "positionDifferenceKm": 0.03627678227568967,
-          "velocityDifferenceKmPerSecond": 1.1204813665781729e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.003160361678590739,
-          "positionDifferenceKm": 100.85268704372308,
-          "velocityDifferenceKmPerSecond": 1.3957533124367776e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": -29200.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0022542074286022364,
           "positionDifferenceKm": 154.34561011528746,
           "velocityDifferenceKmPerSecond": 6.726459080918015e-08
@@ -3537,31 +3538,6 @@
         }
       },
       "tdbDaysFromJ2000": 0.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0021147088081328244,
-          "positionDifferenceKm": 142.72921962949744,
-          "velocityDifferenceKmPerSecond": 2.8837210815785522e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 2.990546463514655e-07,
-          "positionDifferenceKm": 0.023536750873393023,
-          "velocityDifferenceKmPerSecond": 6.865368271999111e-09
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0025695836335680256,
-          "positionDifferenceKm": 92.25758316635394,
-          "velocityDifferenceKmPerSecond": 1.1581621456719352e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 29200.0
     },
     {
       "candidates": {
@@ -3816,31 +3792,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.005087143645575245,
-          "positionDifferenceKm": 113.22373026149536,
-          "velocityDifferenceKmPerSecond": 9.657918514896731e-06
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 4.569973873637667e-07,
-          "positionDifferenceKm": 0.018682700001244244,
-          "velocityDifferenceKmPerSecond": 1.5559769808046357e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.006437570587930479,
-          "positionDifferenceKm": 140.9267722209558,
-          "velocityDifferenceKmPerSecond": 1.350615569264928e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 87600.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0006374882877381511,
           "positionDifferenceKm": 27.7348853721176,
           "velocityDifferenceKmPerSecond": 0.00013912588979408976
@@ -3862,31 +3813,6 @@
         }
       },
       "tdbDaysFromJ2000": 116800.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0013362294747770438,
-          "positionDifferenceKm": 151.57050620566477,
-          "velocityDifferenceKmPerSecond": 6.446947990346432e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 2.4680784060707518e-06,
-          "positionDifferenceKm": 0.08536214463371992,
-          "velocityDifferenceKmPerSecond": 6.016523978505824e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0016132331724202,
-          "positionDifferenceKm": 194.86797504413724,
-          "velocityDifferenceKmPerSecond": 2.1881412234435765e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 146000.0
     },
     {
       "candidates": {
@@ -3916,31 +3842,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0015082735997641972,
-          "positionDifferenceKm": 73.6166733090524,
-          "velocityDifferenceKmPerSecond": 0.0001359756128610047
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 6.048426249993987e-06,
-          "positionDifferenceKm": 0.19507544267159996,
-          "velocityDifferenceKmPerSecond": 1.1579290238438907e-07
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0009775672959503588,
-          "positionDifferenceKm": 48.5124701890178,
-          "velocityDifferenceKmPerSecond": 1.5431329851064372e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 204400.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0015280418239936062,
           "positionDifferenceKm": 90.29333922270546,
           "velocityDifferenceKmPerSecond": 4.174301100917603e-05
@@ -3962,31 +3863,6 @@
         }
       },
       "tdbDaysFromJ2000": 233600.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0004835159414073244,
-          "positionDifferenceKm": 120.3274709069183,
-          "velocityDifferenceKmPerSecond": 0.00014102550530319032
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 2.6547443697488395e-06,
-          "positionDifferenceKm": 0.14576114823766753,
-          "velocityDifferenceKmPerSecond": 5.0097735137718956e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0007745246320212491,
-          "positionDifferenceKm": 21.401327435138864,
-          "velocityDifferenceKmPerSecond": 1.1348659090943295e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 262800.0
     },
     {
       "candidates": {
@@ -4016,31 +3892,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.004408074485292164,
-          "positionDifferenceKm": 202.16371220723246,
-          "velocityDifferenceKmPerSecond": 2.866089293099963e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.257211556938384e-06,
-          "positionDifferenceKm": 0.060345718720403715,
-          "velocityDifferenceKmPerSecond": 1.16592915236244e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.002934214128020231,
-          "positionDifferenceKm": 137.2334577675727,
-          "velocityDifferenceKmPerSecond": 7.266848783065177e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 321200.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.001253090943700455,
           "positionDifferenceKm": 36.767173105621985,
           "velocityDifferenceKmPerSecond": 0.0001240574748907993
@@ -4062,31 +3913,6 @@
         }
       },
       "tdbDaysFromJ2000": 350400.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.003243532752678207,
-          "positionDifferenceKm": 191.70221966289415,
-          "velocityDifferenceKmPerSecond": 0.00013777396705924174
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.034521205383801e-06,
-          "positionDifferenceKm": 0.034884218467632906,
-          "velocityDifferenceKmPerSecond": 1.0211056467906862e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0042746456649183934,
-          "positionDifferenceKm": 166.0012545478066,
-          "velocityDifferenceKmPerSecond": 1.0338318280242705e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 379600.0
     },
     {
       "candidates": {
@@ -4116,31 +3942,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.004406153448711689,
-          "positionDifferenceKm": 138.20429565387693,
-          "velocityDifferenceKmPerSecond": 3.645707321320027e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 1.1338113929910301e-06,
-          "positionDifferenceKm": 0.029813746944293208,
-          "velocityDifferenceKmPerSecond": 1.0159599919616214e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0005425474410276474,
-          "positionDifferenceKm": 144.2993530079131,
-          "velocityDifferenceKmPerSecond": 4.1841103984769835e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 438000.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0056667361438493035,
           "positionDifferenceKm": 171.32571059520663,
           "velocityDifferenceKmPerSecond": 0.0001811105575584937
@@ -4162,31 +3963,6 @@
         }
       },
       "tdbDaysFromJ2000": 467200.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0013463952119789633,
-          "positionDifferenceKm": 95.55973823141937,
-          "velocityDifferenceKmPerSecond": 6.702076610527356e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 4.728254578730319e-07,
-          "positionDifferenceKm": 0.03726152061012705,
-          "velocityDifferenceKmPerSecond": 1.7091209762818947e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0025345068853619072,
-          "positionDifferenceKm": 91.69367245821812,
-          "velocityDifferenceKmPerSecond": 1.0286483180762253e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 496400.0
     },
     {
       "candidates": {
@@ -4216,31 +3992,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.0023464405014552324,
-          "positionDifferenceKm": 131.8245142139514,
-          "velocityDifferenceKmPerSecond": 3.558048738639334e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 2.667223387565609e-06,
-          "positionDifferenceKm": 0.07117263367962819,
-          "velocityDifferenceKmPerSecond": 3.994658717325895e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0011570220850824155,
-          "positionDifferenceKm": 91.93213236531324,
-          "velocityDifferenceKmPerSecond": 1.3122227582384955e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 554800.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.0010369423443181715,
           "positionDifferenceKm": 287.78390362561856,
           "velocityDifferenceKmPerSecond": 0.00017389110113735448
@@ -4262,31 +4013,6 @@
         }
       },
       "tdbDaysFromJ2000": 584000.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
-          "angularDifferenceArcseconds": 0.002716619770255347,
-          "positionDifferenceKm": 107.67389661242217,
-          "velocityDifferenceKmPerSecond": 4.514236166135185e-05
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 3.254664075043876e-06,
-          "positionDifferenceKm": 0.16333299237647844,
-          "velocityDifferenceKmPerSecond": 9.877867950355249e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.0012858827374670786,
-          "positionDifferenceKm": 130.0647859320991,
-          "velocityDifferenceKmPerSecond": 1.0437521418363741e-07
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 613200.0
     },
     {
       "candidates": {
@@ -4316,31 +4042,6 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.003926687899269913,
-          "positionDifferenceKm": 238.32047954129473,
-          "velocityDifferenceKmPerSecond": 0.00011691716898854511
-        },
-        "cubic-float64": {
-          "angularDifferenceArcseconds": 2.092977730939715e-06,
-          "positionDifferenceKm": 0.17620683165732182,
-          "velocityDifferenceKmPerSecond": 8.282349656121149e-08
-        },
-        "direct-float32": {
-          "angularDifferenceArcseconds": 0.004307583716711225,
-          "positionDifferenceKm": 243.50267957022146,
-          "velocityDifferenceKmPerSecond": 7.83396817356729e-08
-        },
-        "direct-float64": {
-          "angularDifferenceArcseconds": 0.0,
-          "positionDifferenceKm": 0.0,
-          "velocityDifferenceKmPerSecond": 0.0
-        }
-      },
-      "tdbDaysFromJ2000": 671600.0
-    },
-    {
-      "candidates": {
-        "cubic-float32": {
           "angularDifferenceArcseconds": 0.004445377449935363,
           "positionDifferenceKm": 142.51436774825567,
           "velocityDifferenceKmPerSecond": 1.5149560188193875e-05
@@ -4366,19 +4067,19 @@
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.00330327593726184,
-          "positionDifferenceKm": 111.55420800831845,
-          "velocityDifferenceKmPerSecond": 1.0510216320308848e-05
+          "angularDifferenceArcseconds": 0.002772789562660724,
+          "positionDifferenceKm": 100.44314722383139,
+          "velocityDifferenceKmPerSecond": 0.00012098432449429156
         },
         "cubic-float64": {
-          "angularDifferenceArcseconds": 1.83225781187582e-06,
-          "positionDifferenceKm": 0.06486172904216932,
-          "velocityDifferenceKmPerSecond": 1.6606547351710598e-08
+          "angularDifferenceArcseconds": 7.701277919057008e-07,
+          "positionDifferenceKm": 0.027069977015532553,
+          "velocityDifferenceKmPerSecond": 4.081614526739467e-09
         },
         "direct-float32": {
-          "angularDifferenceArcseconds": 0.0016614643560649862,
-          "positionDifferenceKm": 103.67287451580165,
-          "velocityDifferenceKmPerSecond": 1.0655449946139611e-08
+          "angularDifferenceArcseconds": 0.0009305409421666916,
+          "positionDifferenceKm": 210.70956828596374,
+          "velocityDifferenceKmPerSecond": 5.879717593093015e-08
         },
         "direct-float64": {
           "angularDifferenceArcseconds": 0.0,
@@ -4386,24 +4087,24 @@
           "velocityDifferenceKmPerSecond": 0.0
         }
       },
-      "tdbDaysFromJ2000": 730000.0
+      "tdbDaysFromJ2000": 759200.0
     },
     {
       "candidates": {
         "cubic-float32": {
-          "angularDifferenceArcseconds": 0.006392272315001354,
-          "positionDifferenceKm": 229.61092667704355,
-          "velocityDifferenceKmPerSecond": 2.6457853996741753e-05
+          "angularDifferenceArcseconds": 0.00030739401737343435,
+          "positionDifferenceKm": 85.44709775037299,
+          "velocityDifferenceKmPerSecond": 5.103398209258414e-05
         },
         "cubic-float64": {
-          "angularDifferenceArcseconds": 3.004151137515784e-06,
-          "positionDifferenceKm": 0.10767132842036038,
-          "velocityDifferenceKmPerSecond": 2.1441594070024801e-07
+          "angularDifferenceArcseconds": 5.171651493506148e-07,
+          "positionDifferenceKm": 0.011542459071019832,
+          "velocityDifferenceKmPerSecond": 6.649047917080664e-09
         },
         "direct-float32": {
-          "angularDifferenceArcseconds": 0.00015003903472524075,
-          "positionDifferenceKm": 92.87208187002518,
-          "velocityDifferenceKmPerSecond": 9.170849698460265e-08
+          "angularDifferenceArcseconds": 0.001379401962549593,
+          "positionDifferenceKm": 89.82398219120532,
+          "velocityDifferenceKmPerSecond": 8.358579227990325e-08
         },
         "direct-float64": {
           "angularDifferenceArcseconds": 0.0,
@@ -4411,7 +4112,307 @@
           "velocityDifferenceKmPerSecond": 0.0
         }
       },
-      "tdbDaysFromJ2000": 766525.0
+      "tdbDaysFromJ2000": 817600.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0003235107613814374,
+          "positionDifferenceKm": 165.358838941396,
+          "velocityDifferenceKmPerSecond": 1.842017267790484e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 6.310483536627707e-07,
+          "positionDifferenceKm": 0.022081556084778468,
+          "velocityDifferenceKmPerSecond": 9.88168534512424e-09
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0009063836306608575,
+          "positionDifferenceKm": 36.369080361596005,
+          "velocityDifferenceKmPerSecond": 1.5123859097579245e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 876000.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0007139057892890855,
+          "positionDifferenceKm": 53.7741499836444,
+          "velocityDifferenceKmPerSecond": 6.466669615916846e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 9.372152414343782e-07,
+          "positionDifferenceKm": 0.03568134949033449,
+          "velocityDifferenceKmPerSecond": 1.7191160617438473e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0022548269776441476,
+          "positionDifferenceKm": 78.24081367126273,
+          "velocityDifferenceKmPerSecond": 4.076389995521608e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 934400.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0029216660737966154,
+          "positionDifferenceKm": 98.01899147576465,
+          "velocityDifferenceKmPerSecond": 3.506308236462984e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 2.1840761162141568e-06,
+          "positionDifferenceKm": 0.06754394417052864,
+          "velocityDifferenceKmPerSecond": 3.450201352065005e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.004553935626122338,
+          "positionDifferenceKm": 106.02537329913716,
+          "velocityDifferenceKmPerSecond": 1.3645213663322606e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 992800.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0009294681439102263,
+          "positionDifferenceKm": 127.18103544761897,
+          "velocityDifferenceKmPerSecond": 7.350429581120571e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 3.8739193320890635e-06,
+          "positionDifferenceKm": 0.13493650077072933,
+          "velocityDifferenceKmPerSecond": 8.449790790388555e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.002350254925501907,
+          "positionDifferenceKm": 80.88632798030375,
+          "velocityDifferenceKmPerSecond": 2.9463300675252254e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1051200.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0027531866611900982,
+          "positionDifferenceKm": 181.36284011884786,
+          "velocityDifferenceKmPerSecond": 9.385230208630417e-06
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 4.481472574256751e-06,
+          "positionDifferenceKm": 0.15325187907171475,
+          "velocityDifferenceKmPerSecond": 8.523559016554595e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0037149680895391746,
+          "positionDifferenceKm": 192.11552371684118,
+          "velocityDifferenceKmPerSecond": 4.72913711773013e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1109600.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0002708888586626138,
+          "positionDifferenceKm": 156.47523359484083,
+          "velocityDifferenceKmPerSecond": 8.412761745395825e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 2.8166123798448925e-06,
+          "positionDifferenceKm": 0.07737399521918555,
+          "velocityDifferenceKmPerSecond": 3.1711222419623335e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.004144026710186762,
+          "positionDifferenceKm": 199.7058839160536,
+          "velocityDifferenceKmPerSecond": 1.0799930698072823e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1168000.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0026870027946055645,
+          "positionDifferenceKm": 95.85625049849654,
+          "velocityDifferenceKmPerSecond": 7.57391693134372e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 4.775842372478462e-07,
+          "positionDifferenceKm": 0.034447025885014644,
+          "velocityDifferenceKmPerSecond": 1.1754918721079554e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0009390014257793345,
+          "positionDifferenceKm": 166.02116116678127,
+          "velocityDifferenceKmPerSecond": 8.930995728134648e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1226400.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.002074865369916756,
+          "positionDifferenceKm": 138.61913920867548,
+          "velocityDifferenceKmPerSecond": 0.00012361595813788906
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 8.781501347420661e-08,
+          "positionDifferenceKm": 0.01993111507161066,
+          "velocityDifferenceKmPerSecond": 6.778965311100531e-09
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0030982232718715515,
+          "positionDifferenceKm": 91.66072803265409,
+          "velocityDifferenceKmPerSecond": 1.6475592855342777e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1284800.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0017090761001262952,
+          "positionDifferenceKm": 48.28856642996003,
+          "velocityDifferenceKmPerSecond": 5.835437426187721e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 5.683403748539435e-07,
+          "positionDifferenceKm": 0.015486048590849634,
+          "velocityDifferenceKmPerSecond": 5.247376225127979e-09
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0027195392770357047,
+          "positionDifferenceKm": 72.74412914948407,
+          "velocityDifferenceKmPerSecond": 1.1548605415131002e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1343200.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0008383364970902985,
+          "positionDifferenceKm": 56.0235601698095,
+          "velocityDifferenceKmPerSecond": 6.940117545403574e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 5.635859223278872e-07,
+          "positionDifferenceKm": 0.020595501365673615,
+          "velocityDifferenceKmPerSecond": 1.2974711357278675e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.007522252948916196,
+          "positionDifferenceKm": 278.1597323648215,
+          "velocityDifferenceKmPerSecond": 9.418750924644089e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1401600.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0017162804298902939,
+          "positionDifferenceKm": 82.18543870634363,
+          "velocityDifferenceKmPerSecond": 7.856238461470311e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 2.419772740330799e-06,
+          "positionDifferenceKm": 0.06406617344725807,
+          "velocityDifferenceKmPerSecond": 4.6852901421694996e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.0023515379257996478,
+          "positionDifferenceKm": 98.18107333151578,
+          "velocityDifferenceKmPerSecond": 9.830542038747488e-08
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1460000.0
+    },
+    {
+      "candidates": {
+        "cubic-float32": {
+          "angularDifferenceArcseconds": 0.0017686469797928356,
+          "positionDifferenceKm": 79.5223942366753,
+          "velocityDifferenceKmPerSecond": 2.700347309036805e-05
+        },
+        "cubic-float64": {
+          "angularDifferenceArcseconds": 1.99588040020359e-08,
+          "positionDifferenceKm": 0.0006314691041902648,
+          "velocityDifferenceKmPerSecond": 2.307948109050808e-08
+        },
+        "direct-float32": {
+          "angularDifferenceArcseconds": 0.004105045038565831,
+          "positionDifferenceKm": 146.25512143399197,
+          "velocityDifferenceKmPerSecond": 1.6481475455646607e-07
+        },
+        "direct-float64": {
+          "angularDifferenceArcseconds": 0.0,
+          "positionDifferenceKm": 0.0,
+          "velocityDifferenceKmPerSecond": 0.0
+        }
+      },
+      "tdbDaysFromJ2000": 1461000.0
     }
   ],
   "referenceArchivesSHA256": {
@@ -4421,39 +4422,39 @@
   "runtimeObservation": {
     "candidates": {
       "cubic-float32": {
-        "checksum": 16924631721657.592,
-        "evaluationsPerSecond": 78752.17184274633,
+        "checksum": 15840426693803.08,
+        "evaluationsPerSecond": 77295.73153329802,
         "iterations": 10000,
-        "scanAndEncodingSeconds": 11.196071625003242,
-        "seconds": 0.12698062499111984
+        "scanAndEncodingSeconds": 19.271377208991908,
+        "seconds": 0.1293732500053011
       },
       "cubic-float64": {
-        "checksum": 16924631690704.656,
-        "evaluationsPerSecond": 80948.41821723293,
+        "checksum": 15840426708312.06,
+        "evaluationsPerSecond": 69881.62925083547,
         "iterations": 10000,
-        "scanAndEncodingSeconds": 11.442970667005284,
-        "seconds": 0.12353545900259633
+        "scanAndEncodingSeconds": 26.770817833021283,
+        "seconds": 0.1430991250090301
       },
       "direct-float32": {
-        "checksum": 16924631795959.73,
-        "evaluationsPerSecond": 54882.29462894741,
+        "checksum": 15840426806120.121,
+        "evaluationsPerSecond": 51096.60754223572,
         "iterations": 10000,
-        "scanAndEncodingSeconds": 8.573209042006056,
-        "seconds": 0.18220812499930616
+        "scanAndEncodingSeconds": 29.531482624995988,
+        "seconds": 0.19570770900463685
       },
       "direct-float64": {
-        "checksum": 16924631690668.111,
-        "evaluationsPerSecond": 55053.03087789175,
+        "checksum": 15840426708278.023,
+        "evaluationsPerSecond": 54103.29535669932,
         "iterations": 10000,
-        "scanAndEncodingSeconds": 8.69983174999652,
-        "seconds": 0.18164304200035986
+        "scanAndEncodingSeconds": 24.59356587496586,
+        "seconds": 0.18483162502525374
       }
     },
     "evaluator": "Packed little-endian bytes, index, decode, cubic reconstruction where applicable, and analytic Chebyshev value/rate for both bodies",
     "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
     "productionRepresentative": false,
     "python": "3.14.7",
-    "totalSeconds": 41.39630883400969
+    "totalSeconds": 102.70402354199905
   },
   "schemaVersion": 1,
   "source": {
@@ -4465,42 +4466,60 @@
     ],
     "retrievedByteRangesSHA256": {
       "0-1023": "71686c47d507ccdae25d47dfcf52830188bbbd1c390405eff6c4c02f35c38156",
-      "1001611200-1003904959": "bc6660378f896f98f68dce649215897e110b1cfa231f089a8260d92ec78d8b2f",
-      "1003904960-1005656079": "4f878db065ca537b91258b7406605a6d398cc095338de288d872d00ad16297ad",
+      "1000926600-1003220359": "32499b3f207f2d99c2c23ba2df1dfcdba658d5b494a07bca4cc34d3b4253162f",
+      "1003220360-1005514119": "4dd3b4d5638a9cc80a03801ed3dfd78d2d8945c8ec31aa40f85a7da72ec487fd",
+      "1005514120-1005656079": "2f9b0ff7e752ba63fd91865a4fc2fcb1902d16286c7cc52d867bda6793821b46",
       "1005656080-1005656111": "64a7c55bd4b84846e1cc4130248db54fc8c40d7b83b76089268d7cd9ce1897a3",
-      "1029581232-1030891951": "26b6f4c92c2ec92ee57245fb559954a8de70c39f34c636bf8a17bd49707c0742",
-      "1030891952-1032202671": "f13dba4a57cd7fedf5d8d11ffebea526b73dcd5bd10e22cf66c9370d2479f479",
-      "1032202672-1033358351": "8a03d43db3596413796a7905178730069c9a5d0afea3d361f835f2996a5e8f71",
+      "1026108752-1027419471": "ba317082166e685a70ccb43a6fe16da184578b77d1fa5274ed7e7c09a84526dd",
+      "1027419472-1028730191": "75afdeecbf6bcaa6dec472db0c3dd13093019c571e7ef4a506fcc589fd75a021",
+      "1028730192-1030040911": "3633eff16225b301d2f0668669af3ed278582d11efff2633b77a3ca0db36bcf6",
+      "1030040912-1031351631": "f6b903fef3e195d4a90fb7ba30ff44059db2b91f425bd7cb2392b9ea32a58d5d",
+      "1031351632-1032662351": "7fdfcddba59d47b8c176947af09035b55cb545ce7fa49009ac080ed064e3f6f6",
+      "1032662352-1033358351": "c9f98b013e0ee73b5ae684ad9329f04a5453092e4f7565277234071f8b4b2160",
       "1033358352-1033358383": "d5c6b01b3b3a267b837b7d69e78e9a83ef50065b2113e3efde9b0b62d70934a2",
       "2562890624-2565184383": "d1cdbb43527c7ff00a98cc9b1689023ff050f234fb6badae7901bf90b3939f42",
       "2565184384-2567478143": "bd9f2b52f71eda45beb3a88c38fd01f3219144ef7fe42ea0184ba035fa232ee0",
       "2567478144-2569771903": "272132b9901b32688d7e1c423b260726f851d334eab2b59cde2513d079af36ff",
       "2569771904-2572065663": "400ea2ab9faa10e7db575a72bbc3ed88624fbac1ef1fd6dc6cd69188a9f8938b",
       "2572065664-2574359423": "05f06fdc8ce3ba0a61a585c405a848861316ee0a0550e5e62990e1aa5d9c3d04",
-      "2574359424-2576499463": "f5d5548ba048452b95ee9f666fe953d7b10860c49d3de1217ad730b6e0df8cfa",
+      "2574359424-2576653183": "1e24f23cb426788d1e52ab5ad5a92cc7b46231b1639eb68275418fbedd94747b",
+      "2576653184-2578946943": "97eebd6535767cedc8372ed8208b4b4f93cd7bc803920aff8788460f79c7826c",
+      "2578946944-2581240703": "7d8ccedda3486fce1401926155027fddf5d2e825470cc48d51602ed4e56d672c",
+      "2581240704-2583534463": "81cfe37ea30a75db0819b323cf829ea69f32eb9076052dcdcd52d468cdac30c3",
+      "2583534464-2585828223": "c5cde0ff555a20a276a849c8ab331bb70c6ef11f9fa91ec84376b99cbcf7d9af",
+      "2585828224-2588121983": "8662d2175ce58094ebe5fe9d10ff6495b3da84dcf782dd925dd9433d234a4c3f",
+      "2588121984-2588652863": "8a467858ce0f578a1c5113788a2dfdcd376db18c71f0d2be119ac6175113e11d",
       "2660183344-2660183375": "c20c893bf36fb75d069891586c264742c93ddeaeced831ad706eb19a4d1be8f8",
       "2660183376-2661494095": "9bd2565c66ebb28f5aca480a13c0d6e7e712b267f6273a80a4549fc469ad3146",
       "2661494096-2662804815": "ea858f76b2a459a2b6b940623c496ecf2d8eb606021894a4d24df33539668ca7",
-      "2662804816-2664071695": "adfaed7da39e5a82dcd233c36ca6b09971264a4d23eeab6db3f08caede535cca",
+      "2662804816-2664115535": "4fcb38f9c54e6955910947f13d0ba1d665d811c94dddae3a08bb6b6f5a485c99",
+      "2664115536-2665426255": "b8a400b5e37cba481b8f848c0d3d8ac49b0a35802b4e3057ca3b27d6bd1ddaca",
+      "2665426256-2666736975": "4d5aee494709f6b9dffc5f00eefb0a5ca47f40d22b14d11c23b7b365753eb2c6",
+      "2666736976-2667544015": "566cc0d73c74153b3444554ee0679bec038506cc9b1575eccd622ce85edc99ff",
       "2687981296-2687981327": "418a0c3ebe8de789eb021d28f4dc926c7bfe29cb3759e043f603413f6f6ad286",
       "2860328960-2860329983": "d52c057ae9b1fffeaa6130c91e56145fcb061e6904c76bb66d3242fc18629236",
       "62464-63487": "8f82a0ffd8f6977bc43f4d7d407b9044be8ed0789a6c92966586829d710813de",
-      "992436160-994729919": "b70fc9dd69741e3192c38796b3ae66d5f13aa17a41abedd7c8f9c674fb5fb777",
-      "994729920-997023679": "2cf7e80230c8905fd726355ae69a222b1d24d0b695d7a5e3f8e6157464f9c63e",
-      "997023680-999317439": "b9da86dd93f9e6f38717ca88344c50a23519bff6b0ed4b412ea90a95fe4765aa",
-      "999317440-1001611199": "bb4c72b5a92ca9590d32e56e88fa6b77ce2d5e42e7b8b26ccd22f27c6adaf348"
+      "980282760-982576519": "3d88541baca0ab772577374e7c964ae6e69bea4db7964c517a286ddc6ebf1bd6",
+      "982576520-984870279": "5dc6c2586733eded1ffabcf56999a70e1b699fe492bcd5a03f6fb7545d0fc98f",
+      "984870280-987164039": "8f57d3876e1eb605af35ff5333ea9e19d3690fea580182337b783179afc49499",
+      "987164040-989457799": "78bd04f368450de83f53238671aba867a4b54ce5e40d92dfc92bc2ac9b5d19a2",
+      "989457800-991751559": "5c85ba4389523a7dd266641124a7f701592dbbaf818f0b538fbb35f0d74d5f7d",
+      "991751560-994045319": "1447985284202fe78f8e30b37697012573d9b7b2d61cea12494feb36c9b7bef4",
+      "994045320-996339079": "a3556be9b7765d1dabbdd2e43a06dfc364632fb63f0e767890ff3bad50d3d2f8",
+      "996339080-998632839": "7c23cd8337bfb4054005cc1f8909fa0cd25650e55f6d312429c75ed0304075da",
+      "998632840-1000926599": "95d3f7eb491ed98aa84bfd7e8376bc9a9cadfc2ccee7633afcc6fc91d451d01c"
     },
     "segments": {
       "10": [
         {
-          "firstRecord": 299064,
+          "firstRecord": 255659,
           "metadata": {
             "record_count": 346278,
             "record_days": 16.0,
             "record_words": 35,
             "start_jd_tdb": -3100015.5
           },
-          "recordCount": 47214,
+          "recordCount": 90619,
           "segment": {
             "center": 0,
             "end_seconds_tdb": -960120000.0,
@@ -4520,7 +4539,7 @@
             "record_words": 35,
             "start_jd_tdb": 2440432.5
           },
-          "recordCount": 48603,
+          "recordCount": 92008,
           "segment": {
             "center": 0,
             "end_seconds_tdb": 479387937600.0,
@@ -4535,14 +4554,14 @@
       ],
       "9": [
         {
-          "firstRecord": 149532,
+          "firstRecord": 127829,
           "metadata": {
             "record_count": 173139,
             "record_days": 32.0,
             "record_words": 20,
             "start_jd_tdb": -3100015.5
           },
-          "recordCount": 23607,
+          "recordCount": 45310,
           "segment": {
             "center": 0,
             "end_seconds_tdb": -960120000.0,
@@ -4562,7 +4581,7 @@
             "record_words": 20,
             "start_jd_tdb": 2440432.5
           },
-          "recordCount": 24302,
+          "recordCount": 46004,
           "segment": {
             "center": 0,
             "end_seconds_tdb": 479387937600.0,
@@ -4581,7 +4600,7 @@
   },
   "sourceCodeSHA256": {
     "Scripts/assess-moon-de441.py": "5da238cbd372de58899fc7de9ca49dbe5e02a33b0886a8ce8bf69854783c26a4",
-    "Scripts/assess-pluto-de441.py": "dfba8100da9c972770a130f6f44f69d7effddc3a13bf20ee9ca288c1f3aa1eff",
+    "Scripts/assess-pluto-de441.py": "1227b6acbf03be7b3cb9f4d0cc7089aa21108f3b1b69640d26c34424243442a1",
     "Scripts/qualify-moon-de441.py": "69521b985aa7d5f577ca8b1d89712d11b5e3453d042059f498bfaaebd24667be"
   }
 }
