@@ -1,0 +1,165 @@
+name: Scientific qualification
+
+# Full qualification is explicit during scientific feature acceptance and before
+# releases. Weekly runs cover the default branch; labeled PRs cover their exact head.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  pull_request:
+    types: [opened, reopened, synchronize, labeled]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  full-debug-macos:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-qualification')
+    runs-on: macos-26
+    timeout-minutes: 180
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify and record qualified revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          echo "Qualification revision: $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Full Debug suite
+        run: swift test --no-parallel
+
+  full-debug-linux:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-qualification')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify and record qualified revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          echo "Qualification revision: $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Swift
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+
+      - name: Full Debug suite
+        run: swift test --no-parallel
+
+  numerical-remeasurement:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-qualification')
+    runs-on: macos-26
+    timeout-minutes: 180
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify and record qualified revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          echo "Qualification revision: $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify native solar numerical tools
+        run: |
+          python3 -m venv .build/numerics-venv
+          .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
+          .build/numerics-venv/bin/python Scripts/qualify-moon-de441-full.py --check
+          .build/numerics-venv/bin/python -m unittest Scripts/test_qualify_moon_de441_full.py -v
+          .build/numerics-venv/bin/python Scripts/generate-apparent-place-fixtures.py --check
+          python3 -m unittest Scripts/test_capture_apparent_place.py -v
+          python3 Scripts/capture-apparent-place.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/generate_apparent_integration.py --check
+          .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
+          python3 Scripts/solar-numerics/numerics.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/derive_altitude.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-debug.json
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-release.json
+
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-debug.json
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
+
+  full-thread-sanitizer:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-qualification')
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify and record qualified revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          echo "Qualification revision: $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Swift
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+
+      - name: Full Thread Sanitizer suite
+        run: swift test --no-parallel --sanitize=thread
+
+  full-address-sanitizer:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'full-qualification')
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout candidate revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify and record qualified revision
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          echo "Qualification revision: $EXPECTED_SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Swift
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+
+      - name: Full Address Sanitizer suite with timed-suite isolation
+        env:
+          LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan-suppressions.txt
+        run: |
+          Scripts/test-lsan-suppressions.sh
+          Scripts/test-test-isolation-wrapper.sh
+          Scripts/test-with-isolated-default-model.sh --sanitize=address

@@ -19,13 +19,11 @@ permissions:
   contents: read
 
 jobs:
-  # Apparent-place integration: local Debug passed in 3661s; hosted altitude rechecks need about 28 minutes each before that suite.
-  # Linux passed in 39m38s; the macOS job exhausted 60 minutes during its second altitude recheck, before its full suite.
-  # TSan's 150-minute ceiling includes headroom over a roughly 103-minute projection from the completed base and Linux timings; it is not a measured TSan result.
-  # These finite job ceilings preserve all test commands and per-test limits; Release and platform-build workloads are unchanged.
+  # Routine PR feedback: full Release coverage plus focused Debug/sanitizer regressions.
+  # Exhaustive Debug and numerical remeasurement live in qualification.yml.
   test-macos:
     runs-on: macos-26
-    timeout-minutes: 180
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -37,6 +35,9 @@ jobs:
         env:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Verify PR test selection controls
+        run: python3 -m unittest Scripts/test_pr_test_selection.py -v
 
       - name: Verify generated time table
         run: python3 Scripts/generate-time-table.py --check
@@ -110,7 +111,7 @@ jobs:
           python3 Scripts/capture-transit-references.py --check
           python3 Scripts/record-transit-evidence.py --check
 
-      - name: Verify native solar numerical tools
+      - name: Verify numerical fixtures and source bindings
         run: |
           python3 -m venv .build/numerics-venv
           .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
@@ -120,22 +121,14 @@ jobs:
           python3 -m unittest Scripts/test_capture_apparent_place.py -v
           python3 Scripts/capture-apparent-place.py --check
           .build/numerics-venv/bin/python Scripts/solar-numerics/generate_apparent_integration.py --check
-          .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
-          python3 Scripts/solar-numerics/numerics.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/derive_altitude.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-debug.json
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-release.json
-
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-debug.json
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
+          python3 Scripts/solar-numerics/numerics.py --bindings-only
 
       - name: Test
-        run: swift test --no-parallel
+        run: python3 Scripts/run-pr-tests.py
 
   test-linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -211,11 +204,11 @@ jobs:
           python3 Scripts/record-transit-evidence.py --check
 
       - name: Test
-        run: swift test --no-parallel
+        run: python3 Scripts/run-pr-tests.py
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -234,11 +227,11 @@ jobs:
           swift-version: "6.2"
 
       - name: Test (Thread Sanitizer)
-        run: swift test --no-parallel --sanitize=thread
+        run: python3 Scripts/run-pr-tests.py --sanitize=thread
 
   test-release-macos:
     runs-on: macos-26
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -256,7 +249,7 @@ jobs:
 
   test-release-linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

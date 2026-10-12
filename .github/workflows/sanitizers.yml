@@ -10,11 +10,14 @@ on:
       - "Scripts/test-test-isolation-wrapper.sh"
       - "Scripts/test-with-isolated-default-model.sh"
       - "Scripts/validate-test-isolation.py"
+      - "Scripts/run-pr-tests.py"
+      - "Scripts/test_pr_test_selection.py"
       - "Sources/AstronomyKit/**"
       - "Tests/**"
-  schedule:
-    - cron: "0 6 * * 1"
-  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -22,8 +25,8 @@ permissions:
 jobs:
   asan:
     runs-on: ubuntu-latest
-    # The apparent-place broad invocation exhausted 60 minutes after a 216s build; retain every isolation and per-test guard under this finite job ceiling.
-    timeout-minutes: 120
+    # Full ASan coverage, including timed-suite isolation, runs in qualification.yml.
+    timeout-minutes: 25
     steps:
       - name: Checkout candidate revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -54,5 +57,4 @@ jobs:
           LSAN_OPTIONS: suppressions=${{ github.workspace }}/.github/lsan-suppressions.txt
         run: |
           Scripts/test-lsan-suppressions.sh
-          Scripts/test-test-isolation-wrapper.sh
-          Scripts/test-with-isolated-default-model.sh --sanitize=address
+          python3 Scripts/run-pr-tests.py --sanitize=address
