@@ -20,3 +20,4 @@ Scripts/orientation-data/eect00.c -whitespace
 Sources/CLibAstronomy/EphemerisData/*.inc linguist-generated=true
 Sources/AstronomyKit/Engine/*/Generated/*.swift linguist-generated=true
 Scripts/observer-event-data/native-captures.json linguist-generated=true
+Sources/AstronomyKit/Engine/Moon/Generated/DE441Full/*.swift linguist-generated=true

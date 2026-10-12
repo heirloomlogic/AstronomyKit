@@ -67,6 +67,8 @@ jobs:
         run: |
           python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_de441.py Scripts/test_generate_moon_events.py -v
           python3 Scripts/generate-moon-de441.py --check
+          python3 -m unittest Scripts/test_generate_moon_de441_full.py -v
+          python3 Scripts/generate-moon-de441-full.py --check
           python3 Scripts/generate-moon-events.py --check
 
       - name: Verify generated Pluto tables
@@ -110,6 +112,8 @@ jobs:
         run: |
           python3 -m venv .build/numerics-venv
           .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
+          .build/numerics-venv/bin/python Scripts/qualify-moon-de441-full.py --check
+          .build/numerics-venv/bin/python -m unittest Scripts/test_qualify_moon_de441_full.py -v
           .build/numerics-venv/bin/python Scripts/generate-apparent-place-fixtures.py --check
           python3 -m unittest Scripts/test_capture_apparent_place.py -v
           python3 Scripts/capture-apparent-place.py --check
@@ -170,6 +174,8 @@ jobs:
         run: |
           python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_de441.py Scripts/test_generate_moon_events.py -v
           python3 Scripts/generate-moon-de441.py --check
+          python3 -m unittest Scripts/test_generate_moon_de441_full.py -v
+          python3 Scripts/generate-moon-de441-full.py --check
           python3 Scripts/generate-moon-events.py --check
 
       - name: Verify generated Pluto tables
