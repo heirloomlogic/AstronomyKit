@@ -212,9 +212,9 @@ struct EngineApparentIntegrationTests {
             let astrometricResidual = EnginePlutoConsumerQualificationTests.angle(astrometric, ar) * 60
             let unit = native / sqrt((native * native).sum())
             let astrometricUnit = astrometric / sqrt((astrometric * astrometric).sum())
-            let correctionResidual =
-                sqrt(((unit - astrometricUnit - (reference - ar)) * (unit - astrometricUnit - (reference - ar))).sum())
-                * 180 / .pi * 3600
+            let correctionDifference: SIMD3<Double> = unit - astrometricUnit - (reference - ar)
+            let correctionNorm: Double = sqrt((correctionDifference * correctionDifference).sum())
+            let correctionResidual: Double = correctionNorm * 180 / .pi * 3600
             #expect(
                 residual < row.angularToleranceArcseconds,
                 "\(row.body) TT \(row.tt) topocentric \(row.observer != nil): \(residual) arcsec")
