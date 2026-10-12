@@ -1,6 +1,6 @@
 {
-  "captureBaseRevision": "e567932b2f59d8a265d9dc08b40133d0a208f440",
-  "captureState": "Foundation changes were uncommitted when measured; exact source content is bound below. This is not a measurement of the unmodified base revision.",
+  "captureBaseRevision": "de2f6f153ce27efac6c4f1e362658af725b2428e",
+  "captureState": "Fresh Release measurement after the component-verifier repair, with uncommitted Python/evidence changes bound below. Runtime and Swift test bytes match the compiled foundation at captureBaseRevision. Historical build receipts are preserved separately; their compiler work was not rerun or relabelled.",
   "derivedPayloadBytes": 227916624,
   "failedReleaseDiagnostics": [
     {
@@ -31,6 +31,13 @@
     "wallSeconds": 136.88
   },
   "generatedSourceBytes": 304660529,
+  "historicalBuildCapture": {
+    "baseRevision": "e567932b2f59d8a265d9dc08b40133d0a208f440",
+    "nativeInputCount": 93,
+    "nativeInputDigest": "90b505e380bff573a5e97f60b7deb3cf75865ade8aaff7250d19b355af520e9b",
+    "originalStorageEvidenceSHA256": "89014a43855a3201f9a2713df56394458052e393b704ca3e8e44c97275dc6939",
+    "scope": "Build invocation receipts and initial measurements are preserved from the original foundation capture. Every bound Swift input is byte-identical; Python qualification changes are not compiler inputs."
+  },
   "host": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
   "initialCompleteStorageRelease": {
     "log": ".context/issue-251/focused-release-private.log",
@@ -39,12 +46,25 @@
     "sha256": "7067a444bda9270262adbad3075c76b42dc193e0ccd34ea92dd204097afdf476",
     "wallSeconds": 141.3
   },
+  "initialReleaseMeasurement": {
+    "checksum": -0.014735377157888975,
+    "firstStateSeconds": 0.00011800002539530396,
+    "randomRecords": 20000,
+    "randomSeconds": 0.11604283330962062
+  },
+  "initialReleaseMeasurementProcess": {
+    "log": ".context/issue-251/full-release-measurement.log",
+    "maximumResidentBytes": 185565184,
+    "sha256": "3a02d9cc10a5527d3c729c0dccf59fd3e9e442eb0b6ef05d3beea4bba46eb8d4",
+    "wallSeconds": 0.25
+  },
   "limitations": [
     "Builds reused dependency caches; final Debug followed an earlier complete-table Debug build. These are actual invocation costs, not clean-machine comparisons.",
     "Initial complete-storage Release rebuilt generated storage and dependent tests after private literal encapsulation. Final Debug/Release invocations follow a documentation-only source comment correction; initial and failed invocations are separate diagnostics.",
     "First-state latency is from a separate Release test process. Its peak RSS includes 20000 later random full-domain accesses, so it is not an initialization-only RSS measurement.",
     "The foundation remains unused by public position/state routes. These costs do not yet measure integrated event latency.",
-    "Single-host timings, RSS and binary sizes are observations, not portable ceilings or acceptance-policy changes."
+    "Single-host timings, RSS and binary sizes are observations, not portable ceilings or acceptance-policy changes.",
+    "The fresh post-verifier-repair Release measurement ran while the unchanged full serial Debug suite was active. Its timing is a concurrent-workload observation; the original separate-process measurement remains recorded under initialReleaseMeasurement."
   ],
   "prototype": {
     "base64Bytes": 9993404,
@@ -79,24 +99,24 @@
   "releaseAstronomyKitObjectBytes": 440729056,
   "releaseMeasurement": {
     "checksum": -0.014735377157888975,
-    "firstStateSeconds": 0.00011800002539530396,
+    "firstStateSeconds": 0.0008482499979436398,
     "randomRecords": 20000,
-    "randomSeconds": 0.11604283330962062
+    "randomSeconds": 1.1691519583109766
   },
   "releaseMeasurementProcess": {
-    "log": ".context/issue-251/full-release-measurement.log",
-    "maximumResidentBytes": 185565184,
-    "sha256": "3a02d9cc10a5527d3c729c0dccf59fd3e9e442eb0b6ef05d3beea4bba46eb8d4",
-    "wallSeconds": 0.25
+    "log": ".context/issue-251/fix-1/storage-measurement.log",
+    "maximumResidentBytes": 185499648,
+    "sha256": "a91150bbdc631dac1ea99d4306618e013e1d5eb329dd2c45801e3007c4683525",
+    "wallSeconds": 1.32
   },
   "releaseModuleBytes": 1353868,
   "releaseTestExecutableBytes": 462350976,
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/generate-moon-de441-full.py": "2b93214153dfb616f4c0a77aba455f9c408b43122fdd2c521528846791049a3b",
-    "Scripts/moon-data/de441-full-component-evidence.json": "76be939923c5d7fb2bb0fcf7d467ea0a3d22c65131a454fb59302ce552d570cb",
+    "Scripts/moon-data/de441-full-component-evidence.json": "36af04f700333a5554d1d5bf3830719d65257e245d9fb3ed85b4ac60a1c3983d",
     "Scripts/moon-data/de441-full-evidence.json": "5a52f1f1972cd4ccf7e95e3214ebc8c4d9fe55812da556232aa4af620943eb49",
-    "Scripts/qualify-moon-de441-full.py": "f5eb8081caa961184fdbc8660764eae7061a4833cbe4bf4528802ffbf8a493d0",
+    "Scripts/qualify-moon-de441-full.py": "d3d1c620aeb9ee2be0bde8d508ad6038cd92240f67dd1855348f7edd37383e14",
     "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441Full.swift": "08b29366ba83cac1a9c9eecd065d03a4378b3f988569a71efd9eb6700bdd321c",
     "Sources/AstronomyKit/Engine/Moon/Generated/DE441Full/MoonDE441Full000.swift": "7f0346af2faec1ff9f995b1227e06afc1e3eac91fb22ba555e3ad4b0a78ebcb6",
     "Sources/AstronomyKit/Engine/Moon/Generated/DE441Full/MoonDE441Full001.swift": "69ae9682a827744ece637a72df6be518b796e6d979aed2fc9d8f4139a9a1d06b",

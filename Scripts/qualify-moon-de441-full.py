@@ -19,6 +19,46 @@ mp.mp.dps=80
 sys.path.insert(0,str(ROOT/'Scripts/solar-numerics'))
 from apparent_bounds import clock_bounds
 
+# Frozen source recipe: first, middle and last batches in the verified DE441 layout.
+# Each tuple records (first source record, count, first midpoint TDB seconds, Moon byte start, Earth byte start).
+SAMPLE_BATCHES=(
+    (1022640,8192,-126230270400,789807392,335490624),
+    (0,8192,-959947200,2107004704,1651118784),
+    (360448,7581,123610881600,2225231648,1769345728),
+)
+COMPONENT_FIELDS=('moonRecordBase64','earthRecordBase64')
+
+
+def sample_inventory(batches,pins):
+    rows=[]
+    for first,count,midpoint,moon_start,earth_start in batches:
+        ranges=[f'{start}-{start+count*328-1}' for start in (moon_start,earth_start)]
+        for offset in (0,count//2,count-1):
+            rows.append(dict(sourceRecordIndex=first+offset,midpointSecondsTDB=midpoint+offset*345600,
+                             orderedRanges=ranges,byteOffsetInRanges=offset*328,rangeHashes={key:pins[key] for key in ranges}))
+    return rows
+
+
+def source_inventory(reader,pins):
+    batches=list(full.q.batches(full.q.layout(reader)))
+    selected=[]
+    for metadata,first,count,ranges in (batches[0],batches[len(batches)//2],batches[-1]):
+        midpoint=(metadata.start_jd_tdb+(first*4)+2-2451545)*86400
+        selected.append((first,count,midpoint,ranges[0][0],ranges[1][0]))
+    return sample_inventory(selected,pins)
+
+
+def validate_samples(rows,pins):
+    expected=sample_inventory(SAMPLE_BATCHES,pins)
+    if not isinstance(rows,list) or len(rows)!=len(expected):
+        raise ValueError('component sample inventory must contain the nine required records')
+    for row,identity in zip(rows,expected):
+        if not isinstance(row,dict) or any(row.get(key)!=value for key,value in identity.items()):
+            raise ValueError('component sample identity or ordered Moon/Earth ranges differ')
+        if not isinstance(row['orderedRanges'],list) or len(row['orderedRanges'])!=2:
+            raise ValueError('component sample must name exactly one Moon range and one Earth range')
+    return expected
+
 
 def clock_enclosure():
     bounds=clock_bounds(Fraction(1461002))
@@ -63,23 +103,28 @@ def main():
     if args.check or args.verify_source:
         check_storage_sources()
         result=json.loads(OUTPUT.read_text())
-        if result['sourceHashes']!=bindings or result['measurements']!=calculate(result['rows']) or result['clockEnclosure']!=clock_enclosure():raise ValueError('component evidence differs')
         pins=manifest['source']['retrievedByteRangesSHA256']
-        for row in result['rows']:
-            if any(pins[key]!=digest for key,digest in row['rangeHashes'].items()):raise ValueError('sample range pin differs')
-            if args.verify_source:
-                reader=full.q.CachedReader(args.cache,pins)
-                for key,field in zip(row['orderedRanges'],('moonRecordBase64','earthRecordBase64')):
-                    lo,hi=map(int,key.split('-'));data=reader.read(lo,hi-lo+1);offset=row['byteOffsetInRanges']
+        expected=validate_samples(result['rows'],pins)
+        if result['sourceHashes']!=bindings or result['measurements']!=calculate(result['rows']) or result['clockEnclosure']!=clock_enclosure():raise ValueError('component evidence differs')
+        if args.verify_source:
+            reader=full.q.CachedReader(args.cache,pins)
+            if source_inventory(reader,pins)!=expected:raise ValueError('pinned sample recipe differs from the original SPK layout')
+            for row in result['rows']:
+                for index,field in enumerate(COMPONENT_FIELDS):
+                    lo,hi=map(int,row['orderedRanges'][index].split('-'));data=reader.read(lo,hi-lo+1);offset=row['byteOffsetInRanges']
                     if data[offset:offset+328]!=base64.b64decode(row[field],validate=True):raise ValueError('sample differs from original source bytes')
         print('Verified nine original-component records at five phases and 80 decimal digits');return
-    reader=full.q.CachedReader(args.cache,manifest['source']['retrievedByteRangesSHA256'])
-    batches=list(full.q.batches(full.q.layout(reader)));rows=[]
-    for batch in (batches[0],batches[len(batches)//2],batches[-1]):
-        metadata,first,count,ranges=batch;data=[reader.read(*r) for r in ranges]
-        for i in (0,count//2,count-1):
-            raw=[d[i*328:(i+1)*328] for d in data];moon,earth=[struct.unpack('<41d',r) for r in raw]
-            rows.append({'midpointSecondsTDB':moon[0],'sourceRecordIndex':first+i,'orderedRanges':[f'{start}-{start+length-1}' for start,length in ranges],'byteOffsetInRanges':i*328,'rangeHashes':{f'{start}-{start+length-1}':reader.ranges[f'{start}-{start+length-1}'] for start,length in ranges},'moonRecordBase64':base64.b64encode(raw[0]).decode(),'earthRecordBase64':base64.b64encode(raw[1]).decode(),'derivedSHA256':hashlib.sha256(full.compose(moon,earth,moon[0])).hexdigest()})
+    pins=manifest['source']['retrievedByteRangesSHA256']
+    reader=full.q.CachedReader(args.cache,pins)
+    rows=source_inventory(reader,pins)
+    validate_samples(rows,pins)
+    for row in rows:
+        raw=[]
+        for index,field in enumerate(COMPONENT_FIELDS):
+            lo,hi=map(int,row['orderedRanges'][index].split('-'));data=reader.read(lo,hi-lo+1);offset=row['byteOffsetInRanges']
+            raw.append(data[offset:offset+328]);row[field]=base64.b64encode(raw[-1]).decode()
+        moon,earth=[struct.unpack('<41d',data) for data in raw]
+        row['derivedSHA256']=hashlib.sha256(full.compose(moon,earth,row['midpointSecondsTDB'])).hexdigest()
     result={'schemaVersion':1,'sourceHashes':bindings,'clockEnclosure':clock_enclosure(),'selection':'First, middle and last records of the first, middle and last pinned 8192-record source batches; phases -1,-0.5,0,0.5,1.','precisionDecimalDigits':80,'measurements':calculate(rows),'rows':rows,'limitations':'Sampled arithmetic comparison against exact original binary64 component coefficients. It does not establish physical accuracy or replace the exhaustive coefficient-subtraction enclosure.'}
     OUTPUT.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n');print(result['measurements'])
 
