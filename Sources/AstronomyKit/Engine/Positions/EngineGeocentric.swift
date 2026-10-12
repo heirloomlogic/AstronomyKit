@@ -35,6 +35,9 @@ extension Engine.Positions {
                 if body == .pluto {
                     return try Engine.Pluto.heliocentricPosition(forLightTimeAt: backdated, observedAt: time)
                 }
+                if target == .pluto, body == .earth, backdated.tt < -Engine.acceptedTTDays {
+                    return try Engine.Pluto.earthState(forLightTimeAt: backdated, observedAt: time).position
+                }
                 return try heliocentricPosition(of: body, at: backdated)
             }
             let origin = try fixedObserver ?? position(of: observer)

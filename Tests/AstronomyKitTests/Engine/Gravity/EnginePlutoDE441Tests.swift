@@ -11,19 +11,21 @@ struct EnginePlutoDE441Tests {
 
     @Test("The tables cover the accepted domain, while native entry points retain their strict range")
     func domain() throws {
-        #expect(Table.pluto.data.count + Table.sun.data.count == 6_898_944)
-        #expect(Table.pluto.recordCount == 47_909 && Table.sun.recordCount == 95_817)
-        for tt in [-766_525.0, 766_525.0] {
+        #expect(Table.pluto.data.count + Table.sun.data.count == 13_149_264)
+        #expect(Table.pluto.recordCount == 91_314 && Table.sun.recordCount == 182_627)
+        for tt in [-1_461_000.0, 1_461_000.0] {
             #expect(Table.state(tt: tt) != nil)
             _ = try Engine.Pluto.heliocentricState(at: PlanetTestSupport.time(tt: tt))
         }
-        for tt in [(-766_525.0).nextDown, 766_525.0.nextUp, .nan, .infinity, -.infinity] {
+        for tt in [(-1_461_000.0).nextDown, 1_461_000.0.nextUp, .nan, .infinity, -.infinity] {
             #expect(Table.state(tt: tt) == nil)
             #expect(throws: AstronomyError.badTime) {
                 _ = try Engine.Pluto.heliocentricState(at: PlanetTestSupport.time(tt: tt))
             }
         }
         for table in [Table.pluto, Table.sun] {
+            #expect(table.start <= -Engine.acceptedTTDays - 1)
+            #expect(table.evaluate(tdb: -Engine.acceptedTTDays - 1) != nil)
             #expect(table.evaluate(tdb: table.start.nextDown) == nil)
             #expect(table.evaluate(tdb: table.start + Double(table.recordCount) * table.days) == nil)
             #expect(table.evaluate(tdb: .nan) == nil)
@@ -75,7 +77,7 @@ struct EnginePlutoDE441Tests {
         let fixture = try JSONDecoder().decode(
             Fixture.self,
             from: Data(contentsOf: root.appendingPathComponent("Scripts/pluto-data/de441-native-fixtures.json")))
-        #expect(fixture.bodyRows.count == 4305 && fixture.heliocentricRows.count == 72)
+        #expect(fixture.bodyRows.count == 4320 && fixture.heliocentricRows.count == 72)
         func vector(_ a: [Double]) -> SIMD3<Double> { SIMD3(a[0], a[1], a[2]) }
         var position = 0.0
         var rate = 0.0
@@ -87,7 +89,7 @@ struct EnginePlutoDE441Tests {
             position = max(position, p)
             rate = max(rate, v)
             // Sum-of-bodies bounds, rounded up from the qualified evidence; these check representation, not physical-center accuracy.
-            #expect(p <= 0.234_914 && v <= 0.134_200)
+            #expect(p <= 0.235_244 && v <= 0.134_385)
         }
         var integratedPosition = 0.0
         var integratedRate = 0.0
@@ -96,13 +98,13 @@ struct EnginePlutoDE441Tests {
         for row in fixture.heliocentricRows {
             var tt = row.tdb
             for _ in 0..<3 { tt = row.tdb - Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay }
-            guard abs(tt) <= 766_525 else { continue }
+            guard abs(tt) <= 1_461_000 else { continue }
             let state = try #require(Table.state(tt: tt))
             let expected = Engine.FrameBias.icrsToEqj.apply(to: vector(row.positionKm) / Engine.kilometersPerAU)
             let velocity = Engine.FrameBias.icrsToEqj.apply(
                 to: vector(row.velocityKmPerTDBDay) * Engine.TDB.rate(tt: tt) / Engine.kilometersPerAU)
-            #expect(Self.length(state.position - expected) * Engine.kilometersPerAU <= 0.234_914)
-            #expect(Self.length(state.velocity - velocity) * Engine.kilometersPerAU <= 0.134_200)
+            #expect(Self.length(state.position - expected) * Engine.kilometersPerAU <= 0.235_244)
+            #expect(Self.length(state.velocity - velocity) * Engine.kilometersPerAU <= 0.134_385)
             guard Engine.MoonEphemeris.weight(tt: tt).weight == 0 else { continue }
             let time = PlanetTestSupport.time(tt: tt)
             let native = try Engine.Pluto.heliocentricState(at: time)
@@ -119,8 +121,8 @@ struct EnginePlutoDE441Tests {
             maximumAngle = max(maximumAngle, angle)
             integratedCount += 1
         }
-        #expect(integratedCount == 48)
-        #expect(integratedPosition <= 0.234_914 && integratedRate <= 0.134_200)
+        #expect(integratedCount == 50)
+        #expect(integratedPosition <= 0.235_244 && integratedRate <= 0.134_385)
         #expect(maximumAngle <= toleranceArcminutes)
         try Self.write(
             [
@@ -133,7 +135,7 @@ struct EnginePlutoDE441Tests {
 
     @Test("Analytic rates differentiate both bodies, TT/TDB, and the frame transform")
     func derivative() throws {
-        for tt in stride(from: -760_000.25, through: 760_000.25, by: 20_000) {
+        for tt in stride(from: -1_460_000.25, through: 1_460_000.25, by: 20_000) {
             let state = try #require(Table.state(tt: tt))
             let h = 1.0 / 16
             func p(_ t: Double) throws -> SIMD3<Double> { try #require(Table.state(tt: t)).position }

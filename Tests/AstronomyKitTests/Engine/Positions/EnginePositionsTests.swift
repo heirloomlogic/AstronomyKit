@@ -166,10 +166,10 @@ struct EnginePositionsTests {
     }
 
     /// Every function at each end of the accepted range, beyond it, and for
-    /// times that are not finite. Pluto's own range is narrower.
+    /// times that are not finite. Pluto includes an internal light-time margin.
     @Test("The accepted range bounds every evaluated time, backdated ones included")
     func acceptedRange() throws {
-        let bodies = Self.supported.filter { $0 != .pluto }
+        let bodies = Self.supported
         for end in [-Engine.acceptedTTDays, Engine.acceptedTTDays] {
             let time = PlanetTestSupport.time(tt: end)
             for body in bodies {
@@ -177,12 +177,6 @@ struct EnginePositionsTests {
                 _ = try Positions.heliocentricState(of: body, at: time)
                 _ = try Positions.heliocentricDistance(of: body, at: time)
                 _ = try Positions.barycentricState(of: body, at: time)
-            }
-            #expect(throws: AstronomyError.badTime) {
-                try Positions.heliocentricPosition(of: .pluto, at: time)
-            }
-            #expect(throws: AstronomyError.badTime) {
-                try Positions.barycentricState(of: .pluto, at: time)
             }
         }
         let beyond =
@@ -210,14 +204,14 @@ struct EnginePositionsTests {
         }
 
         // At the late end the light-time backdates stay inside the range. At
-        // the early end they leave it, except for Earth and the Moon, which
-        // are not backdated.
+        // the early end they leave it. Earth and the Moon are not backdated;
+        // Pluto has a validated internal light-time margin.
         let late = Self.time(tt: Engine.acceptedTTDays)
         let early = Self.time(tt: -Engine.acceptedTTDays)
         for body in bodies {
             for aberration in [Aberration.none, .corrected] {
                 _ = try Positions.geocentricPosition(of: body, at: late, aberration: aberration)
-                if body == .earth || body == .moon {
+                if body == .earth || body == .moon || body == .pluto {
                     _ = try Positions.geocentricPosition(of: body, at: early, aberration: aberration)
                 } else {
                     #expect(throws: AstronomyError.badTime, "\(body)") {

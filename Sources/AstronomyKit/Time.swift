@@ -54,8 +54,7 @@ import Foundation
 /// of J2000: `abs(terrestrialTime) <= 1_461_000` days, roughly
 /// the years −2000 to +6000, about the span VSOP87 claims validity for. Outside it,
 /// and for a non-finite time, they throw ``AstronomyError/badTime`` instead of
-/// returning meaningless or NaN values. Pluto accepts a narrower span, about the years
-/// −100 to +4100. A calculation that samples nearby times (light-travel correction,
+/// returning meaningless or NaN values. A calculation that samples nearby times (light-travel correction,
 /// the Moon's state vectors, searches) can throw within a short distance of either
 /// edge. See <doc:TimeAndObservers>.
 public struct AstroTime: Sendable {

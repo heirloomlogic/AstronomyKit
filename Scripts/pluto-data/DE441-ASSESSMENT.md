@@ -1,23 +1,23 @@
 # Pluto DE441 feasibility
 
-[Issue #190](https://github.com/heirloomlogic/AstronomyKit/issues/190) accepts TT ±766,525 days and ±1 arcminute. The [owner's approval](https://github.com/heirloomlogic/AstronomyKit/issues/190#issuecomment-6068625248) leaves the representation open pending accuracy, size, and runtime evidence. This experiment changes no production ephemeris or tolerance. Its machine-readable result is [de441-evidence.json](de441-evidence.json).
+[Issue #252](https://github.com/heirloomlogic/AstronomyKit/issues/252) extends Pluto to TT ±1,461,000 days. The one-arcminute target approved in [#190](https://github.com/heirloomlogic/AstronomyKit/issues/190#issuecomment-6068625248) is unchanged. Its machine-readable result is [de441-evidence.json](de441-evidence.json).
 
 ## Candidate comparison
 
-The experiment scans every DE441 source record intersecting the accepted TT range, expanded by the existing 2.2e-8-day TT/TDB margin: 47,909 Pluto-barycenter records and 95,817 Sun records. Pluto uses 32-day, degree-5 polynomials; the Sun uses 16-day, degree-10 polynomials. Subtracting Sun (10 relative to SSB 0) from Pluto barycenter (9 relative to SSB 0) produces a heliocentric geometric state on ICRF axes in km and km per TDB day.
+The experiment scans every DE441 source record intersecting the accepted TT range, expanded by the existing 2.2e-8-day TT/TDB margin and one day before the lower endpoint for light-time evaluations: 91,314 Pluto-barycenter records and 182,627 Sun records. Pluto uses 32-day, degree-5 polynomials; the Sun uses 16-day, degree-10 polynomials. Subtracting Sun (10 relative to SSB 0) from Pluto barycenter (9 relative to SSB 0) produces a heliocentric geometric state on ICRF axes in km and km per TDB day.
 
 | Representation | Encoded bytes | Position bound, km | Analytic derivative bound, km/TDB day | Angular representation bound, arcminutes |
 | --- | ---: | ---: | ---: | ---: |
-| Direct Float64 | 32,194,584 | 0, apart from outward-rounding floor | 0, apart from outward-rounding floor | 0, apart from outward-rounding floor |
-| Direct Float32 | 16,097,292 | 359.039 | 0.022514 | 0.000279035 |
-| Shared cubic Float64 | 6,898,944 | 0.234914 | 0.134200 | 0.000000183 |
-| Shared cubic Float32 | 3,449,472 | 432.809 | 45.983210 | 0.000336367 |
+| Direct Float64 | 61,362,744 | 0, apart from outward-rounding floor | 0, apart from outward-rounding floor | 0, apart from outward-rounding floor |
+| Direct Float32 | 30,681,372 | 359.040 | 0.023048 | 0.000279279 |
+| Shared cubic Float64 | 13,149,264 | 0.235244 | 0.134384 | 0.000000183 |
+| Shared cubic Float32 | 6,574,632 | 435.412 | 46.005106 | 0.000338685 |
 
 These are conservative representation bounds against the source polynomials, rounded upward for this table. They do not bound DE441's observational error, the unavailable full-range Pluto-center correction, or a future Swift evaluator's arithmetic. The derivative bounds concern each source interval and its one-sided endpoints; they do not establish accuracy for every state or event consumer.
 
-Shared cubic Float64 is the proposed next integration experiment. It is 6.58 MiB, 78.6% smaller than direct Float64, with a sub-kilometer position bound and much smaller derivative error than the smaller Float32 cubic. Direct Float32 has a smaller derivative bound but larger position errors and record-boundary jumps up to 655.42 km. Shared nodes define a continuous position and first derivative in real arithmetic. In the implemented Float64 reconstruction/evaluator, the largest measured Pluto-table seam residuals are 2.70e-6 km and 1.65e-10 km/TDB day; every adjacent source and decoded pair is checked. This choice introduces no permanent size, speed, radial, or velocity policy.
+The shipping shared cubic Float64 representation occupies 12.54 MiB. Shared nodes define a continuous position and first derivative in real arithmetic; the native integration evidence records every decoded seam. The wider source scan raises the conservative position enclosure from 0.234914 km to 0.235244 km and the derivative enclosure from 0.134200 to 0.134384 km/TDB day. These are computed representation certificates, not relaxed physical accuracy targets. This choice introduces no permanent size, speed, radial, or velocity policy.
 
-On macOS arm64 with Python 3.14, the recorded 10,000-state measurements include indexing, packed-byte decoding, cubic reconstruction, and position/derivative evaluation of both bodies. Shared Float64 measured about 81,000 states/s versus 55,000 for direct Float64. Its scan and encoding took 11.44 s versus 8.70 s for direct Float64. The entire cached experiment took 41.40 s. These observations are hardware-dependent Python measurements; Swift runtime and memory remain unmeasured.
+On macOS arm64 with Python 3.14.7, the recorded 10,000-state measurements include indexing, packed-byte decoding, cubic reconstruction, and position/derivative evaluation of both bodies. Shared Float64 measured about 69,882 states/s versus 54,103 for direct Float64. Scan and encoding took 26.77 s versus 24.59 s. These Python observations do not describe production Swift performance; native measurements are recorded separately.
 
 ## Center versus barycenter
 
@@ -27,7 +27,7 @@ The manifest-pinned [PLU060 kernel](https://naif.jpl.nasa.gov/pub/naif/generic_k
 
 At the 29 center-reference dates, treating the barycenter as the center differs by up to 2,131.97 km, 0.091883 arcseconds, and 0.024273 km/s. Adding the available PLU060 offset to direct DE441 reduces the position residual below 2.14e-6 km; adding it to the shared Float64 candidate gives at most 0.090513 km and 3.09e-7 km/s. The archive agreement supports that particular source combination at those dates. Angular agreement alone does not make omitted center motion suitable for velocity consumers.
 
-The conservative minimum heliocentric source distance is 4,423,407,920 km. With the shared Float64 representation bound, a hypothetical center offset below about 1,286,716 km would fit inside the one-arcminute geometric angular budget. That is a conditional calculation, not evidence that the offset stays within it over the accepted range. Full-range center accuracy remains open. The next link must retain the central DE440/PLU060 model and make any outer barycenter approximation explicit.
+The conservative minimum heliocentric source distance is 4,419,554,543 km. With the shared Float64 representation bound, a hypothetical center offset below about 1,285,596 km would fit inside the one-arcminute geometric angular budget. That is a conditional calculation, not evidence that the offset stays within it over the accepted range. Full-range center accuracy remains open. The next link widens physical-center use within PLU060 coverage.
 
 ## Bounds and encoding
 
@@ -37,21 +37,20 @@ For an interval of length h and normalized coordinate x, endpoint derivatives ar
 
 Outward-rounded interval arithmetic encloses the reconstructed coefficients. For coefficient-error bounds e_n, position error on an axis is at most Σ e_n because |T_n(x)| ≤ 1 on [-1,1]; derivative error per TDB day is at most (2/h) Σ n²e_n because |T'_n(x)| ≤ n². Outward Euclidean norms combine axes, and the two bodies' bounds are added. The minimum Pluto radius is bounded from its constant coefficient minus its tail norm, then the global maximum Sun radius is subtracted. The angular representation bound is asin(position error / minimum distance). Binary64 outward arithmetic and the final libm conversion are used; the tests separately check cubic interval enclosure against exact rational arithmetic.
 
-In addition to all-record bounds and all seams, 72 fixed epochs cover accepted endpoints, the former integrator's 29,200-day grid, the DE441 segment join, and ±32-day neighborhoods of both central-model boundaries. These sample comparisons use TDB labels. They do not execute the production TT conversion, frame rotation, or blended Swift path, and are not an end-to-end transition qualification.
+In addition to all-record bounds and all seams, 72 fixed epochs cover accepted endpoints, a 58,400-day full-span grid, the DE441 segment join, and ±32-day neighborhoods of both central-model boundaries. These sample comparisons use TDB labels. They do not execute the production TT conversion, frame rotation, or blended Swift path, and are not an end-to-end transition qualification.
 
 ## Reproduction
 
 The existing Moon DAF/SPK parser and range cache are reused without changing them. The DE441 HTTP identity and each retrieved range digest are pinned; the 3.08 GiB kernel's whole-file digest is not claimed. PLU060's whole-file digest is verified against the existing Pluto manifest. Candidate binaries are local artifacts and are not bundled into the library.
 
 ```sh
-mkdir -p .context/issue-190
-curl --fail --location --output .context/issue-190/plu060.bsp https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp
-python3 Scripts/assess-pluto-de441.py
-python3 Scripts/assess-pluto-de441.py --check
-python3.11 Scripts/assess-pluto-de441.py --check
+mkdir -p .context/issue-252
+curl --fail --location --output .context/issue-252/plu060.bsp https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp
+python3 Scripts/assess-pluto-de441.py --cache .context/issue-252/ranges --plu060 .context/issue-252/plu060.bsp --artifacts .context/issue-252/candidates
+python3 Scripts/assess-pluto-de441.py --cache .context/issue-252/ranges --plu060 .context/issue-252/plu060.bsp --artifacts .context/issue-252/candidates --check
 python3 -m unittest Scripts/test_assess_pluto_de441.py -v
 ```
 
 `--cache`, `--plu060`, and `--artifacts` override the local paths. A fresh cache downloads the needed verified DE441 byte ranges; an existing cache is rehashed before use. `--check` regenerates every record, candidate binary, bound, reference comparison, and fixed sample, then compares the evidence exactly except for the runtime-observation object. Runtime observations include the interpreter/platform and are deliberately excluded from reproducibility equality. CI runs the offline tests, including source/archive hashes, without downloading kernels; the full replay is a separate recorded validation.
 
-The subsequent links integrated the selected representation and added bounded independent qualification. #96 then moved the public facade onto the native engine, and the archived center, blend, and outer epochs now gate the public Pluto route at their existing limits. This feasibility experiment remains evidence about representation, size, and runtime; it does not establish unsampled physical-center accuracy or the broader range tracked by #252.
+The subsequent links integrated the selected representation and added bounded independent qualification. #96 then moved the public facade onto the native engine, and the archived center, blend, and outer epochs now gate the public Pluto route at their existing limits. This feasibility experiment remains evidence about representation, size, and runtime; it does not establish unsampled physical-center accuracy beyond the PLU060 coverage tracked by #252.

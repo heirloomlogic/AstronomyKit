@@ -31,7 +31,10 @@ struct EnginePlutoMeasurementTests {
         var timings: [String: Double] = [:]
         var checksum = first.x
         let count = 2_000
-        for (name, start, step) in [("outer", -766_500.0, 1_533_000.0 / 1_999), ("central", -30_000.0, 30.0)] {
+        for (name, start, step) in [
+            ("outer", -766_500.0, 1_533_000.0 / 1_999), ("central", -30_000.0, 30.0),
+            ("engineRange", -1_461_000.0, 2_922_000.0 / 1_999),
+        ] {
             let began = Date()
             for index in 0..<count {
                 let value = try Engine.Pluto.heliocentricState(

@@ -13,6 +13,11 @@ SPEC.loader.exec_module(p)
 
 
 class PlutoAssessmentTests(unittest.TestCase):
+    def test_engine_range_includes_retarded_endpoint_margin(self):
+        self.assertEqual(1461000., p.TT_LIMIT)
+        self.assertGreaterEqual(p.LIGHT_TIME_MARGIN_DAYS, 1.)
+
+
     def test_cubic_reproduces_position_and_physical_derivatives(self):
         axes = [(4., 2., -3., .5)] * 3
         left, right = p.nodes(axes, 32.)
@@ -98,8 +103,8 @@ class PlutoAssessmentTests(unittest.TestCase):
         self.assertFalse(evidence['assessment']['absoluteFullRangeAccuracyQualified'])
         self.assertFalse(evidence['assessment']['productionIntegrated'])
         for candidate in evidence['candidates'].values():
-            self.assertEqual(47909, candidate['bodies']['9']['recordCount'])
-            self.assertEqual(95817, candidate['bodies']['10']['recordCount'])
+            self.assertEqual(91314, candidate['bodies']['9']['recordCount'])
+            self.assertEqual(182627, candidate['bodies']['10']['recordCount'])
             self.assertLess(candidate['angularRepresentationBoundArcminutes'], 1.)
             self.assertEqual(sum(b['encodedBytes'] for b in candidate['bodies'].values()), candidate['encodedBytes'])
 

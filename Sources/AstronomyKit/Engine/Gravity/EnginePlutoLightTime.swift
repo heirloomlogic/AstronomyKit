@@ -65,3 +65,33 @@ extension Engine.Pluto {
         try heliocentricState(forLightTimeAt: time, observedAt: observation).position
     }
 }
+
+extension Engine.Pluto {
+    /// Earth's state for Pluto's corrected-aberration iteration, including one day before the public lower endpoint.
+    ///
+    /// The exterior evaluation uses the same VSOP87B series and analytic derivative as Earth's public trajectory. It is confined to a validated Pluto observation with matching time scales and Delta T model.
+    static func earthState(
+        forLightTimeAt time: Engine.Time, observedAt observation: Engine.Time
+    ) throws -> Engine.State<Engine.EQJ> {
+        guard let model = observation.deltaTModel,
+            abs(observation.tt) <= Engine.acceptedTTDays,
+            time.deltaTModel == model,
+            time.ut.isFinite, time.tt.isFinite,
+            time.ut <= observation.ut, time.tt <= observation.tt,
+            time.tt >= -Engine.acceptedTTDays - 1
+        else { throw AstronomyError.badTime }
+        if time.tt >= -Engine.acceptedTTDays {
+            return try Engine.Planet.earth.heliocentricState(at: time)
+        }
+        let t = time.tt / Engine.VSOP87B.daysPerMillennium
+        let sphere = Engine.VSOP87B.coordinates(.earth, millennia: t)
+        let rates = Engine.VSOP87B.derivatives(.earth, millennia: t)
+        let state = Engine.State<Engine.VSOP87Ecliptic>(
+            position: Engine.VSOP87B.rectangular(sphere),
+            velocity: Engine.VSOP87B.velocity(sphere, rates: rates), time: time)
+        guard [state.x, state.y, state.z, state.vx, state.vy, state.vz].allSatisfy(\.isFinite) else {
+            throw AstronomyError.badTime
+        }
+        return Engine.VSOP87B.toEquatorial.apply(to: state)
+    }
+}
