@@ -22,7 +22,8 @@ permissions:
 jobs:
   asan:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # The apparent-place broad invocation exhausted 60 minutes after a 216s build; retain every isolation and per-test guard under this finite job ceiling.
+    timeout-minutes: 120
     steps:
       - name: Checkout candidate revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
