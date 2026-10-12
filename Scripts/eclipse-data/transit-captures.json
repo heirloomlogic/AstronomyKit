@@ -1,7 +1,7 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (30.15 sec)",
-    "release": "Build complete! (127.66 sec)"
+    "debug": "Build complete! (0.97 sec)",
+    "release": "Build complete! (141.90 sec)"
   },
   "debug": {
     "global-sequence": [
@@ -27,12 +27,12 @@
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556238750791,
-        "ingressUT": 374.2396273577279,
+        "egressUT": 374.4556238750768,
+        "ingressUT": 374.2396273577274,
         "kind": "total",
-        "semiDurationMinutes": 155.51749249285422,
-        "tt": 374.3483796056289,
-        "ut": 374.34763722284885
+        "semiDurationMinutes": 155.51749249158547,
+        "tt": 374.3483796057866,
+        "ut": 374.34763722300653
       },
       {
         "date": "2001-07-05",
@@ -223,12 +223,12 @@
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556238750791,
-        "ingressUT": 374.2396273577279,
+        "egressUT": 374.4556238750768,
+        "ingressUT": 374.2396273577274,
         "kind": "total",
-        "semiDurationMinutes": 155.51749249285422,
-        "tt": 374.3483796056289,
-        "ut": 374.34763722284885
+        "semiDurationMinutes": 155.51749249158547,
+        "tt": 374.3483796057866,
+        "ut": 374.34763722300653
       },
       {
         "date": "2001-07-05",
@@ -395,20 +395,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 462350976,
+  "releaseExecutableBytes": 414888848,
   "releaseObjectBytes": {
     "EngineTransitEvents.o": 56720
   },
   "resources": {
     "checksum": 537515.4328593307,
-    "coldSeconds": 0.033882975578308105,
+    "coldSeconds": 0.03252995014190674,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 1.2297569513320923,
-    "peakAfterColdBytes": 85180416,
-    "peakAfterWorkloadBytes": 85917696,
-    "peakBeforeBytes": 47071232
+    "nextSeconds": 1.1812710762023926,
+    "peakAfterColdBytes": 85377024,
+    "peakAfterWorkloadBytes": 86081536,
+    "peakBeforeBytes": 47235072
   },
-  "runtimeBaseRevision": "de2f6f153ce27efac6c4f1e362658af725b2428e",
+  "runtimeBaseRevision": "220cd5424cd3764767731b9cd54f2f8e47cc5491",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

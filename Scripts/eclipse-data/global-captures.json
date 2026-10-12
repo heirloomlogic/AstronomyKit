@@ -1,7 +1,7 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (30.15 sec)",
-    "release": "Build complete! (127.66 sec)"
+    "debug": "Build complete! (0.97 sec)",
+    "release": "Build complete! (141.90 sec)"
   },
   "debug": {
     "area": [
@@ -41,16 +41,16 @@
     ],
     "published": [
       {
-        "distanceKm": 3906.843854828919,
+        "distanceKm": 3906.843132647604,
         "id": "1800-04-24T00:24:00Z",
         "kind": "annular",
-        "latitude": 45.71158613040511,
-        "longitude": 151.3358668120162,
-        "obscuration": 0.8868075330870675,
-        "physicalTT": -72935.48334631124,
+        "latitude": 45.71160713141578,
+        "longitude": 151.33270642905873,
+        "obscuration": 0.8868091607738904,
+        "physicalTT": -72935.48333738686,
         "sourceTT": -72935.48333333334,
-        "tt": -72935.48334631124,
-        "ut": -72935.48350392512
+        "tt": -72935.48333738686,
+        "ut": -72935.48349500074
       },
       {
         "distanceKm": 2188.5171976339384,
@@ -164,16 +164,16 @@
     ],
     "published": [
       {
-        "distanceKm": 3906.843854828919,
+        "distanceKm": 3906.843132647604,
         "id": "1800-04-24T00:24:00Z",
         "kind": "annular",
-        "latitude": 45.71158613040511,
-        "longitude": 151.3358668120162,
-        "obscuration": 0.8868075330870675,
-        "physicalTT": -72935.48334631124,
+        "latitude": 45.71160713141578,
+        "longitude": 151.33270642905873,
+        "obscuration": 0.8868091607738904,
+        "physicalTT": -72935.48333738686,
         "sourceTT": -72935.48333333334,
-        "tt": -72935.48334631124,
-        "ut": -72935.48350392512
+        "tt": -72935.48333738686,
+        "ut": -72935.48349500074
       },
       {
         "distanceKm": 2188.5171976339384,
@@ -249,21 +249,21 @@
       }
     ]
   },
-  "releaseExecutableBytes": 462350976,
+  "releaseExecutableBytes": 414888848,
   "releaseObjectBytes": {
     "EngineGeoidIntersection.o": 31040,
     "EngineGlobalSolarEvents.o": 92560
   },
   "resources": {
-    "checksum": -2866939.3745316835,
-    "coldSeconds": 0.0771169662475586,
+    "checksum": -2866939.3745316803,
+    "coldSeconds": 0.05541491508483887,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 3.6286340951919556,
-    "peakAfterColdBytes": 182779904,
-    "peakAfterWorkloadBytes": 182779904,
-    "peakBeforeBytes": 46923776
+    "nextSeconds": 3.656759023666382,
+    "peakAfterColdBytes": 100990976,
+    "peakAfterWorkloadBytes": 100990976,
+    "peakBeforeBytes": 47300608
   },
-  "runtimeBaseRevision": "de2f6f153ce27efac6c4f1e362658af725b2428e",
+  "runtimeBaseRevision": "220cd5424cd3764767731b9cd54f2f8e47cc5491",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

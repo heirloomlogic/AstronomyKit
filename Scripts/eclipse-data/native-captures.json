@@ -1,8 +1,8 @@
 {
-  "baselineRevision": "de2f6f153ce27efac6c4f1e362658af725b2428e",
+  "baselineRevision": "220cd5424cd3764767731b9cd54f2f8e47cc5491",
   "buildReceipts": {
-    "debug": "Build complete! (30.15 sec)\n",
-    "release": "Build complete! (127.66 sec)\n"
+    "debug": "Build complete! (0.97 sec)\n",
+    "release": "Build complete! (141.90 sec)\n"
   },
   "debug": {
     "obscurations": [
@@ -12,19 +12,19 @@
         "sourceTimeSearchSeed": "2021-11-19T09:03Z"
       },
       {
-        "nativePeakTT": 9735.676452762911,
-        "obscuration": 0.962496007666262,
+        "nativePeakTT": 9735.676452762897,
+        "obscuration": 0.9624960076659318,
         "sourceTimeSearchSeed": "2026-08-28T04:13Z"
       }
     ],
     "published": [
       {
         "kind": "partial",
-        "nativePeakTT": -72949.8151624208,
-        "obscuration": 0.5245773679573285,
-        "partialDurationMinutes": 75.51037961966358,
-        "peakResidualSeconds": 3.6638543475419283,
-        "penumbralDurationMinutes": 142.9992163181305,
+        "nativePeakTT": -72949.81524582277,
+        "obscuration": 0.524614803237667,
+        "partialDurationMinutes": 75.51390815991908,
+        "peakResidualSeconds": 10.869784886017442,
+        "penumbralDurationMinutes": 143.00210802233778,
         "sourceTime": "1800-04-09T16:26Z",
         "totalDurationMinutes": 0
       },
@@ -40,14 +40,14 @@
       },
       {
         "kind": "total",
-        "nativePeakTT": 374.3483796056289,
+        "nativePeakTT": 374.3483796057866,
         "obscuration": 1,
-        "partialDurationMinutes": 98.15976408620372,
-        "peakResidualSeconds": 5.856054184368986,
-        "penumbralDurationMinutes": 155.51749249285422,
-        "penumbralDurationResidualMinutes": 0.017492492854216835,
+        "partialDurationMinutes": 98.15976408509869,
+        "peakResidualSeconds": 5.856067808235821,
+        "penumbralDurationMinutes": 155.51749249158547,
+        "penumbralDurationResidualMinutes": 0.017492491585471726,
         "sourceTime": "2001-01-09T20:20:30Z",
-        "totalDurationMinutes": 30.55698336162095
+        "totalDurationMinutes": 30.556983362766914
       },
       {
         "kind": "partial",
@@ -91,19 +91,19 @@
         "sourceTimeSearchSeed": "2021-11-19T09:03Z"
       },
       {
-        "nativePeakTT": 9735.676452762911,
-        "obscuration": 0.962496007666262,
+        "nativePeakTT": 9735.676452762897,
+        "obscuration": 0.9624960076659318,
         "sourceTimeSearchSeed": "2026-08-28T04:13Z"
       }
     ],
     "published": [
       {
         "kind": "partial",
-        "nativePeakTT": -72949.8151624208,
-        "obscuration": 0.5245773679573285,
-        "partialDurationMinutes": 75.51037961966358,
-        "peakResidualSeconds": 3.6638543475419283,
-        "penumbralDurationMinutes": 142.9992163181305,
+        "nativePeakTT": -72949.81524582277,
+        "obscuration": 0.524614803237667,
+        "partialDurationMinutes": 75.51390815991908,
+        "peakResidualSeconds": 10.869784886017442,
+        "penumbralDurationMinutes": 143.00210802233778,
         "sourceTime": "1800-04-09T16:26Z",
         "totalDurationMinutes": 0
       },
@@ -119,14 +119,14 @@
       },
       {
         "kind": "total",
-        "nativePeakTT": 374.3483796056289,
+        "nativePeakTT": 374.3483796057866,
         "obscuration": 1,
-        "partialDurationMinutes": 98.15976408620372,
-        "peakResidualSeconds": 5.856054184368986,
-        "penumbralDurationMinutes": 155.51749249285422,
-        "penumbralDurationResidualMinutes": 0.017492492854216835,
+        "partialDurationMinutes": 98.15976408509869,
+        "peakResidualSeconds": 5.856067808235821,
+        "penumbralDurationMinutes": 155.51749249158547,
+        "penumbralDurationResidualMinutes": 0.017492491585471726,
         "sourceTime": "2001-01-09T20:20:30Z",
-        "totalDurationMinutes": 30.55698336162095
+        "totalDurationMinutes": 30.556983362766914
       },
       {
         "kind": "partial",
@@ -162,20 +162,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 462350976,
+  "releaseExecutableBytes": 414888848,
   "releaseObjectBytes": {
     "EngineEclipseEvents.o": 116536,
     "EngineShadowGeometry.o": 30672
   },
   "resources": {
-    "checksum": -2855994.8849486904,
-    "coldSeconds": 0.08255600929260254,
+    "checksum": -2855994.884948683,
+    "coldSeconds": 0.06183302402496338,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 4.385388970375061,
-    "peakAfterColdBytes": 185925632,
-    "peakAfterWorkloadBytes": 185925632,
-    "peakBeforeBytes": 50216960,
+    "nextEclipsesSeconds": 4.440572023391724,
+    "peakAfterColdBytes": 103432192,
+    "peakAfterWorkloadBytes": 103432192,
+    "peakBeforeBytes": 49823744,
     "totalEclipseCount": 100
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
