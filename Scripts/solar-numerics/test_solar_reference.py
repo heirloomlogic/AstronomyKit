@@ -82,3 +82,50 @@ class SolarDefinitionTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class SelectedEarthDerivativeTests(unittest.TestCase):
+    def test_first_native_capture_row_has_real_finite_altitude(self):
+        mp = solar.mp
+        tt = mp.mpf('-36524.5')
+        ut = tt-solar.ref.delta_t(tt)/86400
+        result = solar.Solar().altitude(ut, tt, 'espenakMeeus', [0.0, 0.0, 0.0])
+        self.assertTrue(mp.isfinite(result['altitude']))
+        self.assertLessEqual(abs(result['altitude']), 90)
+
+    def test_selected_earth_velocity_at_real_seams_and_adjacent_inputs(self):
+        import math
+        mp = solar.mp
+        earth = solar.ref.Earth()
+        # Both coverage joins and representative interior record joins. The
+        # numerical oracle takes the selected side, independently of k U_k.
+        count = int(mp.ceil((earth.stop-earth.start)/earth.width))
+        for index in [0, 1, count//2, count-1, count]:
+            boundary = float(earth.stop if index == count else earth.start+index*earth.width)
+            for value in [math.nextafter(boundary,-math.inf), boundary, math.nextafter(boundary,math.inf)]:
+                with self.subTest(index=index,value=value):
+                    tt = solar.ref.exact(value)
+                    velocity = earth.velocity(tt)
+                    expected = mp.diff(lambda delta:mp.matrix(earth.position(tt+delta)),mp.mpf(0),direction=1)
+                    self.assertLess(mp.norm(mp.matrix(velocity)-expected),mp.mpf('1e-60'))
+                    self.assertLess(mp.norm(velocity),mp.mpf('.02'))
+
+    def test_every_earth_record_selects_its_right_hand_derivative(self):
+        from unittest.mock import patch
+        import math
+        mp = solar.mp
+        earth = solar.ref.Earth()
+        count = int(mp.ceil((earth.stop-earth.start)/earth.width))
+        # Give each actual table interval a distinct linear derivative. This
+        # exhausts all dispatch seams without reusing the selector as oracle.
+        earth.degree = 1
+        earth.coefficients = [value for segment in range(count) for axis in range(3)
+                              for value in [float(segment),float((segment+1)*4)]]
+        with patch.object(earth,'series',side_effect=lambda tt:[tt,tt,tt]):
+            for index in range(count+1):
+                boundary = float(earth.stop if index == count else earth.start+index*earth.width)
+                for value,segment in [(math.nextafter(boundary,-math.inf),index-1),
+                                      (boundary,index),(math.nextafter(boundary,math.inf),index)]:
+                    expected = segment+1 if 0<=segment<count else 1
+                    actual = earth.velocity(solar.ref.exact(value))
+                    self.assertEqual(list(actual),[mp.mpf(expected)]*3)

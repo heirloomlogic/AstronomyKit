@@ -6,7 +6,9 @@ import csv
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
+import tempfile
 import urllib.parse
 import urllib.request
 
@@ -19,6 +21,37 @@ BODIES={'sun':10,'moon':301,'mercury':199,'venus':299,'mars':499,'jupiter':599,
 SITE=[-82.55,35.6,0.0]
 DISTANCES=ROOT/'Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json'
 RANGE_LIMITS={body:min(row['allowedErrorKm'] for row in json.loads(DISTANCES.read_bytes())['references'] if row['body'].lower()==body and row['mode']=='geocentric') for body in BODIES}
+
+
+def publish_pair(path, query, data, stored):
+    """Stage both files and attempt rollback on a reported publication error.
+
+    Each rename is atomic, but the pair is not crash-atomic. A process or machine
+    interruption between renames can leave a digest mismatch, rejected by replay.
+    Rollback I/O errors propagate; storage failures do not promise preservation.
+    """
+    payloads = [(path, data), (query, (json.dumps(stored, indent=2, sort_keys=True)+'\n').encode())]
+    with tempfile.TemporaryDirectory(dir=path.parent, prefix='.apparent-capture-') as directory:
+        staging = Path(directory)
+        replacements, published = [], []
+        for index, (destination, payload) in enumerate(payloads):
+            candidate = staging/f'candidate-{index}'
+            candidate.write_bytes(payload)
+            backup = staging/f'backup-{index}' if destination.exists() else None
+            if backup is not None:
+                backup.write_bytes(destination.read_bytes())
+            replacements.append((destination, candidate, backup))
+        try:
+            for destination, candidate, backup in replacements:
+                os.replace(candidate, destination)
+                published.append((destination, backup))
+        except BaseException:
+            for destination, backup in reversed(published):
+                if backup is None:
+                    destination.unlink()
+                else:
+                    os.replace(backup, destination)
+            raise
 
 
 def recipe(body,topocentric):
@@ -43,10 +76,10 @@ def case(body,topocentric,fetch):
         document=json.loads(data)
         if document.get('error') or '$$SOE' not in document.get('result',''):
             raise ValueError(document)
-        path.write_bytes(data)
-        query.write_text(json.dumps({'parameters':parameters,'responseSHA256':hashlib.sha256(data).hexdigest()},indent=2,sort_keys=True)+'\n')
-    data=path.read_bytes()
-    stored=json.loads(query.read_bytes())
+        stored={'parameters':parameters,'responseSHA256':hashlib.sha256(data).hexdigest()}
+    else:
+        data=path.read_bytes()
+        stored=json.loads(query.read_bytes())
     if stored!={'parameters':parameters,'responseSHA256':hashlib.sha256(data).hexdigest()}:
         raise ValueError('Recipe or response changed: '+key)
     text=json.loads(data)['result']
@@ -54,6 +87,16 @@ def case(body,topocentric,fetch):
         raise ValueError('Target or origin changed: '+key)
     if 'Atmos refraction: NO (AIRLESS)' not in text:
         raise ValueError('Apparent convention changed')
+    if topocentric:
+        if 'Center-site name: (user defined site below)' not in text:
+            raise ValueError('Observer site convention changed')
+        line=next(line for line in text.splitlines() if line.startswith('Center geodetic :'))
+        site=list(map(float,line.split(':',1)[1].split('{',1)[0].split(',')))
+        expected_site=[SITE[0]%360,SITE[1],SITE[2]]
+        if len(site)!=3 or any(not math.isfinite(a) or abs(a-b)>1e-10 for a,b in zip(site,expected_site)):
+            raise ValueError('Observer site changed')
+    elif 'Center-site name: GEOCENTRIC' not in text:
+        raise ValueError('Observer site convention changed')
     header=next(csv.reader([next(line for line in text.splitlines() if line.startswith('Date_'))]))
     header=[field.strip() for field in header]
     expected=['Date_________JDTT','','','R.A.___(ICRF)','DEC____(ICRF)','R.A.__(a-app)','DEC___(a-app)','delta','deldot','TDB-UT','RA_(ICRF-a-app)','DEC_(ICRF-a-app)','']
@@ -64,6 +107,8 @@ def case(body,topocentric,fetch):
         raise ValueError('Unexpected epoch count')
     result=[]
     for epoch,row in zip(EPOCHS,rows):
+        if len(row)!=len(expected):
+            raise ValueError('Unexpected row layout')
         if not all(math.isfinite(float(row[i])) for i in [0,3,4,5,6,7,8,9,10,11]):
             raise ValueError('Nonfinite source row')
         if abs(float(row[0])-epoch)>1e-8:
@@ -73,6 +118,8 @@ def case(body,topocentric,fetch):
                        'distanceAU':float(row[7]),'tdbMinusUTSeconds':float(row[9]),
                        'apparentICRFDeg':list(map(float,row[10:12])),'angularToleranceArcseconds':2.0 if body in ['uranus','neptune'] else 0.25,
                        'correctionToleranceArcseconds':0.0002, 'rangeToleranceKm':RANGE_LIMITS[body]})
+    if fetch:
+        publish_pair(path,query,data,stored)
     return key,stored,result
 
 

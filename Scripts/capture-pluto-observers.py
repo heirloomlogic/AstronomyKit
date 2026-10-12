@@ -133,20 +133,20 @@ def native_evidence(debug, release):
     for measurement in [debug, release]:
         validate_measurement(measurement)
     return dict(schemaVersion=1, sourceSHA256=source_hashes(), debug=debug, release=release,
-                observationTimeScale='TT, inverted to modeled UT with jplHorizons for the native UT light-time iteration',
+                observationTimeScale='TT reception and emission parameters with elapsed-TDB barycentric light time; jplHorizons supplies the observation UT for frame rotation',
                 toleranceArcminutes=1,
                 domain=dict(acceptedHeliocentricTTDays=[-1461000, 1461000],
                             retardedSourceTDBInterval=dict(lowerInclusive=-1461016.5, upperExclusive=1461015.5),
-                            retardedEarthTTDaysLowerInclusive=-1461001,
-                            earthPaddingScope="Validated Pluto corrected-aberration evaluations only; public Earth range is unchanged",
+                            retardedBodyTTDaysLowerInclusive=-1461002,
+                            bodyPaddingScope="Private apparent emission evaluations; reception Earth remains inside the unchanged public range",
                             successfulGeocentricTTDays=[-1461000, -1460999.9, -1460999, 1460999, 1461000],
                             modes=['none', 'corrected'], issue='https://github.com/heirloomlogic/AstronomyKit/issues/227',
                             preexistingBase='00119ad33521b67fa365b33d940404d5739e356b'),
                 limitations=[f'{sum(map(len, EPOCHS.values())) + len(EXTENDED_EPOCHS)} sampled public directions, not a full-range bound.',
                              'Outer target 9 references do not qualify the physical center 999.',
-                             'Sun-dependent angles retain the separate Sun light-time restriction at the lower engine endpoint.',
+                             'Sun-dependent angles now share apparent-source padding at both accepted endpoints; exterior receptions remain rejected.',
                              'Endpoint tests cover velocity composition, not independent velocity accuracy; event qualification remains separate.',
-                             'Horizons apparent coordinates include gravitational deflection and barycentric light time; native uses heliocentric light time and first-order aberration.',
+                             'Native uses barycentric TDB light time, finite-source solar deflection and relativistic observer aberration; it omits Shapiro delay and planetary deflection.',
                              'Native and Horizons equator-of-date precession/nutation conventions differ.'])
 
 

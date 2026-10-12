@@ -125,30 +125,43 @@ class Solar:
         import apparent_reference as apparent
         result = mp.matrix(equatorial_earth(self.earth.position(tt))) + apparent.sun(tt)
         if location is not None:
-            rotation, sidereal = orientation(ut, tt)
-            latitude, longitude, height = map(ref.exact, location)
-            phi = latitude * mp.pi / 180
-            theta = (sidereal + longitude) * mp.pi / 180
-            polar = 1 - 1 / mp.mpf('298.25642')
-            coefficient = 1 / mp.sqrt(mp.cos(phi)**2 + polar**2 * mp.sin(phi)**2)
-            radius = mp.mpf('6378.1366')
-            au = mp.mpf('149597870.700')
-            site = mp.matrix([(radius*coefficient + height/1000) * mp.cos(phi) * mp.cos(theta) / au,
-                              (radius*coefficient + height/1000) * mp.cos(phi) * mp.sin(theta) / au,
-                              (radius*polar**2*coefficient + height/1000) * mp.sin(phi) / au])
-            result += rotation.T*site
+            result += self.site(ut,tt,location)
+        return result
+
+    @staticmethod
+    def site(ut,tt,location):
+        rotation, sidereal = orientation(ut, tt)
+        latitude, longitude, height = map(ref.exact, location)
+        phi = latitude * mp.pi / 180
+        theta = (sidereal + longitude) * mp.pi / 180
+        polar = 1 - 1 / mp.mpf('298.25642')
+        coefficient = 1 / mp.sqrt(mp.cos(phi)**2 + polar**2 * mp.sin(phi)**2)
+        radius = mp.mpf('6378.1366')
+        au = mp.mpf('149597870.700')
+        site = mp.matrix([(radius*coefficient + height/1000) * mp.cos(phi) * mp.cos(theta) / au,
+                          (radius*coefficient + height/1000) * mp.cos(phi) * mp.sin(theta) / au,
+                          (radius*polar**2*coefficient + height/1000) * mp.sin(phi) / au])
+        return rotation.T*site
+
+    def observer_velocity(self,ut,tt,location=None):
+        import apparent_reference as apparent
+        # Piecewise Earth polynomials can have position jumps. Differentiate
+        # the branch selected at tt; only the smooth Sun/site use mp.diff.
+        result=mp.matrix(equatorial_earth(self.earth.velocity(tt)))+mp.diff(apparent.sun,tt)
+        if location is not None:
+            result+=mp.diff(lambda delta:self.site(ut+delta,tt+delta,location),mp.mpf(0))
         return result
 
     def geocentric(self, ut, tt, model):
         import apparent_reference as apparent
         position = self.observer(ut, tt)
-        velocity = mp.diff(lambda delta:self.observer(ut+delta,tt+delta), mp.mpf(0))
+        velocity = self.observer_velocity(ut,tt)
         return apparent.apparent_sun(tt, position, velocity)
 
     def altitude(self, ut, tt, model, observer):
         import apparent_reference as apparent
         position = self.observer(ut,tt,observer)
-        velocity = mp.diff(lambda delta:self.observer(ut+delta,tt+delta,observer), mp.mpf(0))
+        velocity = self.observer_velocity(ut,tt,observer)
         result = apparent.apparent_sun(tt, position, velocity)
         rotation, sidereal = orientation(ut, tt)
         latitude, longitude, height = map(ref.exact, observer)
