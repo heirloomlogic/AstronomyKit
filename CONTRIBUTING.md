@@ -16,7 +16,7 @@ Open a [bug report](https://github.com/heirloomlogic/AstronomyKit/issues/new?tem
 2. Run `touch .dev-tooling` once, **before your first build**, to enable the swift-format build plugin (see [Code Style](#code-style)).
 3. Make your changes.
 4. Run `swift build` and resolve any swift-format lint warnings.
-5. Run `swift test` and confirm all tests pass.
+5. Run `swift test --no-parallel -c release` and confirm all tests pass.
 6. Open a pull request describing what you changed and why.
 
 ### Code Style
@@ -31,7 +31,15 @@ Your local toolchain must match CI's Swift major.minor version; see [Toolchain A
 
 New functionality should include tests. Bug fixes should include a test that would have caught the issue.
 
-Run the whole suite with `swift test`. Suites run in parallel in one process, and Swift Testing's `.serialized` trait only orders tests inside a single suite, so a test that changes process-wide state such as the Delta T model can make unrelated suites fail intermittently. The Delta T thread-safety test avoids this: its writers swap between two functions that return identical results, so ThreadSanitizer still sees a real pointer swap while other suites get the same values. A time created during a swap can carry the stand-in and report a `nil` `deltaTModel`, so check values, not `deltaTModel`, for times made under the process default. The thread-safety test's own checks never assume which function is the default, because another suite can construct a time or reset the model between any two of its statements.
+For routine development, run the full numerical suite with `swift test --no-parallel -c release`. Run focused Debug regressions with `python3 Scripts/run-pr-tests.py`; add `--sanitize=thread` or `--sanitize=address` for the same selection under a sanitizer. On Linux, set `LSAN_OPTIONS=suppressions=$PWD/.github/lsan-suppressions.txt` when running ASan. `python3 Scripts/run-pr-tests.py --list` shows and validates the selected tests. The explicit suite list covers native input safety, cache behavior, concurrent callers, and model capture; adding a test to a selected suite includes it automatically. Missing suites fail discovery rather than silently shrinking coverage.
+
+PR CI runs the full Release suite on macOS and Linux, focused Debug on both platforms, focused Linux ASan/TSan, fast fixture/provenance checks, and platform builds/runtime smoke tests. The feedback target is 20 minutes after runner startup, with a maximum of 25 minutes per routine test job. Queue time is separate. Do not raise that ceiling to absorb an expanding suite; profile the new cost and move exhaustive qualification work to the workflow below. Release uses the same scientific assertions and tolerances as Debug.
+
+The **Scientific qualification** workflow retains full Debug coverage on macOS and Linux, full Linux ASan/TSan, and native numerical remeasurement. It runs weekly on the default branch and on demand using **Actions → Scientific qualification → Run workflow**, selecting the candidate branch. For an unmerged scientific feature, apply the `full-qualification` PR label; the workflow runs against the exact PR head and reruns when that head changes. Each job records its verified commit SHA in its summary. Manual dispatch becomes available after this workflow reaches the default branch; the label trigger works on this PR immediately.
+
+Scientific feature acceptance and releases require successful qualification of the candidate commit in addition to routine PR checks. A weekly run of another commit does not qualify a candidate. Full qualification can take hours and is not part of ordinary PR feedback. The workflow preserves all existing commands, including ASan's isolated timed suites and process-default mutators; splitting scheduling does not establish that an unfinished qualification has passed.
+
+To reproduce exhaustive Debug locally, run `swift test --no-parallel`. For full ASan, run `Scripts/test-with-isolated-default-model.sh --sanitize=address` with the Linux leak suppression above; for full TSan, run `swift test --no-parallel --sanitize=thread`. Serial suite execution protects process-wide state such as the Delta T default; the concurrency regressions still launch simultaneous callers inside individual tests.
 
 ### Fuzzing the C bridge
 
