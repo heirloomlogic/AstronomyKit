@@ -185,7 +185,7 @@ struct EnginePlanetHorizonsTests {
         #expect(Self.geocentricRecords.count == 8 * 134)
         for (body, time, reference) in Self.geocentricRecords {
             let range = try Self.geocentric(body, at: time).length
-            let errorKm = abs(range - reference.referenceRangeAU) * Engine.kilometersPerAU
+            let errorKm = abs(range - reference.observableRangeAU) * Engine.kilometersPerAU
             #expect(
                 errorKm <= reference.allowedErrorKm,
                 "\(reference.body) JD TT \(reference.julianDateTT): \(errorKm) km, allowance \(reference.allowedErrorKm) km"

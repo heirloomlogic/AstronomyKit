@@ -1,6 +1,6 @@
 # Native sunrise meets the polar allowance
 
-The native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. Its South Pole residual is +50.539200607 TT seconds, within the unchanged 70.8-second allowance. Since the [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96) cutover the public `searchRiseSet` is this search, `AuditValidationTests` asserts row 2,923 without a known-issue wrapper, and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) closes with it.
+The native `Engine.Events.searchRiseSet` uses a 696,000 km apparent optical solar limb and passes all 5,909 archived rows. With the apparent-place model at `cbe14f807fea6fac7b4328d93f5bff77902167d4`, its South Pole residual is +50.424815132 TT seconds, within the unchanged 70.8-second allowance. Since the [#96](https://github.com/heirloomlogic/AstronomyKit/issues/96) cutover the public `searchRiseSet` is this search, `AuditValidationTests` asserts row 2,923 without a known-issue wrapper, and [#124](https://github.com/heirloomlogic/AstronomyKit/issues/124) closes with it.
 
 The former public failure was the Sun rising at the South Pole on 2022-09-20 at 21:52 Universal Time. The public C search at AstronomyKit revision `e3d3d85c804aacf1c13be8249f4350e5013da48e` was +75.985957542 seconds from that minute after the fixture converts both values to TT with Espenak-Meeus. The archived allowance is 70.8 seconds.
 
@@ -16,6 +16,10 @@ The fixture parses `2022-09-20T21:52Z` as a Gregorian calendar coordinate, conve
 
 The official [USNO rise/set definition](https://aa.usno.navy.mil/faq/RST_defs) says sunrise is the upper edge of the solar disk on the horizon under average atmospheric conditions. Its computational definition puts the Sun's center 50 arcminutes below the geometric horizon: 16 arcminutes for an average apparent solar radius plus 34 arcminutes for average horizon refraction. USNO also warns that rise/set accuracy decreases at high latitudes because a shallow crossing turns small angular differences into large time differences.
 
+## Retained pre-upgrade measurements
+
+The following table and convergence measurements are historical implementation observations, not USNO acceptance bounds. They were retained in PR #216 and updated at `87c8ed4a33c2db91dd3ab3cfedc2147522b76baa` and `211c3e8e2d2443d9225d3634245e6a20ce648276`. The former public-search test also pinned +50.517121574 seconds when scanning from January 1. These values remain here as provenance; the apparent-place upgrade does not reproduce them.
+
 ## Observable controls
 
 The public C search called `Astronomy_SearchRiseSetEx`. At sea level its zero was unrefracted topocentric center altitude plus `asin(695700 km / topocentric distance)` plus 34 arcminutes. The first native control evaluates that same distance-dependent upper-limb expression with `Engine.Positions.equatorial`, native observer subtraction, precession and nutation, `Engine.Horizontal`, `Engine.Time`, and `Engine.Search`.
@@ -27,7 +31,7 @@ All native searches start at 2022-01-01 00:00 UT, carry Espenak-Meeus through ev
 | Control | Signed TT residual from the archived minute |
 | --- | ---: |
 | Public C rise search, before the cutover | +75.985957542 s |
-| Public rise search, since the cutover (native, 696,000 km limb) | +50.539200607 s |
+| Retained post-cutover native rise search, 696,000 km limb | +50.539200607 s |
 | Native control, 695,700 km distance-dependent upper limb | +75.950547197 s |
 | Native topocentric, USNO fixed 50-arcminute center depression | -220.648209279 s |
 | Native geocentric direction, USNO fixed 50-arcminute center depression | -759.652990219 s |
@@ -56,9 +60,15 @@ All three agree with 696,000 km within the six-decimal-degree printing resolutio
 
 The native rise/set path therefore retains its distance-dependent angular radius and 34-arcminute refraction, using 696,000 km for the Sun's apparent limb. No other solar-radius consumer changes. This is a source-supported event convention, not a fit to the polar timestamp or a claim about the Sun's physical radius at every wavelength. The three native semidiameters match the printed USNO values within 0.000001 degree; the nominal-radius controls miss that comparison by over a factor of 100. The current USNO one-day service independently reproduces the archived 21:52 entry. Its rise/set implementation is unavailable, and the navigation service's convention does not prove which internal calculation produced that entry.
 
-With the optical radius, the same four Horizons points give an interpolated polar crossing about +52.15501 seconds from the reference TT. The native root is +50.539200607 seconds with the original 0.1-second search tolerance. These are sampled comparisons under specified conventions, not a continuous event-time bound or a prediction of actual atmospheric refraction.
+With the optical radius, the same four Horizons points give an interpolated polar crossing about +52.15501 seconds from the reference TT. The retained pre-upgrade native root was +50.539200607 seconds with the original 0.1-second search tolerance. These are sampled comparisons under specified conventions, not a continuous event-time bound or a prediction of actual atmospheric refraction.
 
 Exact queries, raw responses, digests and derived fixtures are under [`Scripts/observer-event-data`](../../Scripts/observer-event-data/README.md). The complete native Debug/Release captures and source-bound summary preserve every USNO row and the independent observables. The old controls, archived minute and tolerance remain intact; the public known issue is gone.
+
+## Apparent-place model measurements
+
+The complete apparent-place model changes the direction and astrometric distance supplied to the limb observable. Fresh Debug measurements give +50.424815132282674 TT seconds for the public root, +75.85828020237386 seconds for the 695,700 km nominal-radius control, -220.64791460288689 seconds for the fixed-center control and -759.6530007489491 seconds for the geocentric control. The nominal-radius root sequence is [75.86065898649395, 75.86065898649395, 75.86065898649395, 75.85828020237386] seconds; its independent bisection matches the finest result. These are implementation observations, not independent physical truth.
+
+A separate 40-step bisection of the 696,000 km optical-limb observable gives +50.422354467445984 seconds, 0.002460664837 seconds from the public search. The test retains the 0.1-second root comparison, the 70.8-second source acceptance/rejection checks, the 0.003-second convergence spread and the 0.001-second nominal-root bisection comparison. The archived minute, Espenak-Meeus UT-to-TT interpretation, source bytes, limb conventions and independent fixture allowances are unchanged. Historical output pins are no longer assertions about the new model.
 
 ## Reproduction
 

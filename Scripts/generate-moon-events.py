@@ -189,7 +189,29 @@ def check(data):
         raise ValueError("Direct event fixture coverage differs")
 
 
-def check_source_hashes(evidence_path, root=ROOT):
+def event_source_paths():
+    paths = ["Scripts/generate-moon-events.py", "Scripts/moon-data/de441-event-fixtures.json",
+             "Scripts/moon-data/de441-compact-evidence.json",
+             "Scripts/moon-data/apparent-phase-references.json",
+             "Scripts/moon-data/horizons-apparent-phase-moon.json",
+             "Scripts/moon-data/horizons-apparent-phase-moon.query.json",
+             "Scripts/moon-data/horizons-apparent-phase-sun.json",
+             "Scripts/moon-data/horizons-apparent-phase-sun.query.json",
+             "Scripts/test_generate_moon_events.py",
+             "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift",
+             "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift",
+             "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift",
+             "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift",
+             "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift",
+             "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json"]
+    paths += [str(path.relative_to(ROOT)) for path in (ROOT / "Sources/AstronomyKit/Engine").rglob("*.swift")]
+    paths += ["Sources/AstronomyKit/Time.swift", "Sources/AstronomyKit/AstronomyError.swift",
+              "Sources/AstronomyKit/CelestialBody.swift",
+              "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift"]
+    return sorted(set(paths))
+
+
+def check_source_hashes(evidence_path, root=ROOT, required_sources=None):
     evidence_path = Path(evidence_path)
     try:
         evidence = json.loads(evidence_path.read_bytes())
@@ -198,6 +220,8 @@ def check_source_hashes(evidence_path, root=ROOT):
     source_hashes = evidence.get("sourceSHA256")
     if not isinstance(source_hashes, dict) or not source_hashes:
         raise ValueError(f"{evidence_path}: sourceSHA256 must be a non-empty object")
+    if required_sources is not None and set(source_hashes) != set(required_sources):
+        raise ValueError(f"{evidence_path}: source binding coverage differs")
     for source_name, expected in sorted(source_hashes.items()):
         relative = Path(source_name)
         if relative.is_absolute() or ".." in relative.parts:
@@ -224,20 +248,7 @@ def collect_results(prefix):
             rows = [row for row in results[name] if row["event"] == event and row.get("gating", True)]
             summaries[name][event] = {"count": len(rows),
                                      "maximumAbsoluteResidualSeconds": max(abs(row["residualSeconds"]) for row in rows)}
-    files = ["Scripts/generate-moon-events.py", "Scripts/moon-data/de441-event-fixtures.json",
-             "Scripts/moon-data/de441-compact-evidence.json",
-             "Scripts/moon-data/apparent-phase-references.json",
-             "Scripts/moon-data/horizons-apparent-phase-moon.json",
-             "Scripts/moon-data/horizons-apparent-phase-moon.query.json",
-             "Scripts/moon-data/horizons-apparent-phase-sun.json",
-             "Scripts/moon-data/horizons-apparent-phase-sun.query.json",
-             "Scripts/test_generate_moon_events.py",
-             "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift",
-             "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift",
-             "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift",
-             "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift",
-             "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift",
-             "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json"]
+    files = event_source_paths()
     result = {"schemaVersion": 1,
               "runtimeBaseRevision": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
               "toolchain": subprocess.check_output(["swift", "--version"], text=True, stderr=subprocess.STDOUT).strip(),
@@ -269,7 +280,7 @@ def main():
         check(OUTPUT.read_bytes())
         check_apparent_phase_sources()
         for evidence_path in SOURCE_HASH_EVIDENCE:
-            check_source_hashes(evidence_path)
+            check_source_hashes(evidence_path, required_sources=event_source_paths() if evidence_path == SOURCE_HASH_EVIDENCE[0] else None)
     elif args.check_source:
         if generate(args.cache) != OUTPUT.read_bytes():
             raise ValueError("Direct event fixture differs from verified source records")

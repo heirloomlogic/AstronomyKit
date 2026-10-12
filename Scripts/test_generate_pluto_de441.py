@@ -53,6 +53,10 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
 
     def test_native_measurements_bind_the_current_runtime_and_fixture_sources(self):
         evidence = json.loads((g.ROOT/'Scripts/pluto-data/de441-native-evidence.json').read_bytes())
+        required = {str(path.relative_to(g.ROOT)) for path in (g.ROOT/'Sources/AstronomyKit/Engine').rglob('*.swift')}
+        required |= {'Tests/AstronomyKitTests/DistanceAccuracyTests.swift',
+                     'Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json'}
+        self.assertTrue(required <= set(evidence['sourceSHA256']), sorted(required - set(evidence['sourceSHA256'])))
         for path, expected in evidence['sourceSHA256'].items():
             self.assertEqual(expected, hashlib.sha256((g.ROOT/path).read_bytes()).hexdigest(), path)
         self.assertEqual(13149264, evidence['nativeStorage']['decodedPayloadBytes'])

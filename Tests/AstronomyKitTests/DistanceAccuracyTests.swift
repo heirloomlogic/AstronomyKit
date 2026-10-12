@@ -15,6 +15,11 @@ struct DistanceReferenceArchive: Decodable {
         let horizonsRangeAU: Double?
         let referencePositionAU: [Double]
         let allowedErrorKm: Double
+
+        /// Match the archived observable: raw LT range for non-Moon geocentric rows, geometric Moon and heliocentric ranges otherwise.
+        var observableRangeAU: Double {
+            mode == "geocentric" && body != "Moon" ? horizonsRangeAU ?? referenceRangeAU : referenceRangeAU
+        }
     }
 
     static let shared: Self = {
@@ -48,10 +53,7 @@ struct DistanceAccuracyTests {
                 : try body.geocentricPosition(at: time, aberration: .none).magnitude
         }
         // The frozen referenceRangeAU aligns LT vectors to the former fixed-Sun approximation. The complete barycentric route uses the untouched Horizons range instead.
-        let expected =
-            reference.mode == "geocentric" && body != .moon
-            ? reference.horizonsRangeAU ?? reference.referenceRangeAU : reference.referenceRangeAU
-        let errorKm = abs(actual - expected) * 149_597_870.7
+        let errorKm = abs(actual - reference.observableRangeAU) * 149_597_870.7
         #expect(
             errorKm <= reference.allowedErrorKm,
             "\(reference.body) \(reference.mode), JDTT \(reference.julianDateTT): \(errorKm) km; allowance \(reference.allowedErrorKm) km"
