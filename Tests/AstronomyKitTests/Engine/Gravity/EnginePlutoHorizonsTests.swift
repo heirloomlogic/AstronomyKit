@@ -19,9 +19,14 @@ extension PlutoSegmentSuites {
 
         /// The astrometric geocentric EQJ vector, Horizons' definition: Pluto at
         /// the time light left it, minus Earth at `time`, with no aberration,
-        /// from `Engine.Positions`.
+        /// from the public Pluto route.
         static func geocentric(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
-            try Engine.Positions.geocentricPosition(of: .pluto, at: time, aberration: .none)
+            try CelestialBody.pluto.geocentricPosition(at: AstroTime(time), aberration: .none)
+                .engineVector(in: Engine.EQJ.self)
+        }
+
+        static func heliocentric(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
+            try CelestialBody.pluto.heliocentricPosition(at: AstroTime(time)).engineVector(in: Engine.EQJ.self)
         }
 
         static func topocentric(from observer: Observer, at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
@@ -89,7 +94,7 @@ extension PlutoSegmentSuites {
                 let time = Engine.Time(tt: reference.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
                 let range =
                     reference.mode == "heliocentric"
-                    ? try Pluto.heliocentricPosition(at: time).length : try Self.geocentric(at: time).length
+                    ? try Self.heliocentric(at: time).length : try Self.geocentric(at: time).length
                 let errorKm = abs(range - reference.referenceRangeAU) * Engine.kilometersPerAU
                 #expect(
                     errorKm <= reference.allowedErrorKm,
@@ -123,12 +128,27 @@ extension PlutoSegmentSuites {
             return tdb - Engine.TDB.offsetSeconds(tt: tdb) / 86_400
         }
 
-        /// The engine's heliocentric state at a Horizons epoch.
+        /// The engine state retained for the DE441 representation tests that reuse this helper.
         static func state(_ reference: IndependentReferenceArchive.Vector) throws -> Engine.State<Engine.EQJ> {
             try Pluto.heliocentricState(at: PlanetTestSupport.time(tt: tt(reference)))
         }
 
+        /// The public Pluto position and state at a Horizons epoch.
+        static func publicState(_ reference: IndependentReferenceArchive.Vector) throws -> StateVector {
+            let time = AstroTime(PlanetTestSupport.time(tt: tt(reference)))
+            let position = try CelestialBody.pluto.heliocentricPosition(at: time)
+            let state = try CelestialBody.pluto.heliocentricState(at: time)
+            #expect(position == state.position)
+            return state
+        }
+
         static func length(_ v: SIMD3<Double>) -> Double { (v * v).sum().squareRoot() }
+        static func position(_ state: StateVector) -> SIMD3<Double> {
+            SIMD3(state.position.x, state.position.y, state.position.z)
+        }
+        static func velocity(_ state: StateVector) -> SIMD3<Double> {
+            SIMD3(state.velocity.x, state.velocity.y, state.velocity.z)
+        }
 
         /// Horizons' Pluto (999) from `sources/horizons/pluto-vector.json`: 29
         /// dates from 1840 to 2159.
@@ -140,31 +160,30 @@ extension PlutoSegmentSuites {
         /// Inside the DE440 span Pluto is the plu060 data Horizons also reads.
         /// The samples agree within 0.005″ and 0.05 km, and in velocity within
         /// 4e-10 of the speed; the bounds are 1 km and 1e-8.
-        @Test("In the DE440 span within 1 km and 1e-8 of the speed")
+        @Test("Public Pluto state in the DE440 span within 1 km and 1e-8 of the speed")
         func de440Vectors() throws {
             #expect(Self.vectors.count == 29)
             #expect(Self.de440.count == 9)
             for reference in Self.de440 {
-                let state = try Self.state(reference)
-                let km =
-                    Self.length(EnginePlutoTests.position(state) - Self.expected(reference)) * Engine.kilometersPerAU
+                let state = try Self.publicState(reference)
+                let km = Self.length(Self.position(state) - Self.expected(reference)) * Engine.kilometersPerAU
                 #expect(km <= 1, "\(reference.tdb): \(km) km")
                 let v = reference.velocityAUPerDay
                 let velocity = Engine.FrameBias.icrsToEqj.apply(to: SIMD3(v[0], v[1], v[2]))
-                let relative = Self.length(SIMD3(state.vx, state.vy, state.vz) - velocity) / Self.length(velocity)
+                let relative = Self.length(Self.velocity(state) - velocity) / Self.length(velocity)
                 #expect(relative <= 1e-8, "\(reference.tdb): \(relative)")
             }
         }
 
         /// Center references through both blends and the outer barycenter approximation from 1840 to 2159.
-        @Test("Through the blends and outer barycenter approximation from 1840 to 2159 within 1′")
+        @Test("Public Pluto route through the blends and outer barycenter approximation within 1′")
         func modelVectors() throws {
             let others = Self.vectors.filter { reference in
                 !Self.de440.contains { $0.julianDateTDB == reference.julianDateTDB }
             }
             #expect(others.count == 20)
             for reference in others {
-                let arcminutes = try Self.arcminutes(EnginePlutoTests.position(try Self.state(reference)), reference)
+                let arcminutes = try Self.arcminutes(Self.position(try Self.publicState(reference)), reference)
                 #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
             }
         }
@@ -176,17 +195,17 @@ extension PlutoSegmentSuites {
             $0.body == "pluto-barycenter"
         }
 
-        /// Native DE441 agrees with the archived system-barycenter directions; this does not certify full-range center motion.
+        /// The public DE441 route agrees with the archived system-barycenter directions; this does not certify full-range center motion.
         @Test(
-            "Far from J2000 the native barycenter approximation meets 1′",
+            "Far from J2000 the public barycenter approximation meets 1′",
             arguments: barycenterVectors.map(\.julianDateTDB))
         func farFromJ2000(julianDateTDB: Double) throws {
             let reference = try #require(Self.barycenterVectors.first { $0.julianDateTDB == julianDateTDB })
-            let arcminutes = try Self.arcminutes(EnginePlutoTests.position(try Self.state(reference)), reference)
+            let arcminutes = try Self.arcminutes(Self.position(try Self.publicState(reference)), reference)
             #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
         }
 
-        @Test("The checks fail a day off, and with the barycentric state")
+        @Test("The public checks fail a day off, and with the barycentric state")
         func negativeControls() throws {
             let reference = PlutoValidationTests.referenceData[0]
             let time = EnginePlanetHorizonsTests.time(reference)
@@ -195,12 +214,10 @@ extension PlutoSegmentSuites {
                     > toleranceArcminutes)
             let sample = try #require(Self.de440.first)
             let tt = Self.tt(sample)
-            let dayOff = try Pluto.heliocentricState(at: PlanetTestSupport.time(tt: tt + 1))
-            #expect(Self.length(EnginePlutoTests.position(dayOff) - Self.expected(sample)) * Engine.kilometersPerAU > 1)
-            let barycentric = try Pluto.barycentricState(at: PlanetTestSupport.time(tt: tt))
-            #expect(
-                Self.length(EnginePlutoTests.position(barycentric) - Self.expected(sample)) * Engine.kilometersPerAU > 1
-            )
+            let dayOff = try CelestialBody.pluto.heliocentricState(at: AstroTime(PlanetTestSupport.time(tt: tt + 1)))
+            #expect(Self.length(Self.position(dayOff) - Self.expected(sample)) * Engine.kilometersPerAU > 1)
+            let barycentric = try CelestialBody.pluto.barycentricState(at: AstroTime(PlanetTestSupport.time(tt: tt)))
+            #expect(Self.length(Self.position(barycentric) - Self.expected(sample)) * Engine.kilometersPerAU > 1)
         }
     }
 }
