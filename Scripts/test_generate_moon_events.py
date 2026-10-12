@@ -9,7 +9,6 @@ from pathlib import Path
 class MoonEventFixtureTests(unittest.TestCase):
     evidence_files = (
         "Scripts/moon-data/de441-event-evidence.json",
-        "Scripts/moon-data/de441-native-evidence.json",
     )
 
     @classmethod
@@ -54,7 +53,6 @@ class MoonEventFixtureTests(unittest.TestCase):
     def test_committed_event_and_native_evidence_bind_all_named_sources(self):
         counts = [self.tool.check_source_hashes(self.tool.ROOT / name) for name in self.evidence_files]
         self.assertGreater(counts[0], 15)
-        self.assertEqual(11, counts[1])
 
     def test_apparent_event_evidence_binds_composition_clock_and_orientation(self):
         evidence = json.loads((self.tool.ROOT / self.evidence_files[0]).read_bytes())

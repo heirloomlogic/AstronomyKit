@@ -12,11 +12,11 @@ trap 'rm -rf "$scratch"' EXIT
 cat >"$scratch/static-data.swift" <<'SWIFT'
 import Foundation
 
-enum MoonDE441 {
-    static let data = Data(base64Encoded: String(repeating: "QUFB", count: 349_526))!
+enum SaturnEphemeris {
+    static let barycenter = Data(base64Encoded: String(repeating: "QUFB", count: 349_526))!
 }
 
-print(MoonDE441.data.count)
+print(SaturnEphemeris.barycenter.count)
 SWIFT
 
 swiftc -sanitize=address "$scratch/static-data.swift" -o "$scratch/static-data" >"$scratch/static-data-compile.log" 2>&1 || {
@@ -36,7 +36,7 @@ grep -Fxq "1048578" "$scratch/static-data.out" || {
     echo "error: generated static Data control did not decode the expected bytes" >&2
     exit 1
 }
-grep -Fq "MoonDE441O4data_WZ" "$scratch/static-data.err" || {
+grep -Fq "SaturnEphemerisO10barycenter_WZ" "$scratch/static-data.err" || {
     echo "error: generated static Data control did not exercise its initializer suppression" >&2
     exit 1
 }

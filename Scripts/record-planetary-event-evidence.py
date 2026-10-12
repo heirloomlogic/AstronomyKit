@@ -20,7 +20,7 @@ def source_hashes(capture_bytes=None):
     paths += [ROOT/p for p in [
         'Scripts/record-planetary-event-evidence.py', 'Scripts/assess-saturn-apsides.py',
         'Scripts/assess-pluto-de441.py', 'Scripts/assess-moon-de441.py', 'Scripts/qualify-moon-de441.py',
-        'Scripts/generate-moon-tables.py', 'Scripts/generate-moon-de441.py', 'Scripts/generate-saturn-tables.py', 'Scripts/test_saturn_ephemeris.py',
+        'Scripts/generate-moon-tables.py', 'Scripts/packed-table-payload.py', 'Scripts/generate-saturn-tables.py', 'Scripts/test_saturn_ephemeris.py',
         'Sources/CLibAstronomy/EphemerisTime/dtdb.c', 'Sources/CLibAstronomy/astronomy.c',
         'Sources/AstronomyKit/Apsis.swift', 'Sources/AstronomyKit/Time.swift', 'Sources/AstronomyKit/CelestialBody.swift',
         'Tests/AstronomyKitTests/IndependentReferenceFixtures.swift',

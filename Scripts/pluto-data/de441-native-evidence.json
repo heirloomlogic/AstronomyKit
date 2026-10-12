@@ -396,17 +396,17 @@
   "centerExtensionBase": "128ac0a4728206f887027f5674371030faad4b5c",
   "centerNativeRelease": {
     "checksum": 44301.65643972756,
-    "coldSeconds": 0.02088296413421631,
+    "coldSeconds": 0.022637009620666504,
     "coldTT": -72000,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 120897536,
-    "peakBytesAfterLoops": 151781376,
-    "peakBytesBefore": 47726592,
+    "peakBytesAfterCold": 120307712,
+    "peakBytesAfterLoops": 151175168,
+    "peakBytesBefore": 47153152,
     "seconds": {
-      "central": 0.038298964500427246,
-      "engineRange": 0.03795790672302246,
-      "outer": 0.0454939603805542
+      "central": 0.038784027099609375,
+      "engineRange": 0.03700709342956543,
+      "outer": 0.045472025871276855
     }
   },
   "directSourceDebug": {
@@ -438,6 +438,7 @@
     "maximumRateKmPerTDBDay": 1.8634710528664686e-10
   },
   "fullPrecisionFoundationCaptureRevision": "de2f6f153ce27efac6c4f1e362658af725b2428e",
+  "fullPrecisionIntegrationCaptureRevision": "220cd5424cd3764767731b9cd54f2f8e47cc5491",
   "limits": [
     "Outer states represent the Pluto system barycenter, not the physical center. Available PLU060 offset coverage does not qualify the full accepted range or omitted physical-center velocity.",
     "Source representation bounds do not certify absolute DE441 observational accuracy. Native implementation comparisons are sampled except for all-record seam checks.",
@@ -462,17 +463,17 @@
   },
   "nativeRelease": {
     "checksum": 44287.76723921855,
-    "coldSeconds": 0.008213996887207031,
+    "coldSeconds": 0.008278965950012207,
     "coldTT": -766524.75,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 78217216,
+    "peakBytesAfterCold": 78200832,
     "peakBytesAfterLoops": 151175168,
-    "peakBytesBefore": 47104000,
+    "peakBytesBefore": 47136768,
     "seconds": {
-      "central": 0.03737998008728027,
-      "engineRange": 0.03739893436431885,
-      "outer": 0.057331085205078125
+      "central": 0.0372920036315918,
+      "engineRange": 0.0366818904876709,
+      "outer": 0.060978055000305176
     }
   },
   "nativeStorage": {
@@ -507,20 +508,20 @@
         "releaseObjectBytes": 23569456
       }
     },
-    "testExecutableBytes": 462350976
+    "testExecutableBytes": 414888848
   },
   "rangeExtensionBase": "686ffb3b9d69c62ac2c9cc4d0493049f2851d8bd",
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Scripts/generate-moon-de441.py": "b350b467dd0e9eb57fbe440a42a31e97b9d80edc612ad3281456d36b41ff7fbe",
-    "Scripts/generate-pluto-de441.py": "2dd1f9bedf59111ac64b563e8bdf4207fa74038266c329b736bb94b68d3bf061",
+    "Scripts/generate-pluto-de441.py": "57213608b5c883f588a343c5e5df7bded51e20da0c58333d7d4b0d28d46b65d9",
     "Scripts/generate-pluto-tables.py": "06853c3483b869f62b23cb1378bad7241d12ccfb77a7e23e443e0864f4ed0829",
+    "Scripts/packed-table-payload.py": "39618ef9a16ec84e3f03046dca20d736c2ca7d4855073435d5daacac6936c7c9",
     "Scripts/pluto-data/de441-evidence.json": "86a3f3c8c37973ec0e77062d178e686acda18d59c1d4827ecf9bdc9fd5a1968f",
     "Scripts/pluto-data/de441-native-fixtures.json": "38dc2a6406d22db61b06f7910bbc54dead4b2f6630fe54b34e06a5f4ebf9e425",
     "Scripts/pluto-data/plu060-evidence.json": "a4a28fffac897770297061056037ebfd5ca4b2d68269d81912a08a522e1b9252",
     "Scripts/pluto-data/plu060-qualification.json": "0685d7edc61e572f23d039957c6a5b644b74809204816884df76015dd1e441fe",
     "Scripts/qualify-pluto-center.py": "4478cb59a138dbb9e574adcd3cb70c3f476dc09f12bd341e873c11405ce1ccb9",
-    "Scripts/test_generate_pluto_de441.py": "bcdafb7604af5d24d0989809ddbb77a2e27b42f492b87b5e50af2ce3d1c94eb2",
+    "Scripts/test_generate_pluto_de441.py": "c6546ba8643441574cd91b438bb5445e33f945d3c94ea78ebf89602512476767",
     "Sources/AstronomyKit/AstronomyError.swift": "7122525f8f8796baaef9e6a3baff8c2332d0a0f817927af6c98d83b4a81c7746",
     "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
@@ -563,15 +564,12 @@
     "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoStateTable.swift": "23daa2037a4dd5add677903fd3e08549c2997979573fc1ba3b4caabb8d81d4e9",
     "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoSunCoefficients.swift": "6a31ab43f325c9d84c265c4f32c702c2754a8de1d2a858850f160c4bb74e159b",
     "Sources/AstronomyKit/Engine/Moon/EngineFrameBias.swift": "96e32a064cb907b394223c966eaee27a104a5309d0fdbaaaa1cfc5e25b8d66a3",
-    "Sources/AstronomyKit/Engine/Moon/EngineLibration.swift": "9d9b38890d2ccf06c3c13cf086bb8792b79fe08ccff12d8edddf286f8767c23f",
-    "Sources/AstronomyKit/Engine/Moon/EngineLunarSeries.swift": "0f65e3d6a9892558637f12eab83b13ef8276eb4d1283267a1643a1da424db3f8",
-    "Sources/AstronomyKit/Engine/Moon/EngineMoon.swift": "a802e1a73089bc26e7b68e3927a4cf7dc3664fbc9c01cb0086565c7c218ef4eb",
-    "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441.swift": "5457251b2a668e1b3841f7b40e048939d30b6fd20cd934a2a376b4992b3d9864",
+    "Sources/AstronomyKit/Engine/Moon/EngineLibration.swift": "4c7be92f565aaa2e254bdc60b5bb4ad05148f8476e23b98f348eac9b5c23a468",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoon.swift": "82db60c3da117d53782e65fa898d75bd28ee9702841186c14ea86534ff4e1b71",
     "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441Full.swift": "08b29366ba83cac1a9c9eecd065d03a4378b3f988569a71efd9eb6700bdd321c",
-    "Sources/AstronomyKit/Engine/Moon/EngineMoonEphemeris.swift": "a233152b307bf9c4bb89a764be3bab574da279016f3be6c2736006a5529d8753",
-    "Sources/AstronomyKit/Engine/Moon/EngineMoonStates.swift": "442cf8a11ac4b65d4e6fe7c230d73f4ff599584130272a1915d17794d1889e7a",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonEphemeris.swift": "cef342276a14daf12d2c15e6cd500b573926ee556fff705c3cf16f375b22ea87",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonStates.swift": "a9735272b5b2c27084406c6514861a1960775aab1f86dd134a30e54b9bb16b10",
     "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift": "5c77325fb41d76fd9c6e23f08f2ba580924166e0fa2681913a815c1f32b6ad8e",
-    "Sources/AstronomyKit/Engine/Moon/Generated/DE441/MoonDE441Data.swift": "18183bac224958b016b9ee348a9d57c698efd8838eee7578f01af6add96102ae",
     "Sources/AstronomyKit/Engine/Moon/Generated/DE441Full/MoonDE441Full000.swift": "7f0346af2faec1ff9f995b1227e06afc1e3eac91fb22ba555e3ad4b0a78ebcb6",
     "Sources/AstronomyKit/Engine/Moon/Generated/DE441Full/MoonDE441Full001.swift": "69ae9682a827744ece637a72df6be518b796e6d979aed2fc9d8f4139a9a1d06b",
     "Sources/AstronomyKit/Engine/Moon/Generated/DE441Full/MoonDE441Full002.swift": "5fbbc6a8d939975a2ddd12627de65d80d3f9cc97a38e04fb44bcca7840129449",
@@ -697,7 +695,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
-    "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "6aee87d74ef640184fcc740ce521f56f716c303e3506deb5acc6ae56bd91c878",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "8654988dfd07ba1bc67820ddef15b7b1d817ef44c902a139a40576cf685a5e4c",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",

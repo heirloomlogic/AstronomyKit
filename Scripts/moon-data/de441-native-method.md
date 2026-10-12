@@ -1,4 +1,6 @@
-# Native DE441 integration
+# Historical compact DE441 integration
+
+This document and `de441-native-evidence.json` preserve the measurements of the retired compact implementation. They are not current-runtime qualification. The complete binary64 implementation and current integration evidence are described in [the full-source method](de441-full-method.md) and [the integration method](de441-full-integration-method.md). Historical source hashes may name files removed by #251; their original revisions remain recorded below.
 
 The native Swift Moon uses the shared-endpoint representation qualified in [link 2](de441-compact-method.md) outside the central DE440 span. DE440 and the existing 32-day smoothstep weights remain in place. The public Moon APIs use this model after the #96 cutover. The recorded integration evidence does not establish continuous full-range state or event accuracy.
 

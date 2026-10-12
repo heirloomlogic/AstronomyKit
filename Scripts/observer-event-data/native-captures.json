@@ -7,8 +7,8 @@
     "sha256": "f6a2b408dcb32a3ad1e8f57dcc16767f055d3f4bd93c675728a4a351bc9c5d6e"
   },
   "buildReceipts": {
-    "debug": "Build complete! (30.15 sec)",
-    "release": "Build complete! (127.66 sec)"
+    "debug": "Build complete! (0.97 sec)",
+    "release": "Build complete! (141.90 sec)"
   },
   "debug": {
     "points": [
@@ -1151,11 +1151,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20401.66513681097,
-        "nativeUT": -20401.66544306978,
+        "nativeTT": -20401.665136810974,
+        "nativeUT": -20401.665443069785,
         "referenceTT": -20401.664971518963,
         "referenceUT": -20401.665277777778,
-        "residualSeconds": 14.281229430343956,
+        "residualSeconds": 14.281229744665325,
         "sourceLine": 103
       },
       {
@@ -1358,11 +1358,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20389.76736137029,
-        "nativeUT": -20389.767667816202,
+        "nativeTT": -20389.767361370294,
+        "nativeUT": -20389.767667816206,
         "referenceTT": -20389.76705466519,
         "referenceUT": -20389.76736111111,
-        "residualSeconds": 26.499320659786463,
+        "residualSeconds": 26.49932097410783,
         "sourceLine": 126
       },
       {
@@ -2024,11 +2024,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20351.28054607072,
-        "nativeUT": -20351.280853120006,
+        "nativeTT": -20351.280546070717,
+        "nativeUT": -20351.280853120003,
         "referenceTT": -20351.280248506268,
         "referenceUT": -20351.280555555557,
-        "residualSeconds": 25.70956873241812,
+        "residualSeconds": 25.70956841809675,
         "sourceLine": 200
       },
       {
@@ -2042,11 +2042,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20350.230294198915,
-        "nativeUT": -20350.230601264626,
+        "nativeTT": -20350.23029419892,
+        "nativeUT": -20350.23060126463,
         "referenceTT": -20350.230248489843,
         "referenceUT": -20350.230555555554,
-        "residualSeconds": 3.9492638083174825,
+        "residualSeconds": 3.9492641226388514,
         "sourceLine": 202
       },
       {
@@ -2645,11 +2645,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20315.650868393746,
-        "nativeUT": -20315.651175999094,
+        "nativeTT": -20315.65086839375,
+        "nativeUT": -20315.651175999097,
         "referenceTT": -20315.651081283544,
         "referenceUT": -20315.651388888888,
-        "residualSeconds": 18.393678520806134,
+        "residualSeconds": 18.393678206484765,
         "sourceLine": 269
       },
       {
@@ -4382,11 +4382,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20215.71305156798,
-        "nativeUT": -20215.713360720336,
+        "nativeTT": -20215.713051567986,
+        "nativeUT": -20215.713360720343,
         "referenceTT": -20215.712885292087,
         "referenceUT": -20215.713194444445,
-        "residualSeconds": 14.366237015929073,
+        "residualSeconds": 14.366237644571811,
         "sourceLine": 462
       },
       {
@@ -4823,11 +4823,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20190.48148471888,
-        "nativeUT": -20190.4817942589,
+        "nativeTT": -20190.481484718886,
+        "nativeUT": -20190.481794258907,
         "referenceTT": -20190.481634904423,
         "referenceUT": -20190.481944444444,
-        "residualSeconds": 12.976031005382538,
+        "residualSeconds": 12.9760303767398,
         "sourceLine": 511
       },
       {
@@ -4949,11 +4949,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20183.2943763082,
-        "nativeUT": -20183.294685958437,
+        "nativeTT": -20183.294376308204,
+        "nativeUT": -20183.29468595844,
         "referenceTT": -20183.294134794203,
         "referenceUT": -20183.294444444444,
-        "residualSeconds": 20.866809342987835,
+        "residualSeconds": 20.866809657309204,
         "sourceLine": 525
       },
       {
@@ -5471,11 +5471,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20153.2017302714,
-        "nativeUT": -20153.202040382086,
+        "nativeTT": -20153.201730271398,
+        "nativeUT": -20153.202040382082,
         "referenceTT": -20153.20177322265,
         "referenceUT": -20153.202083333334,
-        "residualSeconds": 3.710987779777497,
+        "residualSeconds": 3.710988094098866,
         "sourceLine": 583
       },
       {
@@ -5489,11 +5489,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20152.133625791426,
-        "nativeUT": -20152.133935918428,
+        "nativeTT": -20152.13362579142,
+        "nativeUT": -20152.13393591842,
         "referenceTT": -20152.13371765078,
         "referenceUT": -20152.134027777778,
-        "residualSeconds": 7.936648197937757,
+        "residualSeconds": 7.936648826580495,
         "sourceLine": 585
       },
       {
@@ -5507,11 +5507,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20151.065058464494,
-        "nativeUT": -20151.06536860781,
+        "nativeTT": -20151.0650584645,
+        "nativeUT": -20151.06536860782,
         "referenceTT": -20151.064967634462,
         "referenceUT": -20151.06527777778,
-        "residualSeconds": 7.84771473845467,
+        "residualSeconds": 7.847715367097408,
         "sourceLine": 587
       },
       {
@@ -6146,11 +6146,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20114.40992576323,
-        "nativeUT": -20114.41023646508,
+        "nativeTT": -20114.409925763226,
+        "nativeUT": -20114.410236465075,
         "referenceTT": -20114.41010596482,
         "referenceUT": -20114.410416666666,
-        "residualSeconds": 15.569417411461473,
+        "residualSeconds": 15.569417725782841,
         "sourceLine": 658
       },
       {
@@ -8999,11 +8999,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 18400.29643540897,
-        "nativeUT": 18400.295350123823,
+        "nativeTT": 18400.296435408964,
+        "nativeUT": 18400.295350123815,
         "referenceTT": 18400.296224174024,
         "referenceUT": 18400.29513888889,
-        "residualSeconds": 18.25069938786328,
+        "residualSeconds": 18.25069875922054,
         "sourceLine": 975
       },
       {
@@ -9656,11 +9656,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 18438.021096584525,
-        "nativeUT": 18438.02000886198,
+        "nativeTT": 18438.02109658452,
+        "nativeUT": 18438.020008861975,
         "referenceTT": 18438.021226611443,
         "referenceUT": 18438.02013888889,
-        "residualSeconds": 11.234325694385916,
+        "residualSeconds": 11.234326008707285,
         "sourceLine": 1048
       },
       {
@@ -10421,11 +10421,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 18482.072998588974,
-        "nativeUT": 18482.071908019225,
+        "nativeTT": 18482.072998588977,
+        "nativeUT": 18482.07190801923,
         "referenceTT": 18482.073312791992,
         "referenceUT": 18482.07222222222,
-        "residualSeconds": 27.147140773013234,
+        "residualSeconds": 27.147140458691865,
         "sourceLine": 1133
       },
       {
@@ -10718,11 +10718,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 18499.131794804565,
-        "nativeUT": 18499.130703131967,
+        "nativeTT": 18499.13179480456,
+        "nativeUT": 18499.130703131963,
         "referenceTT": 18499.131647228143,
         "referenceUT": 18499.130555555555,
-        "residualSeconds": 12.750602862797678,
+        "residualSeconds": 12.750602548476309,
         "sourceLine": 1166
       },
       {
@@ -10736,11 +10736,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 18500.17180419103,
-        "nativeUT": 18500.170712451192,
+        "nativeTT": 18500.171804191028,
+        "nativeUT": 18500.17071245119,
         "referenceTT": 18500.17192507318,
         "referenceUT": 18500.170833333334,
-        "residualSeconds": 10.444217640906572,
+        "residualSeconds": 10.444217955227941,
         "sourceLine": 1168
       },
       {
@@ -13094,11 +13094,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 6947.548282355699,
-        "nativeUT": 6947.547459778761,
+        "nativeTT": 6947.5482823556995,
+        "nativeUT": 6947.547459778762,
         "referenceTT": 6947.548044799156,
         "referenceUT": 6947.547222222222,
-        "residualSeconds": 20.52488529297989,
+        "residualSeconds": 20.52488537156023,
         "sourceLine": 1430
       },
       {
@@ -13112,11 +13112,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 6948.5848508241215,
-        "nativeUT": 6948.584028229605,
+        "nativeTT": 6948.584850824121,
+        "nativeUT": 6948.584028229604,
         "referenceTT": 6948.584850372295,
         "referenceUT": 6948.584027777778,
-        "residualSeconds": 0.039037849637679756,
+        "residualSeconds": 0.03903777105733752,
         "sourceLine": 1432
       },
       {
@@ -18332,11 +18332,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 7248.764022613782,
-        "nativeUT": 7248.763194884668,
+        "nativeTT": 7248.764022613781,
+        "nativeUT": 7248.763194884667,
         "referenceTT": 7248.764022173558,
         "referenceUT": 7248.763194444445,
-        "residualSeconds": 0.03803532163146883,
+        "residualSeconds": 0.0380352430511266,
         "sourceLine": 2012
       },
       {
@@ -19322,11 +19322,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 12426.625199410728,
-        "nativeUT": 12426.624269430438,
+        "nativeTT": 12426.625199410726,
+        "nativeUT": 12426.624269430436,
         "referenceTT": 12426.625235535845,
         "referenceUT": 12426.624305555555,
-        "residualSeconds": 3.121210093377158,
+        "residualSeconds": 3.1212102505378425,
         "sourceLine": 2122
       },
       {
@@ -20474,11 +20474,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 12604.366100670517,
-        "nativeUT": 12604.365166715674,
+        "nativeTT": 12604.366100670519,
+        "nativeUT": 12604.365166715676,
         "referenceTT": 12604.366211732624,
         "referenceUT": 12604.365277777777,
-        "residualSeconds": 9.595766040729359,
+        "residualSeconds": 9.595765883568674,
         "sourceLine": 2250
       },
       {
@@ -20501,11 +20501,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 12606.111222611686,
-        "nativeUT": 12606.110288617667,
+        "nativeTT": 12606.111222611687,
+        "nativeUT": 12606.110288617669,
         "referenceTT": 12606.111350660689,
         "referenceUT": 12606.110416666666,
-        "residualSeconds": 11.063433880917728,
+        "residualSeconds": 11.063433723757043,
         "sourceLine": 2253
       },
       {
@@ -21014,11 +21014,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 12686.074709594624,
-        "nativeUT": 12686.07377380236,
+        "nativeTT": 12686.074709594623,
+        "nativeUT": 12686.073773802358,
         "referenceTT": 12686.074546903372,
         "referenceUT": 12686.073611111111,
-        "residualSeconds": 14.05652422690764,
+        "residualSeconds": 14.056524069746956,
         "sourceLine": 2310
       },
       {
@@ -21860,11 +21860,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 11008.233052858624,
-        "nativeUT": 11008.232153475561,
+        "nativeTT": 11008.233052858626,
+        "nativeUT": 11008.232153475563,
         "referenceTT": 11008.232843827504,
         "referenceUT": 11008.231944444444,
-        "residualSeconds": 18.060288846027106,
+        "residualSeconds": 18.06028900318779,
         "sourceLine": 2404
       },
       {
@@ -22211,11 +22211,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11102.902094913974,
-        "nativeUT": 11102.901193548092,
+        "nativeTT": 11102.90209491397,
+        "nativeUT": 11102.901193548088,
         "referenceTT": 11102.902290254775,
         "referenceUT": 11102.90138888889,
-        "residualSeconds": 16.87744520022534,
+        "residualSeconds": 16.877445514546707,
         "sourceLine": 2443
       },
       {
@@ -22409,11 +22409,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11157.807267815975,
-        "nativeUT": 11157.80636529613,
+        "nativeTT": 11157.807267815977,
+        "nativeUT": 11157.806365296132,
         "referenceTT": 11157.807152519841,
         "referenceUT": 11157.80625,
-        "residualSeconds": 9.961585979908705,
+        "residualSeconds": 9.96158613706939,
         "sourceLine": 2465
       },
       {
@@ -22481,11 +22481,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11183.44411909293,
-        "nativeUT": 11183.443216033264,
+        "nativeTT": 11183.444119092928,
+        "nativeUT": 11183.443216033262,
         "referenceTT": 11183.443958615218,
         "referenceUT": 11183.443055555555,
-        "residualSeconds": 13.865274289855734,
+        "residualSeconds": 13.865274132695049,
         "sourceLine": 2473
       },
       {
@@ -22499,11 +22499,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11184.621407449105,
-        "nativeUT": 11184.620504364635,
+        "nativeTT": 11184.621407449109,
+        "nativeUT": 11184.620504364639,
         "referenceTT": 11184.62173641781,
         "referenceUT": 11184.620833333332,
-        "residualSeconds": 28.422896086703986,
+        "residualSeconds": 28.422895772382617,
         "sourceLine": 2475
       },
       {
@@ -22535,11 +22535,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11198.01550637059,
-        "nativeUT": 11198.014603003818,
+        "nativeTT": 11198.015506370592,
+        "nativeUT": 11198.01460300382,
         "referenceTT": 11198.015486700106,
         "referenceUT": 11198.014583333334,
-        "residualSeconds": 1.6995298268739134,
+        "residualSeconds": 1.6995299840345979,
         "sourceLine": 2479
       },
       {
@@ -22661,11 +22661,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11226.800570401372,
-        "nativeUT": 11226.79966642732,
+        "nativeTT": 11226.80057040137,
+        "nativeUT": 11226.799666427318,
         "referenceTT": 11226.80090397406,
         "referenceUT": 11226.8,
-        "residualSeconds": 28.820680151693523,
+        "residualSeconds": 28.820680308854207,
         "sourceLine": 2493
       },
       {
@@ -23165,11 +23165,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 13564.120731220763,
-        "nativeUT": 13564.119775297657,
+        "nativeTT": 13564.12073122076,
+        "nativeUT": 13564.119775297655,
         "referenceTT": 13564.121094812004,
         "referenceUT": 13564.12013888889,
-        "residualSeconds": 31.414283282356337,
+        "residualSeconds": 31.41428343951702,
         "sourceLine": 2549
       },
       {
@@ -23201,11 +23201,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 13576.477293311293,
-        "nativeUT": 13576.476337099231,
+        "nativeTT": 13576.47729331129,
+        "nativeUT": 13576.47633709923,
         "referenceTT": 13576.477345100951,
         "referenceUT": 13576.476388888888,
-        "residualSeconds": 4.474626516457647,
+        "residualSeconds": 4.4746266736183316,
         "sourceLine": 2553
       },
       {
@@ -23741,11 +23741,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 13740.077055881791,
-        "nativeUT": 13740.076095829994,
+        "nativeTT": 13740.07705588179,
+        "nativeUT": 13740.076095829992,
         "referenceTT": 13740.077348940691,
         "referenceUT": 13740.076388888889,
-        "residualSeconds": 25.320288946386427,
+        "residualSeconds": 25.32028910354711,
         "sourceLine": 2613
       },
       {
@@ -24290,11 +24290,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9532.333411162328,
-        "nativeUT": 9532.33254154662,
+        "nativeTT": 9532.333411162326,
+        "nativeUT": 9532.332541546619,
         "referenceTT": 9532.333508504598,
         "referenceUT": 9532.332638888889,
-        "residualSeconds": 8.410372148500755,
+        "residualSeconds": 8.41037230566144,
         "sourceLine": 2674
       },
       {
@@ -24416,11 +24416,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9587.135240053587,
-        "nativeUT": 9587.134369369622,
+        "nativeTT": 9587.135240053585,
+        "nativeUT": 9587.13436936962,
         "referenceTT": 9587.134898461736,
         "referenceUT": 9587.134027777778,
-        "residualSeconds": 29.513535916339606,
+        "residualSeconds": 29.51353575917892,
         "sourceLine": 2688
       },
       {
@@ -24434,11 +24434,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9600.786412971784,
-        "nativeUT": 9600.785542021262,
+        "nativeTT": 9600.786412971785,
+        "nativeUT": 9600.785542021264,
         "referenceTT": 9600.786287617188,
         "referenceUT": 9600.785416666668,
-        "residualSeconds": 10.830637102480978,
+        "residualSeconds": 10.830637259641662,
         "sourceLine": 2690
       },
       {
@@ -24713,11 +24713,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 9722.38662515809,
-        "nativeUT": 9722.385751825175,
+        "nativeTT": 9722.386625158091,
+        "nativeUT": 9722.385751825177,
         "referenceTT": 9722.386984444032,
         "referenceUT": 9722.386111111111,
-        "residualSeconds": 31.04230547323823,
+        "residualSeconds": 31.042305316077545,
         "sourceLine": 2721
       },
       {
@@ -24740,11 +24740,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9737.477057738459,
-        "nativeUT": 9737.476184108891,
+        "nativeTT": 9737.47705773846,
+        "nativeUT": 9737.476184108893,
         "referenceTT": 9737.477262518461,
         "referenceUT": 9737.476388888888,
-        "residualSeconds": 17.692992225056514,
+        "residualSeconds": 17.69299206789583,
         "sourceLine": 2724
       },
       {
@@ -24812,11 +24812,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9776.909442999002,
-        "nativeUT": 9776.908568593213,
+        "nativeTT": 9776.909442999004,
+        "nativeUT": 9776.908568593215,
         "referenceTT": 9776.909207739118,
         "referenceUT": 9776.908333333333,
-        "residualSeconds": 20.326453977031633,
+        "residualSeconds": 20.326454134192318,
         "sourceLine": 2732
       },
       {
@@ -24830,11 +24830,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9777.754728887841,
-        "nativeUT": 9777.753854465396,
+        "nativeTT": 9777.754728887843,
+        "nativeUT": 9777.753854465398,
         "referenceTT": 9777.755041089118,
         "referenceUT": 9777.754166666668,
-        "residualSeconds": 26.97419031173922,
+        "residualSeconds": 26.974190154578537,
         "sourceLine": 2734
       },
       {
@@ -24884,11 +24884,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9804.727168588832,
-        "nativeUT": 9804.726293634547,
+        "nativeTT": 9804.727168588834,
+        "nativeUT": 9804.726293634549,
         "referenceTT": 9804.727263843175,
         "referenceUT": 9804.726388888888,
-        "residualSeconds": 8.229975256836042,
+        "residualSeconds": 8.229975099675357,
         "sourceLine": 2740
       },
       {
@@ -24902,11 +24902,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9805.499528140206,
-        "nativeUT": 9805.498653170682,
+        "nativeTT": 9805.499528140203,
+        "nativeUT": 9805.498653170678,
         "referenceTT": 9805.499486080635,
         "referenceUT": 9805.49861111111,
-        "residualSeconds": 3.6339469836093485,
+        "residualSeconds": 3.6339466692879796,
         "sourceLine": 2742
       },
       {
@@ -25145,11 +25145,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 8084.878628730132,
-        "nativeUT": 8084.877786255944,
+        "nativeTT": 8084.878628730134,
+        "nativeUT": 8084.8777862559455,
         "referenceTT": 8084.878620251966,
         "referenceUT": 8084.877777777778,
-        "residualSeconds": 0.7325135346036404,
+        "residualSeconds": 0.7325136917643249,
         "sourceLine": 2769
       },
       {
@@ -25316,11 +25316,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 8168.094597584979,
-        "nativeUT": 8168.093753604395,
+        "nativeTT": 8168.094597584981,
+        "nativeUT": 8168.093753604397,
         "referenceTT": 8168.094593980584,
         "referenceUT": 8168.09375,
-        "residualSeconds": 0.31141971121542156,
+        "residualSeconds": 0.311419868376106,
         "sourceLine": 2788
       },
       {
@@ -54556,11 +54556,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20401.66513681097,
-        "nativeUT": -20401.66544306978,
+        "nativeTT": -20401.665136810974,
+        "nativeUT": -20401.665443069785,
         "referenceTT": -20401.664971518963,
         "referenceUT": -20401.665277777778,
-        "residualSeconds": 14.281229430343956,
+        "residualSeconds": 14.281229744665325,
         "sourceLine": 103
       },
       {
@@ -54763,11 +54763,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20389.76736137029,
-        "nativeUT": -20389.767667816202,
+        "nativeTT": -20389.767361370294,
+        "nativeUT": -20389.767667816206,
         "referenceTT": -20389.76705466519,
         "referenceUT": -20389.76736111111,
-        "residualSeconds": 26.499320659786463,
+        "residualSeconds": 26.49932097410783,
         "sourceLine": 126
       },
       {
@@ -55429,11 +55429,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20351.28054607072,
-        "nativeUT": -20351.280853120006,
+        "nativeTT": -20351.280546070717,
+        "nativeUT": -20351.280853120003,
         "referenceTT": -20351.280248506268,
         "referenceUT": -20351.280555555557,
-        "residualSeconds": 25.70956873241812,
+        "residualSeconds": 25.70956841809675,
         "sourceLine": 200
       },
       {
@@ -55447,11 +55447,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20350.230294198915,
-        "nativeUT": -20350.230601264626,
+        "nativeTT": -20350.23029419892,
+        "nativeUT": -20350.23060126463,
         "referenceTT": -20350.230248489843,
         "referenceUT": -20350.230555555554,
-        "residualSeconds": 3.9492638083174825,
+        "residualSeconds": 3.9492641226388514,
         "sourceLine": 202
       },
       {
@@ -56050,11 +56050,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20315.650868393746,
-        "nativeUT": -20315.651175999094,
+        "nativeTT": -20315.65086839375,
+        "nativeUT": -20315.651175999097,
         "referenceTT": -20315.651081283544,
         "referenceUT": -20315.651388888888,
-        "residualSeconds": 18.393678520806134,
+        "residualSeconds": 18.393678206484765,
         "sourceLine": 269
       },
       {
@@ -57787,11 +57787,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20215.71305156798,
-        "nativeUT": -20215.713360720336,
+        "nativeTT": -20215.713051567986,
+        "nativeUT": -20215.713360720343,
         "referenceTT": -20215.712885292087,
         "referenceUT": -20215.713194444445,
-        "residualSeconds": 14.366237015929073,
+        "residualSeconds": 14.366237644571811,
         "sourceLine": 462
       },
       {
@@ -58228,11 +58228,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20190.48148471888,
-        "nativeUT": -20190.4817942589,
+        "nativeTT": -20190.481484718886,
+        "nativeUT": -20190.481794258907,
         "referenceTT": -20190.481634904423,
         "referenceUT": -20190.481944444444,
-        "residualSeconds": 12.976031005382538,
+        "residualSeconds": 12.9760303767398,
         "sourceLine": 511
       },
       {
@@ -58354,11 +58354,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20183.2943763082,
-        "nativeUT": -20183.294685958437,
+        "nativeTT": -20183.294376308204,
+        "nativeUT": -20183.29468595844,
         "referenceTT": -20183.294134794203,
         "referenceUT": -20183.294444444444,
-        "residualSeconds": 20.866809342987835,
+        "residualSeconds": 20.866809657309204,
         "sourceLine": 525
       },
       {
@@ -58876,11 +58876,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20153.2017302714,
-        "nativeUT": -20153.202040382086,
+        "nativeTT": -20153.201730271398,
+        "nativeUT": -20153.202040382082,
         "referenceTT": -20153.20177322265,
         "referenceUT": -20153.202083333334,
-        "residualSeconds": 3.710987779777497,
+        "residualSeconds": 3.710988094098866,
         "sourceLine": 583
       },
       {
@@ -58894,11 +58894,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20152.133625791426,
-        "nativeUT": -20152.133935918428,
+        "nativeTT": -20152.13362579142,
+        "nativeUT": -20152.13393591842,
         "referenceTT": -20152.13371765078,
         "referenceUT": -20152.134027777778,
-        "residualSeconds": 7.936648197937757,
+        "residualSeconds": 7.936648826580495,
         "sourceLine": 585
       },
       {
@@ -58912,11 +58912,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": -20151.065058464494,
-        "nativeUT": -20151.06536860781,
+        "nativeTT": -20151.0650584645,
+        "nativeUT": -20151.06536860782,
         "referenceTT": -20151.064967634462,
         "referenceUT": -20151.06527777778,
-        "residualSeconds": 7.84771473845467,
+        "residualSeconds": 7.847715367097408,
         "sourceLine": 587
       },
       {
@@ -59551,11 +59551,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": -20114.40992576323,
-        "nativeUT": -20114.41023646508,
+        "nativeTT": -20114.409925763226,
+        "nativeUT": -20114.410236465075,
         "referenceTT": -20114.41010596482,
         "referenceUT": -20114.410416666666,
-        "residualSeconds": 15.569417411461473,
+        "residualSeconds": 15.569417725782841,
         "sourceLine": 658
       },
       {
@@ -62404,11 +62404,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 18400.29643540897,
-        "nativeUT": 18400.295350123823,
+        "nativeTT": 18400.296435408964,
+        "nativeUT": 18400.295350123815,
         "referenceTT": 18400.296224174024,
         "referenceUT": 18400.29513888889,
-        "residualSeconds": 18.25069938786328,
+        "residualSeconds": 18.25069875922054,
         "sourceLine": 975
       },
       {
@@ -63061,11 +63061,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 18438.021096584525,
-        "nativeUT": 18438.02000886198,
+        "nativeTT": 18438.02109658452,
+        "nativeUT": 18438.020008861975,
         "referenceTT": 18438.021226611443,
         "referenceUT": 18438.02013888889,
-        "residualSeconds": 11.234325694385916,
+        "residualSeconds": 11.234326008707285,
         "sourceLine": 1048
       },
       {
@@ -63826,11 +63826,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 18482.072998588974,
-        "nativeUT": 18482.071908019225,
+        "nativeTT": 18482.072998588977,
+        "nativeUT": 18482.07190801923,
         "referenceTT": 18482.073312791992,
         "referenceUT": 18482.07222222222,
-        "residualSeconds": 27.147140773013234,
+        "residualSeconds": 27.147140458691865,
         "sourceLine": 1133
       },
       {
@@ -64123,11 +64123,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 18499.131794804565,
-        "nativeUT": 18499.130703131967,
+        "nativeTT": 18499.13179480456,
+        "nativeUT": 18499.130703131963,
         "referenceTT": 18499.131647228143,
         "referenceUT": 18499.130555555555,
-        "residualSeconds": 12.750602862797678,
+        "residualSeconds": 12.750602548476309,
         "sourceLine": 1166
       },
       {
@@ -64141,11 +64141,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 18500.17180419103,
-        "nativeUT": 18500.170712451192,
+        "nativeTT": 18500.171804191028,
+        "nativeUT": 18500.17071245119,
         "referenceTT": 18500.17192507318,
         "referenceUT": 18500.170833333334,
-        "residualSeconds": 10.444217640906572,
+        "residualSeconds": 10.444217955227941,
         "sourceLine": 1168
       },
       {
@@ -66499,11 +66499,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 6947.548282355699,
-        "nativeUT": 6947.547459778761,
+        "nativeTT": 6947.5482823556995,
+        "nativeUT": 6947.547459778762,
         "referenceTT": 6947.548044799156,
         "referenceUT": 6947.547222222222,
-        "residualSeconds": 20.52488529297989,
+        "residualSeconds": 20.52488537156023,
         "sourceLine": 1430
       },
       {
@@ -66517,11 +66517,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 6948.5848508241215,
-        "nativeUT": 6948.584028229605,
+        "nativeTT": 6948.584850824121,
+        "nativeUT": 6948.584028229604,
         "referenceTT": 6948.584850372295,
         "referenceUT": 6948.584027777778,
-        "residualSeconds": 0.039037849637679756,
+        "residualSeconds": 0.03903777105733752,
         "sourceLine": 1432
       },
       {
@@ -71737,11 +71737,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 7248.764022613782,
-        "nativeUT": 7248.763194884668,
+        "nativeTT": 7248.764022613781,
+        "nativeUT": 7248.763194884667,
         "referenceTT": 7248.764022173558,
         "referenceUT": 7248.763194444445,
-        "residualSeconds": 0.03803532163146883,
+        "residualSeconds": 0.0380352430511266,
         "sourceLine": 2012
       },
       {
@@ -72727,11 +72727,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 12426.625199410728,
-        "nativeUT": 12426.624269430438,
+        "nativeTT": 12426.625199410726,
+        "nativeUT": 12426.624269430436,
         "referenceTT": 12426.625235535845,
         "referenceUT": 12426.624305555555,
-        "residualSeconds": 3.121210093377158,
+        "residualSeconds": 3.1212102505378425,
         "sourceLine": 2122
       },
       {
@@ -73879,11 +73879,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 12604.366100670517,
-        "nativeUT": 12604.365166715674,
+        "nativeTT": 12604.366100670519,
+        "nativeUT": 12604.365166715676,
         "referenceTT": 12604.366211732624,
         "referenceUT": 12604.365277777777,
-        "residualSeconds": 9.595766040729359,
+        "residualSeconds": 9.595765883568674,
         "sourceLine": 2250
       },
       {
@@ -73906,11 +73906,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 12606.111222611686,
-        "nativeUT": 12606.110288617667,
+        "nativeTT": 12606.111222611687,
+        "nativeUT": 12606.110288617669,
         "referenceTT": 12606.111350660689,
         "referenceUT": 12606.110416666666,
-        "residualSeconds": 11.063433880917728,
+        "residualSeconds": 11.063433723757043,
         "sourceLine": 2253
       },
       {
@@ -74419,11 +74419,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 12686.074709594624,
-        "nativeUT": 12686.07377380236,
+        "nativeTT": 12686.074709594623,
+        "nativeUT": 12686.073773802358,
         "referenceTT": 12686.074546903372,
         "referenceUT": 12686.073611111111,
-        "residualSeconds": 14.05652422690764,
+        "residualSeconds": 14.056524069746956,
         "sourceLine": 2310
       },
       {
@@ -75265,11 +75265,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 11008.233052858624,
-        "nativeUT": 11008.232153475561,
+        "nativeTT": 11008.233052858626,
+        "nativeUT": 11008.232153475563,
         "referenceTT": 11008.232843827504,
         "referenceUT": 11008.231944444444,
-        "residualSeconds": 18.060288846027106,
+        "residualSeconds": 18.06028900318779,
         "sourceLine": 2404
       },
       {
@@ -75616,11 +75616,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11102.902094913974,
-        "nativeUT": 11102.901193548092,
+        "nativeTT": 11102.90209491397,
+        "nativeUT": 11102.901193548088,
         "referenceTT": 11102.902290254775,
         "referenceUT": 11102.90138888889,
-        "residualSeconds": 16.87744520022534,
+        "residualSeconds": 16.877445514546707,
         "sourceLine": 2443
       },
       {
@@ -75814,11 +75814,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11157.807267815975,
-        "nativeUT": 11157.80636529613,
+        "nativeTT": 11157.807267815977,
+        "nativeUT": 11157.806365296132,
         "referenceTT": 11157.807152519841,
         "referenceUT": 11157.80625,
-        "residualSeconds": 9.961585979908705,
+        "residualSeconds": 9.96158613706939,
         "sourceLine": 2465
       },
       {
@@ -75886,11 +75886,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11183.44411909293,
-        "nativeUT": 11183.443216033264,
+        "nativeTT": 11183.444119092928,
+        "nativeUT": 11183.443216033262,
         "referenceTT": 11183.443958615218,
         "referenceUT": 11183.443055555555,
-        "residualSeconds": 13.865274289855734,
+        "residualSeconds": 13.865274132695049,
         "sourceLine": 2473
       },
       {
@@ -75904,11 +75904,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11184.621407449105,
-        "nativeUT": 11184.620504364635,
+        "nativeTT": 11184.621407449109,
+        "nativeUT": 11184.620504364639,
         "referenceTT": 11184.62173641781,
         "referenceUT": 11184.620833333332,
-        "residualSeconds": 28.422896086703986,
+        "residualSeconds": 28.422895772382617,
         "sourceLine": 2475
       },
       {
@@ -75940,11 +75940,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11198.01550637059,
-        "nativeUT": 11198.014603003818,
+        "nativeTT": 11198.015506370592,
+        "nativeUT": 11198.01460300382,
         "referenceTT": 11198.015486700106,
         "referenceUT": 11198.014583333334,
-        "residualSeconds": 1.6995298268739134,
+        "residualSeconds": 1.6995299840345979,
         "sourceLine": 2479
       },
       {
@@ -76066,11 +76066,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 11226.800570401372,
-        "nativeUT": 11226.79966642732,
+        "nativeTT": 11226.80057040137,
+        "nativeUT": 11226.799666427318,
         "referenceTT": 11226.80090397406,
         "referenceUT": 11226.8,
-        "residualSeconds": 28.820680151693523,
+        "residualSeconds": 28.820680308854207,
         "sourceLine": 2493
       },
       {
@@ -76570,11 +76570,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 13564.120731220763,
-        "nativeUT": 13564.119775297657,
+        "nativeTT": 13564.12073122076,
+        "nativeUT": 13564.119775297655,
         "referenceTT": 13564.121094812004,
         "referenceUT": 13564.12013888889,
-        "residualSeconds": 31.414283282356337,
+        "residualSeconds": 31.41428343951702,
         "sourceLine": 2549
       },
       {
@@ -76606,11 +76606,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 13576.477293311293,
-        "nativeUT": 13576.476337099231,
+        "nativeTT": 13576.47729331129,
+        "nativeUT": 13576.47633709923,
         "referenceTT": 13576.477345100951,
         "referenceUT": 13576.476388888888,
-        "residualSeconds": 4.474626516457647,
+        "residualSeconds": 4.4746266736183316,
         "sourceLine": 2553
       },
       {
@@ -77146,11 +77146,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 13740.077055881791,
-        "nativeUT": 13740.076095829994,
+        "nativeTT": 13740.07705588179,
+        "nativeUT": 13740.076095829992,
         "referenceTT": 13740.077348940691,
         "referenceUT": 13740.076388888889,
-        "residualSeconds": 25.320288946386427,
+        "residualSeconds": 25.32028910354711,
         "sourceLine": 2613
       },
       {
@@ -77695,11 +77695,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9532.333411162328,
-        "nativeUT": 9532.33254154662,
+        "nativeTT": 9532.333411162326,
+        "nativeUT": 9532.332541546619,
         "referenceTT": 9532.333508504598,
         "referenceUT": 9532.332638888889,
-        "residualSeconds": 8.410372148500755,
+        "residualSeconds": 8.41037230566144,
         "sourceLine": 2674
       },
       {
@@ -77821,11 +77821,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9587.135240053587,
-        "nativeUT": 9587.134369369622,
+        "nativeTT": 9587.135240053585,
+        "nativeUT": 9587.13436936962,
         "referenceTT": 9587.134898461736,
         "referenceUT": 9587.134027777778,
-        "residualSeconds": 29.513535916339606,
+        "residualSeconds": 29.51353575917892,
         "sourceLine": 2688
       },
       {
@@ -77839,11 +77839,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9600.786412971784,
-        "nativeUT": 9600.785542021262,
+        "nativeTT": 9600.786412971785,
+        "nativeUT": 9600.785542021264,
         "referenceTT": 9600.786287617188,
         "referenceUT": 9600.785416666668,
-        "residualSeconds": 10.830637102480978,
+        "residualSeconds": 10.830637259641662,
         "sourceLine": 2690
       },
       {
@@ -78118,11 +78118,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 9722.38662515809,
-        "nativeUT": 9722.385751825175,
+        "nativeTT": 9722.386625158091,
+        "nativeUT": 9722.385751825177,
         "referenceTT": 9722.386984444032,
         "referenceUT": 9722.386111111111,
-        "residualSeconds": 31.04230547323823,
+        "residualSeconds": 31.042305316077545,
         "sourceLine": 2721
       },
       {
@@ -78145,11 +78145,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9737.477057738459,
-        "nativeUT": 9737.476184108891,
+        "nativeTT": 9737.47705773846,
+        "nativeUT": 9737.476184108893,
         "referenceTT": 9737.477262518461,
         "referenceUT": 9737.476388888888,
-        "residualSeconds": 17.692992225056514,
+        "residualSeconds": 17.69299206789583,
         "sourceLine": 2724
       },
       {
@@ -78217,11 +78217,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9776.909442999002,
-        "nativeUT": 9776.908568593213,
+        "nativeTT": 9776.909442999004,
+        "nativeUT": 9776.908568593215,
         "referenceTT": 9776.909207739118,
         "referenceUT": 9776.908333333333,
-        "residualSeconds": 20.326453977031633,
+        "residualSeconds": 20.326454134192318,
         "sourceLine": 2732
       },
       {
@@ -78235,11 +78235,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9777.754728887841,
-        "nativeUT": 9777.753854465396,
+        "nativeTT": 9777.754728887843,
+        "nativeUT": 9777.753854465398,
         "referenceTT": 9777.755041089118,
         "referenceUT": 9777.754166666668,
-        "residualSeconds": 26.97419031173922,
+        "residualSeconds": 26.974190154578537,
         "sourceLine": 2734
       },
       {
@@ -78289,11 +78289,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9804.727168588832,
-        "nativeUT": 9804.726293634547,
+        "nativeTT": 9804.727168588834,
+        "nativeUT": 9804.726293634549,
         "referenceTT": 9804.727263843175,
         "referenceUT": 9804.726388888888,
-        "residualSeconds": 8.229975256836042,
+        "residualSeconds": 8.229975099675357,
         "sourceLine": 2740
       },
       {
@@ -78307,11 +78307,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 9805.499528140206,
-        "nativeUT": 9805.498653170682,
+        "nativeTT": 9805.499528140203,
+        "nativeUT": 9805.498653170678,
         "referenceTT": 9805.499486080635,
         "referenceUT": 9805.49861111111,
-        "residualSeconds": 3.6339469836093485,
+        "residualSeconds": 3.6339466692879796,
         "sourceLine": 2742
       },
       {
@@ -78550,11 +78550,11 @@
       },
       {
         "direction": "rise",
-        "nativeTT": 8084.878628730132,
-        "nativeUT": 8084.877786255944,
+        "nativeTT": 8084.878628730134,
+        "nativeUT": 8084.8777862559455,
         "referenceTT": 8084.878620251966,
         "referenceUT": 8084.877777777778,
-        "residualSeconds": 0.7325135346036404,
+        "residualSeconds": 0.7325136917643249,
         "sourceLine": 2769
       },
       {
@@ -78721,11 +78721,11 @@
       },
       {
         "direction": "set",
-        "nativeTT": 8168.094597584979,
-        "nativeUT": 8168.093753604395,
+        "nativeTT": 8168.094597584981,
+        "nativeUT": 8168.093753604397,
         "referenceTT": 8168.094593980584,
         "referenceUT": 8168.09375,
-        "residualSeconds": 0.31141971121542156,
+        "residualSeconds": 0.311419868376106,
         "sourceLine": 2788
       },
       {
@@ -106819,20 +106819,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 462350976,
+  "releaseExecutableBytes": 414888848,
   "resources": {
     "checksum": 3257705.9472663584,
-    "coldSunRiseSeconds": 0.013177990913391113,
+    "coldSunRiseSeconds": 0.01382303237915039,
     "eventsPerWorkload": 100,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterColdBytes": 79052800,
-    "peakAfterWorkloadsBytes": 101203968,
-    "peakBeforeBytes": 47562752,
+    "peakAfterColdBytes": 79118336,
+    "peakAfterWorkloadsBytes": 101253120,
+    "peakBeforeBytes": 47710208,
     "seconds": {
-      "moonRise": 0.4818720817565918,
-      "publicCSunRise": 0.523921012878418,
-      "sunHourAngle": 0.13277900218963623,
-      "sunRise": 0.5206100940704346
+      "moonRise": 0.47441399097442627,
+      "publicCSunRise": 0.5211009979248047,
+      "sunHourAngle": 0.12957298755645752,
+      "sunRise": 0.5139750242233276
     }
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"

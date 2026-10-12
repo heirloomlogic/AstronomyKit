@@ -33,7 +33,6 @@ APPARENT_PHASE_EVENTS = [
 ]
 SOURCE_HASH_EVIDENCE = (
     ROOT / "Scripts/moon-data/de441-event-evidence.json",
-    ROOT / "Scripts/moon-data/de441-native-evidence.json",
 )
 
 

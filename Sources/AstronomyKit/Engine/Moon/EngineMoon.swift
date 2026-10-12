@@ -10,7 +10,7 @@ import Foundation
 extension Engine {
     /// The Moon relative to Earth's center.
     ///
-    /// DE440 supplies 1900 through 2130 TT; compact DE441 supplies the rest of the accepted range, with 32-day blends. Positions and states share the cached mean-ecliptic coordinates.
+    /// DE440 supplies 1900 through 2130 TT; complete binary64 DE441 supplies the rest of the accepted range, with 32-day blends. Positions and states share the cached mean-ecliptic coordinates.
     enum Moon {}
 
     /// The mean ecliptic and equinox of the vector's time.
@@ -19,36 +19,35 @@ extension Engine {
 
 extension Engine.Moon {
     /// The lunar model's results shared by every engine caller: 32 entries
-    /// keyed by the exact Julian centuries the model reads.
+    /// keyed by the exact TT days the model reads.
     static let cache = Cache(capacity: 32, registry: .shared)
 
     /// A cache of the model's longitude, latitude and distance.
     typealias Cache = Engine.BoundedCache<Engine.ExactKey, SIMD3<Double>>
 
-    /// ``evaluate(centuries:)`` read through `cache`, keyed by the exact bits
-    /// of `t`, so `0.0` and `-0.0` are different keys. A `t` that is not
+    /// ``evaluate(tt:)`` read through `cache`, keyed by the exact bits
+    /// of `tt`, so `0.0` and `-0.0` are different keys. A `tt` that is not
     /// finite has no key: the model runs and nothing is stored.
     static func coordinates(
-        centuries t: Double, cache: Cache = cache
+        tt: Double, cache: Cache = cache
     ) -> SIMD3<Double> {
-        guard let key = Engine.ExactKey(t) else { return evaluate(centuries: t) }
-        return cache.value(for: key) { evaluate(centuries: t) }
+        guard let key = Engine.ExactKey(tt) else { return evaluate(tt: tt) }
+        return cache.value(for: key) { evaluate(tt: tt) }
     }
 
     /// The Moon's longitude and latitude in radians, on the mean ecliptic
-    /// and equinox of date, and its distance in AU, at `t` Julian centuries
+    /// and equinox of date, and its distance in AU, at `tt` days
     /// of TT from J2000, without the cache. The longitude is from 0 to 2π.
     ///
     /// Both tables are read in TDB and rotated from EQJ into the mean ecliptic of date. The DE440 weight preserves its central span and blends into DE441 outside it.
-    static func evaluate(centuries t: Double) -> SIMD3<Double> {
-        let tt = t * 36_525
+    static func evaluate(tt: Double) -> SIMD3<Double> {
         let weight = Engine.MoonEphemeris.weight(tt: tt).weight
         var position: SIMD3<Double>
         if weight == 1 {
             guard let source = meanEclipticPosition(tt: tt) else { return SIMD3(repeating: .nan) }
             position = source
         } else {
-            guard let outer = meanEclipticPosition(tt: tt, compact: true) else { return SIMD3(repeating: .nan) }
+            guard let outer = meanEclipticPosition(tt: tt, outer: true) else { return SIMD3(repeating: .nan) }
             position = outer
             if weight > 0, let central = meanEclipticPosition(tt: tt) {
                 position += weight * (central - outer)
@@ -62,8 +61,9 @@ extension Engine.Moon {
     }
 
     /// The selected table at `tt` on the mean ecliptic and equinox of date, in AU, or `nil` outside its records.
-    static func meanEclipticPosition(tt: Double, compact: Bool = false) -> SIMD3<Double>? {
-        guard let source = compact ? Engine.MoonDE441.position(tt: tt) : Engine.MoonEphemeris.position(tt: tt) else {
+    static func meanEclipticPosition(tt: Double, outer: Bool = false) -> SIMD3<Double>? {
+        guard let source = outer ? Engine.MoonDE441Full.state(tt: tt)?.position : Engine.MoonEphemeris.position(tt: tt)
+        else {
             return nil
         }
         return meanEquatorToEcliptic(tt: tt).apply(to: Engine.Precession.rotation(tt: tt).apply(to: source))
@@ -77,7 +77,7 @@ extension Engine.Moon {
     }
 
     /// R1(εA): from the mean equator to the mean ecliptic of date, with the
-    /// IAU 2006 mean obliquity at `tt`.
+    /// Vondrák 2011 mean obliquity at `tt`.
     static func meanEquatorToEcliptic(tt: Double) -> Engine.Rotation<Engine.EQM, Engine.ECM> {
         Engine.tilted(by: Engine.Precession.meanObliquity(tt: tt))
     }
@@ -96,7 +96,7 @@ extension Engine.Moon {
         at time: Engine.Time, cache: Cache = cache
     ) throws -> Engine.Vector<Engine.EQJ> {
         try Engine.checkAcceptedTime(time)
-        let ecliptic = vector(coordinates(centuries: time.tt / 36_525, cache: cache), time: time)
+        let ecliptic = vector(coordinates(tt: time.tt, cache: cache), time: time)
         let equator = meanEquatorToEcliptic(tt: time.tt).inverse.apply(to: ecliptic)
         let vector = Engine.Precession.rotation(tt: time.tt).inverse.apply(to: equator)
         guard vector.x.isFinite, vector.y.isFinite, vector.z.isFinite else { throw AstronomyError.badTime }
@@ -117,7 +117,7 @@ extension Engine.Moon {
         at time: Engine.Time, cache: Cache = cache
     ) throws -> Engine.Spherical {
         try Engine.checkAcceptedTime(time)
-        let coordinates = coordinates(centuries: time.tt / 36_525, cache: cache)
+        let coordinates = coordinates(tt: time.tt, cache: cache)
         let ecliptic = vector(coordinates, time: time)
         let tilt = Engine.EarthTilt(tt: time.tt)
         let meanTilt: Engine.Rotation<Engine.EQM, Engine.ECM> = Engine.tilted(by: tilt.meanObliquity)

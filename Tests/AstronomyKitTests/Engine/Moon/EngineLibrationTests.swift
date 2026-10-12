@@ -125,7 +125,7 @@ struct EngineLibrationTests {
         for tt in [-1_000_000.25, -36_530.0, 0, 9_497.375, 47_860.0, 700_000.5] {
             let time = PlanetTestSupport.time(tt: tt)
             let libration = Engine.Moon.libration(at: time)
-            let model = Engine.Moon.coordinates(centuries: tt / 36_525)
+            let model = Engine.Moon.coordinates(tt: tt)
             #expect(libration.moonLongitude == Engine.degreesPerRadian * model.x)
             #expect(libration.moonLatitude == Engine.degreesPerRadian * model.y)
             #expect(libration.distanceKilometers == model.z * Engine.kilometersPerAU)

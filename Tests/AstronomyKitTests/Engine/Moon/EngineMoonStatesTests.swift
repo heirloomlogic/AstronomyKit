@@ -111,10 +111,10 @@ struct EngineMoonStatesTests {
         1e-8 * (1 + abs(tt) / 36_525)
     }
 
-    /// A central stencil requires smooth higher derivatives. Near a DE441 C1 knot, use the fourth-order stencil on the containing polynomial instead, retaining the same error tolerance.
+    /// A central stencil requires smooth higher derivatives. Near a DE441 source-record boundary, use the fourth-order stencil on the containing polynomial instead, retaining the same error tolerance.
     static func derivativeWeights(tt: Double) -> [(Double, Double)] {
         let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
-        let phase = (tdb - Engine.MoonDE441.start).truncatingRemainder(dividingBy: 4)
+        let phase = (tdb - Engine.MoonDE441Full.start).truncatingRemainder(dividingBy: 4)
         if Engine.MoonEphemeris.weight(tt: tt).weight < 1 && (phase < 2 * step || phase > 4 - 2 * step) {
             let direction = phase < 2 * step ? 1.0 : -1.0
             return [(0, -25), (1, 48), (2, -36), (3, 16), (4, -3)].map {
@@ -160,22 +160,35 @@ struct EngineMoonStatesTests {
         #expect(abs(state.distanceRate - distance) <= allowance * 6e-4, "tt \(tt)")
     }
 
-    /// The velocity test above would catch a blend that left out the
-    /// weight's rate: mid-blend the weight changes by about 0.06 a day and
-    /// the two models are a few km apart, a term of a few millionths of the
-    /// speed against that test's 1e-8.
-    @Test("The weight's rate times the models' separation is large enough for the velocity test to see")
+    /// A tighter numerical check resolves the smaller DE440/DE441 blend term; the independent source allowances and the existing derivative checks remain separate.
+    @Test("Position differences reject omission of the blend-weight derivative")
     func blendRateMatters() throws {
-        let tt = Ephemeris.fullWeightStart - Ephemeris.blendDays / 2 + 1
-        let (weight, rate) = Ephemeris.weight(tt: tt)
-        #expect(weight > 0 && weight < 1 && rate > 0.04)
-        let source = try #require(Engine.Moon.meanEclipticSourceState(tt: tt))
-        let outer = try #require(Engine.Moon.meanEclipticSourceState(tt: tt, compact: true)).position
-        let term = rate * (source.position - outer)
-        let speed = (source.velocity * source.velocity).sum().squareRoot()
-        #expect(EngineMoonEphemerisTests.largest(term) > 1e-6 * speed)
-        try velocity(tt: tt)
-        try eclipticRates(tt: tt)
+        for tt in [
+            Ephemeris.fullWeightStart - Ephemeris.blendDays / 2 + 1,
+            Ephemeris.fullWeightEnd + Ephemeris.blendDays / 2 + 1,
+        ] {
+            let (weight, _) = Ephemeris.weight(tt: tt)
+            let central = try #require(Ephemeris.state(tt: tt))
+            let outer = try #require(Engine.MoonDE441Full.state(tt: tt))
+            let omitted = outer.velocity + weight * (central.velocity - outer.velocity)
+            var difference = SIMD3<Double>()
+            for (offset, coefficient) in [(-2.0, 1.0), (-1, -8), (1, 8), (2, -1)] {
+                let p = try Engine.Moon.geocentricPosition(at: Self.time(tt: tt + offset * Self.step))
+                difference += coefficient * SIMD3(p.x, p.y, p.z)
+            }
+            difference /= 12 * Self.step
+            let actual = try Self.velocity(Engine.Moon.geocentricState(at: Self.time(tt: tt)))
+            let residual = EngineMoonEphemerisTests.largest(actual - difference)
+            let missingTermResidual = EngineMoonEphemerisTests.largest(omitted - difference)
+            #expect(residual < 5e-13)
+            #expect(missingTermResidual > 1e-12)
+            #expect(missingTermResidual > 10 * residual)
+            print(
+                "MOON_BLEND tt=\(tt) derivativeResidual=\(residual) omittedWeightRateResidual=\(missingTermResidual) AU/TT-day"
+            )
+            try velocity(tt: tt)
+            try eclipticRates(tt: tt)
+        }
     }
 
     // MARK: - Edges

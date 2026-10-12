@@ -160,7 +160,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialCoverage.swift": "c1c74a4ea6b29371b0b53884b7b0849d57e3830efe81aea097c8ffaa5be32133",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
-    "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "6aee87d74ef640184fcc740ce521f56f716c303e3506deb5acc6ae56bd91c878",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "8654988dfd07ba1bc67820ddef15b7b1d817ef44c902a139a40576cf685a5e4c",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",
