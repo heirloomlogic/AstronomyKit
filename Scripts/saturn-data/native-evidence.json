@@ -14,8 +14,8 @@
     ]
   ],
   "buildSeconds": {
-    "debug": 10.78,
-    "release": 129.23
+    "debug": 10.28,
+    "release": 115.46
   },
   "debug": {
     "coefficients": {
@@ -412,23 +412,23 @@
       }
     ]
   },
-  "releaseExecutableBytes": 154493328,
+  "releaseExecutableBytes": 154540880,
   "resourceScope": "macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.",
   "resources": {
-    "centerColdSeconds": 0.006780028343200684,
+    "centerColdSeconds": 0.006101012229919434,
     "checksum": -443.8575980663478,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.03362905979156494,
+    "eventSeconds": 0.031159043312072754,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 75513856,
-    "peakAfterRetainedBytes": 51953664,
-    "peakAfterWorkloadsBytes": 76103680,
-    "peakBeforeBytes": 46907392,
-    "retainedColdSeconds": 0.0015679597854614258,
+    "peakAfterCenterBytes": 75448320,
+    "peakAfterRetainedBytes": 51888128,
+    "peakAfterWorkloadsBytes": 76054528,
+    "peakBeforeBytes": 46841856,
+    "retainedColdSeconds": 0.0014629364013671875,
     "seconds": {
-      "center": 0.020585060119628906,
-      "retained": 0.013509035110473633
+      "center": 0.018919944763183594,
+      "retained": 0.012328028678894043
     }
   },
   "schemaVersion": 2,
@@ -475,7 +475,7 @@
     "Scripts/saturn-data/barycenter-reference.json": "218c6a9cda702a969c6eecb4cb6927aa735f5d6af9f7c81a5d41f180104c9041",
     "Scripts/saturn-data/barycenter-reference.query.json": "a12f1e6346ba1016f68c4d9eabf51ba11a71896b8122381f70151c6a02c1ab78",
     "Scripts/saturn-data/direct-fixtures.json": "09fc0c61567cb69fd7953712827029c8fe10399b8db5ed0fea8885676a0a0524",
-    "Scripts/saturn-data/native-captures.json": "7d424d5ed29abf1b6dc795baa423cba0ac5ae0ac9ac5947ffd65818386aea62f",
+    "Scripts/saturn-data/native-captures.json": "dd0647e0728642f500f8768c8901d71708a553e09b35bc087ddba359aa6e5416",
     "Scripts/test_saturn_ephemeris.py": "c4e6e58d90210c1aaa01014eedcbb037076a3a552929bf922ffcb7d6e3b94c4a",
     "Sources/AstronomyKit/Apsis.swift": "846e96c10636302634649bb827e843e3b6debf9b1d3f948f0b412f8e26dcece6",
     "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
@@ -535,13 +535,14 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "b215e909949db0a0e2fabd91faead196eb92d00dc88147290a96f64c41e38079",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "22cbcdb8294fd4b54dc785aab583b4f63d1adaa91eca6a3c2576d93b5e6276b8",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
-    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "a2f809b985707e6c5baac20f6ed59e0a751490b2acce383849f764ed7bda3f64",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",

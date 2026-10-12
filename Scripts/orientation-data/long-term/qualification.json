@@ -1,0 +1,121 @@
+{
+  "claim": "Exact-decimal coefficient model, outward rational intervals, complete interval partitions",
+  "enclosures": {
+    "acceptedTT": {
+      "centuriesLower": {
+        "binary64": -40.0,
+        "rational": "-40",
+        "rounding": "lower"
+      },
+      "centuriesUpper": {
+        "binary64": 40.0,
+        "rational": "40",
+        "rounding": "upper"
+      },
+      "crossNormLower": {
+        "binary64": 0.3871389681713731,
+        "rational": "96784742042843282281013948223083139136944823335920740019781/250000000000000000000000000000000000000000000000000000000000",
+        "rounding": "lower"
+      },
+      "eclipticRadicandLower": {
+        "binary64": 0.9999125645557194,
+        "rational": "249978141138929858845578905632948283431507364946808735368667/250000000000000000000000000000000000000000000000000000000000",
+        "rounding": "lower"
+      },
+      "equatorRadicandLower": {
+        "binary64": 0.8619107368947867,
+        "rational": "53869421055924171144592255157056668693950917120823971351169/62500000000000000000000000000000000000000000000000000000000",
+        "rounding": "lower"
+      },
+      "meanObliquity": {
+        "binary64": 2.8104954985967035e-05,
+        "rational": "623726092185914640168572153208729083936048030820288587585201455973115234370997933812927978194950878543139124085988800837500000000000000000000000000000000000000000000000000000000/22192744749007593120229320117072999892681570057709023798028776630542070936567269862270035072939940285874490179865293554393067011966564179490226383873574619433292290017726658406283661",
+        "rounding": "upper"
+      },
+      "partitionCount": {
+        "binary64": 320.0,
+        "rational": "320",
+        "rounding": "upper"
+      },
+      "partitionWidthCenturies": {
+        "binary64": 0.25,
+        "rational": "1/4",
+        "rounding": "upper"
+      },
+      "precession": {
+        "binary64": 0.00012602098146332689,
+        "rational": "30126017049587169868572151701355813201807162080051473639574/239055565984098329239266769946424672594378358983699458564812145",
+        "rounding": "upper"
+      }
+    },
+    "altitudeCertificate": {
+      "centuriesLower": {
+        "binary64": -1.02,
+        "rational": "-51/50",
+        "rounding": "lower"
+      },
+      "centuriesUpper": {
+        "binary64": 1.02,
+        "rational": "51/50",
+        "rounding": "upper"
+      },
+      "crossNormLower": {
+        "binary64": 0.3973387265955313,
+        "rational": "397338726595531363192345912987919497522980119905505062658511/1000000000000000000000000000000000000000000000000000000000000",
+        "rounding": "lower"
+      },
+      "eclipticRadicandLower": {
+        "binary64": 0.9999999412535479,
+        "rational": "999999941253547866853787031720925598598319838606565256058197/1000000000000000000000000000000000000000000000000000000000000",
+        "rounding": "lower"
+      },
+      "equatorRadicandLower": {
+        "binary64": 0.9999002004000629,
+        "rational": "124987525050007873007152233001789506250089278493073812657567/125000000000000000000000000000000000000000000000000000000000",
+        "rounding": "lower"
+      },
+      "meanObliquity": {
+        "binary64": 2.6159418888853988e-05,
+        "rational": "37898439064837087830815189508510623399763930346634371725812612773077599654170637556651518154626373869132178438451963550000000000000000000000000000000000000000000000000000000000/1448749271757900817006275749825745351516133457489459970634488203599780657050292184349548895268561985496931654018533033233222892978298425493577404894588722847220942028199610544579199",
+        "rounding": "upper"
+      },
+      "partitionCount": {
+        "binary64": 9.0,
+        "rational": "9",
+        "rounding": "upper"
+      },
+      "partitionWidthCenturies": {
+        "binary64": 0.25,
+        "rational": "1/4",
+        "rounding": "upper"
+      },
+      "precession": {
+        "binary64": 0.00011517500558708943,
+        "rational": "27533226147843349410428785477089907078190082228580158898542/239055565984098329239266769946424672594378358983699458564812145",
+        "rounding": "upper"
+      }
+    }
+  },
+  "excludes": [
+    "physical-model error",
+    "floating-point evaluation error",
+    "nutation accuracy",
+    "sidereal-model accuracy"
+  ],
+  "kind": "vondrak-2011-model-regularity-and-rates",
+  "model": "ERFA v2.0.1 unbiased ltp poles, Vondrak 2011 with 2012 corrigendum",
+  "schemaVersion": 1,
+  "sourceSHA256": {
+    "Scripts/generate-long-term-precession.py": "dab3a8eb9b60c1b56b68e46d3b9ba97daac79211b3fda11571a523d7897a4fe0",
+    "Scripts/orientation-data/long-term/ltpecl.c": "13e4936ac97abe110b75cbdbbcba04c37cb6bcb59952c0f727ccabab1d55e9cf",
+    "Scripts/orientation-data/long-term/ltpequ.c": "8b6db221ef3203e1ba9e4af96b58caeadd2e1978b8b7c6be8c49aed52aa4570f",
+    "Scripts/orientation-data/long-term/manifest.json": "6cd3c210cccd6fd9142931527ce496f6fd477da9a3e522923a305127a95dc75e",
+    "Scripts/qualify-long-term-precession.py": "a9656ab3aca5eefb74fe5dfed535f317561d7aa0916f0525d2ed037c38182e8e",
+    "Scripts/solar-numerics/intervals.py": "f311ffea878782dd46cb55a79486615626bbf8d8fb351c4186f9c22dfff297c1",
+    "Scripts/solar-numerics/numerics.py": "7dac12895e73786b85dd960977f027817d05f66007621f28a4d4dd9f1ef9b0d9",
+    "Scripts/solar-numerics/precession_bounds.py": "3f3bc8f2a40ac890d2383f019d52ccaece4bf7922085f6fa352f922066cf9c0a",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "a2f809b985707e6c5baac20f6ed59e0a751490b2acce383849f764ed7bda3f64",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba"
+  },
+  "units": "radicands and cross norms dimensionless; rates degrees per TT day"
+}

@@ -5,7 +5,7 @@
     "rows": [
       {
         "aberrationDisplacementArcminutes": 0.3299338849606111,
-        "apparentEQDArcminutes": 0.06367828761868385,
+        "apparentEQDArcminutes": 0.042119656085698134,
         "apparentICRFArcminutes": 0.0012954307365816548,
         "astrometricArcminutes": 0.0010249056037269222,
         "centerWeight": 0,
@@ -20,7 +20,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3317148404667378,
-        "apparentEQDArcminutes": 0.0636765416359502,
+        "apparentEQDArcminutes": 0.04213579859297586,
         "apparentICRFArcminutes": 0.0013006318510894663,
         "astrometricArcminutes": 0.001039264423588326,
         "centerWeight": 0,
@@ -35,7 +35,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.10169456079606433,
-        "apparentEQDArcminutes": 0.059001978681069274,
+        "apparentEQDArcminutes": 0.03164997036046661,
         "apparentICRFArcminutes": 0.0006340664599243612,
         "astrometricArcminutes": 0.00017164814708462583,
         "centerWeight": 0,
@@ -50,7 +50,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3333520236633047,
-        "apparentEQDArcminutes": 0.05740752126693804,
+        "apparentEQDArcminutes": 0.05043051433472211,
         "apparentICRFArcminutes": 0.00042430594080752074,
         "astrometricArcminutes": 9.334573656381022e-05,
         "centerWeight": 0,
@@ -65,7 +65,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.33180255731924546,
-        "apparentEQDArcminutes": 0.05209391830446166,
+        "apparentEQDArcminutes": 0.04875249007416414,
         "apparentICRFArcminutes": 0.00017560401051656483,
         "astrometricArcminutes": 0.000285670901980918,
         "centerWeight": 0,
@@ -80,7 +80,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.33047915603844724,
-        "apparentEQDArcminutes": 0.04036796358629011,
+        "apparentEQDArcminutes": 0.03929343405669847,
         "apparentICRFArcminutes": 0.0003749905892238495,
         "astrometricArcminutes": 2.874502103625114e-05,
         "centerWeight": 0,
@@ -95,7 +95,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1992319355828259,
-        "apparentEQDArcminutes": 0.023855071988205623,
+        "apparentEQDArcminutes": 0.023657347929806394,
         "apparentICRFArcminutes": 0.0004427384208024734,
         "astrometricArcminutes": 0.0001829988586486446,
         "centerWeight": 0,
@@ -110,7 +110,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.26626623200070954,
-        "apparentEQDArcminutes": 0.02881629420083382,
+        "apparentEQDArcminutes": 0.028765858102409125,
         "apparentICRFArcminutes": 0.00042423213246041555,
         "astrometricArcminutes": 4.5119833749633704e-05,
         "centerWeight": 0,
@@ -125,7 +125,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1552193956336515,
-        "apparentEQDArcminutes": 0.06324216307093253,
+        "apparentEQDArcminutes": 0.06221436456868802,
         "apparentICRFArcminutes": 0.0007468634634392325,
         "astrometricArcminutes": 0.00011523341653324648,
         "centerWeight": 0,
@@ -140,7 +140,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.06766882803592808,
-        "apparentEQDArcminutes": 0.10948537398793932,
+        "apparentEQDArcminutes": 0.1046337754787081,
         "apparentICRFArcminutes": 0.0006860232776343712,
         "astrometricArcminutes": 0.00010525594781586469,
         "centerWeight": 0,
@@ -155,7 +155,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.09103250870895253,
-        "apparentEQDArcminutes": 0.1491284742615443,
+        "apparentEQDArcminutes": 0.1357401717678065,
         "apparentICRFArcminutes": 0.00072639855165094,
         "astrometricArcminutes": 8.414434201471051e-05,
         "centerWeight": 0,
@@ -170,7 +170,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3364227574498865,
-        "apparentEQDArcminutes": 0.2610176275018814,
+        "apparentEQDArcminutes": 0.202832588975277,
         "apparentICRFArcminutes": 0.000127398836740622,
         "astrometricArcminutes": 0.00017322688830772264,
         "centerWeight": 0,
@@ -185,7 +185,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23662891484490758,
-        "apparentEQDArcminutes": 0.44538470532194624,
+        "apparentEQDArcminutes": 0.2431326488506281,
         "apparentICRFArcminutes": 0.0002033384512275243,
         "astrometricArcminutes": 9.853276361910084e-05,
         "centerWeight": 0,
@@ -200,7 +200,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.24091389010305916,
-        "apparentEQDArcminutes": 0.4453957513944525,
+        "apparentEQDArcminutes": 0.24313797428574624,
         "apparentICRFArcminutes": 0.0001953622396131748,
         "astrometricArcminutes": 9.832544580709285e-05,
         "centerWeight": 0,
@@ -215,7 +215,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2021738009811943,
-        "apparentEQDArcminutes": 0.0073662944698343145,
+        "apparentEQDArcminutes": 0.007359180095477714,
         "apparentICRFArcminutes": 0.0006165546637393051,
         "astrometricArcminutes": 0.00014659462399186797,
         "centerWeight": 1,
@@ -230,7 +230,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34331546668395424,
-        "apparentEQDArcminutes": 0.003931310177586151,
+        "apparentEQDArcminutes": 0.00392780485878224,
         "apparentICRFArcminutes": 0.00017023244379023306,
         "astrometricArcminutes": 0.0001530738404124383,
         "centerWeight": 1,
@@ -245,7 +245,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3435358075476883,
-        "apparentEQDArcminutes": 0.00393445167365911,
+        "apparentEQDArcminutes": 0.0039309480060947975,
         "apparentICRFArcminutes": 0.00016798332208684425,
         "astrometricArcminutes": 0.00015302359614881053,
         "centerWeight": 1,
@@ -260,7 +260,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34324731331628666,
-        "apparentEQDArcminutes": 0.00416565413331021,
+        "apparentEQDArcminutes": 0.0041621467740859085,
         "apparentICRFArcminutes": 0.00016485614342784066,
         "astrometricArcminutes": 0.00015485278417705375,
         "centerWeight": 1,
@@ -275,7 +275,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3164071779008998,
-        "apparentEQDArcminutes": 0.004387717982608855,
+        "apparentEQDArcminutes": 0.004384171716749413,
         "apparentICRFArcminutes": 0.0003390842438290552,
         "astrometricArcminutes": 0.0001562761247997422,
         "centerWeight": 1,
@@ -290,7 +290,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3058891405053188,
-        "apparentEQDArcminutes": 0.0008082148818503041,
+        "apparentEQDArcminutes": 0.0008082134758195843,
         "apparentICRFArcminutes": 5.3964708367100065e-05,
         "astrometricArcminutes": 0.00013902874243807534,
         "centerWeight": 1,
@@ -305,7 +305,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2784772588096581,
-        "apparentEQDArcminutes": 0.004194102929463,
+        "apparentEQDArcminutes": 0.0041991990081975345,
         "apparentICRFArcminutes": 0.00052205090963343,
         "astrometricArcminutes": 0.00010648957772029099,
         "centerWeight": 1,
@@ -320,7 +320,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2775876834997023,
-        "apparentEQDArcminutes": 0.004189853910662081,
+        "apparentEQDArcminutes": 0.004194949582569195,
         "apparentICRFArcminutes": 0.0005247728528088623,
         "astrometricArcminutes": 0.00010649062021441793,
         "centerWeight": 1,
@@ -335,7 +335,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.21342890667372544,
-        "apparentEQDArcminutes": 0.004042338685379384,
+        "apparentEQDArcminutes": 0.004047386912309323,
         "apparentICRFArcminutes": 0.000659374516275963,
         "astrometricArcminutes": 0.00010834296856355293,
         "centerWeight": 1,
@@ -350,7 +350,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.13870551855808996,
-        "apparentEQDArcminutes": 0.003936118347261705,
+        "apparentEQDArcminutes": 0.003941116142435188,
         "apparentICRFArcminutes": 0.0007605649001742249,
         "astrometricArcminutes": 0.00011137495849685217,
         "centerWeight": 1,
@@ -365,7 +365,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.13754904234451912,
-        "apparentEQDArcminutes": 0.003936655463190174,
+        "apparentEQDArcminutes": 0.003941652135216226,
         "apparentICRFArcminutes": 0.0007614024385354675,
         "astrometricArcminutes": 0.00011142964318806415,
         "centerWeight": 1,
@@ -380,7 +380,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2982575350730607,
-        "apparentEQDArcminutes": 0.0064276170558845835,
+        "apparentEQDArcminutes": 0.006435171990814326,
         "apparentICRFArcminutes": 0.0003635243156209774,
         "astrometricArcminutes": 9.14714220525716e-05,
         "centerWeight": 1,
@@ -395,7 +395,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23386118955381005,
-        "apparentEQDArcminutes": 0.010134814321104415,
+        "apparentEQDArcminutes": 0.010120094385038431,
         "apparentICRFArcminutes": 0.0015546443992303762,
         "astrometricArcminutes": 0.0012308609085139566,
         "centerWeight": 0.00012926075352643574,
@@ -410,7 +410,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.26144748718007876,
-        "apparentEQDArcminutes": 0.009725613209099199,
+        "apparentEQDArcminutes": 0.009711733891065302,
         "apparentICRFArcminutes": 0.0012162988185019357,
         "astrometricArcminutes": 0.0009581862767598624,
         "centerWeight": 0.09574924888341317,
@@ -425,7 +425,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2890377293544813,
-        "apparentEQDArcminutes": 0.00849011190305751,
+        "apparentEQDArcminutes": 0.008476404725334879,
         "apparentICRFArcminutes": 0.0004980562747445424,
         "astrometricArcminutes": 0.0004810573113461057,
         "centerWeight": 0.4858817232684292,
@@ -440,7 +440,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3117898667992761,
-        "apparentEQDArcminutes": 0.008616816450269344,
+        "apparentEQDArcminutes": 0.008602146920162127,
         "apparentICRFArcminutes": 4.354244419072102e-05,
         "astrometricArcminutes": 0.00010102446917539462,
         "centerWeight": 0.8883680236865588,
@@ -455,7 +455,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.32863299516271544,
-        "apparentEQDArcminutes": 0.00853838204044589,
+        "apparentEQDArcminutes": 0.008523693036927397,
         "apparentICRFArcminutes": 7.108686311423621e-05,
         "astrometricArcminutes": 0.00012384203953702503,
         "centerWeight": 0.9999957371229455,
@@ -470,7 +470,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3303151998359428,
-        "apparentEQDArcminutes": 0.008522736233306087,
+        "apparentEQDArcminutes": 0.008508021635719207,
         "apparentICRFArcminutes": 9.457959996587902e-05,
         "astrometricArcminutes": 0.00012406228446669386,
         "centerWeight": 1,
@@ -485,7 +485,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.10453532196605214,
-        "apparentEQDArcminutes": 0.009104851472952355,
+        "apparentEQDArcminutes": 0.009091146547798057,
         "apparentICRFArcminutes": 0.0006419593259434238,
         "astrometricArcminutes": 0.00016222250656309405,
         "centerWeight": 1,
@@ -500,7 +500,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34182005472940746,
-        "apparentEQDArcminutes": 0.008006928704636169,
+        "apparentEQDArcminutes": 0.008016161905033053,
         "apparentICRFArcminutes": 0.00013155861611420495,
         "astrometricArcminutes": 0.00011154425344462626,
         "centerWeight": 1,
@@ -515,7 +515,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.0811915279766434,
-        "apparentEQDArcminutes": 0.00892106733746095,
+        "apparentEQDArcminutes": 0.008930251333586365,
         "apparentICRFArcminutes": 0.0005533411907096267,
         "astrometricArcminutes": 0.00017448557639737733,
         "centerWeight": 1,
@@ -530,7 +530,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.08568741315247196,
-        "apparentEQDArcminutes": 0.008919827117055242,
+        "apparentEQDArcminutes": 0.00892900935973477,
         "apparentICRFArcminutes": 0.0005512139255928313,
         "astrometricArcminutes": 0.00017475659276188727,
         "centerWeight": 1,
@@ -545,7 +545,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1250658744574049,
-        "apparentEQDArcminutes": 0.00901040454263055,
+        "apparentEQDArcminutes": 0.009019601194227093,
         "apparentICRFArcminutes": 0.0006587831063178827,
         "astrometricArcminutes": 6.046130879141918e-05,
         "centerWeight": 0.9031245578421,
@@ -560,7 +560,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.16630031040387488,
-        "apparentEQDArcminutes": 0.009058709438582472,
+        "apparentEQDArcminutes": 0.0090674466406324,
         "apparentICRFArcminutes": 0.0009020248123202676,
         "astrometricArcminutes": 0.000544959903714744,
         "centerWeight": 0.5119646976889962,
@@ -575,7 +575,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2061437725669198,
-        "apparentEQDArcminutes": 0.0076215877575436086,
+        "apparentEQDArcminutes": 0.0076304266072752145,
         "apparentICRFArcminutes": 0.0008251498186071744,
         "astrometricArcminutes": 0.0014086233001552413,
         "centerWeight": 0.11033656228871391,
@@ -590,7 +590,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23375113782752482,
-        "apparentEQDArcminutes": 0.00769938188606556,
+        "apparentEQDArcminutes": 0.007707798899259866,
         "apparentICRFArcminutes": 0.001070830337372304,
         "astrometricArcminutes": 0.001494623716130525,
         "centerWeight": 0.0029352478713644257,
@@ -605,7 +605,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23813243255289024,
-        "apparentEQDArcminutes": 0.007457354007077809,
+        "apparentEQDArcminutes": 0.0074667663316762434,
         "apparentICRFArcminutes": 0.0009428256478580847,
         "astrometricArcminutes": 0.0015275002936985132,
         "centerWeight": 0.0005017298451233214,
@@ -660,7 +660,7 @@
     "rows": [
       {
         "aberrationDisplacementArcminutes": 0.3299338849606111,
-        "apparentEQDArcminutes": 0.06367828761880005,
+        "apparentEQDArcminutes": 0.042119656085698134,
         "apparentICRFArcminutes": 0.0012954307365816548,
         "astrometricArcminutes": 0.0010249056037269222,
         "centerWeight": 0,
@@ -675,7 +675,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3317148404667378,
-        "apparentEQDArcminutes": 0.0636765416359502,
+        "apparentEQDArcminutes": 0.04213579859297586,
         "apparentICRFArcminutes": 0.0013006318510894663,
         "astrometricArcminutes": 0.001039264423588326,
         "centerWeight": 0,
@@ -690,7 +690,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.10169456079606433,
-        "apparentEQDArcminutes": 0.059001978681069274,
+        "apparentEQDArcminutes": 0.03164997036046661,
         "apparentICRFArcminutes": 0.0006340664599243612,
         "astrometricArcminutes": 0.00017164814708462583,
         "centerWeight": 0,
@@ -705,7 +705,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3333520236633047,
-        "apparentEQDArcminutes": 0.05740752126693804,
+        "apparentEQDArcminutes": 0.05043051433472211,
         "apparentICRFArcminutes": 0.00042430594080752074,
         "astrometricArcminutes": 9.334573656381022e-05,
         "centerWeight": 0,
@@ -720,7 +720,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.33180255731924546,
-        "apparentEQDArcminutes": 0.05209391830446166,
+        "apparentEQDArcminutes": 0.04875249007416414,
         "apparentICRFArcminutes": 0.00017560401051656483,
         "astrometricArcminutes": 0.000285670901980918,
         "centerWeight": 0,
@@ -735,7 +735,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.33047915603844724,
-        "apparentEQDArcminutes": 0.04036796358629011,
+        "apparentEQDArcminutes": 0.03929343405669847,
         "apparentICRFArcminutes": 0.0003749905892238495,
         "astrometricArcminutes": 2.874502103625114e-05,
         "centerWeight": 0,
@@ -750,7 +750,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1992319355828259,
-        "apparentEQDArcminutes": 0.023855071988205623,
+        "apparentEQDArcminutes": 0.023657347929806394,
         "apparentICRFArcminutes": 0.0004427384208024734,
         "astrometricArcminutes": 0.0001829988586486446,
         "centerWeight": 0,
@@ -765,7 +765,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.26626623200070954,
-        "apparentEQDArcminutes": 0.02881629420083382,
+        "apparentEQDArcminutes": 0.028765858102409125,
         "apparentICRFArcminutes": 0.00042423213246041555,
         "astrometricArcminutes": 4.5119833749633704e-05,
         "centerWeight": 0,
@@ -780,7 +780,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1552193956336515,
-        "apparentEQDArcminutes": 0.06324216307093253,
+        "apparentEQDArcminutes": 0.06221436456868802,
         "apparentICRFArcminutes": 0.0007468634634392325,
         "astrometricArcminutes": 0.00011523341653324648,
         "centerWeight": 0,
@@ -795,7 +795,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.06766882803592808,
-        "apparentEQDArcminutes": 0.10948537398793932,
+        "apparentEQDArcminutes": 0.1046337754787081,
         "apparentICRFArcminutes": 0.0006860232776343712,
         "astrometricArcminutes": 0.00010525594781586469,
         "centerWeight": 0,
@@ -810,7 +810,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.09103250870895253,
-        "apparentEQDArcminutes": 0.1491284742615443,
+        "apparentEQDArcminutes": 0.1357401717678065,
         "apparentICRFArcminutes": 0.00072639855165094,
         "astrometricArcminutes": 8.414434201471051e-05,
         "centerWeight": 0,
@@ -825,7 +825,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3364227574498865,
-        "apparentEQDArcminutes": 0.2610176275018814,
+        "apparentEQDArcminutes": 0.202832588975277,
         "apparentICRFArcminutes": 0.000127398836740622,
         "astrometricArcminutes": 0.00017322688830772264,
         "centerWeight": 0,
@@ -840,7 +840,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23662891484490758,
-        "apparentEQDArcminutes": 0.44538470532194624,
+        "apparentEQDArcminutes": 0.2431326488506281,
         "apparentICRFArcminutes": 0.0002033384512275243,
         "astrometricArcminutes": 9.853276361910084e-05,
         "centerWeight": 0,
@@ -855,7 +855,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.24091389010305916,
-        "apparentEQDArcminutes": 0.4453957513944525,
+        "apparentEQDArcminutes": 0.24313797428574624,
         "apparentICRFArcminutes": 0.0001953622396131748,
         "astrometricArcminutes": 9.832544580709285e-05,
         "centerWeight": 0,
@@ -870,7 +870,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2021738009811943,
-        "apparentEQDArcminutes": 0.0073662944698343145,
+        "apparentEQDArcminutes": 0.007359180095477714,
         "apparentICRFArcminutes": 0.0006165546637393051,
         "astrometricArcminutes": 0.00014659462399186797,
         "centerWeight": 1,
@@ -885,7 +885,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34331546668395424,
-        "apparentEQDArcminutes": 0.003931310177586151,
+        "apparentEQDArcminutes": 0.00392780485878224,
         "apparentICRFArcminutes": 0.00017023244379023306,
         "astrometricArcminutes": 0.0001530738404124383,
         "centerWeight": 1,
@@ -900,7 +900,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3435358075476883,
-        "apparentEQDArcminutes": 0.00393445167365911,
+        "apparentEQDArcminutes": 0.0039309480060947975,
         "apparentICRFArcminutes": 0.00016798332208684425,
         "astrometricArcminutes": 0.00015302359614881053,
         "centerWeight": 1,
@@ -915,7 +915,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34324731331628666,
-        "apparentEQDArcminutes": 0.00416565413331021,
+        "apparentEQDArcminutes": 0.0041621467740859085,
         "apparentICRFArcminutes": 0.00016485614342784066,
         "astrometricArcminutes": 0.00015485278417705375,
         "centerWeight": 1,
@@ -930,7 +930,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3164071779008998,
-        "apparentEQDArcminutes": 0.004387717982608855,
+        "apparentEQDArcminutes": 0.004384171716749413,
         "apparentICRFArcminutes": 0.0003390842438290552,
         "astrometricArcminutes": 0.0001562761247997422,
         "centerWeight": 1,
@@ -945,7 +945,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3058891405053188,
-        "apparentEQDArcminutes": 0.0008082148818503041,
+        "apparentEQDArcminutes": 0.0008082134758195843,
         "apparentICRFArcminutes": 5.3964708367100065e-05,
         "astrometricArcminutes": 0.00013902874243807534,
         "centerWeight": 1,
@@ -960,7 +960,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2784772588096581,
-        "apparentEQDArcminutes": 0.004194102929463,
+        "apparentEQDArcminutes": 0.0041991990081975345,
         "apparentICRFArcminutes": 0.00052205090963343,
         "astrometricArcminutes": 0.00010648957772029099,
         "centerWeight": 1,
@@ -975,7 +975,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2775876834997023,
-        "apparentEQDArcminutes": 0.004189853910662081,
+        "apparentEQDArcminutes": 0.004194949582569195,
         "apparentICRFArcminutes": 0.0005247728528088623,
         "astrometricArcminutes": 0.00010649062021441793,
         "centerWeight": 1,
@@ -990,7 +990,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.21342890667372544,
-        "apparentEQDArcminutes": 0.004042338685379384,
+        "apparentEQDArcminutes": 0.004047386912309323,
         "apparentICRFArcminutes": 0.000659374516275963,
         "astrometricArcminutes": 0.00010834296856355293,
         "centerWeight": 1,
@@ -1005,7 +1005,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.13870551855808996,
-        "apparentEQDArcminutes": 0.003936118347261705,
+        "apparentEQDArcminutes": 0.003941116142435188,
         "apparentICRFArcminutes": 0.0007605649001742249,
         "astrometricArcminutes": 0.00011137495849685217,
         "centerWeight": 1,
@@ -1020,7 +1020,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.13754904234451912,
-        "apparentEQDArcminutes": 0.003936655463123915,
+        "apparentEQDArcminutes": 0.003941652135216226,
         "apparentICRFArcminutes": 0.0007614024385354675,
         "astrometricArcminutes": 0.00011142964318806415,
         "centerWeight": 1,
@@ -1035,7 +1035,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2982575350730607,
-        "apparentEQDArcminutes": 0.0064276170558845835,
+        "apparentEQDArcminutes": 0.006435171990814326,
         "apparentICRFArcminutes": 0.0003635243156209774,
         "astrometricArcminutes": 9.14714220525716e-05,
         "centerWeight": 1,
@@ -1050,7 +1050,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23386118955381005,
-        "apparentEQDArcminutes": 0.010134814321104415,
+        "apparentEQDArcminutes": 0.010120094385038431,
         "apparentICRFArcminutes": 0.0015546443992303762,
         "astrometricArcminutes": 0.0012308609085139566,
         "centerWeight": 0.00012926075352643574,
@@ -1065,7 +1065,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.26144748718007876,
-        "apparentEQDArcminutes": 0.009725613209099199,
+        "apparentEQDArcminutes": 0.009711733891065302,
         "apparentICRFArcminutes": 0.0012162988185019357,
         "astrometricArcminutes": 0.0009581862767598624,
         "centerWeight": 0.09574924888341317,
@@ -1080,7 +1080,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2890377293544813,
-        "apparentEQDArcminutes": 0.00849011190305751,
+        "apparentEQDArcminutes": 0.008476404725334879,
         "apparentICRFArcminutes": 0.0004980562747445424,
         "astrometricArcminutes": 0.0004810573113461057,
         "centerWeight": 0.4858817232684292,
@@ -1095,7 +1095,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3117898667992761,
-        "apparentEQDArcminutes": 0.008616816450269344,
+        "apparentEQDArcminutes": 0.008602146920162127,
         "apparentICRFArcminutes": 4.354244419072102e-05,
         "astrometricArcminutes": 0.00010102446917539462,
         "centerWeight": 0.8883680236865588,
@@ -1110,7 +1110,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.32863299516271544,
-        "apparentEQDArcminutes": 0.00853838204044589,
+        "apparentEQDArcminutes": 0.008523693036927397,
         "apparentICRFArcminutes": 7.108686311423621e-05,
         "astrometricArcminutes": 0.00012384203953702503,
         "centerWeight": 0.9999957371229455,
@@ -1125,7 +1125,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.3303151998359428,
-        "apparentEQDArcminutes": 0.008522736233306087,
+        "apparentEQDArcminutes": 0.008508021635719207,
         "apparentICRFArcminutes": 9.457959996587902e-05,
         "astrometricArcminutes": 0.00012406228446669386,
         "centerWeight": 1,
@@ -1140,7 +1140,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.10453532196605214,
-        "apparentEQDArcminutes": 0.009104851472952355,
+        "apparentEQDArcminutes": 0.009091146547798057,
         "apparentICRFArcminutes": 0.0006419593259434238,
         "astrometricArcminutes": 0.00016222250656309405,
         "centerWeight": 1,
@@ -1155,7 +1155,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.34182005472940746,
-        "apparentEQDArcminutes": 0.008006928704636169,
+        "apparentEQDArcminutes": 0.008016161905033053,
         "apparentICRFArcminutes": 0.00013155861611420495,
         "astrometricArcminutes": 0.00011154425344462626,
         "centerWeight": 1,
@@ -1170,7 +1170,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.0811915279766434,
-        "apparentEQDArcminutes": 0.00892106733746095,
+        "apparentEQDArcminutes": 0.008930251333586365,
         "apparentICRFArcminutes": 0.0005533411907096267,
         "astrometricArcminutes": 0.00017448557639737733,
         "centerWeight": 1,
@@ -1185,7 +1185,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.08568741315247196,
-        "apparentEQDArcminutes": 0.008919827117055242,
+        "apparentEQDArcminutes": 0.00892900935973477,
         "apparentICRFArcminutes": 0.0005512139255928313,
         "astrometricArcminutes": 0.00017475659276188727,
         "centerWeight": 1,
@@ -1200,7 +1200,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.1250658744574049,
-        "apparentEQDArcminutes": 0.009010404542697267,
+        "apparentEQDArcminutes": 0.009019601194293944,
         "apparentICRFArcminutes": 0.0006587831063178827,
         "astrometricArcminutes": 6.046130879141918e-05,
         "centerWeight": 0.9031245578421,
@@ -1215,7 +1215,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.16630031040387488,
-        "apparentEQDArcminutes": 0.009058709438582472,
+        "apparentEQDArcminutes": 0.0090674466406324,
         "apparentICRFArcminutes": 0.0009020248123202676,
         "astrometricArcminutes": 0.000544959903714744,
         "centerWeight": 0.5119646976889962,
@@ -1230,7 +1230,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.2061437725669198,
-        "apparentEQDArcminutes": 0.0076215877575436086,
+        "apparentEQDArcminutes": 0.0076304266072752145,
         "apparentICRFArcminutes": 0.0008251498186071744,
         "astrometricArcminutes": 0.0014086233001552413,
         "centerWeight": 0.11033656228871391,
@@ -1245,7 +1245,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23375113782752482,
-        "apparentEQDArcminutes": 0.00769938188606556,
+        "apparentEQDArcminutes": 0.007707798899307771,
         "apparentICRFArcminutes": 0.001070830337372304,
         "astrometricArcminutes": 0.001494623716130525,
         "centerWeight": 0.0029352478713644257,
@@ -1260,7 +1260,7 @@
       },
       {
         "aberrationDisplacementArcminutes": 0.23813243255289024,
-        "apparentEQDArcminutes": 0.007457354007077809,
+        "apparentEQDArcminutes": 0.0074667663316762434,
         "apparentICRFArcminutes": 0.0009428256478580847,
         "astrometricArcminutes": 0.0015275002936985132,
         "centerWeight": 0.0005017298451233214,
@@ -1337,13 +1337,14 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "b215e909949db0a0e2fabd91faead196eb92d00dc88147290a96f64c41e38079",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "22cbcdb8294fd4b54dc785aab583b4f63d1adaa91eca6a3c2576d93b5e6276b8",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
-    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "a2f809b985707e6c5baac20f6ed59e0a751490b2acce383849f764ed7bda3f64",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",

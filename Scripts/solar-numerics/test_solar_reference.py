@@ -24,19 +24,17 @@ class SolarDefinitionTests(unittest.TestCase):
         for model in ['espenakMeeus', 'jplHorizons']:
             self.assertIsNone(solar.input_pair(value, 'tt', model, float(boundary)))
 
-    def test_sofa_precession_matrix(self):
+    def test_erfa_published_long_term_precession_matrix(self):
         mp = solar.mp
-        actual = solar.precession(mp.mpf('50123.9999') - mp.mpf('51544.5'))
+        actual = solar.precession((mp.mpf('1666.666') - 2000) * mp.mpf('365.25'))
         expected = [
-            ['0.9999995504864960278', '0.8696112578855404832e-3', '0.3778929293341390127e-3'],
-            ['-0.8696112560510186244e-3', '0.9999996218880458820', '-0.1691646168941896285e-6'],
-            ['-0.3778929335557603418e-3', '-0.1594554040786495076e-6', '0.9999999285984501222'],
+            ['0.9967044141159213819', '0.7437801893193210840e-1', '0.3237624409345603401e-1'],
+            ['-0.7437802731819618167e-1', '0.9972293894454533070', '-0.1205768842723593346e-2'],
+            ['-0.3237622482766575399e-1', '-0.1206286039697609008e-2', '0.9994750246704010914'],
         ]
-        # EnginePrecessionTests uses 1e-13 for this Fukushima-Williams route;
-        # its documented difference from the IERS angle product is about 3e-14.
         for i in range(3):
             for j in range(3):
-                self.assertLess(abs(actual[i,j] - mp.mpf(expected[i][j])), mp.mpf('1e-13'))
+                self.assertLess(abs(actual[i,j] - mp.mpf(expected[i][j])), mp.mpf('1e-14'))
 
     def test_sofa_complementary_terms(self):
         mp = solar.mp

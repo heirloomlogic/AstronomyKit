@@ -125,9 +125,9 @@ struct EngineEarthTiltTests {
     func angles(reference: Published.Reference) {
         let tilt = Self.tilt(tt: reference.tt)
         let radians = Engine.radiansPerDegree
-        #expect(abs(tilt.meanObliquity * radians - reference.obl06) <= 1e-15)
-        #expect(abs(tilt.trueObliquity * radians - (reference.obl06 + reference.deps)) <= 2e-15)
-        let equation = reference.dpsi * cos(reference.obl06) + reference.eect00
+        #expect(abs(tilt.meanObliquity * radians - reference.meanObliquity) <= 1e-15)
+        #expect(abs(tilt.trueObliquity * radians - (reference.meanObliquity + reference.deps)) <= 2e-15)
+        let equation = reference.dpsi * cos(reference.meanObliquity) + reference.eect00
         #expect(abs(tilt.equationOfEquinoxes * radians - equation) <= 1e-15)
         #expect(tilt.trueObliquityRate == tilt.meanObliquityRate + tilt.nutation.obliquityRate)
     }

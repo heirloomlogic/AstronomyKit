@@ -11,11 +11,11 @@ struct NativeCoordinateFacadeTests {
         (0..<3).map { row in (0..<3).map { rotation[$0, row] } }
     }
 
-    @Test("Public frame rotations retain SOFA angle accuracy", arguments: Published.references)
+    @Test("Public frame rotations match the ERFA long-term composition", arguments: Published.references)
     func frames(reference: Published.Reference) throws {
         let time = AstroTime(tt: reference.tt, ut: reference.ut, deltaTModel: .jplHorizons)
         let equator = EngineFrameRotationTests.equatorOfDate(reference)
-        let tilt = Published.r1(reference.obl06 + reference.deps)
+        let tilt = Published.r1(reference.meanObliquity + reference.deps)
         let ecliptic = Published.product(tilt, equator)
         let mean = Published.r1(Published.p06e.eps0)
         let equatorToMean = Published.product(mean, Published.transposed(equator))

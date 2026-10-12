@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Source-bound rational derivation of the partial native solar-altitude budget."""
 from fractions import Fraction as Q
+import precession_bounds
 import argparse
 import ast
 import json
@@ -32,13 +33,9 @@ def rate(poly, t):
 def frame_rates():
     pi = pi_interval().hi
     t = Q('1.02')
-    text = (ROOT/(ENGINE+'Orientation/EnginePrecession.swift')).read_text()
-    obliquity0 = re.search(r'obliquityAtJ2000 = ([0-9_.]+)', text)[1]
-    polys = [coefficients(row.replace('obliquityAtJ2000', obliquity0)) for row in re.findall(r'coefficients: \[([^\]]+)\]', text) if row != 'Double']
-    if len(polys) != 4:
-        raise ValueError('Precession polynomial layout changed')
-    obliquity = rate(polys[0], t)/3600/36525
-    precession = sum(rate(poly,t) for poly in polys[1:])/3600/36525
+    long_term = precession_bounds.enclose(t)
+    obliquity = long_term['meanObliquity']
+    precession = long_term['precession']
     text = (ROOT/(ENGINE+'Orientation/EngineNutation.swift')).read_text()
     arguments = text.split('luniSolarArguments: [[Double]] = [',1)[1].split('    ]',1)[0]
     luni_solar_rates = [rate(coefficients(row),t)*pi/648000 for row in re.findall(r'\[([-+0-9_., ]+)\]', arguments)]
@@ -282,7 +279,7 @@ def derive():
         raise ValueError('The denominator or classification margin is insufficient')
     if 2*values['arrivalUncertaintyDays']+convergence['T'] >= 1:
         raise ValueError('Time hull can span multiple eight-day polynomial seams')
-    paths = sorted(set(BINDINGS + [
+    paths = sorted(set(BINDINGS + precession_bounds.PATHS + [
         'Scripts/solar-numerics/derive_altitude.py', 'Scripts/solar-numerics/intervals.py',
         'Scripts/solar-numerics/certify_light_time.py', 'Scripts/solar-numerics/derived-earth.json',
         'Scripts/solar-numerics/derived-light-convergence.json',

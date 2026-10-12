@@ -1,56 +1,56 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (10.78 sec)",
-    "release": "Build complete! (129.23 sec)"
+    "debug": "Build complete! (10.28 sec)",
+    "release": "Build complete! (115.46 sec)"
   },
   "debug": {
     "global-sequence": [
       {
         "date": "2024-04-08",
         "kind": "total",
-        "tt": 8864.262829952031,
-        "ut": 8864.261973110866
+        "tt": 8864.262829952198,
+        "ut": 8864.261973111034
       },
       {
         "date": "2024-10-02",
         "kind": "annular",
-        "tt": 9041.282082266724,
-        "ut": 9041.281222088302
+        "tt": 9041.282082266576,
+        "ut": 9041.281222088155
       },
       {
         "date": "2025-03-29",
         "kind": "partial",
-        "tt": 9218.950402017801,
-        "ut": 9218.949538454877
+        "tt": 9218.950402017923,
+        "ut": 9218.949538455
       }
     ],
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.45560886363774,
-        "ingressUT": 374.2396122954866,
+        "egressUT": 374.45560886363825,
+        "ingressUT": 374.2396122954872,
         "kind": "total",
-        "semiDurationMinutes": 155.5175290688112,
-        "tt": 374.3483648316754,
-        "ut": 374.34762244889544
+        "semiDurationMinutes": 155.51752906877027,
+        "tt": 374.3483648316758,
+        "ut": 374.34762244889583
       },
       {
         "date": "2001-07-05",
-        "egressUT": 551.2345982173324,
-        "ingressUT": 551.0088650919351,
+        "egressUT": 551.234598217331,
+        "ingressUT": 551.0088650919332,
         "kind": "partial",
-        "semiDurationMinutes": 162.52785028602375,
-        "tt": 551.1224485522262,
-        "ut": 551.1217050718137
+        "semiDurationMinutes": 162.52785028643302,
+        "tt": 551.1224485523882,
+        "ut": 551.1217050719757
       },
       {
         "date": "2001-12-30",
-        "egressUT": 729.0215636496138,
-        "ingressUT": 728.8524985859364,
+        "egressUT": 729.0215636496165,
+        "ingressUT": 728.8524985859412,
         "kind": "penumbral",
-        "semiDurationMinutes": 121.72684584773378,
-        "tt": 728.9378039377822,
-        "ut": 728.9370595867692
+        "semiDurationMinutes": 121.72684584617855,
+        "tt": 728.9378039379045,
+        "ut": 728.9370595868916
       }
     ],
     "published": [
@@ -123,32 +123,32 @@
         "finishTT": 43077.7373457491,
         "finishUT": 43077.73449826429,
         "formerUTCReferenceUT": 43077.614619931985,
-        "peakTT": 43077.61954209773,
-        "peakUT": 43077.61669462215,
-        "publicFormerResidualSeconds": 179.25323022063822,
-        "publicPeakUT": 43077.61669462215,
-        "publicUTResidualSeconds": 2.415353525429964,
-        "separation": 12.060484072500161,
+        "peakTT": 43077.61954208836,
+        "peakUT": 43077.61669461278,
+        "publicFormerResidualSeconds": 179.25242052879184,
+        "publicPeakUT": 43077.61669461278,
+        "publicUTResidualSeconds": 2.4145438335835934,
+        "separation": 12.060484072717744,
         "source": "2117-12-11T02:48Z",
         "sourceUT": 43077.61666666667,
-        "startTT": 43077.501743920126,
-        "startUT": 43077.49889645376
+        "startTT": 43077.50174392011,
+        "startUT": 43077.49889645375
       },
       {
         "body": "venus",
-        "finishTT": 45997.28621491473,
-        "finishUT": 45997.28313658551,
+        "finishTT": 45997.28621491475,
+        "finishUT": 45997.28313658552,
         "formerUTCReferenceUT": 45997.16508353206,
-        "peakTT": 45997.17070322151,
-        "peakUT": 45997.16762490152,
-        "publicFormerResidualSeconds": 219.5743213640526,
-        "publicPeakUT": 45997.16762490152,
-        "publicUTResidualSeconds": 22.79149149544537,
-        "separation": 12.273265499576281,
+        "peakTT": 45997.170703256386,
+        "peakUT": 45997.167624936395,
+        "publicFormerResidualSeconds": 219.57733444869518,
+        "publicPeakUT": 45997.167624936395,
+        "publicUTResidualSeconds": 22.79450458008796,
+        "separation": 12.273265499255565,
         "source": "2125-12-08T16:01Z",
         "sourceUT": 45997.16736111111,
-        "startTT": 45997.05519535924,
-        "startUT": 45997.05211704848
+        "startTT": 45997.05519535923,
+        "startUT": 45997.05211704847
       }
     ],
     "transit-sequence": [
@@ -183,19 +183,19 @@
         "body": "venus",
         "date": "2117-12-11",
         "finishUT": 43077.73449826429,
-        "separation": 12.060484072500161,
-        "startUT": 43077.49889645376,
-        "tt": 43077.61954209773,
-        "ut": 43077.61669462215
+        "separation": 12.060484072717744,
+        "startUT": 43077.49889645375,
+        "tt": 43077.61954208836,
+        "ut": 43077.61669461278
       },
       {
         "body": "venus",
         "date": "2125-12-08",
-        "finishUT": 45997.28313658551,
-        "separation": 12.273265499576281,
-        "startUT": 45997.05211704848,
-        "tt": 45997.17070322151,
-        "ut": 45997.16762490152
+        "finishUT": 45997.28313658552,
+        "separation": 12.273265499255565,
+        "startUT": 45997.05211704847,
+        "tt": 45997.170703256386,
+        "ut": 45997.167624936395
       }
     ]
   },
@@ -204,49 +204,49 @@
       {
         "date": "2024-04-08",
         "kind": "total",
-        "tt": 8864.262829952031,
-        "ut": 8864.261973110866
+        "tt": 8864.262829952198,
+        "ut": 8864.261973111034
       },
       {
         "date": "2024-10-02",
         "kind": "annular",
-        "tt": 9041.282082266724,
-        "ut": 9041.281222088302
+        "tt": 9041.282082266576,
+        "ut": 9041.281222088155
       },
       {
         "date": "2025-03-29",
         "kind": "partial",
-        "tt": 9218.950402017801,
-        "ut": 9218.949538454877
+        "tt": 9218.950402017923,
+        "ut": 9218.949538455
       }
     ],
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556088636344,
-        "ingressUT": 374.2396122954871,
+        "egressUT": 374.45560886363825,
+        "ingressUT": 374.2396122954872,
         "kind": "total",
-        "semiDurationMinutes": 155.51752906602815,
-        "tt": 374.34836483179623,
-        "ut": 374.3476224490163
+        "semiDurationMinutes": 155.51752906877027,
+        "tt": 374.3483648316758,
+        "ut": 374.34762244889583
       },
       {
         "date": "2001-07-05",
-        "egressUT": 551.2345982173287,
-        "ingressUT": 551.0088650919377,
+        "egressUT": 551.234598217331,
+        "ingressUT": 551.0088650919332,
         "kind": "partial",
-        "semiDurationMinutes": 162.52785028152175,
-        "tt": 551.1224485521612,
-        "ut": 551.1217050717488
+        "semiDurationMinutes": 162.52785028643302,
+        "tt": 551.1224485523882,
+        "ut": 551.1217050719757
       },
       {
         "date": "2001-12-30",
-        "egressUT": 729.0215636496138,
-        "ingressUT": 728.8524985859364,
+        "egressUT": 729.0215636496165,
+        "ingressUT": 728.8524985859412,
         "kind": "penumbral",
-        "semiDurationMinutes": 121.72684584773378,
-        "tt": 728.9378039377822,
-        "ut": 728.9370595867692
+        "semiDurationMinutes": 121.72684584617855,
+        "tt": 728.9378039379045,
+        "ut": 728.9370595868916
       }
     ],
     "published": [
@@ -319,32 +319,32 @@
         "finishTT": 43077.7373457491,
         "finishUT": 43077.73449826429,
         "formerUTCReferenceUT": 43077.614619931985,
-        "peakTT": 43077.61954209773,
-        "peakUT": 43077.61669462215,
-        "publicFormerResidualSeconds": 179.25323022063822,
-        "publicPeakUT": 43077.61669462215,
-        "publicUTResidualSeconds": 2.415353525429964,
-        "separation": 12.060484072500161,
+        "peakTT": 43077.61954208836,
+        "peakUT": 43077.61669461278,
+        "publicFormerResidualSeconds": 179.25242052879184,
+        "publicPeakUT": 43077.61669461278,
+        "publicUTResidualSeconds": 2.4145438335835934,
+        "separation": 12.060484072717744,
         "source": "2117-12-11T02:48Z",
         "sourceUT": 43077.61666666667,
-        "startTT": 43077.501743920126,
-        "startUT": 43077.49889645376
+        "startTT": 43077.50174392011,
+        "startUT": 43077.49889645375
       },
       {
         "body": "venus",
-        "finishTT": 45997.28621491473,
-        "finishUT": 45997.28313658551,
+        "finishTT": 45997.28621491475,
+        "finishUT": 45997.28313658552,
         "formerUTCReferenceUT": 45997.16508353206,
-        "peakTT": 45997.17070322151,
-        "peakUT": 45997.16762490152,
-        "publicFormerResidualSeconds": 219.5743213640526,
-        "publicPeakUT": 45997.16762490152,
-        "publicUTResidualSeconds": 22.79149149544537,
-        "separation": 12.273265499576281,
+        "peakTT": 45997.170703256386,
+        "peakUT": 45997.167624936395,
+        "publicFormerResidualSeconds": 219.57733444869518,
+        "publicPeakUT": 45997.167624936395,
+        "publicUTResidualSeconds": 22.79450458008796,
+        "separation": 12.273265499255565,
         "source": "2125-12-08T16:01Z",
         "sourceUT": 45997.16736111111,
-        "startTT": 45997.05519535924,
-        "startUT": 45997.05211704848
+        "startTT": 45997.05519535923,
+        "startUT": 45997.05211704847
       }
     ],
     "transit-sequence": [
@@ -379,36 +379,36 @@
         "body": "venus",
         "date": "2117-12-11",
         "finishUT": 43077.73449826429,
-        "separation": 12.060484072500161,
-        "startUT": 43077.49889645376,
-        "tt": 43077.61954209773,
-        "ut": 43077.61669462215
+        "separation": 12.060484072717744,
+        "startUT": 43077.49889645375,
+        "tt": 43077.61954208836,
+        "ut": 43077.61669461278
       },
       {
         "body": "venus",
         "date": "2125-12-08",
-        "finishUT": 45997.28313658551,
-        "separation": 12.273265499576281,
-        "startUT": 45997.05211704848,
-        "tt": 45997.17070322151,
-        "ut": 45997.16762490152
+        "finishUT": 45997.28313658552,
+        "separation": 12.273265499255565,
+        "startUT": 45997.05211704847,
+        "tt": 45997.170703256386,
+        "ut": 45997.167624936395
       }
     ]
   },
-  "releaseExecutableBytes": 154493328,
+  "releaseExecutableBytes": 154540880,
   "releaseObjectBytes": {
     "EngineTransitEvents.o": 56720
   },
   "resources": {
-    "checksum": 537515.4328593763,
-    "coldSeconds": 0.011873006820678711,
+    "checksum": 537515.4328593194,
+    "coldSeconds": 0.01149296760559082,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 0.6485110521316528,
-    "peakAfterColdBytes": 64634880,
-    "peakAfterWorkloadBytes": 65273856,
-    "peakBeforeBytes": 47235072
+    "nextSeconds": 0.6225320100784302,
+    "peakAfterColdBytes": 64552960,
+    "peakAfterWorkloadBytes": 65159168,
+    "peakBeforeBytes": 47120384
   },
-  "runtimeBaseRevision": "c745693e7720fffed033bf4463c11d54db642388",
+  "runtimeBaseRevision": "51847a48b20a6db5db05cb8848d1f4d0d2138575",
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

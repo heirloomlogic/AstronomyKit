@@ -185,7 +185,13 @@ TDB - TT series in
 Sources/AstronomyKit/Engine/Moon/Generated/TDBTerms.swift is generated from
 the dtdb.c above, and Sources/AstronomyKit/Engine/Moon/EngineTDB.swift and
 EngineFrameBias.swift port eraDtdb, eraFw2m, eraRx and eraRz. The ERFA
-license follows.
+license follows. The long-term precession pole coefficients in
+Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift and the
+pole/matrix construction in EnginePrecession.swift derive from eraLtpecl,
+eraLtpequ and eraLtp of that same release. The unmodified source files and
+published ERFA tests are archived in Scripts/orientation-data/long-term with
+SHA-256 hashes and their original 2013-2023 NumFOCUS notices. Analytic rates
+and rational derivative qualification are AstronomyKit additions.
 
 Copyright (C) 2013-2021, NumFOCUS Foundation.
 All rights reserved.

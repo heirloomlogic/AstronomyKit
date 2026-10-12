@@ -90,7 +90,7 @@ struct EngineCoordinatesTests {
         let time = Engine.Time(ut: reference.ut, tt: reference.tt, deltaTModel: .espenakMeeus)
         let v = Engine.Vector<Engine.EQJ>(x: 0.21, y: -0.95, z: 0.33, time: time)
         let rotation = Published.product(
-            Published.r1(reference.obl06 + reference.deps),
+            Published.r1(reference.meanObliquity + reference.deps),
             EngineFrameRotationTests.equatorOfDate(reference)
         )
         let e = (0..<3).map { rotation[$0][0] * v.x + rotation[$0][1] * v.y + rotation[$0][2] * v.z }

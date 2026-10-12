@@ -20,17 +20,13 @@ struct EngineFrameRotationTests {
         Engine.Time(ut: reference.ut, tt: reference.tt, deltaTModel: .espenakMeeus)
     }
 
-    /// N·P from the SOFA angles: precession by IERS (2010) equation 5.39 and
-    /// nutation R1(−εA − Δε)·R3(−Δψ)·R1(εA), as `eraNumat` builds it.
+    /// N·P combines the independently captured ERFA long-term precession
+    /// matrix with the existing nutation series and long-term obliquity.
     static func equatorOfDate(_ reference: Published.Reference) -> Matrix {
-        let precession = EnginePrecessionTests.equation539(
-            psia: reference.psia,
-            oma: reference.oma,
-            chia: reference.chia
-        )
+        let precession = PublishedLongTermPrecession.at(reference.tt).matrix
         let nutation = Published.product(
-            Published.r1(-(reference.obl06 + reference.deps)),
-            Published.product(Published.r3(-reference.dpsi), Published.r1(reference.obl06))
+            Published.r1(-(reference.meanObliquity + reference.deps)),
+            Published.product(Published.r3(-reference.dpsi), Published.r1(reference.meanObliquity))
         )
         return Published.product(nutation, precession)
     }
@@ -43,7 +39,7 @@ struct EngineFrameRotationTests {
         #expect(Published.maximumDifference(back, Published.r1(-Published.p06e.eps0)) <= 1e-16)
     }
 
-    @Test("J2000 to true equator of date is N·P on the SOFA angles", arguments: Published.references)
+    @Test("J2000 to true equator of date is N·P on the ERFA long-term model", arguments: Published.references)
     func equatorOfDate(reference: Published.Reference) {
         let time = Self.time(reference)
         let expected = Self.equatorOfDate(reference)
@@ -55,7 +51,7 @@ struct EngineFrameRotationTests {
     @Test("True equator to true ecliptic of date is R1(εA + Δε)", arguments: Published.references)
     func eclipticOfDate(reference: Published.Reference) {
         let time = Self.time(reference)
-        let tilt = Published.r1(reference.obl06 + reference.deps)
+        let tilt = Published.r1(reference.meanObliquity + reference.deps)
         #expect(Published.maximumDifference(Published.matrix(Rotations.eqdToEct(time)), tilt) <= 1e-15)
         let throughJ2000 = Published.product(tilt, Self.equatorOfDate(reference))
         #expect(Published.maximumDifference(Published.matrix(Rotations.eqjToEct(time)), throughJ2000) <= 2e-15)

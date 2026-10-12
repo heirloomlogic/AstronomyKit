@@ -1,19 +1,19 @@
 {
-  "baselineRevision": "c745693e7720fffed033bf4463c11d54db642388",
+  "baselineRevision": "51847a48b20a6db5db05cb8848d1f4d0d2138575",
   "buildReceipts": {
-    "debug": "Build complete! (10.78 sec)\n",
-    "release": "Build complete! (129.23 sec)\n"
+    "debug": "Build complete! (10.28 sec)\n",
+    "release": "Build complete! (115.46 sec)\n"
   },
   "debug": {
     "obscurations": [
       {
-        "nativePeakTT": 7992.877822405637,
-        "obscuration": 0.9914046327594503,
+        "nativePeakTT": 7992.8778224057405,
+        "obscuration": 0.9914046327595716,
         "sourceTimeSearchSeed": "2021-11-19T09:03Z"
       },
       {
         "nativePeakTT": 9735.676436438343,
-        "obscuration": 0.9625002357333211,
+        "obscuration": 0.9625002357333138,
         "sourceTimeSearchSeed": "2026-08-28T04:13Z"
       }
     ],
@@ -21,7 +21,7 @@
       {
         "kind": "partial",
         "nativePeakTT": -72949.81517748667,
-        "obscuration": 0.5245693584119314,
+        "obscuration": 0.5245693584119315,
         "partialDurationMinutes": 75.50986547372304,
         "peakResidualSeconds": 4.965545888990164,
         "penumbralDurationMinutes": 142.9989514918998,
@@ -30,54 +30,54 @@
       },
       {
         "kind": "total",
-        "nativePeakTT": 19.69759306311384,
+        "nativePeakTT": 19.697593063113736,
         "obscuration": 1,
-        "partialDurationMinutes": 101.66253219782931,
-        "peakResidualSeconds": 31.83762234441474,
-        "penumbralDurationMinutes": 159.0950078892243,
+        "partialDurationMinutes": 101.66253219782163,
+        "peakResidualSeconds": 31.83762235331642,
+        "penumbralDurationMinutes": 159.09500788921918,
         "sourceTime": "2000-01-21T04:44Z",
-        "totalDurationMinutes": 38.52581243013759
+        "totalDurationMinutes": 38.52581243012736
       },
       {
         "kind": "total",
-        "nativePeakTT": 374.3483648316754,
+        "nativePeakTT": 374.3483648316758,
         "obscuration": 1,
-        "partialDurationMinutes": 98.15980798171495,
-        "peakResidualSeconds": 4.579584599923692,
-        "penumbralDurationMinutes": 155.5175290688112,
-        "penumbralDurationResidualMinutes": 0.017529068811199977,
+        "partialDurationMinutes": 98.15980798445707,
+        "peakResidualSeconds": 4.579584634302591,
+        "penumbralDurationMinutes": 155.51752906877027,
+        "penumbralDurationResidualMinutes": 0.017529068770272715,
         "sourceTime": "2001-01-09T20:20:30Z",
-        "totalDurationMinutes": 30.557144451199747
+        "totalDurationMinutes": 30.557144452141074
       },
       {
         "kind": "partial",
-        "nativePeakTT": 551.1224485522262,
-        "obscuration": 0.45369706581736957,
-        "partialDurationMinutes": 79.63347470163171,
-        "peakResidualSeconds": 3.318204724928364,
-        "penumbralDurationMinutes": 162.52785028602375,
-        "penumbralDurationResidualMinutes": 0.022149713976261864,
+        "nativePeakTT": 551.1224485523882,
+        "obscuration": 0.453697065816224,
+        "partialDurationMinutes": 79.63347469843939,
+        "peakResidualSeconds": 3.3182187220518244,
+        "penumbralDurationMinutes": 162.52785028643302,
+        "penumbralDurationResidualMinutes": 0.02214971356698925,
         "sourceTime": "2001-07-05T14:55:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "penumbral",
-        "nativePeakTT": 728.9378039377822,
+        "nativePeakTT": 728.9378039379045,
         "obscuration": 0,
         "partialDurationMinutes": 0,
-        "peakResidualSeconds": 9.948296904622111,
-        "penumbralDurationMinutes": 121.72684584773378,
-        "penumbralDurationResidualMinutes": 0.023154152266215533,
+        "peakResidualSeconds": 9.948307473678142,
+        "penumbralDurationMinutes": 121.72684584617855,
+        "penumbralDurationResidualMinutes": 0.023154153821451473,
         "sourceTime": "2001-12-30T10:29:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "partial",
-        "nativePeakTT": 36253.854768014375,
-        "obscuration": 0.09711169798031205,
-        "partialDurationMinutes": 44.02533118205611,
-        "peakResidualSeconds": 30.960769881494343,
-        "penumbralDurationMinutes": 128.83077536418568,
+        "nativePeakTT": 36253.85476801417,
+        "obscuration": 0.09711169798079276,
+        "partialDurationMinutes": 44.025331192533486,
+        "peakResidualSeconds": 30.960752279497683,
+        "penumbralDurationMinutes": 128.83077534846961,
         "sourceTime": "2099-04-05T08:27Z",
         "totalDurationMinutes": 0
       }
@@ -87,12 +87,12 @@
     "obscurations": [
       {
         "nativePeakTT": 7992.8778224057405,
-        "obscuration": 0.9914046327595638,
+        "obscuration": 0.9914046327595716,
         "sourceTimeSearchSeed": "2021-11-19T09:03Z"
       },
       {
         "nativePeakTT": 9735.676436438343,
-        "obscuration": 0.9625002357333211,
+        "obscuration": 0.9625002357333138,
         "sourceTimeSearchSeed": "2026-08-28T04:13Z"
       }
     ],
@@ -100,7 +100,7 @@
       {
         "kind": "partial",
         "nativePeakTT": -72949.81517748667,
-        "obscuration": 0.5245693584119314,
+        "obscuration": 0.5245693584119315,
         "partialDurationMinutes": 75.50986547372304,
         "peakResidualSeconds": 4.965545888990164,
         "penumbralDurationMinutes": 142.9989514918998,
@@ -109,73 +109,73 @@
       },
       {
         "kind": "total",
-        "nativePeakTT": 19.69759306311384,
+        "nativePeakTT": 19.697593063113736,
         "obscuration": 1,
-        "partialDurationMinutes": 101.66253219782931,
-        "peakResidualSeconds": 31.83762234441474,
-        "penumbralDurationMinutes": 159.0950078892243,
+        "partialDurationMinutes": 101.66253219782163,
+        "peakResidualSeconds": 31.83762235331642,
+        "penumbralDurationMinutes": 159.09500788921918,
         "sourceTime": "2000-01-21T04:44Z",
-        "totalDurationMinutes": 38.52581243013759
+        "totalDurationMinutes": 38.52581243012736
       },
       {
         "kind": "total",
-        "nativePeakTT": 374.34836483179623,
+        "nativePeakTT": 374.3483648316758,
         "obscuration": 1,
-        "partialDurationMinutes": 98.15980798290184,
-        "peakResidualSeconds": 4.579595041286666,
-        "penumbralDurationMinutes": 155.51752906602815,
-        "penumbralDurationResidualMinutes": 0.01752906602814619,
+        "partialDurationMinutes": 98.15980798445707,
+        "peakResidualSeconds": 4.579584634302591,
+        "penumbralDurationMinutes": 155.51752906877027,
+        "penumbralDurationResidualMinutes": 0.017529068770272715,
         "sourceTime": "2001-01-09T20:20:30Z",
-        "totalDurationMinutes": 30.55714445132253
+        "totalDurationMinutes": 30.557144452141074
       },
       {
         "kind": "partial",
-        "nativePeakTT": 551.1224485521612,
-        "obscuration": 0.45369706581753205,
-        "partialDurationMinutes": 79.6334746987668,
-        "peakResidualSeconds": 3.3181991162564373,
-        "penumbralDurationMinutes": 162.52785028152175,
-        "penumbralDurationResidualMinutes": 0.022149718478260638,
+        "nativePeakTT": 551.1224485523882,
+        "obscuration": 0.453697065816224,
+        "partialDurationMinutes": 79.63347469843939,
+        "peakResidualSeconds": 3.3182187220518244,
+        "penumbralDurationMinutes": 162.52785028643302,
+        "penumbralDurationResidualMinutes": 0.02214971356698925,
         "sourceTime": "2001-07-05T14:55:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "penumbral",
-        "nativePeakTT": 728.9378039377822,
+        "nativePeakTT": 728.9378039379045,
         "obscuration": 0,
         "partialDurationMinutes": 0,
-        "peakResidualSeconds": 9.948296904622111,
-        "penumbralDurationMinutes": 121.72684584773378,
-        "penumbralDurationResidualMinutes": 0.023154152266215533,
+        "peakResidualSeconds": 9.948307473678142,
+        "penumbralDurationMinutes": 121.72684584617855,
+        "penumbralDurationResidualMinutes": 0.023154153821451473,
         "sourceTime": "2001-12-30T10:29:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "partial",
-        "nativePeakTT": 36253.854768014375,
-        "obscuration": 0.09711169798031205,
-        "partialDurationMinutes": 44.02533118205611,
-        "peakResidualSeconds": 30.960769881494343,
-        "penumbralDurationMinutes": 128.83077536418568,
+        "nativePeakTT": 36253.85476801417,
+        "obscuration": 0.09711169798079276,
+        "partialDurationMinutes": 44.025331192533486,
+        "peakResidualSeconds": 30.960752279497683,
+        "penumbralDurationMinutes": 128.83077534846961,
         "sourceTime": "2099-04-05T08:27Z",
         "totalDurationMinutes": 0
       }
     ]
   },
-  "releaseExecutableBytes": 154493328,
+  "releaseExecutableBytes": 154540880,
   "releaseObjectBytes": {
     "EngineEclipseEvents.o": 111104,
     "EngineShadowGeometry.o": 30672
   },
   "resources": {
     "checksum": -2855994.8865393293,
-    "coldSeconds": 0.04006695747375488,
+    "coldSeconds": 0.03678297996520996,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 0.6715430021286011,
-    "peakAfterColdBytes": 164888576,
-    "peakAfterWorkloadBytes": 164888576,
-    "peakBeforeBytes": 49872896,
+    "nextEclipsesSeconds": 0.6650580167770386,
+    "peakAfterColdBytes": 164315136,
+    "peakAfterWorkloadBytes": 164315136,
+    "peakBeforeBytes": 49315840,
     "totalEclipseCount": 100
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
