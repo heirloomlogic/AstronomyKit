@@ -112,6 +112,7 @@ jobs:
         run: |
           python3 -m venv .build/numerics-venv
           .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
+          .build/numerics-venv/bin/python Scripts/generate-apparent-place-fixtures.py --check
           .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
           python3 Scripts/solar-numerics/numerics.py --check
           .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check

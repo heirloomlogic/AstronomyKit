@@ -1,0 +1,38 @@
+{
+  "source": "ERFA v2.0.1",
+  "commit": "9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3",
+  "files": {
+    "ab.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/ab.c",
+      "sha256": "ff4bac5fc8a2ccb5d1f63404c96734fd125069382c7f7a29add598721a122527"
+    },
+    "ld.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/ld.c",
+      "sha256": "affa41a6028f8f2ec23978c6b707771ab654438c2bdb9fcd4a1c4b1a42dad06a"
+    },
+    "pdp.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/pdp.c",
+      "sha256": "7c156c25e55eccbe06506e15accc7d28c45175a20295cbfd95908c9ed3a705c8"
+    },
+    "pxp.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/pxp.c",
+      "sha256": "b1e8e96ea633bcefa1d71b0e09fb6d9fe8ca8ad43e1546ee603396323bd68b12"
+    },
+    "erfa.h": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/erfa.h",
+      "sha256": "9549553b95ca2fbbcdcabcc69d82fb3cdd376c28b03c2793200138ff55727088"
+    },
+    "erfam.h": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/erfam.h",
+      "sha256": "0da6313033aacf9c64533a7e74be49ecda97b4aaa87e134f98287e4ff279886f"
+    },
+    "t_erfa_c.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/t_erfa_c.c",
+      "sha256": "8a92d0099c48df31ca566bea881c19497dc295dba58dba7136cc2f8443c31f15"
+    },
+    "dtdb.c": {
+      "url": "https://raw.githubusercontent.com/liberfa/erfa/9915ba38c9365f8b0738269b8c2ac1fdd5f8dee3/src/dtdb.c",
+      "sha256": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105"
+    }
+  }
+}

@@ -193,6 +193,8 @@ published ERFA tests are archived in Scripts/orientation-data/long-term with
 SHA-256 hashes and their original 2013-2023 NumFOCUS notices. Analytic rates
 and rational derivative qualification are AstronomyKit additions.
 
+The apparent-place kernels in EngineApparentPlace.swift derive from ERFA eraAb and eraLd. Eight unmodified ERFA v2.0.1 files, including their published tests and original notices, are archived in Scripts/apparent-place-data. Analytic rates, validation and the TT light-time solver are AstronomyKit additions.
+
 Copyright (C) 2013-2021, NumFOCUS Foundation.
 All rights reserved.
 
