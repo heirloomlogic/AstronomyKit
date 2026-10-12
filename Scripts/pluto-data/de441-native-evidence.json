@@ -395,17 +395,17 @@
   "centerExtensionBase": "128ac0a4728206f887027f5674371030faad4b5c",
   "centerNativeRelease": {
     "checksum": 44301.65643972756,
-    "coldSeconds": 0.021507978439331055,
+    "coldSeconds": 0.020163893699645996,
     "coldTT": -72000,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 119980032,
-    "peakBytesAfterLoops": 150863872,
-    "peakBytesBefore": 46858240,
+    "peakBytesAfterCold": 120553472,
+    "peakBytesAfterLoops": 151437312,
+    "peakBytesBefore": 47366144,
     "seconds": {
-      "central": 0.037342071533203125,
-      "engineRange": 0.036720991134643555,
-      "outer": 0.04606497287750244
+      "central": 0.037225961685180664,
+      "engineRange": 0.03738594055175781,
+      "outer": 0.04535496234893799
     }
   },
   "directSourceDebug": {
@@ -460,17 +460,17 @@
   },
   "nativeRelease": {
     "checksum": 44287.76723921855,
-    "coldSeconds": 0.007647991180419922,
+    "coldSeconds": 0.008149027824401855,
     "coldTT": -766524.75,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 78462976,
-    "peakBytesAfterLoops": 151437312,
-    "peakBytesBefore": 47349760,
+    "peakBytesAfterCold": 78331904,
+    "peakBytesAfterLoops": 151273472,
+    "peakBytesBefore": 47251456,
     "seconds": {
-      "central": 0.03712201118469238,
-      "engineRange": 0.03681802749633789,
-      "outer": 0.05689704418182373
+      "central": 0.037351012229919434,
+      "engineRange": 0.03692901134490967,
+      "outer": 0.05818009376525879
     }
   },
   "nativeStorage": {
@@ -505,7 +505,7 @@
         "releaseObjectBytes": 23569456
       }
     },
-    "testExecutableBytes": 154461952
+    "testExecutableBytes": 154493328
   },
   "rangeExtensionBase": "686ffb3b9d69c62ac2c9cc4d0493049f2851d8bd",
   "schemaVersion": 1,
@@ -519,6 +519,7 @@
     "Scripts/pluto-data/plu060-qualification.json": "0685d7edc61e572f23d039957c6a5b644b74809204816884df76015dd1e441fe",
     "Scripts/qualify-pluto-center.py": "4478cb59a138dbb9e574adcd3cb70c3f476dc09f12bd341e873c11405ce1ccb9",
     "Scripts/test_generate_pluto_de441.py": "4c21ac1348aa67302201e11af1d17fc5294b895f45e64f17f59d03f4233f09ef",
+    "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "24d3b6936ca45ffab9c2c2591a5de95ab21661f70c1cec97bf9b3b826892156f",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
     "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
@@ -534,7 +535,8 @@
     "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift": "5c77325fb41d76fd9c6e23f08f2ba580924166e0fa2681913a815c1f32b6ad8e",
     "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "27c44179436b2eb9a495b88d09d9520c9092cfede17db0e84764634428f5d583",
     "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "363120568a16d3e70dd05d30531bc40b43190bd8be3a4eae3bdd32dd61a33859",
-    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoCenterQualificationTests.swift": "31439020eb0a17c508e7b4f2b7ff66a686bf184c451f2e25b333793b01e6827b",
+    "Tests/AstronomyKitTests/Engine/Foundation/EngineChebyshevTests.swift": "837d993fe2c497f7832c6e0c633c7f73a26732963144849241f11b7472d2c2ac",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoCenterQualificationTests.swift": "ef72fa0c2919f58c5cbd327c857904c1da5d4823e027505a92fab741ea530ef0",
     "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoDE441Tests.swift": "24e5e7d41809f04000f861a33196626077e5f1043f0d1a3143463101dd6bb91d",
     "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoEphemerisTests.swift": "a1c0dd285bc00d7a5e1f5436ca98c8374124adf03425f621f245e88d43e59918",
     "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoHorizonsTests.swift": "0875a4d9f75aa6db1ee385e7c3fc4abeb0778fb2357fabdbdf4c1cde82e8418c",
