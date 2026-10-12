@@ -72,10 +72,13 @@ extension Engine.ApparentPlace {
     static func observerBeta(_ kinematics: Kinematics, atTT tt: Double) throws -> VectorRate {
         guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
         let rate = Engine.TDB.rate(tt: tt)
+        guard let beta = subluminalBeta(velocityTT: kinematics.motion.rate, tdbRate: rate) else {
+            throw AstronomyError.badVector
+        }
         let velocity = kinematics.motion.rate / rate
         let acceleration = (kinematics.acceleration - velocity * tdbAcceleration(tt: tt)) / rate
-        let result = VectorRate(velocity / Engine.speedOfLightAUPerDay, acceleration / Engine.speedOfLightAUPerDay)
-        guard result.isFinite, norm(result.value) < 1 else { throw AstronomyError.badVector }
+        let result = VectorRate(beta, acceleration / Engine.speedOfLightAUPerDay)
+        guard result.isFinite else { throw AstronomyError.badVector }
         return result
     }
 

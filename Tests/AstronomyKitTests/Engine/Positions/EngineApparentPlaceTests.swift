@@ -284,5 +284,62 @@ struct EngineApparentPlaceTests {
         }
     }
 
+    @Test("Subluminal admission uses TDB velocity at each corresponding epoch")
+    func tdbSpeedDomain() throws {
+        let c = Engine.speedOfLightAUPerDay
+        let rejectedTT = 180.0
+        let rejectedSpeed = c * (1 - 1e-10)
+        #expect(rejectedSpeed / Engine.TDB.rate(tt: rejectedTT) > c)
+        for sign in [-1.0, 1] {
+            let observer = VectorRate(.zero, SIMD3(sign * rejectedSpeed, 0, 0))
+            #expect(throws: AstronomyError.badVector) {
+                try Model.observerBeta(.init(motion: observer, acceleration: .zero), atTT: rejectedTT)
+            }
+            #expect(throws: AstronomyError.badTime) {
+                try Model.retardedState(atTT: rejectedTT, observer: observer) { _ in VectorRate(SIMD3(10, 0, 0)) }
+            }
+            #expect(throws: AstronomyError.badTime) {
+                try Model.retardedState(atTT: rejectedTT, observer: VectorRate(.zero)) { tt in
+                    VectorRate(
+                        SIMD3(10 + sign * rejectedSpeed * (tt - rejectedTT), 0, 0), SIMD3(sign * rejectedSpeed, 0, 0))
+                }
+            }
+        }
+        let acceptedTT = 0.0
+        let acceptedSpeed = c * (1 + 1e-10)
+        #expect(acceptedSpeed > c)
+        #expect(acceptedSpeed / Engine.TDB.rate(tt: acceptedTT) < c)
+        for sign in [-1.0, 1] {
+            let observer = VectorRate(.zero, SIMD3(sign * acceptedSpeed, 0, 0))
+            let beta = try Model.observerBeta(.init(motion: observer, acceleration: .zero), atTT: acceptedTT)
+            #expect(Model.norm(beta.value) < 1)
+            let result = try Model.retardedState(atTT: acceptedTT, observer: observer) { _ in
+                VectorRate(SIMD3(10, 0, 0))
+            }
+            #expect(result.emissionRate > 0)
+        }
+        // A near-c transverse source is admitted, but its fixed-point iteration does not converge within 20 steps.
+        #expect(throws: AstronomyError.noConvergence) {
+            try Model.retardedState(atTT: acceptedTT, observer: VectorRate(.zero)) { tt in
+                VectorRate(SIMD3(10, acceptedSpeed * tt, 0), SIMD3(0, acceptedSpeed, 0))
+            }
+        }
+    }
+
+    @Test("Target speed is validated at the retarded epoch and rejects nonfinite and luminal values")
+    func emittedSpeedDomain() {
+        let c = Engine.speedOfLightAUPerDay
+        for tt in [0.0, 180] {
+            for factor in [1.0, 1.000000001, Double.infinity, Double.nan] {
+                #expect(throws: AstronomyError.badTime) {
+                    try Model.retardedState(atTT: tt, observer: VectorRate(.zero)) { emission in
+                        let speed = emission == tt ? 0 : c * Engine.TDB.rate(tt: emission) * factor
+                        return VectorRate(SIMD3(10, 0, 0), SIMD3(speed, 0, 0))
+                    }
+                }
+            }
+        }
+    }
+
     func maximum(_ v: SIMD3<Double>) -> Double { max(abs(v.x), abs(v.y), abs(v.z)) }
 }

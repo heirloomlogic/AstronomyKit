@@ -117,27 +117,31 @@ extension Engine.ApparentPlace {
 
     /// Solves barycentric geometric light time in elapsed TDB, parameterized by TT, holding the observer at reception.
     ///
-    /// The target evaluator must return position in AU and its derivative per TT day, on the same fixed axes and origin as the observer. It owns source-coverage checks at every requested emission epoch. This solver admits a delay of at most one day, subluminal velocities and a supported reception TT. It returns the derivative of the implicit TDB light-time equation with respect to reception TT, independent of iteration count. The emitted TT must repeat after an iteration, or the TT delay must change by at most four ULP. It does not add Shapiro delay.
+    /// The target evaluator must return position in AU and its derivative per TT day, on the same fixed axes and origin as the observer. It owns source-coverage checks at every requested emission epoch. This solver admits a delay of at most one day, velocities strictly subluminal per TDB day at their respective reception/emission epochs, and a supported reception TT. It returns the derivative of the implicit TDB light-time equation with respect to reception TT, independent of iteration count. The emitted TT must repeat after an iteration, or the TT delay must change by at most four ULP. It does not add Shapiro delay.
     static func retardedState(
         atTT tt: Double, observer: VectorRate, target: (Double) throws -> VectorRate
     ) throws -> RetardedState {
         guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays, observer.isFinite,
-            norm(observer.value).isFinite,
-            norm(observer.rate) < Engine.speedOfLightAUPerDay
+            norm(observer.value).isFinite
         else { throw AstronomyError.badTime }
         let c = Engine.speedOfLightAUPerDay
         let observedClock = Engine.TDB.offsetAndRate(tt: tt)
+        guard let observerBeta = subluminalBeta(velocityTT: observer.rate, tdbRate: observedClock.rate) else {
+            throw AstronomyError.badTime
+        }
         var delay = 0.0
         for iteration in 1...20 {
             let emission = tt - delay
             let source = try target(emission)
-            guard source.isFinite, norm(source.rate) < c else {
+            let emittedClock = Engine.TDB.offsetAndRate(tt: emission)
+            guard source.isFinite,
+                let sourceBeta = subluminalBeta(velocityTT: source.rate, tdbRate: emittedClock.rate)
+            else {
                 throw AstronomyError.badTime
             }
             let p = source.value - observer.value
             let distance = norm(p)
             guard distance.isFinite, distance > 0 else { throw AstronomyError.badVector }
-            let emittedClock = Engine.TDB.offsetAndRate(tt: emission)
             let lightTime = distance / c
             let nextDelay =
                 lightTime - (observedClock.offsetSeconds - emittedClock.offsetSeconds) / Engine.secondsPerDay
@@ -145,10 +149,12 @@ extension Engine.ApparentPlace {
             if abs(nextDelay - delay) <= 4 * nextDelay.ulp || tt - nextDelay == emission {
                 let n = p / distance
                 let emissionRate =
-                    (observedClock.rate + (n * observer.rate).sum() / c)
-                    / (emittedClock.rate + (n * source.rate).sum() / c)
+                    (observedClock.rate / emittedClock.rate)
+                    * ((1 + (n * observerBeta).sum()) / (1 + (n * sourceBeta).sum()))
                 let displacement = VectorRate(p, source.rate * emissionRate - observer.rate)
-                guard displacement.isFinite, emissionRate.isFinite else { throw AstronomyError.badTime }
+                guard displacement.isFinite, emissionRate.isFinite, emissionRate > 0 else {
+                    throw AstronomyError.badTime
+                }
                 return RetardedState(
                     emissionTT: emission, emissionRate: emissionRate, lightTimeDays: lightTime,
                     displacement: displacement, iterations: iteration)
@@ -159,6 +165,14 @@ extension Engine.ApparentPlace {
     }
 
     static func norm(_ p: SIMD3<Double>) -> Double { hypot(hypot(p.x, p.y), p.z) }
+
+    /// Converts a per-TT velocity to a strictly subluminal TDB velocity/c at that velocity's epoch.
+    static func subluminalBeta(velocityTT: SIMD3<Double>, tdbRate: Double) -> SIMD3<Double>? {
+        guard tdbRate.isFinite, tdbRate > 0 else { return nil }
+        let beta = velocityTT / tdbRate / Engine.speedOfLightAUPerDay
+        guard norm(beta) < 1 else { return nil }
+        return beta
+    }
 
     private static func checkDirection(_ p: VectorRate) throws {
         guard p.isFinite, abs((p.value * p.value).sum() - 1) <= 1e-6 else { throw AstronomyError.badVector }
