@@ -1,0 +1,170 @@
+{
+  "clockEnclosure": {
+    "accelerationPerDay": "2784202230121525195271314058206202868653019849602683690517316400044229409687026109/314379565683001662858259766894334006464555507935527792612108448261629542400000000000000000000",
+    "offsetDays": "192225517454723149813707314640083755525336087/7435912750978603039090141214342224281600000000000000",
+    "rateDeparture": "34289137106363393167278867066238159287247869907537522591205923/76447678530962392486854447741467242600595860918779248640000000000000000"
+  },
+  "limitations": "Sampled arithmetic comparison against exact original binary64 component coefficients. It does not establish physical accuracy or replace the exhaustive coefficient-subtraction enclosure.",
+  "measurements": {
+    "maxAxisPositionDifferenceKm": 3.160748740412675e-11,
+    "maxAxisRateDifferenceKmPerTDBDay": 6.811792755202924e-12,
+    "maxCoefficientDifferenceKm": 2.637534635141492e-11
+  },
+  "precisionDecimalDigits": 80,
+  "rows": [
+    {
+      "byteOffsetInRanges": 0,
+      "derivedSHA256": "22ea6ad4d665d8fc07a9399ba00a7078e6dde7be272cd3a54bf6661c94b53bef",
+      "earthRecordBase64": "AADAEeljPcIAAAAAABgFQXCcI3AKT6tA+9JC3FpKk8AXYXfS9qBlwIsdwjLU2iZAlfMEr3iT2j+JpW4ZG6iZv66oH3ldZFg/n/kLUJcxE79JKNmQouDRvtBdlsf0f6E+uzIhmIkeYL7ZFtP3TiMJPprbJeMmut49mfUNb8W1pkD2Ot4O6PeWQG46vbGBz2HAdfHI8FujJMBV3JjGDwrkP7Q9zK50zWK/3nTWVoYdJr/8gOtuA48cPxpjUiH0VuC+wNYfqo9BfT6eLDhOJpxQPm/o7jteXyS+cfc6rD1G5T3RRDsCVHeKQARwyINpTYJAXcH53Z61RMCW/xaEl/wQwCE2gEXglck/T/Ch6cYdPj/2UU2iItohvylPEuDkPgY/BCIuPYBNxb7mpImPuA9JPpAMRQ7mNj4+hOQsq5YwDr67OdEHmf3KPQ==",
+      "midpointSecondsTDB": -126230270400.0,
+      "moonRecordBase64": "AADAEeljPcIAAAAAABgFQYumuSxvWBHBil/TPkyB+EDKSH1TuXnLQBk3PNtuCI3AcGZLL0zhQMCMMQJ6zUsAQB+SmrtZ/L6/Ey2A+9ZheD+M2I4czLU2P44e1+37Oga/UxjqXQd6xD4xCNvw6O5vvmVXKz1FhEO+CTTenVvZDMEuzlzzXi39wE2XX+oJoMZAX1jXZpA3ikCSgECz03RJwIN6mcOi4sc/H+WEuPQXjD/gHNcWqyOCv6zlageywUQ/HWwwKROV4r44jIO5mBm1vma1io8x4Yk++S4h7HkGS774pfUObM/wwDFmp6/6P+fA9rKSD8NOqkB/o9z0G5R1QB7Vfko5QDDA0hKYgPIgo7/l1SViiq2GP8tGqnxYQmy/YecV5rIPKz/ndC4IB9avvvrhxU/nMKO+Dy3/R+Uscz4u0V5ztCQxvg==",
+      "orderedRanges": [
+        "789807392-792494367",
+        "335490624-338177599"
+      ],
+      "rangeHashes": {
+        "335490624-338177599": "28fbcd6541cf81900c47c69003402334f564ef952f1c58e2a9bdc781d16fe9ce",
+        "789807392-792494367": "24ab5c1f994d00a04639991f74a0e194f57c19b8e3517341bb4b423f8aecca41"
+      },
+      "sourceRecordIndex": 1022640
+    },
+    {
+      "byteOffsetInRanges": 1343488,
+      "derivedSHA256": "3e7eeac8bf82b0a2cc5c4d4a4f5ecce3d85221f0f8e554ee3eb84eb08eff7b99",
+      "earthRecordBase64": "AADAEYkPPcIAAAAAABgFQX88SnutsYBApAVRzg5CoUC+jXnEsoBCwAinN5S0CjjAUj0THkj70z8ur+BcoEHAP9U3HbC+gWm/khU5mwq9SL9wfDs/dAEDP79xtnn1ZtY+Pf4uOegsm76A0lj8hwRlvn1LHAo5xzI+XERt+Cm0q8Au2bIvEEVuQG1JcX/trW1ADH6RGxLrB8D5W90Yfcv4v6rZoF0cqJo/B9UNtY30gD9GJ4OxAVozv966rCWoxwy/Xh0h2YFbzD5jOCnAqM+aPke69lyu5GO+gUL5rEbYKL6EfoeUJreewGQPKmTvq19Asj+Xz9F/YEBUUGye6mH5v76yJffQneu/Qz7EI43NjD8VdJhRTeVyP+NwMlXJKyW/edoa1hEOAL8oOCfsyTO/PtLIpj0K+Y0+sa6Vx2H1Vb4GNBILA9wbvg==",
+      "midpointSecondsTDB": -124814692800.0,
+      "moonRecordBase64": "AADAEYkPPcIAAAAAABgFQSRrfrDxNOXAXhwsc1rsBcEHXXkOIYGnQJ+BQC50ip5AtwH6PA1iOcAxpalemqYkwF9t9O9vM9A/Lbm3d/9srz/ZPoi6sCRov/14Wao9dTy/V+AWAcFCAT/a3ET5ALPKPpy7xMi32pe+k63o6qmYEUFv+Ll85jnTwDZ4zq7n2dLACar7hERibkDeAFS9WX9fQHjMACxo7gDAK9fI4OWJ5b92TQc2LpWYP8S5ZV+lR3I/8Ra3H/QCMr+kGH7IhgcBvw+yg3hXRck+A2iDPJiPjz7zoY89XYIDQQ+GDnfXHcTAG5jFuZv1xMBtjaiaOB9gQLCc/ih4ilFA3d5M02NL8r/dIBSd7QDYv/MBx9/e5Io/YULc/xtlZD9oRK2Hh9Ejv6t0RQadCfO+C078L/bkuz5eofE8+bGBPg==",
+      "orderedRanges": [
+        "789807392-792494367",
+        "335490624-338177599"
+      ],
+      "rangeHashes": {
+        "335490624-338177599": "28fbcd6541cf81900c47c69003402334f564ef952f1c58e2a9bdc781d16fe9ce",
+        "789807392-792494367": "24ab5c1f994d00a04639991f74a0e194f57c19b8e3517341bb4b423f8aecca41"
+      },
+      "sourceRecordIndex": 1026736
+    },
+    {
+      "byteOffsetInRanges": 2686648,
+      "derivedSHA256": "997187f5ea673f01b8bf6e5baadbce89f80e91cd575eb80267001a64f30a28ac",
+      "earthRecordBase64": "AADAVy67PMIAAAAAABgFQVLefoa9oJfAK8z3+FamncCTMlFgvwFSQB0YuzaKmixA/HVIRfLU1b8KOqrKBpyCv4QgXb54Dy8/uGb50rE2HL/xrv2aIi/QPu6RCXvoOng+xmu7tyToRr5xY94hGHwZPqktn0wdo9C9luZCSVJcsEB/WiycHoaAwPfmPzw6KmnA9MI+N0mSFEBT92epGP3iPwroiiBUQYu/HNI4LlElTz+ifAZY7fr6vm8CxU8W69W+NTRGOz/lkD5YrPb17JVIvuhO6NNwptY9VtmUBeAi1z2u8Pc/G/WVQPUhiBEhw3HAxJW3nw/lUMAykKYd8ncEQLHdum5dn8g/5WWBbC9Rdb8FLpozxOw2Pzl/p6Iqqu6+R0Oh0Eu8u76GKp+XOjl5Pv2ssiw4zDO+v8TLdovm3D1q8jFquWi9PQ==",
+      "midpointSecondsTDB": -123399460800.0,
+      "moonRecordBase64": "AADAVy67PMIAAAAAABgFQV2owxrYA/5AMpH83RXVAkHFPZNi3N+2wHzVGk/9KpLAtyP9D8K7O0CsSnBB2KPnP1/i01N2upO/wCOyWpLrgT9otAH6HI80vzwMUNKvx96+NDCAxVgZrT4B4Fwk2S+AvrULI7NxIjU+45YTpoPIFMEIoLh/nP3kQJqvAAWz989Apao2LeAhesDMoquTJx9IwK4BLpC5T/E/fTpubFbIs7+BVyMzAiNhP230ykvi1zs/X3OUJ3R29b6PO23rTjuvPggCEBvixTy+xzaRcPRjPb5z4oyXnOT7wKXZDr5QkNZA3i13rTd2tUDwMcZFagBqwEO0h51MRy/AHnryC2EU2z9p+yQtOB+dvxTtWgAeelM/wpIyOdSdIT8juebAYAXgvuyJkXpEJpk+BbYbykNbQr7K6JMf860ivg==",
+      "orderedRanges": [
+        "789807392-792494367",
+        "335490624-338177599"
+      ],
+      "rangeHashes": {
+        "335490624-338177599": "28fbcd6541cf81900c47c69003402334f564ef952f1c58e2a9bdc781d16fe9ce",
+        "789807392-792494367": "24ab5c1f994d00a04639991f74a0e194f57c19b8e3517341bb4b423f8aecca41"
+      },
+      "sourceRecordIndex": 1030831
+    },
+    {
+      "byteOffsetInRanges": 0,
+      "derivedSHA256": "90d0659c644426c86ea320e8cf71215101bad6a69b041fd70e074587254dd476",
+      "earthRecordBase64": "AAAA4NCbzMEAAAAAABgFQZXvRk4tL7DA9fugL6KBgcDAMGRWxgpwQHSYz2b7GQBA/AQDcN7r97/gAAFTCD6nP7rHpSctUHM/EjzxB9PVQr8thZf+kUrHPibs9lBG/NA+1KutISvXkb6vwG0lTZpQvlL95vWs8io+lvmgSog9h0D+89QZbbucwDkf2WLLCUfA2u7ref4vM0DlUIis4fDEv2PWLzxFOLS/lI3eSKZ8dD//B4LLpxslP74GeBWpege/0C6UsioeuT5z9YOu4r6QPgP1CFsmRF2+rhktoqU49r0Vz+rXf7R1QIJqnO9Tg4/AZWCF6AK6NcCDRuYD+vYkQEotZyehoLu/WzB14Ee+pb805EuXeMxmP+I6pW02ERU/00BPoDqI+b65DN5ZvRmtPnYGCWfqxoE++Ekz8i4mUL5g2UODlKTivQ==",
+      "midpointSecondsTDB": -959947200.0,
+      "moonRecordBase64": "AAAA4NCbzMEAAAAAABgFQc3Ix5EqjxRBpQ/IaR095kBIbBt87GDUwOvfae09dGTAx16EFUhjXkCSqR4ZdIYNwCI4+mWxiNi/WzccPETtpz/RcC9pYZYtv9U+iM60kzW/UrU6ksWp9j5BfwWpPxe1PhvINn/EHZG+r/qWdNGF7cBpj7en4D8CQUVwQCsYRK1AAzD3oM9fmMBrQ3LcCpoqQKmQUOqGrxlANmA29GMG2r91564IYdCKv6iMbXN4020/1zyz2mDoH79xhnPmuEX1vsoVghO4lsI+oJOa72g6XD4fAfs6ipLbwCqdNq4MBPRASst6vIqZm0Bm6/n+yKGKwHmGdphBjCFAHy9SKPeeC0BuWWWnMfbMvxayxf8cw3q/P4jNQ443YD8MaToiyHsSv0pmrRsglea+3WAu1b2DtD4PJrfnta5HPg==",
+      "orderedRanges": [
+        "2107004704-2109691679",
+        "1651118784-1653805759"
+      ],
+      "rangeHashes": {
+        "1651118784-1653805759": "beab0706ba30de102070c9ff35be3daf5c589ba694164583c346b4e6eba6c943",
+        "2107004704-2109691679": "ec6e444e4be721126b8d920f056518ad305d45ba7e696d147b1fc85a839c3032"
+      },
+      "sourceRecordIndex": 0
+    },
+    {
+      "byteOffsetInRanges": 1343488,
+      "derivedSHA256": "ae9badc96e4efb85ef26d280318716973fb91fb9fe33f6d846991a28260375a0",
+      "earthRecordBase64": "AAAAQF4ou0EAAAAAABgFQZky7hpuLqtA1yjAXUC4lcDNhYaDorNowL9yN1dNJCRAQaNpLqfY8j8s85wghOiEP8XvtKKYc2+/GI+ZrK6INr/J+7tygmKcPqB8x2ea7ME+4hwsJUU9gj6w43+4yjg1viRzaRpM7BW+5OZcjccjo0CyDYlkN9qXQJJF4lBgYGHA7Vg+csAkMMASfIZmHdvTP+bqSGYuTrE/Qt8UzgFfaD9qfxgogc4iv96zUXM6Wf2+TID5tY14rb6N2eIsJNp/PovIsf2xq00+XVNC2nAN4T2noL+SOdiOQJIkhFex4nxAP9hOrXvlS8Cr/RF+cEoUwJMDZ1hB08M/gTm9oYsAmD/VBOo5tQBMP70b7jBUmRC/3dXSmsb6477imWaKYCqMvuyrpjLCyWg+jtnmazBZMz5RooWGENqovQ==",
+      "midpointSecondsTDB": 455630400.0,
+      "moonRecordBase64": "AAAAQF4ou0EAAAAAABgFQTAmUaS4QxHB1oMsZ06X+0BAhopqDGHPQBPVoSoplonAQetsI9zwV8B2MqNoao/qv9Egl7IO+tM/yOE2mhSgnD/A+YO2ZgcCv4i4JiwAxSa/iimtP3kr576bOUpEZPWaPt5Mt9Rr2Xs+QKonbktQCMFA/d1x20z+wCbt3w/eEsZA91+aQuyBlECCXEuAMDk5wD6r3wLB+xXA2VkCRov1zr+9XOXP9+OHPy0sqnYbpGI/H8qD+wC4Ej/+CMqkMDvkvhuRJa982LK+EDu6R4OpRb5VlUAkX5fzwCUghXHRWOLA+SQlRf23sUD8bMeBm8Z5QKRzYYs0LynAXzNRJIx9/r9HwMUNSMmxv5wXRGgDFnU/0dUmt2hhST8GhDeDv+PxPphteh0nfc++qWFTXiSUmL7v7U7a3ZEPPg==",
+      "orderedRanges": [
+        "2107004704-2109691679",
+        "1651118784-1653805759"
+      ],
+      "rangeHashes": {
+        "1651118784-1653805759": "beab0706ba30de102070c9ff35be3daf5c589ba694164583c346b4e6eba6c943",
+        "2107004704-2109691679": "ec6e444e4be721126b8d920f056518ad305d45ba7e696d147b1fc85a839c3032"
+      },
+      "sourceRecordIndex": 4096
+    },
+    {
+      "byteOffsetInRanges": 2686648,
+      "derivedSHA256": "3ec13e2f0980118e375b7a96c8bae9a0c4fa2a85f60ea3bd5877d79f0785a84f",
+      "earthRecordBase64": "AAAAEMbg20EAAAAAABgFQa7gccOkf6HAhg/or/I3m0BxnFm/Z2FgQPR4RC1ahzLAiVXuuKJT0b8em4aQbvK0Py11SAx4GGy/Y1Y3DkqILr/170NB1vwCP9HUue9iw6K+J5xEAgyXjL6+EDmtZjVSPjmF+3RfFwI+RrQUJtleqsCZcn6DHFuQwK7QV2jitWhAwoodguXzHEBtqxkHV+Hyv8pJLSa4XI8/jFpR1p3xcD9/fCcvqJc3v8rZ+JQlktK+sjYUNMMMxj44p7ym68eAvj51tDJKvEe+9Jd3kxSXGz6z+0HwDS6XwHuis/ccyYTAO6TNopKtVUBQeRtLhp4UQDRgot+87eG/fkm1QZ3tQz8JVxc+LiFjPwvvZKYwvSS/cqlA/MIM1r5kZVlqt5m2PjCFU+zIgWe+3ROPaxKkPb4aSlCEpMEJPg==",
+      "midpointSecondsTDB": 1870862400.0,
+      "moonRecordBase64": "AAAAEMbg20EAAAAAABgFQbdoZUiWOgZB4h9PQ8RJAcFggT7s+M7EwGutEO+UiZdAxNw7yq4CNkBI0ysKA5wawDKbgJ9f2NE/KZQEhZlkkz+OOgc40x5ov6ibnjLY1Qc/0tNdWMUo8j4Hruw5eiG3vpoFnPxU+2a+BVdomN+/EEG2llgj+sb0QIgUhfznY8/ApHX7y75jgsCVTFcj5ftXQGslPeOG6/O/7lTuwiqG1b8bPIcsTvidPwDtrlhLlzc/iU9pmakCLL/VXW0dM1HlPmEx9EPXJq4+ho1S5TCGgb5IYWL+J3L9QJ9bmBeGZ+pADP/gr72Ju8D1cioxbDF6wPaWEClxxkZA+DZ9j7BQqb8jYvFF/kzIv+XD+KpgWIo/bHJ+UqkCPD/ztSoluLUcvwb+G1CF3M0+y42CH6XToj4vPYbJBVxwvg==",
+      "orderedRanges": [
+        "2107004704-2109691679",
+        "1651118784-1653805759"
+      ],
+      "rangeHashes": {
+        "1651118784-1653805759": "beab0706ba30de102070c9ff35be3daf5c589ba694164583c346b4e6eba6c943",
+        "2107004704-2109691679": "ec6e444e4be721126b8d920f056518ad305d45ba7e696d147b1fc85a839c3032"
+      },
+      "sourceRecordIndex": 8191
+    },
+    {
+      "byteOffsetInRanges": 0,
+      "derivedSHA256": "fb54d6691abc234dfd11d583ce140244c459333f570438a1259254828ad4ce6a",
+      "earthRecordBase64": "AABAXsjHPEIAAAAAABgFQfknTcGJJLHAxJFrHpfGc8Bjtz4KcFJuQP56fpS7mtG/gFDlCrGv8L8PpDObOwGgP6HKzQs2jzE/NYSDbJsbH79F7G9KISzsPq+xK6GmzqG+IjAtxcEbYb5333lsfP02PtMN2KV86/W9D6SJQcuKgECkrNJ6DmmdwKmSHnFLfz/A3Es8r8YfMUAMGc9Y0SjIvzBg7fI2/KK/a0SIuOUoYj/T/x7BIc4bv7caJIqK9La+16RuPnJQrD6QvkqPxdpwvnTNeymf3A4+Fqqh6eG78D28zKxvU0ZpwAVyY+I9JYrA4ho6h4WAJEBkZiT90EAdQCcFcGWKc8e/YQBRIKZWir9TUtnTJgVQP4SBUOpc5A2/NkTS27o8qD4EyH2eHsyUPiF46mZUHmC+LLwBResqDz7TCf3b3SPUPQ==",
+      "midpointSecondsTDB": 123610881600.0,
+      "moonRecordBase64": "AABAXsjHPEIAAAAAABgFQTMQEJHaxhVBcbj03x0f2UAZgjovZULTwEkahLr/XDZAYWD2zmsyVUAKoF1uzVQEwLJwX99cTpa/mheSkSvCgz+8/X+K3ORRv55AB6LzngY/3KRG57K7xT7H0x5vdTSdvuBKxEtk2Fs+s5u0n4wD5cAjWDwnKa4CQT+Af+F8AaRASeuK9M3AlcCWGhvLtLAuQMMsWtkIHghAW8nQ+5cRx784zSJUKKmBPzJ8mYsYKR0/ke+jme37Eb+cQ9CRJWnVPhySRRIqmnO+DvL/UOhBVb6knyNZsg3QQKPwc7ZIm/BADQrhJk8LisDQCxoNmpSCwHI7RQ1tyi1Agvj1YKq68D/mnzTYx1m0v0IShul6/HI/2cKERQDKDr/O+QTMV2v6vsk4rcvDecQ+u6juTOXLc76Y96OMm5U5vg==",
+      "orderedRanges": [
+        "2225231648-2227718215",
+        "1769345728-1771832295"
+      ],
+      "rangeHashes": {
+        "1769345728-1771832295": "391f7674115bf63f4db60d6fd9582d06ecc36fc0aed6e927f967a138d9b722d8",
+        "2225231648-2227718215": "0af39aa01726075df7077725c6787d15f04c10be79a5842c1656c2602d8a74b5"
+      },
+      "sourceRecordIndex": 360448
+    },
+    {
+      "byteOffsetInRanges": 1243120,
+      "derivedSHA256": "90f3d1f7affc182a75f7d30170c32aecddbbf76220ab33c8908004fc7f021845",
+      "earthRecordBase64": "AABAstoVPUIAAAAAABgFQTQTbLsJZaTATWnTqsLSmsALQmaPY0JgQLNAL6qhpSlA1sVJCBGG5L9Y2HSAdux5v6swTcgavFc/v6wFdjzTIb+5K4BeUkKfPvtv0NiSup8+IJvjNTMBYL54FD3uP6raPcmqXDMUMOU9ottygIBFrEA342v3jq2PwDEm+VQ4TGbA/i4Oun1UI0B5VCBmpG/gP6M+tcSn6p+/9ml6k/3RUj9FaSUHvc8GP45FsWL1guK+I7uVVFxqkD4+i4l59Y1QPq+nCVnv4SO+CMnceEVb1T0FlIC7fr+RQPJrPW5nInbARQ6IUjneS8A9gMAAHngKQMbD7Jv25cM/QedrgXS5hL/3bwadD/A5Pzlnd2Z5/+g+WtQl3QvZx77B0QrXOS93PiGiIyOaVzM+8UEeI3OlCb5jn/wWrTa+PQ==",
+      "midpointSecondsTDB": 124920705600.0,
+      "moonRecordBase64": "AABAstoVPUIAAAAAABgFQXbg/W1l6AlBLl4+DH8JAUEl50hVkqfEwGg+1CQ7SpDARX7aYFoSSkDaa7toOHfgPzzSRwibJr6/BCmvxsakhj94jYicwtoDv4s+m7MjJwS/TEUMxMJUxD6E7qz2w+9AvrMIGMpS6kq+OecvC/r0EcH8bw9s3x70QMzmHiJGU8xAkoxFjyyOiMDvnC/NDuFEwF9mOditRQRA/c67eGXot79xwZQyWPpsv0YEYBYAhEc/OgluPVna9L40Hq/ckQe1vpZIVGraQYk+Q8HpEzEhO768uqjqsov2wETj4ncnHtxAsG6T6mCzsUCgCXNb7M9wwHo713L4RinAfa2hDqJT6j8KRoZ2gXmgv6U9wY9jwU+/O9xm8l5LLj8Wzgj3pHPdvj1lxUEgkpi+HVBjlx1KcD7tgQshwzAjvg==",
+      "orderedRanges": [
+        "2225231648-2227718215",
+        "1769345728-1771832295"
+      ],
+      "rangeHashes": {
+        "1769345728-1771832295": "391f7674115bf63f4db60d6fd9582d06ecc36fc0aed6e927f967a138d9b722d8",
+        "2225231648-2227718215": "0af39aa01726075df7077725c6787d15f04c10be79a5842c1656c2602d8a74b5"
+      },
+      "sourceRecordIndex": 364238
+    },
+    {
+      "byteOffsetInRanges": 2486240,
+      "derivedSHA256": "3b2509ca33691c7f28b9003c14360c1ea83bb77e77809f571a1d656473354b7c",
+      "earthRecordBase64": "AABABu1jPUIAAAAAABgFQSVhtmd3opVALO0hcVr4ncClPudI/gVQwOe9+aoWNi1AaCthKTVq0z8xDwa4LUyWv03S6/w/8Ue/5vOgUcMS0z6W8XcTyovBPkULkzEk0X++3TNh469mRL5W5UM/fCP2PRiVb4WsUsY95pHD+Fx4sEBUbU71bVF8QEa/aGC2dGjAHGfOq9D7EMCfd79iQMjkP3MDw5gbG4w/bR4WWxDIN7+Y7azG1rkBv/w+hHnLWrA+bE6h//u1gD7/HNBWNXtAvq15Rm38HwS+8Puxj2SuoD2IVausTviXQO/l8i1P2XZAlLRiL5K+UcCOS6gqos0IwE5I/zQj7cw/K5XjF6Twfj8bw4mYkV4Sv9jTsB8E8ey+Uvr/7j45iD7hGxEMmkdwPk9dYBbUByK+fj3KufEK8r2uVFH89jlxvQ==",
+      "midpointSecondsTDB": 126230529600.0,
+      "moonRecordBase64": "AABABu1jPUIAAAAAABgFQfOvwN6he/vAa4YrXS0JA0G4E2SL2Vq0QIAqMbLJjZLA/8Uf1MKpOMDlubimOFP8P5kKDAQeaq4/tTIsna06OL+DGOsbBEomv2Smvz55NeQ+xRkctH3qqT4dLj4dhx9cvo2w1vF4Wyy+9p7v4iLsFMGsGq56jfzhwExwuOcdEc9Af+sPXB+TdUDSPeDhbWZKwDv8frQM2vG/8t3mNsw1nj9ZKfaLg4RmP+qZSTGTxhS/d1WDPWo65b4Lw6klwO+kPuRqJJKtkGk+urZNc8UwBb49wpsWFXP+wNQHca2ABt3AyvHtbIaKtkDvefo7E4JvQPukCMdzXzLAOa7rOeGm47/w82YKxlV3P8rhbXDqYVI/HkF0PZPF7r4eBXyPMa7UvufkleiV54Y+loBiKovrVj7Ny3+SEuLVPQ==",
+      "orderedRanges": [
+        "2225231648-2227718215",
+        "1769345728-1771832295"
+      ],
+      "rangeHashes": {
+        "1769345728-1771832295": "391f7674115bf63f4db60d6fd9582d06ecc36fc0aed6e927f967a138d9b722d8",
+        "2225231648-2227718215": "0af39aa01726075df7077725c6787d15f04c10be79a5842c1656c2602d8a74b5"
+      },
+      "sourceRecordIndex": 368028
+    }
+  ],
+  "schemaVersion": 1,
+  "selection": "First, middle and last records of the first, middle and last pinned 8192-record source batches; phases -1,-0.5,0,0.5,1.",
+  "sourceHashes": {
+    "Scripts/generate-moon-de441-full.py": "2b93214153dfb616f4c0a77aba455f9c408b43122fdd2c521528846791049a3b",
+    "Scripts/moon-data/de441-full-evidence.json": "5a52f1f1972cd4ccf7e95e3214ebc8c4d9fe55812da556232aa4af620943eb49",
+    "Scripts/qualify-moon-de441-full.py": "d3d1c620aeb9ee2be0bde8d508ad6038cd92240f67dd1855348f7edd37383e14",
+    "Scripts/solar-numerics/apparent_bounds.py": "6b8adf65c48efac5c3a54982402708cf8bc515ea2db1394e003f4ed706f298b2",
+    "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift": "5c77325fb41d76fd9c6e23f08f2ba580924166e0fa2681913a815c1f32b6ad8e",
+    "Sources/AstronomyKit/Engine/Moon/Generated/TDBTerms.swift": "e117834cde595413631dd655605ae97a0fd85b20829476472f1eacba1fdb2ef2"
+  }
+}
