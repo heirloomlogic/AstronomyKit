@@ -41,7 +41,7 @@
     "Scripts/solar-numerics/certify_light_time.py": "0948cd14b3a04f9750a6c04c03a6e8f5446323598d2c98f88198a11d755ce3fb",
     "Scripts/solar-numerics/derive_altitude.py": "ef19574783467d765ce75dc696d29cc308b9753b7f10de07ea468a5d99528ecf",
     "Scripts/solar-numerics/derived-earth.json": "f6a3bcb36eed65b6fe764d75543b4d7303a90cccdcf0df0c3c0e80dc3f4acae9",
-    "Scripts/solar-numerics/derived-light-convergence.json": "153c94d7cd202693a4178a9f8a4440f4cd48be7fb515d558e1a9814aabdd2dca",
+    "Scripts/solar-numerics/derived-light-convergence.json": "7650d87a16d9a60d8b1ddce220273482faf9aa4f1b48682f7bc347dd3c47704d",
     "Scripts/solar-numerics/intervals.py": "f311ffea878782dd46cb55a79486615626bbf8d8fb351c4186f9c22dfff297c1",
     "Scripts/solar-numerics/numerics.py": "7dac12895e73786b85dd960977f027817d05f66007621f28a4d4dd9f1ef9b0d9",
     "Sources/AstronomyKit/AstronomyKit.swift": "0286b5b438eab83063b404a6d79b202997ab35bb237ab45e56b86efa6f59615b",
@@ -75,11 +75,11 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "5d8bd4003fae869c238e3ab168244a0039d8f2b4723f36da73050ec9695c5bb8",
-    "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "3f0391e0a6b3d74d4013695e83452d1dc984b0964e046e1d130e1472fdec0316",
+    "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "363120568a16d3e70dd05d30531bc40b43190bd8be3a4eae3bdd32dd61a33859",
     "Sources/AstronomyKit/Observer.swift": "5bd1ff1f613cec548aabdf724cd3167186568c84583b6eb350112c8891946677",
     "Sources/AstronomyKit/Position.swift": "b6f2a40f83f834d6f86cf49d4214ad74d5b42e3e7df68dd5114d8e3eb6893d75",
     "Sources/AstronomyKit/SolarAltitudeObservation.swift": "5b00bb06942a46d47a14638d5cdd8df397a6a580554f0ebf324b47ca5fb7c7ff",
-    "Sources/AstronomyKit/Time.swift": "ecd767601f767df2a71be69b504663935d4cf77374bfe3a2ed9786fc158b16a7",
+    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5"
   },
   "terms": {

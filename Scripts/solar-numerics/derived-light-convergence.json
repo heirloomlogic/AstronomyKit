@@ -3478,7 +3478,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialCoverage.swift": "c1c74a4ea6b29371b0b53884b7b0849d57e3830efe81aea097c8ffaa5be32133",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
-    "Sources/AstronomyKit/Time.swift": "ecd767601f767df2a71be69b504663935d4cf77374bfe3a2ed9786fc158b16a7",
+    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5"
   }
 }

@@ -5,12 +5,12 @@
     "continuous arithmetic or libm bounds",
     "other compilers or architectures"
   ],
-  "gitHead": "3945a67950aa9754b41254a905daae276eb40987",
-  "nativeProcessLog": "\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite NativeAltitudeProbe started.\n\udbc1\udfc8  Test export() started.\n\udbc4\udc5b  Test export() passed after 0.230 seconds.\n\udbc4\udc5b  Suite NativeAltitudeProbe passed after 0.231 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.231 seconds.\n        3.14 real         2.26 user         0.80 sys\n           121094144  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n              131410  page reclaims\n                2358  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 203  voluntary context switches\n                3350  involuntary context switches\n          5161594785  instructions retired\n          1729438567  cycles elapsed\n            27050704  peak memory footprint\n",
-  "nativeProcessSecondsIncludingRunner": 3.1577632499975152,
-  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "gitHead": "89dd445416b059f0e7e87579aa73b061a08a4e1c",
+  "nativeProcessLog": "Another instance of SwiftPM (PID: 82003) is already running using '/Users/sessions/conductor/workspaces/AstronomyKit/minnetonka/.build', waiting until that process has finished execution...\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite NativeAltitudeProbe started.\n\udbc1\udfc8  Test export() started.\n\udbc4\udc5b  Test export() passed after 0.222 seconds.\n\udbc4\udc5b  Suite NativeAltitudeProbe passed after 0.222 seconds.\n\udbc4\udc5b  Test run with 1 test in 1 suite passed after 0.223 seconds.\n        7.92 real         2.24 user         0.78 sys\n           120815616  maximum resident set size\n                   0  average shared memory size\n                   0  average unshared data size\n                   0  average unshared stack size\n              131791  page reclaims\n                2321  page faults\n                   0  swaps\n                   0  block input operations\n                   0  block output operations\n                   0  messages sent\n                   0  messages received\n                   0  signals received\n                 201  voluntary context switches\n                3561  involuntary context switches\n          5177690395  instructions retired\n          1718408976  cycles elapsed\n            26165968  peak memory footprint\n",
+  "nativeProcessSecondsIncludingRunner": 7.950287665997166,
+  "platform": "macOS-27.0.1-arm64-arm-64bit-Mach-O",
   "precisionDecimalDigits": 80,
-  "pythonVersion": "3.12.12",
+  "pythonVersion": "3.14.7",
   "referenceLibrary": "mpmath 1.3.0",
   "requests": [
     {
@@ -131205,12 +131205,12 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "5d8bd4003fae869c238e3ab168244a0039d8f2b4723f36da73050ec9695c5bb8",
-    "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "3f0391e0a6b3d74d4013695e83452d1dc984b0964e046e1d130e1472fdec0316",
+    "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "363120568a16d3e70dd05d30531bc40b43190bd8be3a4eae3bdd32dd61a33859",
     "Sources/AstronomyKit/Observer.swift": "5bd1ff1f613cec548aabdf724cd3167186568c84583b6eb350112c8891946677",
     "Sources/AstronomyKit/Position.swift": "b6f2a40f83f834d6f86cf49d4214ad74d5b42e3e7df68dd5114d8e3eb6893d75",
     "Sources/AstronomyKit/SolarAltitudeBounds.swift": "cf2995480eea9cade91b0a2ae0229dd2eb2df02b5c9d089ddedd74ef981ec541",
     "Sources/AstronomyKit/SolarAltitudeObservation.swift": "5b00bb06942a46d47a14638d5cdd8df397a6a580554f0ebf324b47ca5fb7c7ff",
-    "Sources/AstronomyKit/Time.swift": "ecd767601f767df2a71be69b504663935d4cf77374bfe3a2ed9786fc158b16a7",
+    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
     "Tests/AstronomyKitTests/Engine/Numerics/NativeAltitudeProbe.swift": "0d0d7c13976e3ea125f9b9af6a43f9bb60308114e8ed28417bd968690c9d4498",
     "Tests/AstronomyKitTests/Engine/Numerics/NativeNumericalProbe.swift": "7468f0e6b266a2acddabda2aaf9d1b00465e80bcc4224396cc514d725306b71c"
