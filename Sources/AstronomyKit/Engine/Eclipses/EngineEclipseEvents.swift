@@ -218,7 +218,8 @@ extension Engine.Events {
         direction.y = -direction.y
         direction.z = -direction.z
         return try Engine.Shadows.lunarEarthShadow(
-            target: Engine.Moon.geocentricPosition(at: time), direction: direction)
+            target: Engine.Positions.geocentricPosition(of: .moon, at: time, aberration: .corrected),
+            direction: direction)
     }
 
     private static func moonDiscRadius(in shadow: Engine.Shadows.Shadow<Engine.EQJ>) throws -> Double {

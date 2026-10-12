@@ -53,7 +53,27 @@ class MoonEventFixtureTests(unittest.TestCase):
 
     def test_committed_event_and_native_evidence_bind_all_named_sources(self):
         counts = [self.tool.check_source_hashes(self.tool.ROOT / name) for name in self.evidence_files]
-        self.assertEqual([15, 11], counts)
+        self.assertGreater(counts[0], 15)
+        self.assertEqual(11, counts[1])
+
+    def test_apparent_event_evidence_binds_composition_clock_and_orientation(self):
+        evidence = json.loads((self.tool.ROOT / self.evidence_files[0]).read_bytes())
+        for name in [
+            "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift",
+            "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift",
+            "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift",
+        ]:
+            with self.subTest(source=name):
+                self.assertIn(name, evidence["sourceSHA256"])
+
+    def test_event_replay_rejects_omitted_composition_binding(self):
+        value = json.loads((self.tool.ROOT / self.evidence_files[0]).read_bytes())
+        value["sourceSHA256"].pop("Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift", None)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "evidence.json"
+            path.write_text(json.dumps(value))
+            with self.assertRaisesRegex(ValueError, "source binding coverage differs"):
+                self.tool.check_source_hashes(path, required_sources=self.tool.event_source_paths())
 
     def test_event_and_native_evidence_reject_stale_source_digest(self):
         for evidence_name in self.evidence_files:

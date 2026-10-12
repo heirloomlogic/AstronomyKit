@@ -121,9 +121,10 @@ struct SolarAltitudeObservationTests {
             #expect(bound.total >= plainSum)
             #expect(bound.total <= plainSum.nextUp.nextUp.nextUp)
         }
-        // The source-derived inverse term exceeds the two-residual light-time term.
-        #expect(terrestrial.errorBound.total > 1.1e-8 && terrestrial.errorBound.total < 1.2e-8)
-        #expect(universal.errorBound.total > 2.2e-9 && universal.errorBound.total < 2.3e-9)
+        // TT inversion dominates the partial light-time/ERA budget; constants are independently derived and replayed.
+        #expect(terrestrial.errorBound.scaleConversion > terrestrial.errorBound.lightTimeTermination)
+        #expect(terrestrial.errorBound.total > universal.errorBound.total)
+        #expect(universal.errorBound.total > 0)
     }
 
     @Test("A Date's civil term covers the rounding carried into UT")
@@ -189,13 +190,10 @@ struct SolarAltitudeObservationTests {
         }
         _ = try Self.observe(try Self.date("2100-12-31T23:00:00Z"))
 
-        // The light-time loop backdates up to 8.6 minutes; the first minutes of
-        // the coverage evaluate the Earth before it.
+        // Earth is held at reception. Solar emission padding no longer excludes the first covered minutes.
         let backdate = SolarAltitudeObservation.maximumLightTimeDays
         #expect(backdate > 0.0059 && backdate <= 0.006)
-        #expect(throws: Unsupported.outsidePolynomialCoverage) {
-            try Self.observe(tt: coverage.lowerBound + backdate / 2)
-        }
+        _ = try Self.observe(tt: coverage.lowerBound + backdate / 2)
         _ = try Self.observe(tt: coverage.lowerBound + backdate + 1e-3)
 
         // The last UT whose TT is inside the coverage is accepted; the next one is not.

@@ -9,71 +9,41 @@
 import Foundation
 
 extension Engine.Positions {
-    /// The position of `target` relative to `observer` at the time light left
-    /// `target`, for light that reaches `observer` at `time`: the C engine's
-    /// `Astronomy_BackdatePosition`.
+    /// Barycentric elapsed-TDB light time, with the observer fixed at reception.
     ///
-    /// ``Engine/LightTravel/correct(at:_:)`` finds the light time from
-    /// heliocentric positions. With `.none` the observer stays where it is at
-    /// `time`. With `.corrected` it is backdated with the target, which
-    /// approximates aberration to first order: in the light time the observer
-    /// moves by its velocity times that time, which turns the direction by
-    /// the observer's transverse speed over the speed of light. The vector's
-    /// time is the backdated time.
-    ///
-    /// - Throws: As ``heliocentricPosition(of:at:)`` for either body at any
-    ///   time the iteration reaches, the observer first; the errors of
-    ///   ``Engine/LightTravel/correct(at:_:)``; and `AstronomyError.badTime`
-    ///   for a result that is not finite.
+    /// `.none` returns astrometric place. `.corrected` adds finite-source solar deflection and relativistic aberration. The vector retains emission-time metadata; the direction is expressed on fixed EQJ axes.
     static func backdatedPosition(
         of target: CelestialBody, seenFrom observer: CelestialBody, at time: Engine.Time,
         aberration: Aberration
     ) throws -> Engine.Vector<Engine.EQJ> {
-        let fixedObserver = aberration == .none ? try heliocentricPosition(of: observer, at: time) : nil
-        let vector = try Engine.LightTravel.correct(at: time) { backdated in
-            func position(of body: CelestialBody) throws -> Engine.Vector<Engine.EQJ> {
-                if body == .pluto {
-                    return try Engine.Pluto.heliocentricPosition(forLightTimeAt: backdated, observedAt: time)
-                }
-                if target == .pluto, body == .earth, backdated.tt < -Engine.acceptedTTDays {
-                    return try Engine.Pluto.earthState(forLightTimeAt: backdated, observedAt: time).position
-                }
-                return try heliocentricPosition(of: body, at: backdated)
-            }
-            let origin = try fixedObserver ?? position(of: observer)
-            let position = try position(of: target)
-            return Engine.Vector<Engine.EQJ>(
-                x: position.x - origin.x, y: position.y - origin.y, z: position.z - origin.z,
-                time: backdated)
+        try Engine.checkAcceptedTime(time)
+        let kinematics: Engine.ApparentPlace.Kinematics
+        if observer == .earth {
+            kinematics = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
+        } else {
+            // This API returns a position only; acceleration does not enter its value.
+            kinematics = try Engine.ApparentPlace.Kinematics(
+                motion: Engine.ApparentPlace.bodyMotion(observer, tt: time.tt), acceleration: .zero)
         }
-        return try checked(vector)
+        if target == observer { return Engine.Vector(x: 0, y: 0, z: 0, time: time) }
+        let result = try Engine.ApparentPlace.solution(
+            body: target, at: time, observer: kinematics, aberration: aberration)
+        guard let model = time.deltaTModel else { throw AstronomyError.badTime }
+        let emission = Engine.Time(tt: result.emissionTT, deltaTModel: model)
+        return try checked(
+            Engine.Vector(
+                x: result.motion.value.x, y: result.motion.value.y, z: result.motion.value.z, time: emission))
     }
 
-    /// The position of `body` relative to Earth's center as seen at `time`,
-    /// the C engine's `Astronomy_GeoVector`.
+    /// Astrometric or apparent position relative to Earth's center, at the reception time.
     ///
-    /// Earth is at the origin. The Moon is ``Engine/Moon/geocentricPosition(at:cache:)``
-    /// with no light-time correction and no aberration, whatever `aberration`
-    /// says. Every other body is ``backdatedPosition(of:seenFrom:at:aberration:)``
-    /// seen from Earth. The vector's time is `time`, not the backdated time.
-    ///
-    /// - Throws: `AstronomyError.badTime` for a TT beyond
-    ///   ``Engine/acceptedTTDays`` or not finite, before anything else; then
-    ///   as ``backdatedPosition(of:seenFrom:at:aberration:)``.
+    /// Earth remains the zero vector. Every other supported body, including the Moon, uses the shared barycentric light-time and angular-correction model. Explicit geometric Moon APIs remain geometric.
     static func geocentricPosition(
         of body: CelestialBody, at time: Engine.Time, aberration: Aberration
     ) throws -> Engine.Vector<Engine.EQJ> {
         try Engine.checkAcceptedTime(time)
-        var vector: Engine.Vector<Engine.EQJ>
-        switch body {
-        case .earth:
-            vector = Engine.Vector(x: 0, y: 0, z: 0, time: time)
-        case .moon:
-            vector = try Engine.Moon.geocentricPosition(at: time)
-        default:
-            vector = try backdatedPosition(of: body, seenFrom: .earth, at: time, aberration: aberration)
-        }
-        vector.time = time
-        return try checked(vector)
+        if body == .earth { return Engine.Vector(x: 0, y: 0, z: 0, time: time) }
+        let motion = try Engine.ApparentPlace.geocentricMotion(body: body, at: time, aberration: aberration)
+        return try checked(Engine.Vector(x: motion.value.x, y: motion.value.y, z: motion.value.z, time: time))
     }
 }

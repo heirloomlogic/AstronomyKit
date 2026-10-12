@@ -9,26 +9,23 @@
 import Foundation
 
 extension Engine.Positions {
-    /// The right ascension, declination and distance of `body` seen from
-    /// `observer`, the C engine's `Astronomy_Equator`.
+    /// Apparent or astrometric coordinates from the observer's reception position, velocity and acceleration. Site parallax participates in the light-time solve; corrected mode includes diurnal aberration before the requested frame rotation.
     ///
-    /// The vector is ``geocentricPosition(of:at:aberration:)`` less the
-    /// observer's J2000 position, ``Engine/Observers/vector(_:at:)``, and
-    /// with `.ofDate` it is then rotated to the true equator of date. The
-    /// public layer validates the observer.
-    ///
-    /// - Throws: As ``geocentricPosition(of:at:aberration:)``;
-    ///   `AstronomyError.badVector` for a zero vector, which Earth gives from
-    ///   the geocentric observer; `AstronomyError.badTime` for a result that
-    ///   is not finite.
+    /// The public layer validates the observer. A zero displacement, including Earth from its center, throws `badVector`; unsupported bodies throw `invalidBody` after the accepted-time check.
     static func equatorial(
         of body: CelestialBody, at time: Engine.Time, from observer: Observer, equatorDate: EquatorDate,
         aberration: Aberration
     ) throws -> Engine.Equatorial {
-        let site = Engine.Observers.vector(observer, at: time)
-        let geocentric = try geocentricPosition(of: body, at: time, aberration: aberration)
+        try Engine.checkAcceptedTime(time)
+        let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
+        let site = try Engine.ApparentPlace.siteKinematics(observer, at: time)
+        let origin = Engine.ApparentPlace.Kinematics(
+            motion: earth.motion + site.motion, acceleration: earth.acceleration + site.acceleration)
+        let motion = try Engine.ApparentPlace.solution(
+            body: body, at: time, observer: origin, aberration: aberration
+        ).motion
         let j2000 = Engine.Vector<Engine.EQJ>(
-            x: geocentric.x - site.x, y: geocentric.y - site.y, z: geocentric.z - site.z, time: time)
+            x: motion.value.x, y: motion.value.y, z: motion.value.z, time: time)
         let equatorial =
             switch equatorDate {
             case .j2000: try coordinates(j2000)

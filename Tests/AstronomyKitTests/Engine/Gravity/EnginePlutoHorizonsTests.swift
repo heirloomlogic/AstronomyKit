@@ -95,7 +95,7 @@ extension PlutoSegmentSuites {
                 let range =
                     reference.mode == "heliocentric"
                     ? try Self.heliocentric(at: time).length : try Self.geocentric(at: time).length
-                let errorKm = abs(range - reference.referenceRangeAU) * Engine.kilometersPerAU
+                let errorKm = abs(range - reference.observableRangeAU) * Engine.kilometersPerAU
                 #expect(
                     errorKm <= reference.allowedErrorKm,
                     "\(reference.mode) JD TT \(reference.julianDateTT): \(errorKm) km, allowance \(reference.allowedErrorKm) km"

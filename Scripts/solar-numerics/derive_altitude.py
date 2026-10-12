@@ -2,6 +2,7 @@
 """Source-bound rational derivation of the partial native solar-altitude budget."""
 from fractions import Fraction as Q
 import precession_bounds
+import apparent_bounds
 import argparse
 import ast
 import json
@@ -206,7 +207,7 @@ def derive():
     v, p = terms['speedAUPerTTDay']*norm_hi, terms['joinMaximumAU']*norm_hi
     radius_guard = native_radius_guard(rmax, matrix, C)
     a, m = 1+convergence['deltaTSlopeSecondsPerDay']/86400, 1-convergence['deltaTSlopeSecondsPerDay']/86400
-    k = a*v/C
+    k = convergence['k']
     delta = DeltaT()
     magnitude = max(delta.at_year(I(year,year+1),year).abs_upper() for year in range(1898,2102))
     source = (ROOT/(ENGINE+'Orientation/EngineObserver.swift')).read_text()
@@ -224,8 +225,38 @@ def derive():
         raise ValueError('ERA arithmetic expression changed')
     era_offset, era_rate = map(Q, era_terms.groups())
     omega = 360*(1+era_rate)
-    ut_sensitivity = deg_per_rad*v*a/(1-k)/rho + omega*(1+site/rho)
-    tt_sensitivity = rates['precessionNutation']*rmax/rho + rates['siderealTT']*(1+site/rho)
+    orientation = apparent_bounds.orientation_bounds()
+    site_speed = site*orientation['siteSpeedPerRadius']
+    site_acceleration = site*orientation['siteAccelerationPerRadius']
+    solar_speed = convergence['V']
+    solar_acceleration = convergence['solarAccelerationTT']
+    clock_q = convergence['clockRateDeparture']
+    clock_second = convergence['solarAccelerationPerDay']
+    earth_acceleration = apparent_bounds.earth_acceleration_bound()
+    observer_speed = v+solar_speed+site_speed
+    observer_acceleration = earth_acceleration+solar_acceleration+site_acceleration
+    beta_upper = observer_speed/(1-clock_q)/C
+    beta_rate = (observer_acceleration/(1-clock_q)+observer_speed*clock_second/(1-clock_q)**2)/C
+    if beta_upper >= Q('.001'):
+        raise ValueError('Relativistic map beta enclosure changed')
+    # For |beta|<.001 and h=SRS/s, bound the unnormalized eraAb norm from below.
+    srs=Q('1.97412574336e-8')
+    h=srs/rho
+    inverse_gamma=sqrt_interval(1-beta_upper**2)[0]
+    unnormalized_min=inverse_gamma-beta_upper*(1+beta_upper)-2*h*beta_upper
+    p_lipschitz=(1+beta_upper**2+2*h*beta_upper)/unnormalized_min
+    beta_lipschitz=(beta_upper/inverse_gamma+1+2*beta_upper+beta_upper**3/inverse_gamma+2*h)/unnormalized_min
+    if p_lipschitz>=2 or beta_lipschitz>=4 or unnormalized_min<=0:
+        raise ValueError('Relativistic normalization derivative enclosure changed')
+    distance_lipschitz=2*beta_upper*srs/rho**2/unnormalized_min
+    propagation=1+solar_speed/(C*(1-k))
+    ut_relative=site_speed*propagation
+    tt_relative=(v+2*solar_speed+site_speed)*propagation
+    ut_beta_rate=site_acceleration/(1-clock_q)/C
+    ut_sensitivity=deg_per_rad*(2*ut_relative/rho+4*ut_beta_rate+distance_lipschitz*site_speed)+omega
+    tt_sensitivity=deg_per_rad*(2*tt_relative/rho+4*beta_rate+distance_lipschitz*(v+site_speed))+rates['precessionNutation']+rates['siderealTT']
+    velocity_join=apparent_bounds.earth_velocity_join_bound()
+    join_degrees=deg_per_rad*(2*p/rho+4*velocity_join/(1-clock_q)/C+distance_lipschitz*p)
     u = Q(1,2**53)
     gamma = lambda n: n*u/(1-n*u)
     domain = Q(37000)
@@ -244,11 +275,9 @@ def derive():
         magnitude_offset = abs(offset)+abs(slope)*span
         error = gamma(8)*(domain+(magnitude_offset+abs(slope)*span)/86400)
         civil_tt = max(civil_tt, civil*(1+abs(slope)/86400)+error)
-    delay_rounding = gamma(10)*rmax/C+u*(domain+rmax/C)/(1-u)
-    stop = Q(float(1e-9))/(1-u)+Q('1e-9')
-    light_days = (stop+forward+a*(delay_rounding+p/C))/(1-k)
-    light_au = v*light_days+p
-    light_jump_au = v*convergence['D']/(1-k)
+    light_days = convergence['successfulRootErrorDays']
+    light_au = solar_speed*light_days
+    light_jump_au = Q(0)  # Emission uses TT/TDB directly, with no Delta T branch conversion.
     era_angle = gamma(8)*(era_offset+era_rate*domain+1)*360+u*360
     values = {
         'civilCalendarDays':civil,
@@ -257,9 +286,9 @@ def derive():
         'civilToUTDegrees':(ut_sensitivity+tt_sensitivity*a)*civil,
         'forwardTTDegrees':tt_sensitivity*forward,
         'ttInverseDegrees':ut_sensitivity*inverse_days,
-        'lightTimeDegrees':deg_per_rad*light_au/rho,
-        'eraDegrees':era_angle*(1+site/rho),
-        'joinDegrees':deg_per_rad*p/rho,
+        'lightTimeDegrees':deg_per_rad*2*light_au/rho+join_degrees,
+        'eraDegrees':era_angle*(1+2*site*propagation/rho+4*site_speed/(1-clock_q)/C+distance_lipschitz*site),
+        'joinDegrees':join_degrees,
         'arrivalJumpInverseDegrees':ut_sensitivity*inverse_jump_days,
         'arrivalJumpForwardDegrees':tt_sensitivity*convergence['D'],
         'lightTimeJumpDegrees':deg_per_rad*light_jump_au/rho,
@@ -279,7 +308,7 @@ def derive():
         raise ValueError('The denominator or classification margin is insufficient')
     if 2*values['arrivalUncertaintyDays']+convergence['T'] >= 1:
         raise ValueError('Time hull can span multiple eight-day polynomial seams')
-    paths = sorted(set(BINDINGS + precession_bounds.PATHS + [
+    paths = sorted(set(BINDINGS + precession_bounds.PATHS + apparent_bounds.PATHS + [
         'Scripts/solar-numerics/derive_altitude.py', 'Scripts/solar-numerics/intervals.py',
         'Scripts/solar-numerics/certify_light_time.py', 'Scripts/solar-numerics/derived-earth.json',
         'Scripts/solar-numerics/derived-light-convergence.json',
@@ -294,13 +323,19 @@ def derive():
     ]))
     return {'kind':'native-partial-altitude-derivation', 'schemaVersion':1, 'sourceSHA256':source_hashes(ROOT,paths),
             'dependency':'Earth and finite convergence artifacts must also pass their full check commands',
-            'excludedAltitudeErrors':['polynomial evaluation and fit','frame and sidereal arithmetic','horizon transform and libm','DeltaT polynomial evaluation and decimal-year arithmetic'],
+            'excludedAltitudeErrors':['polynomial evaluation and fit','frame and sidereal arithmetic','horizon transform and libm','DeltaT polynomial evaluation and decimal-year arithmetic','solar interpolation, TT/TDB and relativistic-map arithmetic','source ephemeris and physical-model errors'],
             'terms':{key:record(value) for key,value in values.items()},
             'classificationGuard':{key:str(value) for key,value in guard.items()},
             'nativeRadiusGuard':{key:str(value) for key,value in radius_guard.items()},
             'intermediate': {'deltaTMagnitudeSeconds':str(magnitude), 'topocentricRadiusMarginAU':str(rho),
                              'maxEarthPerturbationAU':str(max_earth_perturbation),
-                             'ratesDegreesPerDay':{key:str(value) for key,value in rates.items()}}}
+                             'ratesDegreesPerDay':{key:str(value) for key,value in rates.items()},
+                             'apparentComposition':{key:str(value) for key,value in {'betaUpper':beta_upper,'betaRate':beta_rate,
+                                'directionLipschitz':p_lipschitz,'betaLipschitz':beta_lipschitz,
+                                'distanceLipschitz':distance_lipschitz,'unnormalizedMinimum':unnormalized_min,
+                                'earthAccelerationAUPerTTDay2':earth_acceleration,'velocityJoinAUPerTTDay':velocity_join,
+                                'siteSpeedAUPerTTDay':site_speed,'siteAccelerationAUPerTTDay2':site_acceleration}.items()},
+                             'orientationBounds':{key:str(value) for key,value in orientation.items()}}}
 
 
 def render(result):

@@ -19,15 +19,13 @@ permissions:
   contents: read
 
 jobs:
-  # The public API runs on the native engine in Debug. The local full suite
-  # grew from 1258s to 1358s at the cutover; the hosted macOS job took 39 to
-  # 42 minutes against its old 45-minute limit before it, and the Linux and
-  # Thread Sanitizer jobs 14 to 18 and 70 to 73 minutes. These limits include
-  # existing numerical setup and runner/sanitizer overhead. Release and
-  # platform-build limits remain tied to their separate workloads.
+  # Apparent-place integration: local Debug passed in 3661s; hosted altitude rechecks need about 28 minutes each before that suite.
+  # Linux passed in 39m38s; the macOS job exhausted 60 minutes during its second altitude recheck, before its full suite.
+  # TSan's 150-minute ceiling includes headroom over a roughly 103-minute projection from the completed base and Linux timings; it is not a measured TSan result.
+  # These finite job ceilings preserve all test commands and per-test limits; Release and platform-build workloads are unchanged.
   test-macos:
     runs-on: macos-26
-    timeout-minutes: 60
+    timeout-minutes: 180
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -113,6 +111,9 @@ jobs:
           python3 -m venv .build/numerics-venv
           .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
           .build/numerics-venv/bin/python Scripts/generate-apparent-place-fixtures.py --check
+          python3 -m unittest Scripts/test_capture_apparent_place.py -v
+          python3 Scripts/capture-apparent-place.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/generate_apparent_integration.py --check
           .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
           python3 Scripts/solar-numerics/numerics.py --check
           .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check
@@ -128,7 +129,7 @@ jobs:
 
   test-linux:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -204,7 +205,7 @@ jobs:
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 360
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

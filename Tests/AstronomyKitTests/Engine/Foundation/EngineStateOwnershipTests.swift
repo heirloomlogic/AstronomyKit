@@ -96,7 +96,7 @@ struct EngineStateOwnershipTests {
                 jplRightAscension: jplReference.rightAscension, jplDeclination: jplReference.declination,
                 jplToleranceArcminutes: jpl.arcminutes,
                 distanceBody: distance.body, distanceMode: distance.2.mode, distanceTT: distance.time.tt,
-                distanceAU: distance.2.referenceRangeAU, distanceToleranceKM: distance.2.allowedErrorKm,
+                distanceAU: distance.2.observableRangeAU, distanceToleranceKM: distance.2.allowedErrorKm,
                 auditBody: try body(named: audit.body),
                 auditUT: IndependentReferenceDate.civil(audit.utc).universalTime,
                 auditRightAscensionDegrees: audit.rightAscensionDegrees,
@@ -123,7 +123,9 @@ struct EngineStateOwnershipTests {
         let result =
             query.distanceMode == "heliocentric"
             ? try Engine.Positions.heliocentricDistance(of: query.distanceBody, at: time)
-            : try Engine.Positions.geocentricPosition(of: query.distanceBody, at: time, aberration: .none).length
+            : query.distanceBody == .moon
+                ? try Engine.Moon.geocentricPosition(at: time).length
+                : try Engine.Positions.geocentricPosition(of: query.distanceBody, at: time, aberration: .none).length
         #expect(abs(result - query.distanceAU) * Engine.kilometersPerAU <= query.distanceToleranceKM)
         return [result.bitPattern]
     }

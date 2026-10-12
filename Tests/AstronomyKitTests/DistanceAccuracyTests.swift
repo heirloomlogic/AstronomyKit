@@ -12,8 +12,14 @@ struct DistanceReferenceArchive: Decodable {
         let mode: String
         let julianDateTT: Double
         let referenceRangeAU: Double
+        let horizonsRangeAU: Double?
         let referencePositionAU: [Double]
         let allowedErrorKm: Double
+
+        /// Match the archived observable: raw LT range for non-Moon geocentric rows, geometric Moon and heliocentric ranges otherwise.
+        var observableRangeAU: Double {
+            mode == "geocentric" && body != "Moon" ? horizonsRangeAU ?? referenceRangeAU : referenceRangeAU
+        }
     }
 
     static let shared: Self = {
@@ -40,9 +46,14 @@ struct DistanceAccuracyTests {
             actual = try body.distanceFromSun(at: time)
         } else {
             #expect(reference.mode == "geocentric")
-            actual = try body.geocentricPosition(at: time, aberration: .none).magnitude
+            // This archived Moon query is a simultaneous VEC_CORR=NONE vector; its observable remains geometric.
+            actual =
+                body == .moon
+                ? try Engine.Moon.geocentricPosition(at: time.engine).length
+                : try body.geocentricPosition(at: time, aberration: .none).magnitude
         }
-        let errorKm = abs(actual - reference.referenceRangeAU) * 149_597_870.7
+        // The frozen referenceRangeAU aligns LT vectors to the former fixed-Sun approximation. The complete barycentric route uses the untouched Horizons range instead.
+        let errorKm = abs(actual - reference.observableRangeAU) * 149_597_870.7
         #expect(
             errorKm <= reference.allowedErrorKm,
             "\(reference.body) \(reference.mode), JDTT \(reference.julianDateTT): \(errorKm) km; allowance \(reference.allowedErrorKm) km"
@@ -64,6 +75,10 @@ struct DistanceAccuracyTests {
         let received = try #require(references.first { $0.body == "Mercury" && $0.mode == "geocentric" })
         let reception = AstroTime(tt: received.julianDateTT - 2_451_545, deltaTModel: .jplHorizons)
         let defaultAberrationRange = try CelestialBody.mercury.geocentricPosition(at: reception).magnitude
-        #expect(abs(defaultAberrationRange - received.referenceRangeAU) * 149_597_870.7 > received.allowedErrorKm)
+        let astrometricRange = try CelestialBody.mercury.geocentricPosition(at: reception, aberration: .none).magnitude
+        #expect(abs(defaultAberrationRange - astrometricRange) < 1e-14)
+        #expect(
+            abs(defaultAberrationRange - (received.horizonsRangeAU ?? received.referenceRangeAU)) * 149_597_870.7
+                <= received.allowedErrorKm)
     }
 }

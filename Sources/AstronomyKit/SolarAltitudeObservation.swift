@@ -59,8 +59,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         /// rounding when it derived TT.
         public let scaleConversion: Double
 
-        /// Light-time termination, including a model-step allowance when
-        /// the conservative backdating interval can cross a Delta T boundary.
+        /// Light-time termination and one possible reception ephemeris join, including its velocity jump in aberration. Emission uses TT/TDB directly and crosses no Delta T branch.
         public let lightTimeTermination: Double
 
         /// Earth Rotation Angle rounding.
@@ -86,8 +85,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
 
     /// A case <doc:SolarAltitudeNumerics> excludes from the budget.
     public enum Unsupported: Error, Sendable, Equatable, Hashable {
-        /// The input TT, or the conservative enclosure of backdated TT,
-        /// is outside ``SolarAltitudeObservation/polynomialCoverage``.
+        /// The input TT, or its conservative reception-time enclosure, is outside ``SolarAltitudeObservation/polynomialCoverage``.
         case outsidePolynomialCoverage
 
         /// The TT lies in a positive Delta T step of the model (1920, 1941,
@@ -109,8 +107,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
     /// The time the altitude was evaluated at, with both scales and the model.
     public let time: AstroTime
 
-    /// The Delta T model that relates the two scales of ``time`` and that the
-    /// light-time loop used.
+    /// The Delta T model that relates the reception time's two scales. The light-time solve uses TT/TDB directly.
     public let deltaTModel: DeltaTModel
 
     /// The observer.
@@ -136,11 +133,10 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
 
     /// The most the Sun's direction changes across one polynomial segment
     /// boundary, in degrees. An interval enclosure widens by this much
-    /// per boundary the backdated TT crosses. The point budget separately
-    /// allows its backdating interval to straddle one polynomial join.
+    /// per boundary the reception TT crosses. The point budget separately allows its reception-time uncertainty to straddle one polynomial join.
     public static let joinDiscontinuityDegrees = SolarAltitudeBounds.joinDegrees
 
-    /// The most the light-time loop backdates the Earth position, in days.
+    /// The most the solar light-time loop backdates the Sun's barycentric position, in TT days.
     public static let maximumLightTimeDays = SolarAltitudeBounds.backdateMaxDays
 
     /// The largest observer height above or below the ellipsoid the budget
@@ -204,13 +200,13 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
             ? globalUncertainty
             : (SolarAltitudeBounds.arrivalUncertaintyBaseDays + SolarAltitudeBounds.classificationInverseGuardDays)
                 .nextUp
-        let earliestUT = ((ut - uncertainty).nextDown - SolarAltitudeBounds.backdateMaxDays).nextDown
+        let earliestUT = (ut - uncertainty).nextDown
         let latestUT = (ut + uncertainty).nextUp
         guard earliestUT >= -SolarAltitudeBounds.classificationUTLimit,
             latestUT <= SolarAltitudeBounds.classificationUTLimit
         else { throw Unsupported.outsidePolynomialCoverage }
-        let lightStep = Self.crossesModelStep(lower: earliestUT, upper: latestUT, model: deltaTModel)
-        let jump = lightStep ? SolarAltitudeBounds.deltaTJumpDays : 0
+        let receptionStep = Self.crossesModelStep(lower: earliestUT, upper: latestUT, model: deltaTModel)
+        let jump = receptionStep ? SolarAltitudeBounds.deltaTJumpDays : 0
         // Within each piece g is increasing. The absolute jump sum also
         // encloses downward steps, for which endpoint images alone fail.
         let earliestTT = Engine.Time(ut: earliestUT, deltaTModel: deltaTModel).tt
@@ -232,8 +228,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         self.errorBound = ErrorBound(
             civilConversion: ErrorBound.addingUp(civilConversion, civilJump),
             scaleConversion: ErrorBound.addingUp(scaleConversion, inverseJump),
-            lightTimeTermination: ErrorBound.addingUp(
-                SolarAltitudeBounds.lightTimeDegrees, lightStep ? SolarAltitudeBounds.lightTimeJumpDegrees : 0),
+            lightTimeTermination: SolarAltitudeBounds.lightTimeDegrees,
             earthRotationAngle: SolarAltitudeBounds.eraDegrees
         )
     }

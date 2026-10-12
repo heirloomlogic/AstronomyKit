@@ -28,7 +28,7 @@ struct EngineEquatorialTests {
             && a.declination.bitPattern == b.declination.bitPattern && a.distance.bitPattern == b.distance.bitPattern
     }
 
-    @Test("Equatorial coordinates are the geocentric position less the observer's, J2000 or of date")
+    @Test("Topocentric light time and angular corrections precede the requested frame rotation")
     func composition() throws {
         for body in Self.bodies where body != .earth {
             for aberration in [Aberration.none, .corrected] {
@@ -37,9 +37,14 @@ struct EngineEquatorialTests {
                     of: body, at: Self.time, from: .geocentric, equatorDate: .j2000, aberration: aberration)
                 #expect(Self.same(fromCenter, try Engine.Equatorial(geocentric)), "\(body)")
 
-                let site = Engine.Observers.vector(ashevilleObserver, at: Self.time)
-                let topocentric = Engine.Vector<Engine.EQJ>(
-                    x: geocentric.x - site.x, y: geocentric.y - site.y, z: geocentric.z - site.z, time: Self.time)
+                let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: Self.time.tt)
+                let site = try Engine.ApparentPlace.siteKinematics(ashevilleObserver, at: Self.time)
+                let origin = Engine.ApparentPlace.Kinematics(
+                    motion: earth.motion + site.motion, acceleration: earth.acceleration + site.acceleration)
+                let result = try Engine.ApparentPlace.solution(
+                    body: body, at: Self.time, observer: origin, aberration: aberration
+                ).motion.value
+                let topocentric = Engine.Vector<Engine.EQJ>(x: result.x, y: result.y, z: result.z, time: Self.time)
                 let j2000 = try Positions.equatorial(
                     of: body, at: Self.time, from: ashevilleObserver, equatorDate: .j2000, aberration: aberration)
                 #expect(Self.same(j2000, try Engine.Equatorial(topocentric)), "\(body)")
@@ -122,9 +127,7 @@ struct EngineEquatorialTests {
     /// of; the model's TT is then 5.9 s later than the published TT − UTC
     /// in 2026, which moves the Moon about 3″. Horizons' refraction is
     /// Sæmundsson's formula with the elevation held at −1° below that, the
-    /// engine's `.jplHorizons` model. Measured, the largest angle is 5.6″,
-    /// for the Moon, which the engine, like the public API, takes without
-    /// aberration.
+    /// engine's `.jplHorizons` model. The independent rows retain their existing allowance; the public Moon now includes apparent corrections.
     @Test("Azimuth and elevation from Asheville against Horizons, with and without refraction")
     func horizonsHorizontal() throws {
         #expect(Self.horizontalRows.count == 96)
@@ -228,14 +231,7 @@ extension PlutoSegmentSuites {
             return (rightAscension * arcsecondsPerHour, declination * arcsecondsPerHour)
         }
 
-        /// The rates' allowance in arcseconds per hour. The planets' rates
-        /// are within 0.013″ per hour of Horizons'; 0.02 is that measured
-        /// bound rounded up, not a published accuracy. The Moon gets neither
-        /// light time nor aberration, as in the public API and the C engine,
-        /// while Horizons' apparent rates include aberration. Its shift, up
-        /// to κ = 20.49552″, turns with the Moon's motion of up to 0.26 radian
-        /// a day relative to Earth's velocity, so its rate reaches 0.22″ per
-        /// hour; the Moon is allowed 0.25 (measured 0.14).
+        /// Retained sampled angular-rate allowances, not published accuracies. The original Moon margin was qualified before its apparent corrections; it remains unchanged.
         static func rateAllowance(_ body: CelestialBody) -> Double { body == .moon ? 0.25 : 0.02 }
 
         /// The apparent rates of `body` at `time` less the row's, in
@@ -263,15 +259,11 @@ extension PlutoSegmentSuites {
         /// apparent RA and Dec rates on the true equator of date; `delta`, the
         /// range at the time light left the target; and `deldot`, the
         /// target's velocity then less the observer's now, along the line of
-        /// sight. `backdatedPosition` with no aberration gives `delta` for
-        /// every body, the Moon included, whose geocentric position has no
-        /// light time: without it the Moon's range is off by Earth's orbital
-        /// motion over the light time, 36 km in 2000. The engine solves light
-        /// time in the heliocentric frame and Horizons in the barycentric one,
-        /// which differ by the Sun's motion over the light time, about 13 m/s.
+        /// sight. The current shared chain solves elapsed-TDB light time on barycentric trajectories for every body, including the Moon.
         @Test("Positions, rates, ranges and range rates against the Horizons observer rows")
         func observerRows() throws {
             #expect(Self.rows.count == 12)
+            var rangeRates: [[String: Any]] = []
             for row in Self.rows {
                 let body = try Self.body(row.body)
                 let time = Self.time(row)
@@ -300,11 +292,31 @@ extension PlutoSegmentSuites {
                 #expect(rangeKm <= (try Self.rangeAllowanceKm(body)), "\(label): \(rangeKm) km")
 
                 let direction = SIMD3(backdated.x, backdated.y, backdated.z) / backdated.length
-                let target = try Positions.heliocentricState(of: body, at: backdated.time).velocityVector
-                let earth = try Positions.heliocentricState(of: .earth, at: time).velocityVector
-                let rangeRate = (direction * (target - earth)).sum() * Engine.kilometersPerAU / Engine.secondsPerDay
-                // Measured: 9.0e-5 km/s at most (Pluto, 1900, in the DE440 blend), 7e-6 elsewhere.
+                let target =
+                    try Engine.ApparentPlace.bodyMotion(body, tt: backdated.time.tt).rate
+                    / Engine.TDB.offsetAndRate(tt: backdated.time.tt).rate
+                let observer =
+                    try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt).motion.rate
+                    / Engine.TDB.offsetAndRate(tt: time.tt).rate
+                // Horizons deldot compares the velocities at their two epochs; it is not the reception-time derivative of the retarded range.
+                let rangeRate = (direction * (target - observer)).sum() * Engine.kilometersPerAU / Engine.secondsPerDay
                 #expect(abs(rangeRate - row.rangeRateKmPerSecond) <= 1e-4, "\(label): \(rangeRate) km/s")
+                if ProcessInfo.processInfo.environment["APPARENT_RANGE_RATE_CAPTURE"] != nil {
+                    let derivative = try Engine.ApparentPlace.geocentricMotion(body: body, at: time, aberration: .none)
+                        .rate
+                    rangeRates.append([
+                        "body": row.body, "utc": row.utc, "tt": time.tt,
+                        "emissionTT": backdated.time.tt, "horizonsDeldotKmPerSecond": row.rangeRateKmPerSecond,
+                        "projectedVelocityKmPerSecond": rangeRate,
+                        "retardedRangeDerivativeKmPerTTSecond": (direction * derivative).sum() * Engine.kilometersPerAU
+                            / Engine.secondsPerDay,
+                        "allowanceKmPerSecond": 1e-4,
+                    ])
+                }
+            }
+            if let path = ProcessInfo.processInfo.environment["APPARENT_RANGE_RATE_CAPTURE"] {
+                try JSONSerialization.data(withJSONObject: rangeRates, options: [.prettyPrinted, .sortedKeys])
+                    .write(to: URL(fileURLWithPath: path))
             }
         }
 

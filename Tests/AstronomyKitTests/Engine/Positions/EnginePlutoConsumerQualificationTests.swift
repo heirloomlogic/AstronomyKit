@@ -68,9 +68,12 @@ struct EnginePlutoConsumerQualificationTests {
                 #expect(emissionTDB > Engine.PlutoEphemeris.sourceStartTDB)
                 #expect(emissionTDB < Engine.PlutoEphemeris.sourceEndTDB && centerWeight > 0)
             }
-            // This checks the existing numerical stopping rule, not a new physical light-time accuracy limit.
-            let next = time.adding(days: -emission.length / Engine.speedOfLightAUPerDay)
-            #expect(abs(next.tt - emission.time.tt) < 1e-9)
+            // The numerical residual is elapsed TDB minus range/c; it is not a physical light-time accuracy limit.
+            let elapsedTDB =
+                time.tt - emission.time.tt
+                + (Engine.TDB.offsetSeconds(tt: time.tt) - Engine.TDB.offsetSeconds(tt: emission.time.tt))
+                / Engine.secondsPerDay
+            #expect(abs(elapsedTDB - emission.length / Engine.speedOfLightAUPerDay) < 1e-9)
             let heliocentric = try Engine.Positions.heliocentricPosition(of: .pluto, at: time)
             let omittedEarth = Self.angle(Self.vector(heliocentric), expectedAstrometric)
             let omittedFrame = Self.angle(Self.vector(apparent), expectedEQD)
@@ -80,7 +83,7 @@ struct EnginePlutoConsumerQualificationTests {
                 "tt": row.tt, "target": row.target, "astrometricArcminutes": errors[0],
                 "apparentICRFArcminutes": errors[1], "apparentEQDArcminutes": errors[2],
                 "emissionTT": emission.time.tt, "emissionTDB": emissionTDB, "centerWeight": centerWeight,
-                "nativeLightTimeMinutes": (time.tt - emission.time.tt) * 1440,
+                "nativeLightTimeMinutes": elapsedTDB * 1440,
                 "horizonsLightTimeMinutes": row.lightTimeMinutes,
                 "omittedEarthArcminutes": omittedEarth, "omittedFrameArcminutes": omittedFrame,
                 "aberrationDisplacementArcminutes": Self.angle(Self.vector(astrometric), Self.vector(apparent)),
@@ -145,12 +148,22 @@ struct EnginePlutoConsumerQualificationTests {
         #expect(horizontal.azimuth.isFinite && horizontal.altitude.isFinite)
     }
 
-    @Test("Sun-dependent angles retain the Sun's endpoint restriction")
+    @Test("Sun-dependent angles use the common apparent-source padding at the accepted endpoints")
     func sunDependentEndpoint() throws {
-        let endpoint = Engine.Time(tt: -1_461_000, deltaTModel: .jplHorizons)
-        #expect(throws: AstronomyError.badTime) { _ = try Engine.Positions.angleFromSun(of: .pluto, at: endpoint) }
-        #expect(throws: AstronomyError.badTime) { _ = try Engine.Positions.pairLongitude(.pluto, .sun, at: endpoint) }
-        #expect(throws: AstronomyError.badTime) { _ = try Engine.Positions.elongation(of: .pluto, at: endpoint) }
+        for tt in [-1_461_000.0, 1_461_000.0] {
+            let endpoint = Engine.Time(tt: tt, deltaTModel: .jplHorizons)
+            #expect(try Engine.Positions.angleFromSun(of: .pluto, at: endpoint).isFinite)
+            #expect(try Engine.Positions.pairLongitude(.pluto, .sun, at: endpoint).isFinite)
+            #expect(try Engine.Positions.elongation(of: .pluto, at: endpoint).elongation.isFinite)
+        }
+        for tt in [(-1_461_000.0).nextDown, 1_461_000.0.nextUp, .nan, .infinity, -.infinity] {
+            let exterior = Engine.Time(tt: tt, deltaTModel: .jplHorizons)
+            #expect(throws: AstronomyError.badTime) { _ = try Engine.Positions.angleFromSun(of: .pluto, at: exterior) }
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Engine.Positions.pairLongitude(.pluto, .sun, at: exterior)
+            }
+            #expect(throws: AstronomyError.badTime) { _ = try Engine.Positions.elongation(of: .pluto, at: exterior) }
+        }
         let time = Engine.Time(tt: -766_525, deltaTModel: .jplHorizons)
         #expect(try Engine.Positions.angleFromSun(of: .pluto, at: time).isFinite)
         #expect(try Engine.Positions.pairLongitude(.pluto, .sun, at: time).isFinite)

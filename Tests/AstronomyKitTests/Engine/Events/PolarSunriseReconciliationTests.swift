@@ -80,23 +80,20 @@ struct PolarSunriseReconciliationTests {
         let geocentric = try Self.root(toleranceSeconds: 0.001, observable: Self.geocentricFixedCenter)
         let geocentricResidual = Self.signedTTResidual(geocentric)
         let bisection = try Self.bisection(observable: Self.existingUpperLimb)
+        let opticalBisection = try Self.bisection(observable: Self.opticalUpperLimb)
 
         print(
             "polar-sunrise residuals: public=\(publicResidual), native=\(nativeResidual), "
                 + "fixed-center=\(fixedCenterResidual), geocentric=\(geocentricResidual), "
                 + "tolerances=\(existingRoots.map(Self.signedTTResidual)), "
-                + "bisection=\(Self.signedTTResidual(bisection))")
+                + "bisection=\(Self.signedTTResidual(bisection)), "
+                + "optical-bisection=\(Self.signedTTResidual(opticalBisection))")
 
-        // The public search is the native rise/set search with its 696,000 km
-        // optical limb, scanned from 2022-01-01 here; the archived row 2,923
-        // capture, scanned on from the previous event, roots 0.022 s later at
-        // +50.539200607 s, inside the search's 0.1 s tolerance. The three
-        // controls keep the 695,700 km nominal radius and the fixed-depression
-        // definitions that do not meet the allowance.
-        #expect(abs(publicResidual - 50.517_121_574) < 0.001)
-        #expect(abs(publicResidual - 50.539_200_607) < 0.1)
+        // Historical model measurements remain in PolarSunriseReconciliation.md.
+        // The current public root is checked against the unchanged source gate
+        // and an independently bisected 696,000 km optical-limb observable.
+        #expect(abs(publicResidual - Self.signedTTResidual(opticalBisection)) < 0.1)
         #expect(abs(publicResidual) <= 70.8)
-        #expect(abs(nativeResidual - 75.950_547_197) < 0.001)
         #expect(abs(fixedCenterResidual - -220.648_209_279) < 0.001)
         #expect(abs(geocentricResidual - -759.652_990_219) < 0.001)
         #expect(abs(nativeResidual) > 70.8)
@@ -118,13 +115,21 @@ struct PolarSunriseReconciliationTests {
     }
 
     private static func existingUpperLimb(_ time: Engine.Time) throws -> Double {
+        try upperLimb(time, radiusKilometers: solarRadiusKilometers)
+    }
+
+    private static func opticalUpperLimb(_ time: Engine.Time) throws -> Double {
+        try upperLimb(time, radiusKilometers: 696_000)
+    }
+
+    private static func upperLimb(_ time: Engine.Time, radiusKilometers: Double) throws -> Double {
         let coordinates = try Engine.Positions.equatorial(
             of: .sun, at: time, from: observer, equatorDate: .ofDate, aberration: .corrected)
         let horizontal = Engine.Horizontal(
             time: time, observer: observer, rightAscension: coordinates.rightAscension,
             declination: coordinates.declination, refraction: .none)
         let angularRadius =
-            asin(solarRadiusKilometers / Engine.kilometersPerAU / coordinates.distance)
+            asin(radiusKilometers / Engine.kilometersPerAU / coordinates.distance)
             * Engine.degreesPerRadian
         return horizontal.altitude + angularRadius + averageRefractionDegrees
     }

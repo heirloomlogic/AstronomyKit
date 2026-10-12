@@ -134,8 +134,8 @@ struct EnginePositionsReferenceTests {
         }
 
     /// `DistanceAccuracyTests` on the composed functions: the heliocentric
-    /// distance, and the length of the geocentric position with no
-    /// aberration, which Horizons' light-time ranges match.
+    /// distance and non-Moon astrometric range. The archived Moon NONE vectors
+    /// qualify the explicit geometric Moon route, not the apparent facade.
     @Test("Every DistanceAccuracyTests record within its allowance")
     func distances() throws {
         #expect(Self.distanceRecords.count == 2_546)
@@ -143,26 +143,29 @@ struct EnginePositionsReferenceTests {
             let range =
                 reference.mode == "heliocentric"
                 ? try Positions.heliocentricDistance(of: body, at: time)
-                : try Positions.geocentricPosition(of: body, at: time, aberration: .none).length
-            let errorKm = abs(range - reference.referenceRangeAU) * Engine.kilometersPerAU
+                : body == .moon
+                    ? try Engine.Moon.geocentricPosition(at: time).length
+                    : try Positions.geocentricPosition(of: body, at: time, aberration: .none).length
+            let errorKm = abs(range - reference.observableRangeAU) * Engine.kilometersPerAU
             #expect(
                 errorKm <= reference.allowedErrorKm,
                 "\(reference.body) \(reference.mode) JD TT \(reference.julianDateTT): \(errorKm) km")
         }
     }
 
-    @Test("The distance checks fail for the wrong mode, aberration or day")
+    @Test("Wrong origins and dates miss the range; angular corrections preserve it")
     func distanceNegativeControls() throws {
         let (_, time, geocentric) = try #require(
             Self.distanceRecords.first { $0.body == .mars && $0.2.mode == "geocentric" })
         func misses(_ range: Double) -> Bool {
-            abs(range - geocentric.referenceRangeAU) * Engine.kilometersPerAU
+            abs(range - geocentric.observableRangeAU) * Engine.kilometersPerAU
                 > geocentric.allowedErrorKm
         }
         #expect(misses(try Positions.heliocentricDistance(of: .mars, at: time)))
-        #expect(
-            misses(try Positions.geocentricPosition(of: .mars, at: time, aberration: .corrected).length)
-        )
+        let astrometricRange = try Positions.geocentricPosition(of: .mars, at: time, aberration: .none).length
+        let apparentRange = try Positions.geocentricPosition(of: .mars, at: time, aberration: .corrected).length
+        #expect(abs(apparentRange - astrometricRange) < 1e-14)
+        #expect(!misses(astrometricRange))
         #expect(
             misses(
                 try Positions.geocentricPosition(of: .mars, at: time.adding(days: 1), aberration: .none)
@@ -171,9 +174,8 @@ struct EnginePositionsReferenceTests {
 
     // MARK: - The Moon's JPLValidationTests suites
 
-    /// The geocentric position the public API reads, with no light time,
-    /// against the astrometric rows of the Moon's suites. The light time
-    /// moves the Moon by about 0.7″, far inside the 1′ allowance.
+    /// The astrometric geocentric route, with optional geometric site subtraction,
+    /// retains its independent 1′ comparison against the Moon suites.
     @Test("The JPLValidationTests geocentric and Asheville Moon suites within their 1′")
     func moon() throws {
         let suites: [(Observer?, [JPLReferencePoint])] = [

@@ -48,3 +48,5 @@ python3 Scripts/generate-moon-events.py --collect-results .context/issue-184/lin
 ```
 
 The source replay needs the verified link-2 cache; ordinary CI uses the pinned fixture offline. Runtime measurements from link 3 remain applicable to unchanged production code. The public API integration and archived position gates are complete. Broader absolute state and event accuracy remains outside the evidence recorded here.
+
+The event report binds the complete native Engine Swift module, including the apparent-place trajectory, TT/TDB clock, generated tables and orientation dependencies used by phase searches, plus its public time/body types, reference archives and test harnesses. This module-wide set is conservative: it includes engine files outside an individual phase call. Offline replay checks the required set as well as every named digest, so removing a composition dependency does not leave a valid report. The recorded native rows are reused only when their runtime and test sources are byte-identical; changing the collector alone requires regenerating the source map, not relabeling older runtime results.

@@ -53,30 +53,30 @@
     "apparent": [
       {
         "event": "firstQuarter",
-        "nativeTT": 9137.498219264804,
+        "nativeTT": 9137.49822678726,
         "referenceUTC": "2025-01-06T23:56:17.647Z",
-        "residualSeconds": -1.5140959352720529,
+        "residualSeconds": -0.8641557244118303,
         "timeAllowanceSeconds": 15
       },
       {
         "event": "full",
-        "nativeTT": 9144.43614594504,
+        "nativeTT": 9144.436153750928,
         "referenceUTC": "2025-01-13T22:26:54.540Z",
-        "residualSeconds": -1.5419234347064048,
+        "residualSeconds": -0.8674946031533182,
         "timeAllowanceSeconds": 15
       },
       {
         "event": "lastQuarter",
-        "nativeTT": 9152.355507619504,
+        "nativeTT": 9152.355516230917,
         "referenceUTC": "2025-01-21T20:30:47.461Z",
-        "residualSeconds": -1.6142497246619314,
+        "residualSeconds": -0.8702236984390765,
         "timeAllowanceSeconds": 15
       },
       {
         "event": "new",
-        "nativeTT": 9160.025780717204,
+        "nativeTT": 9160.025787531136,
         "referenceUTC": "2025-01-29T12:35:58.903Z",
-        "residualSeconds": -1.4606086537241936,
+        "residualSeconds": -0.871884886873886,
         "timeAllowanceSeconds": 15
       }
     ],
@@ -85,198 +85,198 @@
         "event": "new",
         "gating": true,
         "meanNode": false,
-        "nativeTT": -73024.36021446851,
+        "nativeTT": -73024.36020752843,
         "referenceTT": -73024.36025812448,
-        "residualSeconds": 3.771875286474824,
+        "residualSeconds": 4.371498618274927,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "firstQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": -73046.54338902194,
+        "nativeTT": -73046.54338000852,
         "referenceTT": -73046.54359122433,
-        "residualSeconds": 17.470285948365927,
+        "residualSeconds": 18.249046057462692,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "full",
         "gating": true,
         "meanNode": false,
-        "nativeTT": -73038.4027816438,
+        "nativeTT": -73038.40277334943,
         "referenceTT": -73038.40261908786,
-        "residualSeconds": -14.044833043590188,
+        "residualSeconds": -13.328199181705713,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "lastQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": -73031.17176811388,
+        "nativeTT": -73031.17176088643,
         "referenceTT": -73031.17136916397,
-        "residualSeconds": -34.46927214972675,
+        "residualSeconds": -33.84481994435191,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "new",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 5.260202149898146,
+        "nativeTT": 5.260211196840543,
         "referenceTT": 5.260461403345642,
-        "residualSeconds": -22.399497863625584,
+        "residualSeconds": -21.617842040524238,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "firstQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 13.0661381508263,
+        "nativeTT": 13.06614583437979,
         "referenceTT": 13.066017040682027,
-        "residualSeconds": 10.46391646513598,
+        "residualSeconds": 11.127775486778546,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "full",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 19.695484716153683,
+        "nativeTT": 19.69549150071303,
         "referenceTT": 19.695183776306614,
-        "residualSeconds": 26.00120278674467,
+        "residualSeconds": 26.58738871426749,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "lastQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 26.83175787167904,
+        "nativeTT": 26.831765814713904,
         "referenceTT": 26.83198940559072,
-        "residualSeconds": -20.00452996888953,
+        "residualSeconds": -19.318251756749305,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "new",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36534.04091093274,
+        "nativeTT": 36534.040918909996,
         "referenceTT": 36534.041930573454,
-        "residualSeconds": -88.09695790987462,
+        "residualSeconds": -87.40772281307727,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "firstQuarter",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36542.02566906625,
+        "nativeTT": 36542.025677871236,
         "referenceTT": 36542.026653391964,
-        "residualSeconds": -85.04574168473482,
+        "residualSeconds": -84.28499093279243,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "full",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36549.62003261415,
+        "nativeTT": 36549.62003962324,
         "referenceTT": 36549.62109840358,
-        "residualSeconds": -92.08420682698488,
+        "residualSeconds": -91.47862144745886,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "lastQuarter",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36527.04623334087,
+        "nativeTT": 36527.046240854135,
         "referenceTT": 36527.047485606716,
-        "residualSeconds": -108.1957688787952,
+        "residualSeconds": -107.54662295803428,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "new",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36534.0409109333,
+        "nativeTT": 36534.04091891003,
         "referenceTT": 36534.040919548366,
-        "residualSeconds": -0.7443419191986322,
+        "residualSeconds": -0.055152084678411484,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "firstQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36542.02566906461,
+        "nativeTT": 36542.02567787112,
         "referenceTT": 36542.02567853825,
-        "residualSeconds": -0.818522390909493,
+        "residualSeconds": -0.05764025263488293,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "full",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36549.62003261509,
+        "nativeTT": 36549.62003962331,
         "referenceTT": 36549.62004022114,
-        "residualSeconds": -0.6571630015969276,
+        "residualSeconds": -0.051652430556714535,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "lastQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36527.04623334102,
+        "nativeTT": 36527.04624085414,
         "referenceTT": 36527.04624143522,
-        "residualSeconds": -0.6993392715230584,
+        "residualSeconds": -0.05020529497414827,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "ascending",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 374.07933661133234,
+        "nativeTT": 374.07933661133296,
         "referenceTT": 374.07921509259256,
-        "residualSeconds": 10.499219116536551,
+        "residualSeconds": 10.499219170560536,
         "timeAllowanceSeconds": 220.86
       },
       {
         "event": "descending",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 387.4330098358683,
+        "nativeTT": 387.4330098358692,
         "referenceTT": 387.4326873148148,
-        "residualSeconds": 27.86581902037142,
+        "residualSeconds": 27.86581909895176,
         "timeAllowanceSeconds": 220.86
       },
       {
         "event": "descending",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 18265.639111882992,
+        "nativeTT": 18265.639111883054,
         "referenceTT": 18265.639689629632,
-        "residualSeconds": -49.917309649754316,
+        "residualSeconds": -49.917304306291044,
         "timeAllowanceSeconds": 220.86
       },
       {
         "event": "ascending",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 18280.23195332337,
+        "nativeTT": 18280.23195332345,
         "referenceTT": 18280.232050740742,
-        "residualSeconds": -8.416860841680318,
+        "residualSeconds": -8.416853926610202,
         "timeAllowanceSeconds": 220.86
       },
       {
         "event": "descending",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36525.38541373522,
+        "nativeTT": 36525.38541373138,
         "referenceTT": 36525.384828518516,
-        "residualSeconds": 50.56272300425917,
+        "residualSeconds": 50.562391709536314,
         "timeAllowanceSeconds": 220.86
       },
       {
         "event": "ascending",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36538.664761284934,
+        "nativeTT": 36538.66476128049,
         "referenceTT": 36538.66468962963,
-        "residualSeconds": 6.191018270328641,
+        "residualSeconds": 6.190634169615805,
         "timeAllowanceSeconds": 220.86
       },
       {
@@ -285,20 +285,20 @@
         "event": "pericenter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 374.8758171025725,
+        "nativeTT": 374.87581710257234,
         "referenceTT": 374.8750484259259,
-        "residualSeconds": 66.41366226631362,
+        "residualSeconds": 66.41366225157981,
         "timeAllowanceSeconds": 2100
       },
       {
         "distanceAllowanceKm": 25,
-        "distanceResidualKm": -2.5619022691389546,
+        "distanceResidualKm": -2.5619022690225393,
         "event": "apocenter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 389.29479720034993,
+        "nativeTT": 389.2947972003499,
         "referenceTT": 389.2937984259259,
-        "residualSeconds": 86.29411023648572,
+        "residualSeconds": 86.29411023157445,
         "timeAllowanceSeconds": 2100
       },
       {
@@ -314,7 +314,7 @@
       },
       {
         "distanceAllowanceKm": 25,
-        "distanceResidualKm": -0.8343365826876834,
+        "distanceResidualKm": -0.8343365827458911,
         "event": "pericenter",
         "gating": true,
         "meanNode": false,
@@ -325,7 +325,7 @@
       },
       {
         "distanceAllowanceKm": 25,
-        "distanceResidualKm": 9.985324950015638,
+        "distanceResidualKm": 9.985324950073846,
         "event": "pericenter",
         "gating": true,
         "meanNode": false,
@@ -336,7 +336,7 @@
       },
       {
         "distanceAllowanceKm": 25,
-        "distanceResidualKm": -3.24312180042034,
+        "distanceResidualKm": -3.243121800478548,
         "event": "apocenter",
         "gating": true,
         "meanNode": false,
@@ -358,115 +358,115 @@
         "event": "ascending",
         "gating": true,
         "meanNode": true,
-        "nativeTT": -35220.305024489964,
+        "nativeTT": -35220.305024490175,
         "referenceTT": -35220.30502454005,
-        "residualSeconds": 0.004327576607465744,
+        "residualSeconds": 0.004309345968067646,
         "timeAllowanceSeconds": 60
       }
     ],
     "source": [
       {
-        "distanceResidualKm": 1.3277501148404554,
+        "distanceResidualKm": 1.3277424059342593,
         "event": "new",
-        "nativeTT": -1460990.5239901508,
-        "residualSeconds": 2.0053602755069733,
-        "sourceTT": -1460990.524013361,
+        "nativeTT": -1460990.5239867694,
+        "residualSeconds": 2.005521208047867,
+        "sourceTT": -1460990.5240099814,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 0.05402929172851145,
+        "distanceResidualKm": 0.054022032127249986,
         "event": "new",
-        "nativeTT": -1460960.8664785025,
-        "residualSeconds": 0.9624972939491272,
-        "sourceTT": -1460960.8664896425,
+        "nativeTT": -1460960.8664722748,
+        "residualSeconds": 0.9625978767871857,
+        "sourceTT": -1460960.866483416,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 4.3440792131004855,
+        "distanceResidualKm": 4.344074128603097,
         "event": "firstQuarter",
-        "nativeTT": -1460983.1330599664,
-        "residualSeconds": 3.040136396884918,
-        "sourceTT": -1460983.1330951531,
+        "nativeTT": -1460983.133058401,
+        "residualSeconds": 3.0402973294258118,
+        "sourceTT": -1460983.1330935897,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 4.329988613957539,
+        "distanceResidualKm": 4.329996169894002,
         "event": "firstQuarter",
-        "nativeTT": -1460953.8392594352,
-        "residualSeconds": 1.360221952199936,
-        "sourceTT": -1460953.8392751785,
+        "nativeTT": -1460953.8392669226,
+        "residualSeconds": 1.3603828847408295,
+        "sourceTT": -1460953.8392826677,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 0.016712958458811045,
+        "distanceResidualKm": 0.016714840952772647,
         "event": "full",
-        "nativeTT": -1460976.4178518176,
-        "residualSeconds": -0.12371689081192017,
-        "sourceTT": -1460976.4178503857,
+        "nativeTT": -1460976.417847021,
+        "residualSeconds": -0.12367665767669678,
+        "sourceTT": -1460976.4178455896,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 2.7322345617576502,
+        "distanceResidualKm": 2.7322512582177296,
         "event": "full",
-        "nativeTT": -1460946.9032149839,
-        "residualSeconds": -4.348598420619965,
-        "sourceTT": -1460946.9031646529,
+        "nativeTT": -1460946.9032095901,
+        "residualSeconds": -4.348316788673401,
+        "sourceTT": -1460946.9031592624,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": -1.4302195141208358,
+        "distanceResidualKm": -1.4302225867286325,
         "event": "lastQuarter",
-        "nativeTT": -1460998.7099285738,
-        "residualSeconds": -1.6304880380630493,
-        "sourceTT": -1460998.7099097024,
+        "nativeTT": -1460998.7099203714,
+        "residualSeconds": -1.6306087374687195,
+        "sourceTT": -1460998.7099014986,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": -0.14248504681745544,
+        "distanceResidualKm": -0.142489732184913,
         "event": "lastQuarter",
-        "nativeTT": -1460968.8782582022,
-        "residualSeconds": -0.647270679473877,
-        "sourceTT": -1460968.8782507107,
+        "nativeTT": -1460968.8782622926,
+        "residualSeconds": -0.6473712623119354,
+        "sourceTT": -1460968.8782547999,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": -0.996909054403659,
+        "distanceResidualKm": -0.9969050383660942,
         "event": "lastQuarter",
-        "nativeTT": -1460939.050147112,
-        "residualSeconds": 0.8031740784645081,
-        "sourceTT": -1460939.050156408,
+        "nativeTT": -1460939.0501589335,
+        "residualSeconds": 0.8030332624912262,
+        "sourceTT": -1460939.0501682279,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 0.3194928555749357,
+        "distanceResidualKm": 0.3218545379349962,
         "event": "ascending",
-        "nativeTT": -1460976.61557141,
-        "residualSeconds": 0.0827595591545105,
-        "sourceTT": -1460976.6155723678,
+        "nativeTT": -1460976.6160360791,
+        "residualSeconds": 0.08342340588569641,
+        "sourceTT": -1460976.6160370447,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 4.003306144673843,
+        "distanceResidualKm": 4.00577920867363,
         "event": "ascending",
-        "nativeTT": -1460949.2685203413,
-        "residualSeconds": 0.45759156346321106,
-        "sourceTT": -1460949.2685256375,
+        "nativeTT": -1460949.2689971933,
+        "residualSeconds": 0.457531213760376,
+        "sourceTT": -1460949.2690024888,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 0.8978114041383378,
+        "distanceResidualKm": 0.8982053902000189,
         "event": "descending",
-        "nativeTT": -1460989.613781447,
-        "residualSeconds": 1.843743771314621,
-        "sourceTT": -1460989.6138027867,
+        "nativeTT": -1460989.6143068722,
+        "residualSeconds": 1.8441259860992432,
+        "sourceTT": -1460989.6143282163,
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 1.0804029142018408,
+        "distanceResidualKm": 1.0807260566507466,
         "event": "descending",
-        "nativeTT": -1460962.2887091974,
-        "residualSeconds": 3.1626664102077484,
-        "sourceTT": -1460962.2887458024,
+        "nativeTT": -1460962.289233132,
+        "residualSeconds": 3.1626060605049133,
+        "sourceTT": -1460962.2892697363,
         "window": "uniform-00"
       },
       {
@@ -478,7 +478,7 @@
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 0.6494947781902738,
+        "distanceResidualKm": 0.6494947782484815,
         "event": "pericenter",
         "nativeTT": -1460952.7684221428,
         "residualSeconds": 656.3838869333267,
@@ -510,107 +510,107 @@
         "window": "uniform-00"
       },
       {
-        "distanceResidualKm": 12.230831554159522,
+        "distanceResidualKm": 12.230839715106413,
         "event": "new",
-        "nativeTT": -1278374.0461288353,
-        "residualSeconds": -1.623407006263733,
-        "sourceTT": -1278374.0461100459,
+        "nativeTT": -1278374.046127698,
+        "residualSeconds": -1.6231052577495575,
+        "sourceTT": -1278374.046108912,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 0.12946624588221312,
+        "distanceResidualKm": 0.12947265896946192,
         "event": "new",
-        "nativeTT": -1278344.5696086544,
-        "residualSeconds": 0.030597299337387085,
-        "sourceTT": -1278344.5696090085,
+        "nativeTT": -1278344.5696078094,
+        "residualSeconds": 0.030818581581115723,
+        "sourceTT": -1278344.569608166,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 2.3122035150881857,
+        "distanceResidualKm": 2.3122251825989224,
         "event": "new",
-        "nativeTT": -1278315.0573126397,
-        "residualSeconds": -4.314722120761871,
-        "sourceTT": -1278315.0572627007,
+        "nativeTT": -1278315.0573129323,
+        "residualSeconds": -4.314239323139191,
+        "sourceTT": -1278315.057262999,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": -1.4018108420423232,
+        "distanceResidualKm": -1.4018018043134362,
         "event": "firstQuarter",
-        "nativeTT": -1278366.8295255068,
-        "residualSeconds": -1.3969749212265015,
-        "sourceTT": -1278366.8295093381,
+        "nativeTT": -1278366.8295188572,
+        "residualSeconds": -1.396813988685608,
+        "sourceTT": -1278366.8295026904,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": -0.23921881610294804,
+        "distanceResidualKm": -0.23921570973470807,
         "event": "firstQuarter",
-        "nativeTT": -1278336.9900722383,
-        "residualSeconds": -0.8683517575263977,
-        "sourceTT": -1278336.990062188,
+        "nativeTT": -1278336.9900733244,
+        "residualSeconds": -0.8681505918502808,
+        "sourceTT": -1278336.9900632764,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 1.465656471438706,
+        "distanceResidualKm": 1.465679623070173,
         "event": "full",
-        "nativeTT": -1278358.6611405103,
-        "residualSeconds": 2.019985020160675,
-        "sourceTT": -1278358.6611638898,
+        "nativeTT": -1278358.661139387,
+        "residualSeconds": 2.019341289997101,
+        "sourceTT": -1278358.661162759,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 0.1731334010255523,
+        "distanceResidualKm": 0.17314283596351743,
         "event": "full",
-        "nativeTT": -1278329.0165954942,
-        "residualSeconds": 1.6377300024032593,
-        "sourceTT": -1278329.0166144494,
+        "nativeTT": -1278329.0165949338,
+        "residualSeconds": 1.6375087201595306,
+        "sourceTT": -1278329.0166138865,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 4.4959802084486,
+        "distanceResidualKm": 4.495986822119448,
         "event": "lastQuarter",
-        "nativeTT": -1278351.2764951542,
-        "residualSeconds": 2.6284508407115936,
-        "sourceTT": -1278351.2765255761,
+        "nativeTT": -1278351.2764926397,
+        "residualSeconds": 2.6283301413059235,
+        "sourceTT": -1278351.2765230602,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 4.562232098542154,
+        "distanceResidualKm": 4.562235165038146,
         "event": "lastQuarter",
-        "nativeTT": -1278321.9857466128,
-        "residualSeconds": 1.064649224281311,
-        "sourceTT": -1278321.985758935,
+        "nativeTT": -1278321.9857509723,
+        "residualSeconds": 1.0646089911460876,
+        "sourceTT": -1278321.9857632942,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 2.3527680442202836,
+        "distanceResidualKm": 2.352934834489133,
         "event": "ascending",
-        "nativeTT": -1278354.9230011643,
-        "residualSeconds": 1.6842395067214966,
-        "sourceTT": -1278354.9230206579,
+        "nativeTT": -1278354.9237146487,
+        "residualSeconds": 1.6838572919368744,
+        "sourceTT": -1278354.9237341378,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 3.4932134421542287,
+        "distanceResidualKm": 3.490511347015854,
         "event": "ascending",
-        "nativeTT": -1278327.6968350196,
-        "residualSeconds": 0.6495639681816101,
-        "sourceTT": -1278327.6968425377,
+        "nativeTT": -1278327.6975171592,
+        "residualSeconds": 0.6486184895038605,
+        "sourceTT": -1278327.6975246663,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 1.7265919523779303,
+        "distanceResidualKm": 1.7270131536060944,
         "event": "descending",
-        "nativeTT": -1278369.4388405196,
-        "residualSeconds": -4.943787306547165,
-        "sourceTT": -1278369.4387832999,
+        "nativeTT": -1278369.4395790326,
+        "residualSeconds": -4.947026073932648,
+        "sourceTT": -1278369.4395217753,
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 2.7774187920731492,
+        "distanceResidualKm": 2.7767645798739977,
         "event": "descending",
-        "nativeTT": -1278342.1496998759,
-        "residualSeconds": -5.349357426166534,
-        "sourceTT": -1278342.149637962,
+        "nativeTT": -1278342.1503968525,
+        "residualSeconds": -5.349820107221603,
+        "sourceTT": -1278342.1503349333,
         "window": "uniform-01"
       },
       {
@@ -622,7 +622,7 @@
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 7.390653591020964,
+        "distanceResidualKm": 7.390653591137379,
         "event": "pericenter",
         "nativeTT": -1278347.4934734127,
         "residualSeconds": -390.1901587843895,
@@ -630,7 +630,7 @@
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": 2.685221042658668,
+        "distanceResidualKm": 2.6852210427168757,
         "event": "pericenter",
         "nativeTT": -1278321.1937193442,
         "residualSeconds": 750.5463615059853,
@@ -638,7 +638,7 @@
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": -0.022503364423755556,
+        "distanceResidualKm": -0.022503364365547895,
         "event": "apocenter",
         "nativeTT": -1278363.5002768985,
         "residualSeconds": -9.774499386548996,
@@ -654,107 +654,107 @@
         "window": "uniform-01"
       },
       {
-        "distanceResidualKm": -0.007942016702145338,
+        "distanceResidualKm": -0.007948091544676572,
         "event": "new",
-        "nativeTT": -1095756.510177847,
-        "residualSeconds": 0.003962963819503784,
-        "sourceTT": -1095756.5101778929,
+        "nativeTT": -1095756.5101715173,
+        "residualSeconds": 0.004244595766067505,
+        "sourceTT": -1095756.5101715664,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 1.603030046215281,
+        "distanceResidualKm": 1.6030185366980731,
         "event": "new",
-        "nativeTT": -1095726.7706991907,
-        "residualSeconds": 2.019200474023819,
-        "sourceTT": -1095726.770722561,
+        "nativeTT": -1095726.77069582,
+        "residualSeconds": 2.0194821059703827,
+        "sourceTT": -1095726.7707191936,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 0.3614459296804853,
+        "distanceResidualKm": 0.36145078780828044,
         "event": "new",
-        "nativeTT": -1095697.1480403491,
-        "residualSeconds": 2.2311486303806305,
-        "sourceTT": -1095697.1480661726,
+        "nativeTT": -1095697.1480398658,
+        "residualSeconds": 2.2310279309749603,
+        "sourceTT": -1095697.1480656879,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": -0.10832540987757966,
+        "distanceResidualKm": -0.10833074402762577,
         "event": "firstQuarter",
-        "nativeTT": -1095748.8085189923,
-        "residualSeconds": 0.597120076417923,
-        "sourceTT": -1095748.8085259034,
+        "nativeTT": -1095748.8085114448,
+        "residualSeconds": 0.5972608923912048,
+        "sourceTT": -1095748.8085183576,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 4.496651510009542,
+        "distanceResidualKm": 4.496655276918318,
         "event": "firstQuarter",
-        "nativeTT": -1095719.4153266796,
-        "residualSeconds": 2.242172509431839,
-        "sourceTT": -1095719.4153526307,
+        "nativeTT": -1095719.415322601,
+        "residualSeconds": 2.242313325405121,
+        "sourceTT": -1095719.4153485538,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 11.885611340985633,
+        "distanceResidualKm": 11.885619829175994,
         "event": "full",
-        "nativeTT": -1095742.163008788,
-        "residualSeconds": -2.5194592773914337,
-        "sourceTT": -1095742.1629796275,
+        "nativeTT": -1095742.1630047804,
+        "residualSeconds": -2.5191977620124817,
+        "sourceTT": -1095742.162975623,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 0.7913927843328565,
+        "distanceResidualKm": 0.7913739192299545,
         "event": "full",
-        "nativeTT": -1095712.6934543846,
-        "residualSeconds": 0.16606226563453674,
-        "sourceTT": -1095712.6934563066,
+        "nativeTT": -1095712.6934525843,
+        "residualSeconds": 0.16592144966125488,
+        "sourceTT": -1095712.6934545047,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": -1.3759670941508375,
+        "distanceResidualKm": -1.3759713809704408,
         "event": "lastQuarter",
-        "nativeTT": -1095734.9537118494,
-        "residualSeconds": -1.2038558721542358,
-        "sourceTT": -1095734.953697916,
+        "nativeTT": -1095734.9537046338,
+        "residualSeconds": -1.203976571559906,
+        "sourceTT": -1095734.9536906988,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": -0.3670226166723296,
+        "distanceResidualKm": -0.3670228410628624,
         "event": "lastQuarter",
-        "nativeTT": -1095705.1061533343,
-        "residualSeconds": -1.0590165853500366,
-        "sourceTT": -1095705.1061410771,
+        "nativeTT": -1095705.1061513685,
+        "residualSeconds": -1.059117168188095,
+        "sourceTT": -1095705.1061391102,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": -1.248715210647788,
+        "distanceResidualKm": -1.2487939795828424,
         "event": "ascending",
-        "nativeTT": -1095734.3995720253,
-        "residualSeconds": -1.301320642232895,
-        "sourceTT": -1095734.3995569637,
+        "nativeTT": -1095734.3998889131,
+        "residualSeconds": -1.3012401759624481,
+        "sourceTT": -1095734.3998738525,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": -1.3013315171119757,
+        "distanceResidualKm": -1.3012791678775102,
         "event": "ascending",
-        "nativeTT": -1095707.303220772,
-        "residualSeconds": -1.4600001275539398,
-        "sourceTT": -1095707.3032038738,
+        "nativeTT": -1095707.30353769,
+        "residualSeconds": -1.4597788453102112,
+        "sourceTT": -1095707.3035207945,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 6.096384292002767,
+        "distanceResidualKm": 6.0962026550550945,
         "event": "descending",
-        "nativeTT": -1095747.2238397119,
-        "residualSeconds": 4.87842857837677,
-        "sourceTT": -1095747.2238961752,
+        "nativeTT": -1095747.2241035004,
+        "residualSeconds": 4.877825081348419,
+        "sourceTT": -1095747.2241599567,
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 1.0261223369743675,
+        "distanceResidualKm": 1.024598429503385,
         "event": "descending",
-        "nativeTT": -1095720.1939097238,
-        "residualSeconds": 0.29460713267326355,
-        "sourceTT": -1095720.1939131336,
+        "nativeTT": -1095720.1941899215,
+        "residualSeconds": 0.29418468475341797,
+        "sourceTT": -1095720.1941933264,
         "window": "uniform-02"
       },
       {
@@ -774,7 +774,7 @@
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 0.05997329152887687,
+        "distanceResidualKm": 0.05997329158708453,
         "event": "apocenter",
         "nativeTT": -1095731.6991686337,
         "residualSeconds": -3.044622391462326,
@@ -790,111 +790,111 @@
         "window": "uniform-02"
       },
       {
-        "distanceResidualKm": 11.166666296834592,
+        "distanceResidualKm": 11.166669535101391,
         "event": "new",
-        "nativeTT": -913110.2842976187,
+        "nativeTT": -913110.2842920332,
         "residualSeconds": -3.4111563116312027,
-        "sourceTT": -913110.2842581377,
+        "sourceTT": -913110.2842525522,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 1.6803076130454428,
+        "distanceResidualKm": 1.6802851364482194,
         "event": "new",
-        "nativeTT": -913080.8053907824,
-        "residualSeconds": 0.19549280405044556,
-        "sourceTT": -913080.8053930451,
+        "nativeTT": -913080.805388053,
+        "residualSeconds": 0.19553303718566895,
+        "sourceTT": -913080.8053903161,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.15714287181617692,
+        "distanceResidualKm": 0.15714678668882698,
         "event": "firstQuarter",
-        "nativeTT": -913132.8298141223,
-        "residualSeconds": -1.2009289115667343,
-        "sourceTT": -913132.8298002227,
+        "nativeTT": -913132.8298052684,
+        "residualSeconds": -1.2007277458906174,
+        "sourceTT": -913132.8297913711,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": -1.3151094922213815,
+        "distanceResidualKm": -1.315101807413157,
         "event": "firstQuarter",
-        "nativeTT": -913103.0496653415,
-        "residualSeconds": -0.964418426156044,
-        "sourceTT": -913103.0496541793,
+        "nativeTT": -913103.0496581099,
+        "residualSeconds": -0.9642574936151505,
+        "sourceTT": -913103.0496469495,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": -0.4663244172697887,
+        "distanceResidualKm": -0.4663191133295186,
         "event": "firstQuarter",
-        "nativeTT": -913073.2049771827,
-        "residualSeconds": -1.1144276708364487,
-        "sourceTT": -913073.2049642842,
+        "nativeTT": -913073.2049742241,
+        "residualSeconds": -1.1142466217279434,
+        "sourceTT": -913073.2049613277,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.01137334032682702,
+        "distanceResidualKm": 0.011373115587048233,
         "event": "full",
-        "nativeTT": -913124.6095585936,
-        "residualSeconds": 0.0445682555437088,
-        "sourceTT": -913124.6095591094,
+        "nativeTT": -913124.6095502231,
+        "residualSeconds": 0.04453808069229126,
+        "sourceTT": -913124.6095507386,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 1.8051239891792648,
+        "distanceResidualKm": 1.8051172597333789,
         "event": "full",
-        "nativeTT": -913094.8672395318,
-        "residualSeconds": 2.071533724665642,
-        "sourceTT": -913094.8672635079,
+        "nativeTT": -913094.8672346273,
+        "residualSeconds": 2.0716845989227295,
+        "sourceTT": -913094.8672586051,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": -0.12306320376228541,
+        "distanceResidualKm": -0.123056129028555,
         "event": "lastQuarter",
-        "nativeTT": -913116.945381592,
-        "residualSeconds": 1.0942306369543076,
-        "sourceTT": -913116.9453942567,
+        "nativeTT": -913116.9453741661,
+        "residualSeconds": 1.0940797626972198,
+        "sourceTT": -913116.9453868291,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 4.277112116513308,
+        "distanceResidualKm": 4.277129810769111,
         "event": "lastQuarter",
-        "nativeTT": -913087.5688300941,
-        "residualSeconds": 1.6002830117940903,
-        "sourceTT": -913087.5688486159,
+        "nativeTT": -913087.568825656,
+        "residualSeconds": 1.6001924872398376,
+        "sourceTT": -913087.5688441767,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.5431547504267655,
+        "distanceResidualKm": 0.5432128635584377,
         "event": "ascending",
-        "nativeTT": -913112.751715714,
-        "residualSeconds": 0.9745672345161438,
-        "sourceTT": -913112.7517269937,
+        "nativeTT": -913112.751731044,
+        "residualSeconds": 0.9746979922056198,
+        "sourceTT": -913112.7517423253,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 3.61170756991487,
+        "distanceResidualKm": 3.6117612692760304,
         "event": "ascending",
-        "nativeTT": -913085.5422783924,
-        "residualSeconds": 3.3753186464309692,
-        "sourceTT": -913085.5423174585,
+        "nativeTT": -913085.5422979777,
+        "residualSeconds": 3.3753588795661926,
+        "sourceTT": -913085.5423370444,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.43919830897357315,
+        "distanceResidualKm": 0.4392010166775435,
         "event": "descending",
-        "nativeTT": -913126.4348636365,
-        "residualSeconds": 0.8692469447851181,
-        "sourceTT": -913126.4348736972,
+        "nativeTT": -913126.434881847,
+        "residualSeconds": 0.8692368865013123,
+        "sourceTT": -913126.4348919076,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.06295978283742443,
+        "distanceResidualKm": 0.0629635588848032,
         "event": "descending",
-        "nativeTT": -913099.2189943359,
-        "residualSeconds": 1.2453261762857437,
-        "sourceTT": -913099.2190087494,
+        "nativeTT": -913099.2190151293,
+        "residualSeconds": 1.2453161180019379,
+        "sourceTT": -913099.2190295426,
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 4.7821840267279185,
+        "distanceResidualKm": 4.7821840269025415,
         "event": "pericenter",
         "nativeTT": -913111.922659267,
         "residualSeconds": -573.7643893808126,
@@ -910,7 +910,7 @@
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.4273630221723579,
+        "distanceResidualKm": 0.42736302223056555,
         "event": "apocenter",
         "nativeTT": -913127.6614883419,
         "residualSeconds": 41.23786725103855,
@@ -918,7 +918,7 @@
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.08566071162931621,
+        "distanceResidualKm": 0.08566071157110855,
         "event": "apocenter",
         "nativeTT": -913100.005313062,
         "residualSeconds": 13.159313052892685,
@@ -926,111 +926,111 @@
         "window": "uniform-03"
       },
       {
-        "distanceResidualKm": 0.012214725487865508,
+        "distanceResidualKm": 0.01221564837032929,
         "event": "new",
-        "nativeTT": -730492.7095730193,
-        "residualSeconds": 0.13063699007034302,
-        "sourceTT": -730492.7095745313,
+        "nativeTT": -730492.7095643877,
+        "residualSeconds": 0.13053640723228455,
+        "sourceTT": -730492.7095658985,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 1.9955335375270806,
+        "distanceResidualKm": 1.9955454997252673,
         "event": "new",
-        "nativeTT": -730462.9675580414,
-        "residualSeconds": 2.1172989159822464,
-        "sourceTT": -730462.9675825472,
+        "nativeTT": -730462.9675528937,
+        "residualSeconds": 2.1169669926166534,
+        "sourceTT": -730462.9675773956,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": -0.3044906068826094,
+        "distanceResidualKm": -0.30450564745115116,
         "event": "firstQuarter",
-        "nativeTT": -730514.5313662742,
-        "residualSeconds": 4.749581962823868,
-        "sourceTT": -730514.5314212462,
+        "nativeTT": -730514.5313578448,
+        "residualSeconds": 4.749692603945732,
+        "sourceTT": -730514.5314128181,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": -0.060833929921500385,
+        "distanceResidualKm": -0.06084365356946364,
         "event": "firstQuarter",
-        "nativeTT": -730485.0534544194,
-        "residualSeconds": 1.583978533744812,
-        "sourceTT": -730485.0534727525,
+        "nativeTT": -730485.053447392,
+        "residualSeconds": 1.584109291434288,
+        "sourceTT": -730485.0534657266,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 3.9244498103507794,
+        "distanceResidualKm": 3.9244636832154356,
         "event": "firstQuarter",
-        "nativeTT": -730455.6960125371,
-        "residualSeconds": 1.0910522192716599,
-        "sourceTT": -730455.696025165,
+        "nativeTT": -730455.6960084958,
+        "residualSeconds": 1.0912030935287476,
+        "sourceTT": -730455.6960211254,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 4.215022375341505,
+        "distanceResidualKm": 4.215091991005465,
         "event": "full",
-        "nativeTT": -730507.8869524724,
-        "residualSeconds": -5.396882817149162,
-        "sourceTT": -730507.8868900085,
+        "nativeTT": -730507.8869450876,
+        "residualSeconds": -5.396812409162521,
+        "sourceTT": -730507.8868826245,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 10.488874236820266,
+        "distanceResidualKm": 10.48887412698241,
         "event": "full",
-        "nativeTT": -730478.4128208823,
-        "residualSeconds": -4.265496879816055,
-        "sourceTT": -730478.4127715131,
+        "nativeTT": -730478.4128149641,
+        "residualSeconds": -4.265647754073143,
+        "sourceTT": -730478.4127655932,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 0.12192153121577576,
+        "distanceResidualKm": 0.12191331724170595,
         "event": "lastQuarter",
-        "nativeTT": -730500.9186473951,
-        "residualSeconds": -1.6716063022613525,
-        "sourceTT": -730500.9186280478,
+        "nativeTT": -730500.918638666,
+        "residualSeconds": -1.6716666519641876,
+        "sourceTT": -730500.918619318,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": -1.2799908382585272,
+        "distanceResidualKm": -1.2799956279923208,
         "event": "lastQuarter",
-        "nativeTT": -730471.1322131618,
-        "residualSeconds": -0.7849283516407013,
-        "sourceTT": -730471.132204077,
+        "nativeTT": -730471.1322064382,
+        "residualSeconds": -0.7850389927625656,
+        "sourceTT": -730471.1321973521,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 0.9926825712318532,
+        "distanceResidualKm": 0.9926997061120346,
         "event": "ascending",
-        "nativeTT": -730491.5546796924,
-        "residualSeconds": 0.646677240729332,
-        "sourceTT": -730491.5546871771,
+        "nativeTT": -730491.5546534926,
+        "residualSeconds": 0.6466872990131378,
+        "sourceTT": -730491.5546609774,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 0.3152128510409966,
+        "distanceResidualKm": 0.3152705225511454,
         "event": "ascending",
-        "nativeTT": -730464.2571082234,
-        "residualSeconds": 0.2539917826652527,
-        "sourceTT": -730464.2571111631,
+        "nativeTT": -730464.2570821677,
+        "residualSeconds": 0.2540118992328644,
+        "sourceTT": -730464.2570851076,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 10.74976392480312,
+        "distanceResidualKm": 10.749752305157017,
         "event": "descending",
-        "nativeTT": -730505.902988415,
-        "residualSeconds": -5.530386418104172,
-        "sourceTT": -730505.9029244059,
+        "nativeTT": -730505.902966289,
+        "residualSeconds": -5.530346184968948,
+        "sourceTT": -730505.9029022803,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 10.469673669314943,
+        "distanceResidualKm": 10.469693451654166,
         "event": "descending",
-        "nativeTT": -730478.4457818355,
-        "residualSeconds": -4.01771105825901,
-        "sourceTT": -730478.4457353342,
+        "nativeTT": -730478.4457601218,
+        "residualSeconds": -4.017660766839981,
+        "sourceTT": -730478.4457136211,
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 0.03322840348118916,
+        "distanceResidualKm": 0.03322840353939682,
         "event": "pericenter",
         "nativeTT": -730508.5477428001,
         "residualSeconds": 76.46034769713879,
@@ -1046,7 +1046,7 @@
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 0.43709244509227574,
+        "distanceResidualKm": 0.4370924451504834,
         "event": "pericenter",
         "nativeTT": -730452.3394175348,
         "residualSeconds": -422.2410209476948,
@@ -1054,7 +1054,7 @@
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 0.3065153314964846,
+        "distanceResidualKm": 0.30651533155469224,
         "event": "apocenter",
         "nativeTT": -730495.9645660055,
         "residualSeconds": 66.13667607307434,
@@ -1070,111 +1070,111 @@
         "window": "uniform-04"
       },
       {
-        "distanceResidualKm": 2.808209590264596,
+        "distanceResidualKm": 2.808270688576158,
         "event": "new",
-        "nativeTT": -547875.998484963,
-        "residualSeconds": -4.2538996785879135,
-        "sourceTT": -547875.998435728,
+        "nativeTT": -547875.9984778143,
+        "residualSeconds": -4.253849387168884,
+        "sourceTT": -547875.9984285799,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 9.569980668311473,
+        "distanceResidualKm": 9.569972628261894,
         "event": "new",
-        "nativeTT": -547846.5361410963,
-        "residualSeconds": -4.967897012829781,
-        "sourceTT": -547846.5360835975,
+        "nativeTT": -547846.5361354082,
+        "residualSeconds": -4.968289285898209,
+        "sourceTT": -547846.5360779049,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.038282412162516266,
+        "distanceResidualKm": 0.03829225042136386,
         "event": "firstQuarter",
-        "nativeTT": -547868.9956059629,
-        "residualSeconds": -2.000230550765991,
-        "sourceTT": -547868.9955828121,
+        "nativeTT": -547868.9955974261,
+        "residualSeconds": -2.00003944337368,
+        "sourceTT": -547868.9955742775,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": -1.2230329242884181,
+        "distanceResidualKm": -1.223028080072254,
         "event": "firstQuarter",
-        "nativeTT": -547839.1903419719,
-        "residualSeconds": -0.5950078368186951,
-        "sourceTT": -547839.1903350853,
+        "nativeTT": -547839.1903357526,
+        "residualSeconds": -0.5948569625616074,
+        "sourceTT": -547839.1903288676,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.6517907665693201,
+        "distanceResidualKm": 0.6517910574912094,
         "event": "full",
-        "nativeTT": -547890.5894822651,
-        "residualSeconds": 0.29262565076351166,
-        "sourceTT": -547890.5894856519,
+        "nativeTT": -547890.58947275,
+        "residualSeconds": 0.2925250679254532,
+        "sourceTT": -547890.5894761357,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.03090897179208696,
+        "distanceResidualKm": 0.030910449975635856,
         "event": "full",
-        "nativeTT": -547860.7932706405,
-        "residualSeconds": 0.2443157136440277,
-        "sourceTT": -547860.7932734683,
+        "nativeTT": -547860.7932623356,
+        "residualSeconds": 0.2441849559545517,
+        "sourceTT": -547860.7932651618,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 2.2180968021275476,
+        "distanceResidualKm": 2.2180891691241413,
         "event": "full",
-        "nativeTT": -547831.0704257705,
-        "residualSeconds": 2.1984893828630447,
-        "sourceTT": -547831.070451216,
+        "nativeTT": -547831.0704208941,
+        "residualSeconds": 2.19867043197155,
+        "sourceTT": -547831.0704463416,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.07000686996616423,
+        "distanceResidualKm": 0.07000729156425223,
         "event": "lastQuarter",
-        "nativeTT": -547882.6428913743,
-        "residualSeconds": 4.945879429578781,
-        "sourceTT": -547882.6429486183,
+        "nativeTT": -547882.6428830667,
+        "residualSeconds": 4.945748671889305,
+        "sourceTT": -547882.6429403091,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.12354631733614951,
+        "distanceResidualKm": 0.12354838801547885,
         "event": "lastQuarter",
-        "nativeTT": -547853.1702007088,
-        "residualSeconds": 2.075204998254776,
-        "sourceTT": -547853.1702247274,
+        "nativeTT": -547853.1701940694,
+        "residualSeconds": 2.0750541239976883,
+        "sourceTT": -547853.1702180862,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": -1.7611855189315975,
+        "distanceResidualKm": -1.7611815839190967,
         "event": "ascending",
-        "nativeTT": -547871.2948778261,
+        "nativeTT": -547871.294867237,
         "residualSeconds": -4.26151379942894,
-        "sourceTT": -547871.294828503,
+        "sourceTT": -547871.2948179139,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": -0.6550272564636543,
+        "distanceResidualKm": -0.6550410343334079,
         "event": "ascending",
-        "nativeTT": -547844.0076346325,
-        "residualSeconds": -2.0597655326128006,
-        "sourceTT": -547844.0076107926,
+        "nativeTT": -547844.0076246179,
+        "residualSeconds": -2.059805765748024,
+        "sourceTT": -547844.0076007775,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.6739875292405486,
+        "distanceResidualKm": 0.6739913030178286,
         "event": "descending",
-        "nativeTT": -547883.7463125157,
-        "residualSeconds": 2.888849750161171,
-        "sourceTT": -547883.7463459515,
+        "nativeTT": -547883.7463014986,
+        "residualSeconds": 2.888910099864006,
+        "sourceTT": -547883.7463349351,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.04764576692832634,
+        "distanceResidualKm": 0.04763988050399348,
         "event": "descending",
-        "nativeTT": -547856.7031118427,
-        "residualSeconds": 0.16021840274333954,
-        "sourceTT": -547856.7031136971,
+        "nativeTT": -547856.7031009987,
+        "residualSeconds": 0.1602083444595337,
+        "sourceTT": -547856.7031028529,
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 1.2124734685057774,
+        "distanceResidualKm": 1.2124734686221927,
         "event": "pericenter",
         "nativeTT": -547876.7653409363,
         "residualSeconds": 345.2209800481796,
@@ -1182,7 +1182,7 @@
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.10618421016260982,
+        "distanceResidualKm": 0.10618421027902514,
         "event": "pericenter",
         "nativeTT": -547848.4258408054,
         "residualSeconds": -163.78959640860558,
@@ -1190,7 +1190,7 @@
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.5429495238349773,
+        "distanceResidualKm": 0.5429495239513926,
         "event": "apocenter",
         "nativeTT": -547891.5789971118,
         "residualSeconds": 58.958662301301956,
@@ -1198,7 +1198,7 @@
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.07317597110522911,
+        "distanceResidualKm": 0.07317597116343677,
         "event": "apocenter",
         "nativeTT": -547864.2956490687,
         "residualSeconds": 59.065501391887665,
@@ -1214,111 +1214,111 @@
         "window": "uniform-05"
       },
       {
-        "distanceResidualKm": 0.6944350885460153,
+        "distanceResidualKm": 0.6944328483077697,
         "event": "new",
-        "nativeTT": -365258.6382349323,
-        "residualSeconds": 0.3914935514330864,
-        "sourceTT": -365258.6382394635,
+        "nativeTT": -365258.6382255873,
+        "residualSeconds": 0.3916846588253975,
+        "sourceTT": -365258.6382301207,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 0.035257312178146094,
+        "distanceResidualKm": 0.03525843325769529,
         "event": "new",
-        "nativeTT": -365228.8516142733,
-        "residualSeconds": 0.36649368703365326,
-        "sourceTT": -365228.85161851515,
+        "nativeTT": -365228.8516063378,
+        "residualSeconds": 0.36636292934417725,
+        "sourceTT": -365228.85161057813,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 0.4687266046530567,
+        "distanceResidualKm": 0.46871244930662215,
         "event": "firstQuarter",
-        "nativeTT": -365250.7481625982,
-        "residualSeconds": 5.142126604914665,
-        "sourceTT": -365250.7482221135,
+        "nativeTT": -365250.7481544488,
+        "residualSeconds": 5.1422422751784325,
+        "sourceTT": -365250.7482139655,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 0.38410952512640506,
+        "distanceResidualKm": 0.3840969724697061,
         "event": "firstQuarter",
-        "nativeTT": -365221.2859932747,
-        "residualSeconds": 2.5442127138376236,
-        "sourceTT": -365221.2860227216,
+        "nativeTT": -365221.285986885,
+        "residualSeconds": 2.5443334132432938,
+        "sourceTT": -365221.2860163333,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 11.126362198556308,
+        "distanceResidualKm": 11.12631117994897,
         "event": "full",
-        "nativeTT": -365273.54180379154,
-        "residualSeconds": 6.215923838317394,
-        "sourceTT": -365273.5418757351,
+        "nativeTT": -365273.5417969738,
+        "residualSeconds": 6.215818226337433,
+        "sourceTT": -365273.54186891613,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 1.7470438842428848,
+        "distanceResidualKm": 1.747090969758574,
         "event": "full",
-        "nativeTT": -365244.0933815763,
-        "residualSeconds": -3.18723376840353,
-        "sourceTT": -365244.093344687,
+        "nativeTT": -365244.09337457,
+        "residualSeconds": -3.187379613518715,
+        "sourceTT": -365244.09333767905,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 8.702200351166539,
+        "distanceResidualKm": 8.7022117319284,
         "event": "full",
-        "nativeTT": -365214.63407330116,
-        "residualSeconds": -5.444946326315403,
-        "sourceTT": -365214.63401028095,
+        "nativeTT": -365214.63406783575,
+        "residualSeconds": -5.444755218923092,
+        "sourceTT": -365214.63400481775,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": -1.4038496486027725,
+        "distanceResidualKm": -1.4038533908315003,
         "event": "lastQuarter",
-        "nativeTT": -365266.79461865284,
-        "residualSeconds": -3.453199937939644,
-        "sourceTT": -365266.79457868525,
+        "nativeTT": -365266.7946102578,
+        "residualSeconds": -3.4533608704805374,
+        "sourceTT": -365266.79457028833,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": -0.05620020936476067,
+        "distanceResidualKm": -0.05620196956442669,
         "event": "lastQuarter",
-        "nativeTT": -365237.07801382575,
-        "residualSeconds": -2.303512953221798,
-        "sourceTT": -365237.0779871647,
+        "nativeTT": -365237.0780054469,
+        "residualSeconds": -2.3036085069179535,
+        "sourceTT": -365237.07797878474,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": -0.4028155824635178,
+        "distanceResidualKm": -0.4028152985847555,
         "event": "ascending",
-        "nativeTT": -365248.8934821874,
-        "residualSeconds": 1.3673583045601845,
-        "sourceTT": -365248.8934980133,
+        "nativeTT": -365248.89348057355,
+        "residualSeconds": 1.3673532754182816,
+        "sourceTT": -365248.8934963994,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 0.9308621127856895,
+        "distanceResidualKm": 0.9308596225455403,
         "event": "ascending",
-        "nativeTT": -365221.84246244974,
-        "residualSeconds": 3.1372692435979843,
-        "sourceTT": -365221.8424987607,
+        "nativeTT": -365221.8424606982,
+        "residualSeconds": 3.13727930188179,
+        "sourceTT": -365221.8424970093,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": -0.15033357363427058,
+        "distanceResidualKm": -0.15033354744082317,
         "event": "descending",
-        "nativeTT": -365263.2924407632,
-        "residualSeconds": -0.10076891630887985,
-        "sourceTT": -365263.2924395969,
+        "nativeTT": -365263.2924389233,
+        "residualSeconds": -0.1007789745926857,
+        "sourceTT": -365263.2924377569,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": -0.1312565768021159,
+        "distanceResidualKm": -0.1312591091846116,
         "event": "descending",
-        "nativeTT": -365236.2341038923,
-        "residualSeconds": -0.03689378499984741,
-        "sourceTT": -365236.2341034653,
+        "nativeTT": -365236.2341019741,
+        "residualSeconds": -0.03691893070936203,
+        "sourceTT": -365236.2341015468,
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 11.011406670208089,
+        "distanceResidualKm": 11.011406670149881,
         "event": "pericenter",
         "nativeTT": -365273.52479459776,
         "residualSeconds": 332.93585758656263,
@@ -1326,7 +1326,7 @@
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 3.4798808498308063,
+        "distanceResidualKm": 3.479880849714391,
         "event": "pericenter",
         "nativeTT": -365244.98724471644,
         "residualSeconds": 470.49524020403624,
@@ -1334,7 +1334,7 @@
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 0.4488350640749559,
+        "distanceResidualKm": 0.4488350640167482,
         "event": "pericenter",
         "nativeTT": -365216.68022163195,
         "residualSeconds": 256.1213778331876,
@@ -1342,7 +1342,7 @@
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 0.331808440561872,
+        "distanceResidualKm": 0.33180844062007964,
         "event": "apocenter",
         "nativeTT": -365259.97902473545,
         "residualSeconds": 103.20817586034536,
@@ -1358,107 +1358,107 @@
         "window": "uniform-06"
       },
       {
-        "distanceResidualKm": 12.382958357513417,
+        "distanceResidualKm": 12.382918721647002,
         "event": "new",
-        "nativeTT": -182641.65678927375,
-        "residualSeconds": 5.414685979485512,
-        "sourceTT": -182641.65685194373,
+        "nativeTT": -182641.65678247777,
+        "residualSeconds": 5.414688494056463,
+        "sourceTT": -182641.65684514778,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 0.8780013052164577,
+        "distanceResidualKm": 0.8780355690978467,
         "event": "new",
-        "nativeTT": -182612.19491042805,
-        "residualSeconds": -1.9991442561149597,
-        "sourceTT": -182612.1948872898,
+        "nativeTT": -182612.1949035468,
+        "residualSeconds": -1.999222207814455,
+        "sourceTT": -182612.19488040765,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": -1.4653606927604415,
+        "distanceResidualKm": -1.465346663724631,
         "event": "firstQuarter",
-        "nativeTT": -182634.85515073754,
-        "residualSeconds": -3.08374660089612,
-        "sourceTT": -182634.85511504603,
+        "nativeTT": -182634.85514239286,
+        "residualSeconds": -3.083615843206644,
+        "sourceTT": -182634.85510670286,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": -0.18212469323771074,
+        "distanceResidualKm": -0.18211038666777313,
         "event": "firstQuarter",
-        "nativeTT": -182605.13078254653,
-        "residualSeconds": -2.354008052498102,
-        "sourceTT": -182605.13075530107,
+        "nativeTT": -182605.1307743931,
+        "residualSeconds": -2.353821974247694,
+        "sourceTT": -182605.1307471498,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 0.7408865803154185,
+        "distanceResidualKm": 0.7408868829370476,
         "event": "full",
-        "nativeTT": -182626.68974762422,
-        "residualSeconds": 0.5238781683146954,
-        "sourceTT": -182626.68975368762,
+        "nativeTT": -182626.68973840005,
+        "residualSeconds": 0.5237951874732971,
+        "sourceTT": -182626.6897444625,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 0.06782539194682613,
+        "distanceResidualKm": 0.06782324588857591,
         "event": "full",
-        "nativeTT": -182596.9009235753,
-        "residualSeconds": 0.48934053629636765,
-        "sourceTT": -182596.90092923897,
+        "nativeTT": -182596.90091595147,
+        "residualSeconds": 0.4893254488706589,
+        "sourceTT": -182596.90092161496,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 0.06664241035468876,
+        "distanceResidualKm": 0.06666234810836613,
         "event": "lastQuarter",
-        "nativeTT": -182648.4070908777,
-        "residualSeconds": 0.1473287120461464,
-        "sourceTT": -182648.4070925829,
+        "nativeTT": -182648.40708314397,
+        "residualSeconds": 0.1472105272114277,
+        "sourceTT": -182648.4070848478,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 1.0413486597826704,
+        "distanceResidualKm": 1.0413474923698232,
         "event": "lastQuarter",
-        "nativeTT": -182618.85403400732,
-        "residualSeconds": 5.1669529639184475,
-        "sourceTT": -182618.85409381002,
+        "nativeTT": -182618.85402611076,
+        "residualSeconds": 5.166859924793243,
+        "sourceTT": -182618.85408591238,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 0.8530945113743655,
+        "distanceResidualKm": 0.8530911031994037,
         "event": "lastQuarter",
-        "nativeTT": -182589.41827895987,
-        "residualSeconds": 2.912798523902893,
-        "sourceTT": -182589.41831267282,
+        "nativeTT": -182589.4182728701,
+        "residualSeconds": 2.912677824497223,
+        "sourceTT": -182589.41830658165,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 0.13367249246221036,
+        "distanceResidualKm": 0.1336725580622442,
         "event": "ascending",
-        "nativeTT": -182628.21599863676,
-        "residualSeconds": 0.04607196897268295,
-        "sourceTT": -182628.21599917,
+        "nativeTT": -182628.21599855903,
+        "residualSeconds": 0.046074483543634415,
+        "sourceTT": -182628.2159990923,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": -0.27957715233787894,
+        "distanceResidualKm": -0.27957709663314745,
         "event": "ascending",
-        "nativeTT": -182601.0026739511,
-        "residualSeconds": -0.05832044407725334,
-        "sourceTT": -182601.0026732761,
+        "nativeTT": -182601.0026738686,
+        "residualSeconds": -0.05830787122249603,
+        "sourceTT": -182601.00267319375,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 13.231408193416428,
+        "distanceResidualKm": 13.231407986895647,
         "event": "descending",
-        "nativeTT": -182641.84255339435,
+        "nativeTT": -182641.84255333425,
         "residualSeconds": 4.832286201417446,
-        "sourceTT": -182641.8426093236,
+        "sourceTT": -182641.8426092635,
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 11.019915510783903,
+        "distanceResidualKm": 11.019915908633266,
         "event": "descending",
-        "nativeTT": -182614.39447918723,
-        "residualSeconds": 4.866240452975035,
-        "sourceTT": -182614.39453550946,
+        "nativeTT": -182614.3944791246,
+        "residualSeconds": 4.866225365549326,
+        "sourceTT": -182614.39453544666,
         "window": "uniform-07"
       },
       {
@@ -1486,7 +1486,7 @@
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": -0.30832059890963137,
+        "distanceResidualKm": -0.30832059896783903,
         "event": "apocenter",
         "nativeTT": -182601.03933479288,
         "residualSeconds": 67.06961961463094,
@@ -1494,247 +1494,247 @@
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 3.60922422260046e-06,
+        "distanceResidualKm": 3.6967103369534016e-06,
         "event": "new",
-        "nativeTT": -24.560639648509593,
-        "residualSeconds": 0.0007475004167645238,
-        "sourceTT": -24.560639657161218,
+        "nativeTT": -24.560631572521455,
+        "residualSeconds": 0.0007730417905804643,
+        "sourceTT": -24.560631581468698,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 2.2009480744600296e-06,
+        "distanceResidualKm": 2.2220774553716183e-06,
         "event": "new",
-        "nativeTT": 5.260202149903833,
-        "residualSeconds": 0.0007533455971042713,
-        "sourceTT": 5.260202141184555,
+        "nativeTT": 5.260211196757029,
+        "residualSeconds": 0.000759062777433428,
+        "sourceTT": 5.2602111879715805,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -2.6993220672011375e-06,
+        "distanceResidualKm": -1.0405201464891434e-05,
         "event": "firstQuarter",
-        "nativeTT": -16.46435602304932,
-        "residualSeconds": 0.0007705941357016854,
-        "sourceTT": -16.464356031968233,
+        "nativeTT": -16.464348304312715,
+        "residualSeconds": 0.0008876570518623339,
+        "sourceTT": -16.464348314586523,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -2.758635673671961e-06,
+        "distanceResidualKm": -1.029635313898325e-05,
         "event": "firstQuarter",
-        "nativeTT": 13.066138142572818,
-        "residualSeconds": 0.0007597291755701008,
-        "sourceTT": 13.066138133779656,
+        "nativeTT": 13.066145827483007,
+        "residualSeconds": 0.000896922011861534,
+        "sourceTT": 13.066145817101965,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -2.4146283976733685e-06,
+        "distanceResidualKm": -2.3452448658645153e-06,
         "event": "full",
-        "nativeTT": -9.76919444237703,
-        "residualSeconds": 0.0007447711311669991,
-        "sourceTT": -9.769194450997066,
+        "nativeTT": -9.769187668973911,
+        "residualSeconds": 0.0007562897508250899,
+        "sourceTT": -9.769187677727265,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -7.824855856597424e-07,
+        "distanceResidualKm": -1.4667748473584652e-06,
         "event": "full",
-        "nativeTT": 19.69548471614071,
-        "residualSeconds": 0.0007556976356681844,
-        "sourceTT": 19.69548470739421,
+        "nativeTT": 19.695491500517118,
+        "residualSeconds": 0.000741360406664171,
+        "sourceTT": 19.695491491936558,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 2.138491254299879e-06,
+        "distanceResidualKm": -7.227878086268902e-06,
         "event": "lastQuarter",
-        "nativeTT": -2.9129376641029237,
-        "residualSeconds": 0.0007557425277582297,
-        "sourceTT": -2.9129376728499436,
+        "nativeTT": -2.9129292997134555,
+        "residualSeconds": 0.0006017958867232664,
+        "sourceTT": -2.9129293066786857,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 2.847460564225912e-06,
+        "distanceResidualKm": -3.521563485264778e-06,
         "event": "lastQuarter",
-        "nativeTT": 26.83175787169103,
-        "residualSeconds": 0.0007485554192498967,
-        "sourceTT": 26.831757863027192,
+        "nativeTT": 26.831765813241038,
+        "residualSeconds": 0.0006298389394032711,
+        "sourceTT": 26.831765805951235,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -1.569121377542615e-05,
+        "distanceResidualKm": -1.5691155567765236e-05,
         "event": "ascending",
-        "nativeTT": -7.542953187341439,
-        "residualSeconds": 0.0004751441736061679,
-        "sourceTT": -7.542953192840793,
+        "nativeTT": -7.542953187341447,
+        "residualSeconds": 0.00047514448056062975,
+        "sourceTT": -7.5429531928408045,
         "window": "uniform-08"
       },
       {
         "distanceResidualKm": -9.14139673113823e-06,
         "event": "ascending",
-        "nativeTT": 19.913568215770304,
-        "residualSeconds": 0.00048316995844288613,
-        "sourceTT": 19.91356821017806,
+        "nativeTT": 19.91356821577026,
+        "residualSeconds": 0.0004831696514884243,
+        "sourceTT": 19.913568210178017,
         "window": "uniform-08"
       },
       {
         "distanceResidualKm": 4.3978216126561165e-06,
         "event": "descending",
-        "nativeTT": -20.424692705326844,
-        "residualSeconds": 0.0006584274501619802,
-        "sourceTT": -20.424692712947532,
+        "nativeTT": -20.424692705326862,
+        "residualSeconds": 0.0006584271432075184,
+        "sourceTT": -20.424692712947547,
         "window": "uniform-08"
       },
       {
         "distanceResidualKm": 3.863999154418707e-06,
         "event": "descending",
-        "nativeTT": 6.757751885144918,
-        "residualSeconds": 0.0006588093015125196,
-        "sourceTT": 6.75775187751981,
+        "nativeTT": 6.757751885144916,
+        "residualSeconds": 0.0006588106828075979,
+        "sourceTT": 6.757751877519793,
         "window": "uniform-08"
       },
       {
         "distanceResidualKm": -2.488552127033472e-06,
         "event": "pericenter",
-        "nativeTT": -10.044837995316394,
-        "residualSeconds": 0.0003564477992767934,
+        "nativeTT": -10.044837995316387,
+        "residualSeconds": 0.00035644841318571707,
         "sourceTT": -10.044837999441947,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -1.5522236935794353e-06,
+        "distanceResidualKm": -1.5523401089012623e-06,
         "event": "pericenter",
-        "nativeTT": 18.450442702171816,
-        "residualSeconds": 0.0004901421220893099,
+        "nativeTT": 18.450442702171813,
+        "residualSeconds": 0.000490141815134848,
         "sourceTT": 18.450442696498875,
         "window": "uniform-08"
       },
       {
         "distanceResidualKm": 3.432738594710827e-06,
         "event": "apocenter",
-        "nativeTT": -24.038904820590915,
-        "residualSeconds": 0.0005548748276851256,
+        "nativeTT": -24.03890482059087,
+        "residualSeconds": 0.0005548788180931297,
         "sourceTT": -24.038904827013077,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 3.1713861972093582e-06,
+        "distanceResidualKm": 3.1714444048702717e-06,
         "event": "apocenter",
-        "nativeTT": 3.016246841414931,
-        "residualSeconds": 0.000763052993590918,
+        "nativeTT": 3.016246841414829,
+        "residualSeconds": 0.0007630442070194476,
         "sourceTT": 3.016246832583299,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 2.675224095582962e-06,
+        "distanceResidualKm": 2.675107680261135e-06,
         "event": "apocenter",
-        "nativeTT": 30.55591107729482,
-        "residualSeconds": 0.0006104882231738884,
+        "nativeTT": 30.555911077294816,
+        "residualSeconds": 0.0006104879162194266,
         "sourceTT": 30.555911070228984,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 13.184626751230098,
+        "distanceResidualKm": 13.184652821801137,
         "event": "new",
-        "nativeTT": 182592.7134582016,
-        "residualSeconds": -3.9858086965978146,
-        "sourceTT": 182592.71350433363,
+        "nativeTT": 182592.71346340099,
+        "residualSeconds": -3.9858615025877953,
+        "sourceTT": 182592.71350953364,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 14.020895330701023,
+        "distanceResidualKm": 14.020874986366834,
         "event": "new",
-        "nativeTT": 182622.13980136032,
-        "residualSeconds": 3.087297175079584,
-        "sourceTT": 182622.1397656277,
+        "nativeTT": 182622.13980805298,
+        "residualSeconds": 3.0872569419443607,
+        "sourceTT": 182622.13977232084,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 0.05740822170628235,
+        "distanceResidualKm": 0.05741335719358176,
         "event": "new",
-        "nativeTT": 182651.59391285345,
-        "residualSeconds": -0.22133002057671547,
-        "sourceTT": 182651.59391541514,
+        "nativeTT": 182651.59391945714,
+        "residualSeconds": -0.2214532345533371,
+        "sourceTT": 182651.59392202026,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 0.11838880303548649,
+        "distanceResidualKm": 0.11838198482291773,
         "event": "firstQuarter",
-        "nativeTT": 182599.39403571925,
-        "residualSeconds": -0.18338514491915703,
-        "sourceTT": 182599.39403784176,
+        "nativeTT": 182599.39404242684,
+        "residualSeconds": -0.1832619309425354,
+        "sourceTT": 182599.39404454792,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -1.5851496788673103,
+        "distanceResidualKm": -1.585137446236331,
         "event": "firstQuarter",
-        "nativeTT": 182629.04215967545,
-        "residualSeconds": -2.446461282670498,
-        "sourceTT": 182629.04218799097,
+        "nativeTT": 182629.04216806623,
+        "residualSeconds": -2.4463280104100704,
+        "sourceTT": 182629.0421963802,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -0.0053091575973667204,
+        "distanceResidualKm": -0.005310669366735965,
         "event": "full",
-        "nativeTT": 182607.42568405357,
-        "residualSeconds": 0.0017476268112659454,
-        "sourceTT": 182607.42568403334,
+        "nativeTT": 182607.42569217374,
+        "residualSeconds": 0.0016872771084308624,
+        "sourceTT": 182607.4256921542,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 0.8625878558377735,
+        "distanceResidualKm": 0.8625866329530254,
         "event": "full",
-        "nativeTT": 182637.22845392502,
-        "residualSeconds": 0.8793479762971401,
-        "sourceTT": 182637.2284437474,
+        "nativeTT": 182637.22846274727,
+        "residualSeconds": 0.8793630637228489,
+        "sourceTT": 182637.22845256946,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -0.005208837857935578,
+        "distanceResidualKm": -0.005198554485104978,
         "event": "lastQuarter",
-        "nativeTT": 182615.45889674383,
-        "residualSeconds": 0.008230190724134445,
-        "sourceTT": 182615.45889664858,
+        "nativeTT": 182615.45890441808,
+        "residualSeconds": 0.008101947605609894,
+        "sourceTT": 182615.4589043243,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 2.274506308080163,
+        "distanceResidualKm": 2.2745083165937103,
         "event": "lastQuarter",
-        "nativeTT": 182644.9746461018,
-        "residualSeconds": 5.02805057913065,
-        "sourceTT": 182644.97458790676,
+        "nativeTT": 182644.97465360106,
+        "residualSeconds": 5.027934908866882,
+        "sourceTT": 182644.97459540737,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -0.8162460233434103,
+        "distanceResidualKm": -0.8162446349742822,
         "event": "ascending",
-        "nativeTT": 182614.6896208167,
-        "residualSeconds": 1.235994603484869,
-        "sourceTT": 182614.6896065112,
+        "nativeTT": 182614.6896210878,
+        "residualSeconds": 1.235989574342966,
+        "sourceTT": 182614.68960678237,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 0.4477821063483134,
+        "distanceResidualKm": 0.44778291054535657,
         "event": "ascending",
-        "nativeTT": 182641.72380329279,
-        "residualSeconds": 1.5390733256936073,
-        "sourceTT": 182641.72378547944,
+        "nativeTT": 182641.72380356127,
+        "residualSeconds": 1.539065781980753,
+        "sourceTT": 182641.723785748,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -0.5168595637078397,
+        "distanceResidualKm": -0.5168585883220658,
         "event": "descending",
-        "nativeTT": 182600.03367995,
-        "residualSeconds": -0.6672866642475128,
-        "sourceTT": 182600.03368767322,
+        "nativeTT": 182600.0336802211,
+        "residualSeconds": -0.6672640331089497,
+        "sourceTT": 182600.03368794406,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 1.5134131224476732,
+        "distanceResidualKm": 1.5134100272553042,
         "event": "descending",
-        "nativeTT": 182627.11228726277,
-        "residualSeconds": -1.899557188153267,
-        "sourceTT": 182627.1123092484,
+        "nativeTT": 182627.11228752136,
+        "residualSeconds": -1.8995546735823154,
+        "sourceTT": 182627.11230950695,
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 14.29520625056466,
+        "distanceResidualKm": 14.295206250739284,
         "event": "pericenter",
         "nativeTT": 182593.15450090886,
         "residualSeconds": -42.39188935607672,
@@ -1742,7 +1742,7 @@
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 14.609435867110733,
+        "distanceResidualKm": 14.609435867052525,
         "event": "pericenter",
         "nativeTT": 182621.6902175465,
         "residualSeconds": 18.240551836788654,
@@ -1750,7 +1750,7 @@
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 10.793915182061028,
+        "distanceResidualKm": 10.793915182119235,
         "event": "pericenter",
         "nativeTT": 182650.13665420577,
         "residualSeconds": 137.46635103598237,
@@ -1758,7 +1758,7 @@
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -0.004195913497824222,
+        "distanceResidualKm": -0.004195913439616561,
         "event": "apocenter",
         "nativeTT": 182607.4197496669,
         "residualSeconds": -26.912072394043207,
@@ -1766,7 +1766,7 @@
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": -0.1330796666443348,
+        "distanceResidualKm": -0.13307966676075011,
         "event": "apocenter",
         "nativeTT": 182634.52154196295,
         "residualSeconds": 7.725420780479908,
@@ -1774,103 +1774,103 @@
         "window": "uniform-09"
       },
       {
-        "distanceResidualKm": 0.006870900746434927,
+        "distanceResidualKm": 0.006869685661513358,
         "event": "new",
-        "nativeTT": 365239.424984706,
-        "residualSeconds": 0.0066434964537620544,
-        "sourceTT": 365239.4249846291,
+        "nativeTT": 365239.42499286146,
+        "residualSeconds": 0.0066183507442474365,
+        "sourceTT": 365239.42499278486,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 0.9525786655140109,
+        "distanceResidualKm": 0.9525723770493641,
         "event": "new",
-        "nativeTT": 365269.22092299344,
-        "residualSeconds": 1.062481664121151,
-        "sourceTT": 365269.2209106962,
+        "nativeTT": 365269.2209315691,
+        "residualSeconds": 1.062682829797268,
+        "sourceTT": 365269.22091926954,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": -1.5147809825721197,
+        "distanceResidualKm": -1.5147909493534826,
         "event": "firstQuarter",
-        "nativeTT": 365217.78292175,
-        "residualSeconds": 3.054901957511902,
-        "sourceTT": 365217.7828863923,
+        "nativeTT": 365217.782927528,
+        "residualSeconds": 3.055012598633766,
+        "sourceTT": 365217.7828921691,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": -0.04343800473725423,
+        "distanceResidualKm": -0.04343927378067747,
         "event": "firstQuarter",
-        "nativeTT": 365247.3869324856,
-        "residualSeconds": 0.06754137575626373,
-        "sourceTT": 365247.3869317039,
+        "nativeTT": 365247.3869400661,
+        "residualSeconds": 0.0676419585943222,
+        "sourceTT": 365247.3869392832,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 12.385929118783679,
+        "distanceResidualKm": 12.385962035623379,
         "event": "full",
-        "nativeTT": 365224.6265880554,
-        "residualSeconds": -5.127793550491333,
-        "sourceTT": 365224.62664740486,
+        "nativeTT": 365224.6265933804,
+        "residualSeconds": -5.127682909369469,
+        "sourceTT": 365224.6266527286,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 14.22084420057945,
+        "distanceResidualKm": 14.22083099320298,
         "event": "full",
-        "nativeTT": 365254.0628556696,
-        "residualSeconds": 1.7409028485417366,
-        "sourceTT": 365254.06283552025,
+        "nativeTT": 365254.0628623608,
+        "residualSeconds": 1.7408978193998337,
+        "sourceTT": 365254.0628422115,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 0.2160399608546868,
+        "distanceResidualKm": 0.21601281233597547,
         "event": "lastQuarter",
-        "nativeTT": 365231.3245227591,
-        "residualSeconds": -0.4732774570584297,
-        "sourceTT": 365231.3245282369,
+        "nativeTT": 365231.3245295614,
+        "residualSeconds": -0.47341324388980865,
+        "sourceTT": 365231.3245350407,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": -1.5954849973204546,
+        "distanceResidualKm": -1.5954909289139323,
         "event": "lastQuarter",
-        "nativeTT": 365260.9957729794,
-        "residualSeconds": -2.138637565076351,
-        "sourceTT": 365260.99579773215,
+        "nativeTT": 365260.9957813516,
+        "residualSeconds": -2.138783410191536,
+        "sourceTT": 365260.995806106,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": -0.04702601832104847,
+        "distanceResidualKm": -0.04702578380238265,
         "event": "ascending",
-        "nativeTT": 365235.16480667033,
-        "residualSeconds": -0.33134501427412033,
-        "sourceTT": 365235.16481050535,
+        "nativeTT": 365235.1648075069,
+        "residualSeconds": -0.3313349559903145,
+        "sourceTT": 365235.1648113418,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": -1.020550021843519,
+        "distanceResidualKm": -1.0205485189217143,
         "event": "ascending",
-        "nativeTT": 365262.23000821855,
-        "residualSeconds": -2.104107476770878,
-        "sourceTT": 365262.23003257165,
+        "nativeTT": 365262.2300091065,
+        "residualSeconds": -2.104102447628975,
+        "sourceTT": 365262.23003345955,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 3.001227436994668,
+        "distanceResidualKm": 3.0012266379781067,
         "event": "descending",
-        "nativeTT": 365222.29990951525,
-        "residualSeconds": 8.555028028786182,
-        "sourceTT": 365222.2998104987,
+        "nativeTT": 365222.29991018365,
+        "residualSeconds": 8.55502299964428,
+        "sourceTT": 365222.2998111672,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 2.6364883517380804,
+        "distanceResidualKm": 2.6364884629729204,
         "event": "descending",
-        "nativeTT": 365249.59067950107,
-        "residualSeconds": 7.322013191878796,
-        "sourceTT": 365249.59059475554,
+        "nativeTT": 365249.59068023995,
+        "residualSeconds": 7.321993075311184,
+        "sourceTT": 365249.59059549466,
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 13.512258243281394,
+        "distanceResidualKm": 13.51225824339781,
         "event": "pericenter",
         "nativeTT": 365224.87088996905,
         "residualSeconds": -137.12685126811266,
@@ -1878,7 +1878,7 @@
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 14.529841105977539,
+        "distanceResidualKm": 14.529841105919331,
         "event": "pericenter",
         "nativeTT": 365253.41508892697,
         "residualSeconds": -1.9369438290596008,
@@ -1886,7 +1886,7 @@
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": -0.030937449191696942,
+        "distanceResidualKm": -0.030937449249904603,
         "event": "apocenter",
         "nativeTT": 365211.7573938766,
         "residualSeconds": -17.8023224696517,
@@ -1910,111 +1910,111 @@
         "window": "uniform-10"
       },
       {
-        "distanceResidualKm": 10.949143049598206,
+        "distanceResidualKm": 10.949184526805766,
         "event": "new",
-        "nativeTT": 547856.5276435702,
-        "residualSeconds": -5.994747206568718,
-        "sourceTT": 547856.5277129539,
+        "nativeTT": 547856.5276489571,
+        "residualSeconds": -5.995119363069534,
+        "sourceTT": 547856.527718345,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 13.808204847970046,
+        "distanceResidualKm": 13.808197451697197,
         "event": "new",
-        "nativeTT": 547885.9778705761,
-        "residualSeconds": 0.22296197712421417,
-        "sourceTT": 547885.9778679955,
+        "nativeTT": 547885.9778772416,
+        "residualSeconds": 0.22295191884040833,
+        "sourceTT": 547885.9778746611,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.7072135540656745,
+        "distanceResidualKm": 0.707224641868379,
         "event": "firstQuarter",
-        "nativeTT": 547833.755544704,
-        "residualSeconds": -5.077904462814331,
-        "sourceTT": 547833.7556034761,
+        "nativeTT": 547833.7555486319,
+        "residualSeconds": -5.077783763408661,
+        "sourceTT": 547833.7556074025,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.2465429708827287,
+        "distanceResidualKm": 0.24653528135968372,
         "event": "firstQuarter",
-        "nativeTT": 547863.2925416923,
-        "residualSeconds": -0.6320826709270477,
-        "sourceTT": 547863.292549008,
+        "nativeTT": 547863.2925485803,
+        "residualSeconds": -0.6319418549537659,
+        "sourceTT": 547863.2925558945,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": -1.5177735693287104,
+        "distanceResidualKm": -1.5177637181477621,
         "event": "firstQuarter",
-        "nativeTT": 547892.9845578399,
-        "residualSeconds": -1.792014017701149,
-        "sourceTT": 547892.9845785808,
+        "nativeTT": 547892.98456612,
+        "residualSeconds": -1.7918631434440613,
+        "sourceTT": 547892.9845868591,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.6878072072868235,
+        "distanceResidualKm": 0.6878053633263335,
         "event": "full",
-        "nativeTT": 547841.6087201589,
-        "residualSeconds": -0.46400874853134155,
-        "sourceTT": 547841.6087255294,
+        "nativeTT": 547841.6087256945,
+        "residualSeconds": -0.46421997249126434,
+        "sourceTT": 547841.6087310674,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": -0.0011625158367678523,
+        "distanceResidualKm": -0.0011688139638863504,
         "event": "full",
-        "nativeTT": 547871.4202257943,
-        "residualSeconds": 0.008760765194892883,
-        "sourceTT": 547871.4202256929,
+        "nativeTT": 547871.4202339827,
+        "residualSeconds": 0.009273737668991089,
+        "sourceTT": 547871.4202338754,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": -1.353470403002575,
+        "distanceResidualKm": -1.3534637367120013,
         "event": "lastQuarter",
-        "nativeTT": 547849.7490574049,
-        "residualSeconds": 3.3933933824300766,
-        "sourceTT": 547849.7490181295,
+        "nativeTT": 547849.7490632089,
+        "residualSeconds": 3.3932123333215714,
+        "sourceTT": 547849.7490239356,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": -0.11123297916492447,
+        "distanceResidualKm": -0.1112143910722807,
         "event": "lastQuarter",
-        "nativeTT": 547879.312173116,
-        "residualSeconds": 0.19707195460796356,
-        "sourceTT": 547879.3121708351,
+        "nativeTT": 547879.3121805231,
+        "residualSeconds": 0.19688084721565247,
+        "sourceTT": 547879.3121782443,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 11.677081807225477,
+        "distanceResidualKm": 11.677071342302952,
         "event": "ascending",
-        "nativeTT": 547856.6341138245,
+        "nativeTT": 547856.6341120963,
         "residualSeconds": -5.665750801563263,
-        "sourceTT": 547856.6341794003,
+        "sourceTT": 547856.6341776721,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 6.735233453859109,
+        "distanceResidualKm": 6.735207946272567,
         "event": "ascending",
-        "nativeTT": 547884.09716785,
-        "residualSeconds": -2.5318611413240433,
-        "sourceTT": 547884.097197154,
+        "nativeTT": 547884.0971660763,
+        "residualSeconds": -2.5318410247564316,
+        "sourceTT": 547884.09719538,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.2948141552042216,
+        "distanceResidualKm": 0.2948160740197636,
         "event": "descending",
-        "nativeTT": 547843.0165363676,
-        "residualSeconds": -0.13083815574645996,
-        "sourceTT": 547843.0165378819,
+        "nativeTT": 547843.0165341239,
+        "residualSeconds": -0.13080798089504242,
+        "sourceTT": 547843.0165356379,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.3648193082190119,
+        "distanceResidualKm": 0.3648197007132694,
         "event": "descending",
-        "nativeTT": 547870.28399008,
-        "residualSeconds": 0.4257369786500931,
-        "sourceTT": 547870.2839851525,
+        "nativeTT": 547870.2839878405,
+        "residualSeconds": 0.42572692036628723,
+        "sourceTT": 547870.2839829131,
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 11.225577422301285,
+        "distanceResidualKm": 11.22557742218487,
         "event": "pericenter",
         "nativeTT": 547856.5635081081,
         "residualSeconds": -308.1139996647835,
@@ -2022,7 +2022,7 @@
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 13.653883651539218,
+        "distanceResidualKm": 13.653883651422802,
         "event": "pericenter",
         "nativeTT": 547885.0933309532,
         "residualSeconds": -50.1523531973362,
@@ -2030,7 +2030,7 @@
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.19488836429081857,
+        "distanceResidualKm": 0.19488836434902623,
         "event": "apocenter",
         "nativeTT": 547843.1337272587,
         "residualSeconds": -104.29356023669243,
@@ -2046,111 +2046,111 @@
         "window": "uniform-11"
       },
       {
-        "distanceResidualKm": 0.6422849838854745,
+        "distanceResidualKm": 0.6422844997723587,
         "event": "new",
-        "nativeTT": 730473.6156287356,
-        "residualSeconds": -0.21455325186252594,
-        "sourceTT": 730473.6156312189,
+        "nativeTT": 730473.61563458,
+        "residualSeconds": -0.21463371813297272,
+        "sourceTT": 730473.6156370642,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": -0.002926640212535858,
+        "distanceResidualKm": -0.002920346276368946,
         "event": "new",
-        "nativeTT": 730503.4180298294,
-        "residualSeconds": 0.012995302677154541,
-        "sourceTT": 730503.418029679,
+        "nativeTT": 730503.4180380498,
+        "residualSeconds": 0.012472271919250488,
+        "sourceTT": 730503.4180379055,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 0.06157422292744741,
+        "distanceResidualKm": 0.06156487250700593,
         "event": "firstQuarter",
-        "nativeTT": 730452.0794297996,
-        "residualSeconds": 2.4751123040914536,
-        "sourceTT": 730452.0794011524,
+        "nativeTT": 730452.0794325634,
+        "residualSeconds": 2.4752631783485413,
+        "sourceTT": 730452.0794039145,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": -1.2078012534766458,
+        "distanceResidualKm": -1.2078137673670426,
         "event": "firstQuarter",
-        "nativeTT": 730481.7249667625,
-        "residualSeconds": 3.8345899432897568,
-        "sourceTT": 730481.7249223806,
+        "nativeTT": 730481.7249726072,
+        "residualSeconds": 3.834710642695427,
+        "sourceTT": 730481.724928224,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": -0.13262386986752972,
+        "distanceResidualKm": -0.13262572913663462,
         "event": "firstQuarter",
-        "nativeTT": 730511.2574403109,
-        "residualSeconds": 0.3561839461326599,
-        "sourceTT": 730511.2574361884,
+        "nativeTT": 730511.2574476314,
+        "residualSeconds": 0.3562845289707184,
+        "sourceTT": 730511.2574435078,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 2.6950396976899356,
+        "distanceResidualKm": 2.69501572730951,
         "event": "full",
-        "nativeTT": 730459.0191700865,
-        "residualSeconds": 4.014261066913605,
-        "sourceTT": 730459.0191236251,
+        "nativeTT": 730459.0191731887,
+        "residualSeconds": 4.014110192656517,
+        "sourceTT": 730459.0191267291,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 9.406082122819498,
+        "distanceResidualKm": 9.406130310264416,
         "event": "full",
-        "nativeTT": 730488.4317594417,
-        "residualSeconds": -6.6317785531282425,
-        "sourceTT": 730488.4318361984,
+        "nativeTT": 730488.4317650053,
+        "residualSeconds": -6.631818786263466,
+        "sourceTT": 730488.4318417625,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 0.03533332300139591,
+        "distanceResidualKm": 0.03532689833082259,
         "event": "lastQuarter",
-        "nativeTT": 730465.680554887,
-        "residualSeconds": -4.989240691065788,
-        "sourceTT": 730465.6806126329,
+        "nativeTT": 730465.6805590192,
+        "residualSeconds": -4.98938150703907,
+        "sourceTT": 730465.6806167667,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 0.2249845422920771,
+        "distanceResidualKm": 0.22496142867021263,
         "event": "lastQuarter",
-        "nativeTT": 730495.2636585793,
-        "residualSeconds": -0.7745884358882904,
-        "sourceTT": 730495.2636675445,
+        "nativeTT": 730495.2636656048,
+        "residualSeconds": -0.7747292518615723,
+        "sourceTT": 730495.2636745715,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": -0.1486531118862331,
+        "distanceResidualKm": -0.14865360542898998,
         "event": "ascending",
-        "nativeTT": 730478.1695318788,
-        "residualSeconds": 0.27709566056728363,
-        "sourceTT": 730478.1695286717,
+        "nativeTT": 730478.1695397324,
+        "residualSeconds": 0.27707554399967194,
+        "sourceTT": 730478.1695365255,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 0.6847096877172589,
+        "distanceResidualKm": 0.6847098759608343,
         "event": "ascending",
-        "nativeTT": 730505.3307408026,
-        "residualSeconds": 0.6347682327032089,
-        "sourceTT": 730505.3307334557,
+        "nativeTT": 730505.3307480589,
+        "residualSeconds": 0.6347179412841797,
+        "sourceTT": 730505.3307407126,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": -0.22274447104427963,
+        "distanceResidualKm": -0.22275627159979194,
         "event": "descending",
-        "nativeTT": 730463.7269903362,
-        "residualSeconds": -0.5779489874839783,
-        "sourceTT": 730463.7269970254,
+        "nativeTT": 730463.7269976259,
+        "residualSeconds": -0.5779992789030075,
+        "sourceTT": 730463.7270043157,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 5.836599663482048,
+        "distanceResidualKm": 5.83650338021107,
         "event": "descending",
-        "nativeTT": 730490.9912271408,
+        "nativeTT": 730490.9912333362,
         "residualSeconds": -0.548810139298439,
-        "sourceTT": 730490.9912334927,
+        "sourceTT": 730490.9912396881,
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 0.8809792624670081,
+        "distanceResidualKm": 0.8809792624088004,
         "event": "pericenter",
         "nativeTT": 730459.72216634,
         "residualSeconds": -306.85853473842144,
@@ -2158,7 +2158,7 @@
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 7.478375415317714,
+        "distanceResidualKm": 7.4783754152595066,
         "event": "pericenter",
         "nativeTT": 730488.2362810161,
         "residualSeconds": -484.3004710972309,
@@ -2182,111 +2182,111 @@
         "window": "uniform-12"
       },
       {
-        "distanceResidualKm": 3.864553715742659,
+        "distanceResidualKm": 3.8645203834748827,
         "event": "new",
-        "nativeTT": 913090.9523158376,
-        "residualSeconds": 4.678439721465111,
-        "sourceTT": 913090.952261689,
+        "nativeTT": 913090.9523195142,
+        "residualSeconds": 4.6781279146671295,
+        "sourceTT": 913090.9522653692,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 7.718372511211783,
+        "distanceResidualKm": 7.718429479631595,
         "event": "new",
-        "nativeTT": 913120.3574826762,
-        "residualSeconds": -6.795969977974892,
-        "sourceTT": 913120.3575613332,
+        "nativeTT": 913120.3574888612,
+        "residualSeconds": -6.795778870582581,
+        "sourceTT": 913120.357567516,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": -0.44883921032305807,
+        "distanceResidualKm": -0.4488272500457242,
         "event": "firstQuarter",
-        "nativeTT": 913097.6244986712,
-        "residualSeconds": -4.681235924363136,
-        "sourceTT": 913097.6245528521,
+        "nativeTT": 913097.6245031611,
+        "residualSeconds": -4.681135341525078,
+        "sourceTT": 913097.6245573409,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.1531218496384099,
+        "distanceResidualKm": 0.1531199594028294,
         "event": "firstQuarter",
-        "nativeTT": 913127.2507210952,
-        "residualSeconds": -0.7982656359672546,
-        "sourceTT": 913127.2507303344,
+        "nativeTT": 913127.2507283036,
+        "residualSeconds": -0.7981449365615845,
+        "sourceTT": 913127.2507375414,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.05414868675870821,
+        "distanceResidualKm": 0.054142097651492804,
         "event": "full",
-        "nativeTT": 913075.8935681968,
-        "residualSeconds": -0.27793049812316895,
-        "sourceTT": 913075.8935714136,
+        "nativeTT": 913075.893570755,
+        "residualSeconds": -0.2783026546239853,
+        "sourceTT": 913075.8935739761,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.6127647444372997,
+        "distanceResidualKm": 0.6127647872199304,
         "event": "full",
-        "nativeTT": 913105.6482594701,
-        "residualSeconds": 0.0008348375558853149,
-        "sourceTT": 913105.6482594605,
+        "nativeTT": 913105.6482662185,
+        "residualSeconds": 0.000895187258720398,
+        "sourceTT": 913105.6482662081,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": -0.009286793996579945,
+        "distanceResidualKm": -0.009280079742893577,
         "event": "full",
-        "nativeTT": 913135.4335392383,
-        "residualSeconds": 0.011798366904258728,
-        "sourceTT": 913135.4335391017,
+        "nativeTT": 913135.4335480884,
+        "residualSeconds": 0.011456385254859924,
+        "sourceTT": 913135.4335479558,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.22314871178241447,
+        "distanceResidualKm": 0.22316046641208231,
         "event": "lastQuarter",
-        "nativeTT": 913084.0591888345,
-        "residualSeconds": 2.5340136140584946,
-        "sourceTT": 913084.0591595056,
+        "nativeTT": 913084.0591920997,
+        "residualSeconds": 2.533842623233795,
+        "sourceTT": 913084.0591627728,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": -0.8746581365121529,
+        "distanceResidualKm": -0.8746498568798415,
         "event": "lastQuarter",
-        "nativeTT": 913113.6744957763,
-        "residualSeconds": 4.181228578090668,
-        "sourceTT": 913113.6744473825,
+        "nativeTT": 913113.6745016945,
+        "residualSeconds": 4.181027412414551,
+        "sourceTT": 913113.674453303,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.30395720194792375,
+        "distanceResidualKm": 0.303971525572706,
         "event": "ascending",
-        "nativeTT": 913098.692512684,
-        "residualSeconds": -3.000667691230774,
-        "sourceTT": 913098.692547414,
+        "nativeTT": 913098.6926167415,
+        "residualSeconds": -3.0002955347299576,
+        "sourceTT": 913098.6926514672,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": -0.2723614477436058,
+        "distanceResidualKm": -0.27224947029026225,
         "event": "ascending",
-        "nativeTT": 913125.7533348855,
-        "residualSeconds": -5.730646848678589,
-        "sourceTT": 913125.7534012124,
+        "nativeTT": 913125.7534337166,
+        "residualSeconds": -5.730656906962395,
+        "sourceTT": 913125.7535000436,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": -1.5477568175410852,
+        "distanceResidualKm": -1.5478090681135654,
         "event": "descending",
-        "nativeTT": 913086.2475339198,
-        "residualSeconds": 4.862496256828308,
-        "sourceTT": 913086.2474776409,
+        "nativeTT": 913086.2476320143,
+        "residualSeconds": 4.862325266003609,
+        "sourceTT": 913086.2475757374,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": -0.5857506356551312,
+        "distanceResidualKm": -0.5858329175389372,
         "event": "descending",
-        "nativeTT": 913113.3452668526,
-        "residualSeconds": 3.931531682610512,
-        "sourceTT": 913113.3452213488,
+        "nativeTT": 913113.3453682312,
+        "residualSeconds": 3.9315417408943176,
+        "sourceTT": 913113.3453227272,
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.18561286048498005,
+        "distanceResidualKm": 0.1856128602521494,
         "event": "pericenter",
         "nativeTT": 913091.4052068796,
         "residualSeconds": 162.62962482869625,
@@ -2294,7 +2294,7 @@
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 3.0144471467356198,
+        "distanceResidualKm": 3.014447146677412,
         "event": "pericenter",
         "nativeTT": 913119.9131638301,
         "residualSeconds": -486.4339739084244,
@@ -2302,7 +2302,7 @@
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.46906375425169244,
+        "distanceResidualKm": 0.4690637543099001,
         "event": "apocenter",
         "nativeTT": 913078.536088938,
         "residualSeconds": -28.57518196105957,
@@ -2310,7 +2310,7 @@
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.6128423666814342,
+        "distanceResidualKm": 0.6128423666232266,
         "event": "apocenter",
         "nativeTT": 913105.6837110372,
         "residualSeconds": 0.15043169260025024,
@@ -2326,103 +2326,103 @@
         "window": "uniform-13"
       },
       {
-        "distanceResidualKm": 0.104534680780489,
+        "distanceResidualKm": 0.10453580669127405,
         "event": "new",
-        "nativeTT": 1095707.9146636578,
-        "residualSeconds": -0.20675808191299438,
-        "sourceTT": 1095707.9146660508,
+        "nativeTT": 1095707.9146666047,
+        "residualSeconds": -0.2066977322101593,
+        "sourceTT": 1095707.914668997,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 0.6260369748342782,
+        "distanceResidualKm": 0.6260342649766244,
         "event": "new",
-        "nativeTT": 1095737.6904674135,
-        "residualSeconds": 0.26189759373664856,
-        "sourceTT": 1095737.6904643823,
+        "nativeTT": 1095737.6904755328,
+        "residualSeconds": 0.26227980852127075,
+        "sourceTT": 1095737.6904724971,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 0.4519773266511038,
+        "distanceResidualKm": 0.4519689073204063,
         "event": "firstQuarter",
-        "nativeTT": 1095716.0554195724,
-        "residualSeconds": 2.723119407892227,
-        "sourceTT": 1095716.0553880548,
+        "nativeTT": 1095716.0554240413,
+        "residualSeconds": 2.7233004570007324,
+        "sourceTT": 1095716.0553925217,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": -0.4499014758039266,
+        "distanceResidualKm": -0.44990682415664196,
         "event": "firstQuarter",
-        "nativeTT": 1095745.6243680702,
-        "residualSeconds": 4.525966197252274,
-        "sourceTT": 1095745.6243156863,
+        "nativeTT": 1095745.6243740057,
+        "residualSeconds": 4.526026546955109,
+        "sourceTT": 1095745.6243216211,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 5.423332174890675,
+        "distanceResidualKm": 5.423280653019901,
         "event": "full",
-        "nativeTT": 1095722.8750416846,
-        "residualSeconds": 5.207314342260361,
-        "sourceTT": 1095722.8749814148,
+        "nativeTT": 1095722.875046057,
+        "residualSeconds": 5.207958072423935,
+        "sourceTT": 1095722.8749857796,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 6.139538350224029,
+        "distanceResidualKm": 6.139607203542255,
         "event": "full",
-        "nativeTT": 1095752.2935445851,
-        "residualSeconds": -6.692902743816376,
-        "sourceTT": 1095752.2936220493,
+        "nativeTT": 1095752.2935521398,
+        "residualSeconds": -6.692580878734589,
+        "sourceTT": 1095752.2936296002,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": -0.47009042551508173,
+        "distanceResidualKm": -0.4701062088715844,
         "event": "lastQuarter",
-        "nativeTT": 1095700.094211905,
-        "residualSeconds": -1.59214586019516,
-        "sourceTT": 1095700.0942303326,
+        "nativeTT": 1095700.094214937,
+        "residualSeconds": -1.5923269093036652,
+        "sourceTT": 1095700.0942333667,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": -0.8753958970191889,
+        "distanceResidualKm": -0.8754049123963341,
         "event": "lastQuarter",
-        "nativeTT": 1095729.5829261583,
-        "residualSeconds": -4.325786232948303,
-        "sourceTT": 1095729.5829762253,
+        "nativeTT": 1095729.582931379,
+        "residualSeconds": -4.32598739862442,
+        "sourceTT": 1095729.5829814484,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 12.375377476739231,
+        "distanceResidualKm": 12.37555385689484,
         "event": "ascending",
-        "nativeTT": 1095720.9150598317,
-        "residualSeconds": 4.418503493070602,
-        "sourceTT": 1095720.9150086916,
+        "nativeTT": 1095720.9152776592,
+        "residualSeconds": 4.4190868735313416,
+        "sourceTT": 1095720.9152265124,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 6.797912698530126,
+        "distanceResidualKm": 6.800042757531628,
         "event": "ascending",
-        "nativeTT": 1095748.2380001072,
-        "residualSeconds": 2.9018551111221313,
-        "sourceTT": 1095748.237966521,
+        "nativeTT": 1095748.2382356375,
+        "residualSeconds": 2.903062105178833,
+        "sourceTT": 1095748.2382020373,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 0.5269465818419121,
+        "distanceResidualKm": 0.5268058711662889,
         "event": "descending",
-        "nativeTT": 1095706.698590678,
-        "residualSeconds": -0.3612533211708069,
-        "sourceTT": 1095706.698594859,
+        "nativeTT": 1095706.6988580474,
+        "residualSeconds": -0.3611326217651367,
+        "sourceTT": 1095706.6988622271,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": -0.15839705534745008,
+        "distanceResidualKm": -0.1583681913325563,
         "event": "descending",
-        "nativeTT": 1095733.8983492937,
-        "residualSeconds": -0.40406137704849243,
-        "sourceTT": 1095733.8983539704,
+        "nativeTT": 1095733.8986249988,
+        "residualSeconds": -0.40402114391326904,
+        "sourceTT": 1095733.898629675,
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 8.900096903962549,
+        "distanceResidualKm": 8.900096903904341,
         "event": "pericenter",
         "nativeTT": 1095694.607366709,
         "residualSeconds": 427.8370477259159,
@@ -2430,7 +2430,7 @@
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 3.365978555404581,
+        "distanceResidualKm": 3.3659785553463735,
         "event": "pericenter",
         "nativeTT": 1095723.0584283231,
         "residualSeconds": 489.4720382988453,
@@ -2438,7 +2438,7 @@
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 0.12022032489767298,
+        "distanceResidualKm": 0.12022032507229596,
         "event": "pericenter",
         "nativeTT": 1095751.5736766623,
         "residualSeconds": -132.7000044286251,
@@ -2446,7 +2446,7 @@
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 0.4701788902748376,
+        "distanceResidualKm": 0.47017889039125293,
         "event": "apocenter",
         "nativeTT": 1095709.8250521983,
         "residualSeconds": 6.081580370664597,
@@ -2462,111 +2462,111 @@
         "window": "uniform-14"
       },
       {
-        "distanceResidualKm": 13.588815430994146,
+        "distanceResidualKm": 13.588804962579161,
         "event": "new",
-        "nativeTT": 1278325.391422436,
-        "residualSeconds": 2.16548815369606,
-        "sourceTT": 1278325.3913973726,
+        "nativeTT": 1278325.391420245,
+        "residualSeconds": 2.166152000427246,
+        "sourceTT": 1278325.3913951737,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 7.15222401637584,
+        "distanceResidualKm": 7.152193836693186,
         "event": "new",
-        "nativeTT": 1278354.7866023497,
-        "residualSeconds": 5.309104174375534,
-        "sourceTT": 1278354.7865409018,
+        "nativeTT": 1278354.7866050035,
+        "residualSeconds": 5.3091444075107574,
+        "sourceTT": 1278354.786543555,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": -0.5717257864889689,
+        "distanceResidualKm": -0.5717299419338815,
         "event": "firstQuarter",
-        "nativeTT": 1278332.0523377417,
-        "residualSeconds": -1.2602627277374268,
-        "sourceTT": 1278332.052352328,
+        "nativeTT": 1278332.0523424768,
+        "residualSeconds": -1.260242611169815,
+        "sourceTT": 1278332.052357063,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": -1.1202293043606915,
+        "distanceResidualKm": -1.1202173305791803,
         "event": "firstQuarter",
-        "nativeTT": 1278361.5848429643,
-        "residualSeconds": -3.8664445281028748,
-        "sourceTT": 1278361.5848877148,
+        "nativeTT": 1278361.5848484514,
+        "residualSeconds": -3.8663439452648163,
+        "sourceTT": 1278361.5848932008,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.1406384042929858,
+        "distanceResidualKm": 0.14063775923568755,
         "event": "full",
-        "nativeTT": 1278339.9437420163,
-        "residualSeconds": -0.15123635530471802,
-        "sourceTT": 1278339.9437437668,
+        "nativeTT": 1278339.9437419944,
+        "residualSeconds": -0.15137717127799988,
+        "sourceTT": 1278339.9437437465,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.6480900534661487,
+        "distanceResidualKm": 0.6480877961148508,
         "event": "full",
-        "nativeTT": 1278369.7271284005,
-        "residualSeconds": 0.5728192627429962,
-        "sourceTT": 1278369.7271217706,
+        "nativeTT": 1278369.7271355414,
+        "residualSeconds": 0.5729198455810547,
+        "sourceTT": 1278369.7271289104,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": -1.312363767530769,
+        "distanceResidualKm": -1.3123530634329654,
         "event": "lastQuarter",
-        "nativeTT": 1278318.4325399443,
-        "residualSeconds": 1.2673638761043549,
-        "sourceTT": 1278318.4325252757,
+        "nativeTT": 1278318.432543556,
+        "residualSeconds": 1.2672029435634613,
+        "sourceTT": 1278318.4325288893,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.7362488713115454,
+        "distanceResidualKm": 0.7362642029765993,
         "event": "lastQuarter",
-        "nativeTT": 1278348.0478625204,
-        "residualSeconds": 2.7661286294460297,
-        "sourceTT": 1278348.047830505,
+        "nativeTT": 1278348.0478680765,
+        "residualSeconds": 2.766028046607971,
+        "sourceTT": 1278348.0478360623,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.242663222248666,
+        "distanceResidualKm": 0.24266612326027825,
         "event": "lastQuarter",
-        "nativeTT": 1278377.567496186,
-        "residualSeconds": 4.691344499588013,
-        "sourceTT": 1278377.567441888,
+        "nativeTT": 1278377.5675008476,
+        "residualSeconds": 4.691203683614731,
+        "sourceTT": 1278377.5674465513,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.4849252187414095,
+        "distanceResidualKm": 0.4849260550690815,
         "event": "ascending",
-        "nativeTT": 1278341.8133869949,
-        "residualSeconds": -0.1477360725402832,
-        "sourceTT": 1278341.8133887048,
+        "nativeTT": 1278341.813465914,
+        "residualSeconds": -0.1477159559726715,
+        "sourceTT": 1278341.8134676237,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.703775072877761,
+        "distanceResidualKm": 0.7037720674998127,
         "event": "ascending",
-        "nativeTT": 1278369.0753003317,
-        "residualSeconds": 0.4041418433189392,
-        "sourceTT": 1278369.0752956541,
+        "nativeTT": 1278369.0753777127,
+        "residualSeconds": 0.4041619598865509,
+        "sourceTT": 1278369.075373035,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.4515155854751356,
+        "distanceResidualKm": 0.4516598451882601,
         "event": "descending",
-        "nativeTT": 1278327.834929244,
-        "residualSeconds": -1.9046969711780548,
-        "sourceTT": 1278327.834951289,
+        "nativeTT": 1278327.8349879805,
+        "residualSeconds": -1.9051998853683472,
+        "sourceTT": 1278327.8350100315,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 1.3725390586187132,
+        "distanceResidualKm": 1.3719290303415619,
         "event": "descending",
-        "nativeTT": 1278355.2624185742,
-        "residualSeconds": 1.2255415320396423,
-        "sourceTT": 1278355.2624043897,
+        "nativeTT": 1278355.2624793812,
+        "residualSeconds": 1.2250587344169617,
+        "sourceTT": 1278355.2624652022,
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 12.561816872970667,
+        "distanceResidualKm": 12.561816873028874,
         "event": "pericenter",
         "nativeTT": 1278326.2005012773,
         "residualSeconds": 170.34528404474258,
@@ -2574,7 +2574,7 @@
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 8.288020655105356,
+        "distanceResidualKm": 8.288020655163564,
         "event": "pericenter",
         "nativeTT": 1278354.6843829527,
         "residualSeconds": 444.19893845915794,
@@ -2598,103 +2598,103 @@
         "window": "uniform-15"
       },
       {
-        "distanceResidualKm": 0.8188275085994974,
+        "distanceResidualKm": 0.8188227356295101,
         "event": "new",
-        "nativeTT": 1460942.2795231377,
-        "residualSeconds": -0.7394246757030487,
-        "sourceTT": 1460942.2795316959,
+        "nativeTT": 1460942.2795109444,
+        "residualSeconds": -0.7397867739200592,
+        "sourceTT": 1460942.2795195067,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 0.20201059838291258,
+        "distanceResidualKm": 0.20200409163953736,
         "event": "new",
-        "nativeTT": 1460971.9987514855,
-        "residualSeconds": -0.0632062554359436,
-        "sourceTT": 1460971.998752217,
+        "nativeTT": 1460971.9987405052,
+        "residualSeconds": -0.06387010216712952,
+        "sourceTT": 1460971.9987412444,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -1.3778219345258549,
+        "distanceResidualKm": -1.3778265971923247,
         "event": "firstQuarter",
-        "nativeTT": 1460950.457935803,
-        "residualSeconds": 1.590093970298767,
-        "sourceTT": 1460950.4579173992,
+        "nativeTT": 1460950.4579367382,
+        "residualSeconds": 1.5901945531368256,
+        "sourceTT": 1460950.4579183331,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 1.096045201702509,
+        "distanceResidualKm": 1.096050322696101,
         "event": "firstQuarter",
-        "nativeTT": 1460980.041671994,
-        "residualSeconds": 2.815474569797516,
-        "sourceTT": 1460980.0416394074,
+        "nativeTT": 1460980.0416768135,
+        "residualSeconds": 2.8156153857707977,
+        "sourceTT": 1460980.0416442254,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 14.59707613143837,
+        "distanceResidualKm": 14.59707852610154,
         "event": "full",
-        "nativeTT": 1460957.3232927998,
-        "residualSeconds": 0.4870019853115082,
-        "sourceTT": 1460957.3232871632,
+        "nativeTT": 1460957.3232831713,
+        "residualSeconds": 0.4868611693382263,
+        "sourceTT": 1460957.3232775363,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 8.83613609999884,
+        "distanceResidualKm": 8.836196304822806,
         "event": "full",
-        "nativeTT": 1460986.7060481973,
-        "residualSeconds": 4.943143576383591,
-        "sourceTT": 1460986.705990985,
+        "nativeTT": 1460986.7060427102,
+        "residualSeconds": 4.943042993545532,
+        "sourceTT": 1460986.705985499,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -0.6191154471016489,
+        "distanceResidualKm": -0.6191334897885099,
         "event": "lastQuarter",
-        "nativeTT": 1460964.003495663,
-        "residualSeconds": -0.9607672691345215,
-        "sourceTT": 1460964.003506783,
+        "nativeTT": 1460964.0034994017,
+        "residualSeconds": -0.9609483182430267,
+        "sourceTT": 1460964.0035105238,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -1.3295826752437279,
+        "distanceResidualKm": -1.329590228793677,
         "event": "lastQuarter",
-        "nativeTT": 1460993.5945497,
-        "residualSeconds": -3.4305788576602936,
-        "sourceTT": 1460993.5945894057,
+        "nativeTT": 1460993.5945536408,
+        "residualSeconds": -3.4306995570659637,
+        "sourceTT": 1460993.594593348,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 4.085283997585066,
+        "distanceResidualKm": 4.0871960911899805,
         "event": "ascending",
-        "nativeTT": 1460962.4841559813,
-        "residualSeconds": -5.779791623353958,
-        "sourceTT": 1460962.484222877,
+        "nativeTT": 1460962.4829824234,
+        "residualSeconds": -5.785001814365387,
+        "sourceTT": 1460962.4830493794,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 5.788646829489153,
+        "distanceResidualKm": 5.786875469028018,
         "event": "ascending",
-        "nativeTT": 1460989.71222231,
-        "residualSeconds": -8.065174520015717,
-        "sourceTT": 1460989.712315657,
+        "nativeTT": 1460989.711161551,
+        "residualSeconds": -8.066482096910477,
+        "sourceTT": 1460989.7112549131,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -1.3949825644376688,
+        "distanceResidualKm": -1.394623459491413,
         "event": "descending",
-        "nativeTT": 1460949.9892738196,
-        "residualSeconds": 1.834007352590561,
-        "sourceTT": 1460949.9892525927,
+        "nativeTT": 1460949.987943262,
+        "residualSeconds": 1.8343694508075714,
+        "sourceTT": 1460949.987922031,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -0.40806673833867535,
+        "distanceResidualKm": -0.4076663304003887,
         "event": "descending",
-        "nativeTT": 1460977.0366109281,
-        "residualSeconds": 1.338958740234375,
-        "sourceTT": 1460977.036595431,
+        "nativeTT": 1460977.0353382048,
+        "residualSeconds": 1.3388380408287048,
+        "sourceTT": 1460977.035322709,
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 14.46621409006184,
+        "distanceResidualKm": 14.466214090120047,
         "event": "pericenter",
         "nativeTT": 1460957.7915758095,
         "residualSeconds": 27.40878313779831,
@@ -2702,7 +2702,7 @@
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 12.18209758948069,
+        "distanceResidualKm": 12.182097589538898,
         "event": "pericenter",
         "nativeTT": 1460986.2920146303,
         "residualSeconds": 220.04773020744324,
@@ -2710,7 +2710,7 @@
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -0.036942852719221264,
+        "distanceResidualKm": -0.036942852777428925,
         "event": "apocenter",
         "nativeTT": 1460944.8921520852,
         "residualSeconds": 5.632156133651733,
@@ -2718,7 +2718,7 @@
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 0.2439196290797554,
+        "distanceResidualKm": 0.24391962919617072,
         "event": "apocenter",
         "nativeTT": 1460972.0752816938,
         "residualSeconds": 71.15543782711029,
@@ -2726,7 +2726,7 @@
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": -0.05503717594547197,
+        "distanceResidualKm": -0.05503717600367963,
         "event": "apocenter",
         "nativeTT": 1460999.1950279728,
         "residualSeconds": 33.146028220653534,
@@ -2734,163 +2734,163 @@
         "window": "uniform-16"
       },
       {
-        "distanceResidualKm": 2.9596007364452817,
+        "distanceResidualKm": 2.959600576024968,
         "event": "new",
-        "nativeTT": -36583.06484611382,
-        "residualSeconds": 2.5808896170929074,
-        "sourceTT": -36583.06487598523,
+        "nativeTT": -36583.0648419986,
+        "residualSeconds": 2.580900932662189,
+        "sourceTT": -36583.06487187014,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 1.7758646457805298,
+        "distanceResidualKm": 1.7758498674375005,
         "event": "new",
-        "nativeTT": -36553.466860955334,
-        "residualSeconds": 4.608898004516959,
-        "sourceTT": -36553.46691429906,
+        "nativeTT": -36553.46685423093,
+        "residualSeconds": 4.608896118588746,
+        "sourceTT": -36553.466907574635,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -1.80655624717474e-05,
+        "distanceResidualKm": -1.7743732314556837e-05,
         "event": "new",
-        "nativeTT": -36523.92227648181,
-        "residualSeconds": 0.005457247607409954,
-        "sourceTT": -36523.922276544974,
+        "nativeTT": -36523.922269130984,
+        "residualSeconds": 0.005465419963002205,
+        "sourceTT": -36523.92226919424,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -2.9699294827878475e-06,
+        "distanceResidualKm": -2.6061316020786762e-06,
         "event": "new",
-        "nativeTT": -36494.44264600521,
-        "residualSeconds": 0.005262368358671665,
-        "sourceTT": -36494.44264606612,
+        "nativeTT": -36494.44263990805,
+        "residualSeconds": 0.005250424146652222,
+        "sourceTT": -36494.44263996882,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 2.5532879251404665,
+        "distanceResidualKm": 2.553313344484195,
         "event": "firstQuarter",
-        "nativeTT": -36575.93408337024,
-        "residualSeconds": -0.24818186648190022,
-        "sourceTT": -36575.93408049776,
+        "nativeTT": -36575.93407884003,
+        "residualSeconds": -0.24809071328490973,
+        "sourceTT": -36575.93407596861,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 3.436201896169223,
+        "distanceResidualKm": 3.4362055450910702,
         "event": "firstQuarter",
-        "nativeTT": -36546.623259566244,
-        "residualSeconds": -1.654102373868227,
-        "sourceTT": -36546.62324042154,
+        "nativeTT": -36546.623252667356,
+        "residualSeconds": -1.6539659583941102,
+        "sourceTT": -36546.62323352423,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -2.67344294115901e-05,
+        "distanceResidualKm": -2.043356653302908e-05,
         "event": "firstQuarter",
-        "nativeTT": -36517.26404878127,
-        "residualSeconds": 0.004467763938009739,
-        "sourceTT": -36517.26404883298,
+        "nativeTT": -36517.264041139286,
+        "residualSeconds": 0.004598521627485752,
+        "sourceTT": -36517.26404119251,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 3.1177891599363647,
+        "distanceResidualKm": 3.1177521885256283,
         "event": "full",
-        "nativeTT": -36569.070517062806,
-        "residualSeconds": -0.5230112699791789,
-        "sourceTT": -36569.070511009435,
+        "nativeTT": -36569.07051158646,
+        "residualSeconds": -0.5229930393397808,
+        "sourceTT": -36569.0705055333,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 0.3559357154299505,
+        "distanceResidualKm": 0.3559387036366388,
         "event": "full",
-        "nativeTT": -36539.436858540095,
-        "residualSeconds": -1.1847017565742135,
-        "sourceTT": -36539.43684482827,
+        "nativeTT": -36539.4368504338,
+        "residualSeconds": -1.1847099289298058,
+        "sourceTT": -36539.43683672188,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 6.7051732912659645e-06,
+        "distanceResidualKm": 6.443879101425409e-06,
         "event": "full",
-        "nativeTT": -36509.703179127675,
-        "residualSeconds": 0.005328375846147537,
-        "sourceTT": -36509.703179189346,
+        "nativeTT": -36509.70317052422,
+        "residualSeconds": 0.005312659777700901,
+        "sourceTT": -36509.70317058571,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -0.5381509448052384,
+        "distanceResidualKm": -0.538144133577589,
         "event": "lastQuarter",
-        "nativeTT": -36561.22602622758,
-        "residualSeconds": -0.6998660741373897,
-        "sourceTT": -36561.22601812728,
+        "nativeTT": -36561.226019079775,
+        "residualSeconds": -0.7000075187534094,
+        "sourceTT": -36561.226010977836,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -0.06448102614376694,
+        "distanceResidualKm": -0.06447662907885388,
         "event": "lastQuarter",
-        "nativeTT": -36531.33521182882,
-        "residualSeconds": 0.1415590289980173,
-        "sourceTT": -36531.33521346723,
+        "nativeTT": -36531.33520293167,
+        "residualSeconds": 0.14141255524009466,
+        "sourceTT": -36531.335204568386,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -1.537817297503352e-05,
+        "distanceResidualKm": -9.00105806067586e-06,
         "event": "lastQuarter",
-        "nativeTT": -36501.504979176185,
-        "residualSeconds": 0.005314545705914497,
-        "sourceTT": -36501.504979237696,
+        "nativeTT": -36501.50497110668,
+        "residualSeconds": 0.0051925890147686005,
+        "sourceTT": -36501.50497116678,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 1.452874009788502,
+        "distanceResidualKm": 1.4528733619954437,
         "event": "ascending",
-        "nativeTT": -36580.06444449571,
-        "residualSeconds": 0.009936327114701271,
-        "sourceTT": -36580.06444461071,
+        "nativeTT": -36580.06444449721,
+        "residualSeconds": 0.009946385398507118,
+        "sourceTT": -36580.06444461233,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 0.24778184649767354,
+        "distanceResidualKm": 0.24778261751635,
         "event": "ascending",
-        "nativeTT": -36552.77265415894,
-        "residualSeconds": 0.8476593531668186,
-        "sourceTT": -36552.772663969816,
+        "nativeTT": -36552.77265416061,
+        "residualSeconds": 0.8476442657411098,
+        "sourceTT": -36552.77266397131,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 0.00011054205242544413,
+        "distanceResidualKm": 0.00010997889330610633,
         "event": "ascending",
-        "nativeTT": -36525.35659481829,
-        "residualSeconds": 0.005725049413740635,
-        "sourceTT": -36525.35659488455,
+        "nativeTT": -36525.3565948198,
+        "residualSeconds": 0.005720648914575577,
+        "sourceTT": -36525.35659488601,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 2.5776331312954426e-05,
+        "distanceResidualKm": 2.5416899006813765e-05,
         "event": "ascending",
-        "nativeTT": -36497.98512193807,
-        "residualSeconds": 0.004745624028146267,
-        "sourceTT": -36497.985121993,
+        "nativeTT": -36497.985121939644,
+        "residualSeconds": 0.004751281812787056,
+        "sourceTT": -36497.985121994636,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 0.305387117608916,
+        "distanceResidualKm": 0.30538604396861047,
         "event": "descending",
-        "nativeTT": -36567.15376609378,
-        "residualSeconds": -3.734773420728743,
-        "sourceTT": -36567.15372286724,
+        "nativeTT": -36567.1537660954,
+        "residualSeconds": -3.734783479012549,
+        "sourceTT": -36567.15372286874,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 0.2163599130581133,
+        "distanceResidualKm": 0.2163598698680289,
         "event": "descending",
-        "nativeTT": -36539.798354567036,
-        "residualSeconds": -0.821788189932704,
-        "sourceTT": -36539.7983450556,
+        "nativeTT": -36539.79835456869,
+        "residualSeconds": -0.8217869326472282,
+        "sourceTT": -36539.798345057265,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -6.870832294225693e-06,
+        "distanceResidualKm": -7.065304089337587e-06,
         "event": "descending",
-        "nativeTT": -36512.53344341869,
-        "residualSeconds": 0.004811631515622139,
-        "sourceTT": -36512.53344347438,
+        "nativeTT": -36512.533443420376,
+        "residualSeconds": 0.004797801375389099,
+        "sourceTT": -36512.533443475906,
         "window": "blend-1900"
       },
       {
@@ -2910,7 +2910,7 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -4.712957888841629e-06,
+        "distanceResidualKm": -4.7130160965025425e-06,
         "event": "pericenter",
         "nativeTT": -36521.79295411632,
         "residualSeconds": 0.005049887113273144,
@@ -2918,7 +2918,7 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 4.901085048913956e-08,
+        "distanceResidualKm": 4.912726581096649e-08,
         "event": "pericenter",
         "nativeTT": -36493.49532391519,
         "residualSeconds": 0.004940503276884556,
@@ -2926,7 +2926,7 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -0.6948566803475842,
+        "distanceResidualKm": -0.6948566802893765,
         "event": "apocenter",
         "nativeTT": -36561.42151108133,
         "residualSeconds": 45.416840887628496,
@@ -2934,7 +2934,7 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -0.04930051910923794,
+        "distanceResidualKm": -0.04930051905103028,
         "event": "apocenter",
         "nativeTT": -36533.54893263964,
         "residualSeconds": 4.304849915206432,
@@ -2942,7 +2942,7 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -5.971931386739016e-06,
+        "distanceResidualKm": -5.971873179078102e-06,
         "event": "apocenter",
         "nativeTT": -36505.81168898873,
         "residualSeconds": 0.005050515756011009,
@@ -2950,163 +2950,163 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -3.6760757211595774e-05,
+        "distanceResidualKm": -3.549963003024459e-05,
         "event": "new",
-        "nativeTT": 47815.367472365935,
-        "residualSeconds": 0.015293620526790619,
-        "sourceTT": 47815.367472188926,
+        "nativeTT": 47815.36747917235,
+        "residualSeconds": 0.015262188389897346,
+        "sourceTT": 47815.36747899571,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -5.0879549235105515e-05,
+        "distanceResidualKm": -5.059572868049145e-05,
         "event": "new",
-        "nativeTT": 47845.03380944503,
-        "residualSeconds": 0.01528922002762556,
-        "sourceTT": 47845.03380926807,
+        "nativeTT": 47845.03381741522,
+        "residualSeconds": 0.01528104767203331,
+        "sourceTT": 47845.033817238356,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 2.1871161435265094,
+        "distanceResidualKm": 2.1870967862196267,
         "event": "new",
-        "nativeTT": 47874.6225778196,
-        "residualSeconds": 5.108685325831175,
-        "sourceTT": 47874.6225186913,
+        "nativeTT": 47874.622584711185,
+        "residualSeconds": 5.108643835410476,
+        "sourceTT": 47874.62252558336,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 6.257751558383461,
+        "distanceResidualKm": 6.257804862514604,
         "event": "new",
-        "nativeTT": 47904.1154259006,
-        "residualSeconds": -1.916665700264275,
-        "sourceTT": 47904.11544808423,
+        "nativeTT": 47904.11543014736,
+        "residualSeconds": -1.916675758548081,
+        "sourceTT": 47904.115452331105,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -2.109096385538578e-05,
+        "distanceResidualKm": -2.3710657842457294e-05,
         "event": "firstQuarter",
-        "nativeTT": 47822.694292775675,
-        "residualSeconds": 0.015156576409935951,
-        "sourceTT": 47822.69429260025,
+        "nativeTT": 47822.69429934166,
+        "residualSeconds": 0.015252758748829365,
+        "sourceTT": 47822.69429916512,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 0.074913477699738,
+        "distanceResidualKm": 0.07491537707392126,
         "event": "firstQuarter",
-        "nativeTT": 47852.02463278028,
-        "residualSeconds": -0.015060394071042538,
-        "sourceTT": 47852.02463295459,
+        "nativeTT": 47852.02464023105,
+        "residualSeconds": -0.014937808737158775,
+        "sourceTT": 47852.02464040394,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 3.3506119060330093,
+        "distanceResidualKm": 3.3506210915511474,
         "event": "firstQuarter",
-        "nativeTT": 47881.356250266916,
-        "residualSeconds": -3.2117923256009817,
-        "sourceTT": 47881.35628744044,
+        "nativeTT": 47881.35625677623,
+        "residualSeconds": -3.211622592061758,
+        "sourceTT": 47881.356293947785,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 4.2524305172264576e-05,
+        "distanceResidualKm": 4.338606959208846e-05,
         "event": "full",
-        "nativeTT": 47829.43941629276,
-        "residualSeconds": 0.015196180902421474,
-        "sourceTT": 47829.439416116875,
+        "nativeTT": 47829.43942329908,
+        "residualSeconds": 0.015213154256343842,
+        "sourceTT": 47829.439423123,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 0.5558937655878253,
+        "distanceResidualKm": 0.555882663524244,
         "event": "full",
-        "nativeTT": 47859.03618440913,
-        "residualSeconds": -0.13298937119543552,
-        "sourceTT": 47859.03618594836,
+        "nativeTT": 47859.036192432686,
+        "residualSeconds": -0.1329441089183092,
+        "sourceTT": 47859.03619397139,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 0.7394727463833988,
+        "distanceResidualKm": 0.7394769287202507,
         "event": "full",
-        "nativeTT": 47888.71468681756,
-        "residualSeconds": -2.1769413957372308,
-        "sourceTT": 47888.71471201364,
+        "nativeTT": 47888.714693589995,
+        "residualSeconds": -2.176967798732221,
+        "sourceTT": 47888.71471878638,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 2.091319765895605e-05,
+        "distanceResidualKm": 1.8675229512155056e-05,
         "event": "lastQuarter",
-        "nativeTT": 47837.095717675285,
-        "residualSeconds": 0.015357742086052895,
-        "sourceTT": 47837.095717497534,
+        "nativeTT": 47837.0957264104,
+        "residualSeconds": 0.015188637189567089,
+        "sourceTT": 47837.095726234606,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -0.2540002714958973,
+        "distanceResidualKm": -0.2539917032700032,
         "event": "lastQuarter",
-        "nativeTT": 47867.00633989793,
-        "residualSeconds": -0.2371058100834489,
-        "sourceTT": 47867.00634264221,
+        "nativeTT": 47867.006348571755,
+        "residualSeconds": -0.23721770849078894,
+        "sourceTT": 47867.00635131733,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -1.0927141696447507,
+        "distanceResidualKm": -1.0927125526359305,
         "event": "lastQuarter",
-        "nativeTT": 47896.868197580414,
-        "residualSeconds": 2.483131270855665,
-        "sourceTT": 47896.86816884047,
+        "nativeTT": 47896.86820372895,
+        "residualSeconds": 2.4830049136653543,
+        "sourceTT": 47896.868174990464,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -2.9522983822971582e-05,
+        "distanceResidualKm": -3.0114490073174238e-05,
         "event": "ascending",
-        "nativeTT": 47831.50517526265,
-        "residualSeconds": 0.013881060294806957,
-        "sourceTT": 47831.50517510199,
+        "nativeTT": 47831.5051752672,
+        "residualSeconds": 0.013884203508496284,
+        "sourceTT": 47831.505175106504,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 0.7767295520170592,
+        "distanceResidualKm": 0.7767288133036345,
         "event": "ascending",
-        "nativeTT": 47858.88647122356,
-        "residualSeconds": -0.22213971242308617,
-        "sourceTT": 47858.88647379462,
+        "nativeTT": 47858.88647122804,
+        "residualSeconds": -0.22215291392058134,
+        "sourceTT": 47858.886473799255,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 2.448614789522253,
+        "distanceResidualKm": 2.4486147881834768,
         "event": "ascending",
-        "nativeTT": 47886.181548364875,
-        "residualSeconds": -1.3634934090077877,
-        "sourceTT": 47886.18156414605,
+        "nativeTT": 47886.18154836956,
+        "residualSeconds": -1.363492151722312,
+        "sourceTT": 47886.18156415072,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 2.174230758100748e-06,
+        "distanceResidualKm": 3.0134106054902077e-06,
         "event": "descending",
-        "nativeTT": 47818.6933728087,
-        "residualSeconds": 0.013969698920845985,
-        "sourceTT": 47818.693372647016,
+        "nativeTT": 47818.69337281333,
+        "residualSeconds": 0.013963412493467331,
+        "sourceTT": 47818.693372651716,
         "window": "blend-2131"
       },
       {
         "distanceResidualKm": -1.325039193034172e-06,
         "event": "descending",
-        "nativeTT": 47845.94900837082,
-        "residualSeconds": 0.01400490291416645,
-        "sourceTT": 47845.94900820873,
+        "nativeTT": 47845.949008375246,
+        "residualSeconds": 0.014000502415001392,
+        "sourceTT": 47845.9490082132,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 4.219552450871561,
+        "distanceResidualKm": 4.219552460475825,
         "event": "descending",
-        "nativeTT": 47873.33811477712,
-        "residualSeconds": 5.149008356966078,
-        "sourceTT": 47873.33805518212,
+        "nativeTT": 47873.33811478145,
+        "residualSeconds": 5.149003956466913,
+        "sourceTT": 47873.3380551865,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 3.7394544089911506,
+        "distanceResidualKm": 3.7394530125311576,
         "event": "descending",
-        "nativeTT": 47900.70428114075,
-        "residualSeconds": 6.081467843614519,
-        "sourceTT": 47900.70421075339,
+        "nativeTT": 47900.704281145365,
+        "residualSeconds": 6.0814791591838,
+        "sourceTT": 47900.704210757875,
         "window": "blend-2131"
       },
       {
@@ -3126,7 +3126,7 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 8.461822439625394,
+        "distanceResidualKm": 8.461822439508978,
         "event": "pericenter",
         "nativeTT": 47877.68903010885,
         "residualSeconds": -3.7419424625113606,
@@ -3142,7 +3142,7 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 1.0654155630618334e-05,
+        "distanceResidualKm": 1.065409742295742e-05,
         "event": "apocenter",
         "nativeTT": 47838.01114608437,
         "residualSeconds": 0.014534220099449158,
@@ -3150,7 +3150,7 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -0.6568704617093317,
+        "distanceResidualKm": -0.6568704616511241,
         "event": "apocenter",
         "nativeTT": 47865.90271991623,
         "residualSeconds": 3.037694119848311,
@@ -3158,7 +3158,7 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -0.4726177485426888,
+        "distanceResidualKm": -0.4726177486591041,
         "event": "apocenter",
         "nativeTT": 47893.7171192435,
         "residualSeconds": 9.290313720703125,
@@ -3166,115 +3166,115 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -1.1408701539039612e-07,
+        "distanceResidualKm": 4.6566128730773926e-08,
         "event": "new",
-        "nativeTT": -11127.908325015831,
-        "residualSeconds": 1.1158408597111702e-05,
-        "sourceTT": -11127.90832501596,
+        "nativeTT": -11127.908333319549,
+        "residualSeconds": -1.57160684466362e-06,
+        "sourceTT": -11127.90833331953,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -1.1594966053962708e-07,
+        "distanceResidualKm": -4.343455657362938e-07,
         "event": "new",
-        "nativeTT": -11098.279793933412,
-        "residualSeconds": 6.443588063120842e-06,
-        "sourceTT": -11098.279793933487,
+        "nativeTT": -11098.279800464865,
+        "residualSeconds": 2.750311978161335e-05,
+        "sourceTT": -11098.279800465183,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -4.1781459003686905e-07,
+        "distanceResidualKm": -8.135510142892599e-06,
         "event": "firstQuarter",
-        "nativeTT": -11119.992954564303,
-        "residualSeconds": 1.0529765859246254e-05,
-        "sourceTT": -11119.992954564425,
+        "nativeTT": -11119.992961652131,
+        "residualSeconds": 0.0001211708877235651,
+        "sourceTT": -11119.992961653534,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 3.4924596548080444e-09,
+        "distanceResidualKm": -4.369940143078566e-06,
         "event": "firstQuarter",
-        "nativeTT": -11090.664204854784,
-        "residualSeconds": 4.557659849524498e-06,
-        "sourceTT": -11090.664204854836,
+        "nativeTT": -11090.664209851955,
+        "residualSeconds": 9.335344657301903e-05,
+        "sourceTT": -11090.664209853036,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 6.298068910837173e-08,
+        "distanceResidualKm": 2.735760062932968e-08,
         "event": "full",
-        "nativeTT": -11142.663619754705,
-        "residualSeconds": -1.6187550500035286e-05,
-        "sourceTT": -11142.663619754518,
+        "nativeTT": -11142.663626077798,
+        "residualSeconds": -1.5087425708770752e-05,
+        "sourceTT": -11142.663626077623,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -1.2712553143501282e-07,
+        "distanceResidualKm": -1.5774276107549667e-07,
         "event": "full",
-        "nativeTT": -11113.384955301917,
-        "residualSeconds": -5.657784640789032e-06,
-        "sourceTT": -11113.384955301852,
+        "nativeTT": -11113.384961197442,
+        "residualSeconds": -2.200249582529068e-06,
+        "sourceTT": -11113.384961197416,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 6.379559636116028e-08,
+        "distanceResidualKm": 9.415671229362488e-07,
         "event": "full",
-        "nativeTT": -11084.060377151238,
-        "residualSeconds": -3.614695742726326e-06,
-        "sourceTT": -11084.060377151196,
+        "nativeTT": -11084.06038127925,
+        "residualSeconds": 2.7660280466079712e-05,
+        "sourceTT": -11084.06038127957,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 4.603643901646137e-07,
+        "distanceResidualKm": -8.517061360180378e-06,
         "event": "lastQuarter",
-        "nativeTT": -11135.946166674545,
-        "residualSeconds": 3.300374373793602e-06,
-        "sourceTT": -11135.946166674583,
+        "nativeTT": -11135.946174325769,
+        "residualSeconds": -0.00013327226042747498,
+        "sourceTT": -11135.946174324226,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -1.780572347342968e-07,
+        "distanceResidualKm": -9.007344488054514e-06,
         "event": "lastQuarter",
-        "nativeTT": -11106.431219056081,
-        "residualSeconds": -9.42964106798172e-07,
-        "sourceTT": -11106.43121905607,
+        "nativeTT": -11106.431225926315,
+        "residualSeconds": -0.00015291734598577023,
+        "sourceTT": -11106.431225924545,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -8.74255783855915e-06,
+        "distanceResidualKm": -8.124334271997213e-06,
         "event": "ascending",
-        "nativeTT": -11137.482133105725,
-        "residualSeconds": -0.00011614174582064152,
-        "sourceTT": -11137.48213310438,
+        "nativeTT": -11137.48213310586,
+        "residualSeconds": -0.00010828371159732342,
+        "sourceTT": -11137.482133104606,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -9.46590444073081e-06,
+        "distanceResidualKm": -1.024414086714387e-05,
         "event": "ascending",
-        "nativeTT": -11110.256397019102,
-        "residualSeconds": -0.00014427350834012032,
-        "sourceTT": -11110.256397017432,
+        "nativeTT": -11110.256397019233,
+        "residualSeconds": -0.00014647375792264938,
+        "sourceTT": -11110.256397017538,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -7.51507468521595e-06,
+        "distanceResidualKm": -8.077826350927353e-06,
         "event": "ascending",
-        "nativeTT": -11082.878454699505,
-        "residualSeconds": -0.0001546461135149002,
-        "sourceTT": -11082.878454697715,
+        "nativeTT": -11082.878454699632,
+        "residualSeconds": -0.000148045364767313,
+        "sourceTT": -11082.878454697919,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -2.246582880616188e-06,
+        "distanceResidualKm": -2.5680637918412685e-06,
         "event": "descending",
-        "nativeTT": -11122.881891513913,
-        "residualSeconds": 4.6833883970975876e-05,
-        "sourceTT": -11122.881891514455,
+        "nativeTT": -11122.881891514066,
+        "residualSeconds": 4.7462526708841324e-05,
+        "sourceTT": -11122.881891514615,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -2.2334279492497444e-06,
+        "distanceResidualKm": -1.7597922123968601e-06,
         "event": "descending",
-        "nativeTT": -11095.749858804338,
-        "residualSeconds": 6.176414899528027e-05,
-        "sourceTT": -11095.749858805053,
+        "nativeTT": -11095.749858804485,
+        "residualSeconds": 5.642068572342396e-05,
+        "sourceTT": -11095.749858805139,
         "window": "source-segment"
       },
       {
@@ -3286,7 +3286,7 @@
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -4.773028194904327e-09,
+        "distanceResidualKm": -4.6566128730773926e-09,
         "event": "pericenter",
         "nativeTT": -11114.123672805086,
         "residualSeconds": -0.0002825749106705189,
@@ -3294,7 +3294,7 @@
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -7.8580342233181e-09,
+        "distanceResidualKm": -7.799826562404633e-09,
         "event": "pericenter",
         "nativeTT": -11085.855499811989,
         "residualSeconds": -0.00010042567737400532,
@@ -3302,7 +3302,7 @@
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 8.381903171539307e-09,
+        "distanceResidualKm": 8.498318493366241e-09,
         "event": "apocenter",
         "nativeTT": -11128.757671870731,
         "residualSeconds": 1.257285475730896e-05,
@@ -3310,7 +3310,7 @@
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 1.816079020500183e-08,
+        "distanceResidualKm": 1.8102582544088364e-08,
         "event": "apocenter",
         "nativeTT": -11101.468606257158,
         "residualSeconds": 1.100124791264534e-06,
@@ -3320,187 +3320,187 @@
     ],
     "transitions": [
       {
-        "angleArcminutes": 7.2445096183544e-05,
+        "angleArcminutes": 0.00010245283755019126,
         "boundaryTT": -36556.5,
-        "distanceKm": 0.005752641358412802,
+        "distanceKm": 0.005752641300205141,
         "offsetDays": -0.01,
-        "velocityResidualKmPerTTDay": 0.14774457391482138
+        "velocityResidualKmPerTTDay": 0.14774457395189722
+      },
+      {
+        "angleArcminutes": 0.00010245283755019126,
+        "boundaryTT": -36556.5,
+        "distanceKm": 0.005285073712002486,
+        "offsetDays": -0.001,
+        "velocityResidualKmPerTTDay": 0.01466646792384796
       },
       {
         "angleArcminutes": 8.872676000826589e-05,
         "boundaryTT": -36556.5,
-        "distanceKm": 0.005285073770210147,
-        "offsetDays": -0.001,
-        "velocityResidualKmPerTTDay": 0.014666467945720352
+        "distanceKm": 0.005277250485960394,
+        "offsetDays": 0,
+        "velocityResidualKmPerTTDay": 0.001954181670742474
       },
       {
-        "angleArcminutes": 5.122641877509563e-05,
+        "angleArcminutes": 8.872676000826589e-05,
         "boundaryTT": -36556.5,
-        "distanceKm": 0.005277250602375716,
-        "offsetDays": 0,
-        "velocityResidualKmPerTTDay": 0.0019541816704753624
+        "distanceKm": 0.005259971192572266,
+        "offsetDays": 0.001,
+        "velocityResidualKmPerTTDay": 0.03579829712376748
       },
       {
         "angleArcminutes": 7.2445096183544e-05,
         "boundaryTT": -36556.5,
-        "distanceKm": 0.005259971076156944,
-        "offsetDays": 0.001,
-        "velocityResidualKmPerTTDay": 0.03579829712756286
-      },
-      {
-        "angleArcminutes": 5.122641877509563e-05,
-        "boundaryTT": -36556.5,
         "distanceKm": 0.0038661135477013886,
         "offsetDays": 0.01,
-        "velocityResidualKmPerTTDay": 0.33603249981062405
+        "velocityResidualKmPerTTDay": 0.3360324998350714
       },
       {
         "angleArcminutes": 0,
         "boundaryTT": -36524.5,
-        "distanceKm": 0.00022709846962243319,
+        "distanceKm": 0.0002270985278300941,
         "offsetDays": -0.01,
-        "velocityResidualKmPerTTDay": 0.0012462222115482296
+        "velocityResidualKmPerTTDay": 0.001246222213312528
       },
       {
         "angleArcminutes": 0,
         "boundaryTT": -36524.5,
         "distanceKm": 0.00022670038742944598,
         "offsetDays": -0.001,
-        "velocityResidualKmPerTTDay": 0.0012478932099728231
+        "velocityResidualKmPerTTDay": 0.0012478932100484985
       },
       {
-        "angleArcminutes": 5.122641877509563e-05,
+        "angleArcminutes": 0,
         "boundaryTT": -36524.5,
-        "distanceKm": 0.0002263711648993194,
+        "distanceKm": 0.00022637128131464124,
         "offsetDays": 0,
-        "velocityResidualKmPerTTDay": 0.0012464802223614182
+        "velocityResidualKmPerTTDay": 0.0012464802191450323
       },
       {
-        "angleArcminutes": 5.122641877509563e-05,
+        "angleArcminutes": 0,
         "boundaryTT": -36524.5,
-        "distanceKm": 0.00022604240803048015,
+        "distanceKm": 0.00022604234982281923,
         "offsetDays": 0.001,
-        "velocityResidualKmPerTTDay": 0.0012450671524278942
+        "velocityResidualKmPerTTDay": 0.0012450671508991134
       },
       {
         "angleArcminutes": 8.872676000826589e-05,
         "boundaryTT": -36524.5,
         "distanceKm": 0.00022567075211554766,
         "offsetDays": 0.01,
-        "velocityResidualKmPerTTDay": 0.0012468972695260064
+        "velocityResidualKmPerTTDay": 0.0012468972688721353
       },
       {
         "angleArcminutes": 0.00012547858734911237,
         "boundaryTT": 47846.5,
         "distanceKm": 0.0004983873222954571,
         "offsetDays": -0.01,
-        "velocityResidualKmPerTTDay": 0.0034065042006166603
+        "velocityResidualKmPerTTDay": 0.0034065042073400335
       },
       {
         "angleArcminutes": 0.00012547858734911237,
         "boundaryTT": 47846.5,
-        "distanceKm": 0.0004968823050148785,
+        "distanceKm": 0.0004968822468072176,
         "offsetDays": -0.001,
-        "velocityResidualKmPerTTDay": 0.0034037439219684377
+        "velocityResidualKmPerTTDay": 0.003403743910810004
       },
       {
-        "angleArcminutes": 0.00012547858734911237,
+        "angleArcminutes": 0.000144890192367088,
         "boundaryTT": 47846.5,
-        "distanceKm": 0.0004965444677509367,
+        "distanceKm": 0.0004965445841662586,
         "offsetDays": 0,
-        "velocityResidualKmPerTTDay": 0.0034022882157008884
+        "velocityResidualKmPerTTDay": 0.0034022882005857553
       },
       {
-        "angleArcminutes": 0.00012547858734911237,
+        "angleArcminutes": 0.00013553236463535303,
         "boundaryTT": 47846.5,
         "distanceKm": 0.0004969746223650873,
         "offsetDays": 0.001,
-        "velocityResidualKmPerTTDay": 0.003406004998635875
+        "velocityResidualKmPerTTDay": 0.0034060049920672814
       },
       {
-        "angleArcminutes": 0.00012547858734911237,
+        "angleArcminutes": 0.00013553236463535303,
         "boundaryTT": 47846.5,
-        "distanceKm": 0.0004954257165081799,
+        "distanceKm": 0.0004954256000928581,
         "offsetDays": 0.01,
-        "velocityResidualKmPerTTDay": 0.0034031816292843025
+        "velocityResidualKmPerTTDay": 0.0034031816187494526
       },
       {
-        "angleArcminutes": 0.006673801744688323,
+        "angleArcminutes": 0.006673605141257938,
         "boundaryTT": 47878.5,
-        "distanceKm": 7.142368641041685,
+        "distanceKm": 7.142368640808854,
         "offsetDays": -0.01,
-        "velocityResidualKmPerTTDay": 4.7252734228982
+        "velocityResidualKmPerTTDay": 4.725273422896938
       },
       {
         "angleArcminutes": 0.006747901974245267,
         "boundaryTT": 47878.5,
-        "distanceKm": 7.09856913407566,
+        "distanceKm": 7.098569134250283,
         "offsetDays": -0.001,
-        "velocityResidualKmPerTTDay": 4.824476830920707
+        "velocityResidualKmPerTTDay": 4.824476830922701
       },
       {
         "angleArcminutes": 0.006756063586527672,
         "boundaryTT": 47878.5,
         "distanceKm": 7.09364703198662,
         "offsetDays": 0,
-        "velocityResidualKmPerTTDay": 4.83553086218365
+        "velocityResidualKmPerTTDay": 4.835530862189899
       },
       {
         "angleArcminutes": 0.006764021375661567,
         "boundaryTT": 47878.5,
-        "distanceKm": 7.088713814911898,
+        "distanceKm": 7.0887138152029365,
         "offsetDays": 0.001,
-        "velocityResidualKmPerTTDay": 4.846590969017489
+        "velocityResidualKmPerTTDay": 4.846590969017387
       },
       {
         "angleArcminutes": 0.006835416533262634,
         "boundaryTT": 47878.5,
         "distanceKm": 7.043813900381792,
         "offsetDays": 0.01,
-        "velocityResidualKmPerTTDay": 4.946395959179146
+        "velocityResidualKmPerTTDay": 4.946395959188512
       },
       {
         "angleArcminutes": 0,
         "boundaryTT": -11112.5,
-        "distanceKm": 2.2113090381026268e-07,
+        "distanceKm": 2.2118911147117615e-07,
         "offsetDays": -0.01,
-        "velocityResidualKmPerTTDay": 1.6814021674365341e-06
+        "velocityResidualKmPerTTDay": 1.6814141716609726e-06
+      },
+      {
+        "angleArcminutes": 5.122641877509563e-05,
+        "boundaryTT": -11112.5,
+        "distanceKm": 2.3416941985487938e-07,
+        "offsetDays": -0.001,
+        "velocityResidualKmPerTTDay": 1.8335951128498965e-06
       },
       {
         "angleArcminutes": 0,
         "boundaryTT": -11112.5,
-        "distanceKm": 2.341112121939659e-07,
-        "offsetDays": -0.001,
-        "velocityResidualKmPerTTDay": 1.8335998215495569e-06
-      },
-      {
-        "angleArcminutes": 5.122641877509563e-05,
-        "boundaryTT": -11112.5,
-        "distanceKm": 2.550659701228142e-07,
+        "distanceKm": 2.552405931055546e-07,
         "offsetDays": 0,
-        "velocityResidualKmPerTTDay": 1.932154452100611e-06
+        "velocityResidualKmPerTTDay": 1.9321627787110217e-06
       },
       {
-        "angleArcminutes": 8.872676000826589e-05,
+        "angleArcminutes": 0,
         "boundaryTT": -11112.5,
-        "distanceKm": 4.8603396862745285e-08,
+        "distanceKm": 4.848698154091835e-08,
         "offsetDays": 0.001,
-        "velocityResidualKmPerTTDay": 3.421864559202272e-07
+        "velocityResidualKmPerTTDay": 3.421919319031078e-07
       },
       {
-        "angleArcminutes": 5.122641877509563e-05,
+        "angleArcminutes": 0,
         "boundaryTT": -11112.5,
-        "distanceKm": 2.893502824008465e-07,
+        "distanceKm": 2.8923386707901955e-07,
         "offsetDays": 0.01,
-        "velocityResidualKmPerTTDay": 2.182921708162168e-06
+        "velocityResidualKmPerTTDay": 2.1829153709901273e-06
       }
     ]
   },
-  "runtimeBaseRevision": "976da4bbcbdb2f38d484be46be2bd098b252fe23",
+  "runtimeBaseRevision": "9405b26768a76641da13d584eadd95407180bf7a",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
-    "Scripts/generate-moon-events.py": "fac6d76c86dd55fcedd3c5c87a2b7e27d2c55ffcfb27f6e8c53f4bbf1522331b",
+    "Scripts/generate-moon-events.py": "44e9f8956a28b4a0e71300083454e9a51582beee5fe6c2d65b6aa9be6da09a1f",
     "Scripts/moon-data/apparent-phase-references.json": "9b8f30dd4201424391e4722ee9a78e2bd7f5dd2802b485cc878f35bd65c8241d",
     "Scripts/moon-data/de441-compact-evidence.json": "2b5d686303a7b638ae0ee6512574124ef22e7e1c77f9cf871397bbfc82307182",
     "Scripts/moon-data/de441-event-fixtures.json": "94f77aad56bb3e136edcd7a04c04113f723cbd10371ea88c586f4504d2375ea6",
@@ -3508,31 +3508,129 @@
     "Scripts/moon-data/horizons-apparent-phase-moon.query.json": "d3fc5f0ce233dc6f7d03f014ccce25b7478f4cf4f4eaead54ce3aeea3b6e5277",
     "Scripts/moon-data/horizons-apparent-phase-sun.json": "ca66b540ea33705ca5a320270eb13b036f6e1af1a10428f32142420c78f90329",
     "Scripts/moon-data/horizons-apparent-phase-sun.query.json": "592710fbc080ca3dd80be60feac5d3da957a35fd44a3041124b54bd88767d38c",
-    "Scripts/test_generate_moon_events.py": "11695afd109452127b65ceb013ad0f0cd0c0ba594fcd1b36fa7bd270e65ceb92",
-    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "385c5d018a7d1ded918a215775b32977003803b797e83be20d7796c43856d88b",
+    "Scripts/test_generate_moon_events.py": "c63793dcd9dede36e2d106db7bd5c57143684adcb370161aa1836c47ebe4bef9",
+    "Sources/AstronomyKit/AstronomyError.swift": "7122525f8f8796baaef9e6a3baff8c2332d0a0f817927af6c98d83b4a81c7746",
+    "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
+    "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
+    "Sources/AstronomyKit/Engine/Bodies/EngineLagrange.swift": "5884b92dc6b643ba6481499527467f7cb367b4e8afe2f318bb9d3a40b0b003f6",
+    "Sources/AstronomyKit/Engine/Bodies/EngineRotationAxis.swift": "d9fd0b02d56f3ebaff5283aadf56ca6b41993c42e6e4ac2804ad43c8caebc858",
+    "Sources/AstronomyKit/Engine/Bodies/Generated/JupiterMoonSeries.swift": "6560608bab9aa8f5b067afad1a2a421d0e3b678fdb0753246345d1a8ca4c8e57",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineEclipseEvents.swift": "174c20221253b75db8eb50ba2eeb6381461b810731fcb75df93d0054ffcf5b25",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineGeoidIntersection.swift": "9f683e17c1565460a0dc2ab5788b6524c0eed2e5137295d28122c4476d9423bb",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineGlobalSolarEvents.swift": "0cf37a2601a73c7b54cecd65247d95d21e2f1b9bf17a85464d4fc9c3b0733d73",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineLocalSolarEvents.swift": "ab6e5fd47cf894e215c67fc067ae8ef56bb9f6a5f38eb58516c441deea61360a",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineShadowGeometry.swift": "7483be9e746c8a065e4c8d65e5e9b2f997f266640854a12e6ff239c5b3c7e5d0",
+    "Sources/AstronomyKit/Engine/Eclipses/EngineTransitEvents.swift": "d3cc352bc97d10d1543099a7a73966cfe66d586f5366722579605e56e9cb6ae1",
+    "Sources/AstronomyKit/Engine/Events/EngineAngularEvents.swift": "f1feb33c09113778035da88c28a4997cef331d1e99e626d3edd15103e6c27f5e",
+    "Sources/AstronomyKit/Engine/Events/EngineLunarEvents.swift": "6cf35c4b0cdd05aa272c811100a1b1b9395a7cfd1742dabbbeb30ff53de7b506",
+    "Sources/AstronomyKit/Engine/Events/EngineObserverEvents.swift": "d5872b4f262924ec859bd0849dc7f182b37d102d097df6bff1c14772e2bf8079",
+    "Sources/AstronomyKit/Engine/Events/EnginePlanetaryEvents.swift": "0afeceb2ab8fff4295e853116f2ed7794c17e8772397836b2e234d9ce2bdac91",
+    "Sources/AstronomyKit/Engine/Foundation/Engine.swift": "57d6d1ae8dbdacadc23daeab092445b9f27acf5baf021b900c21c5e59a09b38c",
+    "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
+    "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
+    "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "24d3b6936ca45ffab9c2c2591a5de95ab21661f70c1cec97bf9b3b826892156f",
+    "Sources/AstronomyKit/Engine/Foundation/EngineConstants.swift": "9504fdbc479821e8fbb658db830079cc86deada403331113e92bb98b768f946c",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "e8059d781fcddcc8fe5d1f459427cb72f19a85541b8c486e66f925ded436cde2",
+    "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift": "da587b4d643ba188392481fe846aed7c6cbe7fd01e84ab1d73706165c654e027",
+    "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
+    "Sources/AstronomyKit/Engine/Foundation/EngineSearch.swift": "0abe5aa2f8f23e97064b7fe43648542876c175d3215706bae81f20d0926fffe6",
+    "Sources/AstronomyKit/Engine/Foundation/EngineTables.swift": "b23eefd8a7160329868bc503a262f672489b32985bc22ae983ca2de6f432c3ba",
+    "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
+    "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
+    "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "81af4e399a16a4cc8d8915add97a9c9ff425fd14b311673edbb943df29cce2fd",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoEphemeris.swift": "54d1c0894f47a7b7a084fb03509ce9f7bf0efd6d21a1af709bf700935fc33a04",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoLightTime.swift": "2b01424b0987be139603c8ac51770834bd37083f508a6846e934ff89e26f0863",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441PlutoData.swift": "2264d1c762f688282a1d07fb8386dbb490e21f9e54f77e6ad6333c16144921b4",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441SunData.swift": "b8b0fd48631ad87985be734207575b63e41705ec62a3c6488c3a8be3242ad370",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoBarycenterCoefficients.swift": "c554ed8e4bd597fd85d68175238594795201fedd62146a89eb6db27632017a29",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoCenterCoefficients.swift": "c0f0ec73511009f9afea25a120972987a48babca94fb1ca48f450a79bfc88216",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoStateTable.swift": "23daa2037a4dd5add677903fd3e08549c2997979573fc1ba3b4caabb8d81d4e9",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoSunCoefficients.swift": "6a31ab43f325c9d84c265c4f32c702c2754a8de1d2a858850f160c4bb74e159b",
+    "Sources/AstronomyKit/Engine/Moon/EngineFrameBias.swift": "96e32a064cb907b394223c966eaee27a104a5309d0fdbaaaa1cfc5e25b8d66a3",
+    "Sources/AstronomyKit/Engine/Moon/EngineLibration.swift": "9d9b38890d2ccf06c3c13cf086bb8792b79fe08ccff12d8edddf286f8767c23f",
+    "Sources/AstronomyKit/Engine/Moon/EngineLunarSeries.swift": "0f65e3d6a9892558637f12eab83b13ef8276eb4d1283267a1643a1da424db3f8",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoon.swift": "a802e1a73089bc26e7b68e3927a4cf7dc3664fbc9c01cb0086565c7c218ef4eb",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonDE441.swift": "5457251b2a668e1b3841f7b40e048939d30b6fd20cd934a2a376b4992b3d9864",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonEphemeris.swift": "a233152b307bf9c4bb89a764be3bab574da279016f3be6c2736006a5529d8753",
+    "Sources/AstronomyKit/Engine/Moon/EngineMoonStates.swift": "442cf8a11ac4b65d4e6fe7c230d73f4ff599584130272a1915d17794d1889e7a",
+    "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift": "5c77325fb41d76fd9c6e23f08f2ba580924166e0fa2681913a815c1f32b6ad8e",
+    "Sources/AstronomyKit/Engine/Moon/Generated/DE441/MoonDE441Data.swift": "18183bac224958b016b9ee348a9d57c698efd8838eee7578f01af6add96102ae",
+    "Sources/AstronomyKit/Engine/Moon/Generated/MoonDE440Coefficients.swift": "690ed21578f3b89d0438deb22a88710ed31e11394cf12d69f6911d36e1d75b6b",
+    "Sources/AstronomyKit/Engine/Moon/Generated/TDBTerms.swift": "e117834cde595413631dd655605ae97a0fd85b20829476472f1eacba1fdb2ef2",
+    "Sources/AstronomyKit/Engine/Orientation/EngineAtmosphere.swift": "597cf1e08dc7e8de30c21983549f3ea3fe0467a823f7bdfe87abb0003532b8bf",
+    "Sources/AstronomyKit/Engine/Orientation/EngineCoordinates.swift": "10136541491835563c124727f046015c9dc8a554a1bb12c711c797ff812ce385",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEarthRotation.swift": "8da0ccef9811c6a6af993429e2772e07488ed09dea16d77f790b40efd3828a01",
+    "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
+    "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
+    "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "9af68143f6b73976a6324f074b8058dd3fabffc9b4e4245c7a4b99ebac5e3af2",
+    "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "a2f809b985707e6c5baac20f6ed59e0a751490b2acce383849f764ed7bda3f64",
+    "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
+    "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "fab951ae9c90330e71ec92fce7dd2957c6e88a7f018f5abd7f8767256e93f95f",
+    "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialCoverage.swift": "c1c74a4ea6b29371b0b53884b7b0849d57e3830efe81aea097c8ffaa5be32133",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialEarth.swift": "24a126615b194e0eaf968eb462e2c9750f8b49497ca5d681ad5e34077af29e27",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialJupiter.swift": "87319ed3e420bf2b5fa0b1a1e0f1985539a0ccfdb5def27eb808b3d64531f275",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialMars.swift": "b9c150843b00b0521fa85d79f3dac97e5e8716b555aa51c2d52c84e7cc0e547b",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialMercury.swift": "68ecb99714f4471108dc4dfa71fb8e6f82903897d2bca464cf3e32ee9fbca948",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialNeptune.swift": "a12e7fd7fcc700245e1b33bb3a5b98695348d44c7d09665e05d8780d09f58216",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialSaturn.swift": "c685dc93fd5a86e96f29865b8bfc25a0158395e9d87c12440f3c006c8051d733",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialUranus.swift": "05ba88c79fcca26988c9042b4b728603bde9c197b9ab9bb73f2a389259e438e5",
+    "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialVenus.swift": "96463d608a7242dbc5db215b559757ca987f6115a62533d33cd630e271a55795",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnBarycenterData.swift": "4085bb1543aa6aa682b57cee1dbf6671aeed42b3cc5355e266a184c5f59dca98",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
+    "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "6aee87d74ef640184fcc740ce521f56f716c303e3506deb5acc6ae56bd91c878",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "8654988dfd07ba1bc67820ddef15b7b1d817ef44c902a139a40576cf685a5e4c",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",
+    "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
+    "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "aa55bef4bf857f070d22bbacc3f64168abd174848555cab9ed5b31623c839264",
+    "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "4fe3779bb1e725d3d0409e9caa61eac655a2e1ed7132f73b480fb42261162f62",
+    "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "e76fe8ffe7a3f8e4605c8e32c808a4a0d6e3dc733292f25a0e5143a08694acc7",
+    "Sources/AstronomyKit/Engine/Positions/EngineHeliocentric.swift": "5d739e7aac8027ba2b7ad309cb5a5b627ff3ca847bddfc02433a36bd5f671023",
+    "Sources/AstronomyKit/Engine/Positions/EngineIllumination.swift": "7caf847bc8937b91cc57dcbc9e191ee05a67143ce83af837678679acced8b6bf",
+    "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
+    "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "58c35f4991c4f394c6efecefc13e3f1a03dec0fb3319707ea4c66c554e80d230",
+    "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
+    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
     "Tests/AstronomyKitTests/Engine/Events/EngineLunarEventTests.swift": "8eae705bc10b7870b4494c880c3e0524637e5b45e9fb210710df9d28a05968ea",
     "Tests/AstronomyKitTests/Engine/Moon/EngineLibrationTests.swift": "4a9eadfaae13399368825e926d9ff5667a6d26b21bf0d9f80f71b061c959dc33",
     "Tests/AstronomyKitTests/Engine/Moon/EngineMoonEventQualificationTests.swift": "4e94e32dd5b782fa1fd922697d4cfa359493808d46975369304beb5bda671a6c",
     "Tests/AstronomyKitTests/Engine/Moon/MoonEventQualification.swift": "8b324e0ca7d53a21ba63b51f51474f3520880cf34f970421b04d8d4e7bb94d97",
-    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab"
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
   },
   "summaries": {
     "apparent": {
       "firstQuarter": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 1.5140959352720529
+        "maximumAbsoluteResidualSeconds": 0.8641557244118303
       },
       "full": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 1.5419234347064048
+        "maximumAbsoluteResidualSeconds": 0.8674946031533182
       },
       "lastQuarter": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 1.6142497246619314
+        "maximumAbsoluteResidualSeconds": 0.8702236984390765
       },
       "new": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 1.4606086537241936
+        "maximumAbsoluteResidualSeconds": 0.871884886873886
       }
     },
     "published": {
@@ -3542,27 +3640,27 @@
       },
       "ascending": {
         "count": 4,
-        "maximumAbsoluteResidualSeconds": 10.499219116536551
+        "maximumAbsoluteResidualSeconds": 10.499219170560536
       },
       "descending": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 50.56272300425917
+        "maximumAbsoluteResidualSeconds": 50.562391709536314
       },
       "firstQuarter": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 17.470285948365927
+        "maximumAbsoluteResidualSeconds": 18.249046057462692
       },
       "full": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 26.00120278674467
+        "maximumAbsoluteResidualSeconds": 26.58738871426749
       },
       "lastQuarter": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 34.46927214972675
+        "maximumAbsoluteResidualSeconds": 33.84481994435191
       },
       "new": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 22.399497863625584
+        "maximumAbsoluteResidualSeconds": 21.617842040524238
       },
       "pericenter": {
         "count": 4,
@@ -3576,27 +3674,27 @@
       },
       "ascending": {
         "count": 44,
-        "maximumAbsoluteResidualSeconds": 8.065174520015717
+        "maximumAbsoluteResidualSeconds": 8.066482096910477
       },
       "descending": {
         "count": 43,
-        "maximumAbsoluteResidualSeconds": 8.555028028786182
+        "maximumAbsoluteResidualSeconds": 8.55502299964428
       },
       "firstQuarter": {
         "count": 46,
-        "maximumAbsoluteResidualSeconds": 5.142126604914665
+        "maximumAbsoluteResidualSeconds": 5.1422422751784325
       },
       "full": {
         "count": 46,
-        "maximumAbsoluteResidualSeconds": 6.692902743816376
+        "maximumAbsoluteResidualSeconds": 6.692580878734589
       },
       "lastQuarter": {
         "count": 45,
-        "maximumAbsoluteResidualSeconds": 5.1669529639184475
+        "maximumAbsoluteResidualSeconds": 5.166859924793243
       },
       "new": {
         "count": 47,
-        "maximumAbsoluteResidualSeconds": 6.795969977974892
+        "maximumAbsoluteResidualSeconds": 6.795778870582581
       },
       "pericenter": {
         "count": 50,

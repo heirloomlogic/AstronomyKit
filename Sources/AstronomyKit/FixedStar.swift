@@ -79,10 +79,7 @@ public struct FixedStar: Sendable, Hashable {
 
     /// Calculates the star's equatorial coordinates at a given time.
     ///
-    /// Returns the right ascension and declination as seen from Earth.
-    /// Since this is a fixed star, the J2000 coordinates are essentially
-    /// constant, though minor variations occur due to precession and nutation
-    /// when using `equatorDate: .ofDate`.
+    /// Returns apparent coordinates with observer parallax, solar deflection and relativistic annual and diurnal aberration. Catalog light time is implicit in the fixed-star definition; proper motion and radial motion are not modeled. The `.ofDate` frame also includes precession and nutation.
     ///
     /// - Parameters:
     ///   - time: The time at which to calculate the position.
@@ -125,8 +122,7 @@ public struct FixedStar: Sendable, Hashable {
 
     /// Calculates the star's full ecliptic coordinates at a given time.
     ///
-    /// The coordinates are geocentric, corrected for annual aberration, and
-    /// referred to the true ecliptic and equinox of date: the frame
+    /// The coordinates are geocentric, corrected for solar deflection and relativistic annual aberration, and referred to the true ecliptic and equinox of date: the frame
     /// `Vector3D.toEcliptic()` and the geocentric planet, Sun, and Moon
     /// positions use, so a star and a planet at the same instant compare
     /// directly. They are not J2000 ecliptic coordinates, which drift from

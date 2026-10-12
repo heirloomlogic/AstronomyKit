@@ -36,21 +36,7 @@ extension Engine {
 
         /// The star's position relative to Earth on J2000 axes.
         func geocentricPosition(at time: Engine.Time, aberration: Aberration) throws -> Engine.Vector<Engine.EQJ> {
-            let star = try heliocentricPosition(at: time)
-            let corrected: SIMD3<Double>
-            switch aberration {
-            case .none:
-                let earth = try Engine.Planet.earth.heliocentricPosition(at: time)
-                corrected = SIMD3(star.x - earth.x, star.y - earth.y, star.z - earth.z)
-            case .corrected:
-                let earth = try Engine.Planet.earth.heliocentricState(at: time)
-                let position = SIMD3(star.x - earth.x, star.y - earth.y, star.z - earth.z)
-                let distance = (position * position).sum().squareRoot()
-                corrected = position + earth.velocityVector * (distance / Engine.speedOfLightAUPerDay)
-            }
-            return try Engine.Positions.checked(
-                Engine.Vector(x: corrected.x, y: corrected.y, z: corrected.z, time: time)
-            )
+            try apparentPosition(at: time, site: nil, aberration: aberration)
         }
 
         /// The apparent topocentric coordinates on the requested equator.
@@ -61,14 +47,7 @@ extension Engine {
         ) throws -> Engine.Equatorial {
             try validate()
             try Self.validate(observer)
-            let site = Engine.Observers.vector(observer, at: time)
-            let geocentric = try geocentricPosition(at: time, aberration: .corrected)
-            let j2000 = Engine.Vector<Engine.EQJ>(
-                x: geocentric.x - site.x,
-                y: geocentric.y - site.y,
-                z: geocentric.z - site.z,
-                time: time
-            )
+            let j2000 = try apparentPosition(at: time, site: observer, aberration: .corrected)
             let result =
                 switch equatorDate {
                 case .j2000:
@@ -105,6 +84,33 @@ extension Engine {
                 declination: equatorial.declination,
                 refraction: refraction
             )
+        }
+
+        /// Catalog light time is implicit in a fixed-star definition (Kaplan 1998, section 2).
+        /// The catalog vector remains heliocentric; angular corrections use barycentric observer velocity.
+        private func apparentPosition(
+            at time: Engine.Time, site: Observer?, aberration: Aberration
+        ) throws -> Engine.Vector<Engine.EQJ> {
+            let star = try heliocentricPosition(at: time)
+            let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
+            let sun = try Engine.ApparentPlace.sunBarycentricKinematics(tt: time.tt)
+            let offset =
+                try site.map { try Engine.ApparentPlace.siteKinematics($0, at: time) }
+                ?? Engine.ApparentPlace.Kinematics(motion: .init(.zero), acceleration: .zero)
+            let observer = Engine.ApparentPlace.Kinematics(
+                motion: earth.motion + offset.motion, acceleration: earth.acceleration + offset.acceleration)
+            let solarOffset = observer.motion - sun.motion
+            let displacement = Engine.ApparentPlace.VectorRate(SIMD3(star.x, star.y, star.z)) - solarOffset
+            let result: Engine.ApparentPlace.VectorRate
+            if aberration == .none {
+                result = displacement
+            } else {
+                result = try Engine.ApparentPlace.correctedMotion(
+                    displacement, sunToObserver: solarOffset,
+                    beta: Engine.ApparentPlace.observerBeta(observer, atTT: time.tt), solarSource: false)
+            }
+            return try Engine.Positions.checked(
+                Engine.Vector(x: result.value.x, y: result.value.y, z: result.value.z, time: time))
         }
 
         /// Checks the public fixed-star catalog limits.

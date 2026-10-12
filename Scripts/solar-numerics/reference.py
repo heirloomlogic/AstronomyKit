@@ -159,3 +159,14 @@ class Earth:
         n = self.degree + 1
         return [polynomial([exact(v) for v in self.coefficients[(segment * 3 + axis) * n:(segment * 3 + axis + 1) * n]], x)
                 for axis in range(3)]
+
+    def velocity(self, tt):
+        """Derivative of the selected trajectory, not of a jump between models."""
+        if not self.start <= tt < self.stop:
+            return mp.diff(lambda value: mp.matrix(self.series(value)), tt)
+        segment = int(mp.floor((tt-self.start)/self.width))
+        x = 2*(tt-(self.start+segment*self.width))/self.width-1
+        n = self.degree+1
+        # dT_k(x)/dx = k U_(k-1)(x), evaluated independently of native Clenshaw.
+        return [2/self.width*mp.fsum(k*exact(self.coefficients[(segment*3+axis)*n+k])*mp.chebyu(k-1,x)
+                                    for k in range(1,n)) for axis in range(3)]

@@ -97,14 +97,10 @@ struct EngineEclipticStateTests {
         }
     }
 
-    /// The Sun's position is Earth's negated, one astronomical unit's light
-    /// time earlier, on the ecliptic of that earlier time.
-    @Test("The Sun's position is Earth's, backdated by the light time of one au")
+    @Test("The Sun facade uses the shared apparent position on the observation-date ecliptic")
     func sunPosition() throws {
         let time = Self.time(tt: 9_500.75)
-        let earlier = time.adding(days: -1 / Engine.speedOfLightAUPerDay)
-        let earth = try Engine.Planet.earth.heliocentricPosition(at: earlier)
-        let expected = Engine.Ecliptic(Engine.Vector(x: -earth.x, y: -earth.y, z: -earth.z, time: earlier))
+        let expected = Engine.Ecliptic(try Positions.geocentricPosition(of: .sun, at: time, aberration: .corrected))
         let sun = try Positions.sunPosition(at: time)
         #expect(sun.longitude == expected.longitude && sun.latitude == expected.latitude)
         #expect(sun.vector.time.tt == time.tt)
@@ -140,24 +136,15 @@ struct EngineEclipticStateTests {
         }
     }
 
-    /// Near the early end of the accepted range the backdated bodies leave
-    /// it, and so does the Sun's one-au light time; the Moon is not
-    /// backdated.
-    @Test("The accepted range bounds the backdated and light-time times")
+    @Test("Every reception endpoint has covered internal emission times")
     func acceptedRange() throws {
-        let late = Self.time(tt: Engine.acceptedTTDays)
-        let early = Self.time(tt: -Engine.acceptedTTDays)
-        _ = try Positions.sunEclipticState(at: late)
-        _ = try Positions.sunPosition(at: late)
-        #expect(throws: AstronomyError.badTime) { try Positions.sunEclipticState(at: early) }
-        #expect(throws: AstronomyError.badTime) { try Positions.sunPosition(at: early) }
-        for body in Self.bodies where body != .pluto {
-            _ = try Positions.geocentricEclipticState(of: body, at: late, aberration: .corrected)
-            if body == .moon {
-                _ = try Positions.geocentricEclipticState(of: body, at: early, aberration: .corrected)
-            } else {
-                #expect(throws: AstronomyError.badTime, "\(body)") {
-                    try Positions.geocentricEclipticState(of: body, at: early, aberration: .corrected)
+        for end in [-Engine.acceptedTTDays, Engine.acceptedTTDays] {
+            let time = Self.time(tt: end)
+            _ = try Positions.sunEclipticState(at: time)
+            _ = try Positions.sunPosition(at: time)
+            for body in Self.bodies {
+                for aberration in [Aberration.none, .corrected] {
+                    _ = try Positions.geocentricEclipticState(of: body, at: time, aberration: aberration)
                 }
             }
         }
