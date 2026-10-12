@@ -31,6 +31,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Verify candidate revision
@@ -84,7 +85,10 @@ jobs:
           python3 Scripts/capture-pluto-observers.py --check
 
       - name: Verify generated Jupiter moon series
-        run: python3 Scripts/generate-jupiter-moon-series.py --check
+        run: |
+          python3 Scripts/generate-jupiter-moon-series.py --check
+          python3 -m unittest Scripts/test_galilean_residuals.py -v
+          python3 Scripts/galilean-residuals.py --check
 
       - name: Verify long-term precession source and interval bounds
         run: |
@@ -141,6 +145,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Verify candidate revision
@@ -193,7 +198,10 @@ jobs:
           python3 Scripts/capture-pluto-observers.py --check
 
       - name: Verify generated Jupiter moon series
-        run: python3 Scripts/generate-jupiter-moon-series.py --check
+        run: |
+          python3 Scripts/generate-jupiter-moon-series.py --check
+          python3 -m unittest Scripts/test_galilean_residuals.py -v
+          python3 Scripts/galilean-residuals.py --check
 
       - name: Verify lunar eclipse sources and evidence
         run: |
