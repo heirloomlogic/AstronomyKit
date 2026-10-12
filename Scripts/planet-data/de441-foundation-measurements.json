@@ -1,20 +1,27 @@
 {
   "build": {
     "configuration": "release",
-    "initialFreshRepresentation": {
-      "maximumResidentSetBytes": 6657769472,
-      "reportedBuildSeconds": 241.32,
-      "wallSecondsIncludingDependencySetupAndTests": 268.84
-    },
     "finalTreeIncremental": {
       "maximumResidentSetBytes": 8234041344,
       "reportedBuildSeconds": 260.54,
       "revision": "b03633e39ae9f36b4da8216e307f788a6a6913c7",
       "wallSecondsIncludingTests": 278.03
     },
+    "initialFreshRepresentation": {
+      "maximumResidentSetBytes": 6657769472,
+      "reportedBuildSeconds": 241.32,
+      "wallSecondsIncludingDependencySetupAndTests": 268.84
+    },
     "repairTreeFocused": {
       "reportedBuildSeconds": 183.23,
       "scope": "Focused Release build and 27-test affected suite after review repairs"
+    },
+    "routedIntegration": {
+      "configuration": "release",
+      "reportedBuildSeconds": 140.94,
+      "revision": "24021545a72e51b4a8d523fceee1a3d711cc4bc8",
+      "scope": "Fresh combined 96-test Release capture after the scanner-safe source encoding adjustment",
+      "testSeconds": 16.824
     }
   },
   "generated": {
@@ -29,10 +36,21 @@
   "latency": {
     "coldJupiterPhysicalCenterSeconds": 0.0023097916273400187,
     "meanMixedPlanetPhysicalCenterMicroseconds": 16.19547083391808,
-    "mixedPlanetIterations": 10000
+    "mixedPlanetIterations": 10000,
+    "routedIntegration": {
+      "coldJupiterPublicStateSeconds": 0.002647250017616898,
+      "meanMixedPlanetPublicStateMicroseconds": 15.339645830681548,
+      "mixedPlanetIterations": 10000,
+      "revision": "24021545a72e51b4a8d523fceee1a3d711cc4bc8"
+    }
   },
   "products": {
     "releaseStaticLibraryBytes": 458944160,
-    "releaseTestExecutableBytes": 480642592
+    "releaseTestExecutableBytes": 480642592,
+    "routedIntegration": {
+      "releaseStaticLibraryBytes": 470750624,
+      "releaseTestExecutableBytes": 492628992,
+      "revision": "24021545a72e51b4a8d523fceee1a3d711cc4bc8"
+    }
   }
 }

@@ -53,30 +53,30 @@
     "apparent": [
       {
         "event": "firstQuarter",
-        "nativeTT": 9137.498226787267,
+        "nativeTT": 9137.498227266884,
         "referenceUTC": "2025-01-06T23:56:17.647Z",
-        "residualSeconds": -0.8641550957690924,
+        "residualSeconds": -0.8227162237744778,
         "timeAllowanceSeconds": 15
       },
       {
         "event": "full",
-        "nativeTT": 9144.436153750928,
+        "nativeTT": 9144.436154249886,
         "referenceUTC": "2025-01-13T22:26:54.540Z",
-        "residualSeconds": -0.8674946031533182,
+        "residualSeconds": -0.8243846416007727,
         "timeAllowanceSeconds": 15
       },
       {
         "event": "lastQuarter",
-        "nativeTT": 9152.355516230917,
+        "nativeTT": 9152.355516824364,
         "referenceUTC": "2025-01-21T20:30:47.461Z",
-        "residualSeconds": -0.8702236984390765,
+        "residualSeconds": -0.8189498679712415,
         "timeAllowanceSeconds": 15
       },
       {
         "event": "new",
-        "nativeTT": 9160.025787531136,
+        "nativeTT": 9160.02578805774,
         "referenceUTC": "2025-01-29T12:35:58.903Z",
-        "residualSeconds": -0.871884886873886,
+        "residualSeconds": -0.8263863972388208,
         "timeAllowanceSeconds": 15
       }
     ],
@@ -121,108 +121,108 @@
         "event": "new",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 5.260211196840543,
+        "nativeTT": 5.260211782991245,
         "referenceTT": 5.260461403345642,
-        "residualSeconds": -21.617842040524238,
+        "residualSeconds": -21.567198619854366,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "firstQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 13.06614583437979,
+        "nativeTT": 13.06614630868475,
         "referenceTT": 13.066017040682027,
-        "residualSeconds": 11.127775486778546,
+        "residualSeconds": 11.168755435301136,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "full",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 19.69549150071303,
+        "nativeTT": 19.695491929757864,
         "referenceTT": 19.695183776306614,
-        "residualSeconds": 26.58738871426749,
+        "residualSeconds": 26.624458188030076,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "lastQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 26.831765814713904,
+        "nativeTT": 26.831766339106622,
         "referenceTT": 26.83198940559072,
-        "residualSeconds": -19.318251756749305,
+        "residualSeconds": -19.27294422594059,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "new",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36534.040918909996,
+        "nativeTT": 36534.04091969019,
         "referenceTT": 36534.041930573454,
-        "residualSeconds": -87.40772281307727,
+        "residualSeconds": -87.3403140809387,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "firstQuarter",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36542.025677871236,
+        "nativeTT": 36542.025678713,
         "referenceTT": 36542.026653391964,
-        "residualSeconds": -84.28499093279243,
+        "residualSeconds": -84.21226262580603,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "full",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36549.62003962324,
+        "nativeTT": 36549.62004034298,
         "referenceTT": 36549.62109840358,
-        "residualSeconds": -91.47862144745886,
+        "residualSeconds": -91.41643547918648,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "lastQuarter",
         "gating": false,
         "meanNode": false,
-        "nativeTT": 36527.046240854135,
+        "nativeTT": 36527.04624158923,
         "referenceTT": 36527.047485606716,
-        "residualSeconds": -107.54662295803428,
+        "residualSeconds": -107.48311055358499,
         "timeAllowanceSeconds": 90
       },
       {
         "event": "new",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36534.04091891003,
+        "nativeTT": 36534.04091969019,
         "referenceTT": 36534.040919548366,
-        "residualSeconds": -0.055152084678411484,
+        "residualSeconds": 0.012253504246473312,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "firstQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36542.02567787112,
+        "nativeTT": 36542.025678712984,
         "referenceTT": 36542.02567853825,
-        "residualSeconds": -0.05764025263488293,
+        "residualSeconds": 0.015096855349838734,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "full",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36549.62003962331,
+        "nativeTT": 36549.62004034298,
         "referenceTT": 36549.62004022114,
-        "residualSeconds": -0.051652430556714535,
+        "residualSeconds": 0.010527251288294792,
         "timeAllowanceSeconds": 2
       },
       {
         "event": "lastQuarter",
         "gating": true,
         "meanNode": false,
-        "nativeTT": 36527.04624085414,
+        "nativeTT": 36527.04624158924,
         "referenceTT": 36527.04624143522,
-        "residualSeconds": -0.05020529497414827,
+        "residualSeconds": 0.013307109475135803,
         "timeAllowanceSeconds": 2
       },
       {
@@ -1494,67 +1494,67 @@
         "window": "uniform-07"
       },
       {
-        "distanceResidualKm": 3.6967103369534016e-06,
+        "distanceResidualKm": 3.6651617847383022e-06,
         "event": "new",
-        "nativeTT": -24.560631572521455,
-        "residualSeconds": 0.0007730417905804643,
-        "sourceTT": -24.560631581468698,
+        "nativeTT": -24.56063102149976,
+        "residualSeconds": 0.0007618864515279711,
+        "sourceTT": -24.56063103031789,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": 2.2220774553716183e-06,
+        "distanceResidualKm": 2.3811007849872112e-06,
         "event": "new",
-        "nativeTT": 5.260211196757029,
-        "residualSeconds": 0.000759062777433428,
-        "sourceTT": 5.2602111879715805,
+        "nativeTT": 5.260211782912954,
+        "residualSeconds": 0.0007553570696927636,
+        "sourceTT": 5.260211774170395,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -1.0405201464891434e-05,
+        "distanceResidualKm": -9.77696618065238e-06,
         "event": "firstQuarter",
-        "nativeTT": -16.464348304312715,
-        "residualSeconds": 0.0008876570518623339,
-        "sourceTT": -16.464348314586523,
+        "nativeTT": -16.46434777682204,
+        "residualSeconds": 0.0008761625281294982,
+        "sourceTT": -16.46434778696281,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -1.029635313898325e-05,
+        "distanceResidualKm": -1.0369636584073305e-05,
         "event": "firstQuarter",
-        "nativeTT": 13.066145827483185,
-        "residualSeconds": 0.0008969365921984718,
-        "sourceTT": 13.066145817101974,
+        "nativeTT": 13.066146301776715,
+        "residualSeconds": 0.0008940168413573701,
+        "sourceTT": 13.066146291429298,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -2.3452448658645153e-06,
+        "distanceResidualKm": -2.4104956537485123e-06,
         "event": "full",
-        "nativeTT": -9.769187668973911,
-        "residualSeconds": 0.0007562897508250899,
-        "sourceTT": -9.769187677727265,
+        "nativeTT": -9.76918724370922,
+        "residualSeconds": 0.0007552204749572411,
+        "sourceTT": -9.769187252450198,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -1.4667748473584652e-06,
+        "distanceResidualKm": -1.6133999451994896e-06,
         "event": "full",
-        "nativeTT": 19.695491500517118,
-        "residualSeconds": 0.000741360406664171,
-        "sourceTT": 19.695491491936558,
+        "nativeTT": 19.695491929559054,
+        "residualSeconds": 0.0007338378736676532,
+        "sourceTT": 19.69549192106556,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -7.227878086268902e-06,
+        "distanceResidualKm": -7.714552339166403e-06,
         "event": "lastQuarter",
-        "nativeTT": -2.9129292997134555,
-        "residualSeconds": 0.0006017958867232664,
-        "sourceTT": -2.9129293066786857,
+        "nativeTT": -2.9129287573091407,
+        "residualSeconds": 0.0006040986590960529,
+        "sourceTT": -2.9129287643010233,
         "window": "uniform-08"
       },
       {
-        "distanceResidualKm": -3.521563485264778e-06,
+        "distanceResidualKm": -3.269233275204897e-06,
         "event": "lastQuarter",
-        "nativeTT": 26.831765813241038,
-        "residualSeconds": 0.0006298389394032711,
-        "sourceTT": 26.831765805951235,
+        "nativeTT": 26.831766337636708,
+        "residualSeconds": 0.0006395936452463502,
+        "sourceTT": 26.831766330234004,
         "window": "uniform-08"
       },
       {
@@ -2742,27 +2742,27 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -9.193317964673042e-07,
+        "distanceResidualKm": 1.2113014236092567e-07,
         "event": "new",
-        "nativeTT": -36553.466907574075,
-        "residualSeconds": 4.8405490815639496e-05,
-        "sourceTT": -36553.466907574635,
+        "nativeTT": -36553.466907575974,
+        "residualSeconds": 4.2747706174850464e-05,
+        "sourceTT": -36553.46690757647,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -1.7743732314556837e-05,
+        "distanceResidualKm": -1.7376267351210117e-05,
         "event": "new",
-        "nativeTT": -36523.922269130984,
-        "residualSeconds": 0.005465419963002205,
-        "sourceTT": -36523.92226919424,
+        "nativeTT": -36523.922269362534,
+        "residualSeconds": 0.005454733036458492,
+        "sourceTT": -36523.92226942567,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -2.6061316020786762e-06,
+        "distanceResidualKm": -2.6451307348906994e-06,
         "event": "new",
-        "nativeTT": -36494.44263990805,
-        "residualSeconds": 0.005250424146652222,
-        "sourceTT": -36494.44263996882,
+        "nativeTT": -36494.442640122,
+        "residualSeconds": 0.005244137719273567,
+        "sourceTT": -36494.44264018269,
         "window": "blend-1900"
       },
       {
@@ -2774,19 +2774,19 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 3.3745309337973595e-06,
+        "distanceResidualKm": 3.049673978239298e-06,
         "event": "firstQuarter",
-        "nativeTT": -36546.62323351216,
-        "residualSeconds": 0.0010429183021187782,
-        "sourceTT": -36546.62323352423,
+        "nativeTT": -36546.62323355405,
+        "residualSeconds": 0.00103851780295372,
+        "sourceTT": -36546.62323356607,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -2.043356653302908e-05,
+        "distanceResidualKm": -2.0210514776408672e-05,
         "event": "firstQuarter",
-        "nativeTT": -36517.264041139286,
+        "nativeTT": -36517.26404137159,
         "residualSeconds": 0.004598521627485752,
-        "sourceTT": -36517.26404119251,
+        "sourceTT": -36517.264041424816,
         "window": "blend-1900"
       },
       {
@@ -2798,19 +2798,19 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 8.698261808604002e-06,
+        "distanceResidualKm": 7.93358776718378e-06,
         "event": "full",
-        "nativeTT": -36539.43683668711,
-        "residualSeconds": 0.0030036550015211105,
-        "sourceTT": -36539.43683672188,
+        "nativeTT": -36539.436836823996,
+        "residualSeconds": 0.002991710789501667,
+        "sourceTT": -36539.43683685862,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": 6.443879101425409e-06,
+        "distanceResidualKm": 6.723625119775534e-06,
         "event": "full",
-        "nativeTT": -36509.70317052422,
-        "residualSeconds": 0.005312659777700901,
-        "sourceTT": -36509.70317058571,
+        "nativeTT": -36509.70317077231,
+        "residualSeconds": 0.005323346704244614,
+        "sourceTT": -36509.70317083392,
         "window": "blend-1900"
       },
       {
@@ -2822,19 +2822,19 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -7.638474926352501e-06,
+        "distanceResidualKm": -6.8604713305830956e-06,
         "event": "lastQuarter",
-        "nativeTT": -36531.335204512405,
-        "residualSeconds": 0.004836777225136757,
-        "sourceTT": -36531.335204568386,
+        "nativeTT": -36531.33520474761,
+        "residualSeconds": 0.004827976226806641,
+        "sourceTT": -36531.33520480349,
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -9.00105806067586e-06,
+        "distanceResidualKm": -8.481205441057682e-06,
         "event": "lastQuarter",
-        "nativeTT": -36501.50497110668,
-        "residualSeconds": 0.0051925890147686005,
-        "sourceTT": -36501.50497116678,
+        "nativeTT": -36501.50497136686,
+        "residualSeconds": 0.005188188515603542,
+        "sourceTT": -36501.50497142691,
         "window": "blend-1900"
       },
       {
@@ -2950,27 +2950,27 @@
         "window": "blend-1900"
       },
       {
-        "distanceResidualKm": -3.549963003024459e-05,
+        "distanceResidualKm": -3.690627636387944e-05,
         "event": "new",
-        "nativeTT": 47815.36747917235,
-        "residualSeconds": 0.015262188389897346,
-        "sourceTT": 47815.36747899571,
+        "nativeTT": 47815.36748007569,
+        "residualSeconds": 0.015295506455004215,
+        "sourceTT": 47815.36747989866,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -5.059572868049145e-05,
+        "distanceResidualKm": -5.019822856411338e-05,
         "event": "new",
-        "nativeTT": 47845.03381741522,
-        "residualSeconds": 0.01528104767203331,
-        "sourceTT": 47845.033817238356,
+        "nativeTT": 47845.03381829335,
+        "residualSeconds": 0.015279161743819714,
+        "sourceTT": 47845.033818116506,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 5.525653250515461e-07,
+        "distanceResidualKm": 5.0407834351062775e-08,
         "event": "new",
-        "nativeTT": 47874.62252558556,
-        "residualSeconds": 0.0001898501068353653,
-        "sourceTT": 47874.62252558336,
+        "nativeTT": 47874.622525598505,
+        "residualSeconds": 0.0002055661752820015,
+        "sourceTT": 47874.622525596125,
         "window": "blend-2131"
       },
       {
@@ -2982,19 +2982,19 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -2.3710657842457294e-05,
+        "distanceResidualKm": -2.3781380150467157e-05,
         "event": "firstQuarter",
-        "nativeTT": 47822.69429934166,
-        "residualSeconds": 0.015252758748829365,
-        "sourceTT": 47822.69429916512,
+        "nativeTT": 47822.69430014657,
+        "residualSeconds": 0.015259673818945885,
+        "sourceTT": 47822.69429996995,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": -8.669740054756403e-06,
+        "distanceResidualKm": -8.644477929919958e-06,
         "event": "firstQuarter",
-        "nativeTT": 47852.02464057371,
-        "residualSeconds": 0.014668121002614498,
-        "sourceTT": 47852.02464040394,
+        "nativeTT": 47852.0246413688,
+        "residualSeconds": 0.014676922000944614,
+        "sourceTT": 47852.02464119893,
         "window": "blend-2131"
       },
       {
@@ -3006,19 +3006,19 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 4.338606959208846e-05,
+        "distanceResidualKm": 4.3008942157030106e-05,
         "event": "full",
-        "nativeTT": 47829.43942329908,
+        "nativeTT": 47829.43942412507,
         "residualSeconds": 0.015213154256343842,
-        "sourceTT": 47829.439423123,
+        "sourceTT": 47829.43942394899,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 3.920303424820304e-05,
+        "distanceResidualKm": 3.784964792430401e-05,
         "event": "full",
-        "nativeTT": 47859.03619409478,
-        "residualSeconds": 0.010660523548722267,
-        "sourceTT": 47859.03619397139,
+        "nativeTT": 47859.036194748216,
+        "residualSeconds": 0.010630977340042591,
+        "sourceTT": 47859.03619462517,
         "window": "blend-2131"
       },
       {
@@ -3030,19 +3030,19 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 1.8675229512155056e-05,
+        "distanceResidualKm": 1.8675054889172316e-05,
         "event": "lastQuarter",
-        "nativeTT": 47837.0957264104,
-        "residualSeconds": 0.015188637189567089,
-        "sourceTT": 47837.095726234606,
+        "nativeTT": 47837.09572743231,
+        "residualSeconds": 0.015201210044324398,
+        "sourceTT": 47837.09572725637,
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 2.206594217568636e-06,
+        "distanceResidualKm": 2.291169948875904e-06,
         "event": "lastQuarter",
-        "nativeTT": 47867.00635136045,
-        "residualSeconds": 0.003725336864590645,
-        "sourceTT": 47867.00635131733,
+        "nativeTT": 47867.00635162628,
+        "residualSeconds": 0.0037165358662605286,
+        "sourceTT": 47867.006351583266,
         "window": "blend-2131"
       },
       {
@@ -3166,75 +3166,75 @@
         "window": "blend-2131"
       },
       {
-        "distanceResidualKm": 4.6566128730773926e-08,
+        "distanceResidualKm": 1.100124791264534e-07,
         "event": "new",
-        "nativeTT": -11127.908333319549,
-        "residualSeconds": -1.57160684466362e-06,
-        "sourceTT": -11127.90833331953,
+        "nativeTT": -11127.90833298112,
+        "residualSeconds": -9.743962436914444e-06,
+        "sourceTT": -11127.908332981007,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -4.343455657362938e-07,
+        "distanceResidualKm": -3.469758667051792e-07,
         "event": "new",
-        "nativeTT": -11098.279800464865,
-        "residualSeconds": 2.750311978161335e-05,
-        "sourceTT": -11098.279800465183,
+        "nativeTT": -11098.27980014034,
+        "residualSeconds": 2.2945459932088852e-05,
+        "sourceTT": -11098.279800140606,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -8.135510142892599e-06,
+        "distanceResidualKm": -8.175498805940151e-06,
         "event": "firstQuarter",
-        "nativeTT": -11119.992961652131,
-        "residualSeconds": 0.0001211708877235651,
-        "sourceTT": -11119.992961653534,
+        "nativeTT": -11119.992961347118,
+        "residualSeconds": 0.00011834199540317059,
+        "sourceTT": -11119.992961348487,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -4.369940143078566e-06,
+        "distanceResidualKm": -5.289213731884956e-06,
         "event": "firstQuarter",
-        "nativeTT": -11090.664209851955,
-        "residualSeconds": 9.335344657301903e-05,
-        "sourceTT": -11090.664209853036,
+        "nativeTT": -11090.66420958469,
+        "residualSeconds": 9.649666026234627e-05,
+        "sourceTT": -11090.664209585806,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 2.735760062932968e-08,
+        "distanceResidualKm": 2.7299392968416214e-08,
         "event": "full",
-        "nativeTT": -11142.663626077798,
-        "residualSeconds": -1.5087425708770752e-05,
-        "sourceTT": -11142.663626077623,
+        "nativeTT": -11142.663625812604,
+        "residualSeconds": -1.7916318029165268e-05,
+        "sourceTT": -11142.663625812396,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -1.5774276107549667e-07,
+        "distanceResidualKm": 5.611218512058258e-08,
         "event": "full",
-        "nativeTT": -11113.384961197442,
-        "residualSeconds": -2.200249582529068e-06,
-        "sourceTT": -11113.384961197416,
+        "nativeTT": -11113.384960927206,
+        "residualSeconds": -2.986053004860878e-06,
+        "sourceTT": -11113.384960927171,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": 9.415671229362488e-07,
+        "distanceResidualKm": 8.591450750827789e-07,
         "event": "full",
-        "nativeTT": -11084.06038127925,
-        "residualSeconds": 2.7660280466079712e-05,
-        "sourceTT": -11084.06038127957,
+        "nativeTT": -11084.060381059022,
+        "residualSeconds": 2.3102620616555214e-05,
+        "sourceTT": -11084.06038105929,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -8.517061360180378e-06,
+        "distanceResidualKm": -8.974224328994751e-06,
         "event": "lastQuarter",
-        "nativeTT": -11135.946174325769,
-        "residualSeconds": -0.00013327226042747498,
-        "sourceTT": -11135.946174324226,
+        "nativeTT": -11135.946173986846,
+        "residualSeconds": -0.0001302862074226141,
+        "sourceTT": -11135.946173985338,
         "window": "source-segment"
       },
       {
-        "distanceResidualKm": -9.007344488054514e-06,
+        "distanceResidualKm": -8.692091796547174e-06,
         "event": "lastQuarter",
-        "nativeTT": -11106.431225926315,
-        "residualSeconds": -0.00015291734598577023,
-        "sourceTT": -11106.431225924545,
+        "nativeTT": -11106.431225585622,
+        "residualSeconds": -0.00015606055967509747,
+        "sourceTT": -11106.431225583816,
         "window": "source-segment"
       },
       {
@@ -3496,7 +3496,7 @@
       }
     ]
   },
-  "runtimeBaseRevision": "36f1da8a2fb777b803b1a1250645152e351df516",
+  "runtimeBaseRevision": "24021545a72e51b4a8d523fceee1a3d711cc4bc8",
   "schemaVersion": 1,
   "scope": "Published tolerances retain their existing reference scope. Production searches are paired with direct-source roots in frozen full-span and transition windows; no universal event-time or velocity bound is inferred.",
   "sourceSHA256": {
@@ -3539,7 +3539,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
     "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
-    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "81af4e399a16a4cc8d8915add97a9c9ff425fd14b311673edbb943df29cce2fd",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "748f96d2c950cbd1ce2c516b4e2d46839b490dace034cc64289abb309d3a87d8",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
     "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
@@ -3665,11 +3665,11 @@
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
     "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetDE441.swift": "a6001f045c3a126354d9076aa3a712d1bc3d0977f7a74167532ceb9acb9aaba7",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetDE441.swift": "adbaea8c4614f80b26a6ea7436769dccec6ab37e64e493650cd17f3f69c33e8e",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "e19b35cd27463d0e1316a930fefd88d78b1068b6e3d22a035fa57ac89828d503",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "fab951ae9c90330e71ec92fce7dd2957c6e88a7f018f5abd7f8767256e93f95f",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "07c7f7c1e66ba0d6cb38981ecaeef86f5171a365a0c25b621cb91d5c4db98935",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",
@@ -3692,7 +3692,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialUranus.swift": "05ba88c79fcca26988c9042b4b728603bde9c197b9ab9bb73f2a389259e438e5",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialVenus.swift": "96463d608a7242dbc5db215b559757ca987f6115a62533d33cd630e271a55795",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnBarycenterData.swift": "4085bb1543aa6aa682b57cee1dbf6671aeed42b3cc5355e266a184c5f59dca98",
-    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "5492b492d50278368a2edf289f8e1d8aa591d8dd7f934c7f726f402f23409306",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
@@ -3720,19 +3720,19 @@
     "apparent": {
       "firstQuarter": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 0.8641550957690924
+        "maximumAbsoluteResidualSeconds": 0.8227162237744778
       },
       "full": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 0.8674946031533182
+        "maximumAbsoluteResidualSeconds": 0.8243846416007727
       },
       "lastQuarter": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 0.8702236984390765
+        "maximumAbsoluteResidualSeconds": 0.8189498679712415
       },
       "new": {
         "count": 1,
-        "maximumAbsoluteResidualSeconds": 0.871884886873886
+        "maximumAbsoluteResidualSeconds": 0.8263863972388208
       }
     },
     "published": {
@@ -3754,7 +3754,7 @@
       },
       "full": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 26.58738871426749
+        "maximumAbsoluteResidualSeconds": 26.624458188030076
       },
       "lastQuarter": {
         "count": 3,
@@ -3762,7 +3762,7 @@
       },
       "new": {
         "count": 3,
-        "maximumAbsoluteResidualSeconds": 21.617842040524238
+        "maximumAbsoluteResidualSeconds": 21.567198619854366
       },
       "pericenter": {
         "count": 4,
@@ -3784,7 +3784,7 @@
       },
       "firstQuarter": {
         "count": 46,
-        "maximumAbsoluteResidualSeconds": 0.015252758748829365
+        "maximumAbsoluteResidualSeconds": 0.015259673818945885
       },
       "full": {
         "count": 46,
@@ -3792,11 +3792,11 @@
       },
       "lastQuarter": {
         "count": 45,
-        "maximumAbsoluteResidualSeconds": 0.015188637189567089
+        "maximumAbsoluteResidualSeconds": 0.015201210044324398
       },
       "new": {
         "count": 47,
-        "maximumAbsoluteResidualSeconds": 0.01528104767203331
+        "maximumAbsoluteResidualSeconds": 0.015295506455004215
       },
       "pericenter": {
         "count": 50,
