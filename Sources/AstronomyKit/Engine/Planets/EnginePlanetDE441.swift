@@ -9,6 +9,16 @@ extension Engine.PlanetDE441 {
     /// The selected 1900–2131 window and its 32-day exterior blends.
     static func weight(tt: Double) -> (weight: Double, rate: Double) { Engine.MoonEphemeris.weight(tt: tt) }
 
+    /// The second TT derivative of the selected-window blend weight.
+    static func weightAcceleration(tt: Double) -> Double {
+        let start = Engine.MoonEphemeris.fullWeightStart
+        let end = Engine.MoonEphemeris.fullWeightEnd
+        let days = Engine.MoonEphemeris.blendDays
+        guard tt.isFinite, tt > start - days, tt < end + days, tt < start || tt > end else { return 0 }
+        let x = tt < start ? (tt - (start - days)) / days : (end + days - tt) / days
+        return 60 * x * (1 - x) * (1 - 2 * x) / (days * days)
+    }
+
     /// The shared DE441 Sun table used by every selected-window planet trajectory.
     static let sun = direct(Engine.SaturnEphemeris.sun)
 
@@ -76,6 +86,23 @@ extension Engine.PlanetDE441 {
             bias.apply(to: position / Engine.kilometersPerAU),
             bias.apply(to: velocity * conversion.rate / Engine.kilometersPerAU)
         )
+    }
+
+    /// The selected Earth trajectory's second derivative in AU per TT day squared on EQJ axes.
+    static func earthAcceleration(tt: Double, tdbAcceleration: Double) -> SIMD3<Double>? {
+        guard tt.isFinite, tdbAcceleration.isFinite else { return nil }
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
+        guard let barycenter = earthBarycenter.evaluate(tdb: tdb),
+            let barycenterAcceleration = earthBarycenter.acceleration(tdb: tdb),
+            let solar = sun.evaluate(tdb: tdb), let solarAcceleration = sun.acceleration(tdb: tdb),
+            let offset = earthOffset.evaluate(tdb: tdb), let offsetAcceleration = earthOffset.acceleration(tdb: tdb)
+        else { return nil }
+        let velocity = barycenter.velocity - solar.velocity + offset.velocity
+        let acceleration = barycenterAcceleration - solarAcceleration + offsetAcceleration
+        return Engine.FrameBias.icrsToEqj.apply(
+            to: (acceleration * (conversion.rate * conversion.rate) + velocity * tdbAcceleration)
+                / Engine.kilometersPerAU)
     }
 
     private static func tables(

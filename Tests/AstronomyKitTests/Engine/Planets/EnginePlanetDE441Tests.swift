@@ -21,10 +21,12 @@ struct EnginePlanetDE441Tests {
             start: -2, days: 4, recordCount: 1, coefficientCount: 3, scalarBytes: 8, data: data)
         let left = try #require(table.evaluate(tdb: -2))
         let middle = try #require(table.evaluate(tdb: 0))
+        let acceleration = try #require(table.acceleration(tdb: 0))
         #expect(left.position == SIMD3(2, 5, 8))
         #expect(middle.position == SIMD3(-2, -2, -2))
         #expect(left.velocity == SIMD3(-5, -9.5, -14))
         #expect(middle.velocity == SIMD3(1, 2.5, 4))
+        #expect(acceleration == SIMD3(3, 6, 9))
         #expect(table.evaluate(tdb: (-2.0).nextDown) == nil)
         #expect(table.evaluate(tdb: 2) == nil)
         #expect(table.evaluate(tdb: .nan) == nil)
@@ -43,6 +45,9 @@ struct EnginePlanetDE441Tests {
         #expect(invalidBase64.evaluate(tdb: 0.5) == nil)
         #expect(truncated.evaluate(tdb: 0.5) == nil)
         #expect(nonfinite.evaluate(tdb: 0.5) == nil)
+        #expect(invalidBase64.acceleration(tdb: 0.5) == nil)
+        #expect(truncated.acceleration(tdb: 0.5) == nil)
+        #expect(nonfinite.acceleration(tdb: 0.5) == nil)
     }
 
     @Test("Every generated component matches retained direct-source recurrence fixtures")

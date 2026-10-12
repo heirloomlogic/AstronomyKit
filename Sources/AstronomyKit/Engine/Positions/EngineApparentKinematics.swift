@@ -3,22 +3,47 @@ import Foundation
 extension Engine.ApparentPlace {
     /// Earth's selected heliocentric trajectory and its analytic acceleration in AU per TT day squared.
     ///
-    /// The position and velocity retain the public planet evaluator's bits. Acceleration differentiates that same polynomial or VSOP branch. At a polynomial boundary it is the right-hand branch derivative; no continuity across fitted segments is assumed.
+    /// Position and velocity retain the public planet evaluator's bits. Acceleration differentiates the selected DE source, both blends, and the retained trajectory outside them. At a fitted-segment or source-record boundary it is the selected right-hand derivative.
     static func earthHeliocentricKinematics(tt: Double) throws -> Kinematics {
         guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
         let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
         let state = try Engine.Planet.earth.heliocentricState(at: time)
-        let acceleration: SIMD3<Double>
+        let retainedAcceleration: SIMD3<Double>
         if Engine.PlanetPolynomial.covers(tt),
             let fitted = polynomialAcceleration(Engine.PlanetPolynomial.model(.earth), tt: tt)
         {
-            acceleration = fitted
+            retainedAcceleration = fitted
         } else {
-            acceleration = seriesAcceleration(.earth, tt: tt)
+            retainedAcceleration = seriesAcceleration(.earth, tt: tt)
         }
-        let equatorial = Engine.VSOP87B.toEquatorial.apply(to: acceleration)
-        guard [equatorial.x, equatorial.y, equatorial.z].allSatisfy(\.isFinite) else { throw AstronomyError.badTime }
-        return Kinematics(motion: VectorRate(state.positionVector, state.velocityVector), acceleration: equatorial)
+        let legacyAcceleration = Engine.VSOP87B.toEquatorial.apply(to: retainedAcceleration)
+        let (weight, rate) = Engine.PlanetDE441.weight(tt: tt)
+        var acceleration = legacyAcceleration
+        if weight > 0 {
+            let clockAcceleration = tdbAcceleration(tt: tt)
+            guard
+                let sourceAcceleration = Engine.PlanetDE441.earthAcceleration(
+                    tt: tt, tdbAcceleration: clockAcceleration)
+            else { throw AstronomyError.badTime }
+            acceleration = sourceAcceleration
+            if weight < 1 {
+                guard let source = Engine.PlanetDE441.state(of: .earth, tt: tt, physicalCenter: true) else {
+                    throw AstronomyError.badTime
+                }
+                let retained = Engine.VSOP87B.toEquatorial.apply(
+                    to: try Engine.Planet.earth.retainedEclipticState(at: time))
+                let legacyPosition = retained.positionVector
+                let legacyVelocity = retained.velocityVector
+                acceleration =
+                    legacyAcceleration + weight * (sourceAcceleration - legacyAcceleration)
+                    + 2 * rate * (source.velocity - legacyVelocity)
+                    + Engine.PlanetDE441.weightAcceleration(tt: tt) * (source.position - legacyPosition)
+            }
+        }
+        guard [acceleration.x, acceleration.y, acceleration.z].allSatisfy(\.isFinite) else {
+            throw AstronomyError.badTime
+        }
+        return Kinematics(motion: VectorRate(state.positionVector, state.velocityVector), acceleration: acceleration)
     }
 
     /// DE441's compiled solar trajectory, transformed from ICRF/TDB to EQJ/TT.

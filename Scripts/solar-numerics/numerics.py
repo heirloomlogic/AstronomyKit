@@ -13,6 +13,15 @@ ROOT = Path(__file__).resolve().parents[2]
 ENGINE = "Sources/AstronomyKit/Engine/"
 EARTH = ENGINE + "Planets/Generated/PlanetPolynomialEarth.swift"
 COVERAGE = ENGINE + "Planets/Generated/PlanetPolynomialCoverage.swift"
+SELECTED_EARTH_BINDINGS = [
+    ENGINE + "Foundation/EngineDirectChebyshevTable.swift",
+    ENGINE + "Moon/EngineFrameBias.swift", ENGINE + "Moon/EngineMoonEphemeris.swift",
+    ENGINE + "Moon/EngineTDB.swift", ENGINE + "Moon/Generated/TDBTerms.swift",
+    ENGINE + "Planets/EnginePlanetDE441.swift", ENGINE + "Planets/EngineSaturnEphemeris.swift",
+    ENGINE + "Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift",
+    ENGINE + "Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift",
+    ENGINE + "Planets/Generated/Saturn/SaturnSunData.swift",
+]
 BINDINGS = [
     ENGINE + "Foundation/EngineTime.swift", ENGINE + "Foundation/EngineDeltaT.swift",
     ENGINE + "Foundation/EngineCalendar.swift", ENGINE + "Foundation/EngineConstants.swift",
@@ -26,7 +35,7 @@ BINDINGS = [
     ENGINE + "Orientation/EngineEarthRotation.swift", ENGINE + "Orientation/EngineNutation.swift",
     ENGINE + "Orientation/Generated/IAU2000ATerms.swift",
     "Sources/AstronomyKit/CivilTime.swift", "Sources/AstronomyKit/UTCOffsetTable.swift",
-    "Scripts/solar-numerics/numerics.py",
+    "Scripts/solar-numerics/numerics.py", *SELECTED_EARTH_BINDINGS,
 ]
 
 
