@@ -1,0 +1,499 @@
+{
+  "schemaVersion": 1,
+  "precisionDecimalDigits": 50,
+  "sourceHashes": {
+    "Scripts/planet-data/model-preflight/ranges.json": "98cd40489f486ef2fda854fbe712e4abdb65d21bed0c7b723396d56a4e04eca6",
+    "Scripts/apparent-place-data/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
+    "Scripts/reference-data/planetary-apsis-evidence.json": "9cb0ab7430beef2029dc69cabe34010231609c702bfe621b8856feb521aea684",
+    "Scripts/qualify-planet-source-model.py": "b75d4f35958d2ae6f46f82212001bb5c8cc19c3bf8f1c476e02064a8e73a820e",
+    "Scripts/assess-moon-de441.py": "5da238cbd372de58899fc7de9ca49dbe5e02a33b0886a8ce8bf69854783c26a4",
+    "Scripts/reference-data/sources/planetary-apsides/jupiter.json": "b2212ce9f360c3c993d5922fbd8b4fd1b2f9db3cd05737f95b896a5853fb4037",
+    "Scripts/reference-data/sources/planetary-apsides/uranus.json": "53f72c2aa96022ac91cb0b446269c4f834f95224b40fac2c8567c9e28ecb1303",
+    "Scripts/reference-data/sources/planetary-apsides/neptune.json": "8c7e33b2ba0a3f6f253f3faec23074cfd0b0d931fcaa9f2f36e748ed10063adb"
+  },
+  "cases": {
+    "jupiter": {
+      "DE441": {
+        "roots": [
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2462133.383800009",
+              "2462133.383807639"
+            ],
+            "candidateBracketJDTT": [
+              "2462133.3838019083067169189453125",
+              "2462133.38380190890276336669921875"
+            ],
+            "residualSeconds": -0.16549015045166016
+          },
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2462134.018878438",
+              "2462134.018886067"
+            ],
+            "candidateBracketJDTT": [
+              "2462134.018882483766021728515625",
+              "2462134.01888248436206817626953125"
+            ],
+            "residualSeconds": 0.02000713348388672
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2462135.164317586",
+              "2462135.164325215"
+            ],
+            "candidateBracketJDTT": [
+              "2462135.164323405600250244140625",
+              "2462135.16432340619629669189453125"
+            ],
+            "residualSeconds": 0.17326641082763672
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2462129.614070394",
+            "positionResidualKm": 0.0007187212544587211,
+            "velocityResidualKmPerTDBDay": 1.2041329070634958e-06
+          },
+          {
+            "jdTT": "2462133.614070394",
+            "positionResidualKm": 0.0001106165574349372,
+            "velocityResidualKmPerTDBDay": 1.5653499890085063e-07
+          },
+          {
+            "jdTT": "2462137.614070394",
+            "positionResidualKm": 0.000691342727184315,
+            "velocityResidualKmPerTDBDay": 8.194503778610804e-07
+          }
+        ]
+      },
+      "merged": {
+        "roots": [
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2462133.383800009",
+              "2462133.383807639"
+            ],
+            "candidateBracketJDTT": [
+              "2462133.3838019083067169189453125",
+              "2462133.38380190890276336669921875"
+            ],
+            "residualSeconds": -0.16549015045166016
+          },
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2462134.018878438",
+              "2462134.018886067"
+            ],
+            "candidateBracketJDTT": [
+              "2462134.018882483766021728515625",
+              "2462134.01888248436206817626953125"
+            ],
+            "residualSeconds": 0.02000713348388672
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2462135.164317586",
+              "2462135.164325215"
+            ],
+            "candidateBracketJDTT": [
+              "2462135.164323405600250244140625",
+              "2462135.16432340619629669189453125"
+            ],
+            "residualSeconds": 0.17326641082763672
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2462129.614070394",
+            "positionResidualKm": 0.0007187212587449872,
+            "velocityResidualKmPerTDBDay": 1.204133669784236e-06
+          },
+          {
+            "jdTT": "2462133.614070394",
+            "positionResidualKm": 0.00011061655915366993,
+            "velocityResidualKmPerTDBDay": 1.5653585103566224e-07
+          },
+          {
+            "jdTT": "2462137.614070394",
+            "positionResidualKm": 0.0006913427286924245,
+            "velocityResidualKmPerTDBDay": 8.194494890465254e-07
+          }
+        ]
+      },
+      "mergedBarycenterDE441Sun": {
+        "roots": [
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2462133.383800009",
+              "2462133.383807639"
+            ],
+            "candidateBracketJDTT": [
+              "2462133.3838019083067169189453125",
+              "2462133.38380190890276336669921875"
+            ],
+            "residualSeconds": -0.16549015045166016
+          },
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2462134.018878438",
+              "2462134.018886067"
+            ],
+            "candidateBracketJDTT": [
+              "2462134.018882483766021728515625",
+              "2462134.01888248436206817626953125"
+            ],
+            "residualSeconds": 0.02000713348388672
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2462135.164317586",
+              "2462135.164325215"
+            ],
+            "candidateBracketJDTT": [
+              "2462135.164323405600250244140625",
+              "2462135.16432340619629669189453125"
+            ],
+            "residualSeconds": 0.17326641082763672
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2462129.614070394",
+            "positionResidualKm": 0.0007187212544587211,
+            "velocityResidualKmPerTDBDay": 1.2041329070634958e-06
+          },
+          {
+            "jdTT": "2462133.614070394",
+            "positionResidualKm": 0.0001106165574349372,
+            "velocityResidualKmPerTDBDay": 1.5653499890085063e-07
+          },
+          {
+            "jdTT": "2462137.614070394",
+            "positionResidualKm": 0.000691342727184315,
+            "velocityResidualKmPerTDBDay": 8.194503778610804e-07
+          }
+        ]
+      }
+    },
+    "uranus": {
+      "DE441": {
+        "roots": [
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2470033.147309066",
+              "2470033.147316696"
+            ],
+            "candidateBracketJDTT": [
+              "2470033.1533105769228515625",
+              "2470033.15331057751889801025390625"
+            ],
+            "residualSeconds": 518.2009534835815
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2470034.651779891",
+              "2470034.65178752"
+            ],
+            "candidateBracketJDTT": [
+              "2470034.6440828128131561279296875",
+              "2470034.64408281340920257568359375"
+            ],
+            "residualSeconds": -665.357102394104
+          },
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2470037.710564374",
+              "2470037.710572003"
+            ],
+            "candidateBracketJDTT": [
+              "2470037.71607377953488922119140625",
+              "2470037.7160737801309356689453125"
+            ],
+            "residualSeconds": 475.68309116363525
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2470031.695252181",
+            "positionResidualKm": 4198.508514043801,
+            "velocityResidualKmPerTDBDay": 0.7898840497112571
+          },
+          {
+            "jdTT": "2470035.695252181",
+            "positionResidualKm": 4199.55520443026,
+            "velocityResidualKmPerTDBDay": 0.7900611372624399
+          },
+          {
+            "jdTT": "2470039.695252181",
+            "positionResidualKm": 4200.600508111403,
+            "velocityResidualKmPerTDBDay": 0.7902378969756061
+          }
+        ]
+      },
+      "merged": {
+        "roots": [
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2470033.147309066",
+              "2470033.147316696"
+            ],
+            "candidateBracketJDTT": [
+              "2470033.14731340730901336669921875",
+              "2470033.147313407905059814453125"
+            ],
+            "residualSeconds": 0.04549884796142578
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2470034.651779891",
+              "2470034.65178752"
+            ],
+            "candidateBracketJDTT": [
+              "2470034.65177938118302154541015625",
+              "2470034.6517793817790679931640625"
+            ],
+            "residualSeconds": -0.3735952377319336
+          },
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2470037.710564374",
+              "2470037.710572003"
+            ],
+            "candidateBracketJDTT": [
+              "2470037.71057176954705810546875",
+              "2470037.71057177014310455322265625"
+            ],
+            "residualSeconds": 0.30942821502685547
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2470031.695252181",
+            "positionResidualKm": 0.19975526796700488,
+            "velocityResidualKmPerTDBDay": 3.193278519042518e-05
+          },
+          {
+            "jdTT": "2470035.695252181",
+            "positionResidualKm": 0.19985328974201422,
+            "velocityResidualKmPerTDBDay": 3.198073267798236e-05
+          },
+          {
+            "jdTT": "2470039.695252181",
+            "positionResidualKm": 0.2000110842805928,
+            "velocityResidualKmPerTDBDay": 3.2173242515890316e-05
+          }
+        ]
+      },
+      "mergedBarycenterDE441Sun": {
+        "roots": [
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2470033.147309066",
+              "2470033.147316696"
+            ],
+            "candidateBracketJDTT": [
+              "2470033.1473123374056396484375",
+              "2470033.14731233800168609619140625"
+            ],
+            "residualSeconds": -0.04694080352783203
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2470034.651779891",
+              "2470034.65178752"
+            ],
+            "candidateBracketJDTT": [
+              "2470034.6517807622226409912109375",
+              "2470034.65178076281868743896484375"
+            ],
+            "residualSeconds": -0.2542734146118164
+          },
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2470037.710564374",
+              "2470037.710572003"
+            ],
+            "candidateBracketJDTT": [
+              "2470037.710570782494140625",
+              "2470037.71057078309018707275390625"
+            ],
+            "residualSeconds": 0.22414684295654297
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2470031.695252181",
+            "positionResidualKm": 0.0003066625452945464,
+            "velocityResidualKmPerTDBDay": 7.6325336137947e-08
+          },
+          {
+            "jdTT": "2470035.695252181",
+            "positionResidualKm": 2.9365744206417016e-05,
+            "velocityResidualKmPerTDBDay": 6.337766731420343e-09
+          },
+          {
+            "jdTT": "2470039.695252181",
+            "positionResidualKm": 0.00034099811126841084,
+            "velocityResidualKmPerTDBDay": 8.55881953660647e-08
+          }
+        ]
+      }
+    },
+    "neptune": {
+      "DE441": {
+        "roots": [
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2467132.087955191",
+              "2467132.087962821"
+            ],
+            "candidateBracketJDTT": [
+              "2467132.08816613392873382568359375",
+              "2467132.0881661345247802734375"
+            ],
+            "residualSeconds": 17.895878791809082
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2467135.117862415",
+              "2467135.117870044"
+            ],
+            "candidateBracketJDTT": [
+              "2467135.11764716574114990234375",
+              "2467135.11764716633719635009765625"
+            ],
+            "residualSeconds": -18.927083015441895
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2467129.445041371",
+            "positionResidualKm": 706.1408060771355,
+            "velocityResidualKmPerTDBDay": 0.08432160543454781
+          },
+          {
+            "jdTT": "2467133.44504137",
+            "positionResidualKm": 706.4313250440671,
+            "velocityResidualKmPerTDBDay": 0.08434707214978532
+          },
+          {
+            "jdTT": "2467137.445041371",
+            "positionResidualKm": 706.722463059922,
+            "velocityResidualKmPerTDBDay": 0.08437257569800868
+          }
+        ]
+      },
+      "merged": {
+        "roots": [
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2467132.087955191",
+              "2467132.087962821"
+            ],
+            "candidateBracketJDTT": [
+              "2467132.08796059684796905517578125",
+              "2467132.0879605974440155029296875"
+            ],
+            "residualSeconds": 0.13747501373291016
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2467135.117862415",
+              "2467135.117870044"
+            ],
+            "candidateBracketJDTT": [
+              "2467135.11786457308692169189453125",
+              "2467135.1178645736829681396484375"
+            ],
+            "residualSeconds": -0.14308834075927734
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2467129.445041371",
+            "positionResidualKm": 0.0001503882306284754,
+            "velocityResidualKmPerTDBDay": 4.179166980394815e-08
+          },
+          {
+            "jdTT": "2467133.44504137",
+            "positionResidualKm": 0.00020413286364457685,
+            "velocityResidualKmPerTDBDay": 3.884121849194116e-08
+          },
+          {
+            "jdTT": "2467137.445041371",
+            "positionResidualKm": 0.00015170962932188004,
+            "velocityResidualKmPerTDBDay": 1.649287513518378e-08
+          }
+        ]
+      },
+      "mergedBarycenterDE441Sun": {
+        "roots": [
+          {
+            "kind": "pericenter",
+            "referenceBracketJDTT": [
+              "2467132.087955191",
+              "2467132.087962821"
+            ],
+            "candidateBracketJDTT": [
+              "2467132.0879605855230865478515625",
+              "2467132.08796058611913299560546875"
+            ],
+            "residualSeconds": 0.13649654388427734
+          },
+          {
+            "kind": "apocenter",
+            "referenceBracketJDTT": [
+              "2467135.117862415",
+              "2467135.117870044"
+            ],
+            "candidateBracketJDTT": [
+              "2467135.11786458381575775146484375",
+              "2467135.11786458441180419921875"
+            ],
+            "residualSeconds": -0.14216136932373047
+          }
+        ],
+        "vectors": [
+          {
+            "jdTT": "2467129.445041371",
+            "positionResidualKm": 0.15289475298994393,
+            "velocityResidualKmPerTDBDay": 3.116208851753131e-05
+          },
+          {
+            "jdTT": "2467133.44504137",
+            "positionResidualKm": 0.15280162901386682,
+            "velocityResidualKmPerTDBDay": 3.107887534964276e-05
+          },
+          {
+            "jdTT": "2467137.445041371",
+            "positionResidualKm": 0.15311129560285472,
+            "velocityResidualKmPerTDBDay": 3.0972553090884345e-05
+          }
+        ]
+      }
+    }
+  }
+}
