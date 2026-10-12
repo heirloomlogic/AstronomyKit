@@ -25,10 +25,12 @@ python3 Scripts/assess-pluto-de441.py --cache .context/issue-252/ranges --plu060
 python3 Scripts/generate-pluto-de441.py --binaries .context/issue-252/candidates
 python3 Scripts/generate-pluto-de441.py --reference-fixtures --cache .context/issue-252/ranges
 python3 Scripts/generate-pluto-de441.py --check
-python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py -v
-PLUTO_MEASUREMENT_OUTPUT="$PWD/.context/issue-252/native-release.json" swift test --no-parallel -c release --filter EnginePlutoMeasurementTests
-PLUTO_REFERENCE_OUTPUT="$PWD/.context/issue-252/references-release.json" PLUTO_DIFFERENTIAL_OUTPUT="$PWD/.context/issue-252/differential-release.json" PLUTO_BOUNDARY_OUTPUT="$PWD/.context/issue-252/boundaries-release.json" swift test --no-parallel -c release --skip-build --filter EnginePlutoDE441Tests
+python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py Scripts/test_record_pluto_de441_evidence.py -v
+python3 Scripts/record-pluto-de441-evidence.py --capture
+python3 Scripts/record-pluto-de441-evidence.py --check
 ```
+
+The recorder requires a committed source tree. It runs the Pluto implementation checks in fresh Debug and Release processes, runs separate outer-cold and center-cold Release measurements, records the generated-source, object, executable, and decoded-payload sizes, binds the capture revision and complete Engine source inventory, validates the finished document, and replaces the evidence file atomically.
 
 The opt-in measurement uses a fresh process. Setting `PLUTO_MEASUREMENT_CENTER=1` selects TT −72000 for a separate cold center-table decode; the default cold date measures the outer DE441 tables. It measures first use at TT −766,524.75, then 2,000 outer states over −766,500 to +766,500, 2,000 central states from −30,000 in 30-day increments, and 2,000 states over the complete engine range. The artifact retains the historical legacy-model baseline and its original workload description; the added full-engine workload has no baseline counterpart.
 

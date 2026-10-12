@@ -11,6 +11,9 @@ import unittest
 SPEC = importlib.util.spec_from_file_location('pluto_generator', Path(__file__).with_name('generate-pluto-de441.py'))
 g = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(g)
+RECORD_SPEC = importlib.util.spec_from_file_location('pluto_recorder', Path(__file__).with_name('record-pluto-de441-evidence.py'))
+recorder = importlib.util.module_from_spec(RECORD_SPEC)
+RECORD_SPEC.loader.exec_module(recorder)
 
 
 class PlutoDE441GeneratorTests(unittest.TestCase):
@@ -53,13 +56,7 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
 
     def test_native_measurements_bind_the_current_runtime_and_fixture_sources(self):
         evidence = json.loads((g.ROOT/'Scripts/pluto-data/de441-native-evidence.json').read_bytes())
-        required = {str(path.relative_to(g.ROOT)) for path in (g.ROOT/'Sources/AstronomyKit/Engine').rglob('*.swift')}
-        required |= {'Scripts/packed-table-payload.py', 'Scripts/generate-pluto-de441.py',
-                     'Tests/AstronomyKitTests/DistanceAccuracyTests.swift',
-                     'Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json'}
-        self.assertTrue(required <= set(evidence['sourceSHA256']), sorted(required - set(evidence['sourceSHA256'])))
-        for path, expected in evidence['sourceSHA256'].items():
-            self.assertEqual(expected, hashlib.sha256((g.ROOT/path).read_bytes()).hexdigest(), path)
+        self.assertEqual(recorder.source_hashes(), evidence['sourceSHA256'])
         self.assertEqual(13149264, evidence['nativeStorage']['decodedPayloadBytes'])
         self.assertEqual(273939, evidence['everyBoundaryRelease']['count'])
         self.assertEqual(4320, evidence['directSourceRelease']['bodySamples'])
