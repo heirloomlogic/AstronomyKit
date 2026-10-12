@@ -237,19 +237,29 @@ extension PlutoSegmentSuites {
             #expect(Self.largest(day.position - last.position - last.velocity) <= 2e-7)
         }
 
-        @Test("The model reaches 36,525 days before the first state, and throws badTime beyond either limit")
+        @Test("Production Pluto accepts the engine range while the diagnostic model keeps its crawl limit")
         func limits() throws {
-            let first = Pluto.stateTable[0].tt
-            let last = Pluto.stateTable[Pluto.segmentCount].tt
-            _ = try Pluto.heliocentricState(at: Self.time(tt: first - Pluto.crawlLimitDays))
-            for tt in [
-                (first - Pluto.crawlLimitDays).nextDown, (last + Pluto.crawlLimitDays).nextUp, -1e6, 1e6,
-                Engine.acceptedTTDays, .nan, .infinity, -.infinity,
-            ] {
+            for tt in [-Engine.acceptedTTDays, Engine.acceptedTTDays] {
+                let time = Self.time(tt: tt)
+                _ = try Pluto.heliocentricState(at: time)
+                _ = try Pluto.barycentricState(at: time)
+                _ = try Pluto.heliocentricPosition(at: time)
+            }
+            for tt in [-Engine.acceptedTTDays.nextUp, Engine.acceptedTTDays.nextUp, .nan, .infinity, -.infinity] {
                 let time = Self.time(tt: tt)
                 #expect(throws: AstronomyError.badTime, "tt \(tt)") { _ = try Pluto.heliocentricState(at: time) }
                 #expect(throws: AstronomyError.badTime, "tt \(tt)") { _ = try Pluto.barycentricState(at: time) }
                 #expect(throws: AstronomyError.badTime, "tt \(tt)") { _ = try Pluto.heliocentricPosition(at: time) }
+            }
+            let first = Pluto.stateTable[0].tt
+            let last = Pluto.stateTable[Pluto.segmentCount].tt
+            for tt in [(first - Pluto.crawlLimitDays).nextDown, (last + Pluto.crawlLimitDays).nextUp] {
+                #expect(throws: AstronomyError.badTime, "diagnostic tt \(tt)") {
+                    _ = try Pluto.modelState(tt: tt, heliocentric: true)
+                }
+                #expect(throws: AstronomyError.badTime, "diagnostic tt \(tt)") {
+                    _ = try Pluto.modelState(tt: tt, heliocentric: false)
+                }
             }
             #expect(throws: AstronomyError.badTime) { _ = try Pluto.heliocentricState(at: .invalid) }
         }
