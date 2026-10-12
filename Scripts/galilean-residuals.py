@@ -2,6 +2,7 @@
 """Capture and independently replay the archived Galilean-moon residuals."""
 import argparse
 import csv
+from functools import lru_cache
 import hashlib
 import json
 import math
@@ -35,9 +36,22 @@ def archive_paths():
             for body in MOONS for suffix in ('-vector', '-domain-vector') for extension in ('json', 'query.json')]
 
 
-def source_paths():
-    # Bind the complete native source inventory, including shared arithmetic and guards.
-    return sorted([str(p.relative_to(ROOT)) for p in (ROOT / 'Sources/AstronomyKit').rglob('*.swift')] + archive_paths() + [
+REPLAY_OWNERS = {'Scripts/galilean-residuals.py', 'Scripts/test_galilean_residuals.py'}
+
+
+def source_paths(revision=None):
+    # The Git inventory retains deleted owners that a filesystem glob would omit.
+    command = ['git', 'ls-tree', '-rz', '--name-only', revision] if revision else ['git', 'ls-files', '-z']
+    try:
+        inventory = subprocess.check_output(command, cwd=ROOT, stderr=subprocess.PIPE).decode().split('\0')
+    except subprocess.CalledProcessError as error:
+        raise ValueError('Capture revision is unavailable in local Git history') from error
+    native = sorted(p for p in inventory if p.startswith('Sources/AstronomyKit/') and p.endswith('.swift'))
+    if not revision:
+        present = sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'Sources/AstronomyKit').rglob('*.swift'))
+        if native != present:
+            raise ValueError('Tracked and present native source inventory differs')
+    return sorted(native + archive_paths() + [
         FIXTURE, 'Package.swift', 'Sources/CLibAstronomy/astronomy.c',
         'Scripts/reference-data/build-fixtures.py', 'Scripts/generate-jupiter-moon-series.py',
         DATA + '/manifest.json', 'Scripts/galilean-residuals.py', 'Scripts/test_galilean_residuals.py',
@@ -48,6 +62,17 @@ def source_paths():
 
 def source_hashes():
     return {path: digest((ROOT / path).read_bytes()) for path in source_paths()}
+
+
+@lru_cache(maxsize=4)
+def revision_source_hashes(revision):
+    try:
+        if subprocess.check_output(['git', 'cat-file', '-t', revision], cwd=ROOT, stderr=subprocess.PIPE).strip() != b'commit':
+            raise ValueError('Capture revision must identify a Git commit')
+        return {path: digest(subprocess.check_output(['git', 'show', f'{revision}:{path}'], cwd=ROOT,
+                                                    stderr=subprocess.PIPE)) for path in source_paths(revision)}
+    except subprocess.CalledProcessError as error:
+        raise ValueError('Capture revision lacks a bound source owner') from error
 
 
 def check_bindings(bindings):
@@ -203,16 +228,21 @@ def analyze(capture):
 
 
 def record(capture, revision, toolchain):
-    return dict(schemaVersion=1, runtimeCaptureRevision=revision, toolchain=toolchain,
-                sourceSHA256=source_hashes(), captureSHA256=digest(encoded(capture)), capture=capture, analysis=analyze(capture))
+    return dict(schemaVersion=2, runtimeCaptureRevision=revision, toolchain=toolchain,
+                captureSourceSHA256=dict(revision_source_hashes(revision)), sourceSHA256=source_hashes(), captureSHA256=digest(encoded(capture)), capture=capture, analysis=analyze(capture))
 
 
 def validate_record(data):
-    if set(data) != {'schemaVersion', 'runtimeCaptureRevision', 'toolchain', 'sourceSHA256', 'captureSHA256', 'capture', 'analysis'} or data['schemaVersion'] != 1:
+    if set(data) != {'schemaVersion', 'runtimeCaptureRevision', 'toolchain', 'captureSourceSHA256', 'sourceSHA256', 'captureSHA256', 'capture', 'analysis'} or data['schemaVersion'] != 2:
         raise ValueError('Evidence schema differs')
     if not re.fullmatch(r'[0-9a-f]{40}', data['runtimeCaptureRevision']) or not data['toolchain']:
         raise ValueError('Capture revision or toolchain missing')
     check_bindings(data['sourceSHA256'])
+    captured = revision_source_hashes(data['runtimeCaptureRevision'])
+    if data['captureSourceSHA256'] != captured or set(captured) != set(data['sourceSHA256']):
+        raise ValueError('Capture revision source inventory or hashes differ')
+    if any(captured[p] != data['sourceSHA256'][p] for p in captured if p not in REPLAY_OWNERS):
+        raise ValueError('Current native capture inputs differ from the recorded revision')
     if data['captureSHA256'] != digest(encoded(data['capture'])) or data['analysis'] != analyze(data['capture']):
         raise ValueError('Capture digest or replayed metrics differ')
 
