@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT/'Scripts/pluto-data/de441-evidence.json'
 BODIES = {9: 'pluto', 10: 'sun'}
-SPEC = importlib.util.spec_from_file_location('moon_generator', ROOT/'Scripts/generate-moon-de441.py')
+SPEC = importlib.util.spec_from_file_location('packed_generator', ROOT/'Scripts/packed-table-payload.py')
 common = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(common)
 

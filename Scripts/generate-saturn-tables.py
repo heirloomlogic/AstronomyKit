@@ -10,7 +10,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUTPUT=ROOT/'Sources/AstronomyKit/Engine/Planets/Generated/Saturn'
 MANIFEST=ROOT/'Scripts/saturn-data/assessment.json'
 BODIES={6:'barycenter',10:'sun',699:'offset'}
-spec=importlib.util.spec_from_file_location('packed_generator',ROOT/'Scripts/generate-moon-de441.py')
+spec=importlib.util.spec_from_file_location('packed_generator',ROOT/'Scripts/packed-table-payload.py')
 common=importlib.util.module_from_spec(spec);spec.loader.exec_module(common)
 
 

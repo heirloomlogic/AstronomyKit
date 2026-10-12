@@ -23,6 +23,12 @@ g = module('saturn_generator', 'generate-saturn-tables.py')
 
 
 class SaturnEphemerisTests(unittest.TestCase):
+    def test_both_packed_generators_check_without_retired_moon_generator(self):
+        for filename in ('generate-saturn-tables.py', 'generate-pluto-de441.py'):
+            with self.subTest(generator=filename):
+                result = subprocess.run([sys.executable, str(g.ROOT/'Scripts'/filename), '--check'], capture_output=True, text=True)
+                self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+
     def test_quantization_encloses_position_and_analytic_rate(self):
         records = [(100., 1.5, [(300.123456789, -.112345678, .0987654321, -.0032109876)] * 3)]
         data, rounded, bounds = a.quantize(records, 'float32')
@@ -121,7 +127,7 @@ class SaturnEphemerisTests(unittest.TestCase):
             root = Path(directory)
             manifest = json.loads((g.ROOT/'Scripts/planet-data/manifest.json').read_bytes())
             generated = Path('Sources/AstronomyKit/Engine/Planets/Generated')
-            paths = ['Scripts/generate-planet-tables.py', 'Scripts/generate-saturn-tables.py', 'Scripts/generate-moon-de441.py', 'Scripts/planet-data/manifest.json', 'Scripts/saturn-data/assessment.json']
+            paths = ['Scripts/generate-planet-tables.py', 'Scripts/generate-saturn-tables.py', 'Scripts/packed-table-payload.py', 'Scripts/planet-data/manifest.json', 'Scripts/saturn-data/assessment.json']
             paths += list(manifest['files'])
             paths += [str(p.relative_to(g.ROOT)) for p in (g.ROOT/generated).rglob('*.swift')]
             for relative in paths:

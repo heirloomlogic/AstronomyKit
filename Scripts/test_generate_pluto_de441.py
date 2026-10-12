@@ -30,7 +30,7 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
             root = Path(directory)
             manifest = json.loads((g.ROOT/'Scripts/pluto-data/manifest.json').read_bytes())
             generated = g.ROOT/'Sources/AstronomyKit/Engine/Gravity/Generated'
-            paths = ['Scripts/generate-pluto-tables.py', 'Scripts/generate-pluto-de441.py', 'Scripts/generate-moon-de441.py', 'Scripts/pluto-data/manifest.json', 'Scripts/pluto-data/plu060-evidence.json', 'Scripts/pluto-data/de441-evidence.json']
+            paths = ['Scripts/generate-pluto-tables.py', 'Scripts/generate-pluto-de441.py', 'Scripts/packed-table-payload.py', 'Scripts/pluto-data/manifest.json', 'Scripts/pluto-data/plu060-evidence.json', 'Scripts/pluto-data/de441-evidence.json']
             paths += list(manifest['files']) + [manifest['stateTable']['path']]
             paths += [str(p.relative_to(g.ROOT)) for p in generated.rglob('*.swift')]
             for relative in paths:
@@ -54,7 +54,8 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
     def test_native_measurements_bind_the_current_runtime_and_fixture_sources(self):
         evidence = json.loads((g.ROOT/'Scripts/pluto-data/de441-native-evidence.json').read_bytes())
         required = {str(path.relative_to(g.ROOT)) for path in (g.ROOT/'Sources/AstronomyKit/Engine').rglob('*.swift')}
-        required |= {'Tests/AstronomyKitTests/DistanceAccuracyTests.swift',
+        required |= {'Scripts/packed-table-payload.py', 'Scripts/generate-pluto-de441.py',
+                     'Tests/AstronomyKitTests/DistanceAccuracyTests.swift',
                      'Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json'}
         self.assertTrue(required <= set(evidence['sourceSHA256']), sorted(required - set(evidence['sourceSHA256'])))
         for path, expected in evidence['sourceSHA256'].items():
