@@ -137,28 +137,27 @@ struct EnginePlanetDE441Tests {
         }
     }
 
-    @Test("Source foundation latency can be recorded")
+    @Test("Selected-window public-route latency can be recorded")
     func measurement() throws {
         guard let outputPath = ProcessInfo.processInfo.environment["PLANET_DE441_MEASUREMENT_PATH"] else {
             return
         }
         let epochs = [-36_540.25, -1_234.5, 0, 12_345.25, 47_860.75]
         let coldStart = ProcessInfo.processInfo.systemUptime
-        var checksum = try #require(Source.state(of: .jupiter, tt: epochs[0], physicalCenter: true)).position.x
+        var checksum = try Engine.Planet.jupiter.heliocentricState(at: PlanetTestSupport.time(tt: epochs[0])).x
         let coldSeconds = ProcessInfo.processInfo.systemUptime - coldStart
         let iterations = 10_000
         let warmStart = ProcessInfo.processInfo.systemUptime
         for index in 0..<iterations {
             let planet = Engine.Planet.allCases[index % Engine.Planet.allCases.count]
-            let state = try #require(
-                Source.state(of: planet, tt: epochs[index % epochs.count], physicalCenter: true))
-            checksum += state.position.x + state.velocity.y
+            let state = try planet.heliocentricState(at: PlanetTestSupport.time(tt: epochs[index % epochs.count]))
+            checksum += state.x + state.vy
         }
         let warmSeconds = ProcessInfo.processInfo.systemUptime - warmStart
         let report: [String: Any] = [
-            "coldJupiterSeconds": coldSeconds,
+            "coldJupiterPublicSeconds": coldSeconds,
             "iterations": iterations,
-            "meanStateMicroseconds": warmSeconds * 1_000_000 / Double(iterations),
+            "meanPublicStateMicroseconds": warmSeconds * 1_000_000 / Double(iterations),
             "checksum": checksum,
         ]
         let data = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])

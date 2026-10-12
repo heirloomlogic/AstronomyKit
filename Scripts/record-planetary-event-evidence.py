@@ -26,6 +26,8 @@ def source_hashes(capture_bytes=None):
         'Tests/AstronomyKitTests/IndependentReferenceFixtures.swift',
         'Scripts/reference-data/capture-planetary-apsides.py', 'Scripts/reference-data/test_capture_planetary_apsides.py',
         'Scripts/reference-data/build-fixtures.py', 'Scripts/reference-data/planetary-apsis-evidence.json',
+        'Scripts/generate-planet-cycle-census.py', 'Scripts/test_planet_cycle_census.py',
+        'Scripts/planet-data/de441-cycle-census.json',
         'Scripts/reference-data/sources/horizons/saturn-apsis-precision.json',
         'Scripts/reference-data/sources/horizons/saturn-apsis-precision.query.json',
         'Scripts/saturn-data/assessment.json', 'Scripts/saturn-data/direct-fixtures.json', 'Scripts/saturn-data/native-captures.json',
@@ -43,6 +45,7 @@ def measurements(directory, configuration):
     directory = Path(directory)
     result = {name: json.loads((directory/f'link3-{name}-{configuration}.json').read_bytes()) for name in ['saturn', 'source']}
     result['parity'] = json.loads((directory/f'link3-{configuration}.json').read_bytes())
+    result['cycle'] = json.loads((directory/f'link3-cycle-{configuration}.json').read_bytes())
     result['coefficients'] = json.loads((directory/f'saturn-assessment/source-{configuration}.json').read_bytes())
     return result
 
@@ -88,8 +91,21 @@ def validate(result):
         residual = (measured['nativeJDTT'] - sum(bracket)/2)*86400
         if not math.isfinite(residual) or abs(residual - measured['nativeMinusSourceSeconds']) > 1e-9:
             raise ValueError('invalid residual')
-        if measured['body'] not in ['jupiter', 'uranus', 'neptune'] and abs(residual) >= 60:
+        if abs(residual) >= 60:
             raise ValueError('qualified source case missed sixty seconds')
+    census = json.loads((ROOT/'Scripts/planet-data/de441-cycle-census.json').read_bytes())['cases']
+    if len(result['cycle']) != 6 or {row['body'] for row in result['cycle']} != set(census):
+        raise ValueError('complete-cycle measurement inventory differs')
+    for measured in result['cycle']:
+        source = census[measured['body']]
+        if measured['sourceIndex'] not in source['principalPhysicalCrossingIndices']:
+            raise ValueError('complete-cycle principal selection differs')
+        crossing = source['physicalCrossings'][measured['sourceIndex']]
+        if measured['kind'] != crossing['kind'] or measured['sourceTT'] != crossing['tt'] or measured['physicalCrossingCount'] != source['physicalCrossingCount'] or measured['systemCrossingCount'] != source['systemCrossingCount']:
+            raise ValueError('complete-cycle source measurement differs')
+        residual = (measured['nativeTT'] - measured['sourceTT'])*86400
+        if not math.isfinite(residual) or abs(residual-measured['nativeMinusSourceSeconds']) > 1e-9 or abs(residual) >= 60:
+            raise ValueError('complete-cycle sixty-second criterion failed')
     if result['coefficients']['rows'] != len(json.loads((ROOT/'Scripts/saturn-data/direct-fixtures.json').read_bytes())['rows']):
         raise ValueError('coefficient sample selection differs')
 
@@ -130,7 +146,7 @@ def encoding_boundary_limits():
     spec = importlib.util.spec_from_file_location('saturn_assessment', ROOT/'Scripts/assess-saturn-apsides.py')
     assessment = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(assessment)
-    candidate = json.loads(assessment.OUTPUT.read_bytes())['candidates']['float32']
+    candidate = json.loads(assessment.OUTPUT.read_bytes())['candidates']['float64']
     minimum_distances = []
     for root in candidate['roots']:
         tdb = assessment.tt_to_tdb(root['rootJDTT'])
@@ -143,14 +159,14 @@ def encoding_boundary_limits():
                 encodingOnlySlopePerturbationBoundAUPerDay=2*candidate['bodies']['699']['positionBoundKm']/0.001/assessment.d.AU_KM,
                 existingStateDerivativeComparisonAllowanceAUPerDay=2e-9,
                 roots=minimum_distances,
-                scope='Position-encoding contribution only, using the Lipschitz property of vector norm. Evaluator roundoff and the physical source are separate. This does not bound event-time error near shallow roots; the six qualified roots do not test join-adjacent events.')
+                scope='Binary64 position-encoding contribution only, using the Lipschitz property of vector norm. Evaluator roundoff and the physical source are separate. This does not bound event-time error near shallow roots; the six qualified roots do not test join-adjacent events.')
 
 
 def metadata():
-    return dict(decodedPayloadBytes=10618464,
+    return dict(decodedPayloadBytes=19400016,
                 resourceScope='macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.',
                 fullWeightTT=[-36524.5,47846.5], blendTT=[[-36556.5,-36524.5],[47846.5,47878.5]],
-                limitations=['Six Saturn source roots and eight native-selected diagnostic windows, not a continuous event-time bound or an orbital event census.', 'Jupiter, Uranus and Neptune fail the unchanged sixty-second comparison and remain owned by #92.', 'The public searches run on these native searches since the #96 cutover; the parity rows record the facade conversion, not a comparison with the former C searches.', 'Outside the Saturn source window the retained model remains; global physical-center and event accuracy are not established.'])
+                limitations=['The Jupiter, Uranus and Neptune qualification preserves every direct-source physical-center crossing over one nominal orbital cycle, selects principal candidates from the source system-center extrema, and tests those six native events; it is not a continuous event-time bound.', 'The eight 2025 diagnostic windows remain local checks for all planets and Pluto.', 'The public searches run on these native searches since the #96 cutover; the parity rows record the facade conversion, not a comparison with the former C searches.', 'Outside the selected source window the retained model remains; global physical-center and event accuracy are not established.'])
 
 
 def main():

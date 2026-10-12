@@ -17,6 +17,8 @@ struct EnginePlanetPositionsTests {
 
     static func cache() -> Engine.VSOP87B.Cache { PlanetTestSupport.makeCache().0 }
 
+    static func norm(_ value: SIMD3<Double>) -> Double { (value * value).sum().squareRoot() }
+
     // MARK: - IMCCE check values
 
     /// Rectangular position and velocity from the published longitude,
@@ -108,6 +110,63 @@ struct EnginePlanetPositionsTests {
         }
         // The records in excluded segments, which the series cover.
         #expect(seriesRecords == 5)
+    }
+
+    @Test("Every selected-window public and system trajectory uses its DE physical center")
+    func selectedWindowRouting() throws {
+        for planet in Engine.Planet.allCases {
+            for tt in [-20_000.25, 0, 40_000.75] {
+                let time = Self.time(tt: tt)
+                let physicalSource = try #require(Engine.PlanetDE441.state(of: planet, tt: tt, physicalCenter: true))
+                let systemSource = try #require(Engine.PlanetDE441.state(of: planet, tt: tt, physicalCenter: false))
+                let physical = try planet.heliocentricState(at: time)
+                let system = try planet.systemHeliocentricState(at: time)
+                let physicalPosition = SIMD3(physical.x, physical.y, physical.z)
+                let physicalVelocity = SIMD3(physical.vx, physical.vy, physical.vz)
+                let systemPosition = SIMD3(system.x, system.y, system.z)
+                let systemVelocity = SIMD3(system.vx, system.vy, system.vz)
+                #expect(Self.norm(physicalPosition - physicalSource.position) < 1e-10, "\(planet) TT \(tt)")
+                #expect(Self.norm(physicalVelocity - physicalSource.velocity) < 2e-14, "\(planet) TT \(tt)")
+                #expect(Self.norm(systemPosition - systemSource.position) < 1e-10, "\(planet) TT \(tt)")
+                #expect(Self.norm(systemVelocity - systemSource.velocity) < 2e-14, "\(planet) TT \(tt)")
+            }
+        }
+    }
+
+    @Test("Every planet preserves exact blend boundaries and analytic TT derivatives")
+    func selectedWindowBoundaries() throws {
+        let boundaries = [-36_556.5, -36_524.5, 47_846.5, 47_878.5]
+        for (boundaryIndex, tt) in boundaries.enumerated() {
+            for planet in Engine.Planet.allCases {
+                for epoch in [tt.nextDown, tt, tt.nextUp] {
+                    let time = Self.time(tt: epoch)
+                    let state = try planet.heliocentricEclipticState(at: time)
+                    let weight = Engine.PlanetDE441.weight(tt: epoch).weight
+                    #expect(weight >= 0 && weight <= 1, "\(planet) TT \(epoch)")
+                    if weight == 0 {
+                        let retained = try planet.retainedEclipticState(at: time)
+                        #expect(
+                            [state.x, state.y, state.z, state.vx, state.vy, state.vz].map(\.bitPattern)
+                                == [retained.x, retained.y, retained.z, retained.vx, retained.vy, retained.vz].map(
+                                    \.bitPattern))
+                    } else {
+                        _ = try #require(Engine.PlanetDE441.state(of: planet, tt: epoch, physicalCenter: true))
+                    }
+                }
+                let h = 1.0 / 128
+                func position(_ epoch: Double) throws -> SIMD3<Double> {
+                    let state = try planet.heliocentricEclipticState(at: Self.time(tt: epoch))
+                    return SIMD3(state.x, state.y, state.z)
+                }
+                let state = try planet.heliocentricEclipticState(at: Self.time(tt: tt))
+                let derivative =
+                    try (position(tt - 2 * h) - 8 * position(tt - h) + 8 * position(tt + h) - position(tt + 2 * h))
+                    / (12 * h)
+                #expect(Self.norm(SIMD3(state.vx, state.vy, state.vz) - derivative) < 2e-9, "\(planet) TT \(tt)")
+            }
+            let exact = Engine.PlanetDE441.weight(tt: tt)
+            #expect(exact == (boundaryIndex == 0 || boundaryIndex == 3 ? (0, 0) : (1, 0)))
+        }
     }
 
     // MARK: - Consistency
