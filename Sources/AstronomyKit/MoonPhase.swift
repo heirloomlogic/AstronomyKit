@@ -256,7 +256,7 @@ public enum Moon {
 
     /// Calculates the Moon's ecliptic position and velocity.
     ///
-    /// The position fields are bit-identical to ``ecliptic(at:)``. The rates are analytic derivatives of the bundled coefficients: DE440 from 1900 through 2130 TT and the compact DE441 representation elsewhere in the accepted range, with the 32-day transitions between them including the derivative of the blend weight. All paths include the analytic rotation rates of mean obliquity, nutation, and true obliquity. These conventions do not establish independent rate accuracy.
+    /// The position fields are bit-identical to ``ecliptic(at:)``. The rates are analytic derivatives of the bundled coefficients: DE440 from 1900 through 2130 TT and the complete binary64 DE441 coefficients elsewhere in the accepted range, with the 32-day transitions between them including the derivative of the blend weight. All paths include the analytic rotation rates of mean obliquity, nutation, and true obliquity. These conventions do not establish independent rate accuracy.
     ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The ecliptic position and velocity of the Moon.

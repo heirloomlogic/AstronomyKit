@@ -37,7 +37,7 @@ struct EngineMoonCacheTests {
     func shared() {
         #expect(Engine.Moon.cache.capacity == 32)
         let (own, registry) = Self.makeCache()
-        _ = Engine.Moon.coordinates(centuries: 0.25, cache: own)
+        _ = Engine.Moon.coordinates(tt: 0.25, cache: own)
         #expect(registry.count == 1 && own.count == 1)
         registry.removeAll()
         #expect(own.count == 0)
@@ -85,15 +85,15 @@ struct EngineMoonCacheTests {
         #expect([first.longitude, first.longitudeRate] == [shared.longitude, shared.longitudeRate])
     }
 
-    @Test("Signed zeros are different keys, and centuries that are not finite are not stored")
+    @Test("Signed zeros are different keys, and TT days that are not finite are not stored")
     func keys() {
         let (cache, _) = Self.makeCache()
-        let positive = Engine.Moon.coordinates(centuries: 0.0, cache: cache)
-        let negative = Engine.Moon.coordinates(centuries: -0.0, cache: cache)
+        let positive = Engine.Moon.coordinates(tt: 0.0, cache: cache)
+        let negative = Engine.Moon.coordinates(tt: -0.0, cache: cache)
         #expect(positive == negative)
         #expect(cache.statistics == Statistics(hits: 0, misses: 2) && cache.count == 2)
         for t in [Double.nan, .infinity, -.infinity] {
-            let value = Engine.Moon.coordinates(centuries: t, cache: cache)
+            let value = Engine.Moon.coordinates(tt: t, cache: cache)
             #expect(value.x.isNaN)
         }
         #expect(cache.statistics == Statistics(hits: 0, misses: 2) && cache.count == 2)
@@ -103,12 +103,12 @@ struct EngineMoonCacheTests {
     func eviction() {
         let (cache, _) = Self.makeCache()
         for k in 0..<33 {
-            _ = Engine.Moon.coordinates(centuries: Double(k) / 64, cache: cache)
+            _ = Engine.Moon.coordinates(tt: Double(k) / 64, cache: cache)
         }
         #expect(cache.count == 32)
-        _ = Engine.Moon.coordinates(centuries: 1.0 / 64, cache: cache)
+        _ = Engine.Moon.coordinates(tt: 1.0 / 64, cache: cache)
         #expect(cache.statistics.hits == 1)
-        _ = Engine.Moon.coordinates(centuries: 0, cache: cache)
+        _ = Engine.Moon.coordinates(tt: 0, cache: cache)
         #expect(cache.statistics.misses == 34)
     }
 

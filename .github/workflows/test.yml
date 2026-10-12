@@ -65,8 +65,10 @@ jobs:
 
       - name: Verify DE441 Moon assessment tooling
         run: |
-          python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_de441.py Scripts/test_generate_moon_events.py -v
-          python3 Scripts/generate-moon-de441.py --check
+          python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_source_fixtures.py Scripts/test_generate_moon_events.py -v
+          python3 Scripts/generate-moon-source-fixtures.py --check
+          python3 -m unittest Scripts/test_record_moon_full_integration.py -v
+          python3 Scripts/record-moon-full-integration.py --check
           python3 -m unittest Scripts/test_generate_moon_de441_full.py -v
           python3 Scripts/generate-moon-de441-full.py --check
           python3 Scripts/generate-moon-events.py --check
@@ -172,8 +174,10 @@ jobs:
 
       - name: Verify DE441 Moon assessment tooling
         run: |
-          python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_de441.py Scripts/test_generate_moon_events.py -v
-          python3 Scripts/generate-moon-de441.py --check
+          python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_source_fixtures.py Scripts/test_generate_moon_events.py -v
+          python3 Scripts/generate-moon-source-fixtures.py --check
+          python3 -m unittest Scripts/test_record_moon_full_integration.py -v
+          python3 Scripts/record-moon-full-integration.py --check
           python3 -m unittest Scripts/test_generate_moon_de441_full.py -v
           python3 Scripts/generate-moon-de441-full.py --check
           python3 Scripts/generate-moon-events.py --check

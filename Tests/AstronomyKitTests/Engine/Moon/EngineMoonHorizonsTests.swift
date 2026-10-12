@@ -103,14 +103,6 @@ struct EngineMoonHorizonsTests {
     /// blends are.
     static let vectors = IndependentReferenceArchive.shared.vectors.filter { $0.body == "moon" }
 
-    /// The samples, by Julian date TDB, where the lunar series is more than
-    /// 1′ from Horizons: the 13 from 2002 BCE to 999 CE and from 3000 CE to
-    /// 6000 CE (#184).
-    static let legacySeriesFailures: Set<Double> = [
-        990_546.0, 990_910.5, 1_173_170.5, 1_355_795.5, 1_538_420.5, 1_721_045.5, 1_903_670.5, 2_086_295.5,
-        2_816_795.5, 3_182_045.5, 3_547_295.5, 3_912_180.5, 3_912_544.0,
-    ]
-
     /// The allowance `DistanceAccuracyTests` applies to every Moon record.
     static let distanceAllowanceKm = 28.689
 
@@ -118,20 +110,12 @@ struct EngineMoonHorizonsTests {
     /// arcminutes and the range error in km. Horizons gives the time in TDB
     /// and the vector on ICRF axes; the engine takes TT and gives EQJ.
     static func errors(
-        _ reference: IndependentReferenceArchive.Vector, legacy: Bool = false
+        _ reference: IndependentReferenceArchive.Vector
     ) throws -> (arcminutes: Double, km: Double) {
         let tdb = reference.julianDateTDB - 2_451_545
         let tt = tdb - Engine.TDB.offsetSeconds(tt: tdb) / 86_400
         let time = PlanetTestSupport.time(tt: tt)
-        let moon: Engine.Vector<Engine.EQJ>
-        if legacy {
-            let coordinates = Engine.Moon.rectangular(Engine.LunarSeries.coordinates(centuries: tt / 36_525))
-            let eqj = Engine.Precession.rotation(tt: tt).inverse.apply(
-                to: Engine.Moon.meanEquatorToEcliptic(tt: tt).inverse.apply(to: coordinates))
-            moon = Engine.Vector(x: eqj.x, y: eqj.y, z: eqj.z, time: time)
-        } else {
-            moon = try Engine.Moon.geocentricPosition(at: time)
-        }
+        let moon = try Engine.Moon.geocentricPosition(at: time)
         let icrs = reference.positionAU
         let published = Engine.FrameBias.icrsToEqj.apply(to: SIMD3(icrs[0], icrs[1], icrs[2]))
         let expected = Engine.Vector<Engine.EQJ>(x: published.x, y: published.y, z: published.z, time: time)
@@ -146,14 +130,6 @@ struct EngineMoonHorizonsTests {
             #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
             #expect(km <= Self.distanceAllowanceKm, "\(reference.tdb): \(km) km")
         }
-    }
-
-    @Test("The legacy lunar series misses 1′ at its archived failures", arguments: legacySeriesFailures.sorted())
-    func legacySeriesNegativeControl(julianDateTDB: Double) throws {
-        #expect(Self.legacySeriesFailures.count == 13)
-        let reference = try #require(Self.vectors.first { $0.julianDateTDB == julianDateTDB })
-        let (arcminutes, _) = try Self.errors(reference, legacy: true)
-        #expect(arcminutes > toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
     }
 
     @Test("The checks fail without the observer, a day off, or with the wrong distance")

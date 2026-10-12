@@ -51,7 +51,7 @@ extension Engine.Moon {
         let t2 = t * t
         let t3 = t2 * t
         let t4 = t2 * t2
-        let model = coordinates(centuries: t, cache: cache)
+        let model = coordinates(tt: time.tt, cache: cache)
         let (mlon, mlat) = (model.x, model.y)
         let distance = model.z * Engine.kilometersPerAU
         let radius = meanRadiusKilometers
@@ -138,7 +138,7 @@ extension Engine.Moon {
     ///   not finite.
     static func distance(at time: Engine.Time, cache: Cache = cache) throws -> Double {
         try Engine.checkAcceptedTime(time)
-        let distance = coordinates(centuries: time.tt / 36_525, cache: cache).z
+        let distance = coordinates(tt: time.tt, cache: cache).z
         guard distance.isFinite else { throw AstronomyError.badTime }
         return distance
     }

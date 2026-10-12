@@ -98,7 +98,7 @@ print("Longitude: \(state.longitude)°")
 print("Rate: \(state.longitudeRate)°/day")  // About 12 to 15
 ```
 
-The position fields match `Moon.ecliptic(at:)` bit for bit. Rates are per Terrestrial Time day. Throughout calendar 1900–2130 TT, JD `[2415020.5,2499391.5)`, they use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight; farther outside that interval, rates use a central difference of the legacy lunar series over about 43 seconds. All paths include analytic frame rotation rates. This describes the derivative convention without establishing independent rate accuracy. See <doc:CelestialPositions> for the full rate contract.
+The position fields match `Moon.ecliptic(at:)` bit for bit. Rates are analytic derivatives per Terrestrial Time day: DE440 supplies the central 1900–2130 TT interval, and complete binary64 DE441 coefficients supply the exterior accepted range. The 32-day exterior transitions include the derivative of the blend weight. All paths include analytic frame rotation rates. These conventions do not establish independent physical rate accuracy. See <doc:CelestialPositions> for the full rate contract.
 
 ### Cartesian State
 

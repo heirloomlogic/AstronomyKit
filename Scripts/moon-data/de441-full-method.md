@@ -1,6 +1,6 @@
 # Complete DE441 Moon coefficients
 
-This is the first foundation link for #251. Public Moon routes still use the existing DE440/compact-DE441 composition. The final integration link must replace the compact table and decoder, qualify transitions and public consumers at unchanged limits, and remove the unused lunar series. This foundation does not close #251.
+The foundation introduced in #278 preserves every derived DE441 coefficient. The [integration method](de441-full-integration-method.md) describes its production routing outside the unchanged DE440 window, retirement of the compact representation and current public qualification.
 
 The official [DE441 kernel](https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/de441.bsp) contains target 301 and target 399 positions relative to target 3. The generator reads matching four-day SPK type 2 records in frame 1 and validates every record midpoint and radius. The [NAIF SPK description](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/C/req/spk.html#Type%202:%20Chebyshev%20(position%20only)) defines the position-polynomial layout and analytic velocity. DE441 coordinates are ICRF; the native EQJ adapter applies the existing frame-bias rotation.
 

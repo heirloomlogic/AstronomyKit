@@ -24,7 +24,7 @@ extension Engine.ApparentPlace {
             return VectorRate(bias.apply(to: state.position), bias.apply(to: state.velocity * clock.rate))
         }
         if body == .moon || body == .earthMoonBarycenter {
-            guard let moon = Engine.MoonDE441.state(tt: tt) else { throw AstronomyError.badTime }
+            guard let moon = Engine.MoonDE441Full.state(tt: tt) else { throw AstronomyError.badTime }
             let scale = body == .moon ? 1 : 1 / (1 + Engine.Moon.earthMoonMassRatio)
             return try bodyMotion(.earth, tt: tt) + VectorRate(moon.position * scale, moon.velocity * scale)
         }
