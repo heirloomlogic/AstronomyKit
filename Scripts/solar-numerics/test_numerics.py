@@ -9,6 +9,20 @@ import numerics
 
 
 class ExactArithmeticTests(unittest.TestCase):
+    def test_selected_earth_trajectory_dependencies_are_bound(self):
+        self.assertTrue(set(numerics.SELECTED_EARTH_BINDINGS).issubset(numerics.BINDINGS))
+        for path in numerics.SELECTED_EARTH_BINDINGS:
+            with self.subTest(path=path), tempfile.TemporaryDirectory() as folder:
+                root = Path(folder)
+                target = root / path
+                target.parent.mkdir(parents=True)
+                target.write_bytes((numerics.ROOT / path).read_bytes())
+                binding = numerics.source_hashes(numerics.ROOT, [path])
+                numerics.check_hashes(root, binding)
+                target.write_bytes(target.read_bytes() + b"\n")
+                with self.assertRaisesRegex(ValueError, path):
+                    numerics.check_hashes(root, binding)
+
     def test_sqrt_encloses_exact_rational(self):
         for value in [Fraction(0), Fraction(2), Fraction(1, 3), Fraction(1, 2**1100)]:
             lo, hi = numerics.sqrt_interval(value)

@@ -59,7 +59,13 @@ struct EngineApparentPlaceTests {
 
     @Test("Earth kinematics preserve the selected public position and velocity")
     func earthKinematics() throws {
-        for tt in [-Engine.acceptedTTDays, -100000.0, -36525, 0, 36525, 100000, Engine.acceptedTTDays] {
+        let start = Engine.MoonEphemeris.fullWeightStart
+        let end = Engine.MoonEphemeris.fullWeightEnd
+        let epochs = [
+            -Engine.acceptedTTDays, -100000, start - 16, start.nextDown, start, start.nextUp, 0,
+            end.nextDown, end, end.nextUp, end + 16, 100000, Engine.acceptedTTDays,
+        ]
+        for tt in epochs {
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
             let expected = try Engine.Planet.earth.heliocentricState(at: time)
             let result = try Model.earthHeliocentricKinematics(tt: tt)
@@ -90,7 +96,13 @@ struct EngineApparentPlaceTests {
 
     @Test("Kinematics differentiate the selected trajectory away from its seams")
     func analyticAccelerations() throws {
-        for tt in [-1460999.0, -100000.25, -35000.25, -1.25, 0.25, 35000.25, 100000.25, 1460999.0] {
+        let start = Engine.MoonEphemeris.fullWeightStart
+        let end = Engine.MoonEphemeris.fullWeightEnd
+        let epochs = [
+            -1460999.0, -100000.25, start - 16, start.nextDown, start, start.nextUp, -1.25, 0.25,
+            end.nextDown, end, end.nextUp, end + 16, 100000.25, 1460999.0,
+        ]
+        for tt in epochs {
             for evaluator in [
                 Model.earthHeliocentricKinematics, Model.sunBarycentricKinematics, Model.earthBarycentricKinematics,
             ] {
