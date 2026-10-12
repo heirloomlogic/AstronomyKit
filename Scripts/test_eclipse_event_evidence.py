@@ -64,6 +64,22 @@ class EclipseEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "obscuration event time"):
             RECORD.evidence(self.captures, {})
 
+    def test_known_discrepancy_unexpected_pass_is_rejected(self):
+        rows = self.captures["release"]["obscurations"]
+        row = next(row for row in rows if row["sourceTimeSearchSeed"].startswith("2026-08-28"))
+        row["obscuration"] = 0.963
+        with self.assertRaisesRegex(ValueError, "#275 unexpectedly matches"):
+            RECORD.validate_obscurations(rows)
+
+    def test_known_discrepancy_cannot_hide_missing_or_invalid_rows(self):
+        rows = self.captures["release"]["obscurations"]
+        with self.assertRaisesRegex(ValueError, "row selection"):
+            RECORD.validate_obscurations(rows[:-1])
+        row = next(row for row in rows if row["sourceTimeSearchSeed"].startswith("2026-08-28"))
+        row["obscuration"] = float("nan")
+        with self.assertRaisesRegex(ValueError, "invalid lunar obscuration"):
+            RECORD.validate_obscurations(rows)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -121,34 +121,40 @@ class Solar:
     def __init__(self):
         self.earth = ref.Earth()
 
+    def observer(self, ut, tt, location=None):
+        import apparent_reference as apparent
+        result = mp.matrix(equatorial_earth(self.earth.position(tt))) + apparent.sun(tt)
+        if location is not None:
+            rotation, sidereal = orientation(ut, tt)
+            latitude, longitude, height = map(ref.exact, location)
+            phi = latitude * mp.pi / 180
+            theta = (sidereal + longitude) * mp.pi / 180
+            polar = 1 - 1 / mp.mpf('298.25642')
+            coefficient = 1 / mp.sqrt(mp.cos(phi)**2 + polar**2 * mp.sin(phi)**2)
+            radius = mp.mpf('6378.1366')
+            au = mp.mpf('149597870.700')
+            site = mp.matrix([(radius*coefficient + height/1000) * mp.cos(phi) * mp.cos(theta) / au,
+                              (radius*coefficient + height/1000) * mp.cos(phi) * mp.sin(theta) / au,
+                              (radius*polar**2*coefficient + height/1000) * mp.sin(phi) / au])
+            result += rotation.T*site
+        return result
+
     def geocentric(self, ut, tt, model):
-        backdated_ut, backdated_tt = ut, tt
-        c = mp.mpf(299792458) * 86400 / 149597870700
-        trace = []
-        for _ in range(10):
-            vector = [-v for v in equatorial_earth(self.earth.position(backdated_tt))]
-            next_ut = ut - mp.sqrt(mp.fsum(v*v for v in vector)) / c
-            next_tt = next_ut + ref.delta_t(next_ut, model) / 86400
-            trace.append({'ut': backdated_ut, 'tt': backdated_tt, 'nextUT': next_ut, 'nextTT': next_tt})
-            if abs(next_tt-backdated_tt) < mp.mpf('1e-9'):
-                return {'vector': vector, 'trace': trace}
-            backdated_ut, backdated_tt = next_ut, next_tt
-        raise ValueError('Exact-model light-time iteration did not converge in ten evaluations')
+        import apparent_reference as apparent
+        position = self.observer(ut, tt)
+        velocity = mp.diff(lambda delta:self.observer(ut+delta,tt+delta), mp.mpf(0))
+        return apparent.apparent_sun(tt, position, velocity)
 
     def altitude(self, ut, tt, model, observer):
-        result = self.geocentric(ut, tt, model)
+        import apparent_reference as apparent
+        position = self.observer(ut,tt,observer)
+        velocity = mp.diff(lambda delta:self.observer(ut+delta,tt+delta,observer), mp.mpf(0))
+        result = apparent.apparent_sun(tt, position, velocity)
         rotation, sidereal = orientation(ut, tt)
         latitude, longitude, height = map(ref.exact, observer)
         phi = latitude * mp.pi / 180
         theta = (sidereal + longitude) * mp.pi / 180
-        polar = 1 - 1 / mp.mpf('298.25642')
-        coefficient = 1 / mp.sqrt(mp.cos(phi)**2 + polar**2 * mp.sin(phi)**2)
-        radius = mp.mpf('6378.1366')
-        au = mp.mpf('149597870.700')
-        site = mp.matrix([(radius*coefficient + height/1000) * mp.cos(phi) * mp.cos(theta) / au,
-                          (radius*coefficient + height/1000) * mp.cos(phi) * mp.sin(theta) / au,
-                          (radius*polar**2*coefficient + height/1000) * mp.sin(phi) / au])
-        direction = rotation * mp.matrix(result['vector']) - site
+        direction = rotation * mp.matrix(result['vector'])
         north = [-mp.sin(phi)*mp.cos(theta), -mp.sin(phi)*mp.sin(theta), mp.cos(phi)]
         west = [mp.sin(theta), -mp.cos(theta), 0]
         zenith = [mp.cos(phi)*mp.cos(theta), mp.cos(phi)*mp.sin(theta), mp.sin(phi)]

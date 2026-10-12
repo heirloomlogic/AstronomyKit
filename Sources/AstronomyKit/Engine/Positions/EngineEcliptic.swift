@@ -21,82 +21,26 @@ extension Engine.Positions {
         return Engine.Ecliptic(try heliocentricPosition(of: body, at: time)).longitude
     }
 
-    /// The Sun's geocentric position on the true ecliptic and equinox of
-    /// date, the C engine's `Astronomy_SunPosition`.
-    ///
-    /// The Sun is Earth's heliocentric position negated, both taken one
-    /// astronomical unit's light time before `time`, and the ecliptic of date
-    /// is the one at that earlier time. The vector's time is `time`.
-    ///
-    /// - Throws: `AstronomyError.badTime` when the earlier time is beyond
-    ///   ``Engine/acceptedTTDays`` or not finite, or for a result that is not
-    ///   finite.
+    /// The shared apparent Sun solution on the true ecliptic and equinox of reception date.
     static func sunPosition(at time: Engine.Time) throws -> Engine.Ecliptic {
-        let adjusted = sunLightTime(time)
-        let earth = try Engine.Planet.earth.heliocentricPosition(at: adjusted)
-        var ecliptic = Engine.Ecliptic(Engine.Vector(x: -earth.x, y: -earth.y, z: -earth.z, time: adjusted))
-        ecliptic.vector = try checked(ecliptic.vector)
-        ecliptic.vector.time = time
-        guard ecliptic.longitude.isFinite, ecliptic.latitude.isFinite else { throw AstronomyError.badTime }
-        return ecliptic
+        Engine.Ecliptic(try geocentricPosition(of: .sun, at: time, aberration: .corrected))
     }
 
-    /// The position and velocity of `body` relative to Earth's center, on EQJ
-    /// axes, as ``geocentricPosition(of:at:aberration:)`` sees it: the state
-    /// behind the C engine's `Astronomy_GeoEclipticState`.
+    /// The shared astrometric/apparent EQJ position and its analytic derivative per reception TT day.
     ///
-    /// The position is the same double as
-    /// ``geocentricPosition(of:at:aberration:)``'s; the Moon's state is
-    /// ``Engine/Moon/geocentricState(at:cache:)``. For a backdated body the
-    /// velocity is the derivative of the converged light-time solution
-    /// τ = |p(t − τ)| / c by implicit differentiation, so it does not depend
-    /// on how many iterations ran. Rates are per TT day with Delta T held
-    /// fixed.
-    ///
-    /// The bodies are the Sun, the Moon, Mercury to Neptune except Earth, and
-    /// Pluto.
-    ///
-    /// - Throws: `AstronomyError.badTime` for a TT beyond
-    ///   ``Engine/acceptedTTDays`` or not finite; then
-    ///   `AstronomyError.invalidBody` for any other body; then as
-    ///   ``backdatedPosition(of:seenFrom:at:aberration:)`` and
-    ///   ``heliocentricState(of:at:)`` at the backdated time.
+    /// Position and state use identical light-time, deflection and aberration composition. The public state body set remains Sun, Moon, Mercury through Neptune excluding Earth, and Pluto.
     static func geocentricState(
         of body: CelestialBody, at time: Engine.Time, aberration: Aberration
     ) throws -> Engine.State<Engine.EQJ> {
         try Engine.checkAcceptedTime(time)
         switch body {
-        case .moon:
-            return try Engine.Moon.geocentricState(at: time)
-        case .sun, .mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune, .pluto:
+        case .moon, .sun, .mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune, .pluto:
             break
         default:
             throw AstronomyError.invalidBody
         }
-        let vector = try backdatedPosition(of: body, seenFrom: .earth, at: time, aberration: aberration)
-        let position = SIMD3(vector.x, vector.y, vector.z)
-        let direction = position / vector.length
-        let target =
-            try body == .pluto
-            ? Engine.Pluto.heliocentricState(forLightTimeAt: vector.time, observedAt: time).velocityVector
-            : heliocentricState(of: body, at: vector.time).velocityVector
-        let c = Engine.speedOfLightAUPerDay
-        let velocity: SIMD3<Double>
-        switch aberration {
-        case .corrected:
-            let earth =
-                try body == .pluto && vector.time.tt < -Engine.acceptedTTDays
-                ? Engine.Pluto.earthState(forLightTimeAt: vector.time, observedAt: time)
-                : heliocentricState(of: .earth, at: vector.time)
-            let relative = target - earth.velocityVector
-            velocity = relative * (1 / (1 + (direction * relative).sum() / c))
-        case .none:
-            let earth = try heliocentricState(of: .earth, at: time).velocityVector
-            let a = (direction * target).sum() / c
-            let b = (direction * earth).sum() / c
-            velocity = target * ((1 + b) / (1 + a)) - earth
-        }
-        return try checked(Engine.State(position: position, velocity: velocity, time: time))
+        let motion = try Engine.ApparentPlace.geocentricMotion(body: body, at: time, aberration: aberration)
+        return try checked(Engine.State(position: motion.value, velocity: motion.rate, time: time))
     }
 
     /// The apparent geocentric position and velocity of `body` on the true
@@ -120,30 +64,12 @@ extension Engine.Positions {
         try eclipticState(try geocentricState(of: body, at: time, aberration: aberration), reportedAt: time)
     }
 
-    /// The Sun's geocentric position and velocity on the true ecliptic and
-    /// equinox of date, the C engine's `Astronomy_SunEclipticState`.
-    ///
-    /// The position, longitude, latitude and distance are the same doubles
-    /// as ``sunPosition(at:)``'s and its vector's length, including the
-    /// fixed light time of one astronomical unit and the frame at the earlier
-    /// time. The rates are their derivative per TT day, with Delta T held
-    /// fixed.
-    ///
-    /// - Throws: As ``sunPosition(at:)``.
+    /// The shared apparent Sun state on the true ecliptic and equinox of reception date.
     static func sunEclipticState(at time: Engine.Time) throws -> Engine.EclipticState {
-        let adjusted = sunLightTime(time)
-        let earth = try Engine.Planet.earth.heliocentricState(at: adjusted)
-        let sun = Engine.State<Engine.EQJ>(
-            position: -earth.positionVector, velocity: -earth.velocityVector, time: adjusted)
-        return try eclipticState(sun, reportedAt: time)
+        try geocentricEclipticState(of: .sun, at: time, aberration: .corrected)
     }
 
     // MARK: - Helpers
-
-    /// `time` less the light time of one astronomical unit.
-    private static func sunLightTime(_ time: Engine.Time) -> Engine.Time {
-        time.adding(days: -1 / Engine.speedOfLightAUPerDay)
-    }
 
     /// `state` on the true equator and equinox of its time: precession and
     /// then nutation, each rotated and its rate applied to the position.

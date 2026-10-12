@@ -1,0 +1,21 @@
+{
+  "parameters": {
+    "ANG_FORMAT": "'DEG'",
+    "APPARENT": "'AIRLESS'",
+    "CAL_FORMAT": "'JD'",
+    "CAL_TYPE": "'GREGORIAN'",
+    "CENTER": "'500@399'",
+    "COMMAND": "'999'",
+    "CSV_FORMAT": "'YES'",
+    "EPHEM_TYPE": "'OBSERVER'",
+    "EXTRA_PREC": "'YES'",
+    "MAKE_EPHEM": "'YES'",
+    "OBJ_DATA": "'NO'",
+    "QUANTITIES": "'1,2,20,30,45'",
+    "RANGE_UNITS": "'AU'",
+    "TIME_TYPE": "'TT'",
+    "TLIST": "'2451545.125,2455197.625,2461280.676452763'",
+    "TLIST_TYPE": "'JD'"
+  },
+  "responseSHA256": "3d90594acba12f1e007685edcdb5de1b56e0a5c0615214be4e5ce2e71c9ed973"
+}

@@ -77,7 +77,7 @@ extension Engine.Nutation {
     /// arcseconds, constant term first, in Julian centuries: l, F and Ω from
     /// the IERS Conventions 2003 (`iauFal03`, `iauFaf03`, `iauFaom03`), and
     /// l′ and D from MHB2000, as `iauNut00a` takes them.
-    private static let luniSolarArguments: [[Double]] = [
+    static let luniSolarArguments: [[Double]] = [
         [485_868.249_036, 1_717_915_923.217_8, 31.879_2, 0.051_635, -0.000_244_70],
         [1_287_104.793_05, 129_596_581.048_1, -0.553_2, 0.000_136, -0.000_011_49],
         [335_779.526_232, 1_739_527_262.847_8, -12.751_2, -0.001_037, 0.000_004_17],
@@ -90,7 +90,7 @@ extension Engine.Nutation {
     /// through Uranus from the IERS Conventions 2003 (`iauFame03` through
     /// `iauFaur03`), as `iauNut00a` takes them. The general precession is
     /// ``generalPrecession``.
-    private static let planetaryArguments: [(atJ2000: Double, perCentury: Double)] = [
+    static let planetaryArguments: [(atJ2000: Double, perCentury: Double)] = [
         (2.355_555_98, 8_328.691_426_955_4),  // l
         (1.627_905_234, 8_433.466_158_131),  // F
         (5.198_466_741, 7_771.377_146_812_1),  // D
@@ -110,7 +110,7 @@ extension Engine.Nutation {
 
     /// The general precession in longitude, `iauFapa03`: (`linear` +
     /// `quadratic`·t)·t radians, t in Julian centuries.
-    private static let generalPrecession = (linear: 0.024_381_750, quadratic: 0.000_005_386_91)
+    static let generalPrecession = (linear: 0.024_381_750, quadratic: 0.000_005_386_91)
 
     /// Evaluates the series at `t` Julian centuries of TT from J2000.
     ///

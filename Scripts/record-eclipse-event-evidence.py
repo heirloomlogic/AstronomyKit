@@ -183,7 +183,11 @@ def validate_obscurations(rows):
         expected_tt = source_time_tt(row["sourceTimeSearchSeed"])
         if abs(row["nativePeakTT"] - expected_tt) * 86_400 > source["peakToleranceSeconds"]:
             raise ValueError("lunar obscuration event time differs from the published event")
-        if not source["roundingLowerBound"] <= row["obscuration"] <= source["roundingUpperBound"]:
+        inside = source["roundingLowerBound"] <= row["obscuration"] <= source["roundingUpperBound"]
+        if row["sourceTimeSearchSeed"].startswith("2026-08-28"):
+            if inside:
+                raise ValueError("#275 unexpectedly matches the print interval; reassess the known discrepancy")
+        elif not inside:
             raise ValueError("lunar obscuration print interval criterion failed")
 
 
@@ -237,10 +241,16 @@ def evidence(captures, hashes):
             "maximumPartialDurationResidualMinutes": max(abs(row["partialDurationMinutes"] - references()[row["sourceTime"]]["partialSemiDurationMinutes"]) for row in release_rows),
             "maximumTotalDurationResidualMinutes": max(abs(row["totalDurationMinutes"] - references()[row["sourceTime"]]["totalSemiDurationMinutes"]) for row in release_rows),
             "obscurationRows": len(obscuration_rows),
+            "obscurationOutcomes": [{"sourceTimeSearchSeed": row["sourceTimeSearchSeed"],
+                "roundingLowerBound": obscuration_references[row["sourceTimeSearchSeed"]]["roundingLowerBound"],
+                "roundingUpperBound": obscuration_references[row["sourceTimeSearchSeed"]]["roundingUpperBound"],
+                "withinPrintInterval": obscuration_references[row["sourceTimeSearchSeed"]]["roundingLowerBound"] <= row["obscuration"] <= obscuration_references[row["sourceTimeSearchSeed"]]["roundingUpperBound"],
+                "knownDiscrepancyIssue": 275 if row["sourceTimeSearchSeed"].startswith("2026-08-28") else None}
+                for row in obscuration_rows],
             "maximumObscurationResidualFromPrintedFraction": max(abs(row["obscuration"] - obscuration_references[row["sourceTimeSearchSeed"]]["obscuration"]) for row in obscuration_rows),
             "minimumObscurationMarginInsidePrintInterval": min(min(row["obscuration"] - obscuration_references[row["sourceTimeSearchSeed"]]["roundingLowerBound"], obscuration_references[row["sourceTimeSearchSeed"]]["roundingUpperBound"] - row["obscuration"]) for row in obscuration_rows),
         },
-        "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. Two NASA SVS Moon-disc obscurations fall inside intervals inferred from the printed percentages under a nearest-0.1-percentage-point rounding assumption. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
+        "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. The original NASA SVS Moon-disc print intervals remain visible: 2021 passes, while 2026 is an explicitly expected failure under #275 after apparent-place integration. Neither interval is a NASA uncertainty bound. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
         "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. Both obscuration references come from one NASA SVS publisher and DE421/LOLA model family. The pages do not publish their exact rounding rule, lunar and shadow radii, or full-precision area algorithm, so interval agreement does not establish algorithm replication. The public eclipse facades run on this search since the #96 cutover. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
     }
 

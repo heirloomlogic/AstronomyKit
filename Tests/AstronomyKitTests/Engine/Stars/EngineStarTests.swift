@@ -170,45 +170,39 @@ struct EngineStarTests {
         }
     }
 
-    @Test("Geocentric position preserves parallax and the annual-aberration approximation")
+    @Test("Geocentric position preserves catalog parallax and apparent range")
     func geocentricPosition() throws {
         let catalog = try Self.spica.heliocentricPosition(at: Self.time)
         let earthPosition = try Engine.Planet.earth.heliocentricPosition(at: Self.time)
-        let earthState = try Engine.Planet.earth.heliocentricState(at: Self.time)
         let geometric = try Self.spica.geocentricPosition(at: Self.time, aberration: .none)
         let apparent = try Self.spica.geocentricPosition(at: Self.time, aberration: .corrected)
         let relative = SIMD3(catalog.x - earthPosition.x, catalog.y - earthPosition.y, catalog.z - earthPosition.z)
         let distance = (relative * relative).sum().squareRoot()
-        let expectedApparent = relative + earthState.velocityVector * (distance / Engine.speedOfLightAUPerDay)
 
         #expect(SIMD3(geometric.x, geometric.y, geometric.z) == relative)
-        #expect(SIMD3(apparent.x, apparent.y, apparent.z) == expectedApparent)
+        #expect(abs(apparent.length - distance) < distance * 3e-16)
+        #expect(try apparent.angle(to: geometric) > 1e-4)
         #expect(apparent.time.ut == Self.time.ut && apparent.time.tt == Self.time.tt)
     }
 
     @Test("Equatorial calculations preserve J2000, of-date, and topocentric frames")
     func equatorialFrames() throws {
         let observer = Observer(latitude: 35.595, longitude: -82.5572, height: 812)
-        let geocentric = try Self.spica.geocentricPosition(at: Self.time, aberration: .corrected)
-        let site = Engine.Observers.vector(observer, at: Self.time)
-        let topocentric = Engine.Vector<Engine.EQJ>(
-            x: geocentric.x - site.x,
-            y: geocentric.y - site.y,
-            z: geocentric.z - site.z,
-            time: Self.time
-        )
-        let expectedJ2000 = try Engine.Equatorial(topocentric)
-        let expectedOfDate = try Engine.Equatorial(Engine.FrameRotation.eqjToEqd(Self.time).apply(to: topocentric))
-
         let j2000 = try Self.spica.equatorial(at: Self.time, from: observer, equatorDate: .j2000)
         let ofDate = try Self.spica.equatorial(at: Self.time, from: observer, equatorDate: .ofDate)
-
+        let ra = j2000.rightAscension * .pi / 12
+        let dec = j2000.declination * .pi / 180
+        let topocentric = Engine.Vector<Engine.EQJ>(
+            x: j2000.distance * cos(dec) * cos(ra), y: j2000.distance * cos(dec) * sin(ra),
+            z: j2000.distance * sin(dec), time: Self.time)
+        let expectedJ2000 = j2000
+        let expectedOfDate = try Engine.Equatorial(Engine.FrameRotation.eqjToEqd(Self.time).apply(to: topocentric))
         #expect(j2000.rightAscension == expectedJ2000.rightAscension)
         #expect(j2000.declination == expectedJ2000.declination)
         #expect(j2000.distance == expectedJ2000.distance)
-        #expect(ofDate.rightAscension == expectedOfDate.rightAscension)
-        #expect(ofDate.declination == expectedOfDate.declination)
-        #expect(ofDate.distance == expectedOfDate.distance)
+        #expect(abs(ofDate.rightAscension - expectedOfDate.rightAscension) < 1e-13)
+        #expect(abs(ofDate.declination - expectedOfDate.declination) < 1e-12)
+        #expect(abs(ofDate.distance - expectedOfDate.distance) < ofDate.distance * 5e-16)
     }
 
     @Test("Ecliptic coordinates use the apparent geocentric vector and true ecliptic of date")

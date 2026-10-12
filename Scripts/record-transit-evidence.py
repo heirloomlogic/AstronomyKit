@@ -101,7 +101,7 @@ def sequences(values,refs):
         if not row['ingressUT']<row['ut']<row['egressUT'] or abs(row['semiDurationMinutes']-(row['egressUT']-row['ingressUT'])*720)>1e-10:raise ValueError('lunar contact/duration relation')
         historical={n:(row[k]-old['contactsUT'][n])*86400 for n,k in [('penumbralBegin','ingressUT'),('penumbralEnd','egressUT')]}
         matching={n:residual(row[k],matched['contactsUT'][n],matched['timeToleranceSeconds']) for n,k in [('penumbralBegin','ingressUT'),('penumbralEnd','egressUT')]}
-        contacts.append({'date':row['date'],'oh2001ResidualSeconds':historical,'oh2001Within120Seconds':{n:abs(v)<=old['timeToleranceSeconds'] for n,v in historical.items()},'danjonDiagramResidualSeconds':matching,'toleranceSeconds':120,'scope':'Independent source/model comparisons. December OH2001 failures remain unmet for that older convention; matching Danjon contacts do not make those comparisons pass.'})
+        contacts.append({'date':row['date'],'oh2001ResidualSeconds':historical,'oh2001Within120Seconds':{n:abs(v)<=old['timeToleranceSeconds'] for n,v in historical.items()},'danjonDiagramResidualSeconds':matching,'toleranceSeconds':120,'scope':'Independent source/model comparisons. OH2001 outcomes are reported individually under their unchanged interval; matching Danjon contacts do not establish agreement with that older convention.'})
     rows=values['global-sequence'];globals=[]
     if len(rows)!=len(refs['globalSequence']):raise ValueError('global count')
     for row,source in zip(rows,refs['globalSequence']):

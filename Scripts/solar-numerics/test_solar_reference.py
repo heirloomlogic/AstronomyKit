@@ -44,28 +44,37 @@ class SolarDefinitionTests(unittest.TestCase):
         mp = solar.mp
         self.assertLess(abs(solar.mean_sidereal(mp.mpf('2191.5'), mp.mpf('2191.5')) * mp.pi / 180 - mp.mpf('1.754174971870091203')), mp.mpf('1e-12'))
 
-    def test_full_altitude_converges_at_the_backdated_step(self):
+    def test_full_apparent_altitude_agrees_at_extended_precision(self):
         mp = solar.mp
         altitudes = []
         for precision in [80, 110]:
             with mp.workdps(precision):
-                u = solar.ref.exact(1826.5056790659519)
+                u = solar.ref.exact(1826.505)
                 tt = u + solar.ref.delta_t(u) / 86400
                 result = solar.Solar().altitude(u, tt, 'espenakMeeus', [-33.87, 151.21, -10000.0])
-                self.assertEqual(len(result['trace']), 3)
+                self.assertLess(len(result['trace']), 20)
                 altitudes.append(result['altitude'])
         with mp.workdps(110):
             self.assertLess(abs(altitudes[0] - altitudes[1]), mp.mpf('1e-65'))
 
-    def test_backdate_crosses_the_2005_step_at_extended_precision(self):
+    def test_emission_clock_is_continuous_across_the_2005_delta_t_step(self):
+        import apparent_reference as apparent
         mp = solar.mp
         values = []
         for precision in [80, 110]:
             with mp.workdps(precision):
-                u = solar.ref.exact(1826.5056790659519)
-                result = solar.Solar().geocentric(u, u + solar.ref.delta_t(u) / 86400, 'espenakMeeus')
-                self.assertEqual(len(result['trace']), 3)
-                self.assertLess(result['trace'][1]['nextUT'], mp.mpf('1826.5'))
+                u = solar.ref.exact(1826.505)
+                tt = u + solar.ref.delta_t(u) / 86400
+                result = solar.Solar().geocentric(u, tt, 'espenakMeeus')
+                emission = result['trace'][-1]['tt']
+                boundary_tt = mp.mpf('1826.5') + solar.ref.delta_t(mp.mpf('1826.5')) / 86400
+                self.assertLess(emission, boundary_tt)
+                self.assertGreater(tt, boundary_tt)
+                residual = apparent.clock(tt) - apparent.clock(emission) - result['lightTimeDays']
+                self.assertLess(abs(residual), mp.mpf('1e-59'))
+                # Changing the Delta T label cannot alter an already specified reception pair.
+                other = solar.Solar().geocentric(u, tt, 'jplHorizons')
+                self.assertEqual(result['vector'], other['vector'])
                 values.append(result['vector'])
         with mp.workdps(110):
             self.assertLess(max(abs(a-b) for a,b in zip(*values)), mp.mpf('1e-70'))

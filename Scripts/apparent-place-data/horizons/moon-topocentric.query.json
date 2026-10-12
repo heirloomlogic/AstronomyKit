@@ -1,0 +1,23 @@
+{
+  "parameters": {
+    "ANG_FORMAT": "'DEG'",
+    "APPARENT": "'AIRLESS'",
+    "CAL_FORMAT": "'JD'",
+    "CAL_TYPE": "'GREGORIAN'",
+    "CENTER": "'coord@399'",
+    "COMMAND": "'301'",
+    "COORD_TYPE": "'GEODETIC'",
+    "CSV_FORMAT": "'YES'",
+    "EPHEM_TYPE": "'OBSERVER'",
+    "EXTRA_PREC": "'YES'",
+    "MAKE_EPHEM": "'YES'",
+    "OBJ_DATA": "'NO'",
+    "QUANTITIES": "'1,2,20,30,45'",
+    "RANGE_UNITS": "'AU'",
+    "SITE_COORD": "'-82.55,35.6,0.0'",
+    "TIME_TYPE": "'TT'",
+    "TLIST": "'2451545.125,2455197.625,2461280.676452763'",
+    "TLIST_TYPE": "'JD'"
+  },
+  "responseSHA256": "003be71c652ff0663309e57c70d5bc786527f79d022a23efbb2a00d1b2149069"
+}

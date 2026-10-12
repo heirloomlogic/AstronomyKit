@@ -27,7 +27,7 @@ extension CelestialBody {
 
     /// Calculates the apparent geocentric ecliptic position and velocity of this body.
     ///
-    /// The position fields are bit-identical to `geocentricPosition(at: time, aberration: aberration).toEcliptic()`. Rates are in degrees (or AU) per Terrestrial Time day with Delta T held fixed and include the light-time derivative, the observer's motion under the aberration approximation, and the rotation of the true ecliptic and equinox of date. Throughout 1900–2130 TT, Moon and Pluto states use analytic derivatives of the bundled coefficients. The 32-day exterior transitions include the derivative of the blend weight. Farther outside that interval, the Moon uses the derivative of the lunar series and Pluto the derivative of its model's interpolant. These derivative conventions do not establish independent rate accuracy.
+    /// The position fields are bit-identical to `geocentricPosition(at: time, aberration: aberration).toEcliptic()`. Rates are per Terrestrial Time day with Delta T held fixed and differentiate barycentric TDB light time, finite-source solar deflection, relativistic aberration and the observation-date frame. Source-table and blend derivatives follow each body's selected trajectory. These derivatives do not establish independent physical rate accuracy.
     ///
     /// Supported bodies are the Sun, the Moon, Mercury through Neptune except
     /// Earth, and Pluto. Other bodies throw ``AstronomyError/invalidBody``.
@@ -35,7 +35,6 @@ extension CelestialBody {
     /// - Parameters:
     ///   - time: The observation time.
     ///   - aberration: Whether to correct for aberration. Defaults to `.corrected`.
-    ///     Ignored for the Moon, as in `geocentricPosition(at:aberration:)`.
     /// - Returns: The ecliptic position and velocity.
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
@@ -167,20 +166,16 @@ extension CelestialBody {
         StateVector(try Engine.Moon.barycenterState(at: time.engine), at: time)
     }
 
-    /// Returns the position this body actually occupied when it emitted the light
-    /// arriving at the observer body at the given time.
+    /// Returns the astrometric or apparent displacement from the receiving body, with the target's emission time in the vector metadata.
     ///
-    /// This accounts for the finite speed of light: the returned position is
-    /// where the target was in the past, not where it is "now." The vector's
-    /// time is the time the light left the body.
+    /// The observer remains at reception while barycentric light time determines the target's emission TT. Corrected mode then applies solar deflection and relativistic aberration; its direction is not a geometric location. The target and observer being the same supported body returns zero.
     ///
     /// - Parameters:
-    ///   - time: The time when light arrives at the observer.
-    ///   - observerBody: The body receiving the light (e.g., `.earth`).
-    ///   - aberration: Whether to correct for stellar aberration.
-    /// - Returns: The backdated position vector.
-    /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
-    ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
+    ///   - time: The reception time within the accepted TT interval.
+    ///   - observerBody: The receiving body's center.
+    ///   - aberration: The angular-correction mode. At the Sun's center, `.corrected` throws `badVector` because the solar-field observer distance is zero; `.none` remains available.
+    /// - Returns: A fixed-EQJ displacement retaining the astrometric range and emission-time metadata.
+    /// - Throws: `AstronomyError.badTime` for an invalid reception or uncovered emission, `invalidBody` for an unsupported body, or `badVector` for a singular corrected geometry.
     public func backdatedPosition(
         at time: AstroTime,
         seenFrom observerBody: CelestialBody,
@@ -194,12 +189,14 @@ extension CelestialBody {
 
 // MARK: - Aberration
 
-/// Light aberration correction mode.
+/// Selects astrometric or apparent place for solar-system and fixed-star position consumers.
+///
+/// Solar-system light time is solved in elapsed TDB with the observer at reception, including the Moon. Fixed-star catalog light time is implicit in the catalog definition. Explicitly geometric Moon and heliocentric APIs do not use this mode. Neither mode includes Shapiro delay, planetary deflection, atmospheric refraction or source motion absent from the selected trajectory.
 public enum Aberration: Sendable {
-    /// No correction for aberration.
+    /// Astrometric place: light time and topocentric parallax where requested, without gravitational deflection or observer aberration.
     case none
 
-    /// Correct for light time and aberration.
+    /// Apparent place: astrometric place followed by finite-source solar deflection and relativistic barycentric aberration. Topocentric consumers include the site's diurnal velocity. The Sun does not deflect its own image; occulted solar-disk rays use the ERFA limiter.
     case corrected
 }
 
@@ -230,9 +227,7 @@ public enum Sun {
 
     /// Calculates the Sun's ecliptic position and velocity.
     ///
-    /// The position fields are bit-identical to ``position(at:)``, including its
-    /// fixed one-AU light-time adjustment. The rates are the analytic time derivative
-    /// of that position per Terrestrial Time day with Delta T held fixed.
+    /// The position fields are bit-identical to ``position(at:)`` and the general apparent Sun route on the true ecliptic and equinox of observation date. Rates differentiate the shared barycentric light-time and relativistic-aberration solution per Terrestrial Time day with Delta T held fixed.
     ///
     /// - Parameter time: The time at which to calculate the state.
     /// - Returns: The ecliptic position and velocity of the Sun.

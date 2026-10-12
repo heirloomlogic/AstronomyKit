@@ -117,7 +117,7 @@ extension Engine.ApparentPlace {
 
     /// Solves barycentric geometric light time in elapsed TDB, parameterized by TT, holding the observer at reception.
     ///
-    /// The target evaluator must return position in AU and its derivative per TT day, on the same fixed axes and origin as the observer. It owns source-coverage checks at every requested emission epoch. This solver admits a delay of at most one day, velocities strictly subluminal per TDB day at their respective reception/emission epochs, and a supported reception TT. It returns the derivative of the implicit TDB light-time equation with respect to reception TT, independent of iteration count. The emitted TT must repeat after an iteration, or the TT delay must change by at most four ULP. It does not add Shapiro delay.
+    /// The target evaluator must return position in AU and its derivative per TT day, on the same fixed axes and origin as the observer. It owns source-coverage checks at every requested emission epoch. This solver admits a delay of at most one day, velocities strictly subluminal per TDB day at their respective reception/emission epochs, and a supported reception TT. It returns the derivative of the implicit TDB light-time equation with respect to reception TT, independent of iteration count. The emitted TT must repeat after an iteration, or the delay residual must fit the larger of four delay ULP and one emission-TT ULP. The emission lattice term prevents adjacent-epoch cycles without rounding the supplied reception time. It does not add Shapiro delay.
     static func retardedState(
         atTT tt: Double, observer: VectorRate, target: (Double) throws -> VectorRate
     ) throws -> RetardedState {
@@ -146,7 +146,7 @@ extension Engine.ApparentPlace {
             let nextDelay =
                 lightTime - (observedClock.offsetSeconds - emittedClock.offsetSeconds) / Engine.secondsPerDay
             guard lightTime <= 1, nextDelay >= 0 else { throw AstronomyError.badTime }
-            if abs(nextDelay - delay) <= 4 * nextDelay.ulp || tt - nextDelay == emission {
+            if abs(nextDelay - delay) <= max(4 * nextDelay.ulp, emission.ulp) || tt - nextDelay == emission {
                 let n = p / distance
                 let emissionRate =
                     (observedClock.rate / emittedClock.rate)

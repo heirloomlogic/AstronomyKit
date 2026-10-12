@@ -48,12 +48,22 @@ struct NativeAltitudeProbe {
             latitude: request.observer[0], longitude: request.observer[1], height: request.observer[2])
         let altitude = try Engine.Positions.horizontal(of: .sun, at: time, from: observer, refraction: .none)
         var trace: [[String: String]] = []
-        let vector = try Engine.LightTravel.correct(at: time) { backdated in
-            let earth = try Engine.Planet.earth.heliocentricPosition(at: backdated)
-            let numbers = ["ut": backdated.ut, "tt": backdated.tt, "x": earth.x, "y": earth.y, "z": earth.z]
+        let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
+        let site = try Engine.ApparentPlace.siteKinematics(observer, at: time)
+        let origin = Engine.ApparentPlace.Kinematics(
+            motion: earth.motion + site.motion, acceleration: earth.acceleration + site.acceleration)
+        let retarded = try Engine.ApparentPlace.retardedState(atTT: time.tt, observer: origin.motion) { emission in
+            let sun = try Engine.ApparentPlace.bodyMotion(.sun, tt: emission)
+            let displacement = sun.value - origin.motion.value
+            let numbers = ["tt": emission, "x": displacement.x, "y": displacement.y, "z": displacement.z]
             trace.append(numbers.mapValues { String($0.bitPattern, radix: 16) })
-            return Engine.Vector<Engine.EQJ>(x: -earth.x, y: -earth.y, z: -earth.z, time: backdated)
+            return sun
         }
+        let solarOrigin = try Engine.ApparentPlace.sunBarycentricKinematics(tt: time.tt)
+        let vector = try Engine.ApparentPlace.correctedMotion(
+            retarded.displacement, sunToObserver: origin.motion - solarOrigin.motion,
+            beta: Engine.ApparentPlace.observerBeta(origin, atTT: time.tt), solarSource: true
+        ).value
         let numbers = [
             "ut": time.ut, "tt": time.tt, "altitude": altitude.altitude,
             "azimuth": altitude.azimuth, "sunX": vector.x, "sunY": vector.y, "sunZ": vector.z,
@@ -111,17 +121,21 @@ struct NativeAltitudeProbeTests {
         let request = NativeAltitudeProbe.Request(
             id: "2005-flip", value: 1826.5056790659519, scale: "ut", model: "espenakMeeus", observer: [0, 0, 0])
         let record = try NativeAltitudeProbe.evaluate(request)
-        // Different configurations can select different valid stopping steps.
-        // Check that the recorded final callback supplied the returned vector.
-        #expect((1...10).contains(record.trace.count))
+        #expect((1...20).contains(record.trace.count))
         let last = try #require(record.trace.last)
-        for (axis, output) in [("x", "sunX"), ("y", "sunY"), ("z", "sunZ")] {
-            let input = try #require(last[axis])
-            let output = try #require(record.values[output])
-            let inputBits = try #require(UInt64(input, radix: 16))
-            let outputBits = try #require(UInt64(output, radix: 16))
-            #expect(-Double(bitPattern: inputBits) == Double(bitPattern: outputBits))
+        func decoded(_ key: String) throws -> Double {
+            let text = try #require(last[key])
+            let bits = try #require(UInt64(text, radix: 16))
+            return Double(bitPattern: bits)
         }
+        let emission = try decoded("tt")
+        let timePair = Engine.Time(ut: request.value, deltaTModel: .espenakMeeus)
+        let distance = try ["x", "y", "z"].map(decoded).reduce(0) { $0 + $1 * $1 }.squareRoot()
+        let elapsed =
+            timePair.tt - emission
+            + (Engine.TDB.offsetSeconds(tt: timePair.tt) - Engine.TDB.offsetSeconds(tt: emission))
+            / Engine.secondsPerDay
+        #expect(abs(elapsed - distance / Engine.speedOfLightAUPerDay) < 2e-12)
         #expect(record.values["ut"] == String(request.value.bitPattern, radix: 16))
         let time = Engine.Time(ut: request.value, deltaTModel: .espenakMeeus)
         let expected = try Engine.Positions.horizontal(

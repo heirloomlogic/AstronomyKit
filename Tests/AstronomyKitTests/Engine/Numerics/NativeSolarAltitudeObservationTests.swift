@@ -19,9 +19,11 @@ struct NativeSolarAltitudeObservationTests {
         #expect(observation.altitude.bitPattern == ordinary.altitude.bitPattern)
         // Extended-precision same-model value at the recorded time pair;
         // retained as a regression sample, not a continuous error proof.
-        let reference = 63.52129880730797318027411263644790581866
+        let sample = try EngineApparentIntegrationTests.IntegrationReference.load().altitudeSample
+        #expect(sample.ut == native.ut && sample.tt == native.tt)
+        let reference = try #require(Double(sample.altitude))
         #expect(abs(observation.altitude - reference) <= observation.errorBound.total)
-        #expect(observation.errorBound.lightTimeTermination > 5e-7)
+        #expect(observation.errorBound.lightTimeTermination == SolarAltitudeBounds.lightTimeDegrees)
     }
     @Test(
         "Every reference construction and named model repeats the ordinary geometric altitude",
@@ -45,14 +47,14 @@ struct NativeSolarAltitudeObservationTests {
         }
     }
 
-    @Test("The held JPL model does not inherit the 2050 model step")
+    @Test("Neither emission trajectory evaluates the 2050 Delta T step")
     func modelSpecificStep() throws {
         let observer = Observer(latitude: 0, longitude: 0)
         let em = try Sun.altitudeObservation(
             universalTime: 18262.505679351943, from: observer, deltaTModel: .espenakMeeus)
         let jpl = try Sun.altitudeObservation(
             universalTime: 18262.505679351943, from: observer, deltaTModel: .jplHorizons)
-        #expect(em.errorBound.lightTimeTermination > 1e-6)
+        #expect(em.errorBound.lightTimeTermination == SolarAltitudeBounds.lightTimeDegrees)
         #expect(jpl.errorBound.lightTimeTermination == SolarAltitudeBounds.lightTimeDegrees)
     }
 

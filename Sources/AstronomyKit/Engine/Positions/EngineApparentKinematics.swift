@@ -26,6 +26,14 @@ extension Engine.ApparentPlace {
     /// The cubic source interpolation is C1. Its acceleration is the selected record's derivative and can jump at a record boundary. The accepted TT interval stays inside the compiled source coverage.
     static func sunBarycentricKinematics(tt: Double) throws -> Kinematics {
         guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
+        return try sunSourceKinematics(tt: tt)
+    }
+
+    /// Private emission evaluator, limited to two TT days of padding before the public interval.
+    static func sunSourceKinematics(tt: Double) throws -> Kinematics {
+        guard tt.isFinite, tt >= -Engine.acceptedTTDays - 2, tt <= Engine.acceptedTTDays else {
+            throw AstronomyError.badTime
+        }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
         let table = Engine.PlutoDE441.sun

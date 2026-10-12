@@ -90,7 +90,7 @@ extension Engine.Events {
         try Engine.checkAcceptedTime(time)
         guard time.isValid else { throw AstronomyError.badTime }
         let sun = try Engine.Positions.geocentricPosition(of: .sun, at: time, aberration: .corrected)
-        let moon = try Engine.Moon.geocentricPosition(at: time)
+        let moon = try Engine.Positions.geocentricPosition(of: .moon, at: time, aberration: .corrected)
         let target = Engine.Vector<Engine.EQJ>(x: -moon.x, y: -moon.y, z: -moon.z, time: time)
         let direction = Engine.Vector<Engine.EQJ>(x: moon.x - sun.x, y: moon.y - sun.y, z: moon.z - sun.z, time: time)
         return try Engine.Shadows.calculate(

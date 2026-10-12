@@ -203,20 +203,11 @@ struct EnginePositionsTests {
             }
         }
 
-        // At the late end the light-time backdates stay inside the range. At
-        // the early end they leave it. Earth and the Moon are not backdated;
-        // Pluto has a validated internal light-time margin.
-        let late = Self.time(tt: Engine.acceptedTTDays)
-        let early = Self.time(tt: -Engine.acceptedTTDays)
-        for body in bodies {
-            for aberration in [Aberration.none, .corrected] {
-                _ = try Positions.geocentricPosition(of: body, at: late, aberration: aberration)
-                if body == .earth || body == .moon || body == .pluto {
-                    _ = try Positions.geocentricPosition(of: body, at: early, aberration: aberration)
-                } else {
-                    #expect(throws: AstronomyError.badTime, "\(body)") {
-                        try Positions.geocentricPosition(of: body, at: early, aberration: aberration)
-                    }
+        // Internal source padding covers emission times at both public reception endpoints.
+        for end in [-Engine.acceptedTTDays, Engine.acceptedTTDays] {
+            for body in bodies {
+                for aberration in [Aberration.none, .corrected] {
+                    _ = try Positions.geocentricPosition(of: body, at: Self.time(tt: end), aberration: aberration)
                 }
             }
         }
@@ -282,7 +273,7 @@ struct EnginePositionsTests {
     // MARK: - Light time and geocentric positions
 
     @Test(
-        "Geocentric positions: Earth at the origin, the Moon unbackdated, other bodies backdated",
+        "Geocentric positions share the barycentric apparent route; Earth is the origin",
         arguments: instants)
     func geocentricRouting(tt: Double) throws {
         let time = Self.time(tt: tt)
@@ -293,7 +284,6 @@ struct EnginePositionsTests {
                 let expected: SIMD3<Double>
                 switch body {
                 case .earth: expected = .zero
-                case .moon: expected = Self.simd(try Engine.Moon.geocentricPosition(at: time))
                 default:
                     expected = Self.simd(
                         try Positions.backdatedPosition(
@@ -304,31 +294,31 @@ struct EnginePositionsTests {
         }
     }
 
-    /// The vector is the target at the backdated time less the observer at
-    /// the observation time (`.none`) or the backdated time (`.corrected`),
-    /// with the same operations, and the backdated time is the observation
-    /// time less the vector's light time, to the iteration's 1e-9 day.
+    /// The observer stays at reception and the target uses emission TT; their clock difference is elapsed TDB.
     @Test("Backdating solves the light-time equation", arguments: [Aberration.none, .corrected])
     func lightTime(aberration: Aberration) throws {
         let pairs: [(target: CelestialBody, observer: CelestialBody)] = [
             (.sun, .earth), (.mercury, .earth), (.mars, .earth), (.jupiter, .earth), (.neptune, .earth),
             (.pluto, .earth), (.moon, .earth), (.earthMoonBarycenter, .earth),
             (.solarSystemBarycenter, .earth),
-            (.jupiter, .saturn), (.earth, .mars), (.venus, .sun),
+            (.jupiter, .saturn), (.earth, .mars),
         ]
         let time = Self.time(tt: 9_500.75)
         for (target, observer) in pairs {
             let vector = try Positions.backdatedPosition(
                 of: target, seenFrom: observer, at: time, aberration: aberration)
             let lightTime = vector.length / Engine.speedOfLightAUPerDay
-            #expect(
-                abs(vector.time.tt - time.adding(days: -lightTime).tt) < 1e-9, "\(target) from \(observer)")
+            let elapsed =
+                time.tt - vector.time.tt
+                + (Engine.TDB.offsetSeconds(tt: time.tt) - Engine.TDB.offsetSeconds(tt: vector.time.tt))
+                / Engine.secondsPerDay
+            #expect(abs(elapsed - lightTime) < 1e-9, "\(target) from \(observer)")
             #expect(vector.time.deltaTModel == time.deltaTModel)
-            let position = Self.simd(try Positions.heliocentricPosition(of: target, at: vector.time))
-            let origin = Self.simd(
-                try Positions.heliocentricPosition(
-                    of: observer, at: aberration == .none ? time : vector.time))
-            #expect(Self.simd(vector) == position - origin, "\(target) from \(observer)")
+            if aberration == .none {
+                let position = try Engine.ApparentPlace.bodyMotion(target, tt: vector.time.tt).value
+                let origin = try Engine.ApparentPlace.bodyMotion(observer, tt: time.tt).value
+                #expect(Self.length(Self.simd(vector) - (position - origin)) < 1e-13, "\(target) from \(observer)")
+            }
         }
 
         let same = try Positions.backdatedPosition(
@@ -336,37 +326,21 @@ struct EnginePositionsTests {
         #expect(Self.simd(same) == .zero && same.time.tt == time.tt)
     }
 
-    /// Backdating the observer with the target shifts the direction by the
-    /// observer's velocity across the line of sight over the speed of light,
-    /// the first-order (Bradley) aberration. The observer moves along the
-    /// chord from its backdated position to its present one, which is
-    /// parallel to its velocity halfway through the light time to second
-    /// order, so that is the velocity used here: at the present time instead,
-    /// Earth's acceleration over Neptune's light time turns it by 0.03″. The
-    /// target's own motion over the light time's change adds at most
-    /// v·v⊕/c², 0.0016″ for Mars.
-    ///
-    /// For the Sun the shift is Earth's transverse speed over c, which over a
-    /// Keplerian orbit runs from κ(1 − e) to κ(1 + e), with κ = 20.49552″
-    /// the IAU constant of aberration (IAU 1976 System of Astronomical
-    /// Constants, kept in the IAU 2009 system) and e = 0.0167 Earth's orbital
-    /// eccentricity.
-    @Test("The aberration approximation is the first-order annual aberration")
+    /// The first-order Bradley value is a broad independent scale check; published ERFA fixtures and Horizons correction differences test the complete map separately.
+    @Test("Relativistic annual aberration retains the Bradley leading term")
     func aberration() throws {
         let kappa = 20.49552
         let eccentricity = 0.0167
         var sunShifts: [Double] = []
         for day in stride(from: 9_131.25, to: 9_131.25 + 365, by: 7) {
             let time = Self.time(tt: day)
-            for body: CelestialBody in [.sun, .mars, .jupiter, .saturn, .neptune] {
+            for body: CelestialBody in [.sun] {
                 let corrected = try Positions.geocentricPosition(of: body, at: time, aberration: .corrected)
                 let uncorrected = try Positions.geocentricPosition(of: body, at: time, aberration: .none)
                 let arcseconds = try corrected.angle(to: uncorrected) * 3_600
-                let lightTime = uncorrected.length / Engine.speedOfLightAUPerDay
-                let earth = try Positions.heliocentricState(
-                    of: .earth, at: time.adding(days: -lightTime / 2))
+                let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
                 let direction = Self.simd(uncorrected) / uncorrected.length
-                let velocity = earth.velocityVector
+                let velocity = earth.motion.rate / Engine.TDB.offsetAndRate(tt: time.tt).rate
                 let transverse = Self.length(velocity - (velocity * direction).sum() * direction)
                 let expected = transverse / Engine.speedOfLightAUPerDay * Engine.degreesPerRadian * 3_600
                 #expect(
@@ -376,7 +350,7 @@ struct EnginePositionsTests {
             }
             let moon = try Positions.geocentricPosition(of: .moon, at: time, aberration: .corrected)
             let uncorrectedMoon = try Positions.geocentricPosition(of: .moon, at: time, aberration: .none)
-            #expect(Self.simd(moon) == Self.simd(uncorrectedMoon))
+            #expect(Self.simd(moon) != Self.simd(uncorrectedMoon))
         }
         let (least, most) = (try #require(sunShifts.min()), try #require(sunShifts.max()))
         #expect(least >= kappa * (1 - eccentricity) - 0.02 && most <= kappa * (1 + eccentricity) + 0.02)

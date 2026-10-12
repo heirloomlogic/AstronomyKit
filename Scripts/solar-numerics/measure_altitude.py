@@ -2,6 +2,7 @@
 """Measure the complete native geometric-altitude model against extended precision."""
 import argparse
 import precession_bounds
+import apparent_bounds
 import json
 import math
 import os
@@ -15,8 +16,9 @@ import solar_reference as solar
 from numerics import ROOT, ENGINE, BINDINGS, source_hashes, check_hashes
 
 mp = solar.mp
-PATHS = sorted(set(BINDINGS + measure.TOOLS + precession_bounds.PATHS + [
-    'Scripts/solar-numerics/solar_reference.py', 'Scripts/solar-numerics/measure_altitude.py',
+PATHS = sorted(set(BINDINGS + measure.TOOLS + precession_bounds.PATHS + apparent_bounds.PATHS + [
+    'Scripts/solar-numerics/solar_reference.py', 'Scripts/solar-numerics/apparent_reference.py',
+    'Scripts/apparent-place-data/dtdb.c', 'Scripts/solar-numerics/measure_altitude.py',
     'Tests/AstronomyKitTests/Engine/Numerics/NativeAltitudeProbe.swift',
     'Sources/AstronomyKit/SolarAltitudeObservation.swift', 'Sources/AstronomyKit/SolarAltitudeBounds.swift',
     'Sources/AstronomyKit/Position.swift', 'Sources/AstronomyKit/Time.swift', 'Sources/AstronomyKit/Observer.swift',
@@ -33,7 +35,7 @@ OBSERVERS = [[0.0, 0.0, 0.0], [51.5, -0.12, 46.0], [89.999, 180.0, 0.0],
 
 def grid():
     epochs = measure.grid()
-    # Native/exact-real stopping branches differ at these backdated model seams.
+    # Retain the historical backdating-discontinuity neighborhoods as regression samples; the TDB solver has no emission Delta T branch.
     for year, center in [(1941, -21549.494320910424), (2005, 1826.5056790659519), (2050, 18262.505679351943)]:
         for offset in range(-3, 4):
             value = center
@@ -89,7 +91,7 @@ def comparisons(records, requests, native_records=None):
             raise ValueError('A public observation was returned for an input without an exact model inverse')
         rows.append({**record, 'reference': {key: mp.nstr(value, 75) for key, value in expected.items()},
                      'signedError': {key: mp.nstr(value, 25) for key, value in errors.items()},
-                     'inputReference':origin, 'referenceTrace': trace, 'iterationFlip': len(trace) != len(record['trace']),
+                     'inputReference':origin, 'referenceTrace': trace, 'differentIterationCounts': len(trace) != len(record['trace']),
                      'inverseResidualDays': mp.nstr(tt - (ut + solar.ref.delta_t(ut, request['model']) / 86400), 25)})
     return rows
 
@@ -184,7 +186,7 @@ def main():
               'excluded': ['continuous arithmetic or libm bounds', 'other compilers or architectures']}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
-    print(json.dumps({'rows': len(rows), 'flips': sum(row['iterationFlip'] for row in rows), 'maxima': report['sampledMaximumAbsoluteError']}, indent=2))
+    print(json.dumps({'rows': len(rows), 'differentIterationCounts': sum(row['differentIterationCounts'] for row in rows), 'maxima': report['sampledMaximumAbsoluteError']}, indent=2))
 
 
 if __name__ == '__main__':

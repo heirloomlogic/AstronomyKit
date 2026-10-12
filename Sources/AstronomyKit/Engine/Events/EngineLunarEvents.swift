@@ -48,9 +48,7 @@ extension Engine.Events {
     /// The Moon's apparent true-ecliptic longitude east of the apparent geocentric Sun, in degrees from 0 up to 360.
     static func moonPhaseAngle(at time: Engine.Time) throws -> Double {
         let moon = Engine.Ecliptic(
-            try Engine.LightTravel.correct(at: time) {
-                try Engine.Moon.geocentricPosition(at: $0)
-            }
+            try Engine.Positions.geocentricPosition(of: .moon, at: time, aberration: .corrected)
         ).longitude
         let sun = try Engine.Positions.sunPosition(at: time).longitude
         let angle = Engine.normalizedLongitude(moon - sun)
@@ -230,7 +228,7 @@ extension Engine.Events {
 
     private static let meanSynodicMonth = 29.530588
     private static let phaseUncertaintyDays = 1.5
-    private static let earliestApparentTT = (-Engine.acceptedTTDays + 1 / Engine.speedOfLightAUPerDay).nextUp
+    private static let earliestApparentTT = -Engine.acceptedTTDays
     private static let nodeStepDays = 10.0
     private static let nodeStepLimit = 4
     private static let apsisStepDays = 5.0
