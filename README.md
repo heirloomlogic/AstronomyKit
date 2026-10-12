@@ -4,7 +4,7 @@
 
 # AstronomyKit
 
-A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
+A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, with DE-backed planet trajectories in the modern source window and retained VSOP87/NOVAS models elsewhere, validated against JPL Horizons. Runs entirely on-device.
 
 Built on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
 
@@ -35,9 +35,9 @@ Positions, states, distances, and the searches built on them accept a Terrestria
 
 ## Planetary calculation performance
 
-For qualified segments from 1900 through 2100 TT, AstronomyKit evaluates polynomial approximations of the complete VSOP87B model. Position and heliocentric velocity use the same polynomial; distance comes from its position vector. Segments that did not meet the 1e-12 AU fit budget, and dates outside this coverage, use the complete original series. Supported dates are unchanged.
+From 1900 through 2130 TT, AstronomyKit evaluates compiled binary64 DE-backed records for Mercury through Neptune, with 32-day blends to the retained model. Earth and the giant planets include their physical-center offsets; gravity uses their system-center trajectories. Outside the blends, the existing polynomial approximations and complete VSOP87B series remain. Supported dates are unchanged.
 
-The polynomial tables add about 11.5 MB before platform packaging. No files are downloaded or loaded at runtime.
+The selected DE payloads occupy 68,073,240 bytes before base64 source encoding. They follow the package’s compiled-table convention and decode one record at a time; no files are downloaded or loaded at runtime. Issue #245 tracks a possible mapped-resource representation.
 
 ## Numerical compatibility
 

@@ -50,7 +50,7 @@ extension Engine.Gravity {
     }
 
     /// The Sun and Jupiter to Neptune relative to the solar system
-    /// barycenter at one TT, the C engine's `MajorBodyBary`.
+    /// barycenter at one TT, following the C engine's `MajorBodyBary` composition.
     struct MajorBodies: Sendable {
         /// Jupiter to Neptune with their GM, in the order they are added.
         static let planets: [(Engine.Planet, Double)] = [
@@ -66,7 +66,7 @@ extension Engine.Gravity {
         /// The bodies at `tt` days of TT from J2000.
         ///
         /// Each planet's heliocentric state comes from
-        /// ``Engine/Planet/heliocentricState(at:cache:)``. The barycenter is
+        /// ``Engine/Planet/systemHeliocentricState(at:cache:)``. The barycenter is
         /// offset from the Sun by Σ GM/(GM + GM☉) times each planet's
         /// position, and the same sum of the velocities, accumulated from
         /// Jupiter to Neptune; the Sun is that offset negated.
@@ -98,9 +98,9 @@ extension Engine.Gravity {
     /// reads.
     struct SolarSystem: Sendable {
         var sun: BodyState
-        /// Mercury to Neptune gravitational model states, indexed by ``Engine/Planet/rawValue``. Saturn uses its system barycenter; other planets retain their existing approximations.
+        /// Mercury to Neptune system-center gravitational states, indexed by ``Engine/Planet/rawValue``.
         var planets: [BodyState]
-        /// Physical Saturn center for exposed body states and origin translation; forces use `planets`.
+        /// Physical Saturn center for exposed body states and origin translation; forces use the system-center entry in `planets`.
         var saturnCenter: BodyState
 
         /// The GM each planet pulls with, in table order. Earth's includes

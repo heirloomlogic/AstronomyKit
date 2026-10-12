@@ -3,7 +3,7 @@
 //  AstronomyKit
 //
 //  Heliocentric positions, states and distances of the planets, from the
-//  polynomial fits where they apply and the full VSOP87B series elsewhere.
+//  DE-backed tables in the selected window and the retained model elsewhere.
 //
 
 import Foundation
@@ -34,7 +34,7 @@ extension Engine.VSOP87B {
 extension Engine.Planet {
     /// The position in AU relative to the Sun's center, on the VSOP87 axes.
     ///
-    /// Saturn uses DE441 plus the SAT441 physical-center offset from 1900 through 2130 TT, with 32-day exterior blends. Other planets, and Saturn outside those blends, retain the polynomial fits and VSOP87B series.
+    /// Every planet uses its selected DE-backed physical-center trajectory from 1900 through 2130 TT, with 32-day exterior blends. The polynomial fits and VSOP87B series remain outside those blends.
     ///
     /// - Throws: `AstronomyError.badTime` when |TT| is above
     ///   ``Engine/acceptedTTDays`` or is not finite, or when a component of the
@@ -43,7 +43,7 @@ extension Engine.Planet {
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.Vector<Engine.VSOP87Ecliptic> {
         try Engine.checkAcceptedTime(time)
-        if self == .saturn, Engine.SaturnEphemeris.weight(tt: time.tt).weight > 0 {
+        if Engine.PlanetDE441.weight(tt: time.tt).weight > 0 {
             return try heliocentricEclipticState(at: time, cache: cache).position
         }
         let position =
@@ -56,7 +56,7 @@ extension Engine.Planet {
     /// The position in AU and velocity in AU per TT day relative to the
     /// Sun's center, on the VSOP87 axes.
     ///
-    /// The velocity differentiates the selected trajectory, including Saturn's TT/TDB conversion and blend weight. The position is the same double for double as ``heliocentricEclipticPosition(at:cache:)``.
+    /// The velocity differentiates the selected trajectory, including TT/TDB conversion and blend weight. The position is the same double for double as ``heliocentricEclipticPosition(at:cache:)``.
     ///
     /// - Throws: As ``heliocentricEclipticPosition(at:cache:)``, including
     ///   for a velocity component that is not finite.
@@ -66,7 +66,7 @@ extension Engine.Planet {
         try eclipticState(at: time, cache: cache, physicalCenter: true)
     }
 
-    /// System-mass trajectory for gravity and GM-weighted origins. Saturn excludes its satellite-induced center offset; other planets retain their existing model.
+    /// System-mass trajectory for gravity and GM-weighted origins. Earth and the giant planets exclude their physical-center offsets inside the selected window.
     func systemHeliocentricState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.EQJ> {
@@ -77,14 +77,17 @@ extension Engine.Planet {
         at time: Engine.Time, cache: Engine.VSOP87B.Cache, physicalCenter: Bool
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
         try Engine.checkAcceptedTime(time)
-        let (weight, rate) = Engine.SaturnEphemeris.weight(tt: time.tt)
-        if self == .saturn, weight > 0 {
-            guard
-                var (position, velocity) = Engine.SaturnEphemeris.eclipticState(
-                    at: time, physicalCenter: physicalCenter)
-            else {
+        let (weight, rate) = Engine.PlanetDE441.weight(tt: time.tt)
+        if weight > 0 {
+            guard let source = Engine.PlanetDE441.state(of: self, tt: time.tt, physicalCenter: physicalCenter) else {
                 throw AstronomyError.badTime
             }
+            let state = Engine.State<Engine.EQJ>(
+                x: source.position.x, y: source.position.y, z: source.position.z,
+                vx: source.velocity.x, vy: source.velocity.y, vz: source.velocity.z, time: time)
+            let ecliptic = Engine.VSOP87B.toEquatorial.inverse.apply(to: state)
+            var position = SIMD3(ecliptic.x, ecliptic.y, ecliptic.z)
+            var velocity = SIMD3(ecliptic.vx, ecliptic.vy, ecliptic.vz)
             if weight < 1 {
                 let legacy = try retainedEclipticState(at: time, cache: cache)
                 let lp = SIMD3(legacy.x, legacy.y, legacy.z)
@@ -100,7 +103,7 @@ extension Engine.Planet {
         return try retainedEclipticState(at: time, cache: cache)
     }
 
-    /// The retained polynomial/VSOP trajectory, used outside Saturn's source window and for model diagnostics.
+    /// The retained polynomial/VSOP trajectory, used outside the selected source window and for model diagnostics.
     func retainedEclipticState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
@@ -130,14 +133,14 @@ extension Engine.Planet {
 
     /// The distance in AU between the planet's center and the Sun's.
     ///
-    /// Saturn's corrected path and the polynomial fits give the length of their position. The retained series path returns its radius directly, with its existing cache behavior.
+    /// The selected source path and polynomial fits give the length of their position. The retained series path returns its radius directly, with its existing cache behavior.
     ///
     /// - Throws: As ``heliocentricEclipticPosition(at:cache:)``.
     func heliocentricDistance(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Double {
         try Engine.checkAcceptedTime(time)
-        if self == .saturn, Engine.SaturnEphemeris.weight(tt: time.tt).weight > 0 {
+        if Engine.PlanetDE441.weight(tt: time.tt).weight > 0 {
             return try heliocentricEclipticPosition(at: time, cache: cache).length
         }
         let distance: Double

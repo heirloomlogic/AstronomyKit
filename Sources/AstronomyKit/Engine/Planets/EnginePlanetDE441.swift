@@ -1,12 +1,15 @@
 import Foundation
 
 extension Engine {
-    /// Unwired DE-backed source components for the issue 248 planet migration.
+    /// DE-backed source components for selected-window planet trajectories.
     enum PlanetDE441 {}
 }
 
 extension Engine.PlanetDE441 {
-    /// The shared DE441 Sun table already used by Saturn. Keeping one copy avoids changing the current Saturn route in this foundation link.
+    /// The selected 1900–2131 window and its 32-day exterior blends.
+    static func weight(tt: Double) -> (weight: Double, rate: Double) { Engine.MoonEphemeris.weight(tt: tt) }
+
+    /// The shared DE441 Sun table used by every selected-window planet trajectory.
     static let sun = direct(Engine.SaturnEphemeris.sun)
     private static let saturnBarycenter = direct(Engine.SaturnEphemeris.barycenter)
     private static let saturnOffset = direct(Engine.SaturnEphemeris.offset)
@@ -17,7 +20,7 @@ extension Engine.PlanetDE441 {
             coefficientCount: table.coefficientCount, scalarBytes: table.scalarBytes, data: table.data)
     }
 
-    /// Generated tables owned by the issue 248 generator. Saturn retains its separately qualified tables until runtime integration.
+    /// Generated tables owned by the planet generator, plus Saturn's separately qualified tables.
     static var components: [String: Engine.DirectChebyshevTable] {
         [
             "mercuryBarycenter": mercuryBarycenter,
@@ -35,7 +38,7 @@ extension Engine.PlanetDE441 {
         ]
     }
 
-    /// Composes a source state without changing the public planet route. Position is in AU on EQJ axes and velocity is its derivative per TT day.
+    /// Composes a selected-window source state. Position is in AU on EQJ axes and velocity is its derivative per TT day.
     static func state(
         of planet: Engine.Planet, tt: Double, physicalCenter: Bool
     ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {

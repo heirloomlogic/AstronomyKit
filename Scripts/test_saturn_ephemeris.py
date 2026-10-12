@@ -1,3 +1,4 @@
+import base64
 import copy
 import hashlib
 import importlib.util
@@ -23,6 +24,14 @@ g = module('saturn_generator', 'generate-saturn-tables.py')
 
 
 class SaturnEphemerisTests(unittest.TestCase):
+    def test_generated_payload_escapes_credential_like_base64_without_changing_bytes(self):
+        body = dict(startJDTDB=2451545, recordDays=1, recordCount=1, coefficientCount=1, encoding='float64')
+        data = base64.b64decode('ABSK')
+        source = g.render(data, 'offset', body)
+        self.assertIn('AB#SK', source)
+        self.assertNotIn('\nABSK', source)
+        self.assertEqual(g.common.extract(source), data)
+
     def test_both_packed_generators_check_without_retired_moon_generator(self):
         for filename in ('generate-saturn-tables.py', 'generate-pluto-de441.py'):
             with self.subTest(generator=filename):
@@ -136,14 +145,14 @@ class SaturnEphemerisTests(unittest.TestCase):
                 shutil.copyfile(g.ROOT/relative, target)
             binaries = root/'binaries'
             binaries.mkdir()
-            candidate = json.loads(g.MANIFEST.read_bytes())['candidates']['float32']
+            candidate = json.loads(g.MANIFEST.read_bytes())['candidates']['float64']
             for target, name in g.BODIES.items():
                 body = candidate['bodies'][str(target)]
                 data = g.common.extract((g.OUTPUT/f'Saturn{name.title()}Data.swift').read_text())
                 g.common.validate(data, body)
                 with self.assertRaisesRegex(ValueError, 'digest'):
                     g.common.validate(bytes([data[0] ^ 1]) + data[1:], body)
-                (binaries/f'float32-{target}.bin').write_bytes(data)
+                (binaries/f'float64-{target}.bin').write_bytes(data)
             expected = {p.relative_to(root): hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/generated).rglob('*.swift')}
             stale = root/generated/'Saturn/Retired.swift'
             stale.write_text('// obsolete owned output\n')
