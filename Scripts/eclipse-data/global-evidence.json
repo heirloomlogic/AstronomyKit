@@ -2,9 +2,9 @@
   "annularArea": {
     "directTable4SamplesQualified": 2,
     "g0PhysicalAreaInsideSquaredMagnitudeInterval": false,
-    "g0PhysicalAreaResidualBelowSquaredMagnitudeInterval": -2.9957053951035206e-05,
-    "g0PhysicalAreaResidualFromSquaredMagnitude": -3.938842895112593e-05,
-    "nativeG0PhysicalArea": 0.8894736711710488,
+    "g0PhysicalAreaResidualBelowSquaredMagnitudeInterval": -2.99570539564753e-05,
+    "g0PhysicalAreaResidualFromSquaredMagnitude": -3.9388428956566024e-05,
+    "nativeG0PhysicalArea": 0.8894736711710434,
     "sourceG0SquaredMagnitudeInterval": [
       0.8895036282249998,
       0.889522491025
@@ -41,69 +41,69 @@
     "sourcePrintedMagnitude": 1.0
   },
   "buildSeconds": {
-    "debug": 10.78,
-    "release": 129.23
+    "debug": 10.28,
+    "release": 115.46
   },
   "limitations": "Sampled native geometry and published events, which the public facade uses since the #96 cutover. RP1301 direct Table 4 areas pass conditional rounding intervals. G0 is a mixed-k Besselian magnitude, so its square is retained only as a diagnostic beside physical single-radius area. No radius was fitted. Host costs are observations, not portable gates.",
-  "releaseExecutableBytes": 154493328,
+  "releaseExecutableBytes": 154540880,
   "releaseObjectBytes": {
     "EngineGeoidIntersection.o": 31040,
-    "EngineGlobalSolarEvents.o": 92872
+    "EngineGlobalSolarEvents.o": 90416
   },
   "residuals": [
     {
       "id": "1800-04-24T00:24:00Z",
-      "locationDegrees": 0.031602466626870725,
-      "peakSeconds": 2.5807670317590237
+      "locationDegrees": 0.031601902558586345,
+      "peakSeconds": 2.580765774473548
     },
     {
       "id": "2024-04-08T18:18:29Z",
-      "locationDegrees": 0.020148249392425117,
-      "peakSeconds": 0.492144440067932
+      "locationDegrees": 0.020148159040507683,
+      "peakSeconds": 0.4921299812849611
     },
     {
       "id": "2099-03-21T22:54:32Z",
-      "locationDegrees": 0.043950174030947156,
-      "peakSeconds": 1.63442837074399
+      "locationDegrees": 0.04394989142052779,
+      "peakSeconds": 1.6343560768291354
     },
     {
       "id": "2014-04-29",
-      "locationDegrees": 0.11270740168524082,
-      "peakSeconds": 1.5928287233691663
+      "locationDegrees": 0.11270737722408275,
+      "peakSeconds": 1.5928244800306857
     },
     {
       "id": "2023-04-20",
-      "locationDegrees": 0.005687001901832686,
-      "peakSeconds": 1.579432189464569
+      "locationDegrees": 0.0056870012058609296,
+      "peakSeconds": 1.57939808559604
     },
     {
       "id": "2025-03-29",
       "locationDegrees": null,
-      "peakSeconds": 1.2656619830522686
+      "peakSeconds": 1.2656514532864094
     },
     {
       "id": "2043-04-09",
-      "locationDegrees": 0.18392786315693097,
-      "peakSeconds": 0.9662353608291596
+      "locationDegrees": 0.18392783447477445,
+      "peakSeconds": 0.9662394470069557
     }
   ],
   "resources": {
-    "checksum": -2866939.376106077,
-    "coldSeconds": 0.039805054664611816,
+    "checksum": -2866939.376106078,
+    "coldSeconds": 0.03765702247619629,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 0.7216299772262573,
-    "peakAfterColdBytes": 162512896,
-    "peakAfterWorkloadBytes": 162512896,
-    "peakBeforeBytes": 47349760
+    "nextSeconds": 0.6700930595397949,
+    "peakAfterColdBytes": 162381824,
+    "peakAfterWorkloadBytes": 162381824,
+    "peakBeforeBytes": 47202304
   },
-  "runtimeBaseRevision": "c745693e7720fffed033bf4463c11d54db642388",
+  "runtimeBaseRevision": "51847a48b20a6db5db05cb8848d1f4d0d2138575",
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/assess-global-solar-radii.py": "a23afc2a186c09466ef2db23ad8a14a55d84578fe90219d1f931bb0d0121d639",
     "Scripts/assess-rp1301-g0.py": "36dad831724e3c611793009c382c333eb80bdc8f625b16a65d9b92638be60882",
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
-    "Scripts/eclipse-data/global-captures.json": "aa55cc4f230292d049421f3aaabd8e6d3c669e3464dcee145010332891a870af",
+    "Scripts/eclipse-data/global-captures.json": "b4e82204f0aa3470b72670ee02eaee6babc5dfa81a963615d4dc8825616cb265",
     "Scripts/eclipse-data/global-references.json": "cff3956935437c3b24bcb17695e15bc743520f8e31f7f4c7cf6ee7a017acb207",
     "Scripts/eclipse-data/radius-comparison.json": "2dec7be5573f1630413fa2ca51a0efc7111af978517f64aa30f00fca062d7f1d",
     "Scripts/eclipse-data/radius-vectors.json": "7bbb9a9b3497f9a47b7f5852dc6e27564725622841ee46f48fe35779724948d5",
@@ -185,13 +185,14 @@
     "Sources/AstronomyKit/Engine/Orientation/EngineEquationOfEquinoxes.swift": "603cbd7f706769e9b92b5bbc07ec0e469862bf305430b5e8c608430e0d551463",
     "Sources/AstronomyKit/Engine/Orientation/EngineFrameRotations.swift": "109fbafbb3e45b373d45fb021efaa4a0c596469ff21a5986794f6885df69146c",
     "Sources/AstronomyKit/Engine/Orientation/EngineHorizon.swift": "afa12422cc548eeeaeaceeda7e38facdd44b24a0dd418986651ea0cb3e861e12",
-    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "b215e909949db0a0e2fabd91faead196eb92d00dc88147290a96f64c41e38079",
+    "Sources/AstronomyKit/Engine/Orientation/EngineNutation.swift": "22cbcdb8294fd4b54dc785aab583b4f63d1adaa91eca6a3c2576d93b5e6276b8",
     "Sources/AstronomyKit/Engine/Orientation/EngineObserver.swift": "7e81d70a64fe3ee4709e72350017c233a458d30ce56b2c17038219ac90cbd0d5",
-    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "023a92f6be790bf958c5e04c0b4c8717ba4b488fd059c2dbd3468d127db0b6e6",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "a2f809b985707e6c5baac20f6ed59e0a751490b2acce383849f764ed7bda3f64",
     "Sources/AstronomyKit/Engine/Orientation/EngineRefraction.swift": "3f87c416dfd82c881f8fc922ba1fb021ec55c09ec256abcdf16820a97b2d0fa2",
     "Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift": "a4bd8212ebbbb13354545f55b065cb321a91c20558eb4be61aa8b569f633bf7c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
+    "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",

@@ -57,7 +57,7 @@ The primitive report in each configuration records 162 rows: a 33-point coverage
 
 The Debug and Release primitive reports are bit-identical in this recording, so their sampled maxima are identical too; the reports retain the individual results.
 
-The full-altitude reports differ in 10 altitude results: eight supported rows differ by at most eight ULP, and two excluded rows at the 1860 Delta T boundary differ by four ULP. Their sampled maxima are identical. Paired-altitude identity is asserted within a configuration, not between configurations.
+The full-altitude reports differ in six altitude results: five supported rows and one excluded row, with a maximum difference of eight ULP. Their sampled maxima are identical. Paired-altitude identity is asserted within a configuration, not between configurations.
 
 The process timing and RSS include SwiftPM and the test runner in a fresh invocation after the build. They are not library-only latency or retained library memory. Release library build time and library artifact size are reported separately on the PR. `evidence/production-macos-arm64.json` retains the production build/section-size logs, standalone public client source and command, call trials and process RSS, with the retained link-1 artifact for context.
 
