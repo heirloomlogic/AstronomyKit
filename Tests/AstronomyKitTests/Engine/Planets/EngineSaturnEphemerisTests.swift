@@ -68,6 +68,18 @@ struct EngineSaturnEphemerisTests {
         #expect(actual.velocity == expected.velocity)
     }
 
+    @Test("The public Saturn route preserves the original rounded seam selection")
+    func publicRoundedSeamSelection() throws {
+        let seam = -16_383.000_000_014_932
+        for tt in [seam.nextDown, seam, seam.nextUp] {
+            let time = Self.time(tt)
+            let expected = try #require(Source.eclipticState(at: time))
+            let actual = try Engine.Planet.saturn.heliocentricEclipticState(at: time)
+            #expect(Self.p(actual) == expected.position)
+            #expect(Self.v(actual) == expected.velocity)
+        }
+    }
+
     @Test("System-mass consumers exclude the physical-center offset")
     func systemMassConsumers() throws {
         for tt in [-36556.5, -36540.5, -36524.5, 0, 12020.54855741, 47846.5, 47862.5, 47878.5] {

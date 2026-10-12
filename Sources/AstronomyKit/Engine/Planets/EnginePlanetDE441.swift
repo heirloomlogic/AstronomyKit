@@ -11,8 +11,6 @@ extension Engine.PlanetDE441 {
 
     /// The shared DE441 Sun table used by every selected-window planet trajectory.
     static let sun = direct(Engine.SaturnEphemeris.sun)
-    private static let saturnBarycenter = direct(Engine.SaturnEphemeris.barycenter)
-    private static let saturnOffset = direct(Engine.SaturnEphemeris.offset)
 
     private static func direct(_ table: Engine.SaturnEphemeris.Table) -> Engine.DirectChebyshevTable {
         Engine.DirectChebyshevTable(
@@ -45,6 +43,24 @@ extension Engine.PlanetDE441 {
         guard tt.isFinite else { return nil }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
+        if planet == .saturn {
+            guard
+                let barycenter = Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb),
+                let solar = Engine.SaturnEphemeris.sun.evaluate(tdb: tdb)
+            else { return nil }
+            var position = barycenter.position - solar.position
+            var velocity = barycenter.velocity - solar.velocity
+            if physicalCenter {
+                guard let offset = Engine.SaturnEphemeris.offset.evaluate(tdb: tdb) else { return nil }
+                position += offset.position
+                velocity += offset.velocity
+            }
+            let bias = Engine.FrameBias.icrsToEqj
+            return (
+                bias.apply(to: position / Engine.kilometersPerAU),
+                bias.apply(to: velocity * conversion.rate / Engine.kilometersPerAU)
+            )
+        }
         guard let tables = tables(of: planet), let barycenter = tables.barycenter.evaluate(tdb: tdb),
             let solar = sun.evaluate(tdb: tdb)
         else { return nil }
@@ -71,7 +87,7 @@ extension Engine.PlanetDE441 {
         case .earth: (earthBarycenter, earthOffset)
         case .mars: (marsBarycenter, nil)
         case .jupiter: (jupiterBarycenter, jupiterOffset)
-        case .saturn: (saturnBarycenter, saturnOffset)
+        case .saturn: nil
         case .uranus: (uranusBarycenter, uranusOffset)
         case .neptune: (neptuneBarycenter, neptuneOffset)
         }

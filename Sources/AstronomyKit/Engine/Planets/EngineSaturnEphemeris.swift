@@ -6,7 +6,7 @@ extension Engine {
 }
 
 extension Engine.SaturnEphemeris {
-    /// Direct type-2 coefficients in km, with Float32 used only for the small center offset.
+    /// Direct type-2 binary64 coefficients in km.
     struct Table: Sendable {
         let start: Double
         let days: Double
