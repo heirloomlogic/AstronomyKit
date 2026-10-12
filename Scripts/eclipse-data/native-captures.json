@@ -1,8 +1,8 @@
 {
-  "baselineRevision": "51847a48b20a6db5db05cb8848d1f4d0d2138575",
+  "baselineRevision": "a55ac07e3f47e220474621140812d3fd8df0fcc3",
   "buildReceipts": {
-    "debug": "Build complete! (10.28 sec)\n",
-    "release": "Build complete! (115.46 sec)\n"
+    "debug": "Build complete! (11.83 sec)\n",
+    "release": "Build complete! (129.55 sec)\n"
   },
   "debug": {
     "obscurations": [
@@ -162,20 +162,20 @@
       }
     ]
   },
-  "releaseExecutableBytes": 154540880,
+  "releaseExecutableBytes": 154774688,
   "releaseObjectBytes": {
     "EngineEclipseEvents.o": 111104,
     "EngineShadowGeometry.o": 30672
   },
   "resources": {
     "checksum": -2855994.8865393293,
-    "coldSeconds": 0.03678297996520996,
+    "coldSeconds": 0.038673996925354004,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 0.6650580167770386,
-    "peakAfterColdBytes": 164315136,
-    "peakAfterWorkloadBytes": 164315136,
-    "peakBeforeBytes": 49315840,
+    "nextEclipsesSeconds": 0.6644190549850464,
+    "peakAfterColdBytes": 164577280,
+    "peakAfterWorkloadBytes": 164577280,
+    "peakBeforeBytes": 49496064,
     "totalEclipseCount": 100
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
