@@ -45,14 +45,14 @@ extension Engine {
         ///
         /// Clenshaw's recurrence gives the series and its derivative
         /// together, in the order of operations of the C engine's evaluator.
-        /// As there, the last doubles before the end can round up to it when
-        /// the start is subtracted, and fall outside.
+        /// Domain checks use the original TDB. If subtracting the start rounds
+        /// an interior time to the end, the last record still owns that time.
         func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-            guard tdb.isFinite, tdb >= start else { return nil }
+            guard tdb.isFinite, tdb >= start, tdb < start + Double(recordCount) * recordDays else { return nil }
             let offset = tdb - start
             let interval = offset / recordDays
-            guard interval < Double(recordCount) else { return nil }
-            let record = Int(interval.rounded(.down))
+            guard interval.isFinite else { return nil }
+            let record = min(Int(interval.rounded(.down)), recordCount - 1)
             let x = 2 * (offset - Double(record) * recordDays) / recordDays - 1
             var position = SIMD3<Double>()
             var velocity = SIMD3<Double>()

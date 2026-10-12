@@ -30,7 +30,7 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
             root = Path(directory)
             manifest = json.loads((g.ROOT/'Scripts/pluto-data/manifest.json').read_bytes())
             generated = g.ROOT/'Sources/AstronomyKit/Engine/Gravity/Generated'
-            paths = ['Scripts/generate-pluto-tables.py', 'Scripts/generate-pluto-de441.py', 'Scripts/generate-moon-de441.py', 'Scripts/pluto-data/manifest.json', 'Scripts/pluto-data/de441-evidence.json']
+            paths = ['Scripts/generate-pluto-tables.py', 'Scripts/generate-pluto-de441.py', 'Scripts/generate-moon-de441.py', 'Scripts/pluto-data/manifest.json', 'Scripts/pluto-data/plu060-evidence.json', 'Scripts/pluto-data/de441-evidence.json']
             paths += list(manifest['files']) + [manifest['stateTable']['path']]
             paths += [str(p.relative_to(g.ROOT)) for p in generated.rglob('*.swift')]
             for relative in paths:
@@ -58,7 +58,8 @@ class PlutoDE441GeneratorTests(unittest.TestCase):
         self.assertEqual(13149264, evidence['nativeStorage']['decodedPayloadBytes'])
         self.assertEqual(273939, evidence['everyBoundaryRelease']['count'])
         self.assertEqual(4320, evidence['directSourceRelease']['bodySamples'])
-        self.assertEqual(50, evidence['directSourceRelease']['integratedSamples'])
+        self.assertEqual(48, evidence['directSourceRelease']['integratedSamples'])
+        self.assertEqual(21768120, evidence['nativeStorage']['centerDecodedPayloadBytes'])
         self.assertEqual(44, len(evidence['archivedReferences']))
 
     def test_direct_fixture_provenance_and_selection(self):

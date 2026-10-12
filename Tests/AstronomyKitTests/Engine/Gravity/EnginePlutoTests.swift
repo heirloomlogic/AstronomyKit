@@ -28,7 +28,7 @@ extension PlutoSegmentSuites {
         static func velocity(_ state: Engine.State<Engine.EQJ>) -> SIMD3<Double> { SIMD3(state.vx, state.vy, state.vz) }
         static func largest(_ v: SIMD3<Double>) -> Double { EngineMoonEphemerisTests.largest(v) }
 
-        typealias Moon = Engine.MoonEphemeris
+        typealias Center = Engine.PlutoEphemeris
 
         /// Segments 24 and 25 run from 1920 to 2080, where the planets come from
         /// their polynomial fits, so they take a fraction of a second to
@@ -41,7 +41,7 @@ extension PlutoSegmentSuites {
 
         @Test("In the DE440 span the state is the tables', bit for bit")
         func de440() throws {
-            for tt in [Moon.fullWeightStart, -8.5, 0, 9_497.375, Moon.fullWeightEnd] {
+            for tt in [-72_000.0, -8.5, 0, 9_497.375, 72_000] {
                 let state = try Pluto.heliocentricState(at: Self.time(tt: tt))
                 let (position, velocity) = try #require(Engine.PlutoEphemeris.heliocentricState(tt: tt))
                 #expect(Self.position(state) == position, "tt \(tt)")
@@ -51,7 +51,7 @@ extension PlutoSegmentSuites {
 
         @Test("Beyond the blends the state is the DE441 system barycenter's, bit for bit")
         func model() throws {
-            for tt in [Moon.fullWeightStart - Moon.blendDays, -36_600, Moon.fullWeightEnd + Moon.blendDays, 47_900] {
+            for tt in [-80_000.0, Center.sourceStartTDB - 1, Center.sourceEndTDB + 1, 80_000] {
                 let state = try Pluto.heliocentricState(at: Self.time(tt: tt))
                 let model = try Pluto.outerState(tt: tt, heliocentric: true)
                 #expect(Self.position(state) == model.position, "tt \(tt)")
@@ -62,8 +62,11 @@ extension PlutoSegmentSuites {
         @Test(
             "In a blend the state mixes the DE440 center into the DE441 barycenter and differentiates the weight")
         func blend() throws {
-            for tt in [-36_548.25, -36_540.5, 47_854.5, 47_870.75] {
-                let (weight, rate) = Moon.weight(tt: tt)
+            for tt in [
+                Center.sourceStartTDB + 8, Center.sourceStartTDB + 24, Center.sourceEndTDB - 24,
+                Center.sourceEndTDB - 8,
+            ] {
+                let (weight, rate) = Center.weight(tt: tt)
                 #expect(weight > 0 && weight < 1)
                 let state = try Pluto.heliocentricState(at: Self.time(tt: tt))
                 let (position, velocity) = try #require(Engine.PlutoEphemeris.heliocentricState(tt: tt))
@@ -79,8 +82,8 @@ extension PlutoSegmentSuites {
         @Test("No jump at the ends of either blend")
         func blendEnds() throws {
             for tt in [
-                Moon.fullWeightStart - Moon.blendDays, Moon.fullWeightStart, Moon.fullWeightEnd,
-                Moon.fullWeightEnd + Moon.blendDays,
+                Center.sourceStartTDB, Center.fullWeightStartTDB, Center.fullWeightEndTDB,
+                Center.sourceEndTDB,
             ] {
                 let before = try Pluto.heliocentricState(at: Self.time(tt: tt.nextDown))
                 let after = try Pluto.heliocentricState(at: Self.time(tt: tt.nextUp))

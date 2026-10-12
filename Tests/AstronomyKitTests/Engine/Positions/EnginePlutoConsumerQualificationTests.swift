@@ -38,7 +38,7 @@ struct EnginePlutoConsumerQualificationTests {
         let fixture = try JSONDecoder().decode(
             Fixture.self,
             from: Data(contentsOf: root.appendingPathComponent("Scripts/pluto-data/observer-fixtures.json")))
-        #expect(fixture.rows.count == 26)
+        #expect(fixture.rows.count == 41)
         var measurements: [[String: Any]] = []
         var omittedEarthFailures = 0
         var omittedFrameFailures = 0
@@ -62,6 +62,12 @@ struct EnginePlutoConsumerQualificationTests {
             let emission = try Engine.Positions.backdatedPosition(
                 of: .pluto, seenFrom: .earth, at: time, aberration: .none)
             #expect(emission.time.tt < time.tt && emission.time.tt >= -1_461_001)
+            let emissionTDB = emission.time.tt + Engine.TDB.offsetSeconds(tt: emission.time.tt) / Engine.secondsPerDay
+            let centerWeight = Engine.PlutoEphemeris.weight(tt: emission.time.tt).weight
+            if row.target == 999 {
+                #expect(emissionTDB > Engine.PlutoEphemeris.sourceStartTDB)
+                #expect(emissionTDB < Engine.PlutoEphemeris.sourceEndTDB && centerWeight > 0)
+            }
             // This checks the existing numerical stopping rule, not a new physical light-time accuracy limit.
             let next = time.adding(days: -emission.length / Engine.speedOfLightAUPerDay)
             #expect(abs(next.tt - emission.time.tt) < 1e-9)
@@ -73,7 +79,8 @@ struct EnginePlutoConsumerQualificationTests {
             measurements.append([
                 "tt": row.tt, "target": row.target, "astrometricArcminutes": errors[0],
                 "apparentICRFArcminutes": errors[1], "apparentEQDArcminutes": errors[2],
-                "emissionTT": emission.time.tt, "nativeLightTimeMinutes": (time.tt - emission.time.tt) * 1440,
+                "emissionTT": emission.time.tt, "emissionTDB": emissionTDB, "centerWeight": centerWeight,
+                "nativeLightTimeMinutes": (time.tt - emission.time.tt) * 1440,
                 "horizonsLightTimeMinutes": row.lightTimeMinutes,
                 "omittedEarthArcminutes": omittedEarth, "omittedFrameArcminutes": omittedFrame,
                 "aberrationDisplacementArcminutes": Self.angle(Self.vector(astrometric), Self.vector(apparent)),

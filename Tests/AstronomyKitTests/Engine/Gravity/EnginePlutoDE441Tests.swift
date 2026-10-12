@@ -105,7 +105,7 @@ struct EnginePlutoDE441Tests {
                 to: vector(row.velocityKmPerTDBDay) * Engine.TDB.rate(tt: tt) / Engine.kilometersPerAU)
             #expect(Self.length(state.position - expected) * Engine.kilometersPerAU <= 0.235_244)
             #expect(Self.length(state.velocity - velocity) * Engine.kilometersPerAU <= 0.134_385)
-            guard Engine.MoonEphemeris.weight(tt: tt).weight == 0 else { continue }
+            guard Engine.PlutoEphemeris.weight(tt: tt).weight == 0 else { continue }
             let time = PlanetTestSupport.time(tt: tt)
             let native = try Engine.Pluto.heliocentricState(at: time)
             integratedPosition = max(
@@ -121,7 +121,7 @@ struct EnginePlutoDE441Tests {
             maximumAngle = max(maximumAngle, angle)
             integratedCount += 1
         }
-        #expect(integratedCount == 50)
+        #expect(integratedCount == 48)
         #expect(integratedPosition <= 0.235_244 && integratedRate <= 0.134_385)
         #expect(maximumAngle <= toleranceArcminutes)
         try Self.write(
@@ -162,7 +162,7 @@ struct EnginePlutoDE441Tests {
             #expect(angle <= toleranceArcminutes)
             rows.append([
                 "julianDateTDB": reference.julianDateTDB, "body": reference.body,
-                "centerWeight": Engine.MoonEphemeris.weight(tt: tt).weight,
+                "centerWeight": Engine.PlutoEphemeris.weight(tt: tt).weight,
                 "positionDifferenceKm": Self.length(SIMD3(state.x, state.y, state.z) - expected)
                     * Engine.kilometersPerAU,
                 "velocityDifferenceKmPerSecond": Self.length(SIMD3(state.vx, state.vy, state.vz) - velocity)

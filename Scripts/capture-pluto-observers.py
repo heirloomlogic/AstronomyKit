@@ -20,8 +20,11 @@ EPOCHS = {
 }
 
 
-def query(target):
-    result = references.observer_query(str(target), [2451545. + t for t in EPOCHS[target]])
+EXTENDED_EPOCHS = [-73046.5, -73039.5, -73031.5, -73023.5, -73015.5, -73014.5, -72000., 72000., 73013.5, 73014.5, 73022.5, 73030.5, 73038.5, 73044.5, 73045.5]
+
+
+def query(target, epochs=None):
+    result = references.observer_query(str(target), [2451545. + t for t in (EPOCHS[target] if epochs is None else epochs)])
     result.update({key: references.quoted(value) for key, value in {
         'TIME_TYPE': 'TT', 'TLIST_TYPE': 'JD', 'CAL_FORMAT': 'JD',
         'QUANTITIES': '1,2,21,45', 'EXTRA_PREC': 'YES',
@@ -29,7 +32,8 @@ def query(target):
     return result
 
 
-def parse(target, data):
+def parse(target, data, epochs=None):
+    epochs = EPOCHS[target] if epochs is None else epochs
     try:
         references.validate_horizons_response(str(target), data)
     except RuntimeError as error:
@@ -49,10 +53,10 @@ def parse(target, data):
     if [c.strip() for c in next(csv.reader([header]))] != expected:
         raise ValueError('unexpected time scale, frame, or column layout')
     lines = result.split('$$SOE\n')[1].split('$$EOE')[0].splitlines()
-    if len(lines) != len(EPOCHS[target]):
+    if len(lines) != len(epochs):
         raise ValueError('missing or extra observer epochs')
     rows = []
-    for tt, line in zip(EPOCHS[target], lines):
+    for tt, line in zip(epochs, lines):
         columns = [c.strip() for c in next(csv.reader([line]))]
         if len(columns) != 11 or columns[1:3] != ['', ''] or columns[-1] != '':
             raise ValueError('unexpected row layout')
@@ -77,8 +81,19 @@ def fixture():
         rows += parse(target, data)
         sources.append(dict(path=str(path.relative_to(ROOT)), sha256=hashlib.sha256(data).hexdigest(),
                             query=query(target), url=references.horizons_url(query(target))))
-    return dict(schemaVersion=1, observationTimeScale='JD TT', angularToleranceArcminutes=1,
-                selection='Frozen before retrieval: fourteen outer barycenter epochs, including both engine endpoints and twelve center epochs including both 32-day blends.',
+    path = DATA / 'observer-sources' / 'horizons-999-extended.json'
+    data = path.read_bytes()
+    rows += parse(999, data, EXTENDED_EPOCHS)
+    sources.append(dict(path=str(path.relative_to(ROOT)), sha256=hashlib.sha256(data).hexdigest(),
+                        query=query(999, EXTENDED_EPOCHS), url=references.horizons_url(query(999, EXTENDED_EPOCHS))))
+    boundary = DATA / 'observer-sources/horizons-999-observer-boundary.json'
+    boundary_query = json.loads(boundary.with_suffix('.query.json').read_bytes())
+    if boundary_query['query'] != query(999, [73046.49]) or boundary_query['sha256'] != hashlib.sha256(boundary.read_bytes()).hexdigest():
+        raise ValueError('Horizons boundary response provenance differs')
+    if json.loads(boundary.read_bytes()).get('error') != 'No ephemeris for target \"Pluto\" after A.D. 2199-DEC-29 00:00:00.0003 TT':
+        raise ValueError('Horizons boundary availability changed')
+    return dict(schemaVersion=1, observerSourceBoundary=dict(path=str(boundary.relative_to(ROOT)), **boundary_query), observationTimeScale='JD TT', angularToleranceArcminutes=1,
+                selection='Frozen before retrieval: fourteen outer barycenter epochs including both engine endpoints; twenty-seven center epochs retain the twelve archived dates and add both expanded 32-TDB-day blends and interior dates. The earliest new observer epoch is one day inside source coverage to enclose retarded emission.',
                 sources=sources, rows=rows)
 
 
@@ -104,6 +119,8 @@ def validate_measurement(measurement):
                 raise ValueError('one-arcminute target missed')
         if row['horizonsLightTimeMinutes'] != reference['lightTimeMinutes']:
             raise ValueError('reference light time changed')
+        if row['target'] == 999 and not (-73047.5 < row['emissionTDB'] < 73046.5 and 0 < row['centerWeight'] <= 1):
+            raise ValueError('center emission outside verified source coverage')
         if not row['emissionTT'] < row['tt']:
             raise ValueError('emission does not precede observation')
     for name in ['Earth', 'Frame']:
@@ -125,7 +142,7 @@ def native_evidence(debug, release):
                             successfulGeocentricTTDays=[-1461000, -1460999.9, -1460999, 1460999, 1461000],
                             modes=['none', 'corrected'], issue='https://github.com/heirloomlogic/AstronomyKit/issues/227',
                             preexistingBase='00119ad33521b67fa365b33d940404d5739e356b'),
-                limitations=['Twenty-six sampled public directions, not a full-range bound.',
+                limitations=[f'{sum(map(len, EPOCHS.values())) + len(EXTENDED_EPOCHS)} sampled public directions, not a full-range bound.',
                              'Outer target 9 references do not qualify the physical center 999.',
                              'Sun-dependent angles retain the separate Sun light-time restriction at the lower engine endpoint.',
                              'Endpoint tests cover velocity composition, not independent velocity accuracy; event qualification remains separate.',
@@ -148,6 +165,11 @@ def main():
             references.validate_horizons_response(str(target), data)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
+    if args.capture:
+        path = DATA / 'observer-sources' / 'horizons-999-extended.json'
+        data = references.download(references.horizons_url(query(999, EXTENDED_EPOCHS)))
+        parse(999, data, EXTENDED_EPOCHS)
+        path.write_bytes(data)
     output = DATA / 'observer-fixtures.json'
     encoded = (json.dumps(fixture(), indent=2, sort_keys=True) + '\n').encode()
     if args.check:
@@ -156,7 +178,7 @@ def main():
         evidence = json.loads((DATA / 'observer-evidence.json').read_bytes())
         if evidence != native_evidence(evidence['debug'], evidence['release']):
             raise SystemExit('native evidence source bindings or metadata differ; rerun native qualification')
-        print('26 Pluto observer epochs, both archive digests, and native evidence bindings verified')
+        print(f'{sum(map(len, EPOCHS.values())) + len(EXTENDED_EPOCHS)} Pluto observer epochs, archive digests, and native evidence bindings verified')
     else:
         output.write_bytes(encoded)
     if args.record_native:

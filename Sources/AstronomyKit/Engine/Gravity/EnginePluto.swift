@@ -2,8 +2,8 @@
 //  EnginePluto.swift
 //  AstronomyKit
 //
-//  Pluto: DE440/PLU060 center states from 1900 through 2130 TT, blended
-//  into a DE441 system-barycenter approximation outside that span.
+//  Pluto: complete DE440/PLU060 center coverage, with bounded interior
+//  blends into the DE441 system barycenter outside the source span.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ import Foundation
 extension Engine {
     /// Pluto's center in the central DE440/PLU060 span, and a system-barycenter approximation outside it.
     ///
-    /// The 32-day blends retain the central center offset with a smooth weight. DE441 supplies the outer barycenter without a physical-center correction; full-range center position and velocity accuracy remain unqualified. The legacy integrated model and its cache remain available through `modelState` for diagnostics.
+    /// The 32-TDB-day interior blends taper the center contribution at the verified source edges. DE441 supplies the outer barycenter without a physical-center correction; full-range physical-center position and velocity accuracy remain unqualified. The legacy integrated model and its cache remain available through `modelState` for diagnostics.
     enum Pluto {}
 }
 
@@ -59,9 +59,7 @@ extension Engine.Pluto {
     ///
     /// The velocity differentiates the TT/TDB conversion and the DE440 blend weight. Outside the central span it is the system-barycenter rate, not Pluto's physical-center rate.
     ///
-    /// - Throws: `AstronomyError.badTime` for a TT that is not finite, more
-    ///   than ``crawlLimitDays`` before the first tabulated state or after
-    ///   the last, or a result that is not finite.
+    /// - Throws: `AstronomyError.badTime` for nonfinite or out-of-range TT, missing source coverage, or a result that is not finite.
     static func heliocentricState(at time: Engine.Time, cache: Cache = cache) throws -> Engine.State<Engine.EQJ> {
         try state(at: time, heliocentric: true)
     }
@@ -87,10 +85,11 @@ extension Engine.Pluto {
     ) throws -> Engine.State<Engine.EQJ> {
         let tt = time.tt
         guard tt.isFinite, abs(tt) <= Engine.PlutoDE441.acceptedTTDays else { throw AstronomyError.badTime }
-        let (weight, rate) = Engine.MoonEphemeris.weight(tt: tt)
+        let (weight, rate) = Engine.PlutoEphemeris.weight(tt: tt)
         var position: SIMD3<Double>
         var velocity: SIMD3<Double>
-        if weight > 0, let source = Engine.PlutoEphemeris.heliocentricState(tt: tt) {
+        if weight > 0 {
+            guard let source = Engine.PlutoEphemeris.heliocentricState(tt: tt) else { throw AstronomyError.badTime }
             (position, velocity) = source
             if !heliocentric {
                 let sun = try Engine.Gravity.MajorBodies(tt: tt).sun
@@ -134,8 +133,7 @@ extension Engine.Pluto {
     /// the mix's rate, (later − earlier position) / ``stepDays``, so it is
     /// the derivative of the position.
     ///
-    /// - Throws: As ``heliocentricState(at:cache:)``, except for the result
-    ///   check.
+    /// - Throws: `AstronomyError.badTime` for nonfinite TT or a time more than `crawlLimitDays` beyond the diagnostic state table.
     static func modelState(
         tt: Double, heliocentric: Bool, cache: Cache = cache
     ) throws -> (position: SIMD3<Double>, velocity: SIMD3<Double>) {
