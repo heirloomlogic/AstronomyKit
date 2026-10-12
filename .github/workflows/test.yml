@@ -84,7 +84,10 @@ jobs:
           python3 Scripts/capture-pluto-observers.py --check
 
       - name: Verify generated Jupiter moon series
-        run: python3 Scripts/generate-jupiter-moon-series.py --check
+        run: |
+          python3 Scripts/generate-jupiter-moon-series.py --check
+          python3 -m unittest Scripts/test_galilean_residuals.py -v
+          python3 Scripts/galilean-residuals.py --check
 
       - name: Verify long-term precession source and interval bounds
         run: |
@@ -193,7 +196,10 @@ jobs:
           python3 Scripts/capture-pluto-observers.py --check
 
       - name: Verify generated Jupiter moon series
-        run: python3 Scripts/generate-jupiter-moon-series.py --check
+        run: |
+          python3 Scripts/generate-jupiter-moon-series.py --check
+          python3 -m unittest Scripts/test_galilean_residuals.py -v
+          python3 Scripts/galilean-residuals.py --check
 
       - name: Verify lunar eclipse sources and evidence
         run: |

@@ -797,6 +797,8 @@ extension Engine.JupiterMoons {
 
 - The kept terms and the missing Chebyshev corrections leave the engine short of the full theory. Against Horizons, inside JD 2426545.0 to 2476545.0 (1931-07-22 to 2068-06-12), where Astronomy Engine set its 9e-4 limit, the largest error is Io's: 8.34e-4 of its distance and of its speed. Outside, at 1900-01-01 and 2100-01-01, Io is 1.08e-3 off and the others at most 3.2e-4; no limit applies there. In a one-off comparison during development, with a harness that was not committed, the full theory with its corrections was no closer for Io over 1900 to 2100 (1.11e-3 against 1.14e-3 on a 37-day grid) and closer for Callisto (1.9e-4 against 4.3e-4).
 
+The committed [residual harness](Scripts/jupiter-moon-data/residual-method.md) splits the current model's position error in km and returned Keplerian-velocity error in km per TT day over all 104 archived Horizons rows. Its [evidence](Scripts/jupiter-moon-data/residual-evidence.json) preserves raw captures, source hashes, separate per-moon maxima, and exact worst epochs. It does not reproduce the former full-theory comparison or qualify unsampled epochs.
+
 ### Differences from the C engine
 
 - The rotation is built from Ψ and I. The C engine's `Rotation_JUP_EQJ`, printed to 15 digits, agrees within 4.5e-16.
