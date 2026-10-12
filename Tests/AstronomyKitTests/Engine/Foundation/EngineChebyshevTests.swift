@@ -46,4 +46,20 @@ struct EngineChebyshevTests {
         }
         #expect(shifted.evaluate(tdb: (-36_584.5).nextDown) == nil)
     }
+    @Test("A rounded whole-table offset retains the last valid record without admitting the end")
+    func roundedUpperBoundary() throws {
+        let count = 48_698
+        let table = Engine.ChebyshevTable(
+            start: -73_047.5, recordDays: 3, recordCount: count, degreeCount: 1,
+            coefficients: (0..<count).flatMap { i in [Double(i), Double(i), Double(i)] })
+        let end = 73_046.5
+        let previous = end.nextDown
+        #expect(previous - table.start == Double(count) * table.recordDays)
+        let state = try #require(table.evaluate(tdb: previous))
+        #expect(state.position == SIMD3(repeating: Double(count - 1)))
+        #expect(state.velocity == .zero)
+        for outside in [table.start.nextDown, end, end.nextUp, .nan, .infinity, -.infinity] {
+            #expect(table.evaluate(tdb: outside) == nil)
+        }
+    }
 }

@@ -122,4 +122,18 @@ struct EnginePlutoCenterQualificationTests {
             }
         }
     }
+    @Test("The TT mapping to PLU060's upper TDB predecessor remains a valid public state")
+    func upperPredecessor() throws {
+        let tt = 0x1.1d568000000cdp+16
+        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        #expect(tdb == Center.sourceEndTDB.nextDown)
+        #expect(Center.weight(tt: tt).weight > 0)
+        _ = try #require(Center.heliocentricState(tt: tt))
+        let time = AstroTime(Engine.Time(tt: tt, deltaTModel: .jplHorizons))
+        let position = try CelestialBody.pluto.heliocentricPosition(at: time)
+        let state = try CelestialBody.pluto.heliocentricState(at: time)
+        #expect(position.x.isFinite && state.velocity.x.isFinite)
+        #expect(Center.center.evaluate(tdb: Center.sourceEndTDB) == nil)
+        #expect(Center.center.evaluate(tdb: Center.sourceEndTDB.nextUp) == nil)
+    }
 }
