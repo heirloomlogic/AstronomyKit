@@ -1363,6 +1363,8 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "0f0cdfd4dc37af4468f67c875447544390928567f7f2d67696ba4825ef23aed3",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "ad4e414e90b302989cb9449d50cc67dc632603771703616bd360ecbd2e981b5a",
     "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
     "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "27c44179436b2eb9a495b88d09d9520c9092cfede17db0e84764634428f5d583",
     "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "5d8bd4003fae869c238e3ab168244a0039d8f2b4723f36da73050ec9695c5bb8",
