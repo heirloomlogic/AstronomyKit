@@ -1,18 +1,18 @@
 {
-  "baselineRevision": "220cd5424cd3764767731b9cd54f2f8e47cc5491",
+  "baselineRevision": "24021545a72e51b4a8d523fceee1a3d711cc4bc8",
   "buildSeconds": {
-    "debug": 0.97,
-    "release": 141.9
+    "debug": 41.33,
+    "release": 140.94
   },
   "criteria": "All six archived NASA eclipse types and peaks retain the existing 120-second allowance. Partial and total semidurations retain the existing two-minute allowance. Three Danjon-based NASA Five Millennium Catalog penumbral semidurations use the same two-minute allowance. The original NASA SVS Moon-disc print intervals remain visible: 2021 passes, while 2026 is an explicitly expected failure under #275 after apparent-place integration. Neither interval is a NASA uncertainty bound. Strict analytic geometry tests cover no eclipse, penumbral, partial and total boundaries.",
   "limitations": "NASA lunar magnitude is a diameter fraction, not the native disc-area obscuration result. Both obscuration references come from one NASA SVS publisher and DE421/LOLA model family. The pages do not publish their exact rounding rule, lunar and shadow radii, or full-precision area algorithm, so interval agreement does not establish algorithm replication. The public eclipse facades run on this search since the #96 cutover. Runtime, memory, object and executable sizes are host observations, not portable ceilings.",
   "published": {
-    "maximumObscurationResidualFromPrintedFraction": 0.0005039923340681707,
-    "maximumPartialDurationResidualMinutes": 0.9743873169645667,
-    "maximumPeakResidualSeconds": 32.258690195158124,
-    "maximumPenumbralDurationResidualMinutes": 0.023375309518087306,
-    "maximumTotalDurationResidualMinutes": 0.47400514856002474,
-    "minimumObscurationMarginInsidePrintInterval": -3.992334068225745e-06,
+    "maximumObscurationResidualFromPrintedFraction": 0.000518402797438644,
+    "maximumPartialDurationResidualMinutes": 0.9771220805123448,
+    "maximumPeakResidualSeconds": 32.315091392956674,
+    "maximumPenumbralDurationResidualMinutes": 0.023445779468602268,
+    "maximumTotalDurationResidualMinutes": 0.4743113213802417,
+    "minimumObscurationMarginInsidePrintInterval": -1.8402797438699103e-05,
     "obscurationOutcomes": [
       {
         "knownDiscrepancyIssue": null,
@@ -32,25 +32,25 @@
     "obscurationRows": 2,
     "rows": 6
   },
-  "releaseExecutableBytes": 414888848,
+  "releaseExecutableBytes": 492628992,
   "releaseObjectBytes": {
-    "EngineEclipseEvents.o": 116536,
-    "EngineShadowGeometry.o": 30672
+    "EngineEclipseEvents.o": 116504,
+    "EngineShadowGeometry.o": 30656
   },
   "resources": {
-    "checksum": -2855994.884948683,
-    "coldSeconds": 0.06183302402496338,
+    "checksum": -2855994.8849313958,
+    "coldSeconds": 0.06680595874786377,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 4.440572023391724,
-    "peakAfterColdBytes": 103432192,
-    "peakAfterWorkloadBytes": 103432192,
-    "peakBeforeBytes": 49823744,
+    "nextEclipsesSeconds": 4.883499026298523,
+    "peakAfterColdBytes": 106708992,
+    "peakAfterWorkloadBytes": 108740608,
+    "peakBeforeBytes": 49840128,
     "totalEclipseCount": 100
   },
   "schemaVersion": 1,
   "sourceSHA256": {
-    "Scripts/eclipse-data/native-captures.json": "b46bb6df98270e821f75576b3ae3d1a207d0fc8db7d45980c107a455f5f00fda",
+    "Scripts/eclipse-data/native-captures.json": "e123ba2cf5ee3fa1f5b65b99f7aa431c65e04451f8897c6d357e5815525136e3",
     "Scripts/record-eclipse-event-evidence.py": "3bb05c08c84169ebda915352a959fa4d6949cdabbe69fab639555f5625d0185a",
     "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/sources/lunar_1701.html": "15ed1e6e6b1153f6c85e724258aa91e23655fecb08ac7623fd6e2b4b1d8199f7",
@@ -92,7 +92,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
     "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
-    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "81af4e399a16a4cc8d8915add97a9c9ff425fd14b311673edbb943df29cce2fd",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "748f96d2c950cbd1ce2c516b4e2d46839b490dace034cc64289abb309d3a87d8",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
     "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
@@ -218,11 +218,11 @@
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
     "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetDE441.swift": "a6001f045c3a126354d9076aa3a712d1bc3d0977f7a74167532ceb9acb9aaba7",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetDE441.swift": "adbaea8c4614f80b26a6ea7436769dccec6ab37e64e493650cd17f3f69c33e8e",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "e19b35cd27463d0e1316a930fefd88d78b1068b6e3d22a035fa57ac89828d503",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "fab951ae9c90330e71ec92fce7dd2957c6e88a7f018f5abd7f8767256e93f95f",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "07c7f7c1e66ba0d6cb38981ecaeef86f5171a365a0c25b621cb91d5c4db98935",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",
@@ -245,7 +245,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialUranus.swift": "05ba88c79fcca26988c9042b4b728603bde9c197b9ab9bb73f2a389259e438e5",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialVenus.swift": "96463d608a7242dbc5db215b559757ca987f6115a62533d33cd630e271a55795",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnBarycenterData.swift": "4085bb1543aa6aa682b57cee1dbf6671aeed42b3cc5355e266a184c5f59dca98",
-    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "5492b492d50278368a2edf289f8e1d8aa591d8dd7f934c7f726f402f23409306",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
