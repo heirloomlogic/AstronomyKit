@@ -40,8 +40,8 @@ REPLAY_OWNERS = {'Scripts/galilean-residuals.py', 'Scripts/test_galilean_residua
 
 
 def source_paths(revision=None):
-    # The Git inventory retains deleted owners that a filesystem glob would omit.
-    command = ['git', 'ls-tree', '-rz', '--name-only', revision] if revision else ['git', 'ls-files', '-z']
+    # Committed ownership retains deletions even after they have left the index.
+    command = ['git', 'ls-tree', '-rz', '--name-only', revision or 'HEAD']
     try:
         inventory = subprocess.check_output(command, cwd=ROOT, stderr=subprocess.PIPE).decode().split('\0')
     except subprocess.CalledProcessError as error:
@@ -50,7 +50,7 @@ def source_paths(revision=None):
     if not revision:
         present = sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'Sources/AstronomyKit').rglob('*.swift'))
         if native != present:
-            raise ValueError('Tracked and present native source inventory differs')
+            raise ValueError('Committed and present native source inventory differs')
     return sorted(native + archive_paths() + [
         FIXTURE, 'Package.swift', 'Sources/CLibAstronomy/astronomy.c',
         'Scripts/reference-data/build-fixtures.py', 'Scripts/generate-jupiter-moon-series.py',

@@ -147,7 +147,22 @@ class GalileanResidualTests(unittest.TestCase):
             owner.parent.mkdir(parents=True)
             owner.write_text('// tracked native owner\n')
             subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+            subprocess.run(['git', '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'native owner'], cwd=root, check=True)
             owner.unlink()
+            self.tool.ROOT = root
+            with self.assertRaisesRegex(ValueError, 'native source inventory'):
+                self.tool.source_paths()
+
+    def test_staged_deleted_native_owner_is_rejected_before_capture(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            subprocess.run(['git', 'init', '-q', str(root)], check=True)
+            owner = root / 'Sources/AstronomyKit/Deleted.swift'
+            owner.parent.mkdir(parents=True)
+            owner.write_text('// committed native owner\n')
+            subprocess.run(['git', 'add', '.'], cwd=root, check=True)
+            subprocess.run(['git', '-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', 'commit', '-qm', 'native owner'], cwd=root, check=True)
+            subprocess.run(['git', 'rm', '-q', str(owner.relative_to(root))], cwd=root, check=True)
             self.tool.ROOT = root
             with self.assertRaisesRegex(ValueError, 'native source inventory'):
                 self.tool.source_paths()
