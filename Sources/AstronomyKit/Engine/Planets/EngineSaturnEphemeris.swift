@@ -6,68 +6,7 @@ extension Engine {
 }
 
 extension Engine.SaturnEphemeris {
-    /// Direct type-2 coefficients in km, with Float32 used only for the small center offset.
-    struct Table: Sendable {
-        let start: Double
-        let days: Double
-        let recordCount: Int
-        let coefficientCount: Int
-        let scalarBytes: Int
-        let data: Data
-
-        init(start: Double, days: Double, recordCount: Int, coefficientCount: Int, scalarBytes: Int, data: Data) {
-            precondition(days > 0 && recordCount > 0 && coefficientCount > 0)
-            precondition(scalarBytes == 4 || scalarBytes == 8)
-            precondition(data.count == recordCount * 3 * coefficientCount * scalarBytes)
-            self.start = start
-            self.days = days
-            self.recordCount = recordCount
-            self.coefficientCount = coefficientCount
-            self.scalarBytes = scalarBytes
-            self.data = data
-        }
-
-        func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-            guard tdb.isFinite, tdb >= start else { return nil }
-            let interval = (tdb - start) / days
-            guard interval < Double(recordCount) else { return nil }
-            let record = Int(interval.rounded(.down))
-            return evaluate(record: record, x: 2 * ((tdb - start) - Double(record) * days) / days - 1)
-        }
-
-        /// Clenshaw value and analytic derivative, in km and km per TDB day.
-        func evaluate(record: Int, x: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>) {
-            precondition((0..<recordCount).contains(record))
-            return data.withUnsafeBytes { raw in
-                func coefficient(_ index: Int) -> Double {
-                    let offset = index * scalarBytes
-                    if scalarBytes == 4 {
-                        return Double(
-                            Float(
-                                bitPattern: UInt32(
-                                    littleEndian: raw.loadUnaligned(fromByteOffset: offset, as: UInt32.self))))
-                    }
-                    return Double(
-                        bitPattern: UInt64(littleEndian: raw.loadUnaligned(fromByteOffset: offset, as: UInt64.self)))
-                }
-                var position = SIMD3<Double>()
-                var velocity = SIMD3<Double>()
-                for axis in 0..<3 {
-                    let base = (record * 3 + axis) * coefficientCount
-                    var (b1, b2, d1, d2) = (0.0, 0.0, 0.0, 0.0)
-                    for k in stride(from: coefficientCount - 1, to: 0, by: -1) {
-                        let b = 2 * x * b1 - b2 + coefficient(base + k)
-                        let d = 2 * b1 + 2 * x * d1 - d2
-                        (b2, b1) = (b1, b)
-                        (d2, d1) = (d1, d)
-                    }
-                    position[axis] = coefficient(base) + x * b1 - b2
-                    velocity[axis] = (b1 + x * d1 - d2) * 2 / days
-                }
-                return (position, velocity)
-            }
-        }
-    }
+    typealias Table = Engine.DirectChebyshevTable
 
     /// The 1900–2130 full-weight interval and its 32-day blends deliberately reuse the existing Moon/Pluto window; this is not a new global accuracy range.
     static func weight(tt: Double) -> (weight: Double, rate: Double) { Engine.MoonEphemeris.weight(tt: tt) }

@@ -1,0 +1,33 @@
+{
+  "build": {
+    "configuration": "release",
+    "initialFreshRepresentation": {
+      "maximumResidentSetBytes": 6657769472,
+      "reportedBuildSeconds": 241.32,
+      "wallSecondsIncludingDependencySetupAndTests": 268.84
+    },
+    "finalTreeIncremental": {
+      "maximumResidentSetBytes": 8234041344,
+      "reportedBuildSeconds": 260.54,
+      "wallSecondsIncludingTests": 278.03
+    }
+  },
+  "generated": {
+    "rawPayloadBytes": 48673224,
+    "swiftSourceBytes": 65058541
+  },
+  "host": {
+    "architecture": "arm64",
+    "macOS": "27.0.1 (26A434)",
+    "swift": "Apple Swift 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)"
+  },
+  "latency": {
+    "coldJupiterPhysicalCenterSeconds": 0.0041882083169184625,
+    "meanMixedPlanetPhysicalCenterMicroseconds": 18.813975004013628,
+    "mixedPlanetIterations": 10000
+  },
+  "products": {
+    "releaseStaticLibraryBytes": 458935552,
+    "releaseTestExecutableBytes": 480617312
+  }
+}
