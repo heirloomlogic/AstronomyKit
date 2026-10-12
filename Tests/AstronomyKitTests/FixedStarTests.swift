@@ -180,9 +180,9 @@ struct FixedStarTests {
     /// `ab` with Earth's barycentric velocity, the IAU 2006/2000A
     /// bias-precession-nutation matrix `pnm06a`, and a rotation by the true
     /// obliquity (`obl06` plus the `nut06a` obliquity nutation). The engine
-    /// uses IAU 2006 precession without the frame bias and IAU 2006/2000A
-    /// nutation; measured residuals against these references are at most
-    /// 0.023″. The references take the
+    /// uses Vondrák long-term precession without frame bias and IAU
+    /// 2006/2000A nutation. The independent references and their existing
+    /// tolerance are retained. The references take the
     /// calendar instants as TT; the engine's Delta T (up to 203 s at 2100)
     /// moves a star by far less than that.
     @Suite("Ecliptic of Date")
@@ -223,8 +223,7 @@ struct FixedStarTests {
             Reference(star: spica, time: t2100, longitude: 205.2376442, latitude: -2.0606519),
         ]
 
-        /// 0.36″: about 15 times the measured residual, and about 1/14,000
-        /// of the J2000-frame error at these epochs.
+        /// The existing independent-reference allowance is 0.36″.
         static let tolerance = 1e-4
 
         @Test("Matches an independent true-ecliptic-of-date reference", arguments: references)

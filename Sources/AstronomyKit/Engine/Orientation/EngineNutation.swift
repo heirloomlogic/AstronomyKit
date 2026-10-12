@@ -276,7 +276,7 @@ extension Engine.Nutation {
 
 extension Engine {
     /// The orientation of Earth's equator at one TT instant: nutation and
-    /// the IAU 2006 mean obliquity, with their rates.
+    /// the long-term mean obliquity, with their rates.
     struct EarthTilt: Sendable {
         /// The instant, in days of TT from J2000. Only
         /// ``equationOfEquinoxes`` reads it.

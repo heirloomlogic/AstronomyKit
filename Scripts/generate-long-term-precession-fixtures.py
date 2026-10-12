@@ -57,7 +57,9 @@ def generate():
             lines += ['                [' + ', '.join(repr(x) for x in row) + '],' for row in b]
             lines += [f'            ], meanObliquity: {epsilon!r}),']
     lines += ['    ]', '', '    static func at(_ tt: Double) -> Reference {',
-              '        references.first { $0.tt == tt }!', '    }', '}', '']
+              '        guard let reference = references.first(where: { $0.tt == tt }) else {',
+              '            preconditionFailure("Missing archived ERFA epoch")',
+              '        }', '        return reference', '    }', '}', '']
     return '\n'.join(lines)
 
 
@@ -72,6 +74,9 @@ if __name__ == '__main__':
         numeric = r'(?<![\w.])[-+]?\d+(?:\.\d*)?(?:[eE][-+]?\d+)?'
         old = OUTPUT.read_text()
         left, right = re.findall(numeric, old), re.findall(numeric, generated)
+        structure = lambda value: re.sub(r'\s+', '', re.sub(numeric, '#', value))
+        if structure(old) != structure(generated):
+            raise SystemExit('Archived ERFA fixture structure changed')
         if len(left) != len(right) or any(abs(float(a)-float(b)) > 5e-16 for a,b in zip(left,right)):
             raise SystemExit('Archived ERFA fixture values changed')
         print('Long-term precession fixtures match the archived ERFA C oracle.')

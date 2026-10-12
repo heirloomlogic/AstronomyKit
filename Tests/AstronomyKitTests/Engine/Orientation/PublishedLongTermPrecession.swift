@@ -264,6 +264,9 @@ enum PublishedLongTermPrecession {
     ]
 
     static func at(_ tt: Double) -> Reference {
-        references.first { $0.tt == tt }!
+        guard let reference = references.first(where: { $0.tt == tt }) else {
+            preconditionFailure("Missing archived ERFA epoch")
+        }
+        return reference
     }
 }
