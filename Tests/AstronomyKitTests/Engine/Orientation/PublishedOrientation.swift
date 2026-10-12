@@ -202,6 +202,8 @@ enum PublishedOrientation {
         /// and `fapa03` at TT.
         let arguments: [Double]
 
+        var meanObliquity: Double { PublishedLongTermPrecession.at(tt).meanObliquity }
+
         var testDescription: String { "\(year)" }
     }
 

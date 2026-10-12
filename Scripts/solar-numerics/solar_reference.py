@@ -1,5 +1,6 @@
 """Extended-precision geometric Sun model, composed from published definitions."""
 import re
+import importlib.util
 from functools import lru_cache
 import reference as ref
 from numerics import ROOT, ENGINE
@@ -21,16 +22,53 @@ def r3(angle):
     return mp.matrix([[c, s, 0], [-s, c, 0], [0, 0, 1]])
 
 
+@lru_cache(maxsize=1)
+def long_term_coefficients():
+    # Read the independent archived ERFA definitions, not the Swift tables.
+    spec = importlib.util.spec_from_file_location('vondrak_source', ROOT / 'Scripts/generate-long-term-precession.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.generate()  # Verify the pinned source archive.
+    return [module.coefficients(name, prefix) for name,prefix in [('ltpequ.c','xy'),('ltpecl.c','pq')]]
+
+
+def cross(a, b):
+    return mp.matrix([a[(i+1)%3]*b[(i+2)%3]-a[(i+2)%3]*b[(i+1)%3] for i in range(3)])
+
+
+def poles(tt):
+    t = tt / 36525
+    result = []
+    for pol, periodic in long_term_coefficients():
+        values = []
+        for axis in range(2):
+            value = polynomial(pol[axis], t)
+            for row in periodic:
+                period,cx,cy,sx,sy = map(mp.mpf, row)
+                c,s = (cx,sx) if axis == 0 else (cy,sy)
+                angle = 2*mp.pi*t/period
+                value += c*mp.cos(angle)+s*mp.sin(angle)
+            values.append(value*mp.pi/648000)
+        x,y = values
+        result.append(mp.matrix([x,y,mp.sqrt(1-x*x-y*y)]))
+    equ, local = result
+    p,q,w = local
+    eps0 = mp.mpf('84381.406')*mp.pi/648000
+    ecl = mp.matrix([p,-q*mp.cos(eps0)-w*mp.sin(eps0),-q*mp.sin(eps0)+w*mp.cos(eps0)])
+    return equ,ecl
+
+
 def obliquity(tt):
-    return polynomial(['84381.406', '-46.836769', '-0.0001831', '0.00200340', '-0.000000576', '-0.0000000434'], tt / 36525) * mp.pi / 648000
+    equ,ecl = poles(tt)
+    return mp.atan2(mp.norm(cross(equ,ecl)), mp.fdot(equ,ecl))
 
 
 def precession(tt):
-    t = tt / 36525
-    psi = polynomial(['0', '5038.481507', '-1.0790069', '-0.00114045', '0.000132851', '-0.0000000951'], t) * mp.pi / 648000
-    omega = polynomial(['84381.406', '-0.025754', '0.0512623', '-0.00772503', '-0.000000467', '0.0000003337'], t) * mp.pi / 648000
-    chi = polynomial(['0', '10.556403', '-2.3814292', '-0.00121197', '0.000170663', '-0.0000000560'], t) * mp.pi / 648000
-    return r3(chi) * r1(-omega) * r3(-psi) * r1(mp.mpf('84381.406') * mp.pi / 648000)
+    equ,ecl = poles(tt)
+    x = cross(equ,ecl)
+    x /= mp.norm(x)
+    y = cross(equ,x)
+    return mp.matrix([list(x),list(y),list(equ)])
 
 
 def complementary(tt):

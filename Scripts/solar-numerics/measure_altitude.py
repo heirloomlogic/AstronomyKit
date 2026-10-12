@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Measure the complete native geometric-altitude model against extended precision."""
 import argparse
+import precession_bounds
 import json
 import math
 import os
@@ -14,7 +15,7 @@ import solar_reference as solar
 from numerics import ROOT, ENGINE, BINDINGS, source_hashes, check_hashes
 
 mp = solar.mp
-PATHS = sorted(set(BINDINGS + measure.TOOLS + [
+PATHS = sorted(set(BINDINGS + measure.TOOLS + precession_bounds.PATHS + [
     'Scripts/solar-numerics/solar_reference.py', 'Scripts/solar-numerics/measure_altitude.py',
     'Tests/AstronomyKitTests/Engine/Numerics/NativeAltitudeProbe.swift',
     'Sources/AstronomyKit/SolarAltitudeObservation.swift', 'Sources/AstronomyKit/SolarAltitudeBounds.swift',

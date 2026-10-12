@@ -50,7 +50,7 @@ struct EngineEarthRotationTests {
     func equationOfEquinoxes(reference: Published.Reference) {
         let time = Self.time(ut: reference.ut, tt: reference.tt)
         let difference = (Self.apparent(time) - Engine.EarthRotation.meanSiderealTime(time)) * Engine.radiansPerHour
-        let expected = reference.dpsi * cos(reference.obl06) + reference.eect00
+        let expected = reference.dpsi * cos(reference.meanObliquity) + reference.eect00
         #expect(abs(Published.wrapped(difference - expected)) <= Self.tolerance)
     }
 
