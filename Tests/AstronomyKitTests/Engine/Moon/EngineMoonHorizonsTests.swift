@@ -95,7 +95,7 @@ struct EngineMoonHorizonsTests {
         }
     }
 
-    // MARK: - Beyond the DE440 Moon
+    // MARK: - Accepted range
 
     /// Horizons' geometric Moon vectors in `reference-fixtures.json`, from
     /// `sources/horizons/moon-vector.json`: 30 dates from 2002 BCE to 6000 CE,
@@ -106,7 +106,7 @@ struct EngineMoonHorizonsTests {
     /// The samples, by Julian date TDB, where the lunar series is more than
     /// 1′ from Horizons: the 13 from 2002 BCE to 999 CE and from 3000 CE to
     /// 6000 CE (#184).
-    static let beyondSeriesAccuracy: Set<Double> = [
+    static let legacySeriesFailures: Set<Double> = [
         990_546.0, 990_910.5, 1_173_170.5, 1_355_795.5, 1_538_420.5, 1_721_045.5, 1_903_670.5, 2_086_295.5,
         2_816_795.5, 3_182_045.5, 3_547_295.5, 3_912_180.5, 3_912_544.0,
     ]
@@ -138,27 +138,22 @@ struct EngineMoonHorizonsTests {
         return (try moon.angle(to: expected) * 60, abs(moon.length - expected.length) * Engine.kilometersPerAU)
     }
 
-    @Test("Through the blends and DE441 from 1499 to 2500, within 1′ and the Moon's distance allowance")
-    func beyondTheTable() throws {
+    @Test("All archived vectors within 1′ and the Moon's distance allowance")
+    func acceptedRangeVectors() throws {
         #expect(Self.vectors.count == 30)
-        let checked = Self.vectors.filter { !Self.beyondSeriesAccuracy.contains($0.julianDateTDB) }
-        #expect(checked.count == 17)
-        for reference in checked {
+        for reference in Self.vectors {
             let (arcminutes, km) = try Self.errors(reference)
             #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
             #expect(km <= Self.distanceAllowanceKm, "\(reference.tdb): \(km) km")
         }
     }
 
-    @Test(
-        "The legacy series still used by public C APIs misses 1′ (#184, #96)", arguments: beyondSeriesAccuracy.sorted())
-    func farFromJ2000(julianDateTDB: Double) throws {
+    @Test("The legacy lunar series misses 1′ at its archived failures", arguments: legacySeriesFailures.sorted())
+    func legacySeriesNegativeControl(julianDateTDB: Double) throws {
+        #expect(Self.legacySeriesFailures.count == 13)
         let reference = try #require(Self.vectors.first { $0.julianDateTDB == julianDateTDB })
-        let (arcminutes, km) = try Self.errors(reference, legacy: true)
-        withKnownIssue("#184: the lunar series is more than 1′ from DE441 before 1500 and after 2500") {
-            #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
-            #expect(km <= Self.distanceAllowanceKm, "\(reference.tdb): \(km) km")
-        }
+        let (arcminutes, _) = try Self.errors(reference, legacy: true)
+        #expect(arcminutes > toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
     }
 
     @Test("The checks fail without the observer, a day off, or with the wrong distance")
