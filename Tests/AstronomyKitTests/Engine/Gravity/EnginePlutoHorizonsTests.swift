@@ -155,7 +155,7 @@ extension PlutoSegmentSuites {
         static let vectors = IndependentReferenceArchive.shared.vectors.filter { $0.body == "pluto" }
 
         /// The dates in the DE440 span, where Pluto is plu060's.
-        static let de440 = vectors.filter { Engine.MoonEphemeris.weight(tt: tt($0)).weight == 1 }
+        static let de440 = vectors.filter { Engine.PlutoEphemeris.weight(tt: tt($0)).weight == 1 }
 
         /// Inside the DE440 span Pluto is the plu060 data Horizons also reads.
         /// The samples agree within 0.005″ and 0.05 km, and in velocity within
@@ -163,7 +163,7 @@ extension PlutoSegmentSuites {
         @Test("Public Pluto state in the DE440 span within 1 km and 1e-8 of the speed")
         func de440Vectors() throws {
             #expect(Self.vectors.count == 29)
-            #expect(Self.de440.count == 9)
+            #expect(Self.de440.count == 29)
             for reference in Self.de440 {
                 let state = try Self.publicState(reference)
                 let km = Self.length(Self.position(state) - Self.expected(reference)) * Engine.kilometersPerAU
@@ -175,14 +175,11 @@ extension PlutoSegmentSuites {
             }
         }
 
-        /// Center references through both blends and the outer barycenter approximation from 1840 to 2159.
-        @Test("Public Pluto route through the blends and outer barycenter approximation within 1′")
+        /// Every retained center direction now lies inside the expanded full-weight source span.
+        @Test("All archived physical-center directions remain within 1′")
         func modelVectors() throws {
-            let others = Self.vectors.filter { reference in
-                !Self.de440.contains { $0.julianDateTDB == reference.julianDateTDB }
-            }
-            #expect(others.count == 20)
-            for reference in others {
+            #expect(Self.vectors.count == 29)
+            for reference in Self.vectors {
                 let arcminutes = try Self.arcminutes(Self.position(try Self.publicState(reference)), reference)
                 #expect(arcminutes <= toleranceArcminutes, "\(reference.tdb): \(arcminutes)′")
             }

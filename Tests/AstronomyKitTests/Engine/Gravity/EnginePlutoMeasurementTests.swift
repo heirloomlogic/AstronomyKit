@@ -23,9 +23,10 @@ struct EnginePlutoMeasurementTests {
             return Int(usage.ru_maxrss) * 1024
             #endif
         }
+        let coldTT = ProcessInfo.processInfo.environment["PLUTO_MEASUREMENT_CENTER"] == "1" ? -72_000.0 : -766_524.75
         let before = peakBytes()
         let started = Date()
-        let first = try Engine.Pluto.heliocentricState(at: PlanetTestSupport.time(tt: -766_524.75))
+        let first = try Engine.Pluto.heliocentricState(at: PlanetTestSupport.time(tt: coldTT))
         let cold = Date().timeIntervalSince(started)
         let after = peakBytes()
         var timings: [String: Double] = [:]
@@ -44,7 +45,7 @@ struct EnginePlutoMeasurementTests {
             timings[name] = Date().timeIntervalSince(began)
         }
         let result: [String: Any] = [
-            "coldSeconds": cold, "peakBytesBefore": before, "peakBytesAfterCold": after,
+            "coldSeconds": cold, "coldTT": coldTT, "peakBytesBefore": before, "peakBytesAfterCold": after,
             "peakBytesAfterLoops": peakBytes(), "evaluationsPerWorkload": count, "seconds": timings,
             "checksum": checksum, "host": ProcessInfo.processInfo.operatingSystemVersionString,
         ]

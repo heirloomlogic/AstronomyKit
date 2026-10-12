@@ -3,7 +3,7 @@
 //  AstronomyKit
 //
 //  Pluto's center from JPL DE440 and the PLU060 satellite ephemeris, from
-//  1900 through 2130 TT.
+//  the complete verified PLU060 source span.
 //
 
 import Foundation
@@ -20,13 +20,45 @@ extension Engine {
     /// - ``center``: Pluto's center from the Pluto system barycenter, from
     ///   PLU060, in 3-day records of 16 coefficients.
     ///
-    /// Their records start between 1899-11-02 and 1899-11-22 and end between
-    /// 2131-02-12 and 2131-02-19 TDB, so they cover the 32-day blends either
-    /// side of the DE440 span that ``Engine/Pluto`` uses.
+    /// Complete records cover the PLU060 summary interval. Source evaluation and the two interior blends use TDB, so no TT boundary is mistaken for a source boundary.
     enum PlutoEphemeris {}
 }
 
 extension Engine.PlutoEphemeris {
+    /// Common SPK summary coverage, in TDB days from J2000. Padding in the Sun and barycenter records does not extend this interval.
+    static let sourceStartTDB = -73_047.5
+    static let sourceEndTDB = 73_046.5
+    static let blendDaysTDB = 32.0
+    static let fullWeightStartTDB = sourceStartTDB + blendDaysTDB
+    static let fullWeightEndTDB = sourceEndTDB - blendDaysTDB
+
+    /// Physical-center weight and its derivative per TDB day. Both tapers stay inside the source interval; position and its first two derivatives meet the outer model continuously.
+    static func weight(tdb: Double) -> (weight: Double, rate: Double) {
+        guard tdb.isFinite, tdb > sourceStartTDB, tdb < sourceEndTDB else { return (0, 0) }
+        if tdb >= fullWeightStartTDB && tdb <= fullWeightEndTDB { return (1, 0) }
+        let x: Double
+        let sign: Double
+        if tdb < fullWeightStartTDB {
+            x = (tdb - sourceStartTDB) / blendDaysTDB
+            sign = 1
+        } else {
+            x = (sourceEndTDB - tdb) / blendDaysTDB
+            sign = -1
+        }
+        return (
+            x * x * x * (10 + x * (-15 + 6 * x)),
+            sign * 30 * x * x * (1 - x) * (1 - x) / blendDaysTDB
+        )
+    }
+
+    /// The same source weight evaluated at TT, with its derivative per TT day.
+    static func weight(tt: Double) -> (weight: Double, rate: Double) {
+        guard tt.isFinite else { return (0, 0) }
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let result = weight(tdb: tt + conversion.offsetSeconds / Engine.secondsPerDay)
+        return (result.weight, result.rate * conversion.rate)
+    }
+
     /// Pluto's position in AU and velocity in AU per TT day relative to the
     /// Sun's center, on EQJ axes, at `tt` days of TT from J2000, or `nil`
     /// where a table has no record or for a TT that is not finite.
@@ -39,7 +71,8 @@ extension Engine.PlutoEphemeris {
         guard tt.isFinite else { return nil }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
-        guard let pluto = barycenter.evaluate(tdb: tdb),
+        guard tdb >= sourceStartTDB, tdb < sourceEndTDB,
+            let pluto = barycenter.evaluate(tdb: tdb),
             let sun = barycenterFromSun.evaluate(tdb: tdb),
             let offset = center.evaluate(tdb: tdb)
         else { return nil }

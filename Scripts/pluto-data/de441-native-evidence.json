@@ -2,8 +2,8 @@
   "archivedReferenceSummary": {
     "centralCenter": {
       "angularDifferenceArcminutes": 7.2445096183544e-05,
-      "count": 9,
-      "positionDifferenceKm": 1.3550093702918357e-06,
+      "count": 29,
+      "positionDifferenceKm": 4.284915860992695e-06,
       "velocityDifferenceKmPerSecond": 1.914426125832785e-15
     },
     "outerBarycenter": {
@@ -13,108 +13,108 @@
       "velocityDifferenceKmPerSecond": 3.182261058727468e-07
     },
     "outerOrBlendedCenter": {
-      "angularDifferenceArcminutes": 0.0010397827388329034,
-      "count": 20,
-      "positionDifferenceKm": 2131.881478583381,
-      "velocityDifferenceKmPerSecond": 0.024272591696072144
+      "angularDifferenceArcminutes": null,
+      "count": 0,
+      "positionDifferenceKm": null,
+      "velocityDifferenceKmPerSecond": null
     }
   },
   "archivedReferences": [
     {
-      "angularDifferenceArcminutes": 0.0006231962813730347,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2393144,
-      "positionDifferenceKm": 2131.12768383334,
-      "velocityDifferenceKmPerSecond": 0.02427222899778601
+      "positionDifferenceKm": 4.284915860992695e-06,
+      "velocityDifferenceKmPerSecond": 3.7544985280589254e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0004694978832367658,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2393145,
-      "positionDifferenceKm": 2131.3539063394965,
-      "velocityDifferenceKmPerSecond": 0.02427062202490309
+      "positionDifferenceKm": 1.0629568031106373e-06,
+      "velocityDifferenceKmPerSecond": 2.6548313691453776e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0010051349175612065,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2393146,
-      "positionDifferenceKm": 2131.7284444243523,
-      "velocityDifferenceKmPerSecond": 0.024267123361914708
+      "positionDifferenceKm": 1.2534893030921197e-06,
+      "velocityDifferenceKmPerSecond": 7.740097001206491e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0009946371371794848,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2407744,
-      "positionDifferenceKm": 2131.434624444528,
-      "velocityDifferenceKmPerSecond": 0.024270064466855413
+      "positionDifferenceKm": 2.130061734275378e-06,
+      "velocityDifferenceKmPerSecond": 1.1872766820415803e-15
     },
     {
-      "angularDifferenceArcminutes": 0.0005019143493964498,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2407745,
-      "positionDifferenceKm": 2131.0791950934686,
-      "velocityDifferenceKmPerSecond": 0.024272040091956184
+      "positionDifferenceKm": 1.3286960038882966e-07,
+      "velocityDifferenceKmPerSecond": 1.5134867424409284e-15
     },
     {
-      "angularDifferenceArcminutes": 0.000549342140892149,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2407746,
-      "positionDifferenceKm": 2131.0804241792052,
-      "velocityDifferenceKmPerSecond": 0.024270629300636847
+      "positionDifferenceKm": 1.509108565102544e-06,
+      "velocityDifferenceKmPerSecond": 1.7709934137021096e-15
     },
     {
-      "angularDifferenceArcminutes": 0.0008018202823748991,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2407818,
-      "positionDifferenceKm": 2131.876153674082,
-      "velocityDifferenceKmPerSecond": 0.024265484185227858
+      "positionDifferenceKm": 1.0629568031106373e-06,
+      "velocityDifferenceKmPerSecond": 2.6548313691453776e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0010397827388329034,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2414980.5,
-      "positionDifferenceKm": 2131.5049375452,
-      "velocityDifferenceKmPerSecond": 0.024269212131831957
+      "positionDifferenceKm": 7.516239635879055e-07,
+      "velocityDifferenceKmPerSecond": 9.389179063952718e-16
     },
     {
-      "angularDifferenceArcminutes": 0.000549342140892149,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 3.539338708334192e-28,
+      "centerWeight": 1,
       "julianDateTDB": 2414988.5,
-      "positionDifferenceKm": 2131.2133624943476,
-      "velocityDifferenceKmPerSecond": 0.024272591696072144
+      "positionDifferenceKm": 2.2704767267220085e-06,
+      "velocityDifferenceKmPerSecond": 7.740097001206491e-16
     },
     {
-      "angularDifferenceArcminutes": 0.000930574109661391,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0.1035156252669065,
+      "centerWeight": 1,
       "julianDateTDB": 2414996.5,
-      "positionDifferenceKm": 1911.064267230747,
-      "velocityDifferenceKmPerSecond": 0.02177075974625288
+      "positionDifferenceKm": 7.972176023329779e-07,
+      "velocityDifferenceKmPerSecond": 7.740986207597064e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0002805786510332605,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0.5000000003261391,
+      "centerWeight": 1,
       "julianDateTDB": 2415004.5,
-      "positionDifferenceKm": 1065.9797977748428,
-      "velocityDifferenceKmPerSecond": 0.01221836560715908
+      "positionDifferenceKm": 1.3286960038882967e-06,
+      "velocityDifferenceKmPerSecond": 1.5134867424409284e-15
     },
     {
-      "angularDifferenceArcminutes": 0.00010245283755019126,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0.8964843750968825,
+      "centerWeight": 1,
       "julianDateTDB": 2415012.5,
-      "positionDifferenceKm": 220.64932960337345,
-      "velocityDifferenceKmPerSecond": 0.0026406710524265924
+      "positionDifferenceKm": 2.1588754727349707e-06,
+      "velocityDifferenceKmPerSecond": 7.743653214121534e-16
     },
     {
       "angularDifferenceArcminutes": 0,
@@ -191,66 +191,66 @@
     {
       "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0.896484375029976,
+      "centerWeight": 1,
       "julianDateTDB": 2499399.5,
-      "positionDifferenceKm": 220.65840072894548,
-      "velocityDifferenceKmPerSecond": 0.0026401592290654103
+      "positionDifferenceKm": 1.195826403499467e-06,
+      "velocityDifferenceKmPerSecond": 8.39531393016266e-16
     },
     {
-      "angularDifferenceArcminutes": 0.00041930630891382826,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0.5000000002063416,
+      "centerWeight": 1,
       "julianDateTDB": 2499407.5,
-      "positionDifferenceKm": 1065.6157061400795,
-      "velocityDifferenceKmPerSecond": 0.012221320430868167
+      "positionDifferenceKm": 2.3805545902380433e-06,
+      "velocityDifferenceKmPerSecond": 7.508997056117851e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0005750151246234364,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0.10351562520047963,
+      "centerWeight": 1,
       "julianDateTDB": 2499415.5,
-      "positionDifferenceKm": 1910.7450539565023,
-      "velocityDifferenceKmPerSecond": 0.021773769419180373
+      "positionDifferenceKm": 1.0712289652481738e-06,
+      "velocityDifferenceKmPerSecond": 1.202026026221003e-15
     },
     {
-      "angularDifferenceArcminutes": 0.0008244111892466429,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 1.9118002382128188e-28,
+      "centerWeight": 1,
       "julianDateTDB": 2499423.5,
-      "positionDifferenceKm": 2131.881478583381,
-      "velocityDifferenceKmPerSecond": 0.0242655730690178
+      "positionDifferenceKm": 5.47835396836754e-07,
+      "velocityDifferenceKmPerSecond": 2.6548313691453776e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0006698723480404105,
+      "angularDifferenceArcminutes": 7.2445096183544e-05,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2499431.5,
-      "positionDifferenceKm": 2131.879825112941,
-      "velocityDifferenceKmPerSecond": 0.024266414183201617
+      "positionDifferenceKm": 1.1352383633610043e-06,
+      "velocityDifferenceKmPerSecond": 1.5250845116049948e-15
     },
     {
-      "angularDifferenceArcminutes": 0.0007189970501766552,
+      "angularDifferenceArcminutes": 7.2445096183544e-05,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2509944,
-      "positionDifferenceKm": 2131.806345713671,
-      "velocityDifferenceKmPerSecond": 0.02426452936329701
+      "positionDifferenceKm": 1.0629568031106373e-06,
+      "velocityDifferenceKmPerSecond": 4.693123160073657e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0010270865027687001,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2509945,
-      "positionDifferenceKm": 2131.6904995713476,
-      "velocityDifferenceKmPerSecond": 0.02426654503558445
+      "positionDifferenceKm": 5.317378491673326e-07,
+      "velocityDifferenceKmPerSecond": 3.7544985280589254e-16
     },
     {
-      "angularDifferenceArcminutes": 0.0009998998042697513,
+      "angularDifferenceArcminutes": 0,
       "body": "pluto",
-      "centerWeight": 0,
+      "centerWeight": 1,
       "julianDateTDB": 2509946,
-      "positionDifferenceKm": 2131.4221743039807,
-      "velocityDifferenceKmPerSecond": 0.024270261135950034
+      "positionDifferenceKm": 1.0629568031106373e-06,
+      "velocityDifferenceKmPerSecond": 8.602636850715154e-16
     },
     {
       "angularDifferenceArcminutes": 0,
@@ -392,9 +392,25 @@
     "path": ".build/out/Products/Release/AstronomyKitTests.xctest/Contents/MacOS/AstronomyKitTests",
     "testExecutableBytes": 139089760
   },
+  "centerExtensionBase": "128ac0a4728206f887027f5674371030faad4b5c",
+  "centerNativeRelease": {
+    "checksum": 44301.65643972756,
+    "coldSeconds": 0.021507978439331055,
+    "coldTT": -72000,
+    "evaluationsPerWorkload": 2000,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "peakBytesAfterCold": 119980032,
+    "peakBytesAfterLoops": 150863872,
+    "peakBytesBefore": 46858240,
+    "seconds": {
+      "central": 0.037342071533203125,
+      "engineRange": 0.036720991134643555,
+      "outer": 0.04606497287750244
+    }
+  },
   "directSourceDebug": {
     "bodySamples": 4320,
-    "integratedSamples": 50,
+    "integratedSamples": 48,
     "maximumBodyPositionKm": 0.21312571340892866,
     "maximumBodyRateKmPerTDBDay": 0.04052176529119861,
     "maximumIntegratedAngleArcminutes": 1.0531330071605687e-07,
@@ -403,7 +419,7 @@
   },
   "directSourceRelease": {
     "bodySamples": 4320,
-    "integratedSamples": 50,
+    "integratedSamples": 48,
     "maximumBodyPositionKm": 0.21312571340892866,
     "maximumBodyRateKmPerTDBDay": 0.04052176529119861,
     "maximumIntegratedAngleArcminutes": 1.0531330071605687e-07,
@@ -424,9 +440,10 @@
     "Outer states represent the Pluto system barycenter, not the physical center. Available PLU060 offset coverage does not qualify the full accepted range or omitted physical-center velocity.",
     "Source representation bounds do not certify absolute DE441 observational accuracy. Native implementation comparisons are sampled except for all-record seam checks.",
     "Single-host release test-process timings and peak RSS are observations, not device performance or a resource ceiling. The preserved historical baseline includes cold legacy integration; the new engineRange workload has no baseline counterpart.",
-    "The MajorBodies barycentric origin and central physical-center window are retained. Public position/state endpoint support includes the bounded Pluto-only Earth evaluation. Sun-dependent angles retain the Sun endpoint restriction; #252 part 2 owns center expansion and search qualification remains separate."
+    "The MajorBodies barycentric origin is retained. The complete PLU060 window and bounded interior tapers are qualified separately. Public position/state endpoint support includes the bounded Pluto-only Earth evaluation. Sun-dependent angles retain the Sun endpoint restriction; Search qualification remains separate."
   ],
   "measurementWorkloadsTTDays": {
+    "centerCold": -72000,
     "central": [
       -30000,
       29970
@@ -442,20 +459,39 @@
     ]
   },
   "nativeRelease": {
-    "checksum": 44287.76724819192,
-    "coldSeconds": 0.008024930953979492,
+    "checksum": 44287.76723921855,
+    "coldSeconds": 0.007647991180419922,
+    "coldTT": -766524.75,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
     "peakBytesAfterCold": 78462976,
-    "peakBytesAfterLoops": 120274944,
-    "peakBytesBefore": 47398912,
+    "peakBytesAfterLoops": 151437312,
+    "peakBytesBefore": 47349760,
     "seconds": {
-      "central": 0.019659996032714844,
-      "engineRange": 0.019306063652038574,
-      "outer": 0.031249046325683594
+      "central": 0.03712201118469238,
+      "engineRange": 0.03681802749633789,
+      "outer": 0.05689704418182373
     }
   },
   "nativeStorage": {
+    "centerDecodedPayloadBytes": 21768120,
+    "centerGeneratedTables": {
+      "PlutoBarycenterCoefficients": {
+        "cstringSectionBytes": 883521,
+        "generatedSourceBytes": 884069,
+        "releaseObjectBytes": 1779008
+      },
+      "PlutoCenterCoefficients": {
+        "cstringSectionBytes": 25128168,
+        "generatedSourceBytes": 25128716,
+        "releaseObjectBytes": 50268248
+      },
+      "PlutoSunCoefficients": {
+        "cstringSectionBytes": 3239223,
+        "generatedSourceBytes": 3239780,
+        "releaseObjectBytes": 6490472
+      }
+    },
     "decodedPayloadBytes": 13149264,
     "generatedTables": {
       "PlutoDE441PlutoData": {
@@ -469,30 +505,40 @@
         "releaseObjectBytes": 23569456
       }
     },
-    "testExecutableBytes": 141888704
+    "testExecutableBytes": 154461952
   },
   "rangeExtensionBase": "686ffb3b9d69c62ac2c9cc4d0493049f2851d8bd",
   "schemaVersion": 1,
   "sourceSHA256": {
     "Scripts/generate-moon-de441.py": "b350b467dd0e9eb57fbe440a42a31e97b9d80edc612ad3281456d36b41ff7fbe",
     "Scripts/generate-pluto-de441.py": "2dd1f9bedf59111ac64b563e8bdf4207fa74038266c329b736bb94b68d3bf061",
+    "Scripts/generate-pluto-tables.py": "06853c3483b869f62b23cb1378bad7241d12ccfb77a7e23e443e0864f4ed0829",
     "Scripts/pluto-data/de441-evidence.json": "86a3f3c8c37973ec0e77062d178e686acda18d59c1d4827ecf9bdc9fd5a1968f",
     "Scripts/pluto-data/de441-native-fixtures.json": "38dc2a6406d22db61b06f7910bbc54dead4b2f6630fe54b34e06a5f4ebf9e425",
+    "Scripts/pluto-data/plu060-evidence.json": "a4a28fffac897770297061056037ebfd5ca4b2d68269d81912a08a522e1b9252",
+    "Scripts/pluto-data/plu060-qualification.json": "0685d7edc61e572f23d039957c6a5b644b74809204816884df76015dd1e441fe",
+    "Scripts/qualify-pluto-center.py": "4478cb59a138dbb9e574adcd3cb70c3f476dc09f12bd341e873c11405ce1ccb9",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
-    "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "40c1ff9ef30b3bd82ccb86cf57510b260f2f491e29c784388324fec6120b3a53",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
+    "Sources/AstronomyKit/Engine/Gravity/EnginePlutoEphemeris.swift": "54d1c0894f47a7b7a084fb03509ce9f7bf0efd6d21a1af709bf700935fc33a04",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoLightTime.swift": "2b01424b0987be139603c8ac51770834bd37083f508a6846e934ff89e26f0863",
     "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441PlutoData.swift": "2264d1c762f688282a1d07fb8386dbb490e21f9e54f77e6ad6333c16144921b4",
     "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441SunData.swift": "b8b0fd48631ad87985be734207575b63e41705ec62a3c6488c3a8be3242ad370",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoBarycenterCoefficients.swift": "c554ed8e4bd597fd85d68175238594795201fedd62146a89eb6db27632017a29",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoCenterCoefficients.swift": "c0f0ec73511009f9afea25a120972987a48babca94fb1ca48f450a79bfc88216",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoSunCoefficients.swift": "6a31ab43f325c9d84c265c4f32c702c2754a8de1d2a858850f160c4bb74e159b",
     "Sources/AstronomyKit/Engine/Moon/EngineFrameBias.swift": "96e32a064cb907b394223c966eaee27a104a5309d0fdbaaaa1cfc5e25b8d66a3",
     "Sources/AstronomyKit/Engine/Moon/EngineMoonEphemeris.swift": "a233152b307bf9c4bb89a764be3bab574da279016f3be6c2736006a5529d8753",
     "Sources/AstronomyKit/Engine/Moon/EngineTDB.swift": "5c77325fb41d76fd9c6e23f08f2ba580924166e0fa2681913a815c1f32b6ad8e",
     "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "27c44179436b2eb9a495b88d09d9520c9092cfede17db0e84764634428f5d583",
     "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "363120568a16d3e70dd05d30531bc40b43190bd8be3a4eae3bdd32dd61a33859",
-    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoDE441Tests.swift": "bfea34a54306da9d37409c8fef4e061f5dde2fef6b152f9554f2c041052d1e9a",
-    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoHorizonsTests.swift": "9442e338c339a96a1e5d518f8319c987ba6ee70e4506413687f3cf01a8e157c3",
-    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoMeasurementTests.swift": "1799dab361931ad7b5e6624bc0a7706d51da709b7afef978c280760b960c70da",
-    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoTests.swift": "2aaefd4fbed65fa458abe318134bb76a6e5ddfb847e209d950199edd81d2f755"
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoCenterQualificationTests.swift": "31439020eb0a17c508e7b4f2b7ff66a686bf184c451f2e25b333793b01e6827b",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoDE441Tests.swift": "24e5e7d41809f04000f861a33196626077e5f1043f0d1a3143463101dd6bb91d",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoEphemerisTests.swift": "a1c0dd285bc00d7a5e1f5436ca98c8374124adf03425f621f245e88d43e59918",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoHorizonsTests.swift": "0875a4d9f75aa6db1ee385e7c3fc4abeb0778fb2357fabdbdf4c1cde82e8418c",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoMeasurementTests.swift": "4bda3f93c4f3cb5e5fe09a41a2524835ddca4669cf3399fc1cb0b29d3ddc5ede",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoTests.swift": "69f385be758dae1bbc1493f88ea2def1288f2e02b67bc80b0294bb574056ea09"
   },
   "swiftVersion": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

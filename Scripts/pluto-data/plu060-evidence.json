@@ -1,0 +1,57 @@
+{
+  "blendDaysTDB": 32.0,
+  "schemaVersion": 1,
+  "source": {
+    "bytes": 135207936,
+    "sha256": "dfbb102491a26ed41ae08ca3f8963f22f0219df1d8f265ab87b9ad825a826fc6",
+    "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/plu060.bsp",
+    "wholeFileDigestVerified": true
+  },
+  "sourceEndTDB": 73046.5,
+  "sourceStartTDB": -73047.5,
+  "state": "Geometric ICRF coefficients in AU; signed source km coefficients divided by 149597870.7 in binary64; velocities are analytic per TDB day.",
+  "tables": {
+    "barycenter": {
+      "center": 0,
+      "degreeCount": 6,
+      "output": "PlutoBarycenterCoefficients.swift",
+      "payloadBytes": 657504,
+      "payloadSHA256": "7835d2fc9611b123ced50307fd7b46f773112e3441c666210eefd4e74682e2ff",
+      "recordCount": 4566,
+      "recordDays": 32.0,
+      "sign": 1,
+      "startTDB": -73064.5,
+      "summaryEndTDB": 73046.5,
+      "summaryStartTDB": -73047.5,
+      "target": 9
+    },
+    "barycenterFromSun": {
+      "center": 0,
+      "degreeCount": 11,
+      "output": "PlutoSunCoefficients.swift",
+      "payloadBytes": 2410584,
+      "payloadSHA256": "00d142d250f19c3dfe90cdfb824076afe207c00d747e4d195ea970eb05e6be5a",
+      "recordCount": 9131,
+      "recordDays": 16.0,
+      "sign": -1,
+      "startTDB": -73048.5,
+      "summaryEndTDB": 73046.5,
+      "summaryStartTDB": -73047.5,
+      "target": 10
+    },
+    "center": {
+      "center": 9,
+      "degreeCount": 16,
+      "output": "PlutoCenterCoefficients.swift",
+      "payloadBytes": 18700032,
+      "payloadSHA256": "34f24b9633629c2dd4800ea7d5b2f53548cec14272931d60153f038ff16f6794",
+      "recordCount": 48698,
+      "recordDays": 3.0,
+      "sign": 1,
+      "startTDB": -73047.5,
+      "summaryEndTDB": 73046.5,
+      "summaryStartTDB": -73047.5,
+      "target": 999
+    }
+  }
+}

@@ -29,14 +29,14 @@ struct EnginePlutoEphemerisTests {
 
     static let tables = [
         Table(
-            name: "barycenter", table: Ephemeris.barycenter, recordDays: 32, degreeCount: 6, recordCount: 2_640,
-            first: (1899, 11, 2), last: (2131, 2, 19)),
+            name: "barycenter", table: Ephemeris.barycenter, recordDays: 32, degreeCount: 6, recordCount: 4_566,
+            first: (1799, 12, 16), last: (2199, 12, 31)),
         Table(
             name: "barycenterFromSun", table: Ephemeris.barycenterFromSun, recordDays: 16, degreeCount: 11,
-            recordCount: 5_279, first: (1899, 11, 18), last: (2131, 2, 19)),
+            recordCount: 9_131, first: (1800, 1, 1), last: (2199, 12, 31)),
         Table(
-            name: "center", table: Ephemeris.center, recordDays: 3, degreeCount: 16, recordCount: 28_151,
-            first: (1899, 11, 22), last: (2131, 2, 12)),
+            name: "center", table: Ephemeris.center, recordDays: 3, degreeCount: 16, recordCount: 48_698,
+            first: (1800, 1, 2), last: (2199, 12, 30)),
     ]
 
     static func days(_ date: (year: Int, month: Int, day: Int)) -> Double {
@@ -45,6 +45,16 @@ struct EnginePlutoEphemerisTests {
 
     static func end(_ table: Engine.ChebyshevTable) -> Double {
         table.start + Double(table.recordCount) * table.recordDays
+    }
+
+    @Test("PLU060 physical-center states cover the expanded interior")
+    func expandedKernelInterior() throws {
+        for tt in [-72_000.0, -58_400.0, 58_400.0, 72_000.0] {
+            let source = try #require(Ephemeris.heliocentricState(tt: tt))
+            let actual = try Engine.Pluto.heliocentricState(at: Engine.Time(tt: tt, deltaTModel: .jplHorizons))
+            #expect(EngineMoonEphemerisTests.largest(SIMD3(actual.x, actual.y, actual.z) - source.position) < 1e-14)
+            #expect(EngineMoonEphemerisTests.largest(SIMD3(actual.vx, actual.vy, actual.vz) - source.velocity) < 1e-16)
+        }
     }
 
     @Test("Each table's shape and dates", arguments: tables)
@@ -60,27 +70,42 @@ struct EnginePlutoEphemerisTests {
         #expect(finite)
     }
 
-    /// The tables must reach past both blends of ``Engine/MoonEphemeris``,
-    /// read at TDB. Across these 1899–2131 boundaries, TDB is within 1.85 ms
-    /// (2.2e-8 day) of TT.
-    @Test("Every table covers both blends, with TDB − TT at its largest", arguments: tables)
+    @Test("Every complete table encloses the common SPK summary interval", arguments: tables)
     func coverage(_ entry: Table) {
-        let margin = 2.2e-8
-        let moon = Engine.MoonEphemeris.self
-        #expect(entry.table.start < moon.fullWeightStart - moon.blendDays - margin)
-        #expect(Self.end(entry.table) > moon.fullWeightEnd + moon.blendDays + margin)
+        #expect(entry.table.start <= Ephemeris.sourceStartTDB)
+        #expect(Self.end(entry.table) >= Ephemeris.sourceEndTDB)
     }
 
-    @Test("The state is defined across both blends, and not beyond the records or for a TT that is not finite")
+    @Test("Source evaluation respects TDB summary boundaries and rejects nonfinite TT")
     func definedSpan() {
-        let moon = Engine.MoonEphemeris.self
-        #expect(Ephemeris.heliocentricState(tt: (moon.fullWeightStart - moon.blendDays).nextUp) != nil)
-        #expect(Ephemeris.heliocentricState(tt: (moon.fullWeightEnd + moon.blendDays).nextDown) != nil)
-        // The center table starts last and ends first.
-        #expect(Ephemeris.heliocentricState(tt: Ephemeris.center.start - 1) == nil)
-        #expect(Ephemeris.heliocentricState(tt: Self.end(Ephemeris.center) + 1) == nil)
+        #expect(Ephemeris.heliocentricState(tt: Ephemeris.sourceStartTDB + 0.001) != nil)
+        #expect(Ephemeris.heliocentricState(tt: Ephemeris.sourceEndTDB - 0.001) != nil)
+        #expect(Ephemeris.heliocentricState(tt: Ephemeris.sourceStartTDB - 0.001) == nil)
+        #expect(Ephemeris.heliocentricState(tt: Ephemeris.sourceEndTDB + 0.001) == nil)
         for tt in [Double.nan, .infinity, -.infinity] {
             #expect(Ephemeris.heliocentricState(tt: tt) == nil)
+            #expect(Ephemeris.weight(tt: tt).weight == 0)
+        }
+    }
+
+    @Test("Pluto weights cover its own source span and differentiate TDB conversion")
+    func weights() {
+        for tdb in [Ephemeris.sourceStartTDB, Ephemeris.sourceEndTDB, -.infinity, .infinity, .nan] {
+            #expect(Ephemeris.weight(tdb: tdb).weight == 0)
+            #expect(Ephemeris.weight(tdb: tdb).rate == 0)
+        }
+        for tdb in [Ephemeris.fullWeightStartTDB, 0, Ephemeris.fullWeightEndTDB] {
+            #expect(Ephemeris.weight(tdb: tdb).weight == 1)
+            #expect(Ephemeris.weight(tdb: tdb).rate == 0)
+        }
+        for (tdb, sign) in [(Ephemeris.sourceStartTDB + 16, 1.0), (Ephemeris.sourceEndTDB - 16, -1.0)] {
+            #expect(Ephemeris.weight(tdb: tdb).weight == 0.5)
+            #expect(Ephemeris.weight(tdb: tdb).rate == sign * 1.875 / 32)
+            let h = 0.01
+            let slope =
+                (Ephemeris.weight(tt: tdb - 2 * h).weight - 8 * Ephemeris.weight(tt: tdb - h).weight
+                    + 8 * Ephemeris.weight(tt: tdb + h).weight - Ephemeris.weight(tt: tdb + 2 * h).weight) / (12 * h)
+            #expect(abs(Ephemeris.weight(tt: tdb).rate - slope) < 1e-9)
         }
     }
 
