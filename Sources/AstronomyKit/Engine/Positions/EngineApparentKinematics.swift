@@ -34,10 +34,11 @@ extension Engine.ApparentPlace {
                     to: try Engine.Planet.earth.retainedEclipticState(at: time))
                 let legacyPosition = retained.positionVector
                 let legacyVelocity = retained.velocityVector
-                acceleration =
-                    legacyAcceleration + weight * (sourceAcceleration - legacyAcceleration)
-                    + 2 * rate * (source.velocity - legacyVelocity)
-                    + Engine.PlanetDE441.weightAcceleration(tt: tt) * (source.position - legacyPosition)
+                let accelerationBlend: SIMD3<Double> = weight * (sourceAcceleration - legacyAcceleration)
+                let velocityBlend: SIMD3<Double> = (2 * rate) * (source.velocity - legacyVelocity)
+                let positionBlend: SIMD3<Double> =
+                    Engine.PlanetDE441.weightAcceleration(tt: tt) * (source.position - legacyPosition)
+                acceleration = legacyAcceleration + accelerationBlend + velocityBlend + positionBlend
             }
         }
         guard [acceleration.x, acceleration.y, acceleration.z].allSatisfy(\.isFinite) else {
