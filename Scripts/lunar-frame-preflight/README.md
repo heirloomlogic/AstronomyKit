@@ -14,7 +14,7 @@ NASA SVS names DE421, UTC, a geocentric observer, and the apparent center of the
 
 ## Sources and conventions
 
-`source-receipts.json` binds every input to its byte count and SHA-256 digest. The three tables, the Astronomy Engine license, the capture program, and the captured model output also record their exact base path or source revision. Publisher pages and NAIF text kernels record their retrieval URL and time. The replay rejects missing entries, changed bytes, absolute paths, path traversal, and paths outside this directory.
+`source-receipts.json` binds every input to its byte count and SHA-256 digest. The three tables, the Astronomy Engine license, the capture program, and the captured model output also record their exact base path or source revision. Publisher pages and NAIF text kernels record their retrieval URL and time. The replay rejects missing entries, wrong container types, changed bytes, absolute paths, path traversal, and paths outside this directory.
 
 The pinned SVS pages describe hourly geocentric values for 2020, 2021, and 2022. The 2020 table contains 8,785 rows through 2021-01-01 00:00 UT, while the next two contain 8,760 rows each through their final hour; the repeated 2021 boundary is retained because the existing gate checks every published row. Their tables label the source time as UT. The capture passes that calendar coordinate to AstronomyKit as universal time and records the library's corresponding terrestrial time after its Espenak-Meeus Delta T conversion. The NAIF PCK comment states its coverage as 1549-12-31 through 2650-01-25 in ephemeris time/TDB. This fixed-rotation test is epoch-independent and does not equate those clocks.
 
@@ -26,7 +26,7 @@ The frame kernel says the fixed ME frame is closely aligned with the DE421 mean-
 
 - `sources/` contains the pinned publisher pages, frame documentation, exact-base SVS tables, and their license.
 - `capture.swift` records the exact-base AstronomyKit output. `base-libration.json` is the resulting 26,305-row capture.
-- `replay.py` validates provenance, parses every source row, derives the fixed rotation, runs the comparisons and negative controls, and writes `report.json` atomically.
+- `replay.py` validates provenance, parses every source row, derives the fixed rotation, runs the comparisons and negative controls, and writes `report.json` atomically. It rounds report floats to 12 decimal places after all calculations so supported Python versions produce identical evidence bytes; calculations and gate comparisons use unrounded binary64 values.
 - `test_replay.py` tests the source contract, provenance failures, full coverage, clock pairing, matrix convention, existing gates, frame directions, and invalid one-hour/axis-swapped inputs.
 
 ## Reproduce

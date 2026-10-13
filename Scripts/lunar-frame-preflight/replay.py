@@ -32,6 +32,7 @@ SOURCE_PATHS = {
     *("sources/nasa-svs-{}.html".format(identifier) for identifier in PAGE_IDS),
 }
 ROW_LAYOUT = ["universalTime", "terrestrialTime", "longitudeDegrees", "latitudeDegrees"]
+REPORT_DECIMAL_PLACES = 12
 CAPTURE_COMMAND = ["swift build -Xswiftc -enable-testing", "swiftc -I .build/out/Products/Debug Scripts/lunar-frame-preflight/capture.swift .build/out/Products/Debug/AstronomyKit.o .build/out/Products/Debug/CLibAstronomy.o -o /tmp/lunar-frame-capture", "/tmp/lunar-frame-capture Scripts/lunar-frame-preflight/sources Scripts/lunar-frame-preflight/base-libration.json {} {} \"{}\"".format(BASE_REVISION, SOURCE_TREE, CAPTURE_TOOLCHAIN)]
 MONTHS = {name: index + 1 for index, name in enumerate(("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))}
 J2000_UTC = dt.datetime(2000, 1, 1, 12, tzinfo=dt.timezone.utc)
@@ -54,6 +55,11 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def require_object(value, fields, label):
+    if not isinstance(value, dict) or set(value) != fields:
+        raise ReplayError("{} fields differ".format(label))
+
+
 def contained_path(relative):
     if not isinstance(relative, str) or Path(relative).is_absolute() or ".." in Path(relative).parts or Path(relative).as_posix() != relative:
         raise ReplayError("receipt path is not a canonical relative path: {!r}".format(relative))
@@ -67,14 +73,19 @@ def contained_path(relative):
 
 def read_receipts(data=None):
     receipt = json.loads(RECEIPTS_PATH.read_text()) if data is None else data
-    if set(receipt) != {"schemaVersion", "baseRevision", "capture", "sources"} or receipt["schemaVersion"] != 1 or receipt["baseRevision"] != BASE_REVISION:
+    require_object(receipt, {"schemaVersion", "baseRevision", "capture", "sources"}, "receipt")
+    if receipt["schemaVersion"] != 1 or receipt["baseRevision"] != BASE_REVISION:
         raise ReplayError("receipt schema or base revision differs")
     sources = receipt["sources"]
-    if not isinstance(sources, list) or {entry.get("path") for entry in sources if isinstance(entry, dict)} != SOURCE_PATHS or len(sources) != len(SOURCE_PATHS):
+    if not isinstance(sources, list):
+        raise ReplayError("source receipt inventory differs")
+    for index, entry in enumerate(sources):
+        require_object(entry, {"path", "sha256", "bytes", "origin"}, "source receipt {}".format(index))
+        if not isinstance(entry["path"], str) or not isinstance(entry["sha256"], str) or type(entry["bytes"]) is not int:
+            raise ReplayError("source receipt value types differ: {}".format(index))
+    if len(sources) != len(SOURCE_PATHS) or {entry["path"] for entry in sources} != SOURCE_PATHS:
         raise ReplayError("source receipt inventory differs")
     for entry in sources:
-        if set(entry) != {"path", "sha256", "bytes", "origin"}:
-            raise ReplayError("source receipt fields differ")
         path = contained_path(entry["path"])
         if not re.fullmatch(r"[0-9a-f]{64}", entry["sha256"]) or digest(path) != entry["sha256"] or path.stat().st_size != entry["bytes"]:
             raise ReplayError("source receipt content differs: {}".format(entry["path"]))
@@ -82,21 +93,22 @@ def read_receipts(data=None):
         if not isinstance(origin, dict) or origin.get("kind") not in {"exactBaseCopy", "https"}:
             raise ReplayError("source origin differs: {}".format(entry["path"]))
         if origin["kind"] == "exactBaseCopy":
-            if set(origin) != {"kind", "baseRevision", "basePath", "publisherURL"} or origin.get("baseRevision") != BASE_REVISION or not origin.get("basePath") or not origin.get("publisherURL", "").startswith("https://"):
+            require_object(origin, {"kind", "baseRevision", "basePath", "publisherURL"}, "base-copy origin")
+            if origin["baseRevision"] != BASE_REVISION or not isinstance(origin["basePath"], str) or not origin["basePath"] or not isinstance(origin["publisherURL"], str) or not origin["publisherURL"].startswith("https://"):
                 raise ReplayError("base-copy origin is incomplete: {}".format(entry["path"]))
         else:
-            if set(origin) not in ({"kind", "url", "retrievedAt", "contentLength"}, {"kind", "url", "retrievedAt", "contentLength", "lastModified"}) or not origin.get("url", "").startswith("https://") or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", origin.get("retrievedAt", "")) or origin.get("contentLength") != entry["bytes"]:
+            if set(origin) not in ({"kind", "url", "retrievedAt", "contentLength"}, {"kind", "url", "retrievedAt", "contentLength", "lastModified"}) or not isinstance(origin.get("url"), str) or not isinstance(origin.get("retrievedAt"), str) or type(origin.get("contentLength")) is not int or not origin["url"].startswith("https://") or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", origin["retrievedAt"]) or origin["contentLength"] != entry["bytes"]:
                 raise ReplayError("HTTPS origin is incomplete: {}".format(entry["path"]))
-            if "lastModified" in origin and not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", origin["lastModified"]):
+            if "lastModified" in origin and (not isinstance(origin["lastModified"], str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", origin["lastModified"])):
                 raise ReplayError("HTTPS last-modified time differs: {}".format(entry["path"]))
     capture = receipt["capture"]
-    if set(capture) != {"path", "sha256", "bytes", "revision", "astronomyKitSourceTree", "program", "command"}:
-        raise ReplayError("capture receipt fields differ")
+    require_object(capture, {"path", "sha256", "bytes", "revision", "astronomyKitSourceTree", "program", "command"}, "capture receipt")
     path = contained_path(capture["path"])
     if capture["path"] != CAPTURE_PATH or capture["revision"] != BASE_REVISION or capture["astronomyKitSourceTree"] != SOURCE_TREE or digest(path) != capture["sha256"] or path.stat().st_size != capture["bytes"]:
         raise ReplayError("capture receipt differs")
     program = capture["program"]
-    if set(program) != {"path", "sha256"} or program["path"] != CAPTURE_PROGRAM_PATH or digest(contained_path(program["path"])) != program["sha256"]:
+    require_object(program, {"path", "sha256"}, "capture program")
+    if program["path"] != CAPTURE_PROGRAM_PATH or digest(contained_path(program["path"])) != program["sha256"]:
         raise ReplayError("capture program receipt differs")
     if capture["command"] != CAPTURE_COMMAND:
         raise ReplayError("capture command differs")
@@ -276,11 +288,22 @@ def analyze():
     me_to_pa = compare(rows, inverse)
     latitude_reduction = 1 - pa_to_me["latitudeArcminutes"]["rms"] / identity["latitudeArcminutes"]["rms"]
     longitude_gate_ratio = pa_to_me["longitudeArcminutes"]["maxAbsolute"] / 0.1304
-    return {"schemaVersion": 1, "baseRevision": BASE_REVISION, "captureToolchain": toolchain, "coverage": {"totalRows": len(rows), "tables": coverage, "svsClock": "UTC labels replayed as UT coordinates; exact-base capture converts UT to TT with Espenak-Meeus Delta T", "naifClock": "DE440 binary PCK coverage is stated in ET/TDB", "observer": "SVS states geocentric and calls the sub-Earth point the apparent disc center", "lightTime": "SVS does not publish its light-time or aberration recipe; the fixed PA/ME rotation tested here is epoch-independent"}, "sourceContract": contract, "frameMatrixPAtoME": [list(row) for row in matrix], "comparisons": {"identity": identity, "interpretBaseAsPAThenConvertToME": pa_to_me, "interpretBaseAsMEThenConvertToPA": me_to_pa}, "negativeControls": {"oneHourShift": shifted_control(rows), "longitudeLatitudeSwap": swapped_control(rows), "reverseFrameDirection": me_to_pa}, "finding": {"identityLatitudeMeanSignedArcminutes": identity["latitudeArcminutes"]["meanSigned"], "identityLatitudeMaxArcminutes": identity["latitudeArcminutes"]["maxAbsolute"], "identityLongitudeMaxArcminutes": identity["longitudeArcminutes"]["maxAbsolute"], "paToMeLatitudeRMSReductionFraction": latitude_reduction, "paToMeLatitudeMaxArcminutes": pa_to_me["latitudeArcminutes"]["maxAbsolute"], "paToMeLongitudeMaxArcminutes": pa_to_me["longitudeArcminutes"]["maxAbsolute"], "paToMeLongitudeGateRatio": longitude_gate_ratio, "supportedConclusion": "The fixed DE440 PA-to-ME rotation removes most of the steady latitude bias but creates a longitude error above the existing longitude gate, so a whole-frame convention swap does not explain the SVS comparison.", "unresolved": ["SVS does not name its lunar body-fixed frame or orientation-kernel version.", "SVS names DE421 but does not publish the state, light-time, aberration, emission-time, or reception-time recipe behind the sub-Earth coordinates.", "This preflight does not evaluate the DE440 binary PCK orientation or choose a runtime blend and transition."]}}
+    return {"schemaVersion": 1, "reportDecimalPlaces": REPORT_DECIMAL_PLACES, "baseRevision": BASE_REVISION, "captureToolchain": toolchain, "coverage": {"totalRows": len(rows), "tables": coverage, "svsClock": "UTC labels replayed as UT coordinates; exact-base capture converts UT to TT with Espenak-Meeus Delta T", "naifClock": "DE440 binary PCK coverage is stated in ET/TDB", "observer": "SVS states geocentric and calls the sub-Earth point the apparent disc center", "lightTime": "SVS does not publish its light-time or aberration recipe; the fixed PA/ME rotation tested here is epoch-independent"}, "sourceContract": contract, "frameMatrixPAtoME": [list(row) for row in matrix], "comparisons": {"identity": identity, "interpretBaseAsPAThenConvertToME": pa_to_me, "interpretBaseAsMEThenConvertToPA": me_to_pa}, "negativeControls": {"oneHourShift": shifted_control(rows), "longitudeLatitudeSwap": swapped_control(rows), "reverseFrameDirection": me_to_pa}, "finding": {"identityLatitudeMeanSignedArcminutes": identity["latitudeArcminutes"]["meanSigned"], "identityLatitudeMaxArcminutes": identity["latitudeArcminutes"]["maxAbsolute"], "identityLongitudeMaxArcminutes": identity["longitudeArcminutes"]["maxAbsolute"], "paToMeLatitudeRMSReductionFraction": latitude_reduction, "paToMeLatitudeMaxArcminutes": pa_to_me["latitudeArcminutes"]["maxAbsolute"], "paToMeLongitudeMaxArcminutes": pa_to_me["longitudeArcminutes"]["maxAbsolute"], "paToMeLongitudeGateRatio": longitude_gate_ratio, "supportedConclusion": "The fixed DE440 PA-to-ME rotation removes most of the steady latitude bias but creates a longitude error above the existing longitude gate, so a whole-frame convention swap does not explain the SVS comparison.", "unresolved": ["SVS does not name its lunar body-fixed frame or orientation-kernel version.", "SVS names DE421 but does not publish the state, light-time, aberration, emission-time, or reception-time recipe behind the sub-Earth coordinates.", "This preflight does not evaluate the DE440 binary PCK orientation or choose a runtime blend and transition."]}}
+
+
+def canonicalized(value):
+    if isinstance(value, float):
+        rounded = round(value, REPORT_DECIMAL_PLACES)
+        return 0.0 if rounded == 0 else rounded
+    if isinstance(value, dict):
+        return {key: canonicalized(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [canonicalized(item) for item in value]
+    return value
 
 
 def encoded(value):
-    return (json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n").encode()
+    return (json.dumps(canonicalized(value), indent=2, sort_keys=True, allow_nan=False) + "\n").encode()
 
 
 def main():

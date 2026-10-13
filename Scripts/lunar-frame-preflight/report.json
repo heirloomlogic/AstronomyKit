@@ -4,33 +4,33 @@
   "comparisons": {
     "identity": {
       "angularSeparationArcminutes": {
-        "maxAbsolute": 1.67037278235881,
-        "meanSigned": 1.4052906686448046,
-        "rms": 1.4128694135853492,
+        "maxAbsolute": 1.670372782359,
+        "meanSigned": 1.405290668645,
+        "rms": 1.412869413585,
         "worst": {
-          "signed": 1.67037278235881,
+          "signed": 1.670372782359,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "latitudeArcminutes": {
-        "maxAbsolute": 1.6691774564322515,
-        "meanSigned": 1.4047045114847714,
-        "rms": 1.4122870628218573,
+        "maxAbsolute": 1.669177456432,
+        "meanSigned": 1.404704511485,
+        "rms": 1.412287062822,
         "worst": {
-          "signed": 1.6691774564322515,
+          "signed": 1.669177456432,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "longitudeArcminutes": {
-        "maxAbsolute": 0.11034275600707133,
-        "meanSigned": -0.00863026227743136,
-        "rms": 0.04070319425076238,
+        "maxAbsolute": 0.110342756007,
+        "meanSigned": -0.008630262277,
+        "rms": 0.040703194251,
         "worst": {
-          "signed": -0.11034275600707133,
+          "signed": -0.110342756007,
           "source": "mooninfo_2020.txt",
           "sourceLine": 2761,
           "stampUTC": "2020-04-24T23:00:00Z"
@@ -39,33 +39,33 @@
     },
     "interpretBaseAsMEThenConvertToPA": {
       "angularSeparationArcminutes": {
-        "maxAbsolute": 3.2072894880649803,
-        "meanSigned": 2.938817701455545,
-        "rms": 2.9421787466217184,
+        "maxAbsolute": 3.207289488065,
+        "meanSigned": 2.938817701456,
+        "rms": 2.942178746622,
         "worst": {
-          "signed": 3.2072894880649803,
+          "signed": 3.207289488065,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "latitudeArcminutes": {
-        "maxAbsolute": 2.979287574269849,
-        "meanSigned": 2.7120974290504187,
-        "rms": 2.716049102333627,
+        "maxAbsolute": 2.97928757427,
+        "meanSigned": 2.71209742905,
+        "rms": 2.716049102334,
         "worst": {
-          "signed": 2.979287574269849,
+          "signed": 2.97928757427,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "longitudeArcminutes": {
-        "maxAbsolute": 1.247468740177169,
-        "meanSigned": -1.1342189068005595,
-        "rms": 1.135004997484419,
+        "maxAbsolute": 1.247468740177,
+        "meanSigned": -1.134218906801,
+        "rms": 1.135004997484,
         "worst": {
-          "signed": -1.247468740177169,
+          "signed": -1.247468740177,
           "source": "mooninfo_2020.txt",
           "sourceLine": 2761,
           "stampUTC": "2020-04-24T23:00:00Z"
@@ -74,33 +74,33 @@
     },
     "interpretBaseAsPAThenConvertToME": {
       "angularSeparationArcminutes": {
-        "maxAbsolute": 1.2264844867473148,
-        "meanSigned": 1.1269141759627526,
-        "rms": 1.1275460585301302,
+        "maxAbsolute": 1.226484486747,
+        "meanSigned": 1.126914175963,
+        "rms": 1.12754605853,
         "worst": {
-          "signed": 1.2264844867473148,
+          "signed": 1.226484486747,
           "source": "mooninfo_2022.txt",
           "sourceLine": 2964,
           "stampUTC": "2022-05-04T10:00:00Z"
         }
       },
       "latitudeArcminutes": {
-        "maxAbsolute": 0.3590470500005427,
-        "meanSigned": 0.09731305569200477,
-        "rms": 0.1753697881374032,
+        "maxAbsolute": 0.359047050001,
+        "meanSigned": 0.097313055692,
+        "rms": 0.175369788137,
         "worst": {
-          "signed": 0.3590470500005427,
+          "signed": 0.359047050001,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "longitudeArcminutes": {
-        "maxAbsolute": 1.2156765203440045,
-        "meanSigned": 1.116959300560422,
-        "rms": 1.1176207029906433,
+        "maxAbsolute": 1.215676520344,
+        "meanSigned": 1.11695930056,
+        "rms": 1.117620702991,
         "worst": {
-          "signed": 1.2156765203440045,
+          "signed": 1.215676520344,
           "source": "mooninfo_2022.txt",
           "sourceLine": 718,
           "stampUTC": "2022-01-30T20:00:00Z"
@@ -136,13 +136,13 @@
     "totalRows": 26305
   },
   "finding": {
-    "identityLatitudeMaxArcminutes": 1.6691774564322515,
-    "identityLatitudeMeanSignedArcminutes": 1.4047045114847714,
-    "identityLongitudeMaxArcminutes": 0.11034275600707133,
-    "paToMeLatitudeMaxArcminutes": 0.3590470500005427,
-    "paToMeLatitudeRMSReductionFraction": 0.8758256782533992,
-    "paToMeLongitudeGateRatio": 9.322672702024576,
-    "paToMeLongitudeMaxArcminutes": 1.2156765203440045,
+    "identityLatitudeMaxArcminutes": 1.669177456432,
+    "identityLatitudeMeanSignedArcminutes": 1.404704511485,
+    "identityLongitudeMaxArcminutes": 0.110342756007,
+    "paToMeLatitudeMaxArcminutes": 0.359047050001,
+    "paToMeLatitudeRMSReductionFraction": 0.875825678253,
+    "paToMeLongitudeGateRatio": 9.322672702025,
+    "paToMeLongitudeMaxArcminutes": 1.215676520344,
     "supportedConclusion": "The fixed DE440 PA-to-ME rotation removes most of the steady latitude bias but creates a longitude error above the existing longitude gate, so a whole-frame convention swap does not explain the SVS comparison.",
     "unresolved": [
       "SVS does not name its lunar body-fixed frame or orientation-kernel version.",
@@ -152,27 +152,27 @@
   },
   "frameMatrixPAtoME": [
     [
-      0.9999998731138765,
-      -0.0003289586579141938,
-      0.00038152120821145725
+      0.999999873114,
+      -0.000328958658,
+      0.000381521208
     ],
     [
-      0.00032895919698748533,
-      0.9999999458920105,
-      -1.3502060036227025e-06
+      0.000328959197,
+      0.999999945892,
+      -1.350206e-06
     ],
     [
-      -0.00038152074340615683,
-      1.4757107425872328e-06,
-      0.9999999272198697
+      -0.000381520743,
+      1.475711e-06,
+      0.99999992722
     ]
   ],
   "negativeControls": {
     "longitudeLatitudeSwap": {
       "angularSeparationArcminutes": {
         "maxAbsolute": 929.447742534943,
-        "meanSigned": 275.41921678977394,
-        "rms": 349.6937116224473,
+        "meanSigned": 275.419216789772,
+        "rms": 349.693711622446,
         "worst": {
           "signed": 929.447742534943,
           "source": "mooninfo_2020.txt",
@@ -181,22 +181,22 @@
         }
       },
       "latitudeArcminutes": {
-        "maxAbsolute": 658.4196675465522,
-        "meanSigned": -5.987045772636488,
-        "rms": 247.48876191043152,
+        "maxAbsolute": 658.419667546552,
+        "meanSigned": -5.987045772637,
+        "rms": 247.488761910432,
         "worst": {
-          "signed": 658.4196675465522,
+          "signed": 658.419667546552,
           "source": "mooninfo_2020.txt",
           "sourceLine": 1077,
           "stampUTC": "2020-02-14T19:00:00Z"
         }
       },
       "longitudeArcminutes": {
-        "maxAbsolute": 657.0409545619111,
-        "meanSigned": 7.38312002184408,
-        "rms": 247.493000573745,
+        "maxAbsolute": 657.040954561911,
+        "meanSigned": 7.383120021844,
+        "rms": 247.493000573746,
         "worst": {
-          "signed": -657.0409545619111,
+          "signed": -657.040954561911,
           "source": "mooninfo_2020.txt",
           "sourceLine": 1078,
           "stampUTC": "2020-02-14T20:00:00Z"
@@ -205,33 +205,33 @@
     },
     "oneHourShift": {
       "angularSeparationArcminutes": {
-        "maxAbsolute": 7.747616989720527,
-        "meanSigned": 3.7100217750687308,
-        "rms": 4.008449024058289,
+        "maxAbsolute": 7.747616989721,
+        "meanSigned": 3.710021775069,
+        "rms": 4.008449024058,
         "worst": {
-          "signed": 7.747616989720527,
+          "signed": 7.747616989721,
           "source": "mooninfo_2021.txt",
           "sourceLine": 8090,
           "stampUTC": "2021-12-04T00:00:00Z"
         }
       },
       "latitudeArcminutes": {
-        "maxAbsolute": 5.917906541831231,
-        "meanSigned": 1.3923106152784017,
-        "rms": 3.023976270972633,
+        "maxAbsolute": 5.917906541831,
+        "meanSigned": 1.392310615278,
+        "rms": 3.023976270973,
         "worst": {
-          "signed": 5.917906541831231,
+          "signed": 5.917906541831,
           "source": "mooninfo_2021.txt",
           "sourceLine": 8078,
           "stampUTC": "2021-12-03T12:00:00Z"
         }
       },
       "longitudeArcminutes": {
-        "maxAbsolute": 5.524102225531351,
-        "meanSigned": 0.005697557828890864,
-        "rms": 2.640196217042766,
+        "maxAbsolute": 5.524102225531,
+        "meanSigned": 0.005697557829,
+        "rms": 2.640196217043,
         "worst": {
-          "signed": 5.524102225531351,
+          "signed": 5.524102225531,
           "source": "mooninfo_2020.txt",
           "sourceLine": 2342,
           "stampUTC": "2020-04-07T12:00:00Z"
@@ -240,33 +240,33 @@
     },
     "reverseFrameDirection": {
       "angularSeparationArcminutes": {
-        "maxAbsolute": 3.2072894880649803,
-        "meanSigned": 2.938817701455545,
-        "rms": 2.9421787466217184,
+        "maxAbsolute": 3.207289488065,
+        "meanSigned": 2.938817701456,
+        "rms": 2.942178746622,
         "worst": {
-          "signed": 3.2072894880649803,
+          "signed": 3.207289488065,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "latitudeArcminutes": {
-        "maxAbsolute": 2.979287574269849,
-        "meanSigned": 2.7120974290504187,
-        "rms": 2.716049102333627,
+        "maxAbsolute": 2.97928757427,
+        "meanSigned": 2.71209742905,
+        "rms": 2.716049102334,
         "worst": {
-          "signed": 2.979287574269849,
+          "signed": 2.97928757427,
           "source": "mooninfo_2020.txt",
           "sourceLine": 274,
           "stampUTC": "2020-01-12T08:00:00Z"
         }
       },
       "longitudeArcminutes": {
-        "maxAbsolute": 1.247468740177169,
-        "meanSigned": -1.1342189068005595,
-        "rms": 1.135004997484419,
+        "maxAbsolute": 1.247468740177,
+        "meanSigned": -1.134218906801,
+        "rms": 1.135004997484,
         "worst": {
-          "signed": -1.247468740177169,
+          "signed": -1.247468740177,
           "source": "mooninfo_2020.txt",
           "sourceLine": 2761,
           "stampUTC": "2020-04-24T23:00:00Z"
@@ -274,6 +274,7 @@
       }
     }
   },
+  "reportDecimalPlaces": 12,
   "schemaVersion": 1,
   "sourceContract": {
     "naif": {

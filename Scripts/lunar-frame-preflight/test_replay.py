@@ -48,6 +48,38 @@ class LunarFrameReplayTests(unittest.TestCase):
             with self.assertRaises(replay.ReplayError):
                 replay.contained_path(path)
 
+    def test_receipts_reject_wrong_container_types_and_missing_members(self):
+        receipt = json.loads(replay.RECEIPTS_PATH.read_text())
+        invalid = [[], "receipt"]
+        for value in (None, [], "capture"):
+            changed = copy.deepcopy(receipt)
+            changed["capture"] = value
+            invalid.append(changed)
+        for value in (None, [], "program"):
+            changed = copy.deepcopy(receipt)
+            changed["capture"]["program"] = value
+            invalid.append(changed)
+        for value in (None, {}, [None]):
+            changed = copy.deepcopy(receipt)
+            changed["sources"] = value
+            invalid.append(changed)
+        wrong_origin = copy.deepcopy(receipt)
+        wrong_origin["sources"][0]["origin"] = None
+        invalid.append(wrong_origin)
+        missing_capture_member = copy.deepcopy(receipt)
+        missing_capture_member["capture"].pop("command")
+        invalid.append(missing_capture_member)
+        missing_program_member = copy.deepcopy(receipt)
+        missing_program_member["capture"]["program"].pop("sha256")
+        invalid.append(missing_program_member)
+        for value in invalid:
+            with self.subTest(value=value):
+                with self.assertRaises(replay.ReplayError):
+                    replay.read_receipts(value)
+
+    def test_report_encoding_quantizes_floats(self):
+        self.assertEqual(replay.encoded({"value": 1.1234567890123456}), b'{\n  "value": 1.123456789012\n}\n')
+
     def test_primary_sources_state_coverage_and_leave_svs_frame_unnamed(self):
         contract = replay.source_contract()
         self.assertEqual(contract["naif"]["pckCoverageTDB"], ["1549-12-31T00:00:00", "2650-01-25T00:00:00"])
