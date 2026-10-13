@@ -6,8 +6,10 @@ import gzip
 import importlib.util
 import json
 import math
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 ROOT = Path(__file__).resolve().parent
@@ -116,6 +118,60 @@ class PreflightTests(unittest.TestCase):
             mutation(data)
             with self.assertRaises(PREFLIGHT.PreflightError):
                 PREFLIGHT.read_sources(data)
+
+    def test_capture_refreshes_cached_response_and_records_new_http_date(self):
+        entry = self.receipt["sources"][0]
+        recipe = PREFLIGHT.source_recipes()[0]
+        query = (ROOT / entry["query"]["path"]).read_bytes()
+        raw_response = gzip.decompress((ROOT / entry["response"]["path"]).read_bytes())
+        fresh_date = "Tue, 13 Oct 2026 12:00:00 GMT"
+        with tempfile.TemporaryDirectory() as directory:
+            temporary_root = Path(directory)
+            temporary_sources = temporary_root / "sources"
+            temporary_sources.mkdir()
+            (temporary_root / entry["query"]["path"]).write_bytes(query)
+            (temporary_root / entry["response"]["path"]).write_bytes(gzip.compress(raw_response + b"\n", mtime=0))
+            temporary_receipts = temporary_root / "source-receipts.json"
+            temporary_receipts.write_bytes(PREFLIGHT.encoded({"sources": [entry]}))
+            download = mock.Mock(return_value=(raw_response, fresh_date))
+            with mock.patch.object(PREFLIGHT, "ROOT", temporary_root), mock.patch.object(PREFLIGHT, "SOURCES", temporary_sources), mock.patch.object(PREFLIGHT, "RECEIPTS", temporary_receipts), mock.patch.object(PREFLIGHT, "source_recipes", return_value=[recipe]), mock.patch.object(PREFLIGHT, "download", download):
+                PREFLIGHT.capture_sources()
+            download.assert_called_once_with(query)
+            captured = json.loads(temporary_receipts.read_bytes())
+            self.assertEqual(fresh_date, captured["sources"][0]["retrievedAtHTTPDate"])
+            self.assertEqual(raw_response, gzip.decompress((temporary_root / entry["response"]["path"]).read_bytes()))
+
+    def test_source_inventory_rejects_directories_and_symlinks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            temporary_root = Path(directory)
+            temporary_sources = temporary_root / "sources"
+            temporary_sources.mkdir()
+            expected = temporary_sources / "expected.query.txt"
+            expected.write_bytes(b"query")
+            inventory = {"sources/expected.query.txt"}
+            with mock.patch.object(PREFLIGHT, "ROOT", temporary_root), mock.patch.object(PREFLIGHT, "SOURCES", temporary_sources):
+                PREFLIGHT.require_source_inventory(inventory)
+                extra_directory = temporary_sources / "unrecorded"
+                extra_directory.mkdir()
+                with self.assertRaises(PREFLIGHT.PreflightError):
+                    PREFLIGHT.require_source_inventory(inventory)
+                extra_directory.rmdir()
+                target = temporary_root / "target"
+                target.write_bytes(b"target")
+                extra_link = temporary_sources / "unrecorded-link"
+                extra_link.symlink_to(target)
+                with self.assertRaises(PREFLIGHT.PreflightError):
+                    PREFLIGHT.require_source_inventory(inventory)
+                extra_link.unlink()
+                expected.unlink()
+                expected.symlink_to(target)
+                with self.assertRaises(PREFLIGHT.PreflightError):
+                    PREFLIGHT.require_source_inventory(inventory)
+
+    def test_replay_rejects_unrecorded_directory(self):
+        with tempfile.TemporaryDirectory(prefix="unrecorded-", dir=PREFLIGHT.SOURCES):
+            with self.assertRaises(PREFLIGHT.PreflightError):
+                PREFLIGHT.check()
 
     @staticmethod
     def _nested(data, field, value):

@@ -262,42 +262,37 @@ def write_atomic(path, data):
         raise
 
 
+def require_source_inventory(expected_paths):
+    try:
+        entries = tuple(SOURCES.iterdir())
+    except OSError as error:
+        raise PreflightError("source directory inventory is unavailable") from error
+    actual_paths = set()
+    for path in entries:
+        if path.is_symlink() or not path.is_file():
+            raise PreflightError("source directory contains a non-regular entry")
+        actual_paths.add(path.relative_to(ROOT).as_posix())
+    if actual_paths != set(expected_paths):
+        raise PreflightError("source directory inventory differs")
+
+
 def capture_sources():
     SOURCES.mkdir(parents=True, exist_ok=True)
     receipts = []
     expected_paths = set()
-    previous = {}
-    if RECEIPTS.is_file():
-        try:
-            value = json.loads(RECEIPTS.read_bytes())
-            if isinstance(value, dict) and isinstance(value.get("sources"), list):
-                previous = {entry.get("query", {}).get("path"): entry for entry in value["sources"] if isinstance(entry, dict)}
-        except (OSError, json.JSONDecodeError):
-            previous = {}
     for kind, index, start, stop, step in source_recipes():
         query = query_text(start, stop, step)
         epochs = parse_query(query)
         query_relative = "sources/{}-{:03d}.query.txt".format(kind, index)
         response_relative = "sources/{}-{:03d}.response.json.gz".format(kind, index)
-        old = previous.get(query_relative)
-        try:
-            response = (ROOT / response_relative).read_bytes()
-            raw_response = gzip.decompress(response)
-            if (ROOT / query_relative).read_bytes() != query or not isinstance(old, dict) or old.get("retrievedAtHTTPDate") is None:
-                raise PreflightError("cached query differs")
-            parse_response(raw_response, epochs)
-            retrieved = old["retrievedAtHTTPDate"]
-        except (OSError, EOFError, gzip.BadGzipFile, PreflightError):
-            raw_response, retrieved = download(query)
-            parse_response(raw_response, epochs)
-            response = gzip.compress(raw_response, compresslevel=9, mtime=0)
+        raw_response, retrieved = download(query)
+        parse_response(raw_response, epochs)
+        response = gzip.compress(raw_response, compresslevel=9, mtime=0)
         write_atomic(ROOT / query_relative, query)
         write_atomic(ROOT / response_relative, response)
         expected_paths.update((query_relative, response_relative))
         receipts.append(source_receipt(kind, index, query_relative, response_relative, query, response, raw_response, retrieved, len(epochs)))
-    actual = {str(path.relative_to(ROOT)) for path in SOURCES.iterdir() if path.is_file()}
-    if actual != expected_paths:
-        raise PreflightError("source directory contains an unrecorded file")
+    require_source_inventory(expected_paths)
     receipt = {"schemaVersion": 1, "baseRevision": BASE_REVISION, "api": {"url": API_URL, "method": "multipart POST", "format": "json", "signatureVersion": "1.0"}, "sources": receipts}
     write_atomic(RECEIPTS, encoded(receipt))
 
@@ -351,9 +346,7 @@ def read_sources(receipt_data=None):
         archive["uncompressedResponseBytes"] += entry["response"]["uncompressedBytes"]
         archive["vectors"][kind] += entry["vectorCount"]
         observed_paths.update((entry["query"]["path"], entry["response"]["path"]))
-    actual_paths = {str(path.relative_to(ROOT)) for path in SOURCES.iterdir() if path.is_file()}
-    if observed_paths != actual_paths:
-        raise PreflightError("source directory inventory differs")
+    require_source_inventory(observed_paths)
     fit = vectors["fit"]
     expected_heldout = {round(value, 9) for value in holdout_epochs()}
     expected_fit = {round(value, 9) for value in fit_epochs()}
