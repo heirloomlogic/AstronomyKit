@@ -46,6 +46,31 @@ extension Engine.PlanetDE441 {
         ]
     }
 
+    /// A single epoch's immutable clock conversion, shared by a gravity evaluation's planet requests.
+    struct Evaluation: Sendable {
+        let time: Engine.Time
+        private let clock: (tdb: Double, rate: Double)?
+
+        init(at time: Engine.Time) throws {
+            try Engine.checkAcceptedTime(time)
+            self.time = time
+            if weight(tt: time.tt).weight > 0 {
+                let conversion = Engine.TDB.offsetAndRate(tt: time.tt)
+                clock = (time.tt + conversion.offsetSeconds / Engine.secondsPerDay, conversion.rate)
+            } else {
+                clock = nil
+            }
+        }
+
+        func state(
+            of planet: Engine.Planet, physicalCenter: Bool
+        ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+            guard let clock else { return nil }
+            return Engine.PlanetDE441.state(
+                of: planet, tdb: clock.tdb, rate: clock.rate, physicalCenter: physicalCenter)
+        }
+    }
+
     /// Composes a selected-window source state. Position is in AU on EQJ axes and velocity is its derivative per TT day.
     static func state(
         of planet: Engine.Planet, tt: Double, physicalCenter: Bool
@@ -53,6 +78,12 @@ extension Engine.PlanetDE441 {
         guard tt.isFinite else { return nil }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
+        return state(of: planet, tdb: tdb, rate: conversion.rate, physicalCenter: physicalCenter)
+    }
+
+    private static func state(
+        of planet: Engine.Planet, tdb: Double, rate: Double, physicalCenter: Bool
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         if planet == .saturn {
             guard
                 let barycenter = Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb),
@@ -68,7 +99,7 @@ extension Engine.PlanetDE441 {
             let bias = Engine.FrameBias.icrsToEqj
             return (
                 bias.apply(to: position / Engine.kilometersPerAU),
-                bias.apply(to: velocity * conversion.rate / Engine.kilometersPerAU)
+                bias.apply(to: velocity * rate / Engine.kilometersPerAU)
             )
         }
         guard let tables = tables(of: planet), let barycenter = tables.barycenter.evaluate(tdb: tdb),
@@ -84,7 +115,7 @@ extension Engine.PlanetDE441 {
         let bias = Engine.FrameBias.icrsToEqj
         return (
             bias.apply(to: position / Engine.kilometersPerAU),
-            bias.apply(to: velocity * conversion.rate / Engine.kilometersPerAU)
+            bias.apply(to: velocity * rate / Engine.kilometersPerAU)
         )
     }
 
