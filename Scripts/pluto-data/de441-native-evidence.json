@@ -592,7 +592,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
-    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "30e3ab316bdf3f242465a6e7f89fc2b752256adcfee84fd66547bbc1503185f5",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "d2954f95cb6d7495a9716e577dd27ed1e46522fa281c0a13bbd0315380fe02e9",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",
     "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
@@ -618,17 +618,17 @@
   "centerExtensionBase": "128ac0a4728206f887027f5674371030faad4b5c",
   "centerNativeRelease": {
     "checksum": 44301.65643972756,
-    "coldSeconds": 0.020501017570495605,
+    "coldSeconds": 0.019708991050720215,
     "coldTT": -72000,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
     "peakBytesAfterCold": 120356864,
     "peakBytesAfterLoops": 151224320,
-    "peakBytesBefore": 47218688,
+    "peakBytesBefore": 47185920,
     "seconds": {
-      "central": 0.035343050956726074,
-      "engineRange": 0.035595059394836426,
-      "outer": 0.04324305057525635
+      "central": 0.03621494770050049,
+      "engineRange": 0.036651015281677246,
+      "outer": 0.04344296455383301
     }
   },
   "directSourceDebug": {
@@ -685,17 +685,17 @@
   },
   "nativeRelease": {
     "checksum": 44287.76723921855,
-    "coldSeconds": 0.007491111755371094,
+    "coldSeconds": 0.007670998573303223,
     "coldTT": -766524.75,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 78184448,
-    "peakBytesAfterLoops": 151109632,
-    "peakBytesBefore": 47104000,
+    "peakBytesAfterCold": 78348288,
+    "peakBytesAfterLoops": 151273472,
+    "peakBytesBefore": 47267840,
     "seconds": {
-      "central": 0.03523600101470947,
-      "engineRange": 0.0359339714050293,
-      "outer": 0.05569493770599365
+      "central": 0.035650014877319336,
+      "engineRange": 0.03579294681549072,
+      "outer": 0.05558204650878906
     }
   },
   "nativeStorage": {
@@ -733,7 +733,7 @@
     "testExecutableBytes": 492681520
   },
   "rangeExtensionBase": "686ffb3b9d69c62ac2c9cc4d0493049f2851d8bd",
-  "runtimeCaptureRevision": "88d7cc65bdabf9ab089f84770491fb75617c737f",
+  "runtimeCaptureRevision": "f84e00eee5d4b0c590093356bfc008102516f348",
   "schemaVersion": 2,
   "sourceSHA256": {
     "Scripts/generate-pluto-de441.py": "57213608b5c883f588a343c5e5df7bded51e20da0c58333d7d4b0d28d46b65d9",
@@ -934,7 +934,7 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
-    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "30e3ab316bdf3f242465a6e7f89fc2b752256adcfee84fd66547bbc1503185f5",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "d2954f95cb6d7495a9716e577dd27ed1e46522fa281c0a13bbd0315380fe02e9",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",
     "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
