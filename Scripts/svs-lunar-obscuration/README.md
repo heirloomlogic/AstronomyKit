@@ -6,7 +6,7 @@ NASA SVS 5672 says that 96.3% of the Moon's disc is inside Earth's umbra at grea
 
 The exact SVS convention cannot be reproduced from the published source material. The SVS page identifies DE421, LOLA, and the Five Millennium Canon of Lunar Eclipses as datasets, then says it does not retain further dataset details. It does not publish the state vectors, full-precision peak epoch, radii, limb treatment, projection, overlap algorithm, full-precision result, or rounding rule used for 96.3%.
 
-The offline replay verifies the repository's pinned NASA and JPL archives, extracts the one Horizons row at JD TT 2461280.676452763, and independently applies the documented circular Danjon tangent-plane geometry. Its standard-library result is `0.962481599215371`, within `1.1e-14` of the archived 80-digit calculation `0.962481599215360765...`. The pinned native Debug and Release result is `0.9624960076659318`. Both remain below `0.9625`, so neither reproduces the conditional SVS print interval.
+The offline replay verifies its issue-owned NASA and JPL source snapshots, extracts the one Horizons row at JD TT 2461280.676452763, and independently applies the documented circular Danjon tangent-plane geometry. Its standard-library result is `0.962481599215371`, within `1.1e-14` of the archived 80-digit calculation `0.962481599215360765...`. The pinned native Debug and Release result is `0.9624960076659318`. Both remain below `0.9625`, so neither reproduces the conditional SVS print interval.
 
 | Evidence | Ephemeris and epoch | Quantity | Result |
 | --- | --- | --- | --- |
@@ -26,7 +26,7 @@ python3 Scripts/svs-lunar-obscuration/replay.py --check
 python3 -m unittest Scripts/svs-lunar-obscuration/test_replay.py
 ```
 
-`source-receipts.json` binds the archived SVS page, Five Millennium Catalog page, Horizons queries and responses, independent 80-digit comparison, and native Debug/Release capture to SHA-256 digests at base revision `3c31e2d56eb4e887554ea185f5f75bdb78b3a674`. The NASA pages were checked live on 2026-10-13. The catalog bytes still matched the archive; the SVS page bytes had changed while the datum, dataset list, and missing-detail disclaimer remained present, so the replay uses the reviewed repository archive rather than silently replacing it.
+`source-receipts.json` binds local snapshots of the SVS page, Five Millennium Catalog page, Horizons queries and responses, independent 80-digit comparison, and native Debug/Release capture to SHA-256 digests at base revision `3c31e2d56eb4e887554ea185f5f75bdb78b3a674`. The replay has no path dependency on other evidence-owner directories. The NASA pages were checked live on 2026-10-13. The catalog bytes still matched the snapshot; the SVS page bytes had changed while the datum, dataset list, and missing-detail disclaimer remained present, so the replay retains the reviewed base snapshot rather than silently replacing it.
 
 `results.json` is generated only by `replay.py --write`. `--check` rejects source-byte drift, query-response mismatches, missing source statements, changes to the derived comparison, and an unexpected match to the printed interval. The unit tests also reject confusing diameter magnitude with area obscuration, substituting the catalog time for the SVS printed minute, or treating DE441 as the named DE421 source model.
 
