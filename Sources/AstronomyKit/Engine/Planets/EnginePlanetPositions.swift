@@ -63,23 +63,38 @@ extension Engine.Planet {
     func heliocentricEclipticState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
-        try eclipticState(at: time, cache: cache, physicalCenter: true)
+        try eclipticState(
+            evaluation: Engine.PlanetDE441.Evaluation(at: time), cache: cache, physicalCenter: true)
     }
 
     /// System-mass trajectory for gravity and GM-weighted origins. Earth and the giant planets exclude their physical-center offsets inside the selected window.
     func systemHeliocentricState(
         at time: Engine.Time, cache: Engine.VSOP87B.Cache = Engine.VSOP87B.cache
     ) throws -> Engine.State<Engine.EQJ> {
-        Engine.VSOP87B.toEquatorial.apply(to: try eclipticState(at: time, cache: cache, physicalCenter: false))
+        try systemHeliocentricState(evaluation: Engine.PlanetDE441.Evaluation(at: time), cache: cache)
+    }
+
+    func systemHeliocentricState(
+        evaluation: Engine.PlanetDE441.Evaluation, cache: Engine.VSOP87B.Cache
+    ) throws -> Engine.State<Engine.EQJ> {
+        Engine.VSOP87B.toEquatorial.apply(
+            to: try eclipticState(evaluation: evaluation, cache: cache, physicalCenter: false))
+    }
+
+    func heliocentricState(
+        evaluation: Engine.PlanetDE441.Evaluation, cache: Engine.VSOP87B.Cache
+    ) throws -> Engine.State<Engine.EQJ> {
+        Engine.VSOP87B.toEquatorial.apply(
+            to: try eclipticState(evaluation: evaluation, cache: cache, physicalCenter: true))
     }
 
     private func eclipticState(
-        at time: Engine.Time, cache: Engine.VSOP87B.Cache, physicalCenter: Bool
+        evaluation: Engine.PlanetDE441.Evaluation, cache: Engine.VSOP87B.Cache, physicalCenter: Bool
     ) throws -> Engine.State<Engine.VSOP87Ecliptic> {
-        try Engine.checkAcceptedTime(time)
+        let time = evaluation.time
         let (weight, rate) = Engine.PlanetDE441.weight(tt: time.tt)
         if weight > 0 {
-            guard let source = Engine.PlanetDE441.state(of: self, tt: time.tt, physicalCenter: physicalCenter) else {
+            guard let source = evaluation.state(of: self, physicalCenter: physicalCenter) else {
                 throw AstronomyError.badTime
             }
             let state = Engine.State<Engine.EQJ>(

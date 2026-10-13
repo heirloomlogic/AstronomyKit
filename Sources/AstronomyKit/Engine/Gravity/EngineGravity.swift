@@ -74,7 +74,9 @@ extension Engine.Gravity {
         /// - Throws: As the planet functions do: `AstronomyError.badTime`
         ///   for |TT| above ``Engine/acceptedTTDays`` or not finite.
         init(tt: Double) throws {
-            let (sun, planets) = try barycentricStates(Self.planets, tt: tt)
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let evaluation = try Engine.PlanetDE441.Evaluation(at: time)
+            let (sun, planets) = try barycentricStates(Self.planets, evaluation: evaluation)
             self.sun = sun
             (jupiter, saturn, uranus, neptune) = (planets[0], planets[1], planets[2], planets[3])
         }
@@ -118,11 +120,12 @@ extension Engine.Gravity {
         ///
         /// - Throws: As ``MajorBodies/init(tt:)``.
         init(tt: Double) throws {
-            (sun, planets) = try barycentricStates(Self.planetsWithGM, tt: tt)
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let evaluation = try Engine.PlanetDE441.Evaluation(at: time)
+            (sun, planets) = try barycentricStates(Self.planetsWithGM, evaluation: evaluation)
             physicalCenters = planets
             for planet in [Engine.Planet.earth, .jupiter, .saturn, .uranus, .neptune] {
-                let physical = try planet.heliocentricState(at: time, cache: seriesCache)
+                let physical = try planet.heliocentricState(evaluation: evaluation, cache: seriesCache)
                 physicalCenters[planet.rawValue] = BodyState(
                     position: physical.positionVector + sun.position,
                     velocity: physical.velocityVector + sun.velocity)
@@ -165,15 +168,13 @@ extension Engine.Gravity {
     /// the order given, then every planet moved to the barycenter and the
     /// Sun put at minus the offset.
     private static func barycentricStates(
-        _ planets: [(Engine.Planet, Double)], tt: Double
+        _ planets: [(Engine.Planet, Double)], evaluation: Engine.PlanetDE441.Evaluation
     ) throws -> (sun: BodyState, planets: [BodyState]) {
-        // The planet functions read only the TT of their time.
-        let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
         var offset = BodyState(position: .zero, velocity: .zero)
         var heliocentric: [BodyState] = []
         heliocentric.reserveCapacity(planets.count)
         for (planet, gm) in planets {
-            let state = try planet.systemHeliocentricState(at: time, cache: seriesCache)
+            let state = try planet.systemHeliocentricState(evaluation: evaluation, cache: seriesCache)
             let (position, velocity) = (state.positionVector, state.velocityVector)
             let shift = gm / (gm + sunGM)
             offset.position += shift * position
