@@ -19,6 +19,7 @@ mp = solar.mp
 PATHS = sorted(set(BINDINGS + measure.TOOLS + precession_bounds.PATHS + apparent_bounds.PATHS + [
     'Scripts/solar-numerics/solar_reference.py', 'Scripts/solar-numerics/apparent_reference.py',
     'Scripts/apparent-place-data/dtdb.c', 'Scripts/solar-numerics/measure_altitude.py',
+    'Scripts/solar-numerics/selected_earth_bounds.py',
     'Tests/AstronomyKitTests/Engine/Numerics/NativeAltitudeProbe.swift',
     'Sources/AstronomyKit/SolarAltitudeObservation.swift', 'Sources/AstronomyKit/SolarAltitudeBounds.swift',
     'Sources/AstronomyKit/Position.swift', 'Sources/AstronomyKit/Time.swift', 'Sources/AstronomyKit/Observer.swift',

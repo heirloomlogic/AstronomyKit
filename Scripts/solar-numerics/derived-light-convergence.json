@@ -127,7 +127,7 @@
   "schemaVersion": 2,
   "sourceSHA256": {
     "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
-    "Scripts/solar-numerics/apparent_bounds.py": "5d91f042fb3856996285fcb96fa9ba688641a8eb4133efda7594ab073a5dd29e",
+    "Scripts/solar-numerics/apparent_bounds.py": "6b8adf65c48efac5c3a54982402708cf8bc515ea2db1394e003f4ed706f298b2",
     "Scripts/solar-numerics/certify_light_time.py": "2c91ae93bb5bafafadea9fe582df83edf0d4ae2739a76b9a93f890b2701ce53a",
     "Scripts/solar-numerics/intervals.py": "f311ffea878782dd46cb55a79486615626bbf8d8fb351c4186f9c22dfff297c1",
     "Scripts/solar-numerics/numerics.py": "f84b2d8af3b0703c548135db51b820c9e39e16362b352ca924add0eb730d608e",
