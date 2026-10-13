@@ -113,7 +113,7 @@ extension Engine.Positions {
     /// barycenter of ``Engine/Gravity/MajorBodies``, the C engine's
     /// `Astronomy_BaryState`.
     ///
-    /// The Sun, Jupiter, Uranus and Neptune use the major bodies' states. Mercury to Mars and Saturn's physical center add the Sun's state to the planet's heliocentric one. The Moon and Earth-Moon barycenter add their geocentric states to the sum of the Sun's and Earth's. Pluto uses ``Engine/Pluto/barycentricState(at:cache:)``.
+    /// The Sun uses the major bodies' system-center composition. Every planet adds that Sun state to its physical-center heliocentric state. The Moon and Earth-Moon barycenter add their geocentric states to the sum of the Sun's and Earth's. Pluto uses ``Engine/Pluto/barycentricState(at:cache:)``.
     ///
     /// - Throws: As ``heliocentricState(of:at:)``.
     static func barycentricState(
@@ -128,16 +128,9 @@ extension Engine.Positions {
             state = Engine.State(x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, time: time)
         case .pluto:
             state = try Engine.Pluto.barycentricState(at: time)
-        case .sun, .jupiter, .uranus, .neptune:
-            let bodies = try Engine.Gravity.MajorBodies(tt: time.tt)
-            let major: Engine.Gravity.BodyState =
-                switch body {
-                case .sun: bodies.sun
-                case .jupiter: bodies.jupiter
-                case .uranus: bodies.uranus
-                default: bodies.neptune
-                }
-            state = Engine.State(position: major.position, velocity: major.velocity, time: time)
+        case .sun:
+            let sun = try Engine.Gravity.MajorBodies(tt: time.tt).sun
+            state = Engine.State(position: sun.position, velocity: sun.velocity, time: time)
         case .moon, .earthMoonBarycenter:
             let sun = try Engine.Gravity.MajorBodies(tt: time.tt).sun
             let earth = try Engine.Planet.earth.heliocentricState(at: time)
@@ -152,7 +145,6 @@ extension Engine.Positions {
             state = sum(geocentric, origin)
         default:
             guard let planet = Engine.Planet(body) else { throw AstronomyError.invalidBody }
-            // Mercury to Mars and Saturn’s physical center.
             let sun = try Engine.Gravity.MajorBodies(tt: time.tt).sun
             let heliocentric = try planet.heliocentricState(at: time)
             state = sum(

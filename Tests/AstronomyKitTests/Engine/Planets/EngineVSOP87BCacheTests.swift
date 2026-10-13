@@ -67,8 +67,8 @@ struct EngineVSOP87BCacheTests {
         let (cache, _) = Self.makeCache()
         let tt = Engine.PlanetPolynomial.mercury.start(ofSegment: 14) + 3
         #expect(Engine.PlanetPolynomial.position(.mercury, tt: tt) == nil)
-        _ = try Engine.Planet.mercury.heliocentricPosition(at: Self.time(tt: tt), cache: cache)
-        _ = try Engine.Planet.mercury.heliocentricPosition(at: Self.time(tt: tt), cache: cache)
+        _ = try Engine.Planet.mercury.retainedEclipticState(at: Self.time(tt: tt), cache: cache)
+        _ = try Engine.Planet.mercury.retainedEclipticState(at: Self.time(tt: tt), cache: cache)
         #expect(cache.coordinates[Engine.Planet.mercury.rawValue].statistics == Statistics(hits: 1, misses: 1))
     }
 
