@@ -48,6 +48,15 @@ def repository_path(value, label):
     return resolved
 
 
+def snapshot_path(value, label):
+    resolved = repository_path(value, label)
+    try:
+        resolved.relative_to((HERE / "sources").resolve())
+    except ValueError as error:
+        raise EvidenceError(f"{label} path is outside the issue-owned source snapshots") from error
+    return resolved
+
+
 def verify_file(path, expected_sha256, label):
     if not path.is_file():
         raise EvidenceError(f"{label} is missing: {path.relative_to(ROOT)}")
@@ -60,21 +69,21 @@ def verify_receipts(receipts):
     if receipts.get("schemaVersion") != 1:
         raise EvidenceError("unsupported source-receipt schema")
     for label, source in receipts["sources"].items():
-        path = repository_path(source["archivePath"], label)
+        path = snapshot_path(source["archivePath"], label)
         verify_file(path, source["sha256"], label)
         if "queryPath" in source:
-            verify_file(repository_path(source["queryPath"], f"{label} query"), source["querySHA256"], f"{label} query")
+            verify_file(snapshot_path(source["queryPath"], f"{label} query"), source["querySHA256"], f"{label} query")
         text = path.read_text()
         for required in source.get("requiredText", []):
             if required not in text:
                 raise EvidenceError(f"{label} no longer contains required source text: {required}")
     for label, artifact in receipts["supportingArtifacts"].items():
-        verify_file(repository_path(artifact["path"], label), artifact["sha256"], label)
+        verify_file(snapshot_path(artifact["path"], label), artifact["sha256"], label)
 
 
 def horizons_row(source):
-    response = load_json(repository_path(source["archivePath"], "Horizons response"))
-    query = load_json(repository_path(source["queryPath"], "Horizons query"))
+    response = load_json(snapshot_path(source["archivePath"], "Horizons response"))
+    query = load_json(snapshot_path(source["queryPath"], "Horizons query"))
     if response.get("signature", {}).get("source") != "NASA/JPL Horizons API":
         raise EvidenceError("Horizons response signature changed")
     if query.get("responseSHA256") != source["sha256"]:
@@ -167,7 +176,7 @@ def in_print_interval(value):
 
 
 def catalog_facts(receipts):
-    text = repository_path(receipts["sources"]["catalog"]["archivePath"], "catalog").read_text()
+    text = snapshot_path(receipts["sources"]["catalog"]["archivePath"], "catalog").read_text()
     line = next(line for line in text.splitlines() if "2026 Aug 28  04:14:04" in line)
     fields = html.unescape(re.sub(r"<[^>]+>", " ", line)).split()
     if len(fields) != 18 or fields[1:4] != ["2026", "Aug", "28"]:
@@ -176,7 +185,7 @@ def catalog_facts(receipts):
 
 
 def native_result(receipts):
-    captures = load_json(repository_path(receipts["supportingArtifacts"]["nativeCapture"]["path"], "native capture"))
+    captures = load_json(snapshot_path(receipts["supportingArtifacts"]["nativeCapture"]["path"], "native capture"))
     values = []
     for configuration in ("debug", "release"):
         matches = [
@@ -196,7 +205,7 @@ def build_results(receipts):
     sun = horizons_row(receipts["sources"]["horizonsSun"])
     moon = horizons_row(receipts["sources"]["horizonsMoon"])
     replay = replay_overlap(sun, moon)
-    independent = load_json(repository_path(receipts["supportingArtifacts"]["independentOverlap"]["path"], "independent overlap"))["lunarOverlap"]["expected"]
+    independent = load_json(snapshot_path(receipts["supportingArtifacts"]["independentOverlap"]["path"], "independent overlap"))["lunarOverlap"]["expected"]
     independent_obscuration = float(independent["obscuration"])
     if abs(replay["obscuration"] - independent_obscuration) > 2e-14:
         raise EvidenceError("standard-library replay differs from the archived 80-digit overlap")

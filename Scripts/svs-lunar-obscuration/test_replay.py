@@ -42,6 +42,12 @@ class ReplayTests(unittest.TestCase):
         with self.assertRaisesRegex(REPLAY.EvidenceError, "path escapes the repository"):
             REPLAY.verify_receipts(receipts)
 
+    def test_shared_evidence_owner_path_is_rejected(self):
+        receipts = copy.deepcopy(self.receipts)
+        receipts["sources"]["svs"]["archivePath"] = "Scripts/reference-data/sources/nasa-svs-5672.html"
+        with self.assertRaisesRegex(REPLAY.EvidenceError, "outside the issue-owned source snapshots"):
+            REPLAY.verify_receipts(receipts)
+
     def test_measure_and_model_substitutions_are_negative_controls(self):
         result = REPLAY.build_results(self.receipts)
         self.assertTrue(result["negativeControls"])
