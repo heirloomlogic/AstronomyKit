@@ -27,8 +27,9 @@ jobs:
     runs-on: macos-26
     # DE-backed validation used 92 minutes before the full suite, then exhausted
     # the 180-minute job ceiling during the USNO corpus (run 38399462211).
-    # Keep every numerical check, test and per-test guard with four-hour headroom.
-    timeout-minutes: 240
+    # The measured Linux slowdown projects ~244 minutes here; allow headroom
+    # without changing any numerical check, test command or per-test guard.
+    timeout-minutes: 300
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
