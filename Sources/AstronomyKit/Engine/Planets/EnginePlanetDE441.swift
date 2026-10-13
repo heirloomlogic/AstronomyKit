@@ -46,19 +46,43 @@ extension Engine.PlanetDE441 {
         ]
     }
 
-    /// A single epoch's immutable clock conversion, shared by a gravity evaluation's planet requests.
+    private typealias ComponentState = (position: SIMD3<Double>, velocity: SIMD3<Double>)
+
+    private struct ComponentPair: Sendable {
+        let barycenter: ComponentState?
+        let solar: ComponentState?
+    }
+
+    /// A single epoch's immutable clock and optional source components shared by gravity's planet requests.
     struct Evaluation: Sendable {
         let time: Engine.Time
         private let clock: (tdb: Double, rate: Double)?
+        private let components: [ComponentPair?]
 
-        init(at time: Engine.Time) throws {
+        init(at time: Engine.Time, reusingComponentsFor planets: [Engine.Planet] = []) throws {
             try Engine.checkAcceptedTime(time)
             self.time = time
             if weight(tt: time.tt).weight > 0 {
                 let conversion = Engine.TDB.offsetAndRate(tt: time.tt)
-                clock = (time.tt + conversion.offsetSeconds / Engine.secondsPerDay, conversion.rate)
+                let tdb = time.tt + conversion.offsetSeconds / Engine.secondsPerDay
+                clock = (tdb, conversion.rate)
+                let solar = planets.contains { $0 != .saturn } ? sun.evaluate(tdb: tdb) : nil
+                let saturnSolar = planets.contains(.saturn) ? Engine.SaturnEphemeris.sun.evaluate(tdb: tdb) : nil
+                var evaluated =
+                    planets.isEmpty ? [] : [ComponentPair?](repeating: nil, count: Engine.Planet.allCases.count)
+                for planet in planets where evaluated[planet.rawValue] == nil {
+                    if planet == .saturn {
+                        evaluated[planet.rawValue] = ComponentPair(
+                            barycenter: Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb), solar: saturnSolar)
+                    } else {
+                        evaluated[planet.rawValue] = ComponentPair(
+                            barycenter: tables(of: planet)?.barycenter.evaluate(tdb: tdb), solar: solar)
+                    }
+                }
+                components = evaluated
             } else {
                 clock = nil
+                components = []
             }
         }
 
@@ -67,7 +91,8 @@ extension Engine.PlanetDE441 {
         ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
             guard let clock else { return nil }
             return Engine.PlanetDE441.state(
-                of: planet, tdb: clock.tdb, rate: clock.rate, physicalCenter: physicalCenter)
+                of: planet, tdb: clock.tdb, rate: clock.rate, physicalCenter: physicalCenter,
+                components: components.isEmpty ? nil : components[planet.rawValue])
         }
     }
 
@@ -82,13 +107,16 @@ extension Engine.PlanetDE441 {
     }
 
     private static func state(
-        of planet: Engine.Planet, tdb: Double, rate: Double, physicalCenter: Bool
+        of planet: Engine.Planet, tdb: Double, rate: Double, physicalCenter: Bool,
+        components: ComponentPair? = nil
     ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         if planet == .saturn {
-            guard
-                let barycenter = Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb),
-                let solar = Engine.SaturnEphemeris.sun.evaluate(tdb: tdb)
-            else { return nil }
+            let source =
+                components
+                ?? ComponentPair(
+                    barycenter: Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb),
+                    solar: Engine.SaturnEphemeris.sun.evaluate(tdb: tdb))
+            guard let barycenter = source.barycenter, let solar = source.solar else { return nil }
             var position = barycenter.position - solar.position
             var velocity = barycenter.velocity - solar.velocity
             if physicalCenter {
@@ -102,9 +130,12 @@ extension Engine.PlanetDE441 {
                 bias.apply(to: velocity * rate / Engine.kilometersPerAU)
             )
         }
-        guard let tables = tables(of: planet), let barycenter = tables.barycenter.evaluate(tdb: tdb),
-            let solar = sun.evaluate(tdb: tdb)
-        else { return nil }
+        guard let tables = tables(of: planet) else { return nil }
+        let source =
+            components
+            ?? ComponentPair(
+                barycenter: tables.barycenter.evaluate(tdb: tdb), solar: sun.evaluate(tdb: tdb))
+        guard let barycenter = source.barycenter, let solar = source.solar else { return nil }
         var position = barycenter.position - solar.position
         var velocity = barycenter.velocity - solar.velocity
         if physicalCenter, let offsetTable = tables.offset {
