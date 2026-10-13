@@ -3,14 +3,14 @@ import base64
 from fractions import Fraction as Q
 import re
 import struct
-from numerics import ROOT, ENGINE, sqrt_interval, earth_model
+from numerics import ROOT, ENGINE, sqrt_interval
 
 SUN_PATH = ENGINE+'Gravity/Generated/DE441/PlutoDE441SunData.swift'
 TDB_PATH = ENGINE+'Moon/Generated/TDBTerms.swift'
 PATHS = [SUN_PATH,TDB_PATH,ENGINE+'Moon/EngineTDB.swift',ENGINE+'Moon/EngineFrameBias.swift',
          ENGINE+'Gravity/EnginePlutoDE441.swift',ENGINE+'Positions/EngineApparentPlace.swift',
          ENGINE+'Positions/EngineApparentKinematics.swift',ENGINE+'Positions/EngineApparentComposition.swift',
-         ENGINE+'Positions/EngineApparentObserver.swift','Scripts/solar-numerics/apparent_bounds.py']
+         ENGINE+'Positions/EngineApparentObserver.swift','Scripts/solar-numerics/apparent_bounds.py', 'Scripts/solar-numerics/selected_earth_bounds.py']
 
 
 def clock_bounds(limit=Q(37002)):
@@ -76,36 +76,6 @@ def solar_bounds(lower=Q(-37002), upper=Q(37002)):
             'accelerationTT':acceleration*(1+q)**2+speed*clocks['accelerationPerDay'],
             'firstRecord':Q(first),'lastRecord':Q(last),'recordCount':Q(last-first+1),
             'sourceStartTDB':start,'sourceStopTDB':start+count*width,**clocks}
-
-
-def earth_acceleration_bound():
-    degree,width,start,stop,values=earth_model()
-    n=degree+1
-    maximum=Q(0)
-    for first in range(0,len(values),3*n):
-        axes=[]
-        for axis in range(3):
-            # max |T_k''| = k^2(k^2-1)/3 on [-1,1].
-            axes.append(sum(Q(k*k*(k*k-1),3)*abs(Q(a))
-                            for k,a in enumerate(values[first+axis*n:first+(axis+1)*n]))/(width/2)**2)
-        maximum=max(maximum,sum(a*a for a in axes))
-    return sqrt_interval(maximum)[1]*Q('1.000001')
-
-
-def earth_velocity_join_bound():
-    degree,width,start,stop,values=earth_model()
-    n=degree+1
-    maximum=Q(0)
-    for segment in range(1,len(values)//(3*n)):
-        differences=[]
-        for axis in range(3):
-            left=values[((segment-1)*3+axis)*n:((segment-1)*3+axis+1)*n]
-            right=values[(segment*3+axis)*n:(segment*3+axis+1)*n]
-            dl=sum(k*k*Q(a) for k,a in enumerate(left))*2/width
-            dr=sum((-1)**(k-1)*k*k*Q(a) for k,a in enumerate(right) if k)*2/width
-            differences.append(dl-dr)
-        maximum=max(maximum,sum(d*d for d in differences))
-    return sqrt_interval(maximum)[1]*Q('1.000001')
 
 
 def orientation_bounds():
