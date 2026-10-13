@@ -75,7 +75,8 @@ extension Engine.Gravity {
         ///   for |TT| above ``Engine/acceptedTTDays`` or not finite.
         init(tt: Double) throws {
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-            let evaluation = try Engine.PlanetDE441.Evaluation(at: time)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: Self.planets.map { $0.0 })
             let (sun, planets) = try barycentricStates(Self.planets, evaluation: evaluation)
             self.sun = sun
             (jupiter, saturn, uranus, neptune) = (planets[0], planets[1], planets[2], planets[3])
@@ -121,7 +122,8 @@ extension Engine.Gravity {
         /// - Throws: As ``MajorBodies/init(tt:)``.
         init(tt: Double) throws {
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-            let evaluation = try Engine.PlanetDE441.Evaluation(at: time)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: Engine.Planet.allCases)
             (sun, planets) = try barycentricStates(Self.planetsWithGM, evaluation: evaluation)
             physicalCenters = planets
             for planet in [Engine.Planet.earth, .jupiter, .saturn, .uranus, .neptune] {

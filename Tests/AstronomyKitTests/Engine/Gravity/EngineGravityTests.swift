@@ -217,12 +217,13 @@ struct EngineGravityTests {
     }
 
     @Test(
-        "One evaluation's clock preserves every planet and center across source boundaries and models")
-    func sharedClockIdentity() throws {
+        "One evaluation's components preserve every planet and center across source boundaries and models")
+    func sharedComponentIdentity() throws {
         for tt in Self.clockEpochs {
             for model in DeltaTModel.allCases {
                 let time = Engine.Time(ut: tt - 0.001, tt: tt, deltaTModel: model)
-                let evaluation = try Engine.PlanetDE441.Evaluation(at: time)
+                let evaluation = try Engine.PlanetDE441.Evaluation(
+                    at: time, reusingComponentsFor: Engine.Planet.allCases)
                 for planet in Engine.Planet.allCases {
                     #expect(
                         Self.bits(
@@ -239,11 +240,28 @@ struct EngineGravityTests {
         }
     }
 
+    @Test("Partial component reuse preserves uncached planets and repeated requests")
+    func partialComponentIdentity() throws {
+        for tt in [0.0, Engine.MoonEphemeris.fullWeightEnd + 16, -400_000.25] {
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: [.earth, .saturn, .earth])
+            for planet in Engine.Planet.allCases {
+                let expected = try planet.heliocentricState(at: time, cache: Gravity.seriesCache)
+                for _ in 0..<2 {
+                    let actual = try planet.heliocentricState(evaluation: evaluation, cache: Gravity.seriesCache)
+                    #expect(Self.bits(actual) == Self.bits(expected))
+                }
+            }
+        }
+    }
+
     @Test("An immutable evaluation can be shared concurrently without mixing epochs")
-    func sharedClockConcurrency() async throws {
+    func sharedComponentConcurrency() async throws {
         for tt in [0.0, Engine.MoonEphemeris.fullWeightStart - 16, -400_000.25] {
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-            let evaluation = try Engine.PlanetDE441.Evaluation(at: time)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: Engine.Planet.allCases)
             try await withThrowingTaskGroup(of: Void.self) { group in
                 for planet in Engine.Planet.allCases {
                     group.addTask {
@@ -270,7 +288,8 @@ struct EngineGravityTests {
             #expect(throws: AstronomyError.badTime) { _ = try Gravity.SolarSystem(tt: tt) }
             #expect(throws: AstronomyError.badTime) {
                 _ = try Engine.PlanetDE441.Evaluation(
-                    at: Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus))
+                    at: Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus),
+                    reusingComponentsFor: Engine.Planet.allCases)
             }
         }
     }
