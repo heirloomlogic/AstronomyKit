@@ -7,24 +7,16 @@ from fractions import Fraction as Q
 from pathlib import Path
 
 import apparent_bounds
-from intervals import Interval as I, DeltaT, year_start, equatorial_matrix
-from numerics import ROOT, BINDINGS, source_hashes, check_hashes
+import selected_earth_bounds
+from intervals import Interval as I, DeltaT, year_start
+from numerics import ROOT, BINDINGS, source_hashes
 
 C=Q(299792458)*86400/149597870700
 JUMPS=[1900,1920,1941,1961,1986,2005,2050]
 
 
 def constants():
-    artifact=json.loads((ROOT/'Scripts/solar-numerics/derived-earth.json').read_text())
-    check_hashes(ROOT,artifact['sourceSHA256'])
-    terms={key:Q(value['rational']) for key,value in artifact['terms'].items()}
-    matrix=equatorial_matrix()
-    gram=[[sum(matrix[k][i]*matrix[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
-    frame_norm=Q('1.000001')
-    if max(sum(abs(v) for v in row) for row in gram)>frame_norm**2:
-        raise ValueError('Fixed EQJ matrix exceeds its norm enclosure')
-    if min(gram[i][i]-sum(abs(gram[i][j]) for j in range(3) if j!=i) for i in range(3)) < 1/frame_norm**2:
-        raise ValueError('Fixed EQJ matrix violates its lower singular-value enclosure')
+    earth=selected_earth_bounds.derive()
     source=(ROOT/'Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift').read_text()
     required=['for iteration in 1...20',
               'abs(nextDelay - delay) <= max(4 * nextDelay.ulp, emission.ulp) || tt - nextDelay == emission',
@@ -42,7 +34,7 @@ def constants():
               for year in range(1898,2102))
     jumps=sum((delta.at_year(I(year),year)-delta.at_year(I(year),year-1)).abs_upper()/86400 for year in JUMPS)
     site=Q('6388.1366')/Q('149597870.700')
-    radius=terms['radiusMaximumAU']*frame_norm
+    radius=earth['radiusMaximumAU']
     # Every iterate is in [0,T]: |S(t-delay)-S(t)| <= V_s*T.
     t=Q('.006')
     q=sun['rateDeparture']
@@ -50,7 +42,7 @@ def constants():
     k=v/C+q
     if (radius+site+v*t)/C+q*t>=t or k>=1:
         raise ValueError('Solar contraction does not preserve the delay interval')
-    lower=(terms['radiusMinimumAU']/frame_norm-site-v*t)/C-q*t
+    lower=(earth['radiusMinimumAU']-site-v*t)/C-q*t
     # The smallest binary64 spacing on the certified positive delay interval.
     if lower<=Q(1,256) or t>=Q(1,128):
         raise ValueError('Delay ULP bin changed')
@@ -77,13 +69,14 @@ def constants():
 def certify():
     bounds=constants()
     paths=sorted(set(BINDINGS+apparent_bounds.PATHS+[
-        'Scripts/solar-numerics/derived-earth.json','Scripts/solar-numerics/intervals.py',
+        'Scripts/solar-numerics/selected_earth_bounds.py','Scripts/solar-numerics/intervals.py',
         'Scripts/solar-numerics/certify_light_time.py',
-        'Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift','Sources/AstronomyKit/Time.swift']))
+        'Sources/AstronomyKit/Engine/Orientation/EngineRotations.swift','Sources/AstronomyKit/Time.swift',
+        'Sources/AstronomyKit/SolarAltitudeObservation.swift']))
     residuals=[{'evaluation':i+1,'successiveDelayDifferenceUpperDays':str(bounds['T']*bounds['k']**i)} for i in range(20)]
     return {'kind':'exact-model-barycentric-TDB-solar-convergence','schemaVersion':2,
-            'domain':'Reception TT within Earth polynomial coverage and |TT|<37000; surface height within 10 km; Earth/site held at reception; compiled Sun at emission',
-            'dependency':'derived-earth.json must pass numerics.py --check; every compiled solar record intersecting the padded domain is enclosed',
+            'domain':'Reception TT in [-36524.5,36889.5), inside selected Earth full-weight coverage; surface height within 10 km; Earth/site held at reception; compiled Sun at emission',
+            'dependency':'selected_earth_bounds.py encloses every selected Earth record; every compiled solar record intersecting the padded domain is enclosed',
             'sourceSHA256':source_hashes(ROOT,paths),'constants':{k:str(v) for k,v in bounds.items()},
             'records':residuals,
             'proof':['The compiled solar cubic is C1 at shared endpoints; no Delta T conversion occurs at emission.',

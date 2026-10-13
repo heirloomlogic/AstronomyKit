@@ -10,15 +10,15 @@ enum SolarAltitudeBounds {
     static let classificationUTLimit = 37000.0
     static let civilCalendarDays = 1.9744372803387487e-11
     static let civilToTTDays = 5.260697793335522e-11
-    static let civilToTTDegrees = 1.9109922261121532e-08
-    static let civilToUTDegrees = 7.172305306666436e-09
-    static let forwardTTDegrees = 1.839229565916507e-11
-    static let ttInverseDegrees = 8.898033299279463e-09
-    static let lightTimeDegrees = 2.5881610828248626e-11
-    static let eraDegrees = 3.300169371997139e-11
-    static let joinDegrees = 2.5808872533797464e-11
-    static let arrivalJumpInverseDegrees = 0.0008032461526198088
-    static let arrivalJumpForwardDegrees = 4.980945650572721e-06
+    static let civilToTTDegrees = 1.911911011124689e-08
+    static let civilToUTDegrees = 7.1757536780542135e-09
+    static let forwardTTDegrees = 1.982473857859788e-11
+    static let ttInverseDegrees = 8.898040580228058e-09
+    static let lightTimeDegrees = 1.1919094881017085e-13
+    static let eraDegrees = 3.3001720723954566e-11
+    static let joinDegrees = 4.577379229698929e-14
+    static let arrivalJumpInverseDegrees = 0.0008032468098879657
+    static let arrivalJumpForwardDegrees = 5.368875491494299e-06
     static let lightTimeJumpDegrees = 0.0
     static let arrivalUncertaintyBaseDays = 9.699832778384278e-11
     static let arrivalUncertaintyDays = 2.2250353577983486e-06
@@ -28,8 +28,8 @@ enum SolarAltitudeBounds {
     static let deltaTJumpDays = 2.2249376288856943e-06
     static let ttImageSlope = 1.0000003283618477
     static let backdateMaxDays = 0.006
-    static let utSensitivityDegreesPerDay = 361.01950833862446
-    static let ttSensitivityDegreesPerDay = 2.238690013556608
+    static let utSensitivityDegreesPerDay = 361.01980374822716
+    static let ttSensitivityDegreesPerDay = 2.4130453913816767
     static let modelStepUTs: [Double] = [-36524.5, -29220.5, -21549.5, -14244.5, -5113.5, 1826.5, 18262.5]
     struct Gap {
         let lower: Double

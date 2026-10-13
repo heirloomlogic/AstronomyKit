@@ -14,7 +14,8 @@ class AltitudeDerivationTests(unittest.TestCase):
         for name, term in result['terms'].items():
             self.assertGreaterEqual(Q(term['binary64']), Q(term['rational']), name)
         self.assertLess(Q(result['classificationGuard']['derivedForwardErrorDays']), Q('5e-12'))
-        self.assertLess(Q(result['nativeRadiusGuard']['delayUpperDays']), Q('.006'))
+        self.assertLess(Q(result['selectedEarth']['radiusMaximumAU']) / derive.C, Q('.006'))
+        self.assertGreater(Q(result['selectedEarth']['minimumComponentJoinSpacingTTDays']), 1)
 
     def test_decimal_year_clamp_change_invalidates_guard(self):
         original = Path.read_text
