@@ -31,7 +31,8 @@ struct EnginePositionsTests {
     /// series and the Moon from the lunar series, and 1945, 2000 and 2026,
     /// inside the polynomial fits and the DE440 Moon and Pluto. Each is a
     /// multiple of 1/64 day, so the difference stencils below are exact, and
-    /// none is within 2/64 day of a polynomial segment boundary.
+    /// none is within 2/64 day of a polynomial segment boundary. The velocity
+    /// check moves Neptune's 1945 sample off its two-day source-record seam.
     static let instants: [Double] = [-73_010.25, -20_000.5, 0.25, 9_500.75, 73_010.125]
 
     /// The bodies to evaluate at `tt`. Pluto only inside the DE440 span: its
@@ -253,20 +254,21 @@ struct EnginePositionsTests {
         arguments: instants)
     func velocities(tt: Double) throws {
         for body in Self.bodies(at: tt) {
-            let allowance = Self.velocityAllowance(body, tt: tt)
-            let heliocentric = try Positions.heliocentricState(of: body, at: Self.time(tt: tt))
-            let heliocentricRate = try Self.derivative(at: tt) {
+            let sampleTT = body == .neptune && tt == -20_000.5 ? -20_000.25 : tt
+            let allowance = Self.velocityAllowance(body, tt: sampleTT)
+            let heliocentric = try Positions.heliocentricState(of: body, at: Self.time(tt: sampleTT))
+            let heliocentricRate = try Self.derivative(at: sampleTT) {
                 try Positions.heliocentricState(of: body, at: Self.time(tt: $0)).positionVector
             }
             let heliocentricError = Self.length(heliocentric.velocityVector - heliocentricRate)
-            #expect(heliocentricError <= allowance, "\(body) at \(tt): heliocentric \(heliocentricError)")
+            #expect(heliocentricError <= allowance, "\(body) at \(sampleTT): heliocentric \(heliocentricError)")
             guard [.sun, .moon, .earthMoonBarycenter, .pluto].contains(body) else { continue }
-            let barycentric = try Positions.barycentricState(of: body, at: Self.time(tt: tt))
-            let barycentricRate = try Self.derivative(at: tt) {
+            let barycentric = try Positions.barycentricState(of: body, at: Self.time(tt: sampleTT))
+            let barycentricRate = try Self.derivative(at: sampleTT) {
                 try Positions.barycentricState(of: body, at: Self.time(tt: $0)).positionVector
             }
             let barycentricError = Self.length(barycentric.velocityVector - barycentricRate)
-            #expect(barycentricError <= allowance, "\(body) at \(tt): barycentric \(barycentricError)")
+            #expect(barycentricError <= allowance, "\(body) at \(sampleTT): barycentric \(barycentricError)")
         }
     }
 

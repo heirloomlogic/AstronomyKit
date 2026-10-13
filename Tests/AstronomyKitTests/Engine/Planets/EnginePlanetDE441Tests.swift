@@ -83,6 +83,31 @@ struct EnginePlanetDE441Tests {
         }
     }
 
+    @Test("Neptune's exact and adjacent offset seam values select their one-sided source records")
+    func neptuneOffsetSeam() throws {
+        let table = Source.neptuneOffset
+        let record = 8_279
+        let seam = table.start + Double(record) * table.days
+        #expect(seam == -20_000.5)
+        for tdb in [seam.nextDown, seam, seam.nextUp] {
+            let selected = tdb < seam ? record - 1 : record
+            let x = 2 * (tdb - (table.start + Double(selected) * table.days)) / table.days - 1
+            let actual = try #require(table.evaluate(tdb: tdb))
+            let expected = try #require(table.evaluate(record: selected, x: x))
+            #expect(actual.position == expected.position)
+            #expect(actual.velocity == expected.velocity)
+        }
+
+        var tt = seam
+        for _ in 0..<3 { tt = seam - Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay }
+        for instant in [tt.nextDown, tt, tt.nextUp] {
+            let source = try #require(Source.state(of: .neptune, tt: instant, physicalCenter: true))
+            let publicState = try Engine.Planet.neptune.heliocentricState(at: PlanetTestSupport.time(tt: instant))
+            #expect(Self.norm(publicState.positionVector - source.position) < 1e-10)
+            #expect(Self.norm(publicState.velocityVector - source.velocity) < 2e-14)
+        }
+    }
+
     @Test("Source domains include both blends and reject their exterior endpoints")
     func domains() throws {
         let ttBoundaries = [-36_556.5, -36_524.5, 47_846.5, 47_878.5]

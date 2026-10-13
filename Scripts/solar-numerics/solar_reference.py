@@ -1,11 +1,18 @@
 """Extended-precision geometric Sun model, composed from published definitions."""
+import base64
 import re
 import importlib.util
+import struct
 from functools import lru_cache
 import reference as ref
 from numerics import ROOT, ENGINE
 
 mp = ref.mp
+
+EARTH_BARYCENTER_PATH = ENGINE + 'Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift'
+EARTH_OFFSET_PATH = ENGINE + 'Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift'
+PLANET_SUN_PATH = ENGINE + 'Planets/Generated/Saturn/SaturnSunData.swift'
+AU_KM = mp.mpf('149597870.700')
 
 
 def polynomial(coefficients, t):
@@ -117,13 +124,99 @@ def equatorial_earth(position):
             mp.mpf('0.397776982902') * y + mp.mpf('0.917482137087') * z]
 
 
+@lru_cache(maxsize=3)
+def direct_table(path):
+    text = (ROOT / path).read_text()
+    start, days, count, coefficients = re.search(
+        r'start: ([^,]+), days: ([^,]+),\s*recordCount: ([^,]+),\s*coefficientCount: ([^,]+),', text).groups()
+    payload = base64.b64decode(''.join(text.split('"""')[1].split()), validate=True)
+    count = int(count.replace('_', ''))
+    coefficients = int(coefficients.replace('_', ''))
+    if len(payload) != count * 3 * coefficients * 8:
+        raise ValueError(f'Direct source table shape changed: {path}')
+    return mp.mpf(start), mp.mpf(days), count, coefficients, payload
+
+
+def direct_state(path, tdb):
+    start, days, count, coefficients, payload = direct_table(path)
+    record = int(mp.floor((tdb - start) / days))
+    if not 0 <= record < count:
+        raise ValueError(f'Direct source table exterior: {path}')
+    x = 2 * (tdb - start - record * days) / days - 1
+    offset = record * 3 * coefficients * 8
+    values = struct.unpack_from(f'<{3 * coefficients}d', payload, offset)
+    positions, velocities = [], []
+    for axis in range(3):
+        terms = [ref.exact(value) for value in values[axis * coefficients:(axis + 1) * coefficients]]
+        positions.append(mp.fsum(term * mp.chebyt(k, x) for k, term in enumerate(terms)))
+        velocities.append(2 / days * mp.fsum(k * terms[k] * mp.chebyu(k - 1, x) for k in range(1, coefficients)))
+    return mp.matrix(positions), mp.matrix(velocities)
+
+
+def frame_bias(vector):
+    unit = mp.pi / 648000
+    return r1(-mp.mpf('84381.406') * unit) * r3(mp.mpf('0.041775') * unit) * r1(
+        mp.mpf('84381.412819') * unit) * r3(-mp.mpf('0.052928') * unit) * vector
+
+
+class SelectedEarth:
+    def __init__(self):
+        self.retained = ref.Earth()
+
+    @staticmethod
+    def weight(tt):
+        start, end, days = mp.mpf('-36524.5'), mp.mpf('47846.5'), mp.mpf('32')
+        if start <= tt <= end:
+            return mp.mpf(1), mp.mpf(0)
+        if tt <= start - days or tt >= end + days:
+            return mp.mpf(0), mp.mpf(0)
+        if tt < start:
+            x, sign = (tt - (start - days)) / days, 1
+        else:
+            x, sign = (end + days - tt) / days, -1
+        return x**3 * (10 + x * (-15 + 6 * x)), sign * 30 * x**2 * (1 - x)**2 / days
+
+    @staticmethod
+    def source(tt):
+        import apparent_reference as apparent
+        tdb = apparent.clock(tt)
+        barycenter = direct_state(EARTH_BARYCENTER_PATH, tdb)
+        offset = direct_state(EARTH_OFFSET_PATH, tdb)
+        sun = direct_state(PLANET_SUN_PATH, tdb)
+        position = frame_bias(barycenter[0] - sun[0] + offset[0]) / AU_KM
+        velocity = frame_bias(barycenter[1] - sun[1] + offset[1]) * mp.diff(apparent.clock, tt) / AU_KM
+        return position, velocity
+
+    def retained_state(self, tt):
+        position = mp.matrix(equatorial_earth(self.retained.position(tt)))
+        velocity = mp.matrix(equatorial_earth(self.retained.velocity(tt)))
+        return position, velocity
+
+    def position(self, tt):
+        retained_position, _ = self.retained_state(tt)
+        weight, _ = self.weight(tt)
+        if not weight:
+            return retained_position
+        source_position, _ = self.source(tt)
+        return retained_position + weight * (source_position - retained_position)
+
+    def velocity(self, tt):
+        retained_position, retained_velocity = self.retained_state(tt)
+        weight, rate = self.weight(tt)
+        if not weight:
+            return retained_velocity
+        source_position, source_velocity = self.source(tt)
+        return retained_velocity + weight * (source_velocity - retained_velocity) + rate * (
+            source_position - retained_position)
+
+
 class Solar:
     def __init__(self):
-        self.earth = ref.Earth()
+        self.earth = SelectedEarth()
 
     def observer(self, ut, tt, location=None):
         import apparent_reference as apparent
-        result = mp.matrix(equatorial_earth(self.earth.position(tt))) + apparent.sun(tt)
+        result = mp.matrix(self.earth.position(tt)) + apparent.sun(tt)
         if location is not None:
             result += self.site(ut,tt,location)
         return result
@@ -145,9 +238,7 @@ class Solar:
 
     def observer_velocity(self,ut,tt,location=None):
         import apparent_reference as apparent
-        # Piecewise Earth polynomials can have position jumps. Differentiate
-        # the branch selected at tt; only the smooth Sun/site use mp.diff.
-        result=mp.matrix(equatorial_earth(self.earth.velocity(tt)))+mp.diff(apparent.sun,tt)
+        result=mp.matrix(self.earth.velocity(tt))+mp.diff(apparent.sun,tt)
         if location is not None:
             result+=mp.diff(lambda delta:self.site(ut+delta,tt+delta,location),mp.mpf(0))
         return result

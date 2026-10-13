@@ -100,8 +100,8 @@ extension Engine.Gravity {
         var sun: BodyState
         /// Mercury to Neptune system-center gravitational states, indexed by ``Engine/Planet/rawValue``.
         var planets: [BodyState]
-        /// Physical Saturn center for exposed body states and origin translation; forces use the system-center entry in `planets`.
-        var saturnCenter: BodyState
+        /// Mercury to Neptune physical-center states exposed to callers and used for origin translation.
+        var physicalCenters: [BodyState]
 
         /// The GM each planet pulls with, in table order. Earth's includes
         /// the Moon's.
@@ -120,9 +120,13 @@ extension Engine.Gravity {
         init(tt: Double) throws {
             (sun, planets) = try barycentricStates(Self.planetsWithGM, tt: tt)
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-            let physical = try Engine.Planet.saturn.heliocentricState(at: time, cache: seriesCache)
-            saturnCenter = BodyState(
-                position: physical.positionVector + sun.position, velocity: physical.velocityVector + sun.velocity)
+            physicalCenters = planets
+            for planet in [Engine.Planet.earth, .jupiter, .saturn, .uranus, .neptune] {
+                let physical = try planet.heliocentricState(at: time, cache: seriesCache)
+                physicalCenters[planet.rawValue] = BodyState(
+                    position: physical.positionVector + sun.position,
+                    velocity: physical.velocityVector + sun.velocity)
+            }
         }
 
         /// The barycentric state of `body`: the Sun, a planet, or the
@@ -130,8 +134,7 @@ extension Engine.Gravity {
         func state(of body: CelestialBody) -> BodyState? {
             if body == .solarSystemBarycenter { return BodyState(position: .zero, velocity: .zero) }
             if body == .sun { return sun }
-            if body == .saturn { return saturnCenter }
-            return Engine.Planet(body).map { planets[$0.rawValue] }
+            return Engine.Planet(body).map { physicalCenters[$0.rawValue] }
         }
 
         /// The acceleration of a body of negligible mass at barycentric
