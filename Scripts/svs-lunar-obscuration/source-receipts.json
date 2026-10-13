@@ -20,6 +20,7 @@
     "horizonsMoon": {
       "archivePath": "Scripts/svs-lunar-obscuration/sources/horizons/moon-geocentric.json",
       "copiedFrom": "Scripts/apparent-place-data/horizons/moon-geocentric.json@3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+      "queryCopiedFrom": "Scripts/apparent-place-data/horizons/moon-geocentric.query.json@3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
       "queryPath": "Scripts/svs-lunar-obscuration/sources/horizons/moon-geocentric.query.json",
       "querySHA256": "c1690b1b8629a98ae0ee0a1f2bb9f35b382f61feadd4f5b6a076a55055c910dc",
       "sha256": "806c13e6052a7c3106f86b2968f899edee39189e471d8ec405a80e98bb98982c",
@@ -28,6 +29,7 @@
     "horizonsSun": {
       "archivePath": "Scripts/svs-lunar-obscuration/sources/horizons/sun-geocentric.json",
       "copiedFrom": "Scripts/apparent-place-data/horizons/sun-geocentric.json@3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+      "queryCopiedFrom": "Scripts/apparent-place-data/horizons/sun-geocentric.query.json@3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
       "queryPath": "Scripts/svs-lunar-obscuration/sources/horizons/sun-geocentric.query.json",
       "querySHA256": "9a341fea688f27569117121cea0802147a23e3eb6fed15277e07bb0906bde8e2",
       "sha256": "62e7dbf416be54b897d2170b70e18a8e9216e1cdd05b69a7594a6204f6f646eb",

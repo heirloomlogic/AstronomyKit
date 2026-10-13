@@ -72,6 +72,10 @@ def verify_receipts(receipts):
         path = snapshot_path(source["archivePath"], label)
         verify_file(path, source["sha256"], label)
         if "queryPath" in source:
+            query_name = Path(source["queryPath"]).name
+            expected_origin = f"Scripts/apparent-place-data/horizons/{query_name}@{receipts['baseRevision']}"
+            if source.get("queryCopiedFrom") != expected_origin:
+                raise EvidenceError(f"{label} query origin must be {expected_origin}")
             verify_file(snapshot_path(source["queryPath"], f"{label} query"), source["querySHA256"], f"{label} query")
         text = path.read_text()
         for required in source.get("requiredText", []):

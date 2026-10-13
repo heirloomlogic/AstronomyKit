@@ -48,6 +48,15 @@ class ReplayTests(unittest.TestCase):
         with self.assertRaisesRegex(REPLAY.EvidenceError, "outside the issue-owned source snapshots"):
             REPLAY.verify_receipts(receipts)
 
+    def test_horizons_query_snapshots_name_their_base_origins(self):
+        base = self.receipts["baseRevision"]
+        for label in ("horizonsMoon", "horizonsSun"):
+            source = self.receipts["sources"][label]
+            name = Path(source["queryPath"]).name
+            expected = f"Scripts/apparent-place-data/horizons/{name}@{base}"
+            with self.subTest(label=label):
+                self.assertEqual(source.get("queryCopiedFrom"), expected)
+
     def test_measure_and_model_substitutions_are_negative_controls(self):
         result = REPLAY.build_results(self.receipts)
         self.assertTrue(result["negativeControls"])
