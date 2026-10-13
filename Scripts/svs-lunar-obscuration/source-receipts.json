@@ -1,0 +1,60 @@
+{
+  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+  "checkedAt": "2026-10-13",
+  "schemaVersion": 1,
+  "sources": {
+    "catalog": {
+      "archivePath": "Scripts/reference-data/sources/nasa-lunar-2001-2100.html",
+      "requiredText": [
+        "2026 Aug 28  04:14:04",
+        "0.4964  1.9645  0.9299",
+        "calculated using Danjon's enlargement method",
+        "based on the VSOP87 theory",
+        "based on the ELP-2000/82 theory"
+      ],
+      "liveObservedSHA256": "0f640913669a640418f05c173cea0bdeca194fcac6b5b196b6b9ab1b08122792",
+      "sha256": "0f640913669a640418f05c173cea0bdeca194fcac6b5b196b6b9ab1b08122792",
+      "url": "https://eclipse.gsfc.nasa.gov/LEcat5/LE2001-2100.html"
+    },
+    "horizonsMoon": {
+      "archivePath": "Scripts/apparent-place-data/horizons/moon-geocentric.json",
+      "queryPath": "Scripts/apparent-place-data/horizons/moon-geocentric.query.json",
+      "querySHA256": "c1690b1b8629a98ae0ee0a1f2bb9f35b382f61feadd4f5b6a076a55055c910dc",
+      "sha256": "806c13e6052a7c3106f86b2968f899edee39189e471d8ec405a80e98bb98982c",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api"
+    },
+    "horizonsSun": {
+      "archivePath": "Scripts/apparent-place-data/horizons/sun-geocentric.json",
+      "queryPath": "Scripts/apparent-place-data/horizons/sun-geocentric.query.json",
+      "querySHA256": "9a341fea688f27569117121cea0802147a23e3eb6fed15277e07bb0906bde8e2",
+      "sha256": "62e7dbf416be54b897d2170b70e18a8e9216e1cdd05b69a7594a6204f6f646eb",
+      "url": "https://ssd.jpl.nasa.gov/api/horizons.api"
+    },
+    "svs": {
+      "archivePath": "Scripts/reference-data/sources/nasa-svs-5672.html",
+      "requiredText": [
+        "At the moment of greatest eclipse, 4:13 a.m. Universal Time, 96.3% of the Moon's disk is within Earth's umbra",
+        "Umbra magnitude",
+        "fraction of the <strong>diameter</strong>",
+        "obscuration (the 96.3% number here) is the <strong>area</strong>",
+        "DE421 (JPL DE421)",
+        "DEM (Digital Elevation Map) [LRO: LOLA]",
+        "5MCLE (Five Millennium Canon of Lunar Eclipses)",
+        "we do not store any further details, nor the data sets themselves on our site"
+      ],
+      "liveObservedSHA256": "4ca41930656819dabb53643e596cf8139ccc4fecc6eb1708a6e6d8ecddcfaa88",
+      "sha256": "58c3f58627ad6846c41391280f8fbb90e5c7cff2623f229cfa465d5bc620af4e",
+      "url": "https://svs.gsfc.nasa.gov/5672/"
+    }
+  },
+  "supportingArtifacts": {
+    "independentOverlap": {
+      "path": "Scripts/apparent-place-data/integration-reference.json",
+      "sha256": "5a594cc119136587db0fa9c615f99258a3fa980f999a114227d7a6efb6ae3364"
+    },
+    "nativeCapture": {
+      "path": "Scripts/eclipse-data/native-captures.json",
+      "sha256": "b46bb6df98270e821f75576b3ae3d1a207d0fc8db7d45980c107a455f5f00fda"
+    }
+  }
+}
