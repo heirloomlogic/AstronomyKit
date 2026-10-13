@@ -1,0 +1,327 @@
+{
+  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+  "captureToolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1) Target: arm64-apple-macosx27.0.0",
+  "comparisons": {
+    "identity": {
+      "angularSeparationArcminutes": {
+        "maxAbsolute": 1.67037278235881,
+        "meanSigned": 1.4052906686448046,
+        "rms": 1.4128694135853492,
+        "worst": {
+          "signed": 1.67037278235881,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "latitudeArcminutes": {
+        "maxAbsolute": 1.6691774564322515,
+        "meanSigned": 1.4047045114847714,
+        "rms": 1.4122870628218573,
+        "worst": {
+          "signed": 1.6691774564322515,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "longitudeArcminutes": {
+        "maxAbsolute": 0.11034275600707133,
+        "meanSigned": -0.00863026227743136,
+        "rms": 0.04070319425076238,
+        "worst": {
+          "signed": -0.11034275600707133,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 2761,
+          "stampUTC": "2020-04-24T23:00:00Z"
+        }
+      }
+    },
+    "interpretBaseAsMEThenConvertToPA": {
+      "angularSeparationArcminutes": {
+        "maxAbsolute": 3.2072894880649803,
+        "meanSigned": 2.938817701455545,
+        "rms": 2.9421787466217184,
+        "worst": {
+          "signed": 3.2072894880649803,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "latitudeArcminutes": {
+        "maxAbsolute": 2.979287574269849,
+        "meanSigned": 2.7120974290504187,
+        "rms": 2.716049102333627,
+        "worst": {
+          "signed": 2.979287574269849,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "longitudeArcminutes": {
+        "maxAbsolute": 1.247468740177169,
+        "meanSigned": -1.1342189068005595,
+        "rms": 1.135004997484419,
+        "worst": {
+          "signed": -1.247468740177169,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 2761,
+          "stampUTC": "2020-04-24T23:00:00Z"
+        }
+      }
+    },
+    "interpretBaseAsPAThenConvertToME": {
+      "angularSeparationArcminutes": {
+        "maxAbsolute": 1.2264844867473148,
+        "meanSigned": 1.1269141759627526,
+        "rms": 1.1275460585301302,
+        "worst": {
+          "signed": 1.2264844867473148,
+          "source": "mooninfo_2022.txt",
+          "sourceLine": 2964,
+          "stampUTC": "2022-05-04T10:00:00Z"
+        }
+      },
+      "latitudeArcminutes": {
+        "maxAbsolute": 0.3590470500005427,
+        "meanSigned": 0.09731305569200477,
+        "rms": 0.1753697881374032,
+        "worst": {
+          "signed": 0.3590470500005427,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "longitudeArcminutes": {
+        "maxAbsolute": 1.2156765203440045,
+        "meanSigned": 1.116959300560422,
+        "rms": 1.1176207029906433,
+        "worst": {
+          "signed": 1.2156765203440045,
+          "source": "mooninfo_2022.txt",
+          "sourceLine": 718,
+          "stampUTC": "2022-01-30T20:00:00Z"
+        }
+      }
+    }
+  },
+  "coverage": {
+    "lightTime": "SVS does not publish its light-time or aberration recipe; the fixed PA/ME rotation tested here is epoch-independent",
+    "naifClock": "DE440 binary PCK coverage is stated in ET/TDB",
+    "observer": "SVS states geocentric and calls the sub-Earth point the apparent disc center",
+    "svsClock": "UTC labels replayed as UT coordinates; exact-base capture converts UT to TT with Espenak-Meeus Delta T",
+    "tables": {
+      "2020": {
+        "endUTC": "2021-01-01T00:00:00Z",
+        "rows": 8785,
+        "startUTC": "2020-01-01T00:00:00Z",
+        "stepSeconds": 3600
+      },
+      "2021": {
+        "endUTC": "2021-12-31T23:00:00Z",
+        "rows": 8760,
+        "startUTC": "2021-01-01T00:00:00Z",
+        "stepSeconds": 3600
+      },
+      "2022": {
+        "endUTC": "2022-12-31T23:00:00Z",
+        "rows": 8760,
+        "startUTC": "2022-01-01T00:00:00Z",
+        "stepSeconds": 3600
+      }
+    },
+    "totalRows": 26305
+  },
+  "finding": {
+    "identityLatitudeMaxArcminutes": 1.6691774564322515,
+    "identityLatitudeMeanSignedArcminutes": 1.4047045114847714,
+    "identityLongitudeMaxArcminutes": 0.11034275600707133,
+    "paToMeLatitudeMaxArcminutes": 0.3590470500005427,
+    "paToMeLatitudeRMSReductionFraction": 0.8758256782533992,
+    "paToMeLongitudeGateRatio": 9.322672702024576,
+    "paToMeLongitudeMaxArcminutes": 1.2156765203440045,
+    "supportedConclusion": "The fixed DE440 PA-to-ME rotation removes most of the steady latitude bias but creates a longitude error above the existing longitude gate, so a whole-frame convention swap does not explain the SVS comparison.",
+    "unresolved": [
+      "SVS does not name its lunar body-fixed frame or orientation-kernel version.",
+      "SVS names DE421 but does not publish the state, light-time, aberration, emission-time, or reception-time recipe behind the sub-Earth coordinates.",
+      "This preflight does not evaluate the DE440 binary PCK orientation or choose a runtime blend and transition."
+    ]
+  },
+  "frameMatrixPAtoME": [
+    [
+      0.9999998731138765,
+      -0.0003289586579141938,
+      0.00038152120821145725
+    ],
+    [
+      0.00032895919698748533,
+      0.9999999458920105,
+      -1.3502060036227025e-06
+    ],
+    [
+      -0.00038152074340615683,
+      1.4757107425872328e-06,
+      0.9999999272198697
+    ]
+  ],
+  "negativeControls": {
+    "longitudeLatitudeSwap": {
+      "angularSeparationArcminutes": {
+        "maxAbsolute": 929.447742534943,
+        "meanSigned": 275.41921678977394,
+        "rms": 349.6937116224473,
+        "worst": {
+          "signed": 929.447742534943,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 1078,
+          "stampUTC": "2020-02-14T20:00:00Z"
+        }
+      },
+      "latitudeArcminutes": {
+        "maxAbsolute": 658.4196675465522,
+        "meanSigned": -5.987045772636488,
+        "rms": 247.48876191043152,
+        "worst": {
+          "signed": 658.4196675465522,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 1077,
+          "stampUTC": "2020-02-14T19:00:00Z"
+        }
+      },
+      "longitudeArcminutes": {
+        "maxAbsolute": 657.0409545619111,
+        "meanSigned": 7.38312002184408,
+        "rms": 247.493000573745,
+        "worst": {
+          "signed": -657.0409545619111,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 1078,
+          "stampUTC": "2020-02-14T20:00:00Z"
+        }
+      }
+    },
+    "oneHourShift": {
+      "angularSeparationArcminutes": {
+        "maxAbsolute": 7.747616989720527,
+        "meanSigned": 3.7100217750687308,
+        "rms": 4.008449024058289,
+        "worst": {
+          "signed": 7.747616989720527,
+          "source": "mooninfo_2021.txt",
+          "sourceLine": 8090,
+          "stampUTC": "2021-12-04T00:00:00Z"
+        }
+      },
+      "latitudeArcminutes": {
+        "maxAbsolute": 5.917906541831231,
+        "meanSigned": 1.3923106152784017,
+        "rms": 3.023976270972633,
+        "worst": {
+          "signed": 5.917906541831231,
+          "source": "mooninfo_2021.txt",
+          "sourceLine": 8078,
+          "stampUTC": "2021-12-03T12:00:00Z"
+        }
+      },
+      "longitudeArcminutes": {
+        "maxAbsolute": 5.524102225531351,
+        "meanSigned": 0.005697557828890864,
+        "rms": 2.640196217042766,
+        "worst": {
+          "signed": 5.524102225531351,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 2342,
+          "stampUTC": "2020-04-07T12:00:00Z"
+        }
+      }
+    },
+    "reverseFrameDirection": {
+      "angularSeparationArcminutes": {
+        "maxAbsolute": 3.2072894880649803,
+        "meanSigned": 2.938817701455545,
+        "rms": 2.9421787466217184,
+        "worst": {
+          "signed": 3.2072894880649803,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "latitudeArcminutes": {
+        "maxAbsolute": 2.979287574269849,
+        "meanSigned": 2.7120974290504187,
+        "rms": 2.716049102333627,
+        "worst": {
+          "signed": 2.979287574269849,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 274,
+          "stampUTC": "2020-01-12T08:00:00Z"
+        }
+      },
+      "longitudeArcminutes": {
+        "maxAbsolute": 1.247468740177169,
+        "meanSigned": -1.1342189068005595,
+        "rms": 1.135004997484419,
+        "worst": {
+          "signed": -1.247468740177169,
+          "source": "mooninfo_2020.txt",
+          "sourceLine": 2761,
+          "stampUTC": "2020-04-24T23:00:00Z"
+        }
+      }
+    }
+  },
+  "schemaVersion": 1,
+  "sourceContract": {
+    "naif": {
+      "anglesArcseconds": [
+        67.8526,
+        78.6944,
+        0.2785
+      ],
+      "axes": [
+        3,
+        2,
+        1
+      ],
+      "dynamicFrame": "MOON_PA_DE440 relative to ICRF",
+      "fixedFrame": "MOON_ME_DE440_ME421 relative to MOON_PA_DE440",
+      "pckCoverageTDB": [
+        "1549-12-31T00:00:00",
+        "2650-01-25T00:00:00"
+      ]
+    },
+    "svs": {
+      "4768": {
+        "bodyFixedFrameNamed": false,
+        "lightTimeRecipeNamed": false,
+        "modelNamed": "JPL DE421",
+        "observer": "geocentric",
+        "quantity": "sub-Earth longitude and latitude",
+        "timeLabel": "UTC",
+        "year": 2020
+      },
+      "4874": {
+        "bodyFixedFrameNamed": false,
+        "lightTimeRecipeNamed": false,
+        "modelNamed": "JPL DE421",
+        "observer": "geocentric",
+        "quantity": "sub-Earth longitude and latitude",
+        "timeLabel": "UTC",
+        "year": 2021
+      },
+      "4955": {
+        "bodyFixedFrameNamed": false,
+        "lightTimeRecipeNamed": false,
+        "modelNamed": "JPL DE421",
+        "observer": "geocentric",
+        "quantity": "sub-Earth longitude and latitude",
+        "timeLabel": "UTC",
+        "year": 2022
+      }
+    }
+  }
+}
