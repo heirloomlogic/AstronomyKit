@@ -8,6 +8,7 @@ import unittest
 from unittest.mock import patch
 
 import measure
+import solar_reference as solar
 
 
 class MeasurementProvenanceTests(unittest.TestCase):
@@ -39,11 +40,60 @@ class MeasurementProvenanceTests(unittest.TestCase):
                     self.recheck(changed)
 
     def test_saved_reference_is_reexecuted(self):
-        rows = self.saved["rows"][:1]
+        rows = measure.comparisons(self.saved["rows"][:1], self.saved["requests"][:1])
         self.assertEqual(measure.comparisons(rows, self.saved["requests"][:1]), rows)
         changed = copy.deepcopy(rows)
         changed[0]["reference"]["earthX"] = "0"
         self.assertNotEqual(measure.comparisons(changed, self.saved["requests"][:1]), changed)
+
+    def test_earth_rows_follow_selected_ecliptic_model(self):
+        earth = solar.SelectedEarth()
+        routes = {"selected": 0, "blend": 0, "retained": 0}
+        for record, request in zip(self.saved["rows"], self.saved["requests"]):
+            tt = measure.ref.exact(measure.decode(record["values"]["tt"]))
+            weight, _ = earth.weight(tt)
+            retained = earth.retained.position(tt)
+            expected = retained
+            if weight:
+                x, y, z = earth.source(tt)[0]
+                mp = measure.ref.mp
+                source = [x - mp.mpf("0.000000479966") * y,
+                          mp.mpf("0.000000440360") * x + mp.mpf("0.917482137087") * y + mp.mpf("0.397776982902") * z,
+                          -mp.mpf("0.000000190919") * x - mp.mpf("0.397776982902") * y + mp.mpf("0.917482137087") * z]
+                expected = [a + weight * (b - a) for a, b in zip(retained, source)]
+            routes["selected" if weight == 1 else "blend" if weight else "retained"] += 1
+            row = measure.comparisons([record], [request])[0]
+            for name, value in zip(["earthX", "earthY", "earthZ"], expected):
+                self.assertAlmostEqual(measure.ref.mp.mpf(row["reference"][name]), value, delta=measure.ref.mp.mpf("1e-70"), msg=request["id"])
+        self.assertEqual(routes, {"selected": 132, "blend": 8, "retained": 22})
+
+    def test_retained_route_does_not_apply_an_equatorial_round_trip(self):
+        earth = solar.SelectedEarth()
+        tt = measure.ref.mp.mpf("-40000")
+        with patch.object(earth, "source", side_effect=AssertionError("source outside selection")):
+            self.assertEqual(measure.ecliptic_earth(earth, tt), earth.retained.position(tt))
+
+    def test_selected_reference_dependencies_invalidate_reports(self):
+        import measure_altitude
+        paths = ["Scripts/solar-numerics/solar_reference.py", "Scripts/solar-numerics/apparent_reference.py",
+                 "Scripts/apparent-place-data/dtdb.c", *measure.BINDINGS]
+        for path in paths:
+            self.assertIn(path, measure.BINDINGS + measure.TOOLS)
+            self.assertIn(path, measure_altitude.PATHS)
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            for path in paths:
+                target = root / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes((measure.ROOT / path).read_bytes())
+            hashes = measure.source_hashes(root, paths)
+            for path in paths[:3]:
+                target = root / path
+                original = target.read_bytes()
+                target.write_bytes(original + b"\n")
+                with self.assertRaises(ValueError):
+                    measure.check_hashes(root, hashes)
+                target.write_bytes(original)
 
     def test_altered_summary_is_rejected(self):
         changed = copy.deepcopy(self.saved)

@@ -11,9 +11,12 @@ import subprocess
 import time
 
 import reference as ref
+import solar_reference as solar
 from numerics import ROOT, BINDINGS, source_hashes, check_hashes
 
 TOOLS = ["Scripts/solar-numerics/reference.py", "Scripts/solar-numerics/measure.py",
+         "Scripts/solar-numerics/solar_reference.py", "Scripts/solar-numerics/apparent_reference.py",
+         "Scripts/apparent-place-data/dtdb.c",
          "Tests/AstronomyKitTests/Engine/Numerics/NativeNumericalProbe.swift"]
 
 
@@ -47,10 +50,24 @@ def decode(bits):
     return struct.unpack(">d", int(bits, 16).to_bytes(8, "big"))[0]
 
 
+def ecliptic_earth(earth, tt):
+    weight, _ = earth.weight(tt)
+    if not weight:
+        return earth.retained.position(tt)
+    source, _ = earth.source(tt)
+    # Native EQJ-to-VSOP uses the transpose, not a mathematical matrix inverse.
+    columns = [solar.equatorial_earth([int(i == j) for i in range(3)]) for j in range(3)]
+    selected = [ref.mp.fdot(column, source) for column in columns]
+    if weight == 1:
+        return selected
+    retained = earth.retained.position(tt)
+    return [a + weight * (b - a) for a, b in zip(retained, selected)]
+
+
 def comparisons(records, requests):
     if len(records) != len(requests) or len({row["id"] for row in records}) != len(records):
         raise ValueError("Missing or duplicate native output rows")
-    earth = ref.Earth()
+    earth = solar.SelectedEarth()
     result = []
     for record, request in zip(records, requests):
         if any(record[key] != request[key] for key in ["id", "model", "scale"]):
@@ -62,7 +79,7 @@ def comparisons(records, requests):
             raise ValueError("Nonfinite native result")
         ut, tt = ref.exact(numbers["ut"]), ref.exact(numbers["tt"])
         dt = ref.delta_t(ut, record["model"])
-        e = earth.position(tt)
+        e = ecliptic_earth(earth, tt)
         nutation = ref.nutation(tt)
         reference = {"deltaTSeconds": dt, "forwardTT": ut + dt / 86400,
                      "eraDegrees": ref.era(ut), "earthX": e[0], "earthY": e[1], "earthZ": e[2],
@@ -135,7 +152,7 @@ def main():
               "nativeProcessSecondsIncludingRunner": seconds, "nativeProcessLog": log_path.read_text(),
               "requests": requests, "rows": rows,
               "sampledMaximumAbsoluteError": summary(rows),
-              "excluded": ["full altitude", "civil conversion", "frame transforms", "light-time iteration flips",
+              "excluded": ["full altitude", "civil conversion", "apparent/horizon frame transforms", "light-time iteration flips",
                            "continuous arithmetic or libm bounds", "other compilers or architectures"]}
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     print(json.dumps({"rows": len(rows), "maxima": report["sampledMaximumAbsoluteError"]}, indent=2))
