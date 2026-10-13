@@ -3229,7 +3229,7 @@
   "captureSHA256": "6ef5363dc88879890817bef776cd044a7ae35d86211b35f166658d394988df9b",
   "captureSourceSHA256": {
     "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
-    "Scripts/galilean-residuals.py": "6d0f25b63ceac16d3c80ec984e7148aa1f89a976cf173023173292e02d04947c",
+    "Scripts/galilean-residuals.py": "5943dfb961279ce26654dcc39f3f9b1fe502ca13d3c9b9ff16858f537f6da49d",
     "Scripts/generate-jupiter-moon-series.py": "b75c47644d1e116cf9923a373bd9e15d8d89e91e50ef616f011099aa6f4de8f5",
     "Scripts/jupiter-moon-data/manifest.json": "c4f42d1f533559dd3dfdff1ddff454f715aa14eefad15e073784d8a1248b9421",
     "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
@@ -3249,7 +3249,7 @@
     "Scripts/reference-data/sources/horizons/io-domain-vector.query.json": "17982b2777787b3254a3073458c7463d33dbbdd561d8b22281178d915b8c907b",
     "Scripts/reference-data/sources/horizons/io-vector.json": "4c09f6807a15f45ecd936d38ab1c5ca71dfe759bc063c0a3ac1685b1f1aaa981",
     "Scripts/reference-data/sources/horizons/io-vector.query.json": "f20330c61f533ee38a5235929338c4ff17a7bbfd1a59e75e8053536d32da19e6",
-    "Scripts/test_galilean_residuals.py": "3a3e34c6b8b93b6bcaade0249839c3260c7aad5454e82eef3aa239821773133f",
+    "Scripts/test_galilean_residuals.py": "104bd51283eb6b016c4d9414af746f7af43c793b88ae73fbded5f4ec2e7655e4",
     "Sources/AstronomyKit/Apsis.swift": "846e96c10636302634649bb827e843e3b6debf9b1d3f948f0b412f8e26dcece6",
     "Sources/AstronomyKit/AstronomyError.swift": "7122525f8f8796baaef9e6a3baff8c2332d0a0f817927af6c98d83b4a81c7746",
     "Sources/AstronomyKit/AstronomyKit.swift": "0286b5b438eab83063b404a6d79b202997ab35bb237ab45e56b86efa6f59615b",
@@ -3473,7 +3473,7 @@
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
   },
-  "runtimeCaptureRevision": "e70fb49b4799e27e0909fb07bf85470db46d1d70",
+  "runtimeCaptureRevision": "748753e56f2547c12351846bc3617acd25df797d",
   "schemaVersion": 2,
   "sourceSHA256": {
     "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
