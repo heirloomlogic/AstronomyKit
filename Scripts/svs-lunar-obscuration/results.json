@@ -1,0 +1,61 @@
+{
+  "comparison": {
+    "conditionalNearestPrintInterval": [
+      0.9625,
+      0.9635
+    ],
+    "horizonsDE441DanjonReplay": {
+      "axisDistanceKilometers": 3166.2682592692013,
+      "moonRadiusKilometers": 1737.4172040294156,
+      "obscuration": 0.962481599215371,
+      "separationArcseconds": 1672.786265579864,
+      "umbraRadiusKilometers": 4661.568827258111
+    },
+    "nativeCapturedObscuration": 0.9624960076659318,
+    "svsPrintedObscuration": 0.963
+  },
+  "conventions": {
+    "catalog": {
+      "ephemerides": "VSOP87 Sun and ELP-2000/82 Moon",
+      "greatestEclipseUT": "04:14:04",
+      "measure": "umbral magnitude, a diameter fraction",
+      "shadow": "Danjon enlargement",
+      "value": 0.9299
+    },
+    "horizonsReplay": {
+      "ephemeris": "DE441",
+      "epoch": "JD TT 2461280.676452763",
+      "measure": "Moon-disc area inside a circular Danjon umbra",
+      "positions": "geocentric airless apparent directions in ICRF"
+    },
+    "svs": {
+      "datasetsNamed": [
+        "DE421",
+        "LOLA",
+        "5MCLE"
+      ],
+      "greatestEclipseUT": "04:13 (printed minute)",
+      "measure": "Moon-disc area inside the umbra"
+    }
+  },
+  "negativeControls": {
+    "catalogMagnitudeIsSVSArea": false,
+    "catalogTimeEqualsSVSPrintedMinute": false,
+    "horizonsDE441ReplayMatchesSVSPrintInterval": false,
+    "horizonsEphemerisEqualsSVSNamedEphemeris": false,
+    "nativeCaptureMatchesSVSPrintInterval": false
+  },
+  "outcome": {
+    "exactSVSConventionReproduced": false,
+    "missingSourceFields": [
+      "DE421 realization and state vectors used by the visualization",
+      "full-precision peak epoch and time scale",
+      "Sun, Earth, Moon, and umbra radii",
+      "LOLA limb or topography treatment in the 96.3% calculation",
+      "projection and overlap algorithm",
+      "full-precision obscuration and rounding rule"
+    ],
+    "productionDefectEstablished": false
+  },
+  "schemaVersion": 1
+}

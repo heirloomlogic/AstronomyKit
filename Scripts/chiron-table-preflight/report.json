@@ -1,0 +1,102 @@
+{
+  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+  "coverage": {
+    "allSeamsHeldout": true,
+    "endJulianDateTDB": 2506333.5,
+    "everyRecordHeldout": true,
+    "globalEndpointsHeldout": true,
+    "recordCount": 2403,
+    "recordDays": 38.0,
+    "startJulianDateTDB": 2415019.5
+  },
+  "limitations": [
+    "The limits are reversible first-link source-reproduction screens, not a public AstronomyKit accuracy policy.",
+    "The passing residuals apply to the exact aligned daily and half-day query recipe. The retained offset 38-day negative query differs by more than 1 km, so this report does not claim the same result for every legitimate Horizons sampling recipe.",
+    "The archived heldouts cover every record, every seam, and both endpoints, but finite samples do not establish a continuous-domain error bound.",
+    "Agreement with JPL Horizons solution 171 does not establish the physical accuracy or future orbit uncertainty of that solution.",
+    "Lookup latency, package/build cost, and public route behavior remain Link 2 work after PR #283 clears review and ownership.",
+    "This foundation does not change the runtime, its supported interval, or its TT-to-TDB and frame conversions."
+  ],
+  "schemaVersion": 1,
+  "screen": {
+    "analyticVelocity": {
+      "julianDateTDB": 2443481.5,
+      "maximumKmPerTDBDay": 0.000209916,
+      "record": 749,
+      "x": -1.0
+    },
+    "heldoutXPerRecord": [
+      -1.0,
+      -0.736842105,
+      -0.368421053,
+      0.0,
+      0.368421053,
+      0.736842105,
+      1.0
+    ],
+    "position": {
+      "julianDateTDB": 2451499.5,
+      "maximumKm": 0.124360036,
+      "record": 959,
+      "x": 1.0
+    },
+    "positionLimitKm": 1.0,
+    "recordComparisons": 16821,
+    "sameEpochCrossQueryConsistency": {
+      "alignedQueries": {
+        "fitEpochsRepeated": 91314,
+        "maximumPositionKm": 0.124334671,
+        "maximumVelocityKmPerTDBDay": 6.9784e-05,
+        "overlappingRangeEpochs": 60
+      },
+      "rejectedOffsetQueryControl": {
+        "epochs": 2403,
+        "maximumPositionDifferenceKm": 7.093823612,
+        "maximumVelocityDifferenceKmPerTDBDay": 0.004133851,
+        "offsetDays": 12,
+        "reason": "Horizons' numerically integrated small-body output depends on the discrete query path; this offset 38-day recipe exceeds the 1 km source-reproduction screen and is retained only as a negative control.",
+        "stepDays": 38
+      }
+    },
+    "seams": {
+      "count": 2402,
+      "julianDateTDB": 2443481.5,
+      "leftRecord": 748,
+      "maximumPositionJumpKm": 0.136037298,
+      "maximumVelocityJumpKmPerTDBDay": 0.000217186,
+      "rightRecord": 749
+    },
+    "trainingFit": {
+      "epochs": 91314,
+      "maximumPositionKm": 7.63e-06,
+      "maximumVelocityKmPerTDBDay": 5.0131e-05
+    },
+    "velocityLimitKmPerTDBDay": 1.0
+  },
+  "source": {
+    "archive": {
+      "compressedResponseBytes": 16742375,
+      "queryBytes": 11342,
+      "uncompressedResponseBytes": 54411040,
+      "vectors": {
+        "fit": 91314,
+        "holdout": 182691,
+        "negative": 2403
+      }
+    },
+    "center": "Sun (10)",
+    "centerSource": "DE441",
+    "clock": "JD TDB",
+    "state": "geometric ICRF",
+    "target": "2060 Chiron (1977 UB)",
+    "targetSolution": "JPL#171",
+    "units": "km and km/s"
+  },
+  "table": {
+    "coefficientCount": 115344,
+    "degreeCount": 16,
+    "layout": "record, x/y/z axis, ascending Chebyshev degree; uniform record index floor((jdTDB-start)/38), with the inclusive final endpoint handled explicitly by a future runtime integration",
+    "payloadBytes": 922752,
+    "payloadSHA256": "7c851fded389074bb523c4ea4ab19df3688db74cf09850af189ac0f301f20904"
+  }
+}
