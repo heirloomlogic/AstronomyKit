@@ -1,0 +1,182 @@
+{
+  "baselineRevision": "220cd5424cd3764767731b9cd54f2f8e47cc5491",
+  "buildReceipts": {
+    "debug": "Build complete! (0.97 sec)\n",
+    "release": "Build complete! (141.90 sec)\n"
+  },
+  "debug": {
+    "obscurations": [
+      {
+        "nativePeakTT": 7992.877839517901,
+        "obscuration": 0.9914050824251466,
+        "sourceTimeSearchSeed": "2021-11-19T09:03Z"
+      },
+      {
+        "nativePeakTT": 9735.676452762897,
+        "obscuration": 0.9624960076659318,
+        "sourceTimeSearchSeed": "2026-08-28T04:13Z"
+      }
+    ],
+    "published": [
+      {
+        "kind": "partial",
+        "nativePeakTT": -72949.81524582277,
+        "obscuration": 0.524614803237667,
+        "partialDurationMinutes": 75.51390815991908,
+        "peakResidualSeconds": 10.869784886017442,
+        "penumbralDurationMinutes": 143.00210802233778,
+        "sourceTime": "1800-04-09T16:26Z",
+        "totalDurationMinutes": 0
+      },
+      {
+        "kind": "total",
+        "nativePeakTT": 19.697607907649374,
+        "obscuration": 1,
+        "partialDurationMinutes": 101.66266574442005,
+        "peakResidualSeconds": 30.55505447418909,
+        "penumbralDurationMinutes": 159.09510392797756,
+        "sourceTime": "2000-01-21T04:44Z",
+        "totalDurationMinutes": 38.525994851439975
+      },
+      {
+        "kind": "total",
+        "nativePeakTT": 374.3483796057866,
+        "obscuration": 1,
+        "partialDurationMinutes": 98.15976408509869,
+        "peakResidualSeconds": 5.856067808235821,
+        "penumbralDurationMinutes": 155.51749249158547,
+        "penumbralDurationResidualMinutes": 0.017492491585471726,
+        "sourceTime": "2001-01-09T20:20:30Z",
+        "totalDurationMinutes": 30.556983362766914
+      },
+      {
+        "kind": "partial",
+        "nativePeakTT": 551.1224653527185,
+        "obscuration": 0.4536930984161839,
+        "partialDurationMinutes": 79.63325618099589,
+        "peakResidualSeconds": 4.769767258767388,
+        "penumbralDurationMinutes": 162.52774997428787,
+        "penumbralDurationResidualMinutes": 0.02225002571213963,
+        "sourceTime": "2001-07-05T14:55:12Z",
+        "totalDurationMinutes": 0
+      },
+      {
+        "kind": "penumbral",
+        "nativePeakTT": 728.9378194926926,
+        "obscuration": 0,
+        "partialDurationMinutes": 0,
+        "peakResidualSeconds": 11.292241164846928,
+        "penumbralDurationMinutes": 121.72662469048191,
+        "penumbralDurationResidualMinutes": 0.023375309518087306,
+        "sourceTime": "2001-12-30T10:29:12Z",
+        "totalDurationMinutes": 0
+      },
+      {
+        "kind": "partial",
+        "nativePeakTT": 36253.8547830366,
+        "obscuration": 0.09711303553011559,
+        "partialDurationMinutes": 44.02561268303543,
+        "peakResidualSeconds": 32.258690195158124,
+        "penumbralDurationMinutes": 128.83087152556982,
+        "sourceTime": "2099-04-05T08:27Z",
+        "totalDurationMinutes": 0
+      }
+    ]
+  },
+  "release": {
+    "obscurations": [
+      {
+        "nativePeakTT": 7992.877839517901,
+        "obscuration": 0.9914050824251466,
+        "sourceTimeSearchSeed": "2021-11-19T09:03Z"
+      },
+      {
+        "nativePeakTT": 9735.676452762897,
+        "obscuration": 0.9624960076659318,
+        "sourceTimeSearchSeed": "2026-08-28T04:13Z"
+      }
+    ],
+    "published": [
+      {
+        "kind": "partial",
+        "nativePeakTT": -72949.81524582277,
+        "obscuration": 0.524614803237667,
+        "partialDurationMinutes": 75.51390815991908,
+        "peakResidualSeconds": 10.869784886017442,
+        "penumbralDurationMinutes": 143.00210802233778,
+        "sourceTime": "1800-04-09T16:26Z",
+        "totalDurationMinutes": 0
+      },
+      {
+        "kind": "total",
+        "nativePeakTT": 19.697607907649374,
+        "obscuration": 1,
+        "partialDurationMinutes": 101.66266574442005,
+        "peakResidualSeconds": 30.55505447418909,
+        "penumbralDurationMinutes": 159.09510392797756,
+        "sourceTime": "2000-01-21T04:44Z",
+        "totalDurationMinutes": 38.525994851439975
+      },
+      {
+        "kind": "total",
+        "nativePeakTT": 374.3483796057866,
+        "obscuration": 1,
+        "partialDurationMinutes": 98.15976408509869,
+        "peakResidualSeconds": 5.856067808235821,
+        "penumbralDurationMinutes": 155.51749249158547,
+        "penumbralDurationResidualMinutes": 0.017492491585471726,
+        "sourceTime": "2001-01-09T20:20:30Z",
+        "totalDurationMinutes": 30.556983362766914
+      },
+      {
+        "kind": "partial",
+        "nativePeakTT": 551.1224653527185,
+        "obscuration": 0.4536930984161839,
+        "partialDurationMinutes": 79.63325618099589,
+        "peakResidualSeconds": 4.769767258767388,
+        "penumbralDurationMinutes": 162.52774997428787,
+        "penumbralDurationResidualMinutes": 0.02225002571213963,
+        "sourceTime": "2001-07-05T14:55:12Z",
+        "totalDurationMinutes": 0
+      },
+      {
+        "kind": "penumbral",
+        "nativePeakTT": 728.9378194926926,
+        "obscuration": 0,
+        "partialDurationMinutes": 0,
+        "peakResidualSeconds": 11.292241164846928,
+        "penumbralDurationMinutes": 121.72662469048191,
+        "penumbralDurationResidualMinutes": 0.023375309518087306,
+        "sourceTime": "2001-12-30T10:29:12Z",
+        "totalDurationMinutes": 0
+      },
+      {
+        "kind": "partial",
+        "nativePeakTT": 36253.8547830366,
+        "obscuration": 0.09711303553011559,
+        "partialDurationMinutes": 44.02561268303543,
+        "peakResidualSeconds": 32.258690195158124,
+        "penumbralDurationMinutes": 128.83087152556982,
+        "sourceTime": "2099-04-05T08:27Z",
+        "totalDurationMinutes": 0
+      }
+    ]
+  },
+  "releaseExecutableBytes": 414888848,
+  "releaseObjectBytes": {
+    "EngineEclipseEvents.o": 116536,
+    "EngineShadowGeometry.o": 30672
+  },
+  "resources": {
+    "checksum": -2855994.884948683,
+    "coldSeconds": 0.06183302402496338,
+    "host": "Version 27.0.1 (Build 26A434)",
+    "nextEclipseCount": 99,
+    "nextEclipsesSeconds": 4.440572023391724,
+    "peakAfterColdBytes": 103432192,
+    "peakAfterWorkloadBytes": 103432192,
+    "peakBeforeBytes": 49823744,
+    "totalEclipseCount": 100
+  },
+  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+}
