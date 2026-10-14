@@ -3486,7 +3486,7 @@
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
   },
-  "runtimeCaptureRevision": "fd20de53819b8a1fd3420341eaa78a2e14d2e218",
+  "runtimeCaptureRevision": "58d1a852906e48a5d3e4855f53206e5c6ee4b685",
   "schemaVersion": 2,
   "sourceSHA256": {
     "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
