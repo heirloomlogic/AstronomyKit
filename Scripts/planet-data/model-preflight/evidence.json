@@ -5,7 +5,7 @@
     "Scripts/planet-data/model-preflight/ranges.json": "98cd40489f486ef2fda854fbe712e4abdb65d21bed0c7b723396d56a4e04eca6",
     "Scripts/apparent-place-data/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
     "Scripts/reference-data/planetary-apsis-evidence.json": "9cb0ab7430beef2029dc69cabe34010231609c702bfe621b8856feb521aea684",
-    "Scripts/qualify-planet-source-model.py": "b75d4f35958d2ae6f46f82212001bb5c8cc19c3bf8f1c476e02064a8e73a820e",
+    "Scripts/qualify-planet-source-model.py": "7a8762585f75b51174d1fb67267aded3e8d5472e299ecad761e768a0a86fc03c",
     "Scripts/assess-moon-de441.py": "5da238cbd372de58899fc7de9ca49dbe5e02a33b0886a8ce8bf69854783c26a4",
     "Scripts/reference-data/sources/planetary-apsides/jupiter.json": "b2212ce9f360c3c993d5922fbd8b4fd1b2f9db3cd05737f95b896a5853fb4037",
     "Scripts/reference-data/sources/planetary-apsides/uranus.json": "53f72c2aa96022ac91cb0b446269c4f834f95224b40fac2c8567c9e28ecb1303",

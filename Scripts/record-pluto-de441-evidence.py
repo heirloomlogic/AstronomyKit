@@ -1,0 +1,294 @@
+#!/usr/bin/env python3
+"""Capture and replay the current native Pluto DE441 evidence."""
+import argparse
+import base64
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import re
+import subprocess
+import tempfile
+
+
+ROOT = Path(__file__).resolve().parents[1]
+OUTPUT = ROOT / "Scripts/pluto-data/de441-native-evidence.json"
+EXPLICIT_SOURCES = {
+    "Scripts/generate-pluto-de441.py",
+    "Scripts/generate-pluto-tables.py",
+    "Scripts/packed-table-payload.py",
+    "Scripts/pluto-data/de441-evidence.json",
+    "Scripts/pluto-data/de441-native-fixtures.json",
+    "Scripts/pluto-data/plu060-evidence.json",
+    "Scripts/pluto-data/plu060-qualification.json",
+    "Scripts/qualify-pluto-center.py",
+    "Scripts/record-pluto-de441-evidence.py",
+    "Scripts/test_generate_pluto_de441.py",
+    "Scripts/test_record_pluto_de441_evidence.py",
+    "Sources/AstronomyKit/AstronomyError.swift",
+    "Sources/AstronomyKit/CelestialBody.swift",
+    "Sources/AstronomyKit/Time.swift",
+    "Tests/AstronomyKitTests/DistanceAccuracyTests.swift",
+    "Tests/AstronomyKitTests/Engine/Foundation/EngineChebyshevTests.swift",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoCenterQualificationTests.swift",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoDE441Tests.swift",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoEphemerisTests.swift",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoHorizonsTests.swift",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoMeasurementTests.swift",
+    "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoTests.swift",
+    "Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json",
+}
+PRESERVED_KEYS = {
+    "apparentIntegrationCaptureRevision",
+    "baselineCommit",
+    "baselineModification",
+    "baselineRelease",
+    "baselineStorage",
+    "centerExtensionBase",
+    "fullPrecisionFoundationCaptureRevision",
+    "fullPrecisionIntegrationCaptureRevision",
+    "limits",
+    "measurementWorkloadsTTDays",
+    "rangeExtensionBase",
+}
+TABLES = {
+    "generatedTables": {
+        "PlutoDE441PlutoData": "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441PlutoData.swift",
+        "PlutoDE441SunData": "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441SunData.swift",
+    },
+    "centerGeneratedTables": {
+        "PlutoBarycenterCoefficients": "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoBarycenterCoefficients.swift",
+        "PlutoCenterCoefficients": "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoCenterCoefficients.swift",
+        "PlutoSunCoefficients": "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoSunCoefficients.swift",
+    },
+}
+
+
+def encoded(value):
+    return (json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n").encode()
+
+
+def source_paths(root=ROOT):
+    engine = {str(path.relative_to(root)) for path in (root / "Sources/AstronomyKit/Engine").rglob("*.swift")}
+    result = sorted(engine | EXPLICIT_SOURCES)
+    missing = [path for path in result if not (root / path).is_file()]
+    if missing:
+        raise ValueError(f"Missing Pluto evidence source owners: {missing}")
+    return result
+
+
+def source_hashes(root=ROOT):
+    return {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in source_paths(root)}
+
+
+def finite(value):
+    if isinstance(value, dict):
+        return all(finite(item) for item in value.values())
+    if isinstance(value, list):
+        return all(finite(item) for item in value)
+    return not isinstance(value, float) or math.isfinite(value)
+
+
+def validate_keys(value, keys, name):
+    if set(value) != set(keys) or not finite(value):
+        raise ValueError(f"{name} capture schema or finiteness differs")
+
+
+def validate_capture_pair(debug_boundary, release_boundary, debug_direct, release_direct, debug_references, release_references):
+    boundary_keys = {"count", "maximumPositionKm", "maximumRateKmPerTDBDay"}
+    direct_keys = {"bodySamples", "integratedSamples", "maximumBodyPositionKm", "maximumBodyRateKmPerTDBDay", "maximumIntegratedAngleArcminutes", "maximumIntegratedPositionKm", "maximumIntegratedRateKmPerTTDay"}
+    for name, value, keys in [("Debug boundary", debug_boundary, boundary_keys), ("Release boundary", release_boundary, boundary_keys), ("Debug direct-source", debug_direct, direct_keys), ("Release direct-source", release_direct, direct_keys)]:
+        validate_keys(value, keys, name)
+    for name, value in [("Debug references", debug_references), ("Release references", release_references)]:
+        validate_keys(value, {"rows"}, name)
+        if not value["rows"]:
+            raise ValueError(f"{name} is empty")
+    if debug_boundary["count"] <= 0 or debug_direct["bodySamples"] <= 0 or debug_direct["integratedSamples"] <= 0:
+        raise ValueError("Pluto capture counts must be positive")
+    if debug_boundary != release_boundary or debug_direct != release_direct or debug_references != release_references:
+        raise ValueError("Debug and Release Pluto captures differ")
+
+
+def validate_measurement(value, cold):
+    validate_keys(value, {"checksum", "coldSeconds", "coldTT", "evaluationsPerWorkload", "host", "peakBytesAfterCold", "peakBytesAfterLoops", "peakBytesBefore", "seconds"}, "Release measurement")
+    validate_keys(value["seconds"], {"central", "engineRange", "outer"}, "Release measurement timings")
+    if value["coldTT"] != cold or value["evaluationsPerWorkload"] != 2000 or not value["host"]:
+        raise ValueError("Release measurement workload differs")
+    if value["coldSeconds"] < 0 or any(value[key] <= 0 for key in ("peakBytesAfterCold", "peakBytesAfterLoops", "peakBytesBefore")) or any(seconds < 0 for seconds in value["seconds"].values()):
+        raise ValueError("Release measurement contains invalid resource values")
+
+
+def reference_summary(rows):
+    groups = {"centralCenter": [], "outerBarycenter": [], "outerOrBlendedCenter": []}
+    for row in rows:
+        validate_keys(row, {"angularDifferenceArcminutes", "body", "centerWeight", "julianDateTDB", "positionDifferenceKm", "velocityDifferenceKmPerSecond"}, "Archived reference")
+        if row["body"] == "pluto-barycenter":
+            groups["outerBarycenter"].append(row)
+        elif row["body"] == "pluto" and row["centerWeight"] == 1:
+            groups["centralCenter"].append(row)
+        elif row["body"] == "pluto" and 0 <= row["centerWeight"] < 1:
+            groups["outerOrBlendedCenter"].append(row)
+        else:
+            raise ValueError("Archived reference center semantics differ")
+    result = {}
+    for name, selected in groups.items():
+        result[name] = {"count": len(selected)}
+        for key in ("angularDifferenceArcminutes", "positionDifferenceKm", "velocityDifferenceKmPerSecond"):
+            result[name][key] = max((row[key] for row in selected), default=None)
+    return result
+
+
+def cstring_bytes(output):
+    match = re.search(r"Section \(__TEXT, __cstring\): (\d+)", output)
+    if not match:
+        raise ValueError("Release object lacks a reported __cstring section")
+    return int(match.group(1))
+
+
+def packed_bytes(path):
+    text = path.read_text()
+    parts = text.split('"""', 2)
+    if len(parts) != 3:
+        raise ValueError(f"Packed table literal missing: {path}")
+    return base64.b64decode("".join(parts[1].split()), validate=True)
+
+
+def release_object(stem, root=ROOT):
+    candidates = [path for path in (root / ".build").rglob(f"{stem}.o") if "Release" in path.parts or "release" in path.parts]
+    if len(candidates) != 1:
+        raise ValueError(f"Expected one Release object for {stem}, found {candidates}")
+    return candidates[0]
+
+
+def release_executable(root=ROOT):
+    candidates = []
+    for path in (root / ".build").rglob("*"):
+        if path.is_file() and "Release" in path.parts and ".xctest" in str(path) and "dSYM" not in str(path) and os.access(path, os.X_OK):
+            candidates.append(path)
+    if len(candidates) != 1:
+        raise ValueError(f"Expected one Release test executable, found {candidates}")
+    return candidates[0]
+
+
+def storage(root=ROOT):
+    result = {}
+    decoded = {}
+    for section, tables in TABLES.items():
+        result[section] = {}
+        decoded[section] = 0
+        for name, relative in tables.items():
+            source = root / relative
+            object_path = release_object(name, root)
+            size_output = subprocess.check_output(["/usr/bin/size", "-m", str(object_path)], text=True)
+            result[section][name] = {"cstringSectionBytes": cstring_bytes(size_output), "generatedSourceBytes": source.stat().st_size, "releaseObjectBytes": object_path.stat().st_size}
+            decoded[section] += len(packed_bytes(source))
+    result["decodedPayloadBytes"] = decoded["generatedTables"]
+    result["centerDecodedPayloadBytes"] = decoded["centerGeneratedTables"]
+    result["testExecutableBytes"] = release_executable(root).stat().st_size
+    return result
+
+
+def ensure_capture_revision(revision, hashes):
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("Capture revision is not a commit ID")
+    subprocess.run(["git", "cat-file", "-e", revision + "^{commit}"], cwd=ROOT, check=True)
+    subprocess.run(["git", "ls-files", "--error-unmatch", "--", *hashes], cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
+    if subprocess.run(["git", "diff", "--quiet", revision, "--", *hashes], cwd=ROOT).returncode:
+        raise ValueError("Current Pluto evidence sources differ from the capture revision")
+
+
+def validate_evidence(value):
+    expected = PRESERVED_KEYS | {"archivedReferenceSummary", "archivedReferences", "captureSourceSHA256", "centerNativeRelease", "directSourceDebug", "directSourceRelease", "everyBoundaryDebug", "everyBoundaryRelease", "nativeRelease", "nativeStorage", "runtimeCaptureRevision", "schemaVersion", "sourceSHA256", "swiftVersion"}
+    validate_keys(value, expected, "Pluto evidence")
+    if value["schemaVersion"] != 2 or not value["swiftVersion"]:
+        raise ValueError("Pluto evidence schema or toolchain differs")
+    current = source_hashes()
+    if value["sourceSHA256"] != current or value["captureSourceSHA256"] != current:
+        raise ValueError("Pluto evidence source inventory or digest differs")
+    ensure_capture_revision(value["runtimeCaptureRevision"], current)
+    validate_capture_pair(value["everyBoundaryDebug"], value["everyBoundaryRelease"], value["directSourceDebug"], value["directSourceRelease"], {"rows": value["archivedReferences"]}, {"rows": value["archivedReferences"]})
+    if value["archivedReferenceSummary"] != reference_summary(value["archivedReferences"]):
+        raise ValueError("Archived Pluto reference summary differs")
+    validate_measurement(value["nativeRelease"], -766524.75)
+    validate_measurement(value["centerNativeRelease"], -72000.0)
+    if value["nativeStorage"]["decodedPayloadBytes"] != 13149264 or value["nativeStorage"]["centerDecodedPayloadBytes"] != 21768120 or value["nativeStorage"]["testExecutableBytes"] <= 0:
+        raise ValueError("Pluto storage evidence differs")
+    for section in ("generatedTables", "centerGeneratedTables"):
+        if set(value["nativeStorage"].get(section, {})) != set(TABLES[section]) or any(metric <= 0 for row in value["nativeStorage"][section].values() for metric in row.values()):
+            raise ValueError("Pluto table storage evidence differs")
+
+
+def publish(path, value):
+    payload = encoded(value)
+    with tempfile.NamedTemporaryFile(dir=path.parent, prefix=".pluto-evidence-", delete=False) as staged:
+        temporary = Path(staged.name)
+        staged.write(payload)
+    try:
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def run_capture(configuration, directory):
+    boundary = directory / f"boundary-{configuration}.json"
+    direct = directory / f"direct-{configuration}.json"
+    references = directory / f"references-{configuration}.json"
+    environment = dict(os.environ, PLUTO_BOUNDARY_OUTPUT=str(boundary), PLUTO_DIFFERENTIAL_OUTPUT=str(direct), PLUTO_REFERENCE_OUTPUT=str(references))
+    command = ["swift", "test", "--no-parallel"]
+    if configuration == "release":
+        command += ["-c", "release"]
+    command += ["--filter", "EnginePlutoDE441Tests"]
+    subprocess.run(command, cwd=ROOT, env=environment, check=True)
+    return json.loads(boundary.read_bytes()), json.loads(direct.read_bytes()), json.loads(references.read_bytes())
+
+
+def run_measurement(directory, center):
+    output = directory / ("measurement-center.json" if center else "measurement-outer.json")
+    environment = dict(os.environ, PLUTO_MEASUREMENT_OUTPUT=str(output))
+    if center:
+        environment["PLUTO_MEASUREMENT_CENTER"] = "1"
+    subprocess.run(["swift", "test", "--no-parallel", "-c", "release", "--skip-build", "--filter", "EnginePlutoMeasurementTests"], cwd=ROOT, env=environment, check=True)
+    return json.loads(output.read_bytes())
+
+
+def capture():
+    before = source_hashes()
+    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    ensure_capture_revision(revision, before)
+    prior = json.loads(OUTPUT.read_bytes())
+    with tempfile.TemporaryDirectory(prefix="pluto-native-evidence-") as directory_name:
+        directory = Path(directory_name)
+        debug_boundary, debug_direct, debug_references = run_capture("debug", directory)
+        release_boundary, release_direct, release_references = run_capture("release", directory)
+        outer = run_measurement(directory, False)
+        center = run_measurement(directory, True)
+    after = source_hashes()
+    if after != before or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip() != revision:
+        raise ValueError("Pluto evidence sources or revision changed during capture")
+    validate_capture_pair(debug_boundary, release_boundary, debug_direct, release_direct, debug_references, release_references)
+    validate_measurement(outer, -766524.75)
+    validate_measurement(center, -72000.0)
+    rows = release_references["rows"]
+    result = {key: prior[key] for key in PRESERVED_KEYS}
+    result.update(schemaVersion=2, runtimeCaptureRevision=revision, captureSourceSHA256=before, sourceSHA256=after, swiftVersion=subprocess.check_output(["swift", "--version"], cwd=ROOT, text=True), everyBoundaryDebug=debug_boundary, everyBoundaryRelease=release_boundary, directSourceDebug=debug_direct, directSourceRelease=release_direct, archivedReferences=rows, archivedReferenceSummary=reference_summary(rows), nativeRelease=outer, centerNativeRelease=center, nativeStorage=storage())
+    validate_evidence(result)
+    publish(OUTPUT, result)
+    print(f"Recorded Pluto-native evidence at {revision}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    choice = parser.add_mutually_exclusive_group(required=True)
+    choice.add_argument("--capture", action="store_true")
+    choice.add_argument("--check", action="store_true")
+    arguments = parser.parse_args()
+    if arguments.capture:
+        capture()
+    else:
+        validate_evidence(json.loads(OUTPUT.read_bytes()))
+        print("Pluto-native captures, measurements, storage, and source bindings verified")
+
+
+if __name__ == "__main__":
+    main()

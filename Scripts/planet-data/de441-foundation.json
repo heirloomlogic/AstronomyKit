@@ -1,0 +1,296 @@
+{
+  "components": {
+    "earthBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 13,
+      "encodedBytes": 1646736,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 5278,
+      "recordDays": 16.0,
+      "sha256": "cb7d95f4f8de8fd673c6dade7eefab9f5caaa97a64bc4812ad698a08924334c7",
+      "source": "de441",
+      "startJDTDB": 2414976.5,
+      "target": 3
+    },
+    "earthOffset": {
+      "center": 3,
+      "clock": "TDB",
+      "coefficientCount": 13,
+      "encodedBytes": 6586320,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 21110,
+      "recordDays": 4.0,
+      "sha256": "6bbd2b173ceb71bfec04e61b52a6b891577ee29420ea2a59b6ae9bd31b0536e1",
+      "source": "de441",
+      "startJDTDB": 2414984.5,
+      "target": 399
+    },
+    "jupiterBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 8,
+      "encodedBytes": 506880,
+      "exclusiveEndJDTDB": 2499440.5,
+      "frame": "ICRF",
+      "recordCount": 2640,
+      "recordDays": 32.0,
+      "sha256": "33d0e316e752645a9c77e37c25f02d9536b2f34c13af0acbc0d84b3092cdac15",
+      "source": "de441",
+      "startJDTDB": 2414960.5,
+      "target": 5
+    },
+    "jupiterOffset": {
+      "center": 5,
+      "clock": "TDB",
+      "coefficientCount": 16,
+      "encodedBytes": 14410752,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 37528,
+      "recordDays": 2.25,
+      "sha256": "b144e9260a1c6947a322a37c6c85c78095aed91160b55fd55bc26a3aa7ecf7fd",
+      "source": "jup365",
+      "startJDTDB": 2414986.5,
+      "target": 599
+    },
+    "marsBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 11,
+      "encodedBytes": 696960,
+      "exclusiveEndJDTDB": 2499440.5,
+      "frame": "ICRF",
+      "recordCount": 2640,
+      "recordDays": 32.0,
+      "sha256": "17159d2621cd0ff568c34243701eebf5b622d74bfb9a9e81da68933750bc0126",
+      "source": "de441",
+      "startJDTDB": 2414960.5,
+      "target": 4
+    },
+    "mercuryBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 14,
+      "encodedBytes": 3546480,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 10555,
+      "recordDays": 8.0,
+      "sha256": "6006e4cb2996124d70dd703be0f9f737eb8630c6d93c9e05329ecbbde02497c0",
+      "source": "de441",
+      "startJDTDB": 2414984.5,
+      "target": 1
+    },
+    "neptuneBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 6,
+      "encodedBytes": 380160,
+      "exclusiveEndJDTDB": 2499440.5,
+      "frame": "ICRF",
+      "recordCount": 2640,
+      "recordDays": 32.0,
+      "sha256": "9f7c798ea074ce4aeb0f63a3a5984c1f469edbfe312eca4794b2316e11533551",
+      "source": "de441",
+      "startJDTDB": 2414960.5,
+      "target": 8
+    },
+    "neptuneOffset": {
+      "center": 8,
+      "clock": "TDB",
+      "coefficientCount": 11,
+      "encodedBytes": 11145816,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 42219,
+      "recordDays": 2.0,
+      "sha256": "4851e87e1e2db0ca079595d5aef514c9a54939cd0a485896f6bd6a35920bc6c0",
+      "source": "nep098_part-1",
+      "startJDTDB": 2414986.5,
+      "target": 899
+    },
+    "sun": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 11,
+      "encodedBytes": 1393392,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 5278,
+      "recordDays": 16.0,
+      "sha256": "dec28fe40444a8a464fd4c6a8d555770e550612209a690a4cb8759a3b866e620",
+      "source": "de441",
+      "startJDTDB": 2414976.5,
+      "target": 10
+    },
+    "uranusBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 6,
+      "encodedBytes": 380160,
+      "exclusiveEndJDTDB": 2499440.5,
+      "frame": "ICRF",
+      "recordCount": 2640,
+      "recordDays": 32.0,
+      "sha256": "1872427d2d22af3e3934cc8bde34f73a5e06a170b5e26f5dcd94521cfcd668ac",
+      "source": "ura184_part-3",
+      "startJDTDB": 2414960.5,
+      "target": 7
+    },
+    "uranusOffset": {
+      "center": 7,
+      "clock": "TDB",
+      "coefficientCount": 16,
+      "encodedBytes": 8106240,
+      "exclusiveEndJDTDB": 2499426.5,
+      "frame": "ICRF",
+      "recordCount": 21110,
+      "recordDays": 4.0,
+      "sha256": "43bc3d1dc68e7741279430eb3366ca591631cde5a21bdfef659e508255905069",
+      "source": "ura184_part-3",
+      "startJDTDB": 2414986.5,
+      "target": 799
+    },
+    "venusBarycenter": {
+      "center": 0,
+      "clock": "TDB",
+      "coefficientCount": 10,
+      "encodedBytes": 1266720,
+      "exclusiveEndJDTDB": 2499424.5,
+      "frame": "ICRF",
+      "recordCount": 5278,
+      "recordDays": 16.0,
+      "sha256": "d3d0ad808c054613d6e6ec21b5958bb11449f1e5675447289eda7a580bf99378",
+      "source": "de441",
+      "startJDTDB": 2414976.5,
+      "target": 2
+    }
+  },
+  "composition": "Binary64 type-2 SPK components in source kilometres on ICRF axes. Runtime composition subtracts the DE441 Sun. Earth, Jupiter, Uranus and Neptune add their physical-center offsets. Uranus alone uses the DE442 barycenter embedded in URA184, with the DE441 Sun.",
+  "directFixturesSHA256": "f90f2e277f13606e719692cd5e3077f41dcc590642da8191068a4446a6ddcbdc",
+  "generatedBytes": 48673224,
+  "generatorBindings": {
+    "Scripts/assess-moon-de441.py": "5da238cbd372de58899fc7de9ca49dbe5e02a33b0886a8ce8bf69854783c26a4",
+    "Scripts/generate-planet-de441.py": "652d00c5aa3ed6556d26364a2bb89d95eed92c2def21d0af82834c932ab841c9"
+  },
+  "requestedJDTDB": [
+    2414988.499999978,
+    2499423.500000022
+  ],
+  "schemaVersion": 1,
+  "sources": {
+    "de441": {
+      "identity": [
+        3307878400,
+        "\"5fe1446a-c52a3800\"",
+        "Tue, 22 Dec 2020 00:57:14 GMT"
+      ],
+      "retrievedByteRangesSHA256": {
+        "0-1023": "71686c47d507ccdae25d47dfcf52830188bbbd1c390405eff6c4c02f35c38156",
+        "1005210600-1005656079": "4d037c7e86eaebd80c678aeeb0961a0ea9d6e910b5f1f1f225c95ed304fa21b6",
+        "1005656080-1005656111": "64a7c55bd4b84846e1cc4130248db54fc8c40d7b83b76089268d7cd9ce1897a3",
+        "1060933264-1061060623": "29e29fe957ac084ce97765972d56e97ea33cb3164354cc7153c2c16b23d2507b",
+        "1061060624-1061060655": "d5c6b01b3b3a267b837b7d69e78e9a83ef50065b2113e3efde9b0b62d70934a2",
+        "1156467880-1156633447": "07c97f303951a813f4000a678c53ad7d6605168635fa5d72ccc1e477687a10f8",
+        "1156633448-1156633479": "46694b5bb8230e98e4413910338c146b4939411ead3c5e3b9c1bd7c6c246e211",
+        "1204889520-1205112399": "86dd73db029978ab3fbb2274fe8256b2a8f729e1bb9cb02f0f6a83a8150c768e",
+        "1205112400-1205112431": "33d326a8792dbadb2a20d26c2a55bf81efa2ffaaf65148f4270ecc64d8c3433c",
+        "1318169768-1318691615": "774fff88e65dc16a7a86082e9c21cc2a6509e0ab014278bac048ae65266ce714",
+        "1318691616-1318691647": "74ce75fc882b0b360e519604a9d46f52bfe06ac740248309e42da8d6f09ae4e2",
+        "1406931520-1407338815": "ea1eae9950b78b5788a67529d117c8c675c4e3df89d960597feb389a2d2337d5",
+        "1407338816-1407338847": "64f391dab64ae56040717a1f643dd0d3bc36ce1d33c7396118e9a8ec52ddd43a",
+        "1649998848-1651118559": "eded6a49e4fc1982e49700baec20bb2159b85d3c9c48ee145879f893aca847d6",
+        "1651118560-1651118591": "e69896555a5bea7de11035f93b01a4e085307a7faefb67255d95ad8905f996ee",
+        "1651118784-1653805759": "beab0706ba30de102070c9ff35be3daf5c589ba694164583c346b4e6eba6c943",
+        "1653805760-1655956127": "b8162ab5da361788d0b7d28bbdcd2ef96772ccbbb2e871d21e4d52d82c43edba",
+        "2107004672-2107004703": "19e862dfae75aedefbcec480c2fb68b457f1ed14b318635dcbe8938f54060136",
+        "2562890624-2563922983": "5988ce9adaefe69eb10c308d6a0209c771774b9888e334a00c60e28297842c7e",
+        "2660183344-2660183375": "c20c893bf36fb75d069891586c264742c93ddeaeced831ad706eb19a4d1be8f8",
+        "2687981328-2688276367": "64d6e4188f9fd6e8f2b0718f572e75bd3aee4df005082bb73b196cf6c31b4188",
+        "2715779248-2715779279": "418a0c3ebe8de789eb021d28f4dc926c7bfe29cb3759e043f603413f6f6ad286",
+        "2775544872-2775928423": "698fddbe276aceadd4c5dfbf83caadb0d22b77e60311f86d13a08b2f5c515819",
+        "2811682168-2811682199": "8e2cf31d497272dc68cda777636554ee1f3456f44c59504224d6570c413b976e",
+        "2811682200-2812198519": "81e44e21adf87a9a4d1c9da85b2eda47a4cd1fa07313df522ae325f3ea1c4a51",
+        "2860328560-2860328591": "c9d7253a3b6463475d27b52b3918eb57d9bd9a71c28ff069cb924cd40b5e1235",
+        "2860328960-2860329983": "d52c057ae9b1fffeaa6130c91e56145fcb061e6904c76bb66d3242fc18629236",
+        "2860331008-2861540343": "e77a547d2cda37cf70eee27dff98aae819c8a3310db60105f6719b27edbd33ee",
+        "2974302480-2974302511": "82bb749cfabb5f9c7c682ed034ef44c3995761a65231656b5256e494dca18d88",
+        "2974302512-2975246383": "1b7e20692927e97ebc7ead271f6194f5e0367afe8e0aae1d5df3549055a32daf",
+        "3063255856-3063255887": "cfd314cb8abfbd2d9b7aa8eeba2d6de691418958140db17c7e0a67e4279187b1",
+        "3063255888-3065851535": "f0ff71a77b21ff8cb06092a40cd2807099c7258a07f99b647597e4faf0ca9c06",
+        "3307877584-3307877615": "40cf73775b3765e2df9f33328bfe8918c6ecec630301472ab0bee09ce8ac96f5",
+        "452294704-454381439": "214a3607002752b952841939ed3a9cc984e0a2ca82e12203e1963c5db79da737",
+        "454381440-454381471": "a1d6d563d98ced69c1fc8391c30c60a7c39a6ec03a5c926fd0c9bbed3d822639",
+        "62464-63487": "8f82a0ffd8f6977bc43f4d7d407b9044be8ed0789a6c92966586829d710813de"
+      },
+      "url": "https://ssd.jpl.nasa.gov/ftp/eph/planets/bsp/de441.bsp",
+      "wholeKernelSHA256": null
+    },
+    "jup365": {
+      "identity": [
+        1136581632,
+        null,
+        "Sun, 14 Mar 2021 15:29:22 GMT"
+      ],
+      "retrievedByteRangesSHA256": {
+        "0-1023": "b2427e56478c67f39b06f7da6e5e02a4c33c15a1469eff99f2b689b79d0eea38",
+        "1095678328-1098955127": "1cebf800362ff95bc5165c0873a5881da6037a444109acc2cbc7685f5a6100c1",
+        "1098955128-1102231927": "62470cb15b1d1df3150ce2a70dbe341e52a0b489c82c29b7ea77f933e4a92ad4",
+        "1102231928-1104382327": "971a45e4a3e1206f5768132ddb68aab221103fade4dff3db22ffee581f988065",
+        "1108858728-1108858759": "3d39cbb5e520c66e10b11b8925acfabf7c3fe7c12bdbc496475aabd4383ad562",
+        "72704-73727": "ae368f7e8b1002cc9dae1337aee84990577855db1556677b68a05df0755b10a2",
+        "727443840-730720639": "cb0c2f3b937bf2813037007fb8a8d541b955a66977821bb118016fe4365041b8",
+        "730720640-733751039": "3f86fe6cdb7f0c8df77980655542ae0df526df33e3439a8d7fd7fa176590f6c0",
+        "733751040-733751071": "26d5046c4497f095f6388c6cd85eb06458e59f51ab8907510e985e19fe0e7647"
+      },
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/jup365.bsp",
+      "wholeKernelSHA256": null
+    },
+    "nep098_part-1": {
+      "identity": [
+        821838848,
+        null,
+        "Mon, 13 Jul 2026 17:57:46 GMT"
+      ],
+      "retrievedByteRangesSHA256": {
+        "0-1023": "997b24775654113af60bc8bbeab9a281426f1540e26c425d6d5cfc9bc89e503b",
+        "12047656-14341415": "37b8b3376a4e3f572eee43bf272c2182856a1ec352473f3b127e1eb47048447f",
+        "14341416-16635175": "269a957c61d82f8431ac04a80b8a98a3390b6bd365f4de1db02b210aa509a1c1",
+        "16635176-16977055": "028cbe8ad4870d85301c95d9bf1de4b72fbe1103c309431fbb2da1e6fb45ff3f",
+        "20500576-20500607": "3df56a40b5d5db7844cd6fb0029e5e11eaffe74dc6533ac1776a8d4ad466e84c",
+        "45056-46079": "ebbd9d91265f979c3e6b855969064a11d25ed37d3402070a787906081473f3ef",
+        "5155704-7449463": "85565b0d5a061bf1e574a7c0804ac2bc531ec9d6d40231cb0dca50dfef6d0f4f",
+        "7449464-9743223": "95a91984afe3f2a601ae5ab2cfbeb3a79a1efd360fe5dcaa7e7a11e18cf5d691",
+        "9743224-9753863": "35b6a2d39fcb5478b4aea1d56c2dfb92b8d8dd9c5cebeafff1943dc0c56ab2ec",
+        "9753864-9753895": "3653c5bae92be9075a5434eb6cc6d1fae668dcf4fb567270544071bd39647fdc",
+        "9753896-12047655": "56fc3f3844327aa15f6a330d911c9b1cdf6d610086ab6991838b878a9a39b801"
+      },
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/nep098_part-1.bsp",
+      "wholeKernelSHA256": null
+    },
+    "ura184_part-3": {
+      "identity": [
+        386885632,
+        null,
+        "Fri, 26 Sep 2025 13:43:01 GMT"
+      ],
+      "retrievedByteRangesSHA256": {
+        "0-1023": "2f6c4d913ab1e7942a24f14c12022c9758047c89b5b8c6089b9873c530bbf4ab",
+        "155858408-159135207": "bf1ac137e53c3f4ec8e54d784d850213486b02cb805998d866382f88e39f0d7b",
+        "159135208-161173207": "6534c7c771a0d7b99e3643d90c222c55b2d51b8b14156547d2576a49f491aef4",
+        "170993608-170993639": "75fe9ba4509c7d92d5c376f45cc4ce76c44151d309f4fd98a6138ce2aff1df02",
+        "326906776-330035975": "d484b34429d932b58b96c05bf93e61c47f2d38ef099200e5eabf219710ce5915",
+        "330035976-330036007": "86dde3a7f0d81ee0b763947531a81cf691781617c3552aaf758518a0cad79ada",
+        "342419456-342420479": "78f231536f5b5a348fd6f828d0b4d1a5f562b9af052db80faa06c17683b937f8",
+        "379981560-380403959": "4200c54f9ec1d47feaea419501e77d254d49443e4a71e9f9bb1fae3eca6e8f81",
+        "380895000-380895031": "f6b029d476d2a21b49827ddb3a410c02fcf485647dbe44ce0ec5cfdf4c8e0acb",
+        "67584-68607": "21f796c9fc1b8de067b9fdb9b5ec5605445e158d6685f7a0ee8b1c6d5f823d61"
+      },
+      "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/satellites/ura184_part-3.bsp",
+      "wholeKernelSHA256": null
+    }
+  }
+}
