@@ -1,0 +1,123 @@
+{
+  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+  "capture": {
+    "astronomyKitSourceTree": "b091889be7c0a2aad04819086367350836f75acf",
+    "bytes": 1901245,
+    "command": [
+      "swift build -Xswiftc -enable-testing",
+      "swiftc -I .build/out/Products/Debug Scripts/lunar-frame-preflight/capture.swift .build/out/Products/Debug/AstronomyKit.o .build/out/Products/Debug/CLibAstronomy.o -o /tmp/lunar-frame-capture",
+      "/tmp/lunar-frame-capture Scripts/lunar-frame-preflight/sources Scripts/lunar-frame-preflight/base-libration.json 3c31e2d56eb4e887554ea185f5f75bdb78b3a674 b091889be7c0a2aad04819086367350836f75acf \"Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1) Target: arm64-apple-macosx27.0.0\""
+    ],
+    "path": "base-libration.json",
+    "program": {
+      "path": "capture.swift",
+      "sha256": "8a56d9ca6a0576830bd2bba741b1827699504e5dadd2c943df140b72eb5a363a"
+    },
+    "revision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+    "sha256": "f4777a988da98d3751e67382c204541e5411223a7f6a3a09ff27dfd98f575d69"
+  },
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "bytes": 1095,
+      "origin": {
+        "basePath": "Scripts/reference-data/sources/astronomy-engine-license.txt",
+        "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+        "kind": "exactBaseCopy",
+        "publisherURL": "https://raw.githubusercontent.com/cosinekitty/astronomy/865d3da7d8112bbc7911238052c6af4aaf877181/LICENSE"
+      },
+      "path": "sources/astronomy-engine-license.txt",
+      "sha256": "a76df666a7db8a06f599d08e07c3ff74c4b250b50b49c43353af2bd5bb34604e"
+    },
+    {
+      "bytes": 19478,
+      "origin": {
+        "contentLength": 19478,
+        "kind": "https",
+        "lastModified": "2025-04-16T12:47:17Z",
+        "retrievedAt": "2026-10-13T06:39:40Z",
+        "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/fk/satellites/moon_de440_250416.tf"
+      },
+      "path": "sources/moon_de440_250416.tf",
+      "sha256": "a47c71e9c9f33796bdafb2c9d69a7ee447b6016ecad80f71cd6f3e479f9cf768"
+    },
+    {
+      "bytes": 1898,
+      "origin": {
+        "contentLength": 1898,
+        "kind": "https",
+        "lastModified": "2022-07-15T00:06:25Z",
+        "retrievedAt": "2026-10-13T06:39:40Z",
+        "url": "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/moon_pa_de440_200625.cmt"
+      },
+      "path": "sources/moon_pa_de440_200625.cmt",
+      "sha256": "97d3bb1e75e7807a5e0b76f836a2d1d192e0d5bde0c0a87979b4c13255aef8c1"
+    },
+    {
+      "bytes": 1019175,
+      "origin": {
+        "basePath": "Scripts/reference-data/sources/mooninfo_2020.txt",
+        "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+        "kind": "exactBaseCopy",
+        "publisherURL": "https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004768/mooninfo_2020.txt"
+      },
+      "path": "sources/mooninfo_2020.txt",
+      "sha256": "e487d4f934724e477d4247b60b09c4da0b39d6d61a5fa92b4ac60a76a8adf1b1"
+    },
+    {
+      "bytes": 1016275,
+      "origin": {
+        "basePath": "Scripts/reference-data/sources/mooninfo_2021.txt",
+        "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+        "kind": "exactBaseCopy",
+        "publisherURL": "https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004874/mooninfo_2021.txt"
+      },
+      "path": "sources/mooninfo_2021.txt",
+      "sha256": "8e0e187f5993d4ba377da27f4f4fb524a1ad7b7324977f26e3adb01e5da28873"
+    },
+    {
+      "bytes": 1016275,
+      "origin": {
+        "basePath": "Scripts/reference-data/sources/mooninfo_2022.txt",
+        "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+        "kind": "exactBaseCopy",
+        "publisherURL": "https://svs.gsfc.nasa.gov/vis/a000000/a004900/a004955/mooninfo_2022.txt"
+      },
+      "path": "sources/mooninfo_2022.txt",
+      "sha256": "2ab619bf7104b861c7205b52c4f22bcea2b64ce79631031b3726e508abffc4a2"
+    },
+    {
+      "bytes": 120836,
+      "origin": {
+        "contentLength": 120836,
+        "kind": "https",
+        "retrievedAt": "2026-10-13T06:39:40Z",
+        "url": "https://svs.gsfc.nasa.gov/4768/"
+      },
+      "path": "sources/nasa-svs-4768.html",
+      "sha256": "9ae917a2c2c4f0526a86e9b07d00d70019bfa1479752117ba157d989be510482"
+    },
+    {
+      "bytes": 118093,
+      "origin": {
+        "contentLength": 118093,
+        "kind": "https",
+        "retrievedAt": "2026-10-13T06:39:40Z",
+        "url": "https://svs.gsfc.nasa.gov/4874/"
+      },
+      "path": "sources/nasa-svs-4874.html",
+      "sha256": "7148f56c1a44e641ec887a3d83362e31a5cc6566dc33c5539085f243eb210da9"
+    },
+    {
+      "bytes": 120798,
+      "origin": {
+        "contentLength": 120798,
+        "kind": "https",
+        "retrievedAt": "2026-10-13T06:39:40Z",
+        "url": "https://svs.gsfc.nasa.gov/4955/"
+      },
+      "path": "sources/nasa-svs-4955.html",
+      "sha256": "44facaa3aeb5af32dc6427fe776797eb196bfd794afbdee968c9150fe7ed5471"
+    }
+  ]
+}
