@@ -291,7 +291,7 @@ def main():
         expected = json.loads(EVIDENCE.read_bytes())
         if result != expected:
             raise SystemExit('source-model diagnostic or input hashes differ')
-        print('Verified source-model diagnostic; Uranus DE441 acceptance remains unresolved')
+        print('Verified source-model diagnostic; issue 248 authorizes the retained mixed-source Uranus composition')
     else:
         print(json.dumps(result, indent=2))
 

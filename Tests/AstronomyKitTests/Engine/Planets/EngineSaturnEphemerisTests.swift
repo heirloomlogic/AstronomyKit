@@ -54,6 +54,19 @@ struct EngineSaturnEphemerisTests {
             environment: "SATURN_SOURCE_OUTPUT")
     }
 
+    @Test("Packed Saturn tables retain their original rounded seam selection")
+    func roundedSeamSelection() throws {
+        let tt = -16_383.000_000_014_932
+        let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
+        let interval = (tdb - Source.offset.start) / Source.offset.days
+        let record = Int(interval.rounded(.down))
+        let x = 2 * ((tdb - Source.offset.start) - Double(record) * Source.offset.days) / Source.offset.days - 1
+        let expected = Source.offset.evaluate(record: record, x: x)
+        let actual = try #require(Source.offset.evaluate(tdb: tdb))
+        #expect(actual.position == expected.position)
+        #expect(actual.velocity == expected.velocity)
+    }
+
     @Test("System-mass consumers exclude the physical-center offset")
     func systemMassConsumers() throws {
         // DE441 target 6 minus target 10, independently composed from the source tables.
