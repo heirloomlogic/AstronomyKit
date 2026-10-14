@@ -25,14 +25,16 @@ python3 Scripts/assess-pluto-de441.py --cache .context/issue-252/ranges --plu060
 python3 Scripts/generate-pluto-de441.py --binaries .context/issue-252/candidates
 python3 Scripts/generate-pluto-de441.py --reference-fixtures --cache .context/issue-252/ranges
 python3 Scripts/generate-pluto-de441.py --check
-python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py -v
-PLUTO_MEASUREMENT_OUTPUT="$PWD/.context/issue-252/native-release.json" swift test --no-parallel -c release --filter EnginePlutoMeasurementTests
-PLUTO_REFERENCE_OUTPUT="$PWD/.context/issue-252/references-release.json" PLUTO_DIFFERENTIAL_OUTPUT="$PWD/.context/issue-252/differential-release.json" PLUTO_BOUNDARY_OUTPUT="$PWD/.context/issue-252/boundaries-release.json" swift test --no-parallel -c release --skip-build --filter EnginePlutoDE441Tests
+python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py Scripts/test_record_pluto_de441_evidence.py -v
+python3 Scripts/record-pluto-de441-evidence.py --capture
+python3 Scripts/record-pluto-de441-evidence.py --check
 ```
+
+The recorder requires a committed source tree. It runs the Pluto implementation checks in fresh Debug and Release processes, runs separate outer-cold and center-cold Release measurements, records the generated-source, object, executable, and decoded-payload sizes, binds the capture revision and complete Engine source inventory, validates the finished document, and replaces the evidence file atomically.
 
 The opt-in measurement uses a fresh process. Setting `PLUTO_MEASUREMENT_CENTER=1` selects TT −72000 for a separate cold center-table decode; the default cold date measures the outer DE441 tables. It measures first use at TT −766,524.75, then 2,000 outer states over −766,500 to +766,500, 2,000 central states from −30,000 in 30-day increments, and 2,000 states over the complete engine range. The artifact retains the historical legacy-model baseline and its original workload description; the added full-engine workload has no baseline counterpart.
 
-On the recorded arm64 macOS host, outer first use took 8.15 ms. In a separate fresh process, center first use at TT −72000 took 20.16 ms and reached 120,553,472 bytes peak RSS. The outer-first process's 2,000-state outer, central, and full-engine workloads took 58.18 ms, 37.35 ms, and 36.93 ms, with peak RSS 151,273,472 bytes after all loops. The complete center payload is 21,768,120 bytes; its generated Swift totals 29,252,565 bytes, C-string sections 29,250,912 bytes, and Release objects 58,537,728 bytes. The linked test executable is 154,493,328 bytes. These shared-host measurements include test-process and linker overhead; they do not isolate the model extension's cost or predict device performance.
+On the recorded arm64 macOS host, outer first use took 8.41 ms. In a separate fresh process, center first use at TT −72000 took 21.78 ms and reached 120,995,840 bytes peak RSS. The outer-first process's 2,000-state outer, central, and full-engine workloads took 60.37 ms, 38.19 ms, and 37.00 ms, with peak RSS 151,339,008 bytes after all loops. The complete center payload is 21,768,120 bytes; its generated Swift totals 29,252,565 bytes, C-string sections 29,250,912 bytes, and Release objects 58,537,944 bytes. The linked test executable is 480,654,128 bytes. These shared-host measurements include test-process and linker overhead; they do not isolate the model extension's cost or predict device performance.
 
 [The measurement artifact](de441-native-evidence.json) records current source hashes, host, timings, peak RSS, generated-source and compiled-object sizes, linked test-executable size, direct-source residuals, seam maxima, and archived residuals. The historical baseline includes cold legacy integration and comes from a separate run. It is not an isolated measurement of this range extension's overhead. Generated source, objects, executable, decoded payload, and process RSS describe different storage stages; none is an application download-size or device-performance estimate. No size, speed, radial, or velocity ceiling is inferred from these observations.
 

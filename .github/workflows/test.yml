@@ -79,8 +79,9 @@ jobs:
           python3 Scripts/generate-pluto-tables.py --check
           python3 -m unittest Scripts/test_qualify_pluto_center.py -v
           python3 Scripts/qualify-pluto-center.py --check
-          python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py -v
+          python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py Scripts/test_record_pluto_de441_evidence.py -v
           python3 Scripts/generate-pluto-de441.py --check
+          python3 Scripts/record-pluto-de441-evidence.py --check
           python3 -m unittest Scripts/test_capture_pluto_observers.py -v
           python3 Scripts/capture-pluto-observers.py --check
 
@@ -192,8 +193,9 @@ jobs:
           python3 Scripts/generate-pluto-tables.py --check
           python3 -m unittest Scripts/test_qualify_pluto_center.py -v
           python3 Scripts/qualify-pluto-center.py --check
-          python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py -v
+          python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py Scripts/test_record_pluto_de441_evidence.py -v
           python3 Scripts/generate-pluto-de441.py --check
+          python3 Scripts/record-pluto-de441-evidence.py --check
           python3 -m unittest Scripts/test_capture_pluto_observers.py -v
           python3 Scripts/capture-pluto-observers.py --check
 
