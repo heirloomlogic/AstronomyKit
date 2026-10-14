@@ -1,0 +1,606 @@
+{
+  "api": {
+    "format": "json",
+    "method": "multipart POST",
+    "signatureVersion": "1.0",
+    "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
+  },
+  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "index": 0,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-000.query.txt",
+        "sha256": "483d55ef2fb9a15ec4a864b663843c0ea5a2017c8927431d30be8afe1cdd238a"
+      },
+      "response": {
+        "bytes": 554783,
+        "path": "sources/fit-000.response.json.gz",
+        "sha256": "d695801318d59036dc7c95ac9b6204736385b23243df7635bac37bb8b825a2c9",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "961d4c612bc362c48d2f24db36dd29a626aaced288295ab1e0e22d17e2984c29"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:10 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 1,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-001.query.txt",
+        "sha256": "6a8498dd9c9b2d48f0bd4a9b92faf72512a4ddcdbdf099d9973d5be91ab219e8"
+      },
+      "response": {
+        "bytes": 559779,
+        "path": "sources/fit-001.response.json.gz",
+        "sha256": "5e3ac305dd96cb85069eabd0d560f786e6934d01afa001837c01f44034b3609f",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "e3bca0264c82f452c019b869d47d452d5607c0f4dce211ba52a81e384ec59287"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:11 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 2,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-002.query.txt",
+        "sha256": "4761191dbd67bd2c6946fdba0c068366bc7fa809fa4f7b6b2b7e82b5b3862196"
+      },
+      "response": {
+        "bytes": 555223,
+        "path": "sources/fit-002.response.json.gz",
+        "sha256": "b9b1f179fe3edbc0af70b4e92a369b95120a331ba01a6456ec4c28e4bb5e6adf",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "24ce0554413b12b38788fe7464fc623ee1576ae9c70de38984abb2bcb4733bc8"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:12 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 3,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-003.query.txt",
+        "sha256": "a356deadac68dae46639db62ae960d254f86821b8051a71e09b06903a918d0e2"
+      },
+      "response": {
+        "bytes": 559500,
+        "path": "sources/fit-003.response.json.gz",
+        "sha256": "b3e6f94ea4b845c10867f0f864b8db605d34e37136da6c9245b28b5621ace061",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "e6eee3fdda754ad32bee00689237ec3da343660c1e60ff999c337695ed002ae3"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:14 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 4,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-004.query.txt",
+        "sha256": "ded12bf69a0c1910c81946bf01fb7769c93fc09e6629040e59cc84423d6eace8"
+      },
+      "response": {
+        "bytes": 555292,
+        "path": "sources/fit-004.response.json.gz",
+        "sha256": "f48ba793d3465e57e69f3f519a2a4b8b547dbd9cacc1064b87f9edbad7c088cb",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "b590ee2fbc1bcd4e251a9a4c09af9f2da8c1e732f3f0ba551086b6bd0e0fe698"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:15 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 5,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-005.query.txt",
+        "sha256": "9651422af1b922ff1c095f118286bc919f676ac55189d52108b5c4ed321d16a6"
+      },
+      "response": {
+        "bytes": 559383,
+        "path": "sources/fit-005.response.json.gz",
+        "sha256": "a6705f64d9e88a5263e2c0396af48d46544bebab84461ce30b4849661a74fab4",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "030adf69d7f0e1dded1664d2c9517b6812523dd40022acd868e513bb936ce374"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:16 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 6,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-006.query.txt",
+        "sha256": "194548bde519ff3e2b61ab6e397dacedb8f754e50469cf6a8e0d3eeab536ffa7"
+      },
+      "response": {
+        "bytes": 555666,
+        "path": "sources/fit-006.response.json.gz",
+        "sha256": "81ed8f4914d7c019f6c2d6e2e816393ee331c3cb3e57c6e84f92a56a486557e1",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "bf248d4353c09d1bcaaab8e42707866594e70b541d1643903c69046f40b23ad0"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:17 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 7,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-007.query.txt",
+        "sha256": "89f17261ae7a6d46b3ee9eeaff82fb84d4ffcdb51a1c567d1be51c0eb4e9aee3"
+      },
+      "response": {
+        "bytes": 559091,
+        "path": "sources/fit-007.response.json.gz",
+        "sha256": "c723cba0d7e324a22090bd7c7db692412812312714e1d217eead5416e3efabd0",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "319db78b83f515090536859f3fc478467d5cfa32d39e179204e3c4871000b0ee"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:19 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 8,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-008.query.txt",
+        "sha256": "1d348e9690f13f75d062b7d1e8ec729f80c3b18249519bec508b5000f27fd4de"
+      },
+      "response": {
+        "bytes": 556080,
+        "path": "sources/fit-008.response.json.gz",
+        "sha256": "99252d55ce98dd9f09eabc31736513453895b170e2ed91350e7afdfea36738e2",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "7d834a253b2411eabd52de3e52fa7584b6db76b0d600bbf3a363eee27491b0d4"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:20 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 9,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-009.query.txt",
+        "sha256": "eda5b5bfaba0de4e977f4b3302f8cd749d07e41fe21c50c10fe59c2c8aa75bda"
+      },
+      "response": {
+        "bytes": 559526,
+        "path": "sources/fit-009.response.json.gz",
+        "sha256": "14e677892a7b7c5d58e19886461296e463a7fe2f9984ffeb96d2b663a29913e1",
+        "uncompressedBytes": 1794644,
+        "uncompressedSHA256": "9291d35d638ff6f8f130fe26bfedaae5bee583f375c15b17af440c02503f5091"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:22 GMT",
+      "vectorCount": 9120
+    },
+    {
+      "index": 10,
+      "kind": "fit",
+      "query": {
+        "bytes": 343,
+        "path": "sources/fit-010.query.txt",
+        "sha256": "574e07b0167bfe49fbd36bf66b4159895723b17e8bea72f01bfa4860cffc2544"
+      },
+      "response": {
+        "bytes": 10342,
+        "path": "sources/fit-010.response.json.gz",
+        "sha256": "4165a3fede39812510dafcc6e8e8e5ff53205c2d405f1107483669f25a36944b",
+        "uncompressedBytes": 29468,
+        "uncompressedSHA256": "f8acb1c8660442c88c2434b62ccaa974f4d20cd8dcf53846b476c9359aeb3a0f"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:34:23 GMT",
+      "vectorCount": 114
+    },
+    {
+      "index": 0,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-000.query.txt",
+        "sha256": "5bd13e792ec036152a8178871c35020eaaa3fc8b4f4a4a22cbbdf1c905a323f3"
+      },
+      "response": {
+        "bytes": 548002,
+        "path": "sources/holdout-000.response.json.gz",
+        "sha256": "852318a79ef4dcd03f22a610c4ace77ddca050401a298114c04df4177036e22d",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "c53f2787be8dbb15c73e3a88bbec8fb3214d456e4e6f51eaf04bef6cc9017622"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:15 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 1,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-001.query.txt",
+        "sha256": "3de3ace2e79a5d672524fca81799a5c3db8329648dfb2ff111cc2fd3d683d6fa"
+      },
+      "response": {
+        "bytes": 544387,
+        "path": "sources/holdout-001.response.json.gz",
+        "sha256": "9cda4eabefd5eda2dd7f9f19ba1fc468d90528129363d0ee3882cf9b4c77e8fb",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "c53b45aa1e0a644a995098f7518e5e68a07e4878ef2fbcbd7546e4cdc9eed53d"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:16 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 2,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-002.query.txt",
+        "sha256": "23fe13290fad3208530912f64cf38dbe90551dbf594ee3c383ace70b09338554"
+      },
+      "response": {
+        "bytes": 545738,
+        "path": "sources/holdout-002.response.json.gz",
+        "sha256": "6837f33f9b5046e09730296ef53faf5ef19362ecdc4a4e5c5048f941961f60a1",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "04fedd7dd876ea73b340dbe2e4cc7a3c5a2e6410a4b28f1c6ffe3cd015a8e0d5"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:18 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 3,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-003.query.txt",
+        "sha256": "14b0277e827ac083e731cec91df71342834ff3a4c1fa91f31ce7b028c54fd9cf"
+      },
+      "response": {
+        "bytes": 556162,
+        "path": "sources/holdout-003.response.json.gz",
+        "sha256": "6e12cc3475ac719fb05548837e1a658aceb68557cc941a282bda872d5809997b",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "7d50029f03d272dcff0ca96798fbefc9e5cb194d915d09f5b64421cb6c96a54a"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:19 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 4,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-004.query.txt",
+        "sha256": "fad213dbfc52364cfb11b81bb37f92db6d3ba764e4be7c1799d5816b13527d2b"
+      },
+      "response": {
+        "bytes": 548183,
+        "path": "sources/holdout-004.response.json.gz",
+        "sha256": "420b45d89c417a74fedd5663442f9e7d29d4ee57086224bd4f104c9e33ddf86e",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "8e1b444329d7b3c3ad324a11a67c05030d4a66f326e873ea488ed9c9d69e5583"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:20 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 5,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-005.query.txt",
+        "sha256": "2387e49dbc221ec9bb43007c7fce5597fe70b9ca982e4549539e740a80882a0a"
+      },
+      "response": {
+        "bytes": 544724,
+        "path": "sources/holdout-005.response.json.gz",
+        "sha256": "d52433e7932a8b4154ea12a67ad3e3d1d09cfc44f811d6710ff002eab6d25d35",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "4d628139dfaa659dd314429c42fa3407177dcfd8b28324bd82bc19310a6df590"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:22 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 6,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-006.query.txt",
+        "sha256": "490939750b5a459303fcf139909af76a980a01f9ad7378cfd5f1f233c03751a9"
+      },
+      "response": {
+        "bytes": 545422,
+        "path": "sources/holdout-006.response.json.gz",
+        "sha256": "4e57f6b9c1e660b0e475eaf59b01ed2efbb197f0fdccb5018deec4cbfd668337",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "b9922d3ab31b316f94fe78a8082e320ef3de3bfc552ce79dc1044cf96d33bd12"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:23 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 7,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-007.query.txt",
+        "sha256": "ca6ba04fd7176b2154bf20901d871085c25f84ac80e4664ab9989772b056c930"
+      },
+      "response": {
+        "bytes": 555816,
+        "path": "sources/holdout-007.response.json.gz",
+        "sha256": "d6cba91eb37c284f0516de0dc1c4c8b5a25e8b05f498c0a54afb472adaa03035",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "70f3f8f34c2562a37c3a9b5ccda80340f8238fb4c939b9afb0e7349b02c2d9d1"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:25 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 8,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-008.query.txt",
+        "sha256": "8713bb17494ccb996e5e111918d600a31b58cb7dddd91c717fc86eb931cb5f22"
+      },
+      "response": {
+        "bytes": 549038,
+        "path": "sources/holdout-008.response.json.gz",
+        "sha256": "d970d16e84bdbb127e9a0087058f00bf67590bd84a7b74ce794ef133dcdaefc2",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "c4d5f132aa39d6ea8233547a4c7f927b0e699949f01b9266391549cb14ac33c1"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:26 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 9,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-009.query.txt",
+        "sha256": "4d49a679ff6922f7da4e609112778909d990e0bff2cbfcb6349c18e8f617d5c3"
+      },
+      "response": {
+        "bytes": 544104,
+        "path": "sources/holdout-009.response.json.gz",
+        "sha256": "c53924e22f32c5f92ee76b79d1c7dd83fef8e25400d0b329fd3861bcc0b7862c",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "c318a6c064ca1dd5697d6c158e7860c7eb30f7f544ae87055be183de57635a87"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:27 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 10,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-010.query.txt",
+        "sha256": "24e2040711a07afecfbd31a4d1a886df09c4409587ae53d11fd634cf077e6a1b"
+      },
+      "response": {
+        "bytes": 545534,
+        "path": "sources/holdout-010.response.json.gz",
+        "sha256": "8a63c2ad7b952ed31d91f5781c165389b2ded89258c832989f89d0b510786b39",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "5c14aeeedbed6caacd1842988e777471e3900ddf0ade734ac0468d61c61eb940"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:28 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 11,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-011.query.txt",
+        "sha256": "4e94dc941b1b88ad723ed48507aeecc039540c21bcaf472ed46282b16ae84968"
+      },
+      "response": {
+        "bytes": 555481,
+        "path": "sources/holdout-011.response.json.gz",
+        "sha256": "f34dc62c6812d82d87566ca76a0b673c994ade9a624535aa7c41f9774854986e",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "1cde80108676c6c4593a821af2dd64d1224b6c99edc94fb1484fb2ae23a0236d"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:30 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 12,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-012.query.txt",
+        "sha256": "76424bb6bdd27afd5567bbf7db052b8c87132b96b81c7e78af967a70e05b113d"
+      },
+      "response": {
+        "bytes": 549712,
+        "path": "sources/holdout-012.response.json.gz",
+        "sha256": "246d6c74afcc3713be9e6e75b8ef15056d25c03568b4bda9b458ff3de79e25f3",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "6a161d6fa4a1e4d1f6996e3a9d9f7c68bb6070189177a6a28f58dc8e7e5a6ca4"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:31 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 13,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-013.query.txt",
+        "sha256": "fec5ca2e6c8e4bf31ead9d8b00f2e7e596b12a77419d626aea9da3973856f85a"
+      },
+      "response": {
+        "bytes": 544568,
+        "path": "sources/holdout-013.response.json.gz",
+        "sha256": "f1ae8c0c1831307b471fa841964a04f9f2c87b11efb2047359e6e4ea0ff8cf58",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "490e4d424a8b515d6601627c89c931767688f0ae11936050f9f3cf52e2d1e052"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:32 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 14,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-014.query.txt",
+        "sha256": "b90bb76d03f1851eb12c87a0ea46cb8055218edf08952a09aeee174a77ec7020"
+      },
+      "response": {
+        "bytes": 545209,
+        "path": "sources/holdout-014.response.json.gz",
+        "sha256": "07052a87619a5beb46e31bbecbd2a8b1ef10ad3cab7fed850f631756f9b53e2a",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "05f227357615e3604c2f23c1514905e9a747aee32f6e948ca0452e09160ccf72"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:34 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 15,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-015.query.txt",
+        "sha256": "6d791b3ead2910134537c893817556569df3a5609d0c695bcfd2c965b9cf1f83"
+      },
+      "response": {
+        "bytes": 554853,
+        "path": "sources/holdout-015.response.json.gz",
+        "sha256": "a8897b323826c14ab38c0895b8ea1f42c61c59fe7237977dc8059ea7c63f2d20",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "99007235b01bdee34de5ab619f06843d46a56109a915f348630364158329eeb0"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:35 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 16,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-016.query.txt",
+        "sha256": "e8b4e17694150b15a282d8720a6b326014f2e0716e83f1fda5dea063736f2013"
+      },
+      "response": {
+        "bytes": 550215,
+        "path": "sources/holdout-016.response.json.gz",
+        "sha256": "80ae5cdadcf19bc9d4a3b01c16844ebc2cb0025efad76d160286e9f221099595",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "79666e29ad7c7b010e9efdad9c78a0642fb41e46bb61a598d669d5973305b239"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:37 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 17,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-017.query.txt",
+        "sha256": "404833cbfbce021dda630adfc39ba9130a9c1b50293f13a601ae7b2a690c036e"
+      },
+      "response": {
+        "bytes": 544901,
+        "path": "sources/holdout-017.response.json.gz",
+        "sha256": "ab250ac8abc9b0a57d2944d2ac15b9c7cb6dad65d628a4b31e0b9436b0618427",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "80abd663976d851cb012f281978c6d0cb1d40de21c9fbfeea76e6e0755bcbc76"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:38 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 18,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-018.query.txt",
+        "sha256": "145d9d37e8dee91f1389e170a41a5f33ab0aa1cb5aa6d8fa1fcb46c06521bd76"
+      },
+      "response": {
+        "bytes": 545517,
+        "path": "sources/holdout-018.response.json.gz",
+        "sha256": "de9b9bb05492cea7f9c43ed091b56e20fae2783f1e1fab407a1632c2d14ca018",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "d85bce573a05c919851a164e3cf16552f0c536d4408ef820aa76320288ced041"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:39 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 19,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-019.query.txt",
+        "sha256": "42ce8f0a9a0412224b5b6abf41cc52f9c0bbe936289f8580d4c46c06cc501294"
+      },
+      "response": {
+        "bytes": 555307,
+        "path": "sources/holdout-019.response.json.gz",
+        "sha256": "d3e7d3a508feddc4798b8012c29d59b32632e2f42022fce4804bb6adab6c1e8c",
+        "uncompressedBytes": 1795231,
+        "uncompressedSHA256": "625fa20e531d6fbcd8376acc5950ccc0ddcf60459a1446d4d6536d900239aa81"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:41 GMT",
+      "vectorCount": 9123
+    },
+    {
+      "index": 20,
+      "kind": "holdout",
+      "query": {
+        "bytes": 344,
+        "path": "sources/holdout-020.query.txt",
+        "sha256": "d073c78fa5a3bf4d2eebed26e1188f7d7654396d7558c4d95ab97e1e43180e9b"
+      },
+      "response": {
+        "bytes": 17770,
+        "path": "sources/holdout-020.response.json.gz",
+        "sha256": "1f25e02458ddaeb8a70936b48fd2d0c2bb14d4933d4d8893cb243ebf64c888a0",
+        "uncompressedBytes": 52399,
+        "uncompressedSHA256": "0088ebfd0d4ecb86953c3c87d77569b37013345f1dce9a43d9b3d21efec518fb"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:42:42 GMT",
+      "vectorCount": 231
+    },
+    {
+      "index": 0,
+      "kind": "negative",
+      "query": {
+        "bytes": 345,
+        "path": "sources/negative-000.query.txt",
+        "sha256": "cc094cbfae01fe14108b296b8c971eec601881f8ca6d0dd60b3be05bd89bd369"
+      },
+      "response": {
+        "bytes": 167067,
+        "path": "sources/negative-000.response.json.gz",
+        "sha256": "f285af8569200c6f098dbf29668f4b3fa93b814392835517c861e92c3096def0",
+        "uncompressedBytes": 478113,
+        "uncompressedSHA256": "9b2eac50ed9a86fd8a6cca457ef542324b58f5e12c7998d759633d0134fd8272"
+      },
+      "retrievedAtHTTPDate": "Tue, 13 Oct 2026 07:46:22 GMT",
+      "vectorCount": 2403
+    }
+  ]
+}
