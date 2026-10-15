@@ -31,6 +31,9 @@ struct InverseRefractionTests {}
 @Suite("search", .timeLimit(.minutes(1)))
 struct SearchCallbackContractTests {}
 
+@Suite("default model", .timeLimit(.minutes(15)))
+struct SearchCallbackDefaultModelTests {}
+
 @Suite("seasons", .timeLimit(.minutes(5)))
 struct SeasonalEpochTests {}
 SWIFT
@@ -61,6 +64,7 @@ for argument in "$@"; do
     if [[ "$argument" == "list" ]]; then
         for index in {1..10}; do printf 'AstronomyKitTests.InverseRefractionTests/test%s()\n' "$index"; done
         for index in {1..17}; do printf 'AstronomyKitTests.SearchCallbackContractTests/test%s()\n' "$index"; done
+        printf '%s\n' 'AstronomyKitTests.SearchCallbackDefaultModelTests/test1()'
         if [[ "${FAKE_LIST_MODE:-valid}" != "missing_suite" ]]; then
             for index in {1..4}; do printf 'AstronomyKitTests.SeasonalEpochTests/test%s()\n' "$index"; done
         fi
@@ -83,6 +87,7 @@ if [[ -n "$filter" ]]; then
     case "$filter" in
         *InverseRefractionTests*) count=10 ;;
         *SearchCallbackContractTests*) count=17 ;;
+        *SearchCallbackDefaultModelTests*) count=1 ;;
         *SeasonalEpochTests*) count=4 ;;
         *) count=1 ;;
     esac

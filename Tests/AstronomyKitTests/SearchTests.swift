@@ -491,17 +491,19 @@ struct SearchCallbackContractTests {
     }
 }
 
-#if os(macOS) || os(Linux) || os(Windows)
 /// A callback may change the process default model mid-search. Each search captures JPL Horizons, starts with JPL
 /// Horizons as the default, and every callback installs Espenak-Meeus, so a callback time rebuilt from the default
 /// would carry the wrong model and a different TT. Changing the default would shift times built by suites running in
-/// parallel, so the check runs in an exit test's child process; see `ChildProcessIsolation`. It is not in the timed
-/// `SearchCallbackContractTests` because, in a full parallel run, the parent's wait for the child can last minutes.
-@Suite("Search callback default model", .childProcessIsolation)
+/// parallel, so the check runs in an exit test's child process; see `ChildProcessIsolation`. In a full parallel run
+/// the parent's wait for the child has lasted about seven minutes, past `SearchCallbackContractTests`' one-minute
+/// limit, so this suite has its own.
+@Suite("Search callback default model", .childProcessIsolation, .timeLimit(.minutes(15)))
 struct SearchCallbackDefaultModelTests {
+    #if os(macOS) || os(Linux)
     @Test("Callback times keep the captured model when a callback changes the default")
     func callbackTimesKeepCapturedModel() async {
-        await #expect(processExitsWith: .success) {
+        let result = await #expect(processExitsWith: .success) {
+            ChildProcessIsolation.keepStandardError(of: "SearchCallbackDefaultModelTests.callbackTimes")
             typealias Contract = SearchCallbackContractTests
             AstronomyConfig.setDeltaTModel(.jplHorizons)
             let rootVisits = Contract.Visits()
@@ -524,6 +526,7 @@ struct SearchCallbackDefaultModelTests {
                 #expect(time.terrestrialTime.bitPattern == captured.terrestrialTime.bitPattern)
             }
         }
+        ChildProcessIsolation.reportStandardError(of: "SearchCallbackDefaultModelTests.callbackTimes", result: result)
     }
+    #endif
 }
-#endif
