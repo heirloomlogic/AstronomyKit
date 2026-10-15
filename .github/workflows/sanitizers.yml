@@ -1,17 +1,6 @@
 name: Sanitizers
 
 on:
-  pull_request:
-    paths:
-      - ".github/lsan-suppressions.txt"
-      - ".github/workflows/sanitizers.yml"
-      - "Package.swift"
-      - "Scripts/test-lsan-suppressions.sh"
-      - "Scripts/test-test-isolation-wrapper.sh"
-      - "Scripts/test-with-isolated-default-model.sh"
-      - "Scripts/validate-test-isolation.py"
-      - "Sources/AstronomyKit/**"
-      - "Tests/**"
   schedule:
     - cron: "0 6 * * 1"
   workflow_dispatch:

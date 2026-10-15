@@ -129,16 +129,6 @@ class GalileanResidualTests(unittest.TestCase):
             changed = dict(bindings); mutate(changed)
             with self.assertRaises(ValueError): self.tool.check_bindings(changed)
 
-    def test_false_capture_revision_is_rejected(self):
-        revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=self.tool.ROOT, text=True).strip()
-        original = self.tool.record(self.candidate(), revision=revision, toolchain='test')
-        tree = subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], cwd=self.tool.ROOT, text=True).strip()
-        for false_revision in ['2e31344cbf467da35037504515e9f0c2ad7b04f9', '0' * 40, tree]:
-            candidate = copy.deepcopy(original)
-            candidate['runtimeCaptureRevision'] = false_revision
-            with self.subTest(revision=false_revision), self.assertRaises(ValueError):
-                self.tool.validate_record(candidate)
-
     def test_deleted_tracked_native_owner_is_rejected_before_capture(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -168,15 +158,14 @@ class GalileanResidualTests(unittest.TestCase):
                 self.tool.source_paths()
 
     def test_stored_report_metric_and_capture_hash_controls(self):
-        revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=self.tool.ROOT, text=True).strip()
-        data = self.tool.record(self.candidate(), revision=revision, toolchain='test')
+        data = self.tool.record(self.candidate(), toolchain='test', sources=self.tool.source_hashes())
         self.tool.validate_record(data)
         for mutate in [lambda d: d['analysis']['rows'][0].update(positionErrorKm=99),
                        lambda d: d['capture']['rows'].pop(),
                        lambda d: d.update(captureSHA256='0' * 64),
                        lambda d: d['sourceSHA256'].pop(next(iter(d['sourceSHA256']))),
-                       lambda d: d['captureSourceSHA256'].pop(next(iter(d['captureSourceSHA256']))),
-                       lambda d: d['captureSourceSHA256'].__setitem__(next(iter(d['captureSourceSHA256'])), '0' * 64)]:
+                       lambda d: d['sourceSHA256'].__setitem__('Package.swift', '0' * 64),
+                       lambda d: d.update(schemaVersion=2)]:
             changed = copy.deepcopy(data); mutate(changed)
             with self.assertRaises(ValueError): self.tool.validate_record(changed)
 

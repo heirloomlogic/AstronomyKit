@@ -1,0 +1,67 @@
+name: Deep validation
+
+# The slow numerical evidence that used to gate every PR: the serial Debug
+# suite, the solar numerics rechecks and ThreadSanitizer. They run nightly on
+# main and on demand, never as a PR gate. The PR gate is test.yml.
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# The two complete USNO rise/set sweeps (5,909 events each) run single-threaded
+# and cost hours under Debug and TSan; test.yml runs them in Release.
+env:
+  SERIAL_SWEEPS: 'AuditValidationTests/riseSet\(stream:\)|EngineObserverEventsTests/usno\(stream:\)'
+
+jobs:
+  debug-macos:
+    runs-on: macos-26
+    timeout-minutes: 300
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify native solar numerical tools
+        run: |
+          python3 -m venv .build/numerics-venv
+          .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
+          .build/numerics-venv/bin/python Scripts/qualify-moon-de441-full.py --check
+          .build/numerics-venv/bin/python -m unittest Scripts/test_qualify_moon_de441_full.py -v
+          .build/numerics-venv/bin/python Scripts/generate-apparent-place-fixtures.py --check
+          python3 -m unittest Scripts/test_capture_apparent_place.py -v
+          python3 Scripts/capture-apparent-place.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/generate_apparent_integration.py --check
+          .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
+          python3 Scripts/solar-numerics/numerics.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/derive_altitude.py --check
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-debug.json
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-release.json
+
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-debug.json
+          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
+
+      - name: Test (Debug)
+        run: swift test --no-parallel --skip "$SERIAL_SWEEPS"
+
+  test-thread-sanitizer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Swift
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
+        with:
+          swift-version: "6.2"
+
+      - name: Test (Thread Sanitizer)
+        run: swift test -c release --no-parallel --sanitize=thread --skip "$SERIAL_SWEEPS"
