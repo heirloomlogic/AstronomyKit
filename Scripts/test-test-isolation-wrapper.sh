@@ -35,6 +35,17 @@ struct SearchCallbackContractTests {}
 struct SeasonalEpochTests {}
 SWIFT
 
+# Changing the process default inside an exit test's child process is allowed.
+cat >"$temporary_directory/Tests/AstronomyKitTests/ChildProcessWriter.swift" <<'SWIFT'
+import Testing
+
+@Test func childProcessWriter() async {
+    await #expect(processExitsWith: .success) {
+        AstronomyConfig.setDeltaTModel(.jplHorizons)
+    }
+}
+SWIFT
+
 cat >"$temporary_directory/bin/swift" <<'FAKE'
 #!/usr/bin/env bash
 set -euo pipefail
@@ -53,16 +64,6 @@ for argument in "$@"; do
         if [[ "${FAKE_LIST_MODE:-valid}" != "missing_suite" ]]; then
             for index in {1..4}; do printf 'AstronomyKitTests.SeasonalEpochTests/test%s()\n' "$index"; done
         fi
-        if [[ "${FAKE_LIST_MODE:-valid}" != "missing_test" ]]; then
-            printf '%s\n' 'AstronomyKitTests.DeltaTThreadSafetyTests/calculationKeepsCapturedModel()'
-        fi
-        if [[ "${FAKE_LIST_MODE:-valid}" == "prefix_sibling" ]]; then
-            printf '%s\n' 'AstronomyKitTests.DeltaTThreadSafetyTests/calculationKeepsCapturedModelRegression()'
-        elif [[ "${FAKE_LIST_MODE:-valid}" == "selector_collision" ]]; then
-            printf '%s\n' 'AstronomyKitTests.DeltaTThreadSafetyTests/calculationKeepsCapturedModel(argument:)'
-        fi
-        printf '%s\n' 'AstronomyKitTests.DeltaTThreadSafetyTests/concurrentModelSwapIsSafe()'
-        printf '%s\n' 'AstronomyKitTests.EngineStarConcurrencyTests/distinctStarsAndModelUpdates()'
         exit 0
     fi
 done
@@ -111,13 +112,29 @@ expect_failure() {
 }
 
 : >"$FAKE_SWIFT_LOG"
-if ! "$script_directory/test-with-isolated-default-model.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
+if ! "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
     cat "$temporary_directory/output.log" >&2
     echo "error: valid isolation wrapper control failed" >&2
     exit 1
 fi
 grep -Fq -- '--skip ' "$FAKE_SWIFT_LOG"
 grep -Fq 'SeasonalEpochTests/' "$FAKE_SWIFT_LOG"
+# A process default change outside an exit test reaches suites running in parallel.
+cat >"$temporary_directory/Tests/AstronomyKitTests/SharedProcessWriter.swift" <<'SWIFT'
+import Testing
+
+@Test func sharedProcessWriter() async {
+    await #expect(processExitsWith: .success) {}
+    AstronomyConfig.setDeltaTModel(.jplHorizons)
+}
+SWIFT
+expect_failure "process default changed outside an exit test" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
+if [[ -s "$FAKE_SWIFT_LOG" ]]; then
+    echo "error: a shared-process default model write reached swift before validation" >&2
+    exit 1
+fi
+grep -Fq 'SharedProcessWriter.swift:5' "$temporary_directory/output.log"
+rm "$temporary_directory/Tests/AstronomyKitTests/SharedProcessWriter.swift"
 
 # Directory names are not module names: a valid target may use a custom path.
 cp "$temporary_directory/Package.swift" "$temporary_directory/Package.saved"
@@ -127,7 +144,7 @@ import pathlib, sys
 path = pathlib.Path(sys.argv[1])
 path.write_text(path.read_text().replace('.testTarget(name: "AstronomyKitTests")', '.testTarget(name: "AstronomyKitTests", path: "Tests/CustomDirectory")'))
 PYTHON
-if ! "$script_directory/test-with-isolated-default-model.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
+if ! "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
     cat "$temporary_directory/output.log" >&2
     echo "error: valid custom target path was rejected" >&2
     exit 1
@@ -135,28 +152,12 @@ fi
 mv "$temporary_directory/Tests/CustomDirectory" "$temporary_directory/Tests/AstronomyKitTests"
 mv "$temporary_directory/Package.saved" "$temporary_directory/Package.swift"
 
-: >"$FAKE_SWIFT_LOG"
-if ! env FAKE_LIST_MODE=prefix_sibling "$script_directory/test-with-isolated-default-model.sh" --sanitize=address >"$temporary_directory/output.log" 2>&1; then
-    cat "$temporary_directory/output.log" >&2
-    echo "error: exact selector rejected an unrelated prefix sibling" >&2
-    exit 1
-fi
-skip_pattern="$(awk '{ for (field = 1; field <= NF; field++) if ($field == "--skip") print $(field + 1) }' "$FAKE_SWIFT_LOG")"
-if grep -Eq "$skip_pattern" <<<'AstronomyKitTests.DeltaTThreadSafetyTests/calculationKeepsCapturedModelRegression()'; then
-    echo "error: exact main skip selector removed an unrelated prefix sibling" >&2
-    exit 1
-fi
-if ! grep -Eq "$skip_pattern" <<<'AstronomyKitTests.DeltaTThreadSafetyTests/calculationKeepsCapturedModel()'; then
-    echo "error: exact main skip selector did not remove the intended mutator" >&2
-    exit 1
-fi
-
 cat >"$temporary_directory/Tests/OtherTarget/Unlisted.swift" <<'SWIFT'
 import Testing
 @Suite("unlisted", .timeLimit(.minutes(1)))
 struct UnlistedTimedSuite {}
 SWIFT
-expect_failure "unlisted timed suite in another registered target" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "unlisted timed suite in another registered target" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: another target's unlisted timed suite reached swift before manifest validation" >&2
     exit 1
@@ -168,7 +169,7 @@ import Testing
 @Suite("duplicate", .timeLimit(.minutes(1)))
 struct InverseRefractionTests {}
 SWIFT
-expect_failure "duplicate timed suite owner" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "duplicate timed suite owner" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: duplicate timed suite owner reached swift before manifest validation" >&2
     exit 1
@@ -188,7 +189,7 @@ import Testing
 @Suite("same name, different module", .timeLimit(.minutes(1)))
 struct InverseRefractionTests {}
 SWIFT
-expect_failure "timed owner in another module borrows untimed suite selector" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "timed owner in another module borrows untimed suite selector" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: target-owner collision reached Swift tests" >&2
     exit 1
@@ -209,7 +210,7 @@ import pathlib, sys
 path = pathlib.Path(sys.argv[1])
 path.write_text(path.read_text().replace('.testTarget(name: "OtherTarget"),', '.testTarget(name: "OtherTarget"), .testTarget(name: "CustomTarget", path: "CustomTimedTarget"),'))
 PYTHON
-expect_failure "custom-path timed suite outside Tests" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "custom-path timed suite outside Tests" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: custom-path timed suite reached Swift tests" >&2
     exit 1
@@ -232,7 +233,7 @@ struct Container {
     struct InverseRefractionTests {}
 }
 SWIFT
-expect_failure "nested timed suite borrows a top-level selector" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "nested timed suite borrows a top-level selector" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: nested timed suite reached Swift tests" >&2
     exit 1
@@ -241,7 +242,7 @@ grep -Fq 'nested timed suites' "$temporary_directory/output.log"
 rm "$temporary_directory/Tests/AstronomyKitTests/Nested.swift"
 mv "$temporary_directory/TimedSuites.saved" "$temporary_directory/Tests/AstronomyKitTests/TimedSuites.swift"
 
-expect_failure "SwiftPM ownership unavailable" env FAKE_PACKAGE_MODE=failed "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "SwiftPM ownership unavailable" env FAKE_PACKAGE_MODE=failed "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: unavailable SwiftPM ownership reached Swift tests" >&2
     exit 1
@@ -252,7 +253,7 @@ import Testing
 @Test("individual", .timeLimit(.minutes(1)))
 func individuallyTimed() {}
 SWIFT
-expect_failure "individual timed test" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "individual timed test" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: individual timed test reached swift before manifest validation" >&2
     exit 1
@@ -263,32 +264,20 @@ cat >"$temporary_directory/Tests/Ambiguous.swift" <<'SWIFT'
 import Testing
 let unsupportedTraitShape = .timeLimit(.minutes(1))
 SWIFT
-expect_failure "unsupported time-limit trait shape" "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "unsupported time-limit trait shape" "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if [[ -s "$FAKE_SWIFT_LOG" ]]; then
     echo "error: unsupported time-limit trait reached swift before manifest validation" >&2
     exit 1
 fi
 rm "$temporary_directory/Tests/Ambiguous.swift"
 
-expect_failure "missing timed suite selection" env FAKE_LIST_MODE=missing_suite "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "missing timed suite selection" env FAKE_LIST_MODE=missing_suite "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 if grep -Fq -- '--skip ' "$FAKE_SWIFT_LOG"; then
     echo "error: missing suite selection reached the main test run" >&2
     exit 1
 fi
 
-expect_failure "missing default-model selection" env FAKE_LIST_MODE=missing_test "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
-if grep -Fq -- '--skip ' "$FAKE_SWIFT_LOG"; then
-    echo "error: missing default-model selection reached the main test run" >&2
-    exit 1
-fi
-
-expect_failure "default-model runtime selector collision" env FAKE_LIST_MODE=selector_collision "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
-if grep -Fq -- '--skip ' "$FAKE_SWIFT_LOG"; then
-    echo "error: selector collision reached the main test run" >&2
-    exit 1
-fi
-
-expect_failure "isolated failure propagation" env FAKE_FAIL_FILTER=SeasonalEpochTests "$script_directory/test-with-isolated-default-model.sh" --sanitize=address
+expect_failure "isolated failure propagation" env FAKE_FAIL_FILTER=SeasonalEpochTests "$script_directory/test-with-isolated-timed-suites.sh" --sanitize=address
 grep -Fq 'SeasonalEpochTests/' "$FAKE_SWIFT_LOG"
 
 echo "Sanitizer isolation wrapper controls passed"

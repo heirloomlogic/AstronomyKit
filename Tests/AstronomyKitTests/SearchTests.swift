@@ -404,32 +404,40 @@ struct SearchCallbackContractTests {
         }
     }
 
-    /// A callback may change the process default model mid-search. Installing JPL Horizons as the default would shift
-    /// times built by suites running in parallel (see `DeltaTThreadSafetyTests`), so this captures JPL Horizons and
-    /// only ever installs the Espenak-Meeus default. A callback time rebuilt from the default would then carry the
-    /// wrong model and a different TT.
-    @Test("Callback times keep the captured model when a callback changes the default")
-    func callbackTimesKeepCapturedModel() throws {
-        defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
-        let rootVisits = Visits()
-        let root = try #require(
-            try Self.find(.jplHorizons, visits: rootVisits) { u in
-                AstronomyConfig.setDeltaTModel(.espenakMeeus)
-                return u - 0.375
-            })
-        let lightVisits = Visits()
-        let corrected = try Self.correct(.jplHorizons, visits: lightVisits) { u in
-            AstronomyConfig.setDeltaTModel(.espenakMeeus)
-            return [1 + 10 * u, 0.2, 0.3]
+    #if os(macOS) || os(Linux) || os(Windows)
+        /// A callback may change the process default model mid-search. Each search captures JPL Horizons, starts with
+        /// JPL Horizons as the default, and every callback installs Espenak-Meeus, so a callback time rebuilt from the
+        /// default would carry the wrong model and a different TT. Changing the default would shift times built by
+        /// suites running in parallel, so the check runs in an exit test's child process; see `ChildProcessIsolation`.
+        @Test(
+            "Callback times keep the captured model when a callback changes the default",
+            .childProcessIsolation)
+        func callbackTimesKeepCapturedModel() async {
+            await #expect(processExitsWith: .success) {
+                typealias Contract = SearchCallbackContractTests
+                AstronomyConfig.setDeltaTModel(.jplHorizons)
+                let rootVisits = Contract.Visits()
+                let root = try #require(
+                    try Contract.find(.jplHorizons, visits: rootVisits) { u in
+                        AstronomyConfig.setDeltaTModel(.espenakMeeus)
+                        return u - 0.375
+                    })
+                AstronomyConfig.setDeltaTModel(.jplHorizons)
+                let lightVisits = Contract.Visits()
+                let corrected = try Contract.correct(.jplHorizons, visits: lightVisits) { u in
+                    AstronomyConfig.setDeltaTModel(.espenakMeeus)
+                    return [1 + 10 * u, 0.2, 0.3]
+                }
+                #expect(rootVisits.count >= 3)
+                #expect(lightVisits.count >= 3)
+                for time in rootVisits.times + [root] + lightVisits.times + [corrected.time] {
+                    #expect(time.deltaTModel == .jplHorizons)
+                    let captured = AstroTime(ut: time.universalTime, deltaTModel: .jplHorizons)
+                    #expect(time.terrestrialTime.bitPattern == captured.terrestrialTime.bitPattern)
+                }
+            }
         }
-        #expect(rootVisits.count >= 3)
-        #expect(lightVisits.count >= 3)
-        for time in rootVisits.times + [root] + lightVisits.times + [corrected.time] {
-            #expect(time.deltaTModel == .jplHorizons)
-            let captured = AstroTime(ut: time.universalTime, deltaTModel: .jplHorizons)
-            #expect(time.terrestrialTime.bitPattern == captured.terrestrialTime.bitPattern)
-        }
-    }
+    #endif
 
     // MARK: - Light-time correction
 

@@ -8,7 +8,7 @@ on:
       - "Package.swift"
       - "Scripts/test-lsan-suppressions.sh"
       - "Scripts/test-test-isolation-wrapper.sh"
-      - "Scripts/test-with-isolated-default-model.sh"
+      - "Scripts/test-with-isolated-timed-suites.sh"
       - "Scripts/validate-test-isolation.py"
       - "Sources/AstronomyKit/**"
       - "Tests/**"
@@ -57,4 +57,4 @@ jobs:
         run: |
           Scripts/test-lsan-suppressions.sh
           Scripts/test-test-isolation-wrapper.sh
-          Scripts/test-with-isolated-default-model.sh --sanitize=address
+          Scripts/test-with-isolated-timed-suites.sh --sanitize=address

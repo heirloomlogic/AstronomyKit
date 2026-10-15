@@ -7,11 +7,6 @@ readonly timed_suites=(
     "AstronomyKitTests.SearchCallbackContractTests:18"
     "AstronomyKitTests.SeasonalEpochTests:4"
 )
-readonly default_mutator_tests=(
-    "AstronomyKitTests.DeltaTThreadSafetyTests/calculationKeepsCapturedModel"
-    "AstronomyKitTests.DeltaTThreadSafetyTests/concurrentModelSwapIsSafe"
-    "AstronomyKitTests.EngineStarConcurrencyTests/distinctStarsAndModelUpdates"
-)
 script_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly script_directory
 readonly tests_root="${ASTRONOMYKIT_TEST_ISOLATION_ROOT:-${script_directory}/../Tests}"
@@ -47,15 +42,6 @@ for suite_entry in "${timed_suites[@]}"; do
     fi
     skip_alternatives+=("${suite_pattern#^}")
 done
-for test_name in "${default_mutator_tests[@]}"; do
-    test_pattern="$(selector_pattern "$test_name" '\(')"
-    matching_tests="$(count_matches "$test_pattern")"
-    if [[ "$matching_tests" != 1 ]]; then
-        echo "error: isolated default-model selector matched $matching_tests tests instead of 1: $test_name" >&2
-        exit 1
-    fi
-    skip_alternatives+=("${test_pattern#^}")
-done
 skip_pattern="^($(IFS='|'; echo "${skip_alternatives[*]}"))"
 readonly skip_pattern
 
@@ -72,20 +58,6 @@ for suite_entry in "${timed_suites[@]}"; do
     fi
     if ! grep -Eq "Test run with ${expected_tests} tests? in 1 suite passed" "$output_file"; then
         echo "error: isolated timed suite did not pass exactly $expected_tests listed tests: $suite_name" >&2
-        rm -f "$output_file"
-        exit 1
-    fi
-    rm -f "$output_file"
-done
-for test_name in "${default_mutator_tests[@]}"; do
-    test_pattern="$(selector_pattern "$test_name" '\(')"
-    output_file="$(mktemp)"
-    if ! swift test "$@" --skip-build --filter "$test_pattern" 2>&1 | tee "$output_file"; then
-        rm -f "$output_file"
-        exit 1
-    fi
-    if ! grep -Eq 'Test run with 1 test( |$)' "$output_file"; then
-        echo "error: isolated default-model invocation did not run exactly one test: $test_name" >&2
         rm -f "$output_file"
         exit 1
     fi

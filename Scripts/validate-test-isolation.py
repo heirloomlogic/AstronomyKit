@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Fail closed when Swift Testing time-limit traits are not isolated by the sanitizer wrapper."""
+"""Fail closed when Swift Testing time-limit traits are not isolated by the sanitizer wrapper,
+or when a test changes the process default Delta T model outside an exit test's child process."""
 
 import argparse
 import json
@@ -71,16 +72,43 @@ def code_only(source: str) -> str:
     return "".join(result)
 
 
-def closing_parenthesis(source: str, opening: int) -> int:
+def closing_delimiter(source: str, opening: int, pair: str) -> int:
     depth = 0
     for index in range(opening, len(source)):
-        if source[index] == "(":
+        if source[index] == pair[0]:
             depth += 1
-        elif source[index] == ")":
+        elif source[index] == pair[1]:
             depth -= 1
             if depth == 0:
                 return index
-    raise ValueError("unterminated attribute argument list")
+    raise ValueError(f"unterminated {pair} group")
+
+
+def default_model_writes_outside_exit_tests(path: pathlib.Path) -> list[int]:
+    """Lines that call `setDeltaTModel` outside an exit test's trailing closure.
+
+    Suites share one test process and run in parallel, so a model installed
+    there reaches every time another suite builds without a model.
+    """
+    source = path.read_text()
+    if "setDeltaTModel" not in source:
+        return []
+    clean = code_only(source)
+    closures: list[tuple[int, int]] = []
+    for expectation in re.finditer(r"\bprocessExitsWith\s*:", clean):
+        opening = clean.rfind("(", 0, expectation.start())
+        body = closing_delimiter(clean, opening, "()") + 1
+        while body < len(clean) and clean[body].isspace():
+            body += 1
+        if body >= len(clean) or clean[body] != "{":
+            line = clean.count("\n", 0, expectation.start()) + 1
+            raise ValueError(f"{path}:{line}: exit test body must be a trailing closure")
+        closures.append((body, closing_delimiter(clean, body, "{}")))
+    return [
+        clean.count("\n", 0, write.start()) + 1
+        for write in re.finditer(r"\bsetDeltaTModel\b", clean)
+        if not any(start < write.start() < end for start, end in closures)
+    ]
 
 
 def top_level_types(path: pathlib.Path) -> set[tuple[int, int, str]]:
@@ -115,7 +143,7 @@ def timed_declarations(path: pathlib.Path) -> tuple[list[str], list[str]]:
             opening += 1
         if opening >= len(clean) or clean[opening] != "(":
             continue
-        closing = closing_parenthesis(clean, opening)
+        closing = closing_delimiter(clean, opening, "()")
         occurrences = list(re.finditer(r"\.timeLimit\b", clean[opening:closing + 1]))
         if not occurrences:
             continue
@@ -181,11 +209,13 @@ def validate(root: pathlib.Path, expected: set[str]) -> None:
     # Keep the full Tests-tree guard and include registered test sources outside
     # it. Never infer a module from a directory name or a matching runtime count.
     paths = {path.resolve() for path in root.rglob("*.swift")} | set(owners)
+    shared_process_writes: list[str] = []
     for path in sorted(paths):
         try:
             suites, tests = timed_declarations(path)
         except ValueError as error:
             raise ValueError(f"cannot conservatively inventory timed tests: {error}") from error
+        shared_process_writes.extend(f"{path}:{line}" for line in default_model_writes_outside_exit_tests(path))
         for name in suites:
             if path not in owners:
                 raise ValueError(f"timed suite has no SwiftPM test target owner: {path}:{name}")
@@ -194,6 +224,8 @@ def validate(root: pathlib.Path, expected: set[str]) -> None:
                 raise ValueError(f"duplicate timed suite declaration is ambiguous: {selector}")
             discovered.add(selector)
         timed_tests.extend(tests)
+    if shared_process_writes:
+        raise ValueError("process default Delta T model changed outside an exit test: " + ", ".join(shared_process_writes))
     if timed_tests:
         raise ValueError("individual @Test time limits are not supported by the sanitizer isolation manifest: " + ", ".join(timed_tests))
     missing = sorted(expected - discovered)
@@ -217,7 +249,7 @@ def main() -> None:
     except (ValueError, OSError, KeyError, TypeError, subprocess.CalledProcessError) as error:
         print(f"error: {error}", file=sys.stderr)
         raise SystemExit(1) from error
-    print(f"Verified {len(arguments.suite)} timed suites in the sanitizer isolation manifest")
+    print(f"Verified {len(arguments.suite)} timed suites in the sanitizer isolation manifest and no shared-process Delta T model writes")
 
 
 if __name__ == "__main__":
