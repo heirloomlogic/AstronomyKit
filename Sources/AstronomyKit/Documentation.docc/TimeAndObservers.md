@@ -109,7 +109,7 @@ let deltaT = AstronomyConfig.deltaTEspenakMeeus(universalTime: 0)  // Seconds at
 AstronomyConfig.setDeltaTModel(.espenakMeeus)
 ```
 
-`AstronomyConfig.reset()` does not touch the Delta T model. It only frees the Pluto orbit cache.
+`AstronomyConfig.reset()` does not touch the Delta T model. It only clears the engine's calculation caches.
 
 `AstroTime` equality, hashing, and `Codable` use `universalTime` only. A decoded time derives TT under the process default at the moment of decoding, so record `deltaTModel` beside a serialized time when its TT must be reproduced.
 
