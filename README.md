@@ -355,7 +355,7 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 - [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross, the underlying C library (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
 - [ERFA](https://github.com/liberfa/erfa), derived from the IAU SOFA library, for the time and frame routines of the bundled Moon and Pluto ephemerides
-- NASA/JPL DE440, DE441, PLU060, SAT441, JUP365, NEP098 and URA184 ephemerides, from which the bundled Moon, Pluto, Saturn and planet coefficients are derived, and NASA/JPL Horizons states for Chiron (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
+- NASA/JPL DE440, DE441, PLU060, SAT441, JUP365, NEP098 and URA184 ephemerides (URA184 carries the DE442 Uranus barycenter), from which the bundled Moon, Pluto, Saturn and planet coefficients are derived, and NASA/JPL Horizons states for Chiron (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
 
 ## License
 
