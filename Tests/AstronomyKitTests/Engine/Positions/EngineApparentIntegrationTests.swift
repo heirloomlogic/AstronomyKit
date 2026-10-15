@@ -329,7 +329,7 @@ struct EngineApparentIntegrationTests {
 
     @Test("Lunar apparent light time resolves an adjacent-emission lattice cycle")
     func lunarEmissionLattice() throws {
-        let center = 6.536749192681518
+        let center = 46_920.243_891_178_514
         let originalObserver = try Engine.ApparentPlace.earthBarycentricKinematics(tt: center)
         var originalDelay = 0.0
         var emissions: [Double] = []

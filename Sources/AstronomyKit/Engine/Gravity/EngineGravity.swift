@@ -50,7 +50,7 @@ extension Engine.Gravity {
     }
 
     /// The Sun and Jupiter to Neptune relative to the solar system
-    /// barycenter at one TT, the C engine's `MajorBodyBary`.
+    /// barycenter at one TT, following the C engine's `MajorBodyBary` composition.
     struct MajorBodies: Sendable {
         /// Jupiter to Neptune with their GM, in the order they are added.
         static let planets: [(Engine.Planet, Double)] = [
@@ -66,7 +66,7 @@ extension Engine.Gravity {
         /// The bodies at `tt` days of TT from J2000.
         ///
         /// Each planet's heliocentric state comes from
-        /// ``Engine/Planet/heliocentricState(at:cache:)``. The barycenter is
+        /// ``Engine/Planet/systemHeliocentricState(at:cache:)``. The barycenter is
         /// offset from the Sun by Σ GM/(GM + GM☉) times each planet's
         /// position, and the same sum of the velocities, accumulated from
         /// Jupiter to Neptune; the Sun is that offset negated.
@@ -74,7 +74,10 @@ extension Engine.Gravity {
         /// - Throws: As the planet functions do: `AstronomyError.badTime`
         ///   for |TT| above ``Engine/acceptedTTDays`` or not finite.
         init(tt: Double) throws {
-            let (sun, planets) = try barycentricStates(Self.planets, tt: tt)
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: Self.planets.map { $0.0 })
+            let (sun, planets) = try barycentricStates(Self.planets, evaluation: evaluation)
             self.sun = sun
             (jupiter, saturn, uranus, neptune) = (planets[0], planets[1], planets[2], planets[3])
         }
@@ -98,10 +101,10 @@ extension Engine.Gravity {
     /// reads.
     struct SolarSystem: Sendable {
         var sun: BodyState
-        /// Mercury to Neptune gravitational model states, indexed by ``Engine/Planet/rawValue``. Saturn uses its system barycenter; other planets retain their existing approximations.
+        /// Mercury to Neptune system-center gravitational states, indexed by ``Engine/Planet/rawValue``.
         var planets: [BodyState]
-        /// Physical Saturn center for exposed body states and origin translation; forces use `planets`.
-        var saturnCenter: BodyState
+        /// Mercury to Neptune physical-center states exposed to callers and used for origin translation.
+        var physicalCenters: [BodyState]
 
         /// The GM each planet pulls with, in table order. Earth's includes
         /// the Moon's.
@@ -118,11 +121,17 @@ extension Engine.Gravity {
         ///
         /// - Throws: As ``MajorBodies/init(tt:)``.
         init(tt: Double) throws {
-            (sun, planets) = try barycentricStates(Self.planetsWithGM, tt: tt)
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
-            let physical = try Engine.Planet.saturn.heliocentricState(at: time, cache: seriesCache)
-            saturnCenter = BodyState(
-                position: physical.positionVector + sun.position, velocity: physical.velocityVector + sun.velocity)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: Engine.Planet.allCases)
+            (sun, planets) = try barycentricStates(Self.planetsWithGM, evaluation: evaluation)
+            physicalCenters = planets
+            for planet in [Engine.Planet.earth, .jupiter, .saturn, .uranus, .neptune] {
+                let physical = try planet.heliocentricState(evaluation: evaluation, cache: seriesCache)
+                physicalCenters[planet.rawValue] = BodyState(
+                    position: physical.positionVector + sun.position,
+                    velocity: physical.velocityVector + sun.velocity)
+            }
         }
 
         /// The barycentric state of `body`: the Sun, a planet, or the
@@ -130,8 +139,7 @@ extension Engine.Gravity {
         func state(of body: CelestialBody) -> BodyState? {
             if body == .solarSystemBarycenter { return BodyState(position: .zero, velocity: .zero) }
             if body == .sun { return sun }
-            if body == .saturn { return saturnCenter }
-            return Engine.Planet(body).map { planets[$0.rawValue] }
+            return Engine.Planet(body).map { physicalCenters[$0.rawValue] }
         }
 
         /// The acceleration of a body of negligible mass at barycentric
@@ -162,15 +170,13 @@ extension Engine.Gravity {
     /// the order given, then every planet moved to the barycenter and the
     /// Sun put at minus the offset.
     private static func barycentricStates(
-        _ planets: [(Engine.Planet, Double)], tt: Double
+        _ planets: [(Engine.Planet, Double)], evaluation: Engine.PlanetDE441.Evaluation
     ) throws -> (sun: BodyState, planets: [BodyState]) {
-        // The planet functions read only the TT of their time.
-        let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
         var offset = BodyState(position: .zero, velocity: .zero)
         var heliocentric: [BodyState] = []
         heliocentric.reserveCapacity(planets.count)
         for (planet, gm) in planets {
-            let state = try planet.systemHeliocentricState(at: time, cache: seriesCache)
+            let state = try planet.systemHeliocentricState(evaluation: evaluation, cache: seriesCache)
             let (position, velocity) = (state.positionVector, state.velocityVector)
             let shift = gm / (gm + sunGM)
             offset.position += shift * position

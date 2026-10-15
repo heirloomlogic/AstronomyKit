@@ -81,21 +81,25 @@ struct PolarSunriseReconciliationTests {
         let geocentricResidual = Self.signedTTResidual(geocentric)
         let bisection = try Self.bisection(observable: Self.existingUpperLimb)
         let opticalBisection = try Self.bisection(observable: Self.opticalUpperLimb)
+        let fixedCenterBisection = try Self.bisection(observable: Self.topocentricFixedCenter)
+        let geocentricBisection = try Self.bisection(observable: Self.geocentricFixedCenter)
 
         print(
             "polar-sunrise residuals: public=\(publicResidual), native=\(nativeResidual), "
                 + "fixed-center=\(fixedCenterResidual), geocentric=\(geocentricResidual), "
                 + "tolerances=\(existingRoots.map(Self.signedTTResidual)), "
                 + "bisection=\(Self.signedTTResidual(bisection)), "
-                + "optical-bisection=\(Self.signedTTResidual(opticalBisection))")
+                + "optical-bisection=\(Self.signedTTResidual(opticalBisection)), "
+                + "fixed-bisection=\(Self.signedTTResidual(fixedCenterBisection)), "
+                + "geocentric-bisection=\(Self.signedTTResidual(geocentricBisection))")
 
         // Historical model measurements remain in PolarSunriseReconciliation.md.
         // The current public root is checked against the unchanged source gate
         // and an independently bisected 696,000 km optical-limb observable.
         #expect(abs(publicResidual - Self.signedTTResidual(opticalBisection)) < 0.1)
         #expect(abs(publicResidual) <= 70.8)
-        #expect(abs(fixedCenterResidual - -220.648_209_279) < 0.001)
-        #expect(abs(geocentricResidual - -759.652_990_219) < 0.001)
+        #expect(abs(fixedCenterResidual - Self.signedTTResidual(fixedCenterBisection)) < 0.001)
+        #expect(abs(geocentricResidual - Self.signedTTResidual(geocentricBisection)) < 0.001)
         #expect(abs(nativeResidual) > 70.8)
         #expect(abs(fixedCenterResidual) > 70.8)
         #expect(abs(geocentricResidual) > 70.8)

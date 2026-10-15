@@ -25,7 +25,11 @@ jobs:
   # These finite job ceilings preserve all test commands and per-test limits; Release and platform-build workloads are unchanged.
   test-macos:
     runs-on: macos-26
-    timeout-minutes: 180
+    # DE-backed validation used 92 minutes before the full suite, then exhausted
+    # the 180-minute job ceiling during the USNO corpus (run 38399462211).
+    # The measured Linux slowdown projects ~244 minutes here; allow headroom
+    # without changing any numerical check, test command or per-test guard.
+    timeout-minutes: 300
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

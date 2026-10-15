@@ -101,7 +101,7 @@ def center_state(tables, jd):
 _tdb_spec = importlib.util.spec_from_file_location('moon_tables', ROOT/'Scripts/generate-moon-tables.py')
 _tdb_module = importlib.util.module_from_spec(_tdb_spec)
 _tdb_spec.loader.exec_module(_tdb_module)
-_TDB_TERMS = [[tuple(map(float,row)) for row in group] for group in _tdb_module.tdb_terms((ROOT/'Sources/CLibAstronomy/EphemerisTime/dtdb.c').read_text())]
+_TDB_TERMS = [[tuple(map(float,row)) for row in group] for group in _tdb_module.tdb_terms((ROOT/'Scripts/apparent-place-data/dtdb.c').read_text())]
 
 
 def tt_to_tdb(jd):

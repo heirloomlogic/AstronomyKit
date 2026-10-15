@@ -106,7 +106,7 @@ struct EnginePlanetaryEventTests {
         try Self.write(measurements, environment: "SATURN_APSIS_EVIDENCE_OUTPUT")
     }
 
-    @Test("Frozen physical-center source brackets expose remaining planetary timing gaps")
+    @Test("Frozen physical-center source brackets meet the unchanged sixty-second target")
     func sourceApsisBrackets() throws {
         struct Root: Decodable {
             let kind: String
@@ -147,17 +147,68 @@ struct EnginePlanetaryEventTests {
                     * Engine.secondsPerDay,
                 "localCrossings": reference.roots.count,
             ])
-            if [.jupiter, .uranus, .neptune].contains(body) {
-                withKnownIssue(
-                    "#92: retained outer-planet trajectories do not meet the physical-center sixty-second target; local crossings do not identify an orbit's principal extremum"
-                ) {
-                    #expect(abs(seconds) < 60, "\(body): \(seconds) s")
-                }
-            } else {
-                #expect(abs(seconds) < 60, "\(body): \(seconds) s")
-            }
+            #expect(abs(seconds) < 60, "\(body): \(seconds) s")
         }
         try Self.write(measurements, environment: "PLANETARY_SOURCE_EVIDENCE_OUTPUT")
+    }
+
+    @Test("Complete-cycle source principal apsides meet the unchanged sixty-second target")
+    func completeCyclePrincipalApsides() throws {
+        struct Crossing: Decodable {
+            let index: Int
+            let kind: String
+            let lowerTT: Double
+            let upperTT: Double
+            let tt: Double
+        }
+        struct Case: Decodable {
+            let periodDays: Double
+            let spanTT: [Double]
+            let physicalCrossingCount: Int
+            let physicalCrossings: [Crossing]
+            let systemCrossingCount: Int
+            let systemPrincipalCrossingIndices: [Int]
+            let principalPhysicalCrossingIndices: [Int]
+        }
+        struct Archive: Decodable { let cases: [String: Case] }
+        let root = (0..<5).reduce(URL(fileURLWithPath: #filePath)) { url, _ in url.deletingLastPathComponent() }
+        let archive = try JSONDecoder().decode(
+            Archive.self,
+            from: Data(contentsOf: root.appendingPathComponent("Scripts/planet-data/de441-cycle-census.json")))
+        let bodies: [String: CelestialBody] = ["jupiter": .jupiter, "uranus": .uranus, "neptune": .neptune]
+        #expect(archive.cases.count == bodies.count)
+        var measurements: [[String: Any]] = []
+        for name in bodies.keys.sorted() {
+            let body = try #require(bodies[name])
+            let source = try #require(archive.cases[name])
+            #expect(source.physicalCrossingCount == source.physicalCrossings.count)
+            #expect(source.systemPrincipalCrossingIndices.count == 2)
+            #expect(source.principalPhysicalCrossingIndices.count == 2)
+            for index in source.principalPhysicalCrossingIndices {
+                let crossing = source.physicalCrossings[index]
+                let startTT = max(try #require(source.spanTT.first), crossing.tt - source.periodDays / 4)
+                let event = try Events.searchPlanetaryApsis(
+                    of: body,
+                    after: Engine.Time(tt: startTT, deltaTModel: .jplHorizons))
+                let kind = event.kind == .pericenter ? "pericenter" : "apocenter"
+                let residual = (event.time.tt - crossing.tt) * Engine.secondsPerDay
+                #expect(crossing.index == index)
+                #expect(crossing.lowerTT <= crossing.tt && crossing.tt <= crossing.upperTT)
+                #expect(kind == crossing.kind, "\(body) source index \(index)")
+                #expect(abs(residual) < 60, "\(body) source index \(index): \(residual) s")
+                measurements.append([
+                    "body": name,
+                    "kind": crossing.kind,
+                    "sourceIndex": index,
+                    "sourceTT": crossing.tt,
+                    "nativeTT": event.time.tt,
+                    "nativeMinusSourceSeconds": residual,
+                    "physicalCrossingCount": source.physicalCrossingCount,
+                    "systemCrossingCount": source.systemCrossingCount,
+                ])
+            }
+        }
+        try Self.write(measurements, environment: "PLANETARY_CYCLE_EVIDENCE_OUTPUT")
     }
 
     @Test("Every planet returns an ordered alternating sequence on its native trajectory", arguments: planets)

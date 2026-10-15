@@ -4,45 +4,107 @@
     "scope": "previous link3 candidate release executable before Saturn integration"
   },
   "buildReceipts": {
-    "debug": "Build complete! (40.08 sec)",
-    "release": "Build complete! (183.23 sec)"
+    "debug": "Build complete! (0.34 sec)",
+    "release": "Build complete! (0.34 sec)"
   },
   "debug": {
     "coefficients": {
-      "maximumPositionKm": 1.7970192483703922e-05,
-      "maximumRateKmPerTDBDay": 6.272927653846405e-06,
+      "maximumPositionKm": 2.6656007498500226e-07,
+      "maximumRateKmPerTDBDay": 1.6463612699567982e-10,
       "rows": 1167
     },
+    "cycle": [
+      {
+        "body": "jupiter",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": -0.03303759222035296,
+        "nativeTT": 1930.0677256009456,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 0,
+        "sourceTT": 1930.067725983325,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "jupiter",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": 0.004554555926006287,
+        "nativeTT": 4093.741209050592,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 3,
+        "sourceTT": 4093.741208997877,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "neptune",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 9.61506050080061,
+        "nativeTT": -14778.524949992267,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 14,
+        "sourceTT": -14778.525061277689,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "neptune",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -9.957677079364657,
+        "nativeTT": 15587.088050911138,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 171,
+        "sourceTT": 15587.08816616203,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "uranus",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 2.29243033536477,
+        "nativeTT": 3345.2538821181315,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 2,
+        "sourceTT": 3345.253855585373,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "uranus",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -2.3470499203540385,
+        "nativeTT": 18492.710543615944,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 5,
+        "sourceTT": 18492.710570780873,
+        "systemCrossingCount": 2
+      }
+    ],
     "parity": {
       "apsisEvents": [
         {
           "body": "mercury",
-          "jdtt": 2460695.0845825057,
+          "jdtt": 2460695.0845847297,
           "kind": "apocenter"
         },
         {
           "body": "venus",
-          "jdtt": 2460726.3289744984,
+          "jdtt": 2460726.329231903,
           "kind": "pericenter"
         },
         {
           "body": "earth",
-          "jdtt": 2460680.0618358366,
+          "jdtt": 2460680.061977493,
           "kind": "pericenter"
         },
         {
           "body": "mars",
-          "jdtt": 2460782.4260232407,
+          "jdtt": 2460782.426017083,
           "kind": "apocenter"
         },
         {
           "body": "jupiter",
-          "jdtt": 2462133.6140703936,
+          "jdtt": 2462135.164324376,
           "kind": "apocenter"
         },
         {
           "body": "uranus",
-          "jdtt": 2470035.695252181,
+          "jdtt": 2470037.710566672,
           "kind": "pericenter"
         }
       ],
@@ -54,57 +116,57 @@
     },
     "saturn": [
       {
-        "nativeJulianDateTT": 2425931.5364700793,
-        "nativeMinusSourceDistanceAUAtReference": 2.8670399387920042e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2425931.536476302,
+        "nativeMinusSourceDistanceAUAtReference": 2.8403945862010005e-12,
+        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": -3.552713678800501e-12,
         "referenceJulianDateTT": 2425931.5364708,
-        "signedTimingErrorSeconds": -0.0622639199718833,
+        "signedTimingErrorSeconds": 0.4753500921651721,
         "sourceRangeRateAUPerDay": 8.148453522703298e-14
       },
       {
-        "nativeJulianDateTT": 2431340.8745553205,
-        "nativeMinusSourceDistanceAUAtReference": 2.6272317654729704e-12,
-        "nativeSlopeAtEventAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2431340.8745512753,
+        "nativeMinusSourceDistanceAUAtReference": 2.588151915006165e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2431340.87455362,
-        "signedTimingErrorSeconds": 0.14692795230075717,
+        "signedTimingErrorSeconds": -0.2025750931352377,
         "sourceRangeRateAUPerDay": 4.79209996261333e-13
       },
       {
-        "nativeJulianDateTT": 2442055.6486924216,
-        "nativeMinusSourceDistanceAUAtReference": 2.460254222569347e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeJulianDateTT": 2442055.6487006294,
+        "nativeMinusSourceDistanceAUAtReference": 2.524203068787756e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2442055.64869819,
-        "signedTimingErrorSeconds": -0.4983977065421641,
+        "signedTimingErrorSeconds": 0.2107512205839157,
         "sourceRangeRateAUPerDay": 8.159403329905785e-13
       },
       {
-        "nativeJulianDateTT": 2463565.548550721,
-        "nativeMinusSourceDistanceAUAtReference": 2.5295321393059567e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2463565.548544389,
+        "nativeMinusSourceDistanceAUAtReference": 2.531308496145357e-12,
+        "nativeSlopeAtEventAUPerDay": -3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": 1.7763568394002505e-12,
         "referenceJulianDateTT": 2463565.54855741,
-        "signedTimingErrorSeconds": -0.5779444298241287,
+        "signedTimingErrorSeconds": -1.1250187293626368,
         "sourceRangeRateAUPerDay": 3.5145443472243e-12
       },
       {
-        "nativeJulianDateTT": 2468907.282593336,
-        "nativeMinusSourceDistanceAUAtReference": 2.8190783041281975e-12,
-        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2468907.2825932642,
+        "nativeMinusSourceDistanceAUAtReference": 2.7782220968219917e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2468907.28259141,
-        "signedTimingErrorSeconds": 0.16640801914036274,
+        "signedTimingErrorSeconds": 0.16020897310227156,
         "sourceRangeRateAUPerDay": 4.451012363232244e-13
       },
       {
-        "nativeJulianDateTT": 2474345.480539227,
-        "nativeMinusSourceDistanceAUAtReference": 2.5863755581667647e-12,
+        "nativeJulianDateTT": 2474345.4805312078,
+        "nativeMinusSourceDistanceAUAtReference": 2.573941060290963e-12,
         "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2474345.48053982,
-        "signedTimingErrorSeconds": -0.05124695599079132,
+        "signedTimingErrorSeconds": -0.7441200083121657,
         "sourceRangeRateAUPerDay": 8.033357806810229e-13
       }
     ],
@@ -112,63 +174,63 @@
       {
         "body": "mercury",
         "localCrossings": 1,
-        "nativeJDTT": 2460695.0845825057,
-        "nativeMinusSourceSeconds": -0.3296703100204468,
-        "publicMinusSourceSeconds": -0.3296703100204468,
+        "nativeJDTT": 2460695.0845847297,
+        "nativeMinusSourceSeconds": -0.13751685619354248,
+        "publicMinusSourceSeconds": -0.13751685619354248,
         "sourceLowerJDTT": 2460695.084582506,
         "sourceUpperJDTT": 2460695.084590137
       },
       {
         "body": "venus",
         "localCrossings": 1,
-        "nativeJDTT": 2460726.3289744984,
-        "nativeMinusSourceSeconds": -22.08251953125,
-        "publicMinusSourceSeconds": -22.08251953125,
+        "nativeJDTT": 2460726.329231903,
+        "nativeMinusSourceSeconds": 0.15723109245300293,
+        "publicMinusSourceSeconds": 0.15723109245300293,
         "sourceLowerJDTT": 2460726.329226268,
         "sourceUpperJDTT": 2460726.329233898
       },
       {
         "body": "earth",
         "localCrossings": 1,
-        "nativeJDTT": 2460680.0618358366,
-        "nativeMinusSourceSeconds": -12.194985151290894,
-        "publicMinusSourceSeconds": -12.194985151290894,
+        "nativeJDTT": 2460680.061977493,
+        "nativeMinusSourceSeconds": 0.04413574934005737,
+        "publicMinusSourceSeconds": 0.04413574934005737,
         "sourceLowerJDTT": 2460680.061973167,
         "sourceUpperJDTT": 2460680.061980797
       },
       {
         "body": "mars",
         "localCrossings": 1,
-        "nativeJDTT": 2460782.4260232407,
-        "nativeMinusSourceSeconds": 0.32958984375,
-        "publicMinusSourceSeconds": 0.32958984375,
+        "nativeJDTT": 2460782.426017083,
+        "nativeMinusSourceSeconds": -0.2024129033088684,
+        "publicMinusSourceSeconds": -0.2024129033088684,
         "sourceLowerJDTT": 2460782.426015611,
         "sourceUpperJDTT": 2460782.426023241
       },
       {
         "body": "jupiter",
         "localCrossings": 3,
-        "nativeJDTT": 2462133.6140703936,
-        "nativeMinusSourceSeconds": 19895.031617581844,
-        "publicMinusSourceSeconds": 19895.031617581844,
-        "sourceLowerJDTT": 2462133.383800009,
-        "sourceUpperJDTT": 2462133.383807639
+        "nativeJDTT": 2462135.164324376,
+        "nativeMinusSourceSeconds": 0.2570897340774536,
+        "publicMinusSourceSeconds": 0.2570897340774536,
+        "sourceLowerJDTT": 2462135.164317586,
+        "sourceUpperJDTT": 2462135.164325215
       },
       {
         "body": "uranus",
         "localCrossings": 3,
-        "nativeJDTT": 2470035.695252181,
-        "nativeMinusSourceSeconds": -174123.3030617237,
-        "publicMinusSourceSeconds": -174123.3030617237,
+        "nativeJDTT": 2470037.710566672,
+        "nativeMinusSourceSeconds": -0.1310393214225769,
+        "publicMinusSourceSeconds": -0.1310393214225769,
         "sourceLowerJDTT": 2470037.710564374,
         "sourceUpperJDTT": 2470037.710572003
       },
       {
         "body": "neptune",
         "localCrossings": 2,
-        "nativeJDTT": 2467133.445785323,
-        "nativeMinusSourceSeconds": 117316.19380563498,
-        "publicMinusSourceSeconds": 117316.19380563498,
+        "nativeJDTT": 2467132.0880615944,
+        "nativeMinusSourceSeconds": 8.863641321659088,
+        "publicMinusSourceSeconds": 8.863641321659088,
         "sourceLowerJDTT": 2467132.087955191,
         "sourceUpperJDTT": 2467132.087962821
       },
@@ -185,40 +247,102 @@
   },
   "release": {
     "coefficients": {
-      "maximumPositionKm": 1.7970192483703922e-05,
-      "maximumRateKmPerTDBDay": 6.272927653846405e-06,
+      "maximumPositionKm": 2.6656007498500226e-07,
+      "maximumRateKmPerTDBDay": 1.6463612699567982e-10,
       "rows": 1167
     },
+    "cycle": [
+      {
+        "body": "jupiter",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": -0.03303759222035296,
+        "nativeTT": 1930.0677256009456,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 0,
+        "sourceTT": 1930.067725983325,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "jupiter",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": 0.004554555926006287,
+        "nativeTT": 4093.741209050592,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 3,
+        "sourceTT": 4093.741208997877,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "neptune",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 9.61506050080061,
+        "nativeTT": -14778.524949992267,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 14,
+        "sourceTT": -14778.525061277689,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "neptune",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -9.957677079364657,
+        "nativeTT": 15587.088050911138,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 171,
+        "sourceTT": 15587.08816616203,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "uranus",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 2.29243033536477,
+        "nativeTT": 3345.2538821181315,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 2,
+        "sourceTT": 3345.253855585373,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "uranus",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -2.3470499203540385,
+        "nativeTT": 18492.710543615944,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 5,
+        "sourceTT": 18492.710570780873,
+        "systemCrossingCount": 2
+      }
+    ],
     "parity": {
       "apsisEvents": [
         {
           "body": "mercury",
-          "jdtt": 2460695.0845825057,
+          "jdtt": 2460695.0845847297,
           "kind": "apocenter"
         },
         {
           "body": "venus",
-          "jdtt": 2460726.3289744984,
+          "jdtt": 2460726.329231903,
           "kind": "pericenter"
         },
         {
           "body": "earth",
-          "jdtt": 2460680.0618358366,
+          "jdtt": 2460680.061977493,
           "kind": "pericenter"
         },
         {
           "body": "mars",
-          "jdtt": 2460782.4260232407,
+          "jdtt": 2460782.426017083,
           "kind": "apocenter"
         },
         {
           "body": "jupiter",
-          "jdtt": 2462133.6140703936,
+          "jdtt": 2462135.164324376,
           "kind": "apocenter"
         },
         {
           "body": "uranus",
-          "jdtt": 2470035.695252181,
+          "jdtt": 2470037.710566672,
           "kind": "pericenter"
         }
       ],
@@ -230,57 +354,57 @@
     },
     "saturn": [
       {
-        "nativeJulianDateTT": 2425931.5364700793,
-        "nativeMinusSourceDistanceAUAtReference": 2.8670399387920042e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2425931.536476302,
+        "nativeMinusSourceDistanceAUAtReference": 2.8403945862010005e-12,
+        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": -3.552713678800501e-12,
         "referenceJulianDateTT": 2425931.5364708,
-        "signedTimingErrorSeconds": -0.0622639199718833,
+        "signedTimingErrorSeconds": 0.4753500921651721,
         "sourceRangeRateAUPerDay": 8.148453522703298e-14
       },
       {
-        "nativeJulianDateTT": 2431340.8745553205,
-        "nativeMinusSourceDistanceAUAtReference": 2.6272317654729704e-12,
-        "nativeSlopeAtEventAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2431340.8745512753,
+        "nativeMinusSourceDistanceAUAtReference": 2.588151915006165e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2431340.87455362,
-        "signedTimingErrorSeconds": 0.14692795230075717,
+        "signedTimingErrorSeconds": -0.2025750931352377,
         "sourceRangeRateAUPerDay": 4.79209996261333e-13
       },
       {
-        "nativeJulianDateTT": 2442055.6486924216,
-        "nativeMinusSourceDistanceAUAtReference": 2.460254222569347e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeJulianDateTT": 2442055.6487006294,
+        "nativeMinusSourceDistanceAUAtReference": 2.524203068787756e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2442055.64869819,
-        "signedTimingErrorSeconds": -0.4983977065421641,
+        "signedTimingErrorSeconds": 0.2107512205839157,
         "sourceRangeRateAUPerDay": 8.159403329905785e-13
       },
       {
-        "nativeJulianDateTT": 2463565.548550721,
-        "nativeMinusSourceDistanceAUAtReference": 2.5295321393059567e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2463565.548544389,
+        "nativeMinusSourceDistanceAUAtReference": 2.531308496145357e-12,
+        "nativeSlopeAtEventAUPerDay": -3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": 1.7763568394002505e-12,
         "referenceJulianDateTT": 2463565.54855741,
-        "signedTimingErrorSeconds": -0.5779444298241287,
+        "signedTimingErrorSeconds": -1.1250187293626368,
         "sourceRangeRateAUPerDay": 3.5145443472243e-12
       },
       {
-        "nativeJulianDateTT": 2468907.282593336,
-        "nativeMinusSourceDistanceAUAtReference": 2.8190783041281975e-12,
-        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2468907.2825932642,
+        "nativeMinusSourceDistanceAUAtReference": 2.7782220968219917e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2468907.28259141,
-        "signedTimingErrorSeconds": 0.16640801914036274,
+        "signedTimingErrorSeconds": 0.16020897310227156,
         "sourceRangeRateAUPerDay": 4.451012363232244e-13
       },
       {
-        "nativeJulianDateTT": 2474345.480539227,
-        "nativeMinusSourceDistanceAUAtReference": 2.5863755581667647e-12,
+        "nativeJulianDateTT": 2474345.4805312078,
+        "nativeMinusSourceDistanceAUAtReference": 2.573941060290963e-12,
         "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2474345.48053982,
-        "signedTimingErrorSeconds": -0.05124695599079132,
+        "signedTimingErrorSeconds": -0.7441200083121657,
         "sourceRangeRateAUPerDay": 8.033357806810229e-13
       }
     ],
@@ -288,63 +412,63 @@
       {
         "body": "mercury",
         "localCrossings": 1,
-        "nativeJDTT": 2460695.0845825057,
-        "nativeMinusSourceSeconds": -0.3296703100204468,
-        "publicMinusSourceSeconds": -0.3296703100204468,
+        "nativeJDTT": 2460695.0845847297,
+        "nativeMinusSourceSeconds": -0.13751685619354248,
+        "publicMinusSourceSeconds": -0.13751685619354248,
         "sourceLowerJDTT": 2460695.084582506,
         "sourceUpperJDTT": 2460695.084590137
       },
       {
         "body": "venus",
         "localCrossings": 1,
-        "nativeJDTT": 2460726.3289744984,
-        "nativeMinusSourceSeconds": -22.08251953125,
-        "publicMinusSourceSeconds": -22.08251953125,
+        "nativeJDTT": 2460726.329231903,
+        "nativeMinusSourceSeconds": 0.15723109245300293,
+        "publicMinusSourceSeconds": 0.15723109245300293,
         "sourceLowerJDTT": 2460726.329226268,
         "sourceUpperJDTT": 2460726.329233898
       },
       {
         "body": "earth",
         "localCrossings": 1,
-        "nativeJDTT": 2460680.0618358366,
-        "nativeMinusSourceSeconds": -12.194985151290894,
-        "publicMinusSourceSeconds": -12.194985151290894,
+        "nativeJDTT": 2460680.061977493,
+        "nativeMinusSourceSeconds": 0.04413574934005737,
+        "publicMinusSourceSeconds": 0.04413574934005737,
         "sourceLowerJDTT": 2460680.061973167,
         "sourceUpperJDTT": 2460680.061980797
       },
       {
         "body": "mars",
         "localCrossings": 1,
-        "nativeJDTT": 2460782.4260232407,
-        "nativeMinusSourceSeconds": 0.32958984375,
-        "publicMinusSourceSeconds": 0.32958984375,
+        "nativeJDTT": 2460782.426017083,
+        "nativeMinusSourceSeconds": -0.2024129033088684,
+        "publicMinusSourceSeconds": -0.2024129033088684,
         "sourceLowerJDTT": 2460782.426015611,
         "sourceUpperJDTT": 2460782.426023241
       },
       {
         "body": "jupiter",
         "localCrossings": 3,
-        "nativeJDTT": 2462133.6140703936,
-        "nativeMinusSourceSeconds": 19895.031617581844,
-        "publicMinusSourceSeconds": 19895.031617581844,
-        "sourceLowerJDTT": 2462133.383800009,
-        "sourceUpperJDTT": 2462133.383807639
+        "nativeJDTT": 2462135.164324376,
+        "nativeMinusSourceSeconds": 0.2570897340774536,
+        "publicMinusSourceSeconds": 0.2570897340774536,
+        "sourceLowerJDTT": 2462135.164317586,
+        "sourceUpperJDTT": 2462135.164325215
       },
       {
         "body": "uranus",
         "localCrossings": 3,
-        "nativeJDTT": 2470035.695252181,
-        "nativeMinusSourceSeconds": -174123.3030617237,
-        "publicMinusSourceSeconds": -174123.3030617237,
+        "nativeJDTT": 2470037.710566672,
+        "nativeMinusSourceSeconds": -0.1310393214225769,
+        "publicMinusSourceSeconds": -0.1310393214225769,
         "sourceLowerJDTT": 2470037.710564374,
         "sourceUpperJDTT": 2470037.710572003
       },
       {
         "body": "neptune",
         "localCrossings": 2,
-        "nativeJDTT": 2467133.445785323,
-        "nativeMinusSourceSeconds": 117316.19380563498,
-        "publicMinusSourceSeconds": 117316.19380563498,
+        "nativeJDTT": 2467132.0880615944,
+        "nativeMinusSourceSeconds": 8.863641321659088,
+        "publicMinusSourceSeconds": 8.863641321659088,
         "sourceLowerJDTT": 2467132.087955191,
         "sourceUpperJDTT": 2467132.087962821
       },
@@ -359,22 +483,22 @@
       }
     ]
   },
-  "releaseExecutableBytes": 480642592,
+  "releaseExecutableBytes": 492737216,
   "resources": {
-    "centerColdSeconds": 0.009397029876708984,
-    "checksum": -443.8575980663478,
+    "centerColdSeconds": 0.011391997337341309,
+    "checksum": -443.8575980663537,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.04873800277709961,
+    "eventSeconds": 0.03146398067474365,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 76021760,
-    "peakAfterRetainedBytes": 52461568,
-    "peakAfterWorkloadsBytes": 76611584,
-    "peakBeforeBytes": 47366144,
-    "retainedColdSeconds": 0.0015479326248168945,
+    "peakAfterCenterBytes": 98516992,
+    "peakAfterRetainedBytes": 52936704,
+    "peakAfterWorkloadsBytes": 99008512,
+    "peakBeforeBytes": 47857664,
+    "retainedColdSeconds": 0.0068149566650390625,
     "seconds": {
-      "center": 0.02068495750427246,
-      "retained": 0.015081048011779785
+      "center": 0.019943952560424805,
+      "retained": 0.012653946876525879
     }
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"

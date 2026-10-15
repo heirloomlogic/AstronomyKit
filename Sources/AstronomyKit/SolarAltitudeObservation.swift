@@ -122,21 +122,19 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
     /// The derived numerical error bound.
     public let errorBound: ErrorBound
 
-    /// The TT days from J2000 where the Earth polynomial ephemeris applies:
-    /// 1900-01-01 through the end of 2100.
+    /// The reception TT domain of this partial budget: 1900-01-01 through the end of 2100. The entire admitted uncertainty hull lies inside the selected DE Earth's full-weight window.
     public static let polynomialCoverage: Range<Double> =
         SolarAltitudeBounds.polynomialStart..<SolarAltitudeBounds.polynomialStop
 
-    /// The width of one Earth polynomial segment in TT days. Boundaries sit at
-    /// `polynomialCoverage.lowerBound` plus whole multiples of this width.
+    /// The retained Earth polynomial's eight-TT-day spacing, kept as compatibility metadata. It does not locate the selected DE trajectory's record joins.
     public static let polynomialSegmentDays = SolarAltitudeBounds.polynomialSegmentDays
 
-    /// The most the Sun's direction changes across one polynomial segment
-    /// boundary, in degrees. An interval enclosure widens by this much
-    /// per boundary the reception TT crosses. The point budget separately allows its reception-time uncertainty to straddle one polynomial join.
+    /// A position-and-velocity jump allowance for the selected Earth trajectory, in degrees. It sums the maximum join of each source component, including simultaneous joins. The point budget includes this allowance once for its reception uncertainty hull.
+    ///
+    /// Selected component joins occur on the TDB grid `-36560.5 + 4*k`; the barycenter and Sun have joins at `-36568.5 + 16*k`. Convert reception TT to TDB before enumerating joins. An interval enclosure adds this allowance for every grid point crossed, even when it crosses no retained eight-TT-day boundary. A conservative alternative for an interval of `d` TT days is `floor(d / 3.999999) + 1` allowances, including when `d` is zero; this avoids dependence on a rounded TT-to-TDB boundary classification.
     public static let joinDiscontinuityDegrees = SolarAltitudeBounds.joinDegrees
 
-    /// The most the solar light-time loop backdates the Sun's barycentric position, in TT days.
+    /// The derived exact-model solar light-time upper bound, in TT days, used by this partial budget. This excludes interpolation, norm and clock-evaluation errors and is not an unconditional upper bound on every native callback.
     public static let maximumLightTimeDays = SolarAltitudeBounds.backdateMaxDays
 
     /// The largest observer height above or below the ellipsoid the budget

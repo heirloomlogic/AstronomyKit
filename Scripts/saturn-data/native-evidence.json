@@ -14,45 +14,107 @@
     ]
   ],
   "buildSeconds": {
-    "debug": 40.08,
-    "release": 183.23
+    "debug": 0.34,
+    "release": 0.34
   },
   "debug": {
     "coefficients": {
-      "maximumPositionKm": 1.7970192483703922e-05,
-      "maximumRateKmPerTDBDay": 6.272927653846405e-06,
+      "maximumPositionKm": 2.6656007498500226e-07,
+      "maximumRateKmPerTDBDay": 1.6463612699567982e-10,
       "rows": 1167
     },
+    "cycle": [
+      {
+        "body": "jupiter",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": -0.03303759222035296,
+        "nativeTT": 1930.0677256009456,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 0,
+        "sourceTT": 1930.067725983325,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "jupiter",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": 0.004554555926006287,
+        "nativeTT": 4093.741209050592,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 3,
+        "sourceTT": 4093.741208997877,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "neptune",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 9.61506050080061,
+        "nativeTT": -14778.524949992267,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 14,
+        "sourceTT": -14778.525061277689,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "neptune",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -9.957677079364657,
+        "nativeTT": 15587.088050911138,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 171,
+        "sourceTT": 15587.08816616203,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "uranus",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 2.29243033536477,
+        "nativeTT": 3345.2538821181315,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 2,
+        "sourceTT": 3345.253855585373,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "uranus",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -2.3470499203540385,
+        "nativeTT": 18492.710543615944,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 5,
+        "sourceTT": 18492.710570780873,
+        "systemCrossingCount": 2
+      }
+    ],
     "parity": {
       "apsisEvents": [
         {
           "body": "mercury",
-          "jdtt": 2460695.0845825057,
+          "jdtt": 2460695.0845847297,
           "kind": "apocenter"
         },
         {
           "body": "venus",
-          "jdtt": 2460726.3289744984,
+          "jdtt": 2460726.329231903,
           "kind": "pericenter"
         },
         {
           "body": "earth",
-          "jdtt": 2460680.0618358366,
+          "jdtt": 2460680.061977493,
           "kind": "pericenter"
         },
         {
           "body": "mars",
-          "jdtt": 2460782.4260232407,
+          "jdtt": 2460782.426017083,
           "kind": "apocenter"
         },
         {
           "body": "jupiter",
-          "jdtt": 2462133.6140703936,
+          "jdtt": 2462135.164324376,
           "kind": "apocenter"
         },
         {
           "body": "uranus",
-          "jdtt": 2470035.695252181,
+          "jdtt": 2470037.710566672,
           "kind": "pericenter"
         }
       ],
@@ -64,57 +126,57 @@
     },
     "saturn": [
       {
-        "nativeJulianDateTT": 2425931.5364700793,
-        "nativeMinusSourceDistanceAUAtReference": 2.8670399387920042e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2425931.536476302,
+        "nativeMinusSourceDistanceAUAtReference": 2.8403945862010005e-12,
+        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": -3.552713678800501e-12,
         "referenceJulianDateTT": 2425931.5364708,
-        "signedTimingErrorSeconds": -0.0622639199718833,
+        "signedTimingErrorSeconds": 0.4753500921651721,
         "sourceRangeRateAUPerDay": 8.148453522703298e-14
       },
       {
-        "nativeJulianDateTT": 2431340.8745553205,
-        "nativeMinusSourceDistanceAUAtReference": 2.6272317654729704e-12,
-        "nativeSlopeAtEventAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2431340.8745512753,
+        "nativeMinusSourceDistanceAUAtReference": 2.588151915006165e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2431340.87455362,
-        "signedTimingErrorSeconds": 0.14692795230075717,
+        "signedTimingErrorSeconds": -0.2025750931352377,
         "sourceRangeRateAUPerDay": 4.79209996261333e-13
       },
       {
-        "nativeJulianDateTT": 2442055.6486924216,
-        "nativeMinusSourceDistanceAUAtReference": 2.460254222569347e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeJulianDateTT": 2442055.6487006294,
+        "nativeMinusSourceDistanceAUAtReference": 2.524203068787756e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2442055.64869819,
-        "signedTimingErrorSeconds": -0.4983977065421641,
+        "signedTimingErrorSeconds": 0.2107512205839157,
         "sourceRangeRateAUPerDay": 8.159403329905785e-13
       },
       {
-        "nativeJulianDateTT": 2463565.548550721,
-        "nativeMinusSourceDistanceAUAtReference": 2.5295321393059567e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2463565.548544389,
+        "nativeMinusSourceDistanceAUAtReference": 2.531308496145357e-12,
+        "nativeSlopeAtEventAUPerDay": -3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": 1.7763568394002505e-12,
         "referenceJulianDateTT": 2463565.54855741,
-        "signedTimingErrorSeconds": -0.5779444298241287,
+        "signedTimingErrorSeconds": -1.1250187293626368,
         "sourceRangeRateAUPerDay": 3.5145443472243e-12
       },
       {
-        "nativeJulianDateTT": 2468907.282593336,
-        "nativeMinusSourceDistanceAUAtReference": 2.8190783041281975e-12,
-        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2468907.2825932642,
+        "nativeMinusSourceDistanceAUAtReference": 2.7782220968219917e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2468907.28259141,
-        "signedTimingErrorSeconds": 0.16640801914036274,
+        "signedTimingErrorSeconds": 0.16020897310227156,
         "sourceRangeRateAUPerDay": 4.451012363232244e-13
       },
       {
-        "nativeJulianDateTT": 2474345.480539227,
-        "nativeMinusSourceDistanceAUAtReference": 2.5863755581667647e-12,
+        "nativeJulianDateTT": 2474345.4805312078,
+        "nativeMinusSourceDistanceAUAtReference": 2.573941060290963e-12,
         "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2474345.48053982,
-        "signedTimingErrorSeconds": -0.05124695599079132,
+        "signedTimingErrorSeconds": -0.7441200083121657,
         "sourceRangeRateAUPerDay": 8.033357806810229e-13
       }
     ],
@@ -122,63 +184,63 @@
       {
         "body": "mercury",
         "localCrossings": 1,
-        "nativeJDTT": 2460695.0845825057,
-        "nativeMinusSourceSeconds": -0.3296703100204468,
-        "publicMinusSourceSeconds": -0.3296703100204468,
+        "nativeJDTT": 2460695.0845847297,
+        "nativeMinusSourceSeconds": -0.13751685619354248,
+        "publicMinusSourceSeconds": -0.13751685619354248,
         "sourceLowerJDTT": 2460695.084582506,
         "sourceUpperJDTT": 2460695.084590137
       },
       {
         "body": "venus",
         "localCrossings": 1,
-        "nativeJDTT": 2460726.3289744984,
-        "nativeMinusSourceSeconds": -22.08251953125,
-        "publicMinusSourceSeconds": -22.08251953125,
+        "nativeJDTT": 2460726.329231903,
+        "nativeMinusSourceSeconds": 0.15723109245300293,
+        "publicMinusSourceSeconds": 0.15723109245300293,
         "sourceLowerJDTT": 2460726.329226268,
         "sourceUpperJDTT": 2460726.329233898
       },
       {
         "body": "earth",
         "localCrossings": 1,
-        "nativeJDTT": 2460680.0618358366,
-        "nativeMinusSourceSeconds": -12.194985151290894,
-        "publicMinusSourceSeconds": -12.194985151290894,
+        "nativeJDTT": 2460680.061977493,
+        "nativeMinusSourceSeconds": 0.04413574934005737,
+        "publicMinusSourceSeconds": 0.04413574934005737,
         "sourceLowerJDTT": 2460680.061973167,
         "sourceUpperJDTT": 2460680.061980797
       },
       {
         "body": "mars",
         "localCrossings": 1,
-        "nativeJDTT": 2460782.4260232407,
-        "nativeMinusSourceSeconds": 0.32958984375,
-        "publicMinusSourceSeconds": 0.32958984375,
+        "nativeJDTT": 2460782.426017083,
+        "nativeMinusSourceSeconds": -0.2024129033088684,
+        "publicMinusSourceSeconds": -0.2024129033088684,
         "sourceLowerJDTT": 2460782.426015611,
         "sourceUpperJDTT": 2460782.426023241
       },
       {
         "body": "jupiter",
         "localCrossings": 3,
-        "nativeJDTT": 2462133.6140703936,
-        "nativeMinusSourceSeconds": 19895.031617581844,
-        "publicMinusSourceSeconds": 19895.031617581844,
-        "sourceLowerJDTT": 2462133.383800009,
-        "sourceUpperJDTT": 2462133.383807639
+        "nativeJDTT": 2462135.164324376,
+        "nativeMinusSourceSeconds": 0.2570897340774536,
+        "publicMinusSourceSeconds": 0.2570897340774536,
+        "sourceLowerJDTT": 2462135.164317586,
+        "sourceUpperJDTT": 2462135.164325215
       },
       {
         "body": "uranus",
         "localCrossings": 3,
-        "nativeJDTT": 2470035.695252181,
-        "nativeMinusSourceSeconds": -174123.3030617237,
-        "publicMinusSourceSeconds": -174123.3030617237,
+        "nativeJDTT": 2470037.710566672,
+        "nativeMinusSourceSeconds": -0.1310393214225769,
+        "publicMinusSourceSeconds": -0.1310393214225769,
         "sourceLowerJDTT": 2470037.710564374,
         "sourceUpperJDTT": 2470037.710572003
       },
       {
         "body": "neptune",
         "localCrossings": 2,
-        "nativeJDTT": 2467133.445785323,
-        "nativeMinusSourceSeconds": 117316.19380563498,
-        "publicMinusSourceSeconds": 117316.19380563498,
+        "nativeJDTT": 2467132.0880615944,
+        "nativeMinusSourceSeconds": 8.863641321659088,
+        "publicMinusSourceSeconds": 8.863641321659088,
         "sourceLowerJDTT": 2467132.087955191,
         "sourceUpperJDTT": 2467132.087962821
       },
@@ -193,85 +255,147 @@
       }
     ]
   },
-  "decodedPayloadBytes": 10618464,
+  "decodedPayloadBytes": 19400016,
   "encodingBoundaryLimits": {
-    "encodingOnlySlopePerturbationBoundAUPerDay": 2.638261770889603e-10,
+    "encodingOnlySlopePerturbationBoundAUPerDay": 5.943289805086987e-167,
     "existingStateDerivativeComparisonAllowanceAUPerDay": 2e-09,
     "finiteDifferenceWidthDays": 0.001,
     "roots": [
       {
-        "nearestRecordJoinSeconds": 46351.10887885094,
+        "nearestRecordJoinSeconds": 46351.10453367233,
         "referenceJDTT": 2425931.5364708
       },
       {
-        "nearestRecordJoinSeconds": 54038.66142787447,
+        "nearestRecordJoinSeconds": 54038.66166927328,
         "referenceJDTT": 2431340.87455362
       },
       {
-        "nearestRecordJoinSeconds": 30352.634360053344,
+        "nearestRecordJoinSeconds": 30352.634842850966,
         "referenceJDTT": 2442055.64869819
       },
       {
-        "nearestRecordJoinSeconds": 39005.27895838022,
+        "nearestRecordJoinSeconds": 39005.27855620603,
         "referenceJDTT": 2463565.54855741
       },
       {
-        "nearestRecordJoinSeconds": 18784.001755400095,
+        "nearestRecordJoinSeconds": 18784.00264084339,
         "referenceJDTT": 2468907.28259141
       },
       {
-        "nearestRecordJoinSeconds": 41518.47228674451,
+        "nearestRecordJoinSeconds": 41518.473172187805,
         "referenceJDTT": 2474345.48053982
       }
     ],
-    "scope": "Position-encoding contribution only, using the Lipschitz property of vector norm. Evaluator roundoff and the physical source are separate. This does not bound event-time error near shallow roots; the six qualified roots do not test join-adjacent events."
+    "scope": "Binary64 position-encoding contribution only, using the Lipschitz property of vector norm. Evaluator roundoff and the physical source are separate. This does not bound event-time error near shallow roots; the six qualified roots do not test join-adjacent events."
   },
   "fullWeightTT": [
     -36524.5,
     47846.5
   ],
   "limitations": [
-    "Six Saturn source roots and eight native-selected diagnostic windows, not a continuous event-time bound or an orbital event census.",
-    "Jupiter, Uranus and Neptune fail the unchanged sixty-second comparison and remain owned by #92.",
+    "The Jupiter, Uranus and Neptune qualification preserves every direct-source physical-center crossing over one nominal orbital cycle, selects principal candidates from the source system-center extrema, and tests those six native events; it is not a continuous event-time bound.",
+    "The eight 2025 diagnostic windows remain local checks for all planets and Pluto.",
     "The public searches run on these native searches since the #96 cutover; the parity rows record the facade conversion, not a comparison with the former C searches.",
-    "Outside the Saturn source window the retained model remains; global physical-center and event accuracy are not established."
+    "Outside the selected source window the retained model remains; global physical-center and event accuracy are not established."
   ],
   "release": {
     "coefficients": {
-      "maximumPositionKm": 1.7970192483703922e-05,
-      "maximumRateKmPerTDBDay": 6.272927653846405e-06,
+      "maximumPositionKm": 2.6656007498500226e-07,
+      "maximumRateKmPerTDBDay": 1.6463612699567982e-10,
       "rows": 1167
     },
+    "cycle": [
+      {
+        "body": "jupiter",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": -0.03303759222035296,
+        "nativeTT": 1930.0677256009456,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 0,
+        "sourceTT": 1930.067725983325,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "jupiter",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": 0.004554555926006287,
+        "nativeTT": 4093.741209050592,
+        "physicalCrossingCount": 4,
+        "sourceIndex": 3,
+        "sourceTT": 4093.741208997877,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "neptune",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 9.61506050080061,
+        "nativeTT": -14778.524949992267,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 14,
+        "sourceTT": -14778.525061277689,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "neptune",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -9.957677079364657,
+        "nativeTT": 15587.088050911138,
+        "physicalCrossingCount": 430,
+        "sourceIndex": 171,
+        "sourceTT": 15587.08816616203,
+        "systemCrossingCount": 6
+      },
+      {
+        "body": "uranus",
+        "kind": "apocenter",
+        "nativeMinusSourceSeconds": 2.29243033536477,
+        "nativeTT": 3345.2538821181315,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 2,
+        "sourceTT": 3345.253855585373,
+        "systemCrossingCount": 2
+      },
+      {
+        "body": "uranus",
+        "kind": "pericenter",
+        "nativeMinusSourceSeconds": -2.3470499203540385,
+        "nativeTT": 18492.710543615944,
+        "physicalCrossingCount": 6,
+        "sourceIndex": 5,
+        "sourceTT": 18492.710570780873,
+        "systemCrossingCount": 2
+      }
+    ],
     "parity": {
       "apsisEvents": [
         {
           "body": "mercury",
-          "jdtt": 2460695.0845825057,
+          "jdtt": 2460695.0845847297,
           "kind": "apocenter"
         },
         {
           "body": "venus",
-          "jdtt": 2460726.3289744984,
+          "jdtt": 2460726.329231903,
           "kind": "pericenter"
         },
         {
           "body": "earth",
-          "jdtt": 2460680.0618358366,
+          "jdtt": 2460680.061977493,
           "kind": "pericenter"
         },
         {
           "body": "mars",
-          "jdtt": 2460782.4260232407,
+          "jdtt": 2460782.426017083,
           "kind": "apocenter"
         },
         {
           "body": "jupiter",
-          "jdtt": 2462133.6140703936,
+          "jdtt": 2462135.164324376,
           "kind": "apocenter"
         },
         {
           "body": "uranus",
-          "jdtt": 2470035.695252181,
+          "jdtt": 2470037.710566672,
           "kind": "pericenter"
         }
       ],
@@ -283,57 +407,57 @@
     },
     "saturn": [
       {
-        "nativeJulianDateTT": 2425931.5364700793,
-        "nativeMinusSourceDistanceAUAtReference": 2.8670399387920042e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2425931.536476302,
+        "nativeMinusSourceDistanceAUAtReference": 2.8403945862010005e-12,
+        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": -3.552713678800501e-12,
         "referenceJulianDateTT": 2425931.5364708,
-        "signedTimingErrorSeconds": -0.0622639199718833,
+        "signedTimingErrorSeconds": 0.4753500921651721,
         "sourceRangeRateAUPerDay": 8.148453522703298e-14
       },
       {
-        "nativeJulianDateTT": 2431340.8745553205,
-        "nativeMinusSourceDistanceAUAtReference": 2.6272317654729704e-12,
-        "nativeSlopeAtEventAUPerDay": -1.7763568394002505e-12,
+        "nativeJulianDateTT": 2431340.8745512753,
+        "nativeMinusSourceDistanceAUAtReference": 2.588151915006165e-12,
+        "nativeSlopeAtEventAUPerDay": 0,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2431340.87455362,
-        "signedTimingErrorSeconds": 0.14692795230075717,
+        "signedTimingErrorSeconds": -0.2025750931352377,
         "sourceRangeRateAUPerDay": 4.79209996261333e-13
       },
       {
-        "nativeJulianDateTT": 2442055.6486924216,
-        "nativeMinusSourceDistanceAUAtReference": 2.460254222569347e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeJulianDateTT": 2442055.6487006294,
+        "nativeMinusSourceDistanceAUAtReference": 2.524203068787756e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2442055.64869819,
-        "signedTimingErrorSeconds": -0.4983977065421641,
+        "signedTimingErrorSeconds": 0.2107512205839157,
         "sourceRangeRateAUPerDay": 8.159403329905785e-13
       },
       {
-        "nativeJulianDateTT": 2463565.548550721,
-        "nativeMinusSourceDistanceAUAtReference": 2.5295321393059567e-12,
-        "nativeSlopeAtEventAUPerDay": 0,
-        "nativeSlopeAtReferenceAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2463565.548544389,
+        "nativeMinusSourceDistanceAUAtReference": 2.531308496145357e-12,
+        "nativeSlopeAtEventAUPerDay": -3.552713678800501e-12,
+        "nativeSlopeAtReferenceAUPerDay": 1.7763568394002505e-12,
         "referenceJulianDateTT": 2463565.54855741,
-        "signedTimingErrorSeconds": -0.5779444298241287,
+        "signedTimingErrorSeconds": -1.1250187293626368,
         "sourceRangeRateAUPerDay": 3.5145443472243e-12
       },
       {
-        "nativeJulianDateTT": 2468907.282593336,
-        "nativeMinusSourceDistanceAUAtReference": 2.8190783041281975e-12,
-        "nativeSlopeAtEventAUPerDay": 3.552713678800501e-12,
+        "nativeJulianDateTT": 2468907.2825932642,
+        "nativeMinusSourceDistanceAUAtReference": 2.7782220968219917e-12,
+        "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
         "nativeSlopeAtReferenceAUPerDay": 0,
         "referenceJulianDateTT": 2468907.28259141,
-        "signedTimingErrorSeconds": 0.16640801914036274,
+        "signedTimingErrorSeconds": 0.16020897310227156,
         "sourceRangeRateAUPerDay": 4.451012363232244e-13
       },
       {
-        "nativeJulianDateTT": 2474345.480539227,
-        "nativeMinusSourceDistanceAUAtReference": 2.5863755581667647e-12,
+        "nativeJulianDateTT": 2474345.4805312078,
+        "nativeMinusSourceDistanceAUAtReference": 2.573941060290963e-12,
         "nativeSlopeAtEventAUPerDay": 1.7763568394002505e-12,
-        "nativeSlopeAtReferenceAUPerDay": 0,
+        "nativeSlopeAtReferenceAUPerDay": -1.7763568394002505e-12,
         "referenceJulianDateTT": 2474345.48053982,
-        "signedTimingErrorSeconds": -0.05124695599079132,
+        "signedTimingErrorSeconds": -0.7441200083121657,
         "sourceRangeRateAUPerDay": 8.033357806810229e-13
       }
     ],
@@ -341,63 +465,63 @@
       {
         "body": "mercury",
         "localCrossings": 1,
-        "nativeJDTT": 2460695.0845825057,
-        "nativeMinusSourceSeconds": -0.3296703100204468,
-        "publicMinusSourceSeconds": -0.3296703100204468,
+        "nativeJDTT": 2460695.0845847297,
+        "nativeMinusSourceSeconds": -0.13751685619354248,
+        "publicMinusSourceSeconds": -0.13751685619354248,
         "sourceLowerJDTT": 2460695.084582506,
         "sourceUpperJDTT": 2460695.084590137
       },
       {
         "body": "venus",
         "localCrossings": 1,
-        "nativeJDTT": 2460726.3289744984,
-        "nativeMinusSourceSeconds": -22.08251953125,
-        "publicMinusSourceSeconds": -22.08251953125,
+        "nativeJDTT": 2460726.329231903,
+        "nativeMinusSourceSeconds": 0.15723109245300293,
+        "publicMinusSourceSeconds": 0.15723109245300293,
         "sourceLowerJDTT": 2460726.329226268,
         "sourceUpperJDTT": 2460726.329233898
       },
       {
         "body": "earth",
         "localCrossings": 1,
-        "nativeJDTT": 2460680.0618358366,
-        "nativeMinusSourceSeconds": -12.194985151290894,
-        "publicMinusSourceSeconds": -12.194985151290894,
+        "nativeJDTT": 2460680.061977493,
+        "nativeMinusSourceSeconds": 0.04413574934005737,
+        "publicMinusSourceSeconds": 0.04413574934005737,
         "sourceLowerJDTT": 2460680.061973167,
         "sourceUpperJDTT": 2460680.061980797
       },
       {
         "body": "mars",
         "localCrossings": 1,
-        "nativeJDTT": 2460782.4260232407,
-        "nativeMinusSourceSeconds": 0.32958984375,
-        "publicMinusSourceSeconds": 0.32958984375,
+        "nativeJDTT": 2460782.426017083,
+        "nativeMinusSourceSeconds": -0.2024129033088684,
+        "publicMinusSourceSeconds": -0.2024129033088684,
         "sourceLowerJDTT": 2460782.426015611,
         "sourceUpperJDTT": 2460782.426023241
       },
       {
         "body": "jupiter",
         "localCrossings": 3,
-        "nativeJDTT": 2462133.6140703936,
-        "nativeMinusSourceSeconds": 19895.031617581844,
-        "publicMinusSourceSeconds": 19895.031617581844,
-        "sourceLowerJDTT": 2462133.383800009,
-        "sourceUpperJDTT": 2462133.383807639
+        "nativeJDTT": 2462135.164324376,
+        "nativeMinusSourceSeconds": 0.2570897340774536,
+        "publicMinusSourceSeconds": 0.2570897340774536,
+        "sourceLowerJDTT": 2462135.164317586,
+        "sourceUpperJDTT": 2462135.164325215
       },
       {
         "body": "uranus",
         "localCrossings": 3,
-        "nativeJDTT": 2470035.695252181,
-        "nativeMinusSourceSeconds": -174123.3030617237,
-        "publicMinusSourceSeconds": -174123.3030617237,
+        "nativeJDTT": 2470037.710566672,
+        "nativeMinusSourceSeconds": -0.1310393214225769,
+        "publicMinusSourceSeconds": -0.1310393214225769,
         "sourceLowerJDTT": 2470037.710564374,
         "sourceUpperJDTT": 2470037.710572003
       },
       {
         "body": "neptune",
         "localCrossings": 2,
-        "nativeJDTT": 2467133.445785323,
-        "nativeMinusSourceSeconds": 117316.19380563498,
-        "publicMinusSourceSeconds": 117316.19380563498,
+        "nativeJDTT": 2467132.0880615944,
+        "nativeMinusSourceSeconds": 8.863641321659088,
+        "publicMinusSourceSeconds": 8.863641321659088,
         "sourceLowerJDTT": 2467132.087955191,
         "sourceUpperJDTT": 2467132.087962821
       },
@@ -412,35 +536,37 @@
       }
     ]
   },
-  "releaseExecutableBytes": 480642592,
+  "releaseExecutableBytes": 492737216,
   "resourceScope": "macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.",
   "resources": {
-    "centerColdSeconds": 0.009397029876708984,
-    "checksum": -443.8575980663478,
+    "centerColdSeconds": 0.011391997337341309,
+    "checksum": -443.8575980663537,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.04873800277709961,
+    "eventSeconds": 0.03146398067474365,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 76021760,
-    "peakAfterRetainedBytes": 52461568,
-    "peakAfterWorkloadsBytes": 76611584,
-    "peakBeforeBytes": 47366144,
-    "retainedColdSeconds": 0.0015479326248168945,
+    "peakAfterCenterBytes": 98516992,
+    "peakAfterRetainedBytes": 52936704,
+    "peakAfterWorkloadsBytes": 99008512,
+    "peakBeforeBytes": 47857664,
+    "retainedColdSeconds": 0.0068149566650390625,
     "seconds": {
-      "center": 0.02068495750427246,
-      "retained": 0.015081048011779785
+      "center": 0.019943952560424805,
+      "retained": 0.012653946876525879
     }
   },
   "schemaVersion": 2,
   "sourceSHA256": {
     "Scripts/assess-moon-de441.py": "5da238cbd372de58899fc7de9ca49dbe5e02a33b0886a8ce8bf69854783c26a4",
     "Scripts/assess-pluto-de441.py": "1227b6acbf03be7b3cb9f4d0cc7089aa21108f3b1b69640d26c34424243442a1",
-    "Scripts/assess-saturn-apsides.py": "888bdb62009f37750a8fd26ac3c4f8210dc7cea3606bac244adbb57601e0a021",
+    "Scripts/assess-saturn-apsides.py": "fc5b4b8a173b251f8e655daa6ad078ce3704e1014f770ddd34c98ba487cdf222",
     "Scripts/generate-moon-tables.py": "674afcfcfc28b1a9d0ede7716e2540de132afe573cbdf95cb167690cb88026e0",
-    "Scripts/generate-saturn-tables.py": "7e7e8a907ca95cbdad6b9692f78fd4268f6a199cbf881fa1139a6f10b3718ead",
+    "Scripts/generate-planet-cycle-census.py": "3dcc9c3da027c262b6e01fcc9d3d62951915334bf06d9ffd5d075394d62faea8",
+    "Scripts/generate-saturn-tables.py": "f2cf78cb3a9503c94821e9ec3281a38ad0b77af49094f348ef25b18ea64ac50f",
     "Scripts/packed-table-payload.py": "39618ef9a16ec84e3f03046dca20d736c2ca7d4855073435d5daacac6936c7c9",
+    "Scripts/planet-data/de441-cycle-census.json": "3657cdb563bbba030994dc4053e324db3bfbe00bba01c961fb1049a2a56bb773",
     "Scripts/qualify-moon-de441.py": "69521b985aa7d5f577ca8b1d89712d11b5e3453d042059f498bfaaebd24667be",
-    "Scripts/record-planetary-event-evidence.py": "3343ef8e98a3e60641726a1a300e23c41afa8c4bc90ab69397ec57c6f562a87c",
+    "Scripts/record-planetary-event-evidence.py": "f4ef833940b61d8b2a27bb6e3cede1624d2a04829564671553018247fe20d397",
     "Scripts/reference-data/build-fixtures.py": "624f89695e2f0afffe8f53f73bfb7de24a69c06386a1eb80d49b911da6b17d50",
     "Scripts/reference-data/capture-planetary-apsides.py": "3789be611d1bc5219d2e55d82ad4429188ced595c6b88d51cdd421de6b0b0eba",
     "Scripts/reference-data/planetary-apsis-evidence.json": "9cb0ab7430beef2029dc69cabe34010231609c702bfe621b8856feb521aea684",
@@ -475,8 +601,9 @@
     "Scripts/saturn-data/barycenter-reference.json": "218c6a9cda702a969c6eecb4cb6927aa735f5d6af9f7c81a5d41f180104c9041",
     "Scripts/saturn-data/barycenter-reference.query.json": "a12f1e6346ba1016f68c4d9eabf51ba11a71896b8122381f70151c6a02c1ab78",
     "Scripts/saturn-data/direct-fixtures.json": "09fc0c61567cb69fd7953712827029c8fe10399b8db5ed0fea8885676a0a0524",
-    "Scripts/saturn-data/native-captures.json": "91b8d27666fb3c71dae647afb00150eb66a2e3b87cbb5a9eaa06aa6f93dd36e2",
-    "Scripts/test_saturn_ephemeris.py": "ec98cf4d0acbbe96a9b4cf7fef7c581bcb2cd51c3526f9f4b420b4874f695d65",
+    "Scripts/saturn-data/native-captures.json": "45eeb7f976f97c97060816f0294816ff3cb58f43c215fb2f0034071ab4d37aae",
+    "Scripts/test_planet_cycle_census.py": "32b568f1279c9e737d01d63f35c024c0f103e5e7ada902a5b48ddce2048ac73a",
+    "Scripts/test_saturn_ephemeris.py": "e1820ecdf6d02a323a0e884604f34df96317f8c544aecfa557da62e46fc149e0",
     "Sources/AstronomyKit/Apsis.swift": "846e96c10636302634649bb827e843e3b6debf9b1d3f948f0b412f8e26dcece6",
     "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
@@ -499,7 +626,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "24d3b6936ca45ffab9c2c2591a5de95ab21661f70c1cec97bf9b3b826892156f",
     "Sources/AstronomyKit/Engine/Foundation/EngineConstants.swift": "9504fdbc479821e8fbb658db830079cc86deada403331113e92bb98b768f946c",
     "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "e8059d781fcddcc8fe5d1f459427cb72f19a85541b8c486e66f925ded436cde2",
-    "Sources/AstronomyKit/Engine/Foundation/EngineDirectChebyshevTable.swift": "328b470b4b013253bce8fb7a4814dfaf0dd55bd3122d546c5616395c0cdf519f",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDirectChebyshevTable.swift": "0937cf619659adbd0277a9204ca7952d75cce04218f26b26d9f767ac4f6a3d2e",
     "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift": "da587b4d643ba188392481fe846aed7c6cbe7fd01e84ab1d73706165c654e027",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
     "Sources/AstronomyKit/Engine/Foundation/EngineSearch.swift": "0abe5aa2f8f23e97064b7fe43648542876c175d3215706bae81f20d0926fffe6",
@@ -507,7 +634,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
     "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
-    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "81af4e399a16a4cc8d8915add97a9c9ff425fd14b311673edbb943df29cce2fd",
+    "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "d354b0a71b21064e959bd81df91a215e6b236ffb6d8d931be278816bd97c5099",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
     "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
@@ -633,11 +760,11 @@
     "Sources/AstronomyKit/Engine/Orientation/Generated/EquinoxComplementaryTerms.swift": "b29f74663243f82267dc2e3f11d7851d5a0fb9d12cdb35c6eafba67f6e3ed509",
     "Sources/AstronomyKit/Engine/Orientation/Generated/IAU2000ATerms.swift": "dac21ba0daa90636de35bcfd533873ad3525ec3a9664a393152b8d4c3c76daad",
     "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetDE441.swift": "a6001f045c3a126354d9076aa3a712d1bc3d0977f7a74167532ceb9acb9aaba7",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetDE441.swift": "a31cbeb60ae3537d0645980c2e8a99595352773446dbe0511b3658a7fa845e02",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
-    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "bb50737283618ac95c0df0ed041cde668cded087c85b8835a2bb38dfea322628",
+    "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "fab951ae9c90330e71ec92fce7dd2957c6e88a7f018f5abd7f8767256e93f95f",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "f7cc879f8780fda83a69f88bd962e17fcff57809beed2086f81021a03f11760b",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",
@@ -660,18 +787,18 @@
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialUranus.swift": "05ba88c79fcca26988c9042b4b728603bde9c197b9ab9bb73f2a389259e438e5",
     "Sources/AstronomyKit/Engine/Planets/Generated/PlanetPolynomialVenus.swift": "96463d608a7242dbc5db215b559757ca987f6115a62533d33cd630e271a55795",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnBarycenterData.swift": "4085bb1543aa6aa682b57cee1dbf6671aeed42b3cc5355e266a184c5f59dca98",
-    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "c1d3164053daea8ae7c78967e827a25d4ee7164d820cb3f2a904954cc2e05ea0",
+    "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnOffsetData.swift": "5492b492d50278368a2edf289f8e1d8aa591d8dd7f934c7f726f402f23409306",
     "Sources/AstronomyKit/Engine/Planets/Generated/Saturn/SaturnSunData.swift": "c9e76733e3e58577669e66f67d9bc4308bbfc351d36ded6451671a1d94b2d727",
     "Sources/AstronomyKit/Engine/Planets/Generated/VSOP87BTerms.swift": "170a96916712ec405548461df665b9f3879018b9b00a8775ac6773ac0bc635c2",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentComposition.swift": "b0ae4c614504f3659d056ab4a5a0174d58e91037dc5d8322a38186d4fd1a2c17",
-    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "8654988dfd07ba1bc67820ddef15b7b1d817ef44c902a139a40576cf685a5e4c",
+    "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "d2954f95cb6d7495a9716e577dd27ed1e46522fa281c0a13bbd0315380fe02e9",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",
     "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
     "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "aa55bef4bf857f070d22bbacc3f64168abd174848555cab9ed5b31623c839264",
     "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "4fe3779bb1e725d3d0409e9caa61eac655a2e1ed7132f73b480fb42261162f62",
     "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "e76fe8ffe7a3f8e4605c8e32c808a4a0d6e3dc733292f25a0e5143a08694acc7",
-    "Sources/AstronomyKit/Engine/Positions/EngineHeliocentric.swift": "5d739e7aac8027ba2b7ad309cb5a5b627ff3ca847bddfc02433a36bd5f671023",
+    "Sources/AstronomyKit/Engine/Positions/EngineHeliocentric.swift": "dea7f05a7517066b59bad6255ebc93cc4d2971a164c8e13511a9855320a0772c",
     "Sources/AstronomyKit/Engine/Positions/EngineIllumination.swift": "7caf847bc8937b91cc57dcbc9e191ee05a67143ce83af837678679acced8b6bf",
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "58c35f4991c4f394c6efecefc13e3f1a03dec0fb3319707ea4c66c554e80d230",
@@ -679,9 +806,9 @@
     "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
     "Sources/CLibAstronomy/EphemerisTime/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
-    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "1686346d62961daebe8c17e829ad1cd13768c642695b5eb6dd57a7afa0246a9d",
-    "Tests/AstronomyKitTests/Engine/Gravity/EngineGravityTests.swift": "70a588e2c3a0b8d719655410d888ae58df8bbd6bd3586f4d4018a6542873291c",
-    "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnEphemerisTests.swift": "e2a996a2d37e0f96e212e6c166ef228777fc0e2e5203004f407e390033981922",
+    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "7a451fe02814ae42c27c72241c1c9fc8202604129440152f01f5f03bc8eff13b",
+    "Tests/AstronomyKitTests/Engine/Gravity/EngineGravityTests.swift": "3d8b0fb9480aa1d2e827b73a2554318fc0658011721b12d3066619ee39808b2c",
+    "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnEphemerisTests.swift": "0e14a6ac69aaef77f87e53243bec6a23e925068d4ac15245741f4934e934bddf",
     "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnMeasurementTests.swift": "2ef055c4a9f6e61bb14373c3c8aacfdb010d5b9d818521bc2e5e74e6991a3453",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
     "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"

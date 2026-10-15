@@ -3,14 +3,15 @@
 from fractions import Fraction as Q
 import precession_bounds
 import apparent_bounds
+import selected_earth_bounds
 import argparse
 import ast
 import json
 import re
 
-from intervals import Interval as I, DeltaT, equatorial_matrix, expression, year_start
+from intervals import Interval as I, DeltaT, expression, year_start
 from certify_light_time import constants as convergence_constants, C
-from numerics import ROOT, ENGINE, record, earth_model, sqrt_interval, upward, downward, BINDINGS, source_hashes, check_hashes, unpack
+from numerics import ROOT, ENGINE, record, sqrt_interval, upward, downward, BINDINGS, source_hashes, check_hashes, unpack
 
 
 def pi_interval():
@@ -157,55 +158,14 @@ def classification_guard():
             'derivativeSecondsPerYear':max(derivatives),'roundingFactors':max(operation_counts)}
 
 
-def native_radius_guard(radius_upper, matrix, c):
-    degree,width,start,stop,values = earth_model()
-    if degree != 12 or width != 8:
-        raise ValueError('Native polynomial radius guard requires degree12 and eight-day segments')
-    source = (ROOT/(ENGINE+'Planets/EnginePlanetPolynomial.swift')).read_text()
-    required = ['let x = (tt - start(ofSegment: segment)) / half - 1',
-                'let b = 2 * x * b1 - b2 + coefficients[first + k]',
-                'position[axis] = x * b1 - b2 + coefficients[first]',
-                'if segment > 0, start(ofSegment: segment) > tt { segment -= 1 }']
-    if any(line not in source for line in required):
-        raise ValueError('Native polynomial normalization or recurrence changed')
-    epsilon = Q(1,2**53)
-    gamma = lambda n: n*epsilon/(1-n*epsilon)
-    tiny = Q(1,2**1074)
-    coefficients_upper = [max(abs(Q(value)) for value in values[k::degree+1]) for k in range(degree+1)]
-    # A deliberately loose normalization error, using both subtraction operands.
-    dx = gamma(3)*(Q(74000,4)+1)
-    x_upper = 1+dx
-    b1=b2=e1=e2=Q(0)
-    for k in range(degree,0,-1):
-        magnitude = 2*x_upper*b1+b2+coefficients_upper[k]
-        error = 2*x_upper*e1+e2+2*dx*b1+gamma(4)*magnitude+8*tiny
-        b1,b2 = magnitude*(1+gamma(4))+8*tiny,b1
-        e1,e2 = error,e1
-    magnitude = x_upper*b1+b2+coefficients_upper[0]
-    error = x_upper*e1+e2+dx*b1+gamma(3)*magnitude+8*tiny
-    component_upper = magnitude*(1+gamma(3))+8*tiny
-    frame_errors = [sum(abs(coefficient) for coefficient in row)*(error+gamma(8)*component_upper)+8*tiny for row in matrix]
-    error_length = sqrt_interval(sum(value*value for value in frame_errors))[1]
-    actual_delay_upper = (radius_upper+error_length)*(1+gamma(8))/(c*(1-epsilon))
-    if actual_delay_upper >= Q('.006'):
-        raise ValueError('Native radius and norm rounding exceed the backdating classification interval')
-    return {'positionErrorAU':error_length,'delayUpperDays':actual_delay_upper,'normalizationError':dx}
-
-
 def derive():
     convergence = convergence_constants()
     light = json.loads((ROOT/'Scripts/solar-numerics/derived-light-convergence.json').read_text())
     check_hashes(ROOT, light['sourceSHA256'])
     guard = classification_guard()
-    earth = json.loads((ROOT/'Scripts/solar-numerics/derived-earth.json').read_text())
-    terms = {key:Q(value['rational']) for key,value in earth['terms'].items()}
-    matrix = equatorial_matrix()
-    gram = [[sum(matrix[k][i]*matrix[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
-    departure = max(sum(abs(value-(1 if i==j else 0)) for j,value in enumerate(row)) for i,row in enumerate(gram))
-    norm_hi, norm_lo = Q('1.000001'), 1-departure
-    rmin, rmax = terms['radiusMinimumAU']*norm_lo, terms['radiusMaximumAU']*norm_hi
-    v, p = terms['speedAUPerTTDay']*norm_hi, terms['joinMaximumAU']*norm_hi
-    radius_guard = native_radius_guard(rmax, matrix, C)
+    earth = selected_earth_bounds.derive()
+    rmin = earth['radiusMinimumAU']
+    v, p = earth['speedAUPerTTDay'], earth['joinMaximumAU']
     a, m = 1+convergence['deltaTSlopeSecondsPerDay']/86400, 1-convergence['deltaTSlopeSecondsPerDay']/86400
     k = convergence['k']
     delta = DeltaT()
@@ -232,7 +192,7 @@ def derive():
     solar_acceleration = convergence['solarAccelerationTT']
     clock_q = convergence['clockRateDeparture']
     clock_second = convergence['solarAccelerationPerDay']
-    earth_acceleration = apparent_bounds.earth_acceleration_bound()
+    earth_acceleration = earth['accelerationAUPerTTDay2']
     observer_speed = v+solar_speed+site_speed
     observer_acceleration = earth_acceleration+solar_acceleration+site_acceleration
     beta_upper = observer_speed/(1-clock_q)/C
@@ -255,7 +215,7 @@ def derive():
     ut_beta_rate=site_acceleration/(1-clock_q)/C
     ut_sensitivity=deg_per_rad*(2*ut_relative/rho+4*ut_beta_rate+distance_lipschitz*site_speed)+omega
     tt_sensitivity=deg_per_rad*(2*tt_relative/rho+4*beta_rate+distance_lipschitz*(v+site_speed))+rates['precessionNutation']+rates['siderealTT']
-    velocity_join=apparent_bounds.earth_velocity_join_bound()
+    velocity_join=earth['velocityJoinAUPerTTDay']
     join_degrees=deg_per_rad*(2*p/rho+4*velocity_join/(1-clock_q)/C+distance_lipschitz*p)
     u = Q(1,2**53)
     gamma = lambda n: n*u/(1-n*u)
@@ -307,10 +267,10 @@ def derive():
     if max_earth_perturbation >= Q('.00001') or values['arrivalUncertaintyDays'] >= Q('.00001'):
         raise ValueError('The denominator or classification margin is insufficient')
     if 2*values['arrivalUncertaintyDays']+convergence['T'] >= 1:
-        raise ValueError('Time hull can span multiple eight-day polynomial seams')
+        raise ValueError('Time hull can span multiple selected source joins in one component')
     paths = sorted(set(BINDINGS + precession_bounds.PATHS + apparent_bounds.PATHS + [
         'Scripts/solar-numerics/derive_altitude.py', 'Scripts/solar-numerics/intervals.py',
-        'Scripts/solar-numerics/certify_light_time.py', 'Scripts/solar-numerics/derived-earth.json',
+        'Scripts/solar-numerics/certify_light_time.py', 'Scripts/solar-numerics/selected_earth_bounds.py',
         'Scripts/solar-numerics/derived-light-convergence.json',
         'Sources/AstronomyKit/Time.swift', 'Sources/AstronomyKit/Observer.swift',
         'Sources/AstronomyKit/Position.swift', 'Sources/AstronomyKit/SolarAltitudeObservation.swift',
@@ -322,11 +282,14 @@ def derive():
             'Orientation/EngineRefraction.swift', 'Orientation/EngineRotations.swift']],
     ]))
     return {'kind':'native-partial-altitude-derivation', 'schemaVersion':1, 'sourceSHA256':source_hashes(ROOT,paths),
-            'dependency':'Earth and finite convergence artifacts must also pass their full check commands',
+            'dependency':'Selected Earth majorants are reconstructed; the finite convergence artifact must also pass its full check command',
             'excludedAltitudeErrors':['polynomial evaluation and fit','frame and sidereal arithmetic','horizon transform and libm','DeltaT polynomial evaluation and decimal-year arithmetic','solar interpolation, TT/TDB and relativistic-map arithmetic','source ephemeris and physical-model errors'],
             'terms':{key:record(value) for key,value in values.items()},
             'classificationGuard':{key:str(value) for key,value in guard.items()},
-            'nativeRadiusGuard':{key:str(value) for key,value in radius_guard.items()},
+            'selectedEarth':{**{key:str(value) for key,value in earth.items() if key not in ['components', 'clock']},
+                'components':{path:{key:str(value) for key,value in component.items()}
+                              for path,component in zip(selected_earth_bounds.PATHS,earth['components'])},
+                'clock':{key:str(value) for key,value in earth['clock'].items()}},
             'intermediate': {'deltaTMagnitudeSeconds':str(magnitude), 'topocentricRadiusMarginAU':str(rho),
                              'maxEarthPerturbationAU':str(max_earth_perturbation),
                              'ratesDegreesPerDay':{key:str(value) for key,value in rates.items()},
@@ -339,7 +302,7 @@ def derive():
 
 
 def render(result):
-    fixed = {'polynomialStart':-36524.5,'polynomialStop':36889.5,'polynomialSegmentDays':8.0,
+    fixed = {'polynomialStart':float(selected_earth_bounds.START),'polynomialStop':float(selected_earth_bounds.STOP),'polynomialSegmentDays':8.0,
              'observerHeightMeters':10000.0,'inverseToleranceFloorDays':1e-12,
              'inverseTolerancePerDay':4.440892098500626e-16,'classificationUTLimit':37000.0}
     lines = ['// Generated by Scripts/solar-numerics/derive_altitude.py; do not edit.',

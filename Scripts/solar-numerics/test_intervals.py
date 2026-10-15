@@ -35,10 +35,10 @@ class IntervalTests(unittest.TestCase):
         self.assertLess(value.lo, Q('64.671'))
         self.assertGreater(value.hi, Q('64.720'))
 
-    def test_earth_interval_contains_independent_extended_precision_value(self):
+    def test_retained_earth_interval_contains_independent_extended_precision_value(self):
         t = Q('1826.500748')
         actual = Earth().position(Interval(t))
-        expected = solar.equatorial_earth(solar.Solar().earth.position(solar.mp.mpf(t.numerator)/t.denominator))
+        expected = solar.equatorial_earth(solar.Solar().earth.retained.position(solar.mp.mpf(t.numerator)/t.denominator))
         for interval, value in zip(actual, expected):
             self.assertLessEqual(solar.mp.mpf(interval.lo.numerator)/interval.lo.denominator, value)
             self.assertGreaterEqual(solar.mp.mpf(interval.hi.numerator)/interval.hi.denominator, value)

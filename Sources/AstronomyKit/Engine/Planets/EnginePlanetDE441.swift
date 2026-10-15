@@ -1,15 +1,26 @@
 import Foundation
 
 extension Engine {
-    /// Unwired DE-backed source components for the issue 248 planet migration.
+    /// DE-backed source components for selected-window planet trajectories.
     enum PlanetDE441 {}
 }
 
 extension Engine.PlanetDE441 {
-    /// The shared DE441 Sun table already used by Saturn. Keeping one copy avoids changing the current Saturn route in this foundation link.
+    /// The selected 1900–2131 window and its 32-day exterior blends.
+    static func weight(tt: Double) -> (weight: Double, rate: Double) { Engine.MoonEphemeris.weight(tt: tt) }
+
+    /// The second TT derivative of the selected-window blend weight.
+    static func weightAcceleration(tt: Double) -> Double {
+        let start = Engine.MoonEphemeris.fullWeightStart
+        let end = Engine.MoonEphemeris.fullWeightEnd
+        let days = Engine.MoonEphemeris.blendDays
+        guard tt.isFinite, tt > start - days, tt < end + days, tt < start || tt > end else { return 0 }
+        let x = tt < start ? (tt - (start - days)) / days : (end + days - tt) / days
+        return 60 * x * (1 - x) * (1 - 2 * x) / (days * days)
+    }
+
+    /// The shared DE441 Sun table used by every selected-window planet trajectory.
     static let sun = direct(Engine.SaturnEphemeris.sun)
-    private static let saturnBarycenter = direct(Engine.SaturnEphemeris.barycenter)
-    private static let saturnOffset = direct(Engine.SaturnEphemeris.offset)
 
     private static func direct(_ table: Engine.SaturnEphemeris.Table) -> Engine.DirectChebyshevTable {
         Engine.DirectChebyshevTable(
@@ -17,7 +28,7 @@ extension Engine.PlanetDE441 {
             coefficientCount: table.coefficientCount, scalarBytes: table.scalarBytes, data: table.data)
     }
 
-    /// Generated tables owned by the issue 248 generator. Saturn retains its separately qualified tables until runtime integration.
+    /// Generated tables owned by the planet generator, plus Saturn's separately qualified tables.
     static var components: [String: Engine.DirectChebyshevTable] {
         [
             "mercuryBarycenter": mercuryBarycenter,
@@ -35,16 +46,96 @@ extension Engine.PlanetDE441 {
         ]
     }
 
-    /// Composes a source state without changing the public planet route. Position is in AU on EQJ axes and velocity is its derivative per TT day.
+    private typealias ComponentState = (position: SIMD3<Double>, velocity: SIMD3<Double>)
+
+    private struct ComponentPair: Sendable {
+        let barycenter: ComponentState?
+        let solar: ComponentState?
+    }
+
+    /// A single epoch's immutable clock and optional source components shared by gravity's planet requests.
+    struct Evaluation: Sendable {
+        let time: Engine.Time
+        private let clock: (tdb: Double, rate: Double)?
+        private let components: [ComponentPair?]
+
+        init(at time: Engine.Time, reusingComponentsFor planets: [Engine.Planet] = []) throws {
+            try Engine.checkAcceptedTime(time)
+            self.time = time
+            if weight(tt: time.tt).weight > 0 {
+                let conversion = Engine.TDB.offsetAndRate(tt: time.tt)
+                let tdb = time.tt + conversion.offsetSeconds / Engine.secondsPerDay
+                clock = (tdb, conversion.rate)
+                let solar = planets.contains { $0 != .saturn } ? sun.evaluate(tdb: tdb) : nil
+                let saturnSolar = planets.contains(.saturn) ? Engine.SaturnEphemeris.sun.evaluate(tdb: tdb) : nil
+                var evaluated =
+                    planets.isEmpty ? [] : [ComponentPair?](repeating: nil, count: Engine.Planet.allCases.count)
+                for planet in planets where evaluated[planet.rawValue] == nil {
+                    if planet == .saturn {
+                        evaluated[planet.rawValue] = ComponentPair(
+                            barycenter: Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb), solar: saturnSolar)
+                    } else {
+                        evaluated[planet.rawValue] = ComponentPair(
+                            barycenter: tables(of: planet)?.barycenter.evaluate(tdb: tdb), solar: solar)
+                    }
+                }
+                components = evaluated
+            } else {
+                clock = nil
+                components = []
+            }
+        }
+
+        func state(
+            of planet: Engine.Planet, physicalCenter: Bool
+        ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+            guard let clock else { return nil }
+            return Engine.PlanetDE441.state(
+                of: planet, tdb: clock.tdb, rate: clock.rate, physicalCenter: physicalCenter,
+                components: components.isEmpty ? nil : components[planet.rawValue])
+        }
+    }
+
+    /// Composes a selected-window source state. Position is in AU on EQJ axes and velocity is its derivative per TT day.
     static func state(
         of planet: Engine.Planet, tt: Double, physicalCenter: Bool
     ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
         guard tt.isFinite else { return nil }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
-        guard let tables = tables(of: planet), let barycenter = tables.barycenter.evaluate(tdb: tdb),
-            let solar = sun.evaluate(tdb: tdb)
-        else { return nil }
+        return state(of: planet, tdb: tdb, rate: conversion.rate, physicalCenter: physicalCenter)
+    }
+
+    private static func state(
+        of planet: Engine.Planet, tdb: Double, rate: Double, physicalCenter: Bool,
+        components: ComponentPair? = nil
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+        if planet == .saturn {
+            let source =
+                components
+                ?? ComponentPair(
+                    barycenter: Engine.SaturnEphemeris.barycenter.evaluate(tdb: tdb),
+                    solar: Engine.SaturnEphemeris.sun.evaluate(tdb: tdb))
+            guard let barycenter = source.barycenter, let solar = source.solar else { return nil }
+            var position = barycenter.position - solar.position
+            var velocity = barycenter.velocity - solar.velocity
+            if physicalCenter {
+                guard let offset = Engine.SaturnEphemeris.offset.evaluate(tdb: tdb) else { return nil }
+                position += offset.position
+                velocity += offset.velocity
+            }
+            let bias = Engine.FrameBias.icrsToEqj
+            return (
+                bias.apply(to: position / Engine.kilometersPerAU),
+                bias.apply(to: velocity * rate / Engine.kilometersPerAU)
+            )
+        }
+        guard let tables = tables(of: planet) else { return nil }
+        let source =
+            components
+            ?? ComponentPair(
+                barycenter: tables.barycenter.evaluate(tdb: tdb), solar: sun.evaluate(tdb: tdb))
+        guard let barycenter = source.barycenter, let solar = source.solar else { return nil }
         var position = barycenter.position - solar.position
         var velocity = barycenter.velocity - solar.velocity
         if physicalCenter, let offsetTable = tables.offset {
@@ -55,8 +146,25 @@ extension Engine.PlanetDE441 {
         let bias = Engine.FrameBias.icrsToEqj
         return (
             bias.apply(to: position / Engine.kilometersPerAU),
-            bias.apply(to: velocity * conversion.rate / Engine.kilometersPerAU)
+            bias.apply(to: velocity * rate / Engine.kilometersPerAU)
         )
+    }
+
+    /// The selected Earth trajectory's second derivative in AU per TT day squared on EQJ axes.
+    static func earthAcceleration(tt: Double, tdbAcceleration: Double) -> SIMD3<Double>? {
+        guard tt.isFinite, tdbAcceleration.isFinite else { return nil }
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
+        guard let barycenter = earthBarycenter.evaluate(tdb: tdb),
+            let barycenterAcceleration = earthBarycenter.acceleration(tdb: tdb),
+            let solar = sun.evaluate(tdb: tdb), let solarAcceleration = sun.acceleration(tdb: tdb),
+            let offset = earthOffset.evaluate(tdb: tdb), let offsetAcceleration = earthOffset.acceleration(tdb: tdb)
+        else { return nil }
+        let velocity = barycenter.velocity - solar.velocity + offset.velocity
+        let acceleration = barycenterAcceleration - solarAcceleration + offsetAcceleration
+        return Engine.FrameBias.icrsToEqj.apply(
+            to: (acceleration * (conversion.rate * conversion.rate) + velocity * tdbAcceleration)
+                / Engine.kilometersPerAU)
     }
 
     private static func tables(
@@ -68,7 +176,7 @@ extension Engine.PlanetDE441 {
         case .earth: (earthBarycenter, earthOffset)
         case .mars: (marsBarycenter, nil)
         case .jupiter: (jupiterBarycenter, jupiterOffset)
-        case .saturn: (saturnBarycenter, saturnOffset)
+        case .saturn: nil
         case .uranus: (uranusBarycenter, uranusOffset)
         case .neptune: (neptuneBarycenter, neptuneOffset)
         }

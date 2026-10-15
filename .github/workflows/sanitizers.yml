@@ -22,8 +22,10 @@ permissions:
 jobs:
   asan:
     runs-on: ubuntu-latest
-    # The apparent-place broad invocation exhausted 60 minutes after a 216s build; retain every isolation and per-test guard under this finite job ceiling.
-    timeout-minutes: 120
+    # DE-backed trajectories still made test progress at the 120-minute cutoff
+    # after the evaluation-scoped reuse fix (run 38381655135). Preserve the full
+    # workload, isolation and per-test guards with a finite three-hour ceiling.
+    timeout-minutes: 180
     steps:
       - name: Checkout candidate revision
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

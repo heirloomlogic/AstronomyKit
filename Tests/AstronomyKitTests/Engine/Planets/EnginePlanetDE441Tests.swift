@@ -21,10 +21,12 @@ struct EnginePlanetDE441Tests {
             start: -2, days: 4, recordCount: 1, coefficientCount: 3, scalarBytes: 8, data: data)
         let left = try #require(table.evaluate(tdb: -2))
         let middle = try #require(table.evaluate(tdb: 0))
+        let acceleration = try #require(table.acceleration(tdb: 0))
         #expect(left.position == SIMD3(2, 5, 8))
         #expect(middle.position == SIMD3(-2, -2, -2))
         #expect(left.velocity == SIMD3(-5, -9.5, -14))
         #expect(middle.velocity == SIMD3(1, 2.5, 4))
+        #expect(acceleration == SIMD3(3, 6, 9))
         #expect(table.evaluate(tdb: (-2.0).nextDown) == nil)
         #expect(table.evaluate(tdb: 2) == nil)
         #expect(table.evaluate(tdb: .nan) == nil)
@@ -43,6 +45,9 @@ struct EnginePlanetDE441Tests {
         #expect(invalidBase64.evaluate(tdb: 0.5) == nil)
         #expect(truncated.evaluate(tdb: 0.5) == nil)
         #expect(nonfinite.evaluate(tdb: 0.5) == nil)
+        #expect(invalidBase64.acceleration(tdb: 0.5) == nil)
+        #expect(truncated.acceleration(tdb: 0.5) == nil)
+        #expect(nonfinite.acceleration(tdb: 0.5) == nil)
     }
 
     @Test("Every generated component matches retained direct-source recurrence fixtures")
@@ -75,6 +80,31 @@ struct EnginePlanetDE441Tests {
             #expect(
                 Self.norm(actual.velocity - expectedVelocity) <= velocityRoundoff,
                 "\(row.component) record \(row.record)")
+        }
+    }
+
+    @Test("Neptune's exact and adjacent offset seam values select their one-sided source records")
+    func neptuneOffsetSeam() throws {
+        let table = Source.neptuneOffset
+        let record = 8_279
+        let seam = table.start + Double(record) * table.days
+        #expect(seam == -20_000.5)
+        for tdb in [seam.nextDown, seam, seam.nextUp] {
+            let selected = tdb < seam ? record - 1 : record
+            let x = 2 * (tdb - (table.start + Double(selected) * table.days)) / table.days - 1
+            let actual = try #require(table.evaluate(tdb: tdb))
+            let expected = try #require(table.evaluate(record: selected, x: x))
+            #expect(actual.position == expected.position)
+            #expect(actual.velocity == expected.velocity)
+        }
+
+        var tt = seam
+        for _ in 0..<3 { tt = seam - Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay }
+        for instant in [tt.nextDown, tt, tt.nextUp] {
+            let source = try #require(Source.state(of: .neptune, tt: instant, physicalCenter: true))
+            let publicState = try Engine.Planet.neptune.heliocentricState(at: PlanetTestSupport.time(tt: instant))
+            #expect(Self.norm(publicState.positionVector - source.position) < 1e-10)
+            #expect(Self.norm(publicState.velocityVector - source.velocity) < 2e-14)
         }
     }
 
@@ -137,28 +167,27 @@ struct EnginePlanetDE441Tests {
         }
     }
 
-    @Test("Source foundation latency can be recorded")
+    @Test("Selected-window public-route latency can be recorded")
     func measurement() throws {
         guard let outputPath = ProcessInfo.processInfo.environment["PLANET_DE441_MEASUREMENT_PATH"] else {
             return
         }
         let epochs = [-36_540.25, -1_234.5, 0, 12_345.25, 47_860.75]
         let coldStart = ProcessInfo.processInfo.systemUptime
-        var checksum = try #require(Source.state(of: .jupiter, tt: epochs[0], physicalCenter: true)).position.x
+        var checksum = try Engine.Planet.jupiter.heliocentricState(at: PlanetTestSupport.time(tt: epochs[0])).x
         let coldSeconds = ProcessInfo.processInfo.systemUptime - coldStart
         let iterations = 10_000
         let warmStart = ProcessInfo.processInfo.systemUptime
         for index in 0..<iterations {
             let planet = Engine.Planet.allCases[index % Engine.Planet.allCases.count]
-            let state = try #require(
-                Source.state(of: planet, tt: epochs[index % epochs.count], physicalCenter: true))
-            checksum += state.position.x + state.velocity.y
+            let state = try planet.heliocentricState(at: PlanetTestSupport.time(tt: epochs[index % epochs.count]))
+            checksum += state.x + state.vy
         }
         let warmSeconds = ProcessInfo.processInfo.systemUptime - warmStart
         let report: [String: Any] = [
-            "coldJupiterSeconds": coldSeconds,
+            "coldJupiterPublicSeconds": coldSeconds,
             "iterations": iterations,
-            "meanStateMicroseconds": warmSeconds * 1_000_000 / Double(iterations),
+            "meanPublicStateMicroseconds": warmSeconds * 1_000_000 / Double(iterations),
             "checksum": checksum,
         ]
         let data = try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])

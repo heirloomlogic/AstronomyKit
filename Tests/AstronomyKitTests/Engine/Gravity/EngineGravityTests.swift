@@ -194,10 +194,103 @@ struct EngineGravityTests {
         #expect(next.step.acceleration == next.bodies.acceleration(at: next.step.position))
     }
 
+    private static var clockEpochs: [Double] {
+        let start = Engine.MoonEphemeris.fullWeightStart
+        let end = Engine.MoonEphemeris.fullWeightEnd
+        let boundaries = [start - 32, start, end, end + 32]
+        var epochs = boundaries.flatMap { [$0.nextDown, $0, $0.nextUp] }
+        epochs += [start - 16, end + 16, 0, 182.5, -400_000.25, 700_000.75]
+        // Map component knots from TDB to TT, then inspect both neighboring doubles.
+        for table in Engine.PlanetDE441.components.values {
+            let tdb = table.start + table.days
+            var tt = tdb
+            for _ in 0..<4 {
+                tt = tdb - Engine.TDB.offsetAndRate(tt: tt).offsetSeconds / Engine.secondsPerDay
+            }
+            epochs += [tt.nextDown, tt, tt.nextUp]
+        }
+        return epochs
+    }
+
+    private static func bits(_ state: Engine.State<Engine.EQJ>) -> [UInt64] {
+        [state.x, state.y, state.z, state.vx, state.vy, state.vz].map(\.bitPattern)
+    }
+
+    @Test(
+        "One evaluation's components preserve every planet and center across source boundaries and models")
+    func sharedComponentIdentity() throws {
+        for tt in Self.clockEpochs {
+            for model in DeltaTModel.allCases {
+                let time = Engine.Time(ut: tt - 0.001, tt: tt, deltaTModel: model)
+                let evaluation = try Engine.PlanetDE441.Evaluation(
+                    at: time, reusingComponentsFor: Engine.Planet.allCases)
+                for planet in Engine.Planet.allCases {
+                    #expect(
+                        Self.bits(
+                            try planet.systemHeliocentricState(evaluation: evaluation, cache: Gravity.seriesCache)
+                        )
+                            == Self.bits(try planet.systemHeliocentricState(at: time, cache: Gravity.seriesCache))
+                    )
+                    #expect(
+                        Self.bits(
+                            try planet.heliocentricState(evaluation: evaluation, cache: Gravity.seriesCache))
+                            == Self.bits(try planet.heliocentricState(at: time, cache: Gravity.seriesCache)))
+                }
+            }
+        }
+    }
+
+    @Test("Partial component reuse preserves uncached planets and repeated requests")
+    func partialComponentIdentity() throws {
+        for tt in [0.0, Engine.MoonEphemeris.fullWeightEnd + 16, -400_000.25] {
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: [.earth, .saturn, .earth])
+            for planet in Engine.Planet.allCases {
+                let expected = try planet.heliocentricState(at: time, cache: Gravity.seriesCache)
+                for _ in 0..<2 {
+                    let actual = try planet.heliocentricState(evaluation: evaluation, cache: Gravity.seriesCache)
+                    #expect(Self.bits(actual) == Self.bits(expected))
+                }
+            }
+        }
+    }
+
+    @Test("An immutable evaluation can be shared concurrently without mixing epochs")
+    func sharedComponentConcurrency() async throws {
+        for tt in [0.0, Engine.MoonEphemeris.fullWeightStart - 16, -400_000.25] {
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+            let evaluation = try Engine.PlanetDE441.Evaluation(
+                at: time, reusingComponentsFor: Engine.Planet.allCases)
+            try await withThrowingTaskGroup(of: Void.self) { group in
+                for planet in Engine.Planet.allCases {
+                    group.addTask {
+                        let expected = try planet.heliocentricState(at: time, cache: Gravity.seriesCache)
+                        for _ in 0..<8 {
+                            let actual = try planet.heliocentricState(
+                                evaluation: evaluation, cache: Gravity.seriesCache)
+                            #expect(Self.bits(actual) == Self.bits(expected))
+                        }
+                    }
+                }
+                try await group.waitForAll()
+            }
+        }
+    }
+
     @Test("A time outside the accepted range throws badTime")
     func badTime() {
-        for tt in [Double.nan, .infinity, Engine.acceptedTTDays.nextUp] {
+        for tt in [
+            Double.nan, .infinity, -.infinity, Engine.acceptedTTDays.nextUp,
+            -Engine.acceptedTTDays.nextUp,
+        ] {
             #expect(throws: AstronomyError.badTime) { _ = try Gravity.MajorBodies(tt: tt) }
+            #expect(throws: AstronomyError.badTime) { _ = try Gravity.SolarSystem(tt: tt) }
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Engine.PlanetDE441.Evaluation(
+                    at: Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus),
+                    reusingComponentsFor: Engine.Planet.allCases)
+            }
         }
     }
 }

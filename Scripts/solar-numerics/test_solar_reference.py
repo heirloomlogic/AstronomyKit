@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import solar_reference as solar
 
 
@@ -56,6 +57,30 @@ class SolarDefinitionTests(unittest.TestCase):
                 altitudes.append(result['altitude'])
         with mp.workdps(110):
             self.assertLess(abs(altitudes[0] - altitudes[1]), mp.mpf('1e-65'))
+
+    def test_selected_earth_composes_all_three_bound_components(self):
+        mp = solar.mp
+        states = [
+            (mp.matrix([11, 13, 17]), mp.matrix([19, 23, 29])),
+            (mp.matrix([2, 3, 5]), mp.matrix([7, 11, 13])),
+            (mp.matrix([1, 4, 9]), mp.matrix([16, 25, 36])),
+        ]
+        with patch.object(solar, 'direct_state', side_effect=states) as direct, patch(
+            'apparent_reference.clock', side_effect=lambda value: value
+        ):
+            position, velocity = solar.SelectedEarth.source(mp.mpf(0))
+        self.assertEqual(
+            [call.args[0] for call in direct.call_args_list],
+            [solar.EARTH_BARYCENTER_PATH, solar.EARTH_OFFSET_PATH, solar.PLANET_SUN_PATH])
+        self.assertEqual(position, solar.frame_bias(states[0][0] - states[2][0] + states[1][0]) / solar.AU_KM)
+        self.assertEqual(velocity, solar.frame_bias(states[0][1] - states[2][1] + states[1][1]) / solar.AU_KM)
+
+    def test_selected_earth_changes_the_recorded_altitude_epoch(self):
+        mp = solar.mp
+        earth = solar.SelectedEarth()
+        tt = mp.mpf('1826.5064275680454')
+        retained, _ = earth.retained_state(tt)
+        self.assertGreater(mp.norm(earth.position(tt) - retained), mp.mpf('1e-9'))
 
     def test_emission_clock_is_continuous_across_the_2005_delta_t_step(self):
         import apparent_reference as apparent

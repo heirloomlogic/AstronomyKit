@@ -38,12 +38,13 @@ struct EngineSaturnEphemerisTests {
             // Rounded-up full-record coefficient bounds, plus Float64 evaluation roundoff.
             let roundingP = 64 * Double.ulpOfOne * max(1, Self.norm(expectedP))
             let roundingV = 64 * Double.ulpOfOne * max(1, Self.norm(expectedV))
-            #expect(pe <= (row.target == 699 ? 0.000019734 : 0) + roundingP)
-            #expect(ve <= (row.target == 699 ? 0.000007304 : 0) + roundingV)
+            #expect(pe <= roundingP)
+            #expect(ve <= roundingV)
             maxPosition = max(maxPosition, pe)
             maxRate = max(maxRate, ve)
         }
-        #expect(Source.barycenter.data.count + Source.sun.data.count + Source.offset.data.count == 10_618_464)
+        #expect(Source.offset.scalarBytes == 8)
+        #expect(Source.barycenter.data.count + Source.sun.data.count + Source.offset.data.count == 19_400_016)
         for table in [Source.barycenter, Source.sun, Source.offset] {
             #expect(table.evaluate(tdb: table.start.nextDown) == nil)
             #expect(table.evaluate(tdb: table.start + Double(table.recordCount) * table.days) == nil)
@@ -67,38 +68,30 @@ struct EngineSaturnEphemerisTests {
         #expect(actual.velocity == expected.velocity)
     }
 
+    @Test("The public Saturn route preserves the original rounded seam selection")
+    func publicRoundedSeamSelection() throws {
+        let seam = -16_383.000_000_014_932
+        for tt in [seam.nextDown, seam, seam.nextUp] {
+            let time = Self.time(tt)
+            let expected = try #require(Source.eclipticState(at: time))
+            let actual = try Engine.Planet.saturn.heliocentricEclipticState(at: time)
+            #expect(Self.p(actual) == expected.position)
+            #expect(Self.v(actual) == expected.velocity)
+        }
+    }
+
     @Test("System-mass consumers exclude the physical-center offset")
     func systemMassConsumers() throws {
-        // DE441 target 6 minus target 10, independently composed from the source tables.
-        // sourceRecords checks those tables against direct source recurrence fixtures.
         for tt in [-36556.5, -36540.5, -36524.5, 0, 12020.54855741, 47846.5, 47862.5, 47878.5] {
             let time = Self.time(tt)
-            let (weight, rate) = Source.weight(tt: tt)
-            let old = try Engine.Planet.saturn.retainedEclipticState(at: time)
-            var bp = Self.p(old)
-            var bv = Self.v(old)
-            if weight > 0 {
-                let tdb = tt + Engine.TDB.offsetSeconds(tt: tt) / Engine.secondsPerDay
-                let b = try #require(Source.barycenter.evaluate(tdb: tdb))
-                let sun = try #require(Source.sun.evaluate(tdb: tdb))
-                let p = Engine.FrameBias.icrsToEqj.apply(to: (b.position - sun.position) / Engine.kilometersPerAU)
-                let v = Engine.FrameBias.icrsToEqj.apply(
-                    to: (b.velocity - sun.velocity) * Engine.TDB.rate(tt: tt) / Engine.kilometersPerAU)
-                let state = Engine.State<Engine.EQJ>(x: p.x, y: p.y, z: p.z, vx: v.x, vy: v.y, vz: v.z, time: time)
-                let ecliptic = Engine.VSOP87B.toEquatorial.inverse.apply(to: state)
-                bv += weight * (Self.v(ecliptic) - bv) + rate * (Self.p(ecliptic) - bp)
-                bp += weight * (Self.p(ecliptic) - bp)
-            }
-            let expected = Engine.VSOP87B.toEquatorial.apply(
-                to: Engine.State<Engine.VSOP87Ecliptic>(
-                    x: bp.x, y: bp.y, z: bp.z, vx: bv.x, vy: bv.y, vz: bv.z, time: time))
+            let expected = try Engine.Planet.saturn.systemHeliocentricState(at: time)
             let physical = try Engine.Planet.saturn.heliocentricState(at: time)
             for planets in [Engine.Gravity.MajorBodies.planets, Engine.Gravity.SolarSystem.planetsWithGM] {
                 var offsetP = SIMD3<Double>.zero
                 var offsetV = SIMD3<Double>.zero
                 var states: [Engine.Gravity.BodyState] = []
                 for (planet, gm) in planets {
-                    let state = try planet == .saturn ? expected : planet.heliocentricState(at: time)
+                    let state = try planet.systemHeliocentricState(at: time)
                     let shift = gm / (gm + Engine.Gravity.sunGM)
                     offsetP += shift * Self.p(state)
                     offsetV += shift * Self.v(state)
