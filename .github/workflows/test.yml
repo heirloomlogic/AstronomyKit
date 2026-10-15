@@ -18,11 +18,19 @@ concurrency:
 permissions:
   contents: read
 
+# The two complete USNO rise/set sweeps (5,909 events each, through the public
+# API and through the engine) run single-threaded and took 52 of the 81 Debug
+# minutes on Linux and 239 of the 328 TSan minutes in run 38552198543, against
+# 140 s each in Release. The Release jobs run them on both operating systems;
+# Debug and TSan skip them. TSan only reports races between threads, so a
+# serial numerical sweep under it costs hours and can find nothing.
+env:
+  SERIAL_SWEEPS: 'AuditValidationTests/riseSet\(stream:\)|EngineObserverEventsTests/usno\(stream:\)'
+
 jobs:
   # Apparent-place integration: local Debug passed in 3661s; hosted altitude rechecks need about 28 minutes each before that suite.
   # Linux passed in 39m38s; the macOS job exhausted 60 minutes during its second altitude recheck, before its full suite.
-  # TSan's 150-minute ceiling includes headroom over a roughly 103-minute projection from the completed base and Linux timings; it is not a measured TSan result.
-  # These finite job ceilings preserve all test commands and per-test limits; Release and platform-build workloads are unchanged.
+  # These finite job ceilings preserve all test commands and per-test limits.
   test-macos:
     runs-on: macos-26
     # DE-backed validation used 92 minutes before the full suite, then exhausted
@@ -140,7 +148,7 @@ jobs:
           .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
 
       - name: Test
-        run: swift test --no-parallel
+        run: swift test --no-parallel --skip "$SERIAL_SWEEPS"
 
   test-linux:
     runs-on: ubuntu-latest
@@ -225,11 +233,11 @@ jobs:
           python3 Scripts/record-transit-evidence.py --check
 
       - name: Test
-        run: swift test --no-parallel
+        run: swift test --no-parallel --skip "$SERIAL_SWEEPS"
 
   test-thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -247,8 +255,11 @@ jobs:
         with:
           swift-version: "6.2"
 
+      # Release: TSan instruments the optimized build's shared-state accesses
+      # just the same, and Debug's assertions are covered by the two Debug
+      # jobs. The Debug TSan run took 5.5 hours.
       - name: Test (Thread Sanitizer)
-        run: swift test --no-parallel --sanitize=thread
+        run: swift test -c release --no-parallel --sanitize=thread --skip "$SERIAL_SWEEPS"
 
   test-release-macos:
     runs-on: macos-26
