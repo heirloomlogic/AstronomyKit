@@ -521,7 +521,7 @@
     "Scripts/pluto-data/plu060-evidence.json": "a4a28fffac897770297061056037ebfd5ca4b2d68269d81912a08a522e1b9252",
     "Scripts/pluto-data/plu060-qualification.json": "0685d7edc61e572f23d039957c6a5b644b74809204816884df76015dd1e441fe",
     "Scripts/qualify-pluto-center.py": "4478cb59a138dbb9e574adcd3cb70c3f476dc09f12bd341e873c11405ce1ccb9",
-    "Scripts/record-pluto-de441-evidence.py": "0510abf31a65ab143767b5ceeecc833e8a58d4452c51d6ff9c734974391e916b",
+    "Scripts/record-pluto-de441-evidence.py": "4a338f92159d45ff825cec8562318122115841029c8899adb31b71436de7f8ae",
     "Scripts/test_generate_pluto_de441.py": "e205c74d9bccbd43524e69375c359031b2515b5c7406ee4500851b00ef19fe4e",
     "Scripts/test_record_pluto_de441_evidence.py": "9bd203b3c3d5016c414196080fd1a3da3977990bca9e9cc5d8cac4c6c46735da",
     "Sources/AstronomyKit/AstronomyError.swift": "7122525f8f8796baaef9e6a3baff8c2332d0a0f817927af6c98d83b4a81c7746",
