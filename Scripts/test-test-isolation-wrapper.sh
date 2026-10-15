@@ -60,7 +60,7 @@ printf '%s\n' "$*" >>"$FAKE_SWIFT_LOG"
 for argument in "$@"; do
     if [[ "$argument" == "list" ]]; then
         for index in {1..10}; do printf 'AstronomyKitTests.InverseRefractionTests/test%s()\n' "$index"; done
-        for index in {1..18}; do printf 'AstronomyKitTests.SearchCallbackContractTests/test%s()\n' "$index"; done
+        for index in {1..17}; do printf 'AstronomyKitTests.SearchCallbackContractTests/test%s()\n' "$index"; done
         if [[ "${FAKE_LIST_MODE:-valid}" != "missing_suite" ]]; then
             for index in {1..4}; do printf 'AstronomyKitTests.SeasonalEpochTests/test%s()\n' "$index"; done
         fi
@@ -82,7 +82,7 @@ if [[ -n "$filter" ]]; then
     fi
     case "$filter" in
         *InverseRefractionTests*) count=10 ;;
-        *SearchCallbackContractTests*) count=18 ;;
+        *SearchCallbackContractTests*) count=17 ;;
         *SeasonalEpochTests*) count=4 ;;
         *) count=1 ;;
     esac

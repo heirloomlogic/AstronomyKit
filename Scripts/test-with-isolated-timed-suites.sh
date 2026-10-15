@@ -4,7 +4,7 @@ set -euo pipefail
 
 readonly timed_suites=(
     "AstronomyKitTests.InverseRefractionTests:10"
-    "AstronomyKitTests.SearchCallbackContractTests:18"
+    "AstronomyKitTests.SearchCallbackContractTests:17"
     "AstronomyKitTests.SeasonalEpochTests:4"
 )
 script_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
