@@ -396,17 +396,17 @@
   "centerExtensionBase": "128ac0a4728206f887027f5674371030faad4b5c",
   "centerNativeRelease": {
     "checksum": 44301.65643972756,
-    "coldSeconds": 0.0199509859085083,
+    "coldSeconds": 0.019991040229797363,
     "coldTT": -72000,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 120340480,
-    "peakBytesAfterLoops": 151224320,
-    "peakBytesBefore": 47202304,
+    "peakBytesAfterCold": 121061376,
+    "peakBytesAfterLoops": 151945216,
+    "peakBytesBefore": 47923200,
     "seconds": {
-      "central": 0.03580498695373535,
-      "engineRange": 0.036695003509521484,
-      "outer": 0.044502973556518555
+      "central": 0.03691303730010986,
+      "engineRange": 0.03746998310089111,
+      "outer": 0.0450359582901001
     }
   },
   "directSourceDebug": {
@@ -463,17 +463,17 @@
   },
   "nativeRelease": {
     "checksum": 44287.76723921855,
-    "coldSeconds": 0.007643938064575195,
+    "coldSeconds": 0.00920403003692627,
     "coldTT": -766524.75,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 78856192,
-    "peakBytesAfterLoops": 151764992,
-    "peakBytesBefore": 47759360,
+    "peakBytesAfterCold": 78987264,
+    "peakBytesAfterLoops": 151896064,
+    "peakBytesBefore": 47890432,
     "seconds": {
-      "central": 0.03652501106262207,
-      "engineRange": 0.03577899932861328,
-      "outer": 0.05527901649475098
+      "central": 0.03979599475860596,
+      "engineRange": 0.039845943450927734,
+      "outer": 0.07141804695129395
     }
   },
   "nativeStorage": {
@@ -482,17 +482,17 @@
       "PlutoBarycenterCoefficients": {
         "cstringSectionBytes": 883521,
         "generatedSourceBytes": 884069,
-        "releaseObjectBytes": 1779064
+        "releaseObjectBytes": 1778984
       },
       "PlutoCenterCoefficients": {
         "cstringSectionBytes": 25128168,
         "generatedSourceBytes": 25128716,
-        "releaseObjectBytes": 50268304
+        "releaseObjectBytes": 50268216
       },
       "PlutoSunCoefficients": {
         "cstringSectionBytes": 3239223,
         "generatedSourceBytes": 3239780,
-        "releaseObjectBytes": 6490536
+        "releaseObjectBytes": 6490448
       }
     },
     "decodedPayloadBytes": 13149264,
@@ -500,15 +500,15 @@
       "PlutoDE441PlutoData": {
         "cstringSectionBytes": 5889818,
         "generatedSourceBytes": 5890201,
-        "releaseObjectBytes": 11790152
+        "releaseObjectBytes": 11790080
       },
       "PlutoDE441SunData": {
         "cstringSectionBytes": 11779506,
         "generatedSourceBytes": 11779888,
-        "releaseObjectBytes": 23569512
+        "releaseObjectBytes": 23569432
       }
     },
-    "testExecutableBytes": 492737216
+    "testExecutableBytes": 492725680
   },
   "rangeExtensionBase": "686ffb3b9d69c62ac2c9cc4d0493049f2851d8bd",
   "schemaVersion": 3,

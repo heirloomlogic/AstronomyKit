@@ -81,7 +81,7 @@ AstronomyKit uses the platform's native libm. There is no bit-identity promise b
 ## Verification
 
 ```sh
-Scripts/test-with-isolated-default-model.sh -c release
+Scripts/test-with-isolated-timed-suites.sh -c release
 swift test --no-parallel
 swift test -c release --no-parallel --sanitize=thread
 python3 Scripts/generate-time-table.py --check
@@ -90,7 +90,7 @@ python3 Scripts/reference-data/build-fixtures.py --check
 swift test --filter 'EngineStateOwnershipTests|EngineVSOP87BCacheTests|EngineNutationCacheTests|EngineMoonCacheTests|EnginePlutoCacheTests|EngineCacheTests|DeltaTThreadSafetyTests|EngineStarConcurrencyTests|EngineGravitySimulationTests'
 ```
 
-Plain `swift test` is enough locally. `DeltaTThreadSafetyTests` alternates the two public named models and restores Espenak-Meeus after each test; each constructed time must capture one complete named model and its matching TT. The PR gate runs `Scripts/test-with-isolated-default-model.sh -c release`, which runs the suite in parallel and then runs the tests that change the process-wide Delta T model, and the suites with wall-clock budgets, in their own invocations.
+Plain `swift test` is enough locally. `DeltaTThreadSafetyTests` alternates the two public named models in an exit test's child process; each time constructed there must capture one complete named model and its matching TT. Tests change the process default model only in such child processes (see CONTRIBUTING), so suites running in parallel never see a temporary model. On macOS, `swift test --sanitize=thread` and `--sanitize=address` skip the suites that run exit tests (`DeltaTThreadSafetyTests`, `EngineStarConcurrencyTests`, `SearchCallbackDefaultModelTests` and `ChildProcessIsolationTests`) because their child processes abort under a macOS sanitizer runtime. The Linux TSan job in `deep-validation.yml` and the Linux ASan job in `sanitizers.yml` run them. The PR gate runs `Scripts/test-with-isolated-timed-suites.sh -c release`, which runs the suite in parallel and then runs the suites with wall-clock budgets in their own invocations.
 
 For an opt-in Release observation of integrated serial and contended workload time and process peak resident bytes, set `CACHE_OWNERSHIP_MEASUREMENT_OUTPUT` to a JSON output path and filter to `EngineStateOwnershipTests.measurement`. The serial pass runs first from cold caches and warms them for the larger contended pass, so its elapsed times do not establish a speedup. Peak resident bytes are a finite process observation, not evidence that memory cannot leak. The observation has no resource threshold; compare runs only when the host, toolchain, configuration, and workload are the same.
 

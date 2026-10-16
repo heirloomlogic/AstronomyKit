@@ -132,7 +132,7 @@ jobs:
       # Parallel Release run; the wrapper isolates the suites that change
       # the process-wide Delta T model or rely on wall-clock budgets.
       - name: Test (release)
-        run: Scripts/test-with-isolated-default-model.sh -c release
+        run: Scripts/test-with-isolated-timed-suites.sh -c release
 
   test-linux:
     runs-on: ubuntu-latest
@@ -157,7 +157,7 @@ jobs:
       # Parallel Release run; the wrapper isolates the suites that change
       # the process-wide Delta T model or rely on wall-clock budgets.
       - name: Test (release)
-        run: Scripts/test-with-isolated-default-model.sh -c release
+        run: Scripts/test-with-isolated-timed-suites.sh -c release
 
   # The macOS jobs above exercise the shared source, but the iOS/tvOS/watchOS
   # SDKs compile differently (availability, unavailable APIs). Build the library
