@@ -31,7 +31,7 @@ Built on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy)
 
 ## Supported dates
 
-Positions, states, distances, and the searches built on them accept a Terrestrial Time within 4,000 Julian years of J2000, roughly the years −2000 to +6000, and throw `AstronomyError.badTime` outside it. Pluto's range is narrower, about the years −100 to +4100. See "Accepted Range" in the `AstroTime` documentation.
+Positions, states, distances, and the searches built on them accept a Terrestrial Time within 4,000 Julian years of J2000, roughly the years −2000 to +6000, and throw `AstronomyError.badTime` outside it. Pluto accepts the same range. From 1800 through 2199 its position is the planet's center, from DE440 and PLU060. Outside that span it is the Pluto-system barycenter from DE441. The two differ by at most 0.1 arcsecond at the 29 sampled center dates, but the center is not independently verified outside 1800–2199. Comparisons with JPL Horizons at 41 sampled dates across the range stay within the 1 arcminute target. See "Accepted Range" in the `AstroTime` documentation.
 
 ## Planetary calculation performance
 
