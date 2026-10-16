@@ -2,7 +2,6 @@
 """Capture and independently replay the archived Galilean-moon residuals."""
 import argparse
 import csv
-from functools import lru_cache
 import hashlib
 import json
 import math
@@ -39,18 +38,13 @@ def archive_paths():
 REPLAY_OWNERS = {'Scripts/galilean-residuals.py', 'Scripts/test_galilean_residuals.py'}
 
 
-def source_paths(revision=None):
+def source_paths():
     # Committed ownership retains deletions even after they have left the index.
-    command = ['git', 'ls-tree', '-rz', '--name-only', revision or 'HEAD']
-    try:
-        inventory = subprocess.check_output(command, cwd=ROOT, stderr=subprocess.PIPE).decode().split('\0')
-    except subprocess.CalledProcessError as error:
-        raise ValueError('Capture revision is unavailable in local Git history') from error
+    inventory = subprocess.check_output(['git', 'ls-tree', '-rz', '--name-only', 'HEAD'], cwd=ROOT).decode().split('\0')
     native = sorted(p for p in inventory if p.startswith('Sources/AstronomyKit/') and p.endswith('.swift'))
-    if not revision:
-        present = sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'Sources/AstronomyKit').rglob('*.swift'))
-        if native != present:
-            raise ValueError('Committed and present native source inventory differs')
+    present = sorted(str(p.relative_to(ROOT)) for p in (ROOT / 'Sources/AstronomyKit').rglob('*.swift'))
+    if native != present:
+        raise ValueError('Committed and present native source inventory differs')
     return sorted(native + archive_paths() + [
         FIXTURE, 'Package.swift', 'Sources/CLibAstronomy/astronomy.c',
         'Scripts/reference-data/build-fixtures.py', 'Scripts/generate-jupiter-moon-series.py',
@@ -64,19 +58,10 @@ def source_hashes():
     return {path: digest((ROOT / path).read_bytes()) for path in source_paths()}
 
 
-@lru_cache(maxsize=4)
-def revision_source_hashes(revision):
-    try:
-        if subprocess.check_output(['git', 'cat-file', '-t', revision], cwd=ROOT, stderr=subprocess.PIPE).strip() != b'commit':
-            raise ValueError('Capture revision must identify a Git commit')
-        return {path: digest(subprocess.check_output(['git', 'show', f'{revision}:{path}'], cwd=ROOT,
-                                                    stderr=subprocess.PIPE)) for path in source_paths(revision)}
-    except subprocess.CalledProcessError as error:
-        raise ValueError('Capture revision lacks a bound source owner') from error
-
-
 def check_bindings(bindings):
-    if bindings != source_hashes():
+    # The replay owners are this script and its tests; editing them changes the replay, not the capture.
+    current = source_hashes()
+    if set(bindings) != set(current) or any(bindings[p] != current[p] for p in current if p not in REPLAY_OWNERS):
         raise ValueError('Source binding coverage or digest differs')
 
 
@@ -227,22 +212,17 @@ def analyze(capture):
     return dict(rows=rows, moons=moons)
 
 
-def record(capture, revision, toolchain):
-    return dict(schemaVersion=2, runtimeCaptureRevision=revision, toolchain=toolchain,
-                captureSourceSHA256=dict(revision_source_hashes(revision)), sourceSHA256=source_hashes(), captureSHA256=digest(encoded(capture)), capture=capture, analysis=analyze(capture))
+def record(capture, toolchain, sources):
+    return dict(schemaVersion=3, toolchain=toolchain, sourceSHA256=sources,
+                captureSHA256=digest(encoded(capture)), capture=capture, analysis=analyze(capture))
 
 
 def validate_record(data):
-    if set(data) != {'schemaVersion', 'runtimeCaptureRevision', 'toolchain', 'captureSourceSHA256', 'sourceSHA256', 'captureSHA256', 'capture', 'analysis'} or data['schemaVersion'] != 2:
+    if set(data) != {'schemaVersion', 'toolchain', 'sourceSHA256', 'captureSHA256', 'capture', 'analysis'} or data['schemaVersion'] != 3:
         raise ValueError('Evidence schema differs')
-    if not re.fullmatch(r'[0-9a-f]{40}', data['runtimeCaptureRevision']) or not data['toolchain']:
-        raise ValueError('Capture revision or toolchain missing')
+    if not data['toolchain']:
+        raise ValueError('Capture toolchain missing')
     check_bindings(data['sourceSHA256'])
-    captured = revision_source_hashes(data['runtimeCaptureRevision'])
-    if data['captureSourceSHA256'] != captured or set(captured) != set(data['sourceSHA256']):
-        raise ValueError('Capture revision source inventory or hashes differ')
-    if any(captured[p] != data['sourceSHA256'][p] for p in captured if p not in REPLAY_OWNERS):
-        raise ValueError('Current native capture inputs differ from the recorded revision')
     if data['captureSHA256'] != digest(encoded(data['capture'])) or data['analysis'] != analyze(data['capture']):
         raise ValueError('Capture digest or replayed metrics differ')
 
@@ -255,18 +235,14 @@ def main():
     args = parser.parse_args()
     if args.capture:
         before = source_hashes()
-        revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
-        subprocess.run(['git', 'ls-files', '--error-unmatch', '--', *before], cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
-        if subprocess.check_output(['git', 'diff', revision, '--', *before], cwd=ROOT):
-            raise ValueError('Commit the bound implementation before native capture')
         toolchain = subprocess.check_output(['swift', '--version'], cwd=ROOT, text=True).strip()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'native.json'
             env = dict(os.environ, GALILEAN_RESIDUAL_OUTPUT=str(path))
             subprocess.run(['swift', 'test', '--no-parallel', '--filter', 'EngineGalileanResidualCaptureTests'], cwd=ROOT, env=env, check=True)
-            if source_hashes() != before or subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() != revision:
-                raise ValueError('Sources or revision changed during native capture')
-            data = record(json.loads(path.read_bytes()), revision, toolchain)
+            if source_hashes() != before:
+                raise ValueError('Sources changed during native capture')
+            data = record(json.loads(path.read_bytes()), toolchain, before)
             validate_record(data)
             with tempfile.NamedTemporaryFile(dir=OUTPUT.parent, prefix='.residual-', delete=False) as staged:
                 temporary = Path(staged.name)

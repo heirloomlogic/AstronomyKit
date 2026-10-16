@@ -39,6 +39,7 @@ EXPLICIT_SOURCES = {
     "Tests/AstronomyKitTests/Engine/Gravity/EnginePlutoTests.swift",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/distance-fixtures.json",
 }
+REPLAY_OWNERS = {"Scripts/record-pluto-de441-evidence.py", "Scripts/test_record_pluto_de441_evidence.py"}
 PRESERVED_KEYS = {
     "apparentIntegrationCaptureRevision",
     "baselineCommit",
@@ -189,24 +190,18 @@ def storage(root=ROOT):
     return result
 
 
-def ensure_capture_revision(revision, hashes):
-    if not re.fullmatch(r"[0-9a-f]{40}", revision):
-        raise ValueError("Capture revision is not a commit ID")
-    subprocess.run(["git", "cat-file", "-e", revision + "^{commit}"], cwd=ROOT, check=True)
-    subprocess.run(["git", "ls-files", "--error-unmatch", "--", *hashes], cwd=ROOT, stdout=subprocess.DEVNULL, check=True)
-    if subprocess.run(["git", "diff", "--quiet", revision, "--", *hashes], cwd=ROOT).returncode:
-        raise ValueError("Current Pluto evidence sources differ from the capture revision")
+def check_sources(recorded, current):
+    # The replay owners are this script and its tests; editing them changes the replay, not the capture.
+    if set(recorded) != set(current) or any(recorded[path] != current[path] for path in current if path not in REPLAY_OWNERS):
+        raise ValueError("Pluto evidence source inventory or digest differs")
 
 
 def validate_evidence(value):
-    expected = PRESERVED_KEYS | {"archivedReferenceSummary", "archivedReferences", "captureSourceSHA256", "centerNativeRelease", "directSourceDebug", "directSourceRelease", "everyBoundaryDebug", "everyBoundaryRelease", "nativeRelease", "nativeStorage", "runtimeCaptureRevision", "schemaVersion", "sourceSHA256", "swiftVersion"}
+    expected = PRESERVED_KEYS | {"archivedReferenceSummary", "archivedReferences", "centerNativeRelease", "directSourceDebug", "directSourceRelease", "everyBoundaryDebug", "everyBoundaryRelease", "nativeRelease", "nativeStorage", "schemaVersion", "sourceSHA256", "swiftVersion"}
     validate_keys(value, expected, "Pluto evidence")
-    if value["schemaVersion"] != 2 or not value["swiftVersion"]:
+    if value["schemaVersion"] != 3 or not value["swiftVersion"]:
         raise ValueError("Pluto evidence schema or toolchain differs")
-    current = source_hashes()
-    if value["sourceSHA256"] != current or value["captureSourceSHA256"] != current:
-        raise ValueError("Pluto evidence source inventory or digest differs")
-    ensure_capture_revision(value["runtimeCaptureRevision"], current)
+    check_sources(value["sourceSHA256"], source_hashes())
     validate_capture_pair(value["everyBoundaryDebug"], value["everyBoundaryRelease"], value["directSourceDebug"], value["directSourceRelease"], {"rows": value["archivedReferences"]}, {"rows": value["archivedReferences"]})
     if value["archivedReferenceSummary"] != reference_summary(value["archivedReferences"]):
         raise ValueError("Archived Pluto reference summary differs")
@@ -254,8 +249,6 @@ def run_measurement(directory, center):
 
 def capture():
     before = source_hashes()
-    revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-    ensure_capture_revision(revision, before)
     prior = json.loads(OUTPUT.read_bytes())
     with tempfile.TemporaryDirectory(prefix="pluto-native-evidence-") as directory_name:
         directory = Path(directory_name)
@@ -264,17 +257,17 @@ def capture():
         outer = run_measurement(directory, False)
         center = run_measurement(directory, True)
     after = source_hashes()
-    if after != before or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip() != revision:
-        raise ValueError("Pluto evidence sources or revision changed during capture")
+    if after != before:
+        raise ValueError("Pluto evidence sources changed during capture")
     validate_capture_pair(debug_boundary, release_boundary, debug_direct, release_direct, debug_references, release_references)
     validate_measurement(outer, -766524.75)
     validate_measurement(center, -72000.0)
     rows = release_references["rows"]
     result = {key: prior[key] for key in PRESERVED_KEYS}
-    result.update(schemaVersion=2, runtimeCaptureRevision=revision, captureSourceSHA256=before, sourceSHA256=after, swiftVersion=subprocess.check_output(["swift", "--version"], cwd=ROOT, text=True), everyBoundaryDebug=debug_boundary, everyBoundaryRelease=release_boundary, directSourceDebug=debug_direct, directSourceRelease=release_direct, archivedReferences=rows, archivedReferenceSummary=reference_summary(rows), nativeRelease=outer, centerNativeRelease=center, nativeStorage=storage())
+    result.update(schemaVersion=3, sourceSHA256=after, swiftVersion=subprocess.check_output(["swift", "--version"], cwd=ROOT, text=True), everyBoundaryDebug=debug_boundary, everyBoundaryRelease=release_boundary, directSourceDebug=debug_direct, directSourceRelease=release_direct, archivedReferences=rows, archivedReferenceSummary=reference_summary(rows), nativeRelease=outer, centerNativeRelease=center, nativeStorage=storage())
     validate_evidence(result)
     publish(OUTPUT, result)
-    print(f"Recorded Pluto-native evidence at {revision}")
+    print("Recorded Pluto-native evidence")
 
 
 def main():

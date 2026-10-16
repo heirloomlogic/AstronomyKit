@@ -30,7 +30,7 @@ python3 Scripts/record-pluto-de441-evidence.py --capture
 python3 Scripts/record-pluto-de441-evidence.py --check
 ```
 
-The recorder requires a committed source tree. It runs the Pluto implementation checks in fresh Debug and Release processes, runs separate outer-cold and center-cold Release measurements, records the generated-source, object, executable, and decoded-payload sizes, binds the capture revision and complete Engine source inventory, validates the finished document, and replaces the evidence file atomically.
+It runs the Pluto implementation checks in fresh Debug and Release processes, runs separate outer-cold and center-cold Release measurements, records the generated-source, object, executable, and decoded-payload sizes, binds the SHA-256 of the complete Engine source inventory (the recorder and its tests may change without a new capture), validates the finished document, and replaces the evidence file atomically.
 
 The opt-in measurement uses a fresh process. Setting `PLUTO_MEASUREMENT_CENTER=1` selects TT −72000 for a separate cold center-table decode; the default cold date measures the outer DE441 tables. It measures first use at TT −766,524.75, then 2,000 outer states over −766,500 to +766,500, 2,000 central states from −30,000 in 30-day increments, and 2,000 states over the complete engine range. The artifact retains the historical legacy-model baseline and its original workload description; the added full-engine workload has no baseline counterpart.
 

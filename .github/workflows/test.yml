@@ -6,6 +6,9 @@ name: Tests
 # a semantic conflict between two branches that each passed alone now surfaces
 # on the next PR rather than immediately. Restore the push trigger if one slips
 # through.
+#
+# This workflow is the fast PR gate. The serial Debug suite, the solar
+# numerics rechecks and ThreadSanitizer run in deep-validation.yml instead.
 on:
   pull_request:
     branches:
@@ -18,26 +21,10 @@ concurrency:
 permissions:
   contents: read
 
-# The two complete USNO rise/set sweeps (5,909 events each, through the public
-# API and through the engine) run single-threaded and took 52 of the 81 Debug
-# minutes on Linux and 239 of the 328 TSan minutes in run 38552198543, against
-# 140 s each in Release. The Release jobs run them on both operating systems;
-# Debug and TSan skip them. TSan only reports races between threads, so a
-# serial numerical sweep under it costs hours and can find nothing.
-env:
-  SERIAL_SWEEPS: 'AuditValidationTests/riseSet\(stream:\)|EngineObserverEventsTests/usno\(stream:\)'
-
 jobs:
-  # Apparent-place integration: local Debug passed in 3661s; hosted altitude rechecks need about 28 minutes each before that suite.
-  # Linux passed in 39m38s; the macOS job exhausted 60 minutes during its second altitude recheck, before its full suite.
-  # These finite job ceilings preserve all test commands and per-test limits.
-  test-macos:
+  verify-generated-sources:
     runs-on: macos-26
-    # DE-backed validation used 92 minutes before the full suite, then exhausted
-    # the 180-minute job ceiling during the USNO corpus (run 38399462211).
-    # The measured Linux slowdown projects ~244 minutes here; allow headroom
-    # without changing any numerical check, test command or per-test guard.
-    timeout-minutes: 300
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -127,141 +114,7 @@ jobs:
           python3 Scripts/capture-transit-references.py --check
           python3 Scripts/record-transit-evidence.py --check
 
-      - name: Verify native solar numerical tools
-        run: |
-          python3 -m venv .build/numerics-venv
-          .build/numerics-venv/bin/pip install -r Scripts/solar-numerics/requirements.txt
-          .build/numerics-venv/bin/python Scripts/qualify-moon-de441-full.py --check
-          .build/numerics-venv/bin/python -m unittest Scripts/test_qualify_moon_de441_full.py -v
-          .build/numerics-venv/bin/python Scripts/generate-apparent-place-fixtures.py --check
-          python3 -m unittest Scripts/test_capture_apparent_place.py -v
-          python3 Scripts/capture-apparent-place.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/generate_apparent_integration.py --check
-          .build/numerics-venv/bin/python -m unittest discover -s Scripts/solar-numerics -v
-          python3 Scripts/solar-numerics/numerics.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/certify_light_time.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/derive_altitude.py --check
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-debug.json
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure.py --recheck --output Scripts/solar-numerics/evidence/macos-arm64-release.json
-
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-debug.json
-          .build/numerics-venv/bin/python Scripts/solar-numerics/measure_altitude.py --recheck --output Scripts/solar-numerics/evidence/altitude-macos-arm64-release.json
-
-      - name: Test
-        run: swift test --no-parallel --skip "$SERIAL_SWEEPS"
-
-  test-linux:
-    runs-on: ubuntu-latest
-    timeout-minutes: 90
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Verify candidate revision
-        env:
-          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
-        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-
-      - name: Install Swift
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-
-      - name: Verify generated planet tables
-        run: python3 Scripts/generate-planet-tables.py --check
-
-      - name: Verify Saturn source tables and planetary event archives
-        run: |
-          python3 -m unittest Scripts/test_saturn_ephemeris.py Scripts/reference-data/test_capture_planetary_apsides.py -v
-          python3 Scripts/generate-saturn-tables.py --check
-          python3 Scripts/reference-data/capture-planetary-apsides.py --check
-          python3 Scripts/record-planetary-event-evidence.py --check
-
-      - name: Verify observer-event primary sources and evidence
-        run: |
-          python3 -m unittest Scripts/test_observer_events.py -v
-          python3 Scripts/capture-observer-events.py --check
-          python3 Scripts/record-observer-event-evidence.py --check
-
-      - name: Verify generated Moon tables
-        run: python3 Scripts/generate-moon-tables.py --check
-
-      - name: Verify DE441 Moon assessment tooling
-        run: |
-          python3 -m unittest Scripts/test_assess_moon_de441.py Scripts/test_qualify_moon_de441.py Scripts/test_generate_moon_source_fixtures.py Scripts/test_generate_moon_events.py -v
-          python3 Scripts/generate-moon-source-fixtures.py --check
-          python3 -m unittest Scripts/test_record_moon_full_integration.py -v
-          python3 Scripts/record-moon-full-integration.py --check
-          python3 -m unittest Scripts/test_generate_moon_de441_full.py -v
-          python3 Scripts/generate-moon-de441-full.py --check
-          python3 Scripts/generate-moon-events.py --check
-
-      - name: Verify generated Pluto tables
-        run: |
-          python3 Scripts/generate-pluto-tables.py --check
-          python3 -m unittest Scripts/test_qualify_pluto_center.py -v
-          python3 Scripts/qualify-pluto-center.py --check
-          python3 -m unittest Scripts/test_assess_pluto_de441.py Scripts/test_generate_pluto_de441.py Scripts/test_record_pluto_de441_evidence.py -v
-          python3 Scripts/generate-pluto-de441.py --check
-          python3 Scripts/record-pluto-de441-evidence.py --check
-          python3 -m unittest Scripts/test_capture_pluto_observers.py -v
-          python3 Scripts/capture-pluto-observers.py --check
-
-      - name: Verify generated Jupiter moon series
-        run: |
-          python3 Scripts/generate-jupiter-moon-series.py --check
-          python3 -m unittest Scripts/test_galilean_residuals.py -v
-          python3 Scripts/galilean-residuals.py --check
-
-      - name: Verify lunar eclipse sources and evidence
-        run: |
-          python3 -m unittest Scripts.reference-data.test_build_fixtures.LunarEclipseFixtureTests Scripts/test_eclipse_event_evidence.py -v
-          python3 Scripts/record-eclipse-event-evidence.py --check
-          python3 -m unittest Scripts/test_global_solar.py -v
-          python3 Scripts/capture-global-solar.py --check
-          python3 Scripts/assess-global-solar-radii.py --check
-          python3 Scripts/record-global-solar-evidence.py --check
-          python3 -m unittest Scripts/test_local_solar.py -v
-          python3 Scripts/capture-local-solar.py --check
-          python3 Scripts/record-local-solar-evidence.py --check
-          python3 -m unittest Scripts/test_transit_evidence.py -v
-          python3 Scripts/capture-transit-references.py --check
-          python3 Scripts/record-transit-evidence.py --check
-
-      - name: Test
-        run: swift test --no-parallel --skip "$SERIAL_SWEEPS"
-
-  test-thread-sanitizer:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Verify candidate revision
-        env:
-          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
-        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
-
-      - name: Install Swift
-        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
-        with:
-          swift-version: "6.2"
-
-      # Release: TSan instruments the optimized build's shared-state accesses
-      # just the same, and Debug's assertions are covered by the two Debug
-      # jobs. The Debug TSan run took 5.5 hours.
-      - name: Test (Thread Sanitizer)
-        run: swift test -c release --no-parallel --sanitize=thread --skip "$SERIAL_SWEEPS"
-
-  test-release-macos:
+  test-macos:
     runs-on: macos-26
     timeout-minutes: 20
     steps:
@@ -276,10 +129,12 @@ jobs:
           EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
 
+      # Parallel Release run; the wrapper isolates the suites that change
+      # the process-wide Delta T model or rely on wall-clock budgets.
       - name: Test (release)
-        run: swift test --no-parallel -c release
+        run: Scripts/test-with-isolated-timed-suites.sh -c release
 
-  test-release-linux:
+  test-linux:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -299,8 +154,10 @@ jobs:
         with:
           swift-version: "6.2"
 
+      # Parallel Release run; the wrapper isolates the suites that change
+      # the process-wide Delta T model or rely on wall-clock budgets.
       - name: Test (release)
-        run: swift test --no-parallel -c release
+        run: Scripts/test-with-isolated-timed-suites.sh -c release
 
   # The macOS jobs above exercise the shared source, but the iOS/tvOS/watchOS
   # SDKs compile differently (availability, unavailable APIs). Build the library
