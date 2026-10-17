@@ -1,7 +1,7 @@
 {
   "buildSeconds": {
-    "debug": 12.4,
-    "release": 166.33
+    "debug": 13.47,
+    "release": 140.71
   },
   "centralMidpointDifferencesSeconds": {
     "Springfield, ILLINOIS": 0.13159174122847617
@@ -179,13 +179,13 @@
   },
   "resources": {
     "checksum": 340147.30894289777,
-    "coldSeconds": 0.1058340072631836,
+    "coldSeconds": 0.10996508598327637,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 5.782596111297607,
-    "peakAfterColdBytes": 104841216,
-    "peakAfterWorkloadBytes": 106872832,
-    "peakBeforeBytes": 48021504
+    "nextSeconds": 5.995228052139282,
+    "peakAfterColdBytes": 104202240,
+    "peakAfterWorkloadBytes": 106201088,
+    "peakBeforeBytes": 47349760
   },
   "rp1301Contacts": [
     {
@@ -237,7 +237,7 @@
       "seconds": -0.9330867149401456
     }
   ],
-  "runtimeBaseRevision": "2d9aacadc4ce00da6a142116e6845849acba7f20",
+  "runtimeBaseRevision": "b54e410f6840f74a411e2866c564b10c74896c24",
   "schemaVersion": 1,
   "sequence": [
     {
@@ -262,7 +262,7 @@
   "sourceHashes": {
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-local-solar.py": "c65a5f544352fddd7ef75e8ed3d8da374c94dfce78672fc8d3c2f6b066d3877a",
-    "Scripts/eclipse-data/local-captures.json": "4acfacd92172438c7a58a1f39aca5509a350510d1a016e047c9577215f28688f",
+    "Scripts/eclipse-data/local-captures.json": "0401c7f6876f773e42bbd676169c1c507e73add1803bf97bdafc1b2f4c2f334b",
     "Scripts/eclipse-data/local-references.json": "7d2301230ee722952c2654f1ae8d067c3d8a615ab3d2061adc606df9fc7bced0",
     "Scripts/local-solar-peak-probe.swift": "d7f46ceb60aa765d0db551f16736d8c77ce8743cb0242432eececf8c91bfe520",
     "Scripts/record-eclipse-event-evidence.py": "3bb05c08c84169ebda915352a959fa4d6949cdabbe69fab639555f5625d0185a",
@@ -460,7 +460,7 @@
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "a50ba5ab200c67f79a2f221cc432089a9c9435c43cd4129dc2b5c1775d5f26f2",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "5b0a2e36d7c08ec73302dc266980951cd2f6556f0cff8fa0fb783473ca23bae3",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",

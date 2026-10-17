@@ -1,7 +1,7 @@
 {
   "buildSeconds": {
-    "debug": 12.4,
-    "release": 166.33
+    "debug": 13.47,
+    "release": 140.71
   },
   "limitations": "Sampled independent UT contacts/angular minima and published next identities, not full-domain accuracy. Physical spheres use NASA fact-sheet mean radii; these are not attributed to the Meeus catalog. Apparent vectors retain engine light-time/aberration conventions. OH2001 December penumbral contacts remain outside 120 s; matching Danjon diagrams are separately qualified. Global G0/1986 and local peak limitations remain in their evidence owners. The public facade runs on these searches since the #96 cutover; host costs are not portable gates.",
   "published": [
@@ -104,15 +104,15 @@
   },
   "resources": {
     "checksum": 537515.4329263234,
-    "coldSeconds": 0.04107201099395752,
+    "coldSeconds": 0.04068708419799805,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 1.1146990060806274,
-    "peakAfterColdBytes": 82968576,
-    "peakAfterWorkloadBytes": 92389376,
-    "peakBeforeBytes": 47955968
+    "nextSeconds": 1.1077330112457275,
+    "peakAfterColdBytes": 83017728,
+    "peakAfterWorkloadBytes": 92307456,
+    "peakBeforeBytes": 48021504
   },
-  "runtimeBaseRevision": "2d9aacadc4ce00da6a142116e6845849acba7f20",
+  "runtimeBaseRevision": "b54e410f6840f74a411e2866c564b10c74896c24",
   "schemaVersion": 1,
   "sequences": {
     "global": [
@@ -238,7 +238,7 @@
   "sourceHashes": {
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-transit-references.py": "353dbde0ada3434cb96205cffc0aeda8fff46142b876c99015246c805daee224",
-    "Scripts/eclipse-data/transit-captures.json": "083c8e9b8f2704e757b8de824658e6e042a089cafd29e147ac8948349989b1f3",
+    "Scripts/eclipse-data/transit-captures.json": "2a71da90e899d99a819bfa0d978d41c318559d2b17e5b6438036209970f0fde3",
     "Scripts/eclipse-data/transit-references.json": "cc822496e688ba73e8d9e83d1aaab071d436bebf24c964bb4ca4537218d543bb",
     "Scripts/record-eclipse-event-evidence.py": "3bb05c08c84169ebda915352a959fa4d6949cdabbe69fab639555f5625d0185a",
     "Scripts/record-transit-evidence.py": "86347187735dff97197d039bd9c3fe350e5402ebed2dc757f809fc5c861fcccf",
@@ -424,7 +424,7 @@
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "a50ba5ab200c67f79a2f221cc432089a9c9435c43cd4129dc2b5c1775d5f26f2",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "5b0a2e36d7c08ec73302dc266980951cd2f6556f0cff8fa0fb783473ca23bae3",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",

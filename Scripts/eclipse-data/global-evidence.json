@@ -41,8 +41,8 @@
     "sourcePrintedMagnitude": 1.0
   },
   "buildSeconds": {
-    "debug": 12.4,
-    "release": 166.33
+    "debug": 13.47,
+    "release": 140.71
   },
   "limitations": "Sampled native geometry and published events, which the public facade uses since the #96 cutover. RP1301 direct Table 4 areas pass conditional rounding intervals. G0 is a mixed-k Besselian magnitude, so its square is retained only as a diagnostic beside physical single-radius area. No radius was fitted. Host costs are observations, not portable gates.",
   "releaseExecutableBytes": 493923504,
@@ -89,21 +89,21 @@
   ],
   "resources": {
     "checksum": -2866939.3745380742,
-    "coldSeconds": 0.06440699100494385,
+    "coldSeconds": 0.06876301765441895,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 4.491013050079346,
-    "peakAfterColdBytes": 104349696,
-    "peakAfterWorkloadBytes": 106348544,
-    "peakBeforeBytes": 47300608
+    "nextSeconds": 4.657294988632202,
+    "peakAfterColdBytes": 104546304,
+    "peakAfterWorkloadBytes": 106545152,
+    "peakBeforeBytes": 47415296
   },
-  "runtimeBaseRevision": "2d9aacadc4ce00da6a142116e6845849acba7f20",
+  "runtimeBaseRevision": "b54e410f6840f74a411e2866c564b10c74896c24",
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/assess-global-solar-radii.py": "a23afc2a186c09466ef2db23ad8a14a55d84578fe90219d1f931bb0d0121d639",
     "Scripts/assess-rp1301-g0.py": "36dad831724e3c611793009c382c333eb80bdc8f625b16a65d9b92638be60882",
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
-    "Scripts/eclipse-data/global-captures.json": "e0930617b75118ac1b7d28943a863836b13eda9e274817104ad30d52a72b50ce",
+    "Scripts/eclipse-data/global-captures.json": "04d1d197d2ef3e61138eae3bd3d30c13eb7a917e2a6376a7f752e56ffaca0e32",
     "Scripts/eclipse-data/global-references.json": "cff3956935437c3b24bcb17695e15bc743520f8e31f7f4c7cf6ee7a017acb207",
     "Scripts/eclipse-data/radius-comparison.json": "2dec7be5573f1630413fa2ca51a0efc7111af978517f64aa30f00fca062d7f1d",
     "Scripts/eclipse-data/radius-vectors.json": "7bbb9a9b3497f9a47b7f5852dc6e27564725622841ee46f48fe35779724948d5",
@@ -288,7 +288,7 @@
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "a50ba5ab200c67f79a2f221cc432089a9c9435c43cd4129dc2b5c1775d5f26f2",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "5b0a2e36d7c08ec73302dc266980951cd2f6556f0cff8fa0fb783473ca23bae3",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",

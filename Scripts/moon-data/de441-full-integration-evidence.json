@@ -338,15 +338,15 @@
     ],
     "measurement-release": {
       "checksum": -0.015608830476035283,
-      "coldSeconds": 0.00013303756713867188,
+      "coldSeconds": 0.00012600421905517578,
       "evaluationsPerWorkload": 20000,
       "host": "Version 27.0.1 (Build 26A434)",
-      "peakBytesAfterCold": 47693824,
-      "peakBytesAfterLoops": 365707264,
-      "peakBytesBefore": 47382528,
+      "peakBytesAfterCold": 48349184,
+      "peakBytesAfterLoops": 366329856,
+      "peakBytesBefore": 48070656,
       "seconds": {
-        "central": 0.3296780586242676,
-        "outer": 0.5305019617080688
+        "central": 0.3528330326080322,
+        "outer": 0.5517560243606567
       }
     }
   },
@@ -357,9 +357,9 @@
     "differential-release": "9e716f8dfbef93ac385908c55cf89df9529a8bae17e14c66d4da779fc829fbe6",
     "horizons-debug": "8b435341c0438879092a7280ecbea22ee6b419845dc3cc889e285e26674363a8",
     "horizons-release": "8b435341c0438879092a7280ecbea22ee6b419845dc3cc889e285e26674363a8",
-    "measurement-release": "0ad4fcd0e7824272522b23c0f3e95d51860e36e8860254d869f0970093d9cbef"
+    "measurement-release": "1a48c6bc9c4911acc48ba220af810845acfb928843f6d04b27f55e5d1e97f21b"
   },
-  "runtimeBaseRevision": "2d9aacadc4ce00da6a142116e6845849acba7f20",
+  "runtimeBaseRevision": "b54e410f6840f74a411e2866c564b10c74896c24",
   "schemaVersion": 1,
   "scope": "Complete derived binary64 coefficients; sampled independent state and Horizons checks; exhaustive source-seam jumps. Numerical source agreement is distinct from physical accuracy. Resource observations are single-host measurements.",
   "sourceSHA256": {
@@ -540,7 +540,7 @@
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "a50ba5ab200c67f79a2f221cc432089a9c9435c43cd4129dc2b5c1775d5f26f2",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "5b0a2e36d7c08ec73302dc266980951cd2f6556f0cff8fa0fb783473ca23bae3",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",
