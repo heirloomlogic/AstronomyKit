@@ -184,11 +184,10 @@ struct EngineChironTests {
         #expect(throws: AstronomyError.badTime) {
             _ = try Chiron.heliocentricState(forLightTimeAt: backdated, observedAt: before)
         }
-        #expect(throws: AstronomyError.badTime) {
-            _ = try Chiron.heliocentricState(forLightTimeAt: observation.adding(days: 1.0 / 24), observedAt: observation)
-        }
-        #expect(throws: AstronomyError.badTime) {
-            _ = try Chiron.heliocentricState(forLightTimeAt: observation.adding(days: -2), observedAt: observation)
+        for evaluation in [observation.adding(days: 1.0 / 24), observation.adding(days: -2)] {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Chiron.heliocentricState(forLightTimeAt: evaluation, observedAt: observation)
+            }
         }
     }
 

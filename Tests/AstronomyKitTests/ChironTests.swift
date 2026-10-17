@@ -185,7 +185,8 @@ struct ChironTests {
             let position = try Chiron.heliocentricPosition(
                 at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB))
             let expected = EngineMoonStatesTests.eqj(reference.positionAU)
-            let km = EngineGravityTests.length(SIMD3(position.x, position.y, position.z) - expected) * Engine.kilometersPerAU
+            let gap = SIMD3(position.x, position.y, position.z) - expected
+            let km = EngineGravityTests.length(gap) * Engine.kilometersPerAU
             #expect(km <= 5, "\(reference.tdb): \(km) km")
         }
     }
