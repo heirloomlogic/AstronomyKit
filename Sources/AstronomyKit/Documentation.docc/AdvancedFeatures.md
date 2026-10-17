@@ -235,7 +235,7 @@ let observer = Observer(latitude: 40.7, longitude: -74.0)
 let horizon = try Chiron.horizon(at: .now, from: observer)
 ```
 
-The heliocentric position is within 5 km of Horizons across the span. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``. The range is checked on the time's Terrestrial Time.
+The heliocentric position is within 10 km of every archived Horizons vector across the span; how far depends on how Horizons was queried, from 0.13 km to 7.1 km. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``. The range is checked on the time's Terrestrial Time.
 
 ## Observer Gravity
 

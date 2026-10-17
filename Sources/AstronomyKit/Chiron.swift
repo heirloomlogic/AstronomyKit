@@ -24,11 +24,13 @@ import Foundation
 ///
 /// ## Accuracy
 ///
-/// The heliocentric position is within 5 km of Horizons across the span:
-/// 0.13 km at the 16,821 Horizons epochs held out of the fit, and up to
-/// 2.3 km at Horizons vectors requested separately, since Horizons'
-/// small-body integration varies slightly with how it is queried. That is
-/// agreement with Horizons, not the physical accuracy of its orbit solution.
+/// The heliocentric position is within 10 km of every archived Horizons
+/// vector across the span. Horizons' small-body integration varies with how
+/// it is queried, so the gap depends on the query: 0.13 km at the 16,821
+/// epochs held out of the fit, up to 2.3 km at vectors requested as time
+/// lists, and up to 7.1 km at a 38-day series offset from the fit's grid.
+/// That is agreement with Horizons, not the physical accuracy of its orbit
+/// solution.
 /// The apparent positions carry no aberration or parallax.
 ///
 /// Calculations are supported for years 1900 through 2150. Times outside

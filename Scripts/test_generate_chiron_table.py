@@ -107,16 +107,29 @@ class ChironTableTests(unittest.TestCase):
             GENERATOR.parse_response(prefix + b"$$SOE" + vectors.replace(match, b"NaN", 1), epochs)
 
     def test_screen_rejects_position_and_velocity_outside_limits(self):
-        fit, heldout, consistency, archive = GENERATOR.read_sources()
+        fit, heldout, negative, consistency, archive = GENERATOR.read_sources()
         coefficients = GENERATOR.fit_coefficients(fit)
         changed_position = [list(row) for row in heldout]
         changed_position[len(changed_position) // 2][1] += 2
         with self.assertRaises(GENERATOR.TableError):
-            GENERATOR.assessment(coefficients, fit, changed_position, consistency, archive)
+            GENERATOR.assessment(coefficients, fit, changed_position, negative, consistency, archive)
         changed_velocity = [list(row) for row in heldout]
         changed_velocity[len(changed_velocity) // 2][4] += 2 / 86_400
         with self.assertRaises(GENERATOR.TableError):
-            GENERATOR.assessment(coefficients, fit, changed_velocity, consistency, archive)
+            GENERATOR.assessment(coefficients, fit, changed_velocity, negative, consistency, archive)
+
+    def test_stated_bound_covers_every_archived_horizons_vector(self):
+        report = json.loads(self.replayed[1])
+        bound = report["screen"]["archivedHorizonsVectors"]
+        self.assertEqual(GENERATOR.STATED_LIMIT_KM, bound["statedLimitKm"])
+        self.assertLessEqual(bound["maximumPositionKm"], bound["statedLimitKm"])
+        self.assertGreater(bound["maximumPositionKm"], 5)
+        fit, heldout, negative, consistency, archive = GENERATOR.read_sources()
+        coefficients = GENERATOR.fit_coefficients(fit)
+        changed = [list(row) for row in negative]
+        changed[len(changed) // 2][1] += 2 * GENERATOR.STATED_LIMIT_KM
+        with self.assertRaises(GENERATOR.TableError):
+            GENERATOR.assessment(coefficients, fit, heldout, changed, consistency, archive)
 
     def test_receipt_rejects_wrong_inner_types_and_hashes(self):
         mutations = (

@@ -307,7 +307,7 @@ AstronomyKit includes features not present in the upstream C library:
 
 | Feature | Description |
 |---------|-------------|
-| `Chiron` | Positions for 2060 Chiron from 1900 to 2150, read from a Chebyshev table fitted to JPL Horizons and within 5 km of it. Astronomy Engine has no built-in Chiron support. |
+| `Chiron` | Positions for 2060 Chiron from 1900 to 2150, read from a Chebyshev table fitted to JPL Horizons and within 10 km of every archived Horizons vector. Astronomy Engine has no built-in Chiron support. |
 | `FixedStar` | Thread-safe value type for user-defined stars from J2000 catalog coordinates. Wraps Astronomy Engine's `Astronomy_DefineStar()` with mutex-protected calculation slots and a Swift-idiomatic API. |
 
 All other AstronomyKit types wrap Astronomy Engine C functions directly.

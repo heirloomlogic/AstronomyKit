@@ -37,6 +37,7 @@ HOLDOUT_X = tuple(2 * offset / RECORD_DAYS - 1 for offset in HOLDOUT_DAY_OFFSETS
 AU_KM = 149_597_870.7
 POSITION_LIMIT_KM = 1.0
 VELOCITY_LIMIT_KM_PER_DAY = 1.0
+STATED_LIMIT_KM = 10.0
 REPORT_DECIMAL_PLACES = 9
 SWIFT_LINE = 120
 J2000_JD = 2_451_545.0
@@ -392,7 +393,7 @@ def read_sources(receipt_data=None):
         negative_velocity = max(negative_velocity, magnitude(86_400 * (a - b) for a, b in zip(row[4:7], aligned[4:7])))
     if len(vectors["negative"]) != RECORD_COUNT or negative_position <= POSITION_LIMIT_KM:
         raise TableError("negative query-path control no longer discriminates")
-    return fit, heldout, {"alignedQueries": {"fitEpochsRepeated": len(repeated_fit_map), "overlappingRangeEpochs": 3 * (len([recipe for recipe in source_recipes() if recipe[0] == "holdout"]) - 1), "maximumPositionKm": max(position_maximum, overlap_position_maximum), "maximumVelocityKmPerTDBDay": max(velocity_maximum, overlap_velocity_maximum)}, "rejectedOffsetQueryControl": {"epochs": len(vectors["negative"]), "offsetDays": 12, "stepDays": 38, "maximumPositionDifferenceKm": negative_position, "maximumVelocityDifferenceKmPerTDBDay": negative_velocity, "reason": "Horizons' numerically integrated small-body output depends on the discrete query path; this offset 38-day recipe exceeds the 1 km source-reproduction screen and is retained only as a negative control."}}, archive
+    return fit, heldout, vectors["negative"], {"alignedQueries": {"fitEpochsRepeated": len(repeated_fit_map), "overlappingRangeEpochs": 3 * (len([recipe for recipe in source_recipes() if recipe[0] == "holdout"]) - 1), "maximumPositionKm": max(position_maximum, overlap_position_maximum), "maximumVelocityKmPerTDBDay": max(velocity_maximum, overlap_velocity_maximum)}, "rejectedOffsetQueryControl": {"epochs": len(vectors["negative"]), "offsetDays": 12, "stepDays": 38, "maximumPositionDifferenceKm": negative_position, "maximumVelocityDifferenceKmPerTDBDay": negative_velocity, "reason": "Horizons' numerically integrated small-body output depends on the discrete query path; this offset 38-day recipe exceeds the 1 km source-reproduction screen and is retained only as a negative control."}}, archive
 
 
 def fit_coefficients(rows):
@@ -487,7 +488,7 @@ def magnitude(values):
     return math.sqrt(math.fsum(value * value for value in values))
 
 
-def assessment(coefficients, fit, heldout, source_consistency, archive):
+def assessment(coefficients, fit, heldout, negative, source_consistency, archive):
     by_epoch = {round(row[0], 9): row for row in heldout}
     if len(by_epoch) != len(heldout):
         raise TableError("heldout source contains duplicate epochs")
@@ -537,21 +538,31 @@ def assessment(coefficients, fit, heldout, source_consistency, archive):
                 seam_velocity_worst = (velocity_jump, detail)
     if max(position_worst[0], training_position_maximum) > POSITION_LIMIT_KM or max(velocity_worst[0], training_velocity_maximum) > VELOCITY_LIMIT_KM_PER_DAY:
         raise TableError("candidate exceeds the source-reproduction screen")
+    # The offset query is the farthest archived Horizons recipe from the table.
+    archived = (max(position_worst[0], training_position_maximum), None)
+    for row in negative:
+        record = min(int((row[0] - START_JD_TDB) // RECORD_DAYS), RECORD_COUNT - 1)
+        position, _ = evaluate(coefficients, record, 2 * (row[0] - START_JD_TDB - record * RECORD_DAYS) / RECORD_DAYS - 1)
+        error = magnitude(a - b for a, b in zip(position, row[1:4]))
+        if error > archived[0]:
+            archived = (error, row[0])
+    if archived[0] > STATED_LIMIT_KM:
+        raise TableError("candidate exceeds the stated bound at an archived Horizons vector")
     coefficient_bytes = struct.pack("<{}d".format(len(coefficients)), *coefficients)
     return coefficient_bytes, canonical({
         "schemaVersion": 2,
         "source": {"target": "2060 Chiron (1977 UB)", "targetSolution": "JPL#171", "center": "Sun (10)", "centerSource": "DE441", "state": "geometric ICRF", "clock": "JD TDB", "units": "km and km/s", "archive": archive},
         "coverage": {"startJulianDateTDB": START_JD_TDB, "endJulianDateTDB": END_JD_TDB, "recordDays": RECORD_DAYS, "recordCount": RECORD_COUNT, "everyRecordHeldout": True, "globalEndpointsHeldout": True, "allSeamsHeldout": True},
         "table": {"degreeCount": DEGREE_COUNT, "coefficientCount": len(coefficients), "payloadBytes": len(coefficient_bytes), "payloadSHA256": digest_bytes(coefficient_bytes), "layout": "record, x/y/z axis, ascending Chebyshev degree, km on ICRF axes; record floor((jdTDB-start)/38) holds [start + 38k, start + 38(k + 1)), so the final endpoint is outside the table", "swiftSource": SWIFT_PATH},
-        "screen": {"positionLimitKm": POSITION_LIMIT_KM, "velocityLimitKmPerTDBDay": VELOCITY_LIMIT_KM_PER_DAY, "trainingFit": {"epochs": len(fit), "maximumPositionKm": training_position_maximum, "maximumVelocityKmPerTDBDay": training_velocity_maximum}, "heldoutXPerRecord": list(HOLDOUT_X), "recordComparisons": comparisons, "sameEpochCrossQueryConsistency": source_consistency, "position": {"maximumKm": position_worst[0], **position_worst[1]}, "analyticVelocity": {"maximumKmPerTDBDay": velocity_worst[0], **velocity_worst[1]}, "seams": {"count": RECORD_COUNT - 1, "maximumPositionJumpKm": seam_position_worst[0], **seam_position_worst[1], "maximumVelocityJumpKmPerTDBDay": seam_velocity_worst[0], **seam_velocity_worst[1]}},
+        "screen": {"positionLimitKm": POSITION_LIMIT_KM, "velocityLimitKmPerTDBDay": VELOCITY_LIMIT_KM_PER_DAY, "trainingFit": {"epochs": len(fit), "maximumPositionKm": training_position_maximum, "maximumVelocityKmPerTDBDay": training_velocity_maximum}, "heldoutXPerRecord": list(HOLDOUT_X), "recordComparisons": comparisons, "sameEpochCrossQueryConsistency": source_consistency, "position": {"maximumKm": position_worst[0], **position_worst[1]}, "analyticVelocity": {"maximumKmPerTDBDay": velocity_worst[0], **velocity_worst[1]}, "archivedHorizonsVectors": {"statedLimitKm": STATED_LIMIT_KM, "epochs": len(fit) + len(heldout) + len(negative), "maximumPositionKm": archived[0], "julianDateTDB": archived[1]}, "seams": {"count": RECORD_COUNT - 1, "maximumPositionJumpKm": seam_position_worst[0], **seam_position_worst[1], "maximumVelocityJumpKmPerTDBDay": seam_velocity_worst[0], **seam_velocity_worst[1]}},
         "limitations": ["The 1 km and 1 km/day limits screen how well the table reproduces its source; they are not a public accuracy promise.", "The passing residuals apply to the exact aligned daily and half-day query recipe. The retained offset 38-day negative query differs by more than 1 km, so this report does not claim the same result for every legitimate Horizons sampling recipe.", "The archived heldouts cover every record, every seam, and both endpoints, but finite samples do not establish a continuous-domain error bound.", "Agreement with JPL Horizons solution 171 does not establish the physical accuracy or future orbit uncertainty of that solution."],
     })
 
 
 def replay():
-    fit, heldout, source_consistency, archive = read_sources()
+    fit, heldout, negative, source_consistency, archive = read_sources()
     coefficients = fit_coefficients(fit)
-    coefficient_bytes, report = assessment(coefficients, fit, heldout, source_consistency, archive)
+    coefficient_bytes, report = assessment(coefficients, fit, heldout, negative, source_consistency, archive)
     return coefficient_bytes, encoded(report)
 
 

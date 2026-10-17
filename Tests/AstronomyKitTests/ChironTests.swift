@@ -177,7 +177,7 @@ struct ChironTests {
         /// The public position is the engine's table on J2000 equatorial
         /// axes, so Horizons' ICRF vectors are rotated to it. Horizons gives
         /// TDB, which the test reads as TT; the 1.7 ms between them moves
-        /// Chiron by under 0.01 km. `EngineChironTests` measures 2.3 km at most.
+        /// Chiron by under 0.03 km. `EngineChironTests` measures 2.3 km at most.
         @Test(
             "Heliocentric positions within 5 km of Horizons, 1900 to 2150",
             arguments: IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron-anchor" })
