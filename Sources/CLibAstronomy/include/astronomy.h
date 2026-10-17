@@ -282,8 +282,9 @@ astro_status_t;
  *
  * The astro_time_t type contains `ut` to represent Universal Time (UT1/UTC) and
  * `tt` to represent Terrestrial Time (TT, also known as *ephemeris time*).
- * The difference `tt-ut` is known as *&Delta;T*, using a best-fit piecewise model devised by
- * [Espenak and Meeus](https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html).
+ * The difference `tt-ut` is known as *&Delta;T*. By default it comes from
+ * #Astronomy_DeltaT_IersObserved: IERS-observed UT1 from 1962, IERS predictions about a
+ * year ahead, and the Morrison-Stephenson-Hohenkerk-Zawilski (2021) historical series.
  *
  * Both `tt` and `ut` are necessary for performing different astronomical calculations.
  * Indeed, certain calculations (such as rise/set times) require both time scales.
@@ -662,14 +663,32 @@ typedef astro_func_result_t (* astro_search_func_t) (void *context, astro_time_t
  * slowing down over time. Delta T = TT - UT, where
  * TT = Terrestrial Time, based on atomic time, and
  * UT = Universal Time, civil time based on the Earth's rotation.
- * Astronomy Engine defaults to using a Delta T function defined by
- * Espenak and Meeus in their "Five Millennium Canon of Solar Eclipses".
+ * AstronomyKit defaults to #Astronomy_DeltaT_IersObserved (local patch). The upstream
+ * Astronomy Engine default, Espenak and Meeus's "Five Millennium Canon of Solar Eclipses"
+ * polynomials, remains available as #Astronomy_DeltaT_EspenakMeeus.
  * See: https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html
  */
 typedef double (* astro_deltat_func) (double ut);
 
+/**
+ * @brief The source #Astronomy_DeltaT_IersObserved draws on at a given UT.
+ */
+typedef enum
+{
+    DELTAT_REGIME_EXTRAPOLATED_PAST,    /**< Before -720: the long-term length-of-day model. */
+    DELTAT_REGIME_HISTORICAL,           /**< -720 to 1962: the Table S15 v2020 spline. */
+    DELTAT_REGIME_OBSERVED,             /**< IERS EOP 20 C04, then Bulletin A rapid values. */
+    DELTAT_REGIME_PREDICTED,            /**< IERS Bulletin A predictions. */
+    DELTAT_REGIME_EXTRAPOLATED_FUTURE,  /**< After the predictions: the long-term model. */
+    DELTAT_REGIME_UNDEFINED             /**< NaN input. */
+}
+astro_deltat_regime_t;
+
 double Astronomy_DeltaT_EspenakMeeus(double ut);
 double Astronomy_DeltaT_JplHorizons(double ut);
+double Astronomy_DeltaT_IersObserved(double ut);
+double Astronomy_DeltaTUncertainty_IersObserved(double ut);
+astro_deltat_regime_t Astronomy_DeltaTRegime_IersObserved(double ut);
 
 void Astronomy_SetDeltaTFunction(astro_deltat_func func);
 

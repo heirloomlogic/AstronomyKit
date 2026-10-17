@@ -23,8 +23,14 @@
         Mercury at the 1900/2100 edges); compensation matches an exactly
         summed evaluation of the same tables bit for bit.
       - Bounded TT inverse with finite-input, representational-precision, and
-        discontinuity-gap checks; the Espenak-Meeus default and Delta T values
-        are unchanged.
+        discontinuity-gap checks.
+      - Observed Delta T (deltat_iers.h, generated/deltat_iers.h) as the
+        default DeltaTFunc: IERS EOP 20 C04 and Bulletin A UT1 from 1962, the
+        Table S15 v2020 historical spline before it, and the HMNAO long-term
+        length-of-day model outside both; Astronomy_DeltaT_IersObserved,
+        Astronomy_DeltaTUncertainty_IersObserved and
+        Astronomy_DeltaTRegime_IersObserved. The Espenak-Meeus and JPL
+        Horizons functions are unchanged and remain selectable.
       - Analytic geocentric ecliptic state (Astronomy_GeoEclipticState,
         Astronomy_SunEclipticState, Astronomy_MoonEclipticState): apparent
         position bit-identical to the position function each mirrors, plus
@@ -823,12 +829,12 @@ astro_angle_result_t Astronomy_AngleBetween(astro_vector_t a, astro_vector_t b)
 }
 
 /**
- * @brief The default Delta T function used by Astronomy Engine.
+ * @brief The upstream Astronomy Engine default Delta T function.
  *
  * Espenak and Meeus use a series of piecewise polynomials to
  * approximate DeltaT of the Earth in their "Five Millennium Canon of Solar Eclipses".
  * See: https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html
- * This is the default Delta T function used by Astronomy Engine.
+ * AstronomyKit defaults to #Astronomy_DeltaT_IersObserved instead.
  *
  * @param ut
  *      The floating point number of days since noon UTC on January 1, 2000.
@@ -964,14 +970,16 @@ double Astronomy_DeltaT_JplHorizons(double ut)
     return Astronomy_DeltaT_EspenakMeeus(ut);
 }
 
-static _Atomic(astro_deltat_func) DeltaTFunc = Astronomy_DeltaT_EspenakMeeus;
+#include "deltat_iers.h"
+
+static _Atomic(astro_deltat_func) DeltaTFunc = Astronomy_DeltaT_IersObserved;
 
 /**
  * @brief Changes the function Astronomy Engine uses to calculate Delta T.
  *
  * Most programs should not call this function. It is for advanced use cases only.
- * By default, Astronomy Engine uses the function #Astronomy_DeltaT_EspenakMeeus
- * to estimate changes in the Earth's rotation rate over time.
+ * By default, AstronomyKit uses #Astronomy_DeltaT_IersObserved, observed Earth
+ * rotation from IERS and the historical record.
  * However, for the sake of unit tests that compare calculations against
  * external data sources that use alternative models for Delta T,
  * it is sometimes useful to replace the Delta T model to match.

@@ -222,7 +222,7 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.mercury.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x405a_9443_6ef9_3167, lat: 0xc010_2c4b_d7ec_4f1b, dist: 0x3fe5_e242_f1d3_ccfb,
+            lon: 0x405a_9443_6ef9_3167, lat: 0xc010_2c4b_d7ec_4f1b, dist: 0x3fe5_e242_f1d4_13e9,
             "Mercury 2026"
         )
         expectEcliptic(
@@ -242,17 +242,17 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.saturn.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x402d_7c7f_bd4a_63e1, lat: 0xc003_e941_17dc_2bd3, dist: 0x4022_3d36_7806_f729,
+            lon: 0x402d_7c7f_bd4a_63e1, lat: 0xc003_e941_17dc_2bd3, dist: 0x4022_3d36_7806_cb2a,
             "Saturn 2026"
         )
         expectEcliptic(
             try CelestialBody.uranus.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4050_2e8b_1741_9316, lat: 0xbfc3_dc41_ac1a_7703, dist: 0x4033_ffb4_07f2_aae3,
+            lon: 0x4050_2e8b_1741_9316, lat: 0xbfc3_dc41_ac1a_7703, dist: 0x4033_ffb4_07f2_7fe8,
             "Uranus 2026"
         )
         expectEcliptic(
             try CelestialBody.neptune.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4011_61ab_b760_a14a, lat: 0xbff6_2e51_91b9_5e13, dist: 0x403d_6913_d381_de23,
+            lon: 0x4011_61ab_b760_a14a, lat: 0xbff6_2e51_91b9_5e13, dist: 0x403d_6913_d381_9ad9,
             "Neptune 2026"
         )
         expectEcliptic(
@@ -277,42 +277,42 @@ struct ReproducibilityTests {
         )
         expectEcliptic(
             try CelestialBody.mercury.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x406f_7009_0870_6a6d, lat: 0x4007_6782_4859_b8be, dist: 0x3fe9_a9f7_54e2_2e86,
+            lon: 0x406f_7009_0870_6a6d, lat: 0x4007_6782_4859_b8be, dist: 0x3fe9_a9f7_54e2_ecb4,
             "Mercury 2050"
         )
         expectEcliptic(
             try CelestialBody.venus.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x406b_dad8_2db0_b9fa, lat: 0x4008_7831_1bb9_9d5a, dist: 0x3fe4_19d8_c2c2_83c5,
+            lon: 0x406b_dad8_2db0_b9fa, lat: 0x4008_7831_1bb9_9d5a, dist: 0x3fe4_19d8_c2c2_c3a6,
             "Venus 2050"
         )
         expectEcliptic(
             try CelestialBody.mars.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4076_6a90_4d34_faf4, lat: 0xbfd7_ccd6_a238_d5ac, dist: 0x3ff1_5296_6f77_42e3,
+            lon: 0x4076_6a90_4d34_faf4, lat: 0xbfd7_ccd6_a238_d5ac, dist: 0x3ff1_5296_6f77_75f9,
             "Mars 2050"
         )
         expectEcliptic(
             try CelestialBody.jupiter.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4063_7bb7_ca02_232f, lat: 0x3ff0_309f_4b1a_bd5d, dist: 0x4013_8a1d_a212_52ca,
+            lon: 0x4063_7bb7_ca02_232f, lat: 0x3ff0_309f_4b1a_bd5d, dist: 0x4013_8a1d_a211_e89c,
             "Jupiter 2050"
         )
         expectEcliptic(
             try CelestialBody.saturn.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4073_2a1d_d291_9c06, lat: 0xbfe4_5654_1497_4590, dist: 0x4025_63fb_9111_e429,
+            lon: 0x4073_2a1d_d291_9c06, lat: 0xbfe4_5654_1497_4590, dist: 0x4025_63fb_9112_3489,
             "Saturn 2050"
         )
         expectEcliptic(
             try CelestialBody.uranus.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4065_f016_2072_56cd, lat: 0x3fe8_9b5c_5e5f_3d70, dist: 0x4032_3074_f62c_4aa5,
+            lon: 0x4065_f016_2072_56cd, lat: 0x3fe8_9b5c_5e5f_3d70, dist: 0x4032_3074_f62b_d4ff,
             "Uranus 2050"
         )
         expectEcliptic(
             try CelestialBody.neptune.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x404c_0f1f_bc4f_35fd, lat: 0xbffc_1684_a152_574d, dist: 0x403c_fd56_729e_e71e,
+            lon: 0x404c_0f1f_bc4f_35fd, lat: 0xbffc_1684_a152_574d, dist: 0x403c_fd56_729f_4fbc,
             "Neptune 2050"
         )
         expectEcliptic(
             try CelestialBody.pluto.geocentricPosition(at: t).toEcliptic(),
-            lon: 0x4075_2a6b_ff2c_a79d, lat: 0xc029_fa23_c6c6_359d, dist: 0x4044_fe55_caf2_ec61,
+            lon: 0x4075_2a6b_ff2c_a79d, lat: 0xc029_fa23_c6c6_359d, dist: 0x4044_fe55_caf3_6e63,
             "Pluto 2050"
         )
         expectEcliptic(
@@ -353,7 +353,7 @@ struct ReproducibilityTests {
     func equatorialTopocentric2026() throws {
         expectEquatorial(
             try CelestialBody.moon.equatorial(at: Self.t2026, from: Self.asheville, equatorDate: .j2000),
-            ra: 0x402f_7217_4477_5a07, dec: 0xc039_ce7b_4cc1_0222, dist: 0x3f65_f783_2f9f_49ab,
+            ra: 0x402f_7214_2508_8969, dec: 0xc039_ce7e_13a6_a5cf, dist: 0x3f65_f780_f400_2da0,
             "Moon (topo Asheville) 2026"
         )
     }
@@ -366,7 +366,7 @@ struct ReproducibilityTests {
             try CelestialBody.sun.riseTime(after: Self.t2026, from: Self.asheville)
         )
         #expect(
-            close(sunrise.universalTime, Self.exact(0x40c2_f278_3d3f_d62f), tolerance: 0.01 / 86_400),
+            close(sunrise.universalTime, Self.exact(0x40c2_f278_3d3d_dfbf), tolerance: 0.01 / 86_400),
             "Sunrise UT drifted"
         )
 
@@ -374,7 +374,7 @@ struct ReproducibilityTests {
             try CelestialBody.sun.setTime(after: Self.t2026, from: Self.asheville)
         )
         #expect(
-            close(sunset.universalTime, Self.exact(0x40c2_f243_a77e_541c), tolerance: 0.01 / 86_400),
+            close(sunset.universalTime, Self.exact(0x40c2_f243_a77c_f6e4), tolerance: 0.01 / 86_400),
             "Sunset UT drifted"
         )
     }
@@ -387,7 +387,7 @@ struct ReproducibilityTests {
             try Moon.searchPhase(.full, after: Self.t2026)
         )
         #expect(
-            close(fullMoon.universalTime, Self.exact(0x40c2_f50d_e615_4cc1), tolerance: 0.01 / 86_400),
+            close(fullMoon.universalTime, Self.exact(0x40c2_f50d_e872_84b7), tolerance: 0.01 / 86_400),
             "Full-moon search UT drifted"
         )
 
@@ -645,7 +645,7 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.pluto.geocentricEclipticState(at: t),
-            lonRate: 0xbf97_eea6_51e2_d452, latRate: 0xbf58_b942_8a14_5396, distRate: 0xbf2b_9337_758b_ff50,
+            lonRate: 0xbf97_eea6_51e2_d452, latRate: 0xbf58_b942_8a14_5396, distRate: 0xbf2b_9337_727d_db26,
             "Pluto 2026"
         )
         expectEclipticRates(
@@ -707,12 +707,12 @@ struct ReproducibilityTests {
         )
         expectEclipticRates(
             try CelestialBody.neptune.geocentricEclipticState(at: t),
-            lonRate: 0xbf97_13bd_729e_8f9f, latRate: 0x3f44_a06e_f66f_2f65, distRate: 0x3f83_a5c0_ede9_ee3a,
+            lonRate: 0xbf97_13bd_729e_8f9f, latRate: 0x3f44_a06e_f66f_2f65, distRate: 0x3f83_a5c0_ee00_78eb,
             "Neptune 2050"
         )
         expectEclipticRates(
             try CelestialBody.pluto.geocentricEclipticState(at: t),
-            lonRate: 0x3f89_0952_68dc_6602, latRate: 0x3f71_b6a1_1ae6_e856, distRate: 0x3f90_e199_108e_7e6f,
+            lonRate: 0x3f89_0952_68dc_6602, latRate: 0x3f71_b6a1_1ae6_e856, distRate: 0x3f90_e199_1087_e109,
             "Pluto 2050"
         )
         expectEclipticRates(

@@ -118,6 +118,10 @@ struct CivilTimeTests {
 
     @Test("Civil TT remains invertible across positive Delta T model jumps")
     func deltaTJumpGaps() throws {
+        // The Espenak-Meeus polynomials jump at their 1961 and 1986 joins.
+        AstronomyConfig.setDeltaTModel(.espenakMeeus)
+        defer { AstronomyConfig.setDeltaTModel(.iersObserved) }
+
         for unixSeconds in [506_140_670.85679626, -282_782_416.0919621] {
             let date = Date(timeIntervalSince1970: unixSeconds)
             let utcDays = (unixSeconds - 946_728_000) / 86_400
@@ -134,7 +138,7 @@ struct CivilTimeTests {
     @Test("TT inverse defines both signs of Delta T discontinuity")
     func deltaTJumpBoundaries() throws {
         AstronomyConfig.setDeltaTModel(.espenakMeeus)
-        defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
+        defer { AstronomyConfig.setDeltaTModel(.iersObserved) }
 
         func surroundingTimes(year: Double) -> (beforeUT: Double, beforeTT: Double, afterUT: Double, afterTT: Double) {
             let boundary = 14 + (year - 2_000) * 365.24217
@@ -183,7 +187,7 @@ struct CivilTimeTests {
     @Test("Negative-Delta-T overlap follows the TT-seeded inverse")
     func negativeDeltaTOverlap() {
         AstronomyConfig.setDeltaTModel(.espenakMeeus)
-        defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
+        defer { AstronomyConfig.setDeltaTModel(.iersObserved) }
 
         let requestedTT = -36_510.21703178009
         let earlierUT = -36_510.21700051158
