@@ -141,6 +141,14 @@ struct ChironTests {
             #expect(eq.distance > 0, "Distance should be positive")
         }
 
+        @Test("Geocentric position in 2100 is plausible")
+        func geocentricPosition2100() throws {
+            let position = try Chiron.geocentricPosition(at: AstroTime(year: 2_100, month: 1, day: 1))
+
+            #expect(position.magnitude > 5)
+            #expect(position.magnitude < 15)
+        }
+
         @Test("Ecliptic longitude is in valid range")
         func eclipticLongitudeValid() throws {
             let time = AstroTime(year: 2_025, month: 1, day: 1)
@@ -162,26 +170,23 @@ struct ChironTests {
         }
     }
 
-    // MARK: - Epoch Reference Tests
+    // MARK: - JPL Horizons
 
-    @Suite("Reference Epoch Accuracy")
-    struct EpochTests {
-        static let anchors: [(year: Int, position: (Double, Double, Double))] = [
-            (2_000, (-3.532082802845036, -8.673587566387649, -2.935491685233997)),
-            (2_010, (13.19148992863117, -9.058771972133892, -2.018744306999665)),
-            (2_020, (18.74979015626275, 0.9060856547258316, 1.445166327129911)),
-            (2_030, (13.13185175469694, 10.45171373019759, 4.086005508618447)),
-            (2_040, (-1.878330124332237, 10.99286850835428, 3.325776674355994)),
-        ]
-
-        @Test("Reference anchors remain exact", arguments: anchors)
-        func referenceAnchorsRemainExact(anchor: (year: Int, position: (Double, Double, Double))) throws {
+    @Suite("JPL Horizons")
+    struct HorizonsTests {
+        /// The public position is the engine's table on J2000 equatorial
+        /// axes, so Horizons' ICRF vectors are rotated to it. Horizons gives
+        /// TDB, which the test reads as TT; the 1.7 ms between them moves
+        /// Chiron by under 0.01 km. `EngineChironTests` measures 2.3 km at most.
+        @Test(
+            "Heliocentric positions within 5 km of Horizons, 1900 to 2150",
+            arguments: IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron-anchor" })
+        func heliocentricPosition(reference: IndependentReferenceArchive.Vector) throws {
             let position = try Chiron.heliocentricPosition(
-                at: AstroTime(year: anchor.year, month: 1, day: 1))
-
-            #expect(abs(position.x - anchor.position.0) < 1e-12)
-            #expect(abs(position.y - anchor.position.1) < 1e-12)
-            #expect(abs(position.z - anchor.position.2) < 1e-12)
+                at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB))
+            let expected = EngineMoonStatesTests.eqj(reference.positionAU)
+            let km = EngineGravityTests.length(SIMD3(position.x, position.y, position.z) - expected) * Engine.kilometersPerAU
+            #expect(km <= 5, "\(reference.tdb): \(km) km")
         }
     }
 
@@ -279,9 +284,8 @@ struct ChironTests {
         }
 
         /// Horizons' astrometric direction, which has no aberration as the API
-        /// has none, is the published position. The 1′ row tolerance is the
-        /// accuracy `Engine Chiron positions` measures against these rows;
-        /// the largest difference here is 0.49′, in 1900.
+        /// has none, is the published position. The 0.01′ bound is measured,
+        /// not published: the largest difference is 0.0006′, in 2000.
         @Test("Horizon matches the Horizons observer rows rotated to the equator of date")
         func horizonMatchesHorizonsRows() throws {
             let rows = IndependentReferenceArchive.shared.chironObservations
@@ -295,15 +299,15 @@ struct ChironTests {
                 let expected = try Self.horizontal(of: vector, at: time)
                 let horizon = try Chiron.horizon(at: time, from: ashevilleObserver, refraction: .none)
                 let separation = Self.separationArcminutes(horizon, expected)
-                #expect(separation <= row.angularToleranceArcminutes, "\(row.utc): \(separation)′")
+                #expect(separation <= 0.01, "\(row.utc): \(separation)′")
             }
         }
     }
 
-    // MARK: - Epoch Continuity
+    // MARK: - Continuity
 
-    @Suite("Epoch Continuity")
-    struct EpochContinuityTests {
+    @Suite("Continuity")
+    struct ContinuityTests {
         private func distance(_ a: Vector3D, _ b: Vector3D) -> Double {
             let dx = a.x - b.x
             let dy = a.y - b.y
@@ -311,10 +315,8 @@ struct ChironTests {
             return (dx * dx + dy * dy + dz * dz).squareRoot()
         }
 
-        @Test("Position is not frozen near a reference epoch")
-        func notFrozenNearEpoch() throws {
-            // The state must be evaluated at the requested time, not returned
-            // verbatim for any time within a day of a reference epoch.
+        @Test("Position moves over 12 hours")
+        func movesOverTwelveHours() throws {
             let epoch = AstroTime(year: 2_020, month: 1, day: 1)
             let nearby = epoch.addingHours(12)
 
@@ -327,8 +329,8 @@ struct ChironTests {
             #expect(moved < 1e-2, "Position should not jump (moved \(moved) AU)")
         }
 
-        @Test("Position is continuous across the one-day epoch boundary")
-        func continuousAcrossBoundary() throws {
+        @Test("Position is continuous across a day")
+        func continuousAcrossDay() throws {
             let epoch = AstroTime(year: 2_020, month: 1, day: 1)
             let before = epoch.addingDays(0.9)
             let after = epoch.addingDays(1.1)
@@ -336,22 +338,11 @@ struct ChironTests {
             let posBefore = try Chiron.heliocentricPosition(at: before)
             let posAfter = try Chiron.heliocentricPosition(at: after)
 
-            // 0.2 days of orbital motion is ~6e-4 AU; a discontinuity at the
-            // boundary would show up as a jump of a full day's motion or more.
+            // 0.2 days of orbital motion is ~6e-4 AU; a discontinuity would
+            // show up as a jump of a full day's motion or more.
             let moved = distance(posBefore, posAfter)
-            #expect(moved > 1e-5, "Position should move across the boundary (moved \(moved) AU)")
-            #expect(moved < 1.5e-3, "Position should not jump at the boundary (moved \(moved) AU)")
-        }
-
-        @Test("Position is continuous when the nearest reference anchor changes")
-        func continuousAcrossReferenceTransition() throws {
-            let before = AstroTime(year: 2_004, month: 12, day: 31, hour: 11, minute: 59)
-            let after = AstroTime(year: 2_004, month: 12, day: 31, hour: 12, minute: 1)
-
-            let posBefore = try Chiron.heliocentricPosition(at: before)
-            let posAfter = try Chiron.heliocentricPosition(at: after)
-
-            #expect(distance(posBefore, posAfter) < 0.01)
+            #expect(moved > 1e-5, "Position should move (moved \(moved) AU)")
+            #expect(moved < 1.5e-3, "Position should not jump (moved \(moved) AU)")
         }
 
         @Test("Returned state carries the requested time")
@@ -377,50 +368,6 @@ struct ChironTests {
             // Velocity magnitude should be reasonable for a centaur
             let speed = state.velocity.magnitude
             #expect(speed > 0 && speed < 0.1, "Velocity \(speed) AU/day is reasonable")  // ~5 km/s max
-        }
-    }
-
-    // MARK: - Simulation Reuse
-
-    @Suite("Simulation Reuse")
-    struct SimulationReuseTests {
-        private func maximumComponentError(_ a: Vector3D, _ b: Vector3D) -> Double {
-            max(abs(a.x - b.x), abs(a.y - b.y), abs(a.z - b.z))
-        }
-
-        @Test("A nearby reverse update reuses a long-span simulation without changing its result")
-        func nearbyReverseUpdateMatchesFreshPropagation() throws {
-            let reusable = Chiron.ReusableSimulation()
-            _ = try reusable.state(at: AstroTime(year: 2_100, month: 1, day: 1))
-            let target = AstroTime(year: 2_099, month: 12, day: 31, hour: 18)
-
-            let reused = try reusable.state(at: target).position
-            let fresh = try Chiron.heliocentricPosition(at: target)
-
-            #expect(maximumComponentError(reused, fresh) < 1e-8)
-        }
-
-        @Test("A rejected time leaves the reuse state as it was")
-        func rejectedKeepsReuseState() throws {
-            let reusable = Chiron.ReusableSimulation()
-            let start = AstroTime(year: 2_020, month: 4, day: 10)
-            _ = try reusable.state(at: start)
-            let path = reusable.pathDays
-            #expect(throws: AstronomyError.badTime) {
-                _ = try reusable.state(at: AstroTime(tt: -1_000_000, ut: start.universalTime))
-            }
-            #expect(reusable.epochIndex == 2 && reusable.pathDays == path)
-            _ = try reusable.state(at: start.addingDays(-30))
-            #expect(reusable.epochIndex == 2 && abs(reusable.pathDays - (path + 30)) < 1e-6)
-        }
-
-        @Test("Light-time correction remains physically bounded after long-span propagation")
-        func longSpanLightTimeCorrection() throws {
-            let position = try Chiron.geocentricPosition(
-                at: AstroTime(year: 2_100, month: 1, day: 1))
-
-            #expect(position.magnitude > 5)
-            #expect(position.magnitude < 15)
         }
     }
 }

@@ -19,7 +19,7 @@ Built on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy)
 - Ecliptic position and velocity in one call: longitude, latitude, distance, and their rates
 - Moon phase angles, quarters, illumination, and libration
 - User-defined fixed stars from J2000 catalog coordinates
-- Gravity-simulated position for 2060 Chiron
+- Position for 2060 Chiron from a table fitted to JPL Horizons
 - Rise, set, and culmination times
 - Lunar and solar eclipse predictions
 - Equinoxes and solstices
@@ -276,7 +276,7 @@ print("Venus-Mars separation: \(angle)°")
 | `Apsis` | Perihelion/aphelion or perigee/apogee events |
 | `AstroTime` | Time representation with UT/TT and `Date` conversion |
 | `CelestialBody` | Enum of Sun, Moon, planets, and moons |
-| `Chiron` | Gravity-simulated position for 2060 Chiron |
+| `Chiron` | Position for 2060 Chiron from a table fitted to JPL Horizons |
 | `Constellation` | Constellation identification |
 | `Ecliptic` | Ecliptic longitude and latitude coordinates |
 | `EclipticState` | Ecliptic position plus longitude, latitude, and distance rates |
@@ -307,7 +307,7 @@ AstronomyKit includes features not present in the upstream C library:
 
 | Feature | Description |
 |---------|-------------|
-| `Chiron` | Gravity-simulated positions for 2060 Chiron using pre-computed JPL Horizons state vectors at reference epochs (2000–2040). Astronomy Engine has no built-in Chiron support. |
+| `Chiron` | Positions for 2060 Chiron from 1900 to 2150, read from a Chebyshev table fitted to JPL Horizons and within 5 km of it. Astronomy Engine has no built-in Chiron support. |
 | `FixedStar` | Thread-safe value type for user-defined stars from J2000 catalog coordinates. Wraps Astronomy Engine's `Astronomy_DefineStar()` with mutex-protected calculation slots and a Swift-idiomatic API. |
 
 All other AstronomyKit types wrap Astronomy Engine C functions directly.

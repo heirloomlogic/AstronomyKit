@@ -8,7 +8,7 @@
 //  - Positions for the Sun, Moon, planets, and Jupiter's moons
 //  - Moon phase angles, quarters, illumination, and libration
 //  - User-defined fixed stars from J2000 catalog coordinates
-//  - Gravity-simulated position for 2060 Chiron
+//  - Position for 2060 Chiron from a table fitted to JPL Horizons
 //  - Rise, set, and culmination times
 //  - Lunar and solar eclipse predictions
 //  - Equinoxes and solstices
