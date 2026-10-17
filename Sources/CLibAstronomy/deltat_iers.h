@@ -8,8 +8,9 @@
  *     IERS Bulletin A rapid values and predictions. Each row's abscissa is its UT1,
  *     MJD - 51544.5 + (UT1-UTC)/86400, and Delta T is linear in UT1 between rows.
  *   - Historical: Table S15 v2020 from -720.0 to the first C04 row, in Julian epoch
- *     years. The last segment's linear term is raised so the spline meets the first
- *     C04 value (Skyfield's continuity correction).
+ *     years, rebuilt by the generator as cubic Hermite segments through the mean
+ *     one-sided value and rate at each knot, so it is C0 and C1 everywhere. The last
+ *     segment ends on the first C04 value and the rate of the first C04 interval.
  *   - Extrapolated: before -720.0 and after the last prediction, the integral of
  *     lod = 1.72 t - 3.5 sin(2 pi (t + 0.75) / 14) ms, t in centuries from 1825.0, with
  *     its constant fixed by continuity at the join. HMNAO extrapolates the spline this

@@ -127,40 +127,96 @@ struct DeltaTIersObservedTests {
         }
     }
 
-    @Test("Every join is continuous", arguments: ["-720 spline start", "1962 IERS start", "last prediction"])
+    /// Knots of Table S15 v2020 inside the historical regime, -100 through 1959.
+    static let splineKnots: [Double] = [
+        -100, 400, 1_000, 1_150, 1_300, 1_500, 1_600, 1_650, 1_720, 1_800, 1_810, 1_820, 1_830,
+        1_840, 1_850, 1_855, 1_860, 1_865, 1_870, 1_875, 1_880, 1_885, 1_890, 1_895, 1_900,
+        1_905, 1_910, 1_915, 1_920, 1_925, 1_930, 1_935, 1_940, 1_945, 1_950, 1_953, 1_956, 1_959,
+    ]
+
+    /// The first C04 row: 1962-01-01 0h UTC plus its UT1 − UTC.
+    static let firstObservedUT = (37_665 - 51_544.5) + 0.032_633_8 / 86_400
+
+    /// The last Bulletin A prediction's UT1.
+    static func lastPredictedUT() throws -> Double {
+        let last = try #require(try IERSRecords.finals().last(where: \.predicted)).row
+        return (last.mjd - 51_544.5) + last.ut1MinusUTC / 86_400
+    }
+
+    static func deltaT(_ ut: Double) -> Double { AstronomyConfig.deltaTIersObserved(universalTime: ut) }
+
+    /// One-sided Delta T rates in seconds per day, second-order differences
+    /// over 0.01 and 0.02 day on each side, so curvature cancels on each side
+    /// and only the third derivative and rounding remain (below 1e-9 s/day).
+    /// Rounding in the Table S15 polynomials made the two differ by up to
+    /// 1.1e-6 s/day.
+    static func rates(at ut: Double) -> (before: Double, after: Double) {
+        let step = 0.01
+        return (
+            (3 * deltaT(ut) - 4 * deltaT(ut - step) + deltaT(ut - 2 * step)) / (2 * step),
+            (-3 * deltaT(ut) + 4 * deltaT(ut + step) - deltaT(ut + 2 * step)) / (2 * step)
+        )
+    }
+
+    /// Value continuity: 1e-9 s, against the published table's 1 ms rounding jumps.
+    static let valueTolerance = 1e-9
+
+    /// Rate continuity: 1e-8 s/day, against the published table's 1.1e-6 s/day.
+    static let rateTolerance = 1e-8
+
+    @Test("Delta T is continuous in value and rate at every Table S15 knot")
+    func splineKnotsAreC1() {
+        for knot in Self.splineKnots {
+            let ut = Self.ut(year: knot)
+            #expect(AstronomyConfig.deltaTIersObservedRegime(universalTime: ut) == .historical)
+            let step = Self.deltaT(ut) - Self.deltaT(ut.nextDown)
+            #expect(abs(step) < Self.valueTolerance, "Knot \(knot): value step \(step) s")
+            let rates = Self.rates(at: ut)
+            let rateStep = rates.after - rates.before
+            #expect(abs(rateStep) < Self.rateTolerance, "Knot \(knot): rate step \(rateStep) s/day")
+        }
+    }
+
+    @Test(
+        "Every regime join is continuous in value",
+        arguments: ["-720 spline start", "1962 IERS start", "last prediction"]
+    )
     func joinsAreContinuous(join: String) throws {
         let ut: Double
         switch join {
-        case "-720 spline start":
-            ut = Self.ut(year: -720)
-        case "1962 IERS start":
-            // The first C04 row: 1962-01-01 0h UTC plus its UT1 − UTC.
-            ut = (37_665 - 51_544.5) + 0.032_633_8 / 86_400
-        default:
-            let last = try #require(try IERSRecords.finals().last(where: \.predicted)).row
-            ut = (last.mjd - 51_544.5) + last.ut1MinusUTC / 86_400
+        case "-720 spline start": ut = Self.ut(year: -720)
+        case "1962 IERS start": ut = Self.firstObservedUT
+        default: ut = try Self.lastPredictedUT()
         }
-        let before = AstronomyConfig.deltaTIersObserved(universalTime: ut.nextDown)
-        let after = AstronomyConfig.deltaTIersObserved(universalTime: ut.nextUp)
+        let before = Self.deltaT(ut.nextDown)
+        let after = Self.deltaT(ut.nextUp)
         let regimes = [ut - 1e-6, ut + 1e-6].map { AstronomyConfig.deltaTIersObservedRegime(universalTime: $0) }
-        #expect(abs(after - before) < 1e-9, "\(join): \(before) → \(after)")
+        #expect(abs(after - before) < Self.valueTolerance, "\(join): \(before) → \(after)")
         #expect(regimes[0] != regimes[1], "\(join) separates two regimes")
     }
 
-    @Test("Table S15 segments meet within its published 1 ms precision")
-    func splineKnotsMeet() {
-        // Knots of Table S15 v2020 from -720 through 1959.
-        let knots: [Double] = [
-            -100, 400, 1_000, 1_150, 1_300, 1_500, 1_600, 1_650, 1_720, 1_800, 1_810, 1_820, 1_830,
-            1_840, 1_850, 1_855, 1_860, 1_865, 1_870, 1_875, 1_880, 1_885, 1_890, 1_895, 1_900,
-            1_905, 1_910, 1_915, 1_920, 1_925, 1_930, 1_935, 1_940, 1_945, 1_950, 1_953, 1_956, 1_959,
-        ]
-        for knot in knots {
-            let ut = Self.ut(year: knot)
-            let step =
-                AstronomyConfig.deltaTIersObserved(universalTime: ut)
-                - AstronomyConfig.deltaTIersObserved(universalTime: ut.nextDown)
-            #expect(abs(step) <= 0.001_000_1, "Knot \(knot): \(step) s")
+    @Test("The 1962 join is also continuous in rate")
+    func observedJoinIsC1() {
+        // The 1959–1962 segment ends on the first C04 interval's rate. The
+        // long-term joins at -720 and after the predictions are C0 only.
+        let rates = Self.rates(at: Self.firstObservedUT)
+        #expect(abs(rates.after - rates.before) < Self.rateTolerance, "Rate step \(rates.after - rates.before) s/day")
+    }
+
+    @Test("A five-point second derivative across each knot sees no step")
+    func secondDerivativeAcrossKnots() {
+        // The stencil downstream event searches use, with ±0.01 and ±0.02 day
+        // steps. A 1 ms value step at the centre would read about 12 s/day²; the
+        // physical second derivative here is below 1e-6 s/day².
+        let h = 0.01
+        for knot in Self.splineKnots + [1_962] {
+            let ut = knot == 1_962 ? Self.firstObservedUT : Self.ut(year: knot)
+            for centre in [ut - h / 2, ut, ut + h / 2] {
+                let samples = [-2.0, -1, 0, 1, 2].map { Self.deltaT(centre + $0 * h) }
+                let weighted = -samples[0] + 16 * samples[1] - 30 * samples[2] + 16 * samples[3] - samples[4]
+                let second = weighted / (12 * h * h)
+                #expect(abs(second) < 1e-4, "Knot \(knot): \(second) s/day²")
+            }
         }
     }
 

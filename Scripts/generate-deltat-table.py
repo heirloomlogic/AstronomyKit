@@ -161,6 +161,13 @@ def spline_value(row, year):
     return a0 + t * (a1 + t * (a2 + t * a3))
 
 
+def spline_slope(row, year):
+    """Delta T rate in seconds per year."""
+    k0, k1, a0, a1, a2, a3 = row
+    t = (year - k0) / (k1 - k0)
+    return (a1 + t * (2 * a2 + t * 3 * a3)) / (k1 - k0)
+
+
 def page_text():
     text = (DATA/'hmnao-lvm.html').read_text()
     text = re.sub(r'<!--.*?-->', ' ', text, flags=re.S)
@@ -259,24 +266,59 @@ def generate():
     interpolation_max = max(interpolation)
     interpolation_rms = math.sqrt(sum(e * e for e in interpolation) / len(interpolation))
 
-    # The spline below the first C04 row. Skyfield's continuity correction
-    # (timelib.build_delta_t): adjust the linear term of the last segment so it
-    # meets the first IERS value; earlier segments are unchanged.
+    # The spline below the first C04 row, made C0 and C1 at every knot.
+    # Table S15 converts a cubic spline to per-segment polynomials rounded to
+    # 1 ms, so one-sided values and slopes at a knot disagree by up to that
+    # rounding. Each knot takes the mean of its one-sided value and slope, and
+    # each segment becomes the cubic Hermite interpolant of its end values and
+    # slopes. The last segment ends at the first C04 row with the C04 value
+    # and the rate of the first C04 interval, which also absorbs the
+    # spline's departure from C04 there (Skyfield adjusts only the linear
+    # term, which leaves the rate discontinuous).
     spline = parse_spline()
     first_ut = abscissa(0)
     join_year = decimal_year(first_ut)
     if abs(join_year - JOIN_KNOT) > 1e-6:
         raise ValueError('The first C04 row no longer falls on the 1962.0 spline knot')
-    historical = [list(row) for row in spline if row[1] <= JOIN_KNOT]
-    last = historical[-1]
-    join_t = (join_year - last[0]) / (last[1] - last[0])
-    if not 1.0 <= join_t < 1.0 + 1e-6:
-        raise ValueError('Spline join falls outside its last segment')
+    published = [row for row in spline if row[1] <= JOIN_KNOT]
+    knot_years = [row[0] for row in published] + [join_year]
+    values = [spline_value(published[0], published[0][0])]
+    slopes = [spline_slope(published[0], published[0][0])]
+    for before, after in zip(published, published[1:]):
+        knot = after[0]
+        values.append((spline_value(before, knot) + spline_value(after, knot)) / 2)
+        slopes.append((spline_slope(before, knot) + spline_slope(after, knot)) / 2)
     join_value = table[0][0] / 1.0e7
-    spline_step = join_value - spline_value(last, join_year)
-    last[3] += spline_step / join_t
-    if abs(spline_value(last, join_year) - join_value) > 1e-9:
-        raise ValueError('Spline continuity correction failed')
+    join_rate = (table[1][0] - table[0][0]) / 1.0e7 / (abscissa(1) - abscissa(0)) * 365.25
+    spline_step = join_value - spline_value(published[-1], join_year)
+    values.append(join_value)
+    slopes.append(join_rate)
+    historical = []
+    for index in range(len(published)):
+        k0, k1 = knot_years[index], knot_years[index + 1]
+        width = k1 - k0
+        p0, p1 = values[index], values[index + 1]
+        m0, m1 = slopes[index] * width, slopes[index + 1] * width
+        historical.append([k0, k1, p0, m0, 3 * (p1 - p0) - 2 * m0 - m1, 2 * (p0 - p1) + m0 + m1])
+    # The reconstruction must stay within the published rounding, except in
+    # the last segment, which carries the join to C04.
+    reconstruction = []
+    for rebuilt, original in zip(historical, published):
+        reconstruction.append(max(
+            abs(spline_value(rebuilt, rebuilt[0] + f * (rebuilt[1] - rebuilt[0]))
+                - spline_value(original, original[0] + f * (original[1] - original[0])))
+            for f in (i / 200 for i in range(201))
+        ))
+    if max(reconstruction[:-1]) > 0.0015:
+        raise ValueError(f'Spline reconstruction departs from Table S15 by {max(reconstruction[:-1])} s')
+    for rebuilt, after in zip(historical, historical[1:]):
+        if abs(spline_value(rebuilt, rebuilt[1]) - after[2]) > 1e-9:
+            raise ValueError(f'Spline is discontinuous at {rebuilt[1]}')
+    if abs(spline_value(historical[-1], join_year) - join_value) > 1e-9:
+        raise ValueError('Spline does not meet the first C04 row')
+    published_value_jump = max(abs(spline_value(a, a[1]) - spline_value(b, b[0])) for a, b in zip(published, published[1:]))
+    published_slope_jump = max(abs(spline_slope(a, a[1]) - spline_slope(b, b[0])) for a, b in zip(published, published[1:])) / 365.25
+    join_rate_step = (join_rate - spline_slope(published[-1], join_year)) / 365.25
 
     # The spline's misfit to IERS where both exist bounds how much its
     # stated error estimates can be trusted after 1962.
@@ -311,7 +353,11 @@ def generate():
         f' * Linear interpolation against the 12h C04 samples, 1984 to {mjd_date(c04[-1][0])}:',
         f' * maximum {interpolation_max * 1e3:.4f} ms, rms {interpolation_rms * 1e3:.4f} ms over {len(interpolation)} samples.',
         f' * Table S15 v2020 departs from C04 by at most {misfit:.4f} s over 1962-2019.',
-        f' * Spline continuity step at the first C04 row: {spline_step:+.6f} s.',
+        f' * Table S15 one-sided knot values differ by up to {published_value_jump * 1e3:.3f} ms and rates by',
+        f' * {published_slope_jump:.3e} s/day; the Hermite reconstruction below is C0 and C1 at every knot',
+        f' * and stays within {max(reconstruction[:-1]) * 1e3:.3f} ms of the published polynomials before 1959.',
+        f' * At the first C04 row the published spline is {spline_step:+.6f} s and {join_rate_step:+.3e} s/day',
+        f' * from C04; the 1959-1962 segment absorbs both and departs from Table S15 by up to {reconstruction[-1]:.4f} s.',
         ' */',
         '',
         f'#define DELTAT_IERS_TABLE_ID "{table_id}"',
@@ -328,8 +374,9 @@ def generate():
         f'#define DELTAT_LOD_PHASE {c_double(LOD_PHASE)}',
         f'#define DELTAT_LOD_EPOCH {c_double(LOD_EPOCH)}',
         '',
-        '/* Table S15 v2020 rows {K_i, K_{i+1}, a_0, a_1, a_2, a_3} below the first C04 row;',
-        f' * the last row\'s a_1 carries the continuity correction. Source: {files["Table-S15.2020.txt"]["url"]} */',
+        '/* Table S15 v2020 segments {K_i, K_{i+1}, a_0, a_1, a_2, a_3} below the first C04 row, rebuilt as',
+        ' * cubic Hermite segments through the mean one-sided value and rate at each knot; the last segment',
+        f' * ends at the first C04 row with its value and rate. Source: {files["Table-S15.2020.txt"]["url"]} */',
         'static const double deltat_spline[DELTAT_SPLINE_COUNT][6] =',
         '{',
     ]
@@ -357,6 +404,11 @@ def generate():
         'interpolation_rms_ms': interpolation_rms * 1e3,
         'spline_misfit_s': misfit,
         'spline_step_s': spline_step,
+        'spline_join_rate_step_s_per_day': join_rate_step,
+        'published_knot_value_jump_ms': published_value_jump * 1e3,
+        'published_knot_rate_jump_s_per_day': published_slope_jump,
+        'reconstruction_max_ms_before_1959': max(reconstruction[:-1]) * 1e3,
+        'reconstruction_last_segment_s': reconstruction[-1],
     }
     return '\n'.join(lines), report
 

@@ -60,8 +60,11 @@ public enum DeltaTModel: Sendable, CaseIterable {
     /// - From −720 to 1962: the Table S15 v2020 spline of Morrison, Stephenson,
     ///   Hohenkerk and Zawilski (2021), the 2020 addendum to Stephenson,
     ///   Morrison and Hohenkerk (2016), as published by HM Nautical Almanac
-    ///   Office. Its last segment, 1959–1962, is corrected linearly by 0.376 s
-    ///   so that it meets the first C04 value.
+    ///   Office. Each segment is rebuilt as the cubic Hermite curve through
+    ///   the mean one-sided value and rate at its knots, which removes the
+    ///   table's 1 ms rounding jumps and stays within 0.65 ms of it. The
+    ///   1959–1962 segment ends on the first C04 value and rate, absorbing
+    ///   the spline's 0.376 s departure there.
     /// - Before −720 and after the last prediction: the integral of HMNAO's
     ///   long-term length-of-day model, lod = 1.72 t − 3.5 sin(2π(t + 0.75)/14)
     ///   ms with t in centuries from 1825.0, continuous with the value at the
