@@ -69,7 +69,7 @@ extension Engine.SaturnEphemeris {
         }
     }
 
-    /// The 1900–2130 full-weight interval and its 32-day blends deliberately reuse the Moon's DE441 window; this is not a new global accuracy range.
+    /// The 1900–2130 full-weight interval and its 32-day blends deliberately reuse the Moon's DE440 window; this is not a new global accuracy range.
     static func weight(tt: Double) -> (weight: Double, rate: Double) { Engine.PlanetDE441.weight(tt: tt) }
 
     /// A state in AU and AU per TT day on the retained model’s ecliptic axes. The default includes the physical-center offset; system-mass callers exclude it.
