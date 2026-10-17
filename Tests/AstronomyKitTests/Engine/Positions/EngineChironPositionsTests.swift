@@ -17,39 +17,28 @@ struct EngineChironPositionsTests {
 
     static let rows = IndependentReferenceArchive.shared.chironObservations
 
-    /// 1900-01-01 03:00 UT, the first row's time, and Chiron's light-time
-    /// position then, which `spanStart` also reads: integrating a century
-    /// back from the 2000 anchor takes seconds in Debug.
-    static let firstRowTime = Engine.Time(ut: Engine.Chiron.earliestUT + 3.0 / 24, deltaTModel: .espenakMeeus)
-    static let firstRow = Result { try Positions.chironGeocentricPosition(at: firstRowTime) }
-
-    /// Horizons' astrometric direction, and its apparent ecliptic of date,
-    /// which differs from the engine's, without aberration like the public
-    /// API's, by up to κ = 20.5″; both within the rows' 1′. The range is
-    /// within 0.002 AU, the drift `NATIVE_ENGINE.md` records for Chiron's
-    /// heliocentric state a century from its anchors (254,000 km in 1900),
-    /// rounded up: a measured bound, not a published accuracy. Measured: 0.49′
-    /// and 5.6e-4 AU at most, in 1900.
+    /// Horizons' astrometric direction within 0.02′ and the range within
+    /// 3e-5 AU, measured bounds rather than published accuracies: 0.011′ and
+    /// 1.4e-5 AU at most, in 2100, where Delta T is extrapolated. Horizons'
+    /// apparent ecliptic of date differs from the engine's, which has no
+    /// aberration like the public API's, by up to κ = 20.5″, within the rows'
+    /// 1′.
     @Test("Chiron against the Horizons observer rows from 1900 to 2100")
     func observerRows() throws {
         #expect(Self.rows.count == 6)
         for row in Self.rows {
             let time = IndependentReferenceDate.engine(row.utc)
-            // One integration per row: the coordinates are this vector's, as
-            // `composition` checks.
-            let vector =
-                abs(time.ut - Self.firstRowTime.ut) < 1e-9
-                ? try Self.firstRow.get() : try Positions.chironGeocentricPosition(at: time)
+            let vector = try Positions.chironGeocentricPosition(at: time)
             let equatorial = try Engine.Equatorial(vector)
             let arcminutes = IndependentReferenceMath.angularSeparationArcminutes(
                 raDegrees1: equatorial.rightAscension * 15, decDegrees1: equatorial.declination,
                 raDegrees2: row.rightAscensionDegrees, decDegrees2: row.declinationDegrees)
-            #expect(arcminutes <= row.angularToleranceArcminutes, "\(row.utc): \(arcminutes)′")
+            #expect(arcminutes <= 0.02, "\(row.utc): \(arcminutes)′")
             let ecliptic = Engine.Ecliptic(vector)
             let longitude = IndependentReferenceMath.wrappedDifference(ecliptic.longitude, row.eclipticLongitudeDegrees)
             #expect(abs(longitude) * 60 <= row.angularToleranceArcminutes, "\(row.utc)")
             #expect(abs(ecliptic.latitude - row.eclipticLatitudeDegrees) * 60 <= row.angularToleranceArcminutes)
-            #expect(abs(equatorial.distance - row.apparentRangeAU) <= 0.002, "\(row.utc): \(equatorial.distance) AU")
+            #expect(abs(equatorial.distance - row.apparentRangeAU) <= 3e-5, "\(row.utc): \(equatorial.distance) AU")
         }
     }
 
@@ -93,9 +82,10 @@ struct EngineChironPositionsTests {
         let start = Engine.Time(ut: Engine.Chiron.earliestUT, deltaTModel: model).tt
         let early = Engine.Time(ut: Engine.Chiron.earliestUT + 1.0 / 24, deltaTModel: model)
         try Engine.Chiron.checkSupported(early)
-        let vector = try Self.firstRow.get()
+        let later = Engine.Time(ut: Engine.Chiron.earliestUT + 3.0 / 24, deltaTModel: model)
+        let vector = try Positions.chironGeocentricPosition(at: later)
         #expect(vector.time.tt >= start)
-        let lightTime = Self.firstRowTime.tt - vector.time.tt
+        let lightTime = later.tt - vector.time.tt
         #expect(early.tt - lightTime < start && early.tt > start, "light time \(lightTime * 24) h")
         #expect(abs(lightTime * 24 - 1.560) < 0.005, "light time \(lightTime * 24) h")
 

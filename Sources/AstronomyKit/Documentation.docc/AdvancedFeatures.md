@@ -219,7 +219,7 @@ J2000 coordinates can be found from:
 
 > Note: `Chiron` is an AstronomyKit addition. Astronomy Engine has no built-in support for 2060 Chiron.
 
-AstronomyKit provides gravity-simulated positions for the centaur 2060 Chiron using pre-computed JPL Horizons state vectors at reference epochs (2000, 2010, 2020, 2030, 2040). The nearest epoch is selected and propagated via n-body gravity simulation.
+AstronomyKit computes positions for the centaur 2060 Chiron from a table of Chebyshev polynomials fitted to JPL Horizons' heliocentric vectors. Each call reads one 38-day record, so it takes the same time anywhere from 1900 to 2150.
 
 ### Getting Chiron's Position
 
@@ -235,7 +235,7 @@ let observer = Observer(latitude: 40.7, longitude: -74.0)
 let horizon = try Chiron.horizon(at: .now, from: observer)
 ```
 
-Accuracy is highest near the reference epochs and degrades with distance from them. Within ±5 years of an epoch, error is expected to be less than 1 arcminute. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``. The range is checked on the time's Terrestrial Time, which the simulation steps in.
+The heliocentric position is within 10 km of every archived Horizons vector across the span; how far depends on how Horizons was queried, from 0.13 km to 7.1 km. Calculations are limited to years 1900 through 2150; times outside that range throw ``AstronomyError/badTime``. The range is checked on the time's Terrestrial Time.
 
 ## Observer Gravity
 

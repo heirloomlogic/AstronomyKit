@@ -32,8 +32,8 @@ extension Engine.Positions {
     /// to Neptune, in that order, with the masses of ``Engine/Gravity``.
     ///
     /// - Throws: `AstronomyError.badTime` for a TT beyond
-    ///   ``Engine/acceptedTTDays`` or not finite, outside Pluto's range, or
-    ///   for a result that is not finite; then `AstronomyError.invalidBody`
+    ///   ``Engine/acceptedTTDays`` or not finite, or for a result that is not
+    ///   finite; then `AstronomyError.invalidBody`
     ///   for a body none of these covers.
     static func heliocentricPosition(
         of body: CelestialBody, at time: Engine.Time
