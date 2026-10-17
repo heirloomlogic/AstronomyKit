@@ -81,7 +81,7 @@ struct EngineMoonHorizonsTests {
         let rows = IndependentReferenceArchive.shared.observations.filter { $0.body == "moon" }
         #expect(rows.count == 3)
         for row in rows {
-            let ut = IndependentReferenceDate.civil(row.utc).universalTime
+            let ut = IndependentReferenceDate.civil(row.utc, deltaTModel: .espenakMeeus).universalTime
             let time = Engine.Time(ut: ut, deltaTModel: .espenakMeeus)
             let equatorial = try Engine.Equatorial(Engine.Moon.geocentricPosition(at: time))
             let arcminutes = IndependentReferenceMath.angularSeparationArcminutes(

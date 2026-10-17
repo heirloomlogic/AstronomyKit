@@ -170,7 +170,9 @@ struct EngineLibrationTests {
     // MARK: - Event inputs
 
     static func time(_ utc: String) -> Engine.Time {
-        Engine.Time(ut: IndependentReferenceDate.civil(utc).universalTime, deltaTModel: .espenakMeeus)
+        Engine.Time(
+            ut: IndependentReferenceDate.civil(utc, deltaTModel: .espenakMeeus).universalTime,
+            deltaTModel: .espenakMeeus)
     }
 
     /// The Sun's longitude on the true ecliptic of date as the C engine's

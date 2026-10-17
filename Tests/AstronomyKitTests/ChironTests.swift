@@ -43,11 +43,19 @@ struct ChironTests {
                 #expect(throws: AstronomyError.badTime) { try Chiron.checkSupported(before) }
                 #expect(throws: AstronomyError.badTime) { _ = try Chiron.heliocentricPosition(at: before) }
                 #expect(throws: AstronomyError.badTime) { _ = try Chiron.geoState(at: before) }
-                // Delta T drops at 1900.0, so a UT up to 88 ms before the start
-                // has a TT inside the span (EngineChironTests); 89 ms before is outside.
-                try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.088 / 86_400, deltaTModel: model))
-                #expect(throws: AstronomyError.badTime) {
-                    try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.089 / 86_400, deltaTModel: model))
+                if model == .iersObserved {
+                    // Observed Delta T is continuous at 1900.0, so a UT 1 ms
+                    // before the start has a TT before the span's.
+                    #expect(throws: AstronomyError.badTime) {
+                        try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.001 / 86_400, deltaTModel: model))
+                    }
+                } else {
+                    // Espenak-Meeus Delta T drops at 1900.0, so a UT up to 88 ms before the
+                    // start has a TT inside the span (EngineChironTests); 89 ms before is outside.
+                    try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.088 / 86_400, deltaTModel: model))
+                    #expect(throws: AstronomyError.badTime) {
+                        try Chiron.checkSupported(AstroTime(ut: -36_524.5 - 0.089 / 86_400, deltaTModel: model))
+                    }
                 }
                 #expect(throws: AstronomyError.badTime) {
                     try Chiron.checkSupported(AstroTime(tt: Self.latestTT.nextUp, deltaTModel: model))
@@ -78,17 +86,18 @@ struct ChironTests {
         @Test("A time is checked by its TT; its UT neither passes nor blocks it")
         func checkedByTerrestrialTime() throws {
             // 2000-01-01 UT with a TT 2,700 years earlier, then each end.
+            // `earliestTT` is the start under Espenak-Meeus, so the pairs name it.
             let outside = [
-                AstroTime(tt: -1_000_000, ut: 0),
-                AstroTime(tt: Self.earliestTT.nextDown, ut: 0),
-                AstroTime(tt: Self.latestTT.nextUp, ut: 0),
+                AstroTime(tt: -1_000_000, ut: 0, deltaTModel: .espenakMeeus),
+                AstroTime(tt: Self.earliestTT.nextDown, ut: 0, deltaTModel: .espenakMeeus),
+                AstroTime(tt: Self.latestTT.nextUp, ut: 0, deltaTModel: .espenakMeeus),
             ]
             for time in outside {
                 #expect(throws: AstronomyError.badTime) { _ = try Chiron.heliocentricPosition(at: time) }
                 #expect(throws: AstronomyError.badTime) { _ = try Chiron.geoState(at: time) }
             }
-            try Chiron.checkSupported(AstroTime(tt: Self.earliestTT, ut: 0))
-            try Chiron.checkSupported(AstroTime(tt: Self.latestTT, ut: 1_000_000))
+            try Chiron.checkSupported(AstroTime(tt: Self.earliestTT, ut: 0, deltaTModel: .espenakMeeus))
+            try Chiron.checkSupported(AstroTime(tt: Self.latestTT, ut: 1_000_000, deltaTModel: .espenakMeeus))
 
             let pair = try Chiron.heliocentricPosition(at: AstroTime(tt: 0, ut: -1_000_000))
             let consistent = try Chiron.heliocentricPosition(at: AstroTime(tt: 0))
@@ -287,7 +296,7 @@ struct ChironTests {
             let rows = IndependentReferenceArchive.shared.chironObservations
             #expect(!rows.isEmpty)
             for row in rows {
-                let time = IndependentReferenceDate.civil(row.utc)
+                let time = IndependentReferenceDate.civil(row.utc, deltaTModel: .iersObserved)
                 let vector = Vector3D.from(
                     sphere: Spherical(
                         latitude: row.declinationDegrees, longitude: row.rightAscensionDegrees, distance: 1),

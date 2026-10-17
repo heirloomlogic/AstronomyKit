@@ -12,13 +12,17 @@ struct EngineLunarEventTests {
     }
 
     static func eventTime(_ utc: String) -> Engine.Time {
-        Engine.Time(tt: IndependentReferenceDate.civil(utc).terrestrialTime, deltaTModel: .espenakMeeus)
+        Engine.Time(
+            tt: IndependentReferenceDate.civil(utc, deltaTModel: .espenakMeeus).terrestrialTime,
+            deltaTModel: .espenakMeeus)
     }
 
     @Test("Published node and apsis UTC labels retain civil-time semantics")
     func publishedEventTimeSemantics() {
         for utc in ["2100-01-01T21:13Z", "2100-01-17T10:48Z"] {
-            #expect(Self.eventTime(utc).tt == IndependentReferenceDate.civil(utc).terrestrialTime)
+            #expect(
+                Self.eventTime(utc).tt
+                    == IndependentReferenceDate.civil(utc, deltaTModel: .espenakMeeus).terrestrialTime)
         }
     }
 

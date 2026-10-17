@@ -41,14 +41,14 @@
     "sourcePrintedMagnitude": 1.0
   },
   "buildSeconds": {
-    "debug": 0.34,
-    "release": 0.34
+    "debug": 40.03,
+    "release": 147.41
   },
   "limitations": "Sampled native geometry and published events, which the public facade uses since the #96 cutover. RP1301 direct Table 4 areas pass conditional rounding intervals. G0 is a mixed-k Besselian magnitude, so its square is retained only as a diagnostic beside physical single-radius area. No radius was fitted. Host costs are observations, not portable gates.",
-  "releaseExecutableBytes": 492737216,
+  "releaseExecutableBytes": 493858752,
   "releaseObjectBytes": {
-    "EngineGeoidIntersection.o": 31088,
-    "EngineGlobalSolarEvents.o": 92672
+    "EngineGeoidIntersection.o": 31184,
+    "EngineGlobalSolarEvents.o": 92712
   },
   "residuals": [
     {
@@ -89,21 +89,21 @@
   ],
   "resources": {
     "checksum": -2866939.3745380742,
-    "coldSeconds": 0.06443703174591064,
+    "coldSeconds": 0.06831896305084229,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 99,
-    "nextSeconds": 4.593804955482483,
-    "peakAfterColdBytes": 104153088,
-    "peakAfterWorkloadBytes": 106168320,
-    "peakBeforeBytes": 47202304
+    "nextSeconds": 4.886813998222351,
+    "peakAfterColdBytes": 105185280,
+    "peakAfterWorkloadBytes": 107200512,
+    "peakBeforeBytes": 48185344
   },
-  "runtimeBaseRevision": "aea1be96334ab01d71b57239a0e873cd6fc15c33",
+  "runtimeBaseRevision": "b9d310ce9a571cdeac3a5b2525bce8868fda9ad0",
   "schemaVersion": 1,
   "sourceHashes": {
     "Scripts/assess-global-solar-radii.py": "a23afc2a186c09466ef2db23ad8a14a55d84578fe90219d1f931bb0d0121d639",
     "Scripts/assess-rp1301-g0.py": "36dad831724e3c611793009c382c333eb80bdc8f625b16a65d9b92638be60882",
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
-    "Scripts/eclipse-data/global-captures.json": "6640bf997fa45b33a3581a935a491b08b021a8764eb2aa3ed93b5cdde8b7b590",
+    "Scripts/eclipse-data/global-captures.json": "d90aa1496d5ff4576f204212f5c03e9f095c3aea454742bd49a32384f68090e8",
     "Scripts/eclipse-data/global-references.json": "cff3956935437c3b24bcb17695e15bc743520f8e31f7f4c7cf6ee7a017acb207",
     "Scripts/eclipse-data/radius-comparison.json": "2dec7be5573f1630413fa2ca51a0efc7111af978517f64aa30f00fca062d7f1d",
     "Scripts/eclipse-data/radius-vectors.json": "7bbb9a9b3497f9a47b7f5852dc6e27564725622841ee46f48fe35779724948d5",
@@ -148,7 +148,8 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
     "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "24d3b6936ca45ffab9c2c2591a5de95ab21661f70c1cec97bf9b3b826892156f",
     "Sources/AstronomyKit/Engine/Foundation/EngineConstants.swift": "9504fdbc479821e8fbb658db830079cc86deada403331113e92bb98b768f946c",
-    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "e8059d781fcddcc8fe5d1f459427cb72f19a85541b8c486e66f925ded436cde2",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "841ca71bba922e1b620fba421e0ae020b56efe84132b515bdb07f42c08885af9",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaTObserved.swift": "0218d835be008ef0426a0a54c0bc50909bd0c15d4774769fff3ede011918be37",
     "Sources/AstronomyKit/Engine/Foundation/EngineDirectChebyshevTable.swift": "0937cf619659adbd0277a9204ca7952d75cce04218f26b26d9f767ac4f6a3d2e",
     "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift": "da587b4d643ba188392481fe846aed7c6cbe7fd01e84ab1d73706165c654e027",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
@@ -156,6 +157,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTables.swift": "b23eefd8a7160329868bc503a262f672489b32985bc22ae983ca2de6f432c3ba",
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
+    "Sources/AstronomyKit/Engine/Foundation/Generated/DeltaTObservedTable.swift": "0e0894da3b5558619d768fabd6964075764d21808dc23d288377561945fa6d31",
     "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "d354b0a71b21064e959bd81df91a215e6b236ffb6d8d931be278816bd97c5099",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
@@ -327,10 +329,10 @@
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "58c35f4991c4f394c6efecefc13e3f1a03dec0fb3319707ea4c66c554e80d230",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
     "Sources/AstronomyKit/Observer.swift": "5bd1ff1f613cec548aabdf724cd3167186568c84583b6eb350112c8891946677",
-    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
-    "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
+    "Sources/AstronomyKit/Time.swift": "3d38636da7ca64c91633896cc9494b03383055a5db951539c849c6c71fa449dd",
+    "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "30f1d283d8ab4d23a3756a47ec26a92cba71ed981551ebb4a71511509055a4b7",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "520a4b9c5dad0d9431212a10e807ccca9f9c2ede196b4599e4e02cd19c83f86c"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

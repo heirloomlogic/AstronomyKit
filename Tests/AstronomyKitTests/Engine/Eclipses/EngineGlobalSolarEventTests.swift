@@ -20,7 +20,9 @@ struct EngineGlobalSolarEventTests {
             ("2024-04-08T18:18:29Z", 8864.262835648147),
             ("2099-03-21T22:54:32Z", 36239.45453703704),
         ] {
-            #expect(IndependentReferenceDate.terrestrialCalendar(text).terrestrialTime == expected)
+            #expect(
+                IndependentReferenceDate.terrestrialCalendar(text, deltaTModel: .espenakMeeus).terrestrialTime
+                    == expected)
         }
     }
 
@@ -130,7 +132,7 @@ struct EngineGlobalSolarEventTests {
             rows.append(row)
         }
         for row in IndependentReferenceArchive.shared.globalSolarEclipses {
-            let time = IndependentReferenceDate.terrestrialCalendar(row.terrestrialTime)
+            let time = IndependentReferenceDate.terrestrialCalendar(row.terrestrialTime, deltaTModel: .espenakMeeus)
             try check(
                 row.terrestrialTime, time.terrestrialTime, row.kind, row.latitudeDegrees, row.longitudeDegrees,
                 row.timeToleranceSeconds, row.locationToleranceDegrees)

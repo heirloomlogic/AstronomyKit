@@ -72,7 +72,7 @@ struct AuditValidationTests {
         })
     func jplGeocentricObservation(reference: IndependentReferenceArchive.Observation) throws {
         let body = body(named: reference.body)
-        let time = IndependentReferenceDate.civil(reference.utc)
+        let time = IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved)
         let equatorial = try body.equatorial(
             at: time, from: .geocentric, equatorDate: .j2000, aberration: .corrected)
         let angularError = IndependentReferenceMath.angularSeparationArcminutes(
@@ -119,7 +119,7 @@ struct AuditValidationTests {
         var engineLongitudes: [Double] = []
         for reference in references {
             let state = try CelestialBody.mercury.geocentricEclipticState(
-                at: IndependentReferenceDate.civil(reference.utc))
+                at: IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved))
             #expect(
                 abs(
                     IndependentReferenceMath.wrappedDifference(
@@ -148,7 +148,8 @@ struct AuditValidationTests {
         arguments: IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron" })
     func chironPosition(reference: IndependentReferenceArchive.Vector) throws {
         let position = try Chiron.heliocentricPosition(
-            at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB))
+            at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB, deltaTModel: .iersObserved)
+        )
         let error = IndependentReferenceMath.maximumComponentError(
             actual: position, expected: reference.positionAU)
         #expect(
@@ -186,7 +187,8 @@ struct AuditValidationTests {
         position: Double, velocity: Double
     ) {
         let moons = try Jupiter.moons(
-            at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB))
+            at: IndependentReferenceDate.terrestrial(julianDateTDB: reference.julianDateTDB, deltaTModel: .iersObserved)
+        )
         let state: StateVector =
             switch reference.body {
             case "io": moons.io
@@ -204,7 +206,7 @@ struct AuditValidationTests {
 
     @Test("Published seasonal events", arguments: IndependentReferenceArchive.shared.seasons)
     func seasonalEvent(reference: IndependentReferenceArchive.Season) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved)
         let year = Calendar(identifier: .gregorian).component(.year, from: expected.date)
         let seasons = try Seasons.forYear(year)
         let actual: AstroTime =
@@ -271,7 +273,7 @@ struct AuditValidationTests {
         "Published lunar node events and positions",
         arguments: IndependentReferenceArchive.shared.lunarNodes)
     func lunarNode(reference: IndependentReferenceArchive.LunarNode) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved)
         let actual = try Moon.searchNode(after: expected.addingDays(-5))
         #expect(actual.kind == (reference.kind == "ascending" ? .ascending : .descending))
         #expect(
@@ -286,7 +288,7 @@ struct AuditValidationTests {
 
     @Test("Published lunar apsides", arguments: IndependentReferenceArchive.shared.lunarApsides)
     func lunarApsis(reference: IndependentReferenceArchive.Apsis) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved)
         let actual = try Moon.searchApsis(after: expected.addingDays(-5))
         #expect(actual.kind == (try apsisKind(named: reference.kind)))
         #expect(
@@ -306,7 +308,7 @@ struct AuditValidationTests {
 
     @Test("Published Earth apsides", arguments: IndependentReferenceArchive.shared.earthApsides)
     func earthApsis(reference: IndependentReferenceArchive.Apsis) throws {
-        let expected = IndependentReferenceDate.civil(reference.utc)
+        let expected = IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved)
         let actual = try CelestialBody.earth.searchApsis(after: expected.addingDays(-5))
         #expect(actual.kind == (try apsisKind(named: reference.kind)))
         #expect(
@@ -334,7 +336,7 @@ struct AuditValidationTests {
         let peakError = IndependentReferenceDate.universalSeconds(actual.peak, expected)
         #expect(peakError <= reference.toleranceSeconds)
         if reference.universalTime == "2099-04-05T08:27Z" {
-            let civilTime = IndependentReferenceDate.civil(reference.universalTime)
+            let civilTime = IndependentReferenceDate.civil(reference.universalTime, deltaTModel: .iersObserved)
             // Named sanity check: finite only, not an accuracy comparison.
             #expect(IndependentReferenceDate.seconds(actual.peak, civilTime).isFinite)
         }
@@ -350,7 +352,13 @@ struct AuditValidationTests {
         "NASA global solar eclipse peaks",
         arguments: IndependentReferenceArchive.shared.globalSolarEclipses)
     func globalSolarEclipse(reference: IndependentReferenceArchive.GlobalSolarEclipse) throws {
-        let expected = IndependentReferenceDate.terrestrialCalendar(reference.terrestrialTime)
+        // The catalog computes each greatest-eclipse location with the Delta T
+        // it prints beside the TD peak, Espenak-Meeus (201 s in 2099). Earth's
+        // rotation under another Delta T moves the longitude by 15″ a second,
+        // so the location is compared under the catalog's own model, as
+        // `EngineGlobalSolarEventTests` does.
+        let expected = IndependentReferenceDate.terrestrialCalendar(
+            reference.terrestrialTime, deltaTModel: .espenakMeeus)
         let actual = try Eclipse.searchGlobalSolar(after: expected.addingDays(-10))
         #expect(actual.kind == eclipseKind(named: reference.kind))
         #expect(
@@ -415,7 +423,7 @@ struct AuditValidationTests {
     @Test("Frame mutation exceeds the archived position tolerance")
     func frameMutationFails() throws {
         let reference = try #require(archive.observations.first { $0.body == "mars" })
-        let time = IndependentReferenceDate.civil(reference.utc)
+        let time = IndependentReferenceDate.civil(reference.utc, deltaTModel: .iersObserved)
         let correct = try CelestialBody.mars.equatorial(
             at: time, from: .geocentric, equatorDate: .j2000, aberration: .corrected)
         let wrongFrame = try CelestialBody.mars.equatorial(
@@ -437,7 +445,7 @@ struct AuditValidationTests {
         let reference = try #require(
             archive.lunarPhases.first { $0.sourceTime == "2100-01-18T12:35:00.000Z" })
         let universal = IndependentReferenceDate.universal(reference.sourceTime, deltaTModel: .espenakMeeus)
-        let misreadAsCivil = IndependentReferenceDate.civil(reference.sourceTime)
+        let misreadAsCivil = IndependentReferenceDate.civil(reference.sourceTime, deltaTModel: .espenakMeeus)
         #expect(IndependentReferenceDate.terrestrialSeconds(universal, misreadAsCivil) > reference.toleranceSeconds)
     }
 
@@ -446,7 +454,7 @@ struct AuditValidationTests {
         let vector = try #require(
             archive.vectors.first { $0.body == "chiron" && $0.julianDateTDB == 2_451_544.5 })
         let actualVector = try Chiron.heliocentricPosition(
-            at: IndependentReferenceDate.terrestrial(julianDateTDB: vector.julianDateTDB))
+            at: IndependentReferenceDate.terrestrial(julianDateTDB: vector.julianDateTDB, deltaTModel: .iersObserved))
         var signMutated = vector.positionAU
         signMutated[0] *= -1
         #expect(
@@ -457,7 +465,7 @@ struct AuditValidationTests {
                 > vector.sanityToleranceAU!)
         let apsis = archive.earthApsides[0]
         let actualApsis = try CelestialBody.earth.searchApsis(
-            after: IndependentReferenceDate.civil(apsis.utc).addingDays(-5))
+            after: IndependentReferenceDate.civil(apsis.utc, deltaTModel: .iersObserved).addingDays(-5))
         #expect(abs(actualApsis.distanceAU - apsis.distanceAU!) <= apsis.distanceToleranceAU!)
         #expect(
             abs(actualApsis.distanceAU - apsis.distanceAU! * 149_597_870.7) > apsis.distanceToleranceAU!)

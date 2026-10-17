@@ -109,7 +109,7 @@ extension Engine {
 
 ## Time and the Delta T model
 
-In the tree: `EngineTime.swift`, `EngineDeltaT.swift`, `EngineCalendar.swift`.
+In the tree: `EngineTime.swift`, `EngineDeltaT.swift`, `EngineDeltaTObserved.swift`, `EngineCalendar.swift`, and `Generated/DeltaTObservedTable.swift`, which `Scripts/generate-deltat-table.py` writes.
 
 `Engine.Time` holds `ut` (modeled UT1 days), `tt` (Terrestrial Time days) and `deltaTModel`, the public `DeltaTModel` that relates them.
 
@@ -133,11 +133,12 @@ extension Engine.DeltaT {
 - `init(ut:tt:deltaTModel:)` stores both scales as given. It keeps the model only when both are finite; otherwise the time is invalid and its scales stay as given, so a huge UT with an infinite TT still reports that UT.
 - `fromPair(ut:tt:deltaTModel:)` rebuilds a time from recorded scales, as `AstroTime(tt:ut:deltaTModel:)` does, and returns `Engine.Time.invalid` (NaN scales, no model) when either scale is not finite.
 - `isValid` is true when both scales are finite.
-- `init(ut:deltaTModel:)` sets `tt = ut + ΔT(ut) / 86400`. With Espenak-Meeus, TT overflows from about |ut| = 1e158 days and the time is invalid with its UT kept.
+- `init(ut:deltaTModel:)` sets `tt = ut + ΔT(ut) / 86400`. Under every model, TT overflows from about |ut| = 8.7e157 days and the time is invalid with its UT kept.
 - `init(tt:deltaTModel:)` is the bounded inverse of local patch 10 in MAINTAINING.md. It returns exactly the requested TT. It starts from `ut = tt`, iterates at most 128 times, and accepts a UT whose model TT is within `max(1e-12, 2ε|tt|)` days, where ε = 2.22e-16 is the double epsilon, so a large TT converges at the precision a double holds. In the TT gap left by a positive Delta T jump it bisects to the first representable UT after the jump. In the overlap of a negative jump it returns the solution iteration reaches first: the later one where Delta T is positive and the earlier one where it is negative (1900). A TT that is not finite, an iterate that is not finite, or no convergence gives `invalid`.
 - `civil(utcDays:deltaTModel:)` and `utcDays` convert civil UTC with the existing generated table in `UTCOffsetTable.swift` (`CivilTime`), from 1961 on. Before 1961 the civil day count is taken as UT1. A TT inside a positive leap second maps to the following midnight, and where a negative historical step repeats civil times the later occurrence wins.
 - `days(year:month:day:hour:minute:second:)` is the proleptic Gregorian day count from 2000-01-01 12:00, with every integer component clamped to `Int32`.
-- `Engine.DeltaT.seconds(ut:model:)` evaluates `espenakMeeus(ut:)` or `jplHorizons(ut:)`, which holds UT at 17 tropical years after J2000.
+- `Engine.DeltaT.seconds(ut:model:)` evaluates `Observed.seconds(ut:)`, `espenakMeeus(ut:)` or `jplHorizons(ut:)`, which holds UT at 17 tropical years after J2000.
+- `Engine.DeltaT.Observed` is `DeltaTModel.iersObserved`, the process default: daily IERS EOP 20 C04 and Bulletin A rows at 0h UTC from 1962-01-01, linear in UT1 between rows; before them the Table S15 v2020 spline in Julian epoch years, rebuilt by the generator as C0 and C1 cubic Hermite segments whose last ends on the first C04 value and rate; before −720 and after the last prediction the integral of HMNAO's long-term length-of-day model, continuous with the value at the join. `uncertainty(ut:)` and `regime(ut:)` give the stated uncertainty and the source. The rows hold the generator's exact integers in units of 1e-7 s, and each function performs the 3.2.0 C engine's `Astronomy_DeltaT_IersObserved`, `Astronomy_DeltaTUncertainty_IersObserved` and `Astronomy_DeltaTRegime_IersObserved` operations in the same order on the same values. The generator writes that C header from the same run and checks both. The model is continuous, so the TT inverse never meets a gap with it.
 
 A UT-derived time (adding days or a search step) derives TT with the source time's model, so one calculation uses one model from its input to its result. The process default belongs to the public layer, not to `Engine`: engine functions take a model or a time that carries one, and the public layer reads the default once per call, when the caller passes no model.
 
@@ -157,12 +158,13 @@ The process default is a `Synchronization.Atomic` in the public layer (`Astronom
 
 ### Published-value checks
 
-Tests under `Tests/AstronomyKitTests/Engine/Foundation/` check the time code against published sources, not against C output:
+Tests under `Tests/AstronomyKitTests/Engine/Foundation/` check the time code against published sources, not against C output; `DeltaTIersObservedTests` checks the observed model:
 
 - Espenak-Meeus against NASA's polynomial page, transcribed independently, at ten points in each bounded piece, two in each open-ended one, and on both sides of every piece boundary; against Table 1 from −500 to +500 within the 4 seconds that page states, from 600 to 1800 within each value's published standard error, and against Table 2 (1955 to 2005) within the 0.1 s it is published to.
 - The TT inverse in the gap or overlap of every Espenak-Meeus discontinuity, under both models where the model reaches it.
 - Civil UTC against every row of `Scripts/time-data/tai-utc.dat`, read directly, at the start of each row and halfway to the next; IERS Bulletin C's 37 s; the ERFA `t_utctai` reference; the 2016 leap second and the 1961 negative step.
 - Day counts against Meeus (Astronomical Algorithms, chapter 7), ERFA `eraCal2jd`, and Julian Day 0, with the 146,097-day 400-year cycle, normalization and `Int32` clamping.
+- The observed model against the raw IERS files in `Scripts/deltat-data/`, parsed in the test independently of the generator: civil UTC at every daily C04 and Bulletin A row reproduces IERS UT1 − UTC within 1 µs, and the 12h C04 samples within the stated 0.16 ms interpolation error; Bulletin A against C04 over the year before the join; value continuity at every spline knot and regime join, rate continuity at every knot and at 1962, and a five-point second derivative across each; HMNAO's tabulated historical and extrapolated Delta T; and civil sunrise and sunset at Asheville against JPL Horizons with its EOP-based UT1 within 0.25 s.
 
 The JPL Horizons model is a reverse-engineered approximation with no published values; its tests check that it equals Espenak-Meeus before the hold and is constant after it.
 

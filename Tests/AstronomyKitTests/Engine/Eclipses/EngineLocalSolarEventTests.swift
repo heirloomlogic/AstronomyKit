@@ -27,7 +27,10 @@ struct EngineLocalSolarEventTests {
         let time = IndependentReferenceDate.universal("2024-04-08T19:04:48Z", deltaTModel: .espenakMeeus)
         #expect(time.universalTime == 8864.295)
         #expect(
-            abs(time.universalTime - IndependentReferenceDate.civil("2024-04-08T19:04:48Z").universalTime) * 86400 > 1)
+            abs(
+                time.universalTime
+                    - IndependentReferenceDate.civil("2024-04-08T19:04:48Z", deltaTModel: .espenakMeeus).universalTime)
+                * 86400 > 1)
     }
 
     @Test("Published local contact kinds, UT1 times and altitudes")
@@ -58,7 +61,9 @@ struct EngineLocalSolarEventTests {
                 contacts.append([
                     "name": label, "source": source, "sourceUT": expected.universalTime, "ut": actual.time.ut,
                     "tt": actual.time.tt, "altitude": actual.altitude,
-                    "formerUTCResidualSeconds": (actual.time.ut - IndependentReferenceDate.civil(source).universalTime)
+                    "formerUTCResidualSeconds":
+                        (actual.time.ut
+                        - IndependentReferenceDate.civil(source, deltaTModel: .espenakMeeus).universalTime)
                         * 86400,
                 ])
             }

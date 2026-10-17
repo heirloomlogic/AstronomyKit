@@ -98,7 +98,7 @@ struct EngineStateOwnershipTests {
                 distanceBody: distance.body, distanceMode: distance.2.mode, distanceTT: distance.time.tt,
                 distanceAU: distance.2.observableRangeAU, distanceToleranceKM: distance.2.allowedErrorKm,
                 auditBody: try body(named: audit.body),
-                auditUT: IndependentReferenceDate.civil(audit.utc).universalTime,
+                auditUT: IndependentReferenceDate.civil(audit.utc, deltaTModel: .espenakMeeus).universalTime,
                 auditRightAscensionDegrees: audit.rightAscensionDegrees,
                 auditDeclinationDegrees: audit.declinationDegrees,
                 auditToleranceArcminutes: audit.angularToleranceArcminutes, index: index)

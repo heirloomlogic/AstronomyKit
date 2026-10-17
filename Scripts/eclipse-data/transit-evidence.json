@@ -1,7 +1,7 @@
 {
   "buildSeconds": {
-    "debug": 0.34,
-    "release": 0.34
+    "debug": 40.03,
+    "release": 147.41
   },
   "limitations": "Sampled independent UT contacts/angular minima and published next identities, not full-domain accuracy. Physical spheres use NASA fact-sheet mean radii; these are not attributed to the Meeus catalog. Apparent vectors retain engine light-time/aberration conventions. OH2001 December penumbral contacts remain outside 120 s; matching Danjon diagrams are separately qualified. Global G0/1986 and local peak limitations remain in their evidence owners. The public facade runs on these searches since the #96 cutover; host costs are not portable gates.",
   "published": [
@@ -98,21 +98,21 @@
       "url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/venusfact.html"
     }
   },
-  "releaseExecutableBytes": 492737216,
+  "releaseExecutableBytes": 493858752,
   "releaseObjectBytes": {
-    "EngineTransitEvents.o": 56808
+    "EngineTransitEvents.o": 56864
   },
   "resources": {
     "checksum": 537515.4329263234,
-    "coldSeconds": 0.03891897201538086,
+    "coldSeconds": 0.04123103618621826,
     "host": "Version 27.0.1 (Build 26A434)",
     "nextCount": 19,
-    "nextSeconds": 1.0767790079116821,
-    "peakAfterColdBytes": 82591744,
-    "peakAfterWorkloadBytes": 91865088,
-    "peakBeforeBytes": 47710208
+    "nextSeconds": 1.1534349918365479,
+    "peakAfterColdBytes": 82460672,
+    "peakAfterWorkloadBytes": 91897856,
+    "peakBeforeBytes": 47546368
   },
-  "runtimeBaseRevision": "aea1be96334ab01d71b57239a0e873cd6fc15c33",
+  "runtimeBaseRevision": "b9d310ce9a571cdeac3a5b2525bce8868fda9ad0",
   "schemaVersion": 1,
   "sequences": {
     "global": [
@@ -238,7 +238,7 @@
   "sourceHashes": {
     "Scripts/capture-global-solar.py": "60e3cd29f2ec6efb8bc98c7df745c792c3d61c34676ae20ea99d3ee10ac91f1b",
     "Scripts/capture-transit-references.py": "353dbde0ada3434cb96205cffc0aeda8fff46142b876c99015246c805daee224",
-    "Scripts/eclipse-data/transit-captures.json": "140d3af1c7d4aac5db42da060aae422efdc5573f3dd5c9aa1ddcabc52803a528",
+    "Scripts/eclipse-data/transit-captures.json": "6fcaf160f563e9432fa4e2760c643f936518df164232f4af5b19e8255a4df971",
     "Scripts/eclipse-data/transit-references.json": "cc822496e688ba73e8d9e83d1aaab071d436bebf24c964bb4ca4537218d543bb",
     "Scripts/record-eclipse-event-evidence.py": "3bb05c08c84169ebda915352a959fa4d6949cdabbe69fab639555f5625d0185a",
     "Scripts/record-transit-evidence.py": "86347187735dff97197d039bd9c3fe350e5402ebed2dc757f809fc5c861fcccf",
@@ -262,7 +262,7 @@
     "Scripts/reference-data/sources/venus.html": "c06f2f10efc8554328bb51ed1725d13f1ec53a5a82a0c25089dcf1104994ca7f",
     "Scripts/test_transit_evidence.py": "1c1d357b43edb7fefbfdf06853a23bba786aab6ca7604eca754462f98fe2217a",
     "Sources/AstronomyKit/AstronomyError.swift": "7122525f8f8796baaef9e6a3baff8c2332d0a0f817927af6c98d83b4a81c7746",
-    "Sources/AstronomyKit/AstronomyKit.swift": "0286b5b438eab83063b404a6d79b202997ab35bb237ab45e56b86efa6f59615b",
+    "Sources/AstronomyKit/AstronomyKit.swift": "3560464447c6b40240b5962dee7d516a8547159aac3cf82a9b434a45d5bbeb18",
     "Sources/AstronomyKit/CelestialBody.swift": "7c94d629be89ce9c7e2d2a4de616e3f526fd2d0034d8750e60e8d400f159aa61",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Bodies/EngineJupiterMoons.swift": "63f246663de2c8d4fbbe976cc737f4881a09b14aae55d5c64e4d997c084b751b",
@@ -284,7 +284,8 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
     "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "24d3b6936ca45ffab9c2c2591a5de95ab21661f70c1cec97bf9b3b826892156f",
     "Sources/AstronomyKit/Engine/Foundation/EngineConstants.swift": "9504fdbc479821e8fbb658db830079cc86deada403331113e92bb98b768f946c",
-    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "e8059d781fcddcc8fe5d1f459427cb72f19a85541b8c486e66f925ded436cde2",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "841ca71bba922e1b620fba421e0ae020b56efe84132b515bdb07f42c08885af9",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaTObserved.swift": "0218d835be008ef0426a0a54c0bc50909bd0c15d4774769fff3ede011918be37",
     "Sources/AstronomyKit/Engine/Foundation/EngineDirectChebyshevTable.swift": "0937cf619659adbd0277a9204ca7952d75cce04218f26b26d9f767ac4f6a3d2e",
     "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift": "da587b4d643ba188392481fe846aed7c6cbe7fd01e84ab1d73706165c654e027",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
@@ -292,6 +293,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTables.swift": "b23eefd8a7160329868bc503a262f672489b32985bc22ae983ca2de6f432c3ba",
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
+    "Sources/AstronomyKit/Engine/Foundation/Generated/DeltaTObservedTable.swift": "0e0894da3b5558619d768fabd6964075764d21808dc23d288377561945fa6d31",
     "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "d354b0a71b21064e959bd81df91a215e6b236ffb6d8d931be278816bd97c5099",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
@@ -462,16 +464,16 @@
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "58c35f4991c4f394c6efecefc13e3f1a03dec0fb3319707ea4c66c554e80d230",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
-    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
+    "Sources/AstronomyKit/Time.swift": "3d38636da7ca64c91633896cc9494b03383055a5db951539c849c6c71fa449dd",
     "Sources/AstronomyKit/Transit.swift": "983f8382095c09633884766f861a26707ed9f6022ea6ec937a90683034c4e854",
     "Sources/AstronomyKit/UTCOffsetTable.swift": "1aeecd498507255293aa63fde986cea402fd2b8840c2e385b12d879628d3def5",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
     "Sources/CLibAstronomy/include/astronomy.h": "86708c090b3a521b9016d8c8d5ac2244a1d75fcf4b651a8a526ec6e7e4927d44",
-    "Tests/AstronomyKitTests/AuditValidationTests.swift": "5590fd73ddbdc7774485ad5f466bd4d42ef49cd62f6b4d6634e2ecd0f57304c1",
-    "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "48b2e6d3dd817f6ebc4b4469ab0557716620504fed0b8234f8e904fd7cfb052f",
-    "Tests/AstronomyKitTests/Engine/Eclipses/EngineTransitEventTests.swift": "8f33c1523ac370875183c729e0f6de0f9d519501f0f963a01fdd3bc2b4d9cf3c",
+    "Tests/AstronomyKitTests/AuditValidationTests.swift": "a186b1b01d8f4f227e0d1d9a69d7028206c94c2ff813ce17220701e09398f185",
+    "Tests/AstronomyKitTests/Engine/Eclipses/EngineGlobalSolarEventTests.swift": "30f1d283d8ab4d23a3756a47ec26a92cba71ed981551ebb4a71511509055a4b7",
+    "Tests/AstronomyKitTests/Engine/Eclipses/EngineTransitEventTests.swift": "1a513645dbd73942ff534ddf812a6a7fbc3e42de47c14cb713710d09f49eb74a",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "520a4b9c5dad0d9431212a10e807ccca9f9c2ede196b4599e4e02cd19c83f86c"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

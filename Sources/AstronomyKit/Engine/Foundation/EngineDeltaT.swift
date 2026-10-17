@@ -2,7 +2,8 @@
 //  EngineDeltaT.swift
 //  AstronomyKit
 //
-//  The two Delta T models: Espenak-Meeus and the JPL Horizons approximation.
+//  The Delta T models: dispatch, Espenak-Meeus and the JPL Horizons
+//  approximation. The observed default is in EngineDeltaTObserved.swift.
 //
 
 extension Engine {
@@ -15,6 +16,7 @@ extension Engine {
         /// TT − UT in seconds at modeled UT1 `ut` days since J2000.
         static func seconds(ut: Double, model: DeltaTModel) -> Double {
             switch model {
+            case .iersObserved: Observed.seconds(ut: ut)
             case .espenakMeeus: espenakMeeus(ut: ut)
             case .jplHorizons: jplHorizons(ut: ut)
             }

@@ -110,11 +110,17 @@ struct EngineChironTests {
 
     /// Espenak-Meeus Delta T is -2.7016 s just before 1900.0, from the
     /// 1860-1900 polynomial, and -2.79 s at it, from the 1900-1920 one. Both
-    /// models use those pieces there. A UT up to 88.4 ms before 1900-01-01
-    /// 00:00 therefore has a TT after the start's, and is accepted.
+    /// polynomial models use those pieces there. A UT up to 88.4 ms before
+    /// 1900-01-01 00:00 therefore has a TT after the start's, and is accepted.
+    /// Observed Delta T is continuous there, so a UT 1 ms before is outside.
     @Test("UTs up to 88 ms before the start are accepted, after Delta T drops at 1900.0")
     func startAfterDeltaTDrop() throws {
-        for model in DeltaTModel.allCases {
+        try Chiron.checkSupported(Engine.Time(ut: Chiron.earliestUT, deltaTModel: .iersObserved))
+        #expect(throws: AstronomyError.badTime) {
+            try Chiron.checkSupported(
+                Engine.Time(ut: Chiron.earliestUT - 0.001 / 86_400, deltaTModel: .iersObserved))
+        }
+        for model in [DeltaTModel.espenakMeeus, .jplHorizons] {
             let inside = Engine.Time(ut: Chiron.earliestUT - 0.088 / 86_400, deltaTModel: model)
             let outside = Engine.Time(ut: Chiron.earliestUT - 0.089 / 86_400, deltaTModel: model)
             try Chiron.checkSupported(inside)

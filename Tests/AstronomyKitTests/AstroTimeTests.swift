@@ -120,14 +120,13 @@ struct AstroTimeTests {
         @Test("Add fractional days")
         func addFractionalDays() {
             let time = AstroTime(year: 2_025, month: 1, day: 1, hour: 0)
-            let later = time.addingDays(0.5)  // Add 12 hours
+            let later = time.addingDays(0.5)  // Add 12 hours of UT1
 
-            let date = later.date
-            var calendar = Calendar(identifier: .gregorian)
-            calendar.timeZone = TimeZone(identifier: "UTC")!
-            let hour = calendar.component(.hour, from: date)
-
-            #expect(hour == 12)
+            // UT1 and UTC run at rates that differ by the excess length of
+            // day, a few milliseconds per day, so 12 h of UT1 is 12 h of UTC
+            // to within the change in Delta T over that half day.
+            let elapsed = later.date.timeIntervalSince(time.date)
+            #expect(abs(elapsed - 43_200) < 0.005)
         }
 
         @Test("Add positive hours")
