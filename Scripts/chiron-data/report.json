@@ -1,5 +1,4 @@
 {
-  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
   "coverage": {
     "allSeamsHeldout": true,
     "endJulianDateTDB": 2506333.5,
@@ -10,20 +9,24 @@
     "startJulianDateTDB": 2415019.5
   },
   "limitations": [
-    "The limits are reversible first-link source-reproduction screens, not a public AstronomyKit accuracy policy.",
+    "The 1 km and 1 km/day limits screen how well the table reproduces its source; they are not a public accuracy promise.",
     "The passing residuals apply to the exact aligned daily and half-day query recipe. The retained offset 38-day negative query differs by more than 1 km, so this report does not claim the same result for every legitimate Horizons sampling recipe.",
     "The archived heldouts cover every record, every seam, and both endpoints, but finite samples do not establish a continuous-domain error bound.",
-    "Agreement with JPL Horizons solution 171 does not establish the physical accuracy or future orbit uncertainty of that solution.",
-    "Lookup latency, package/build cost, and public route behavior remain Link 2 work after PR #283 clears review and ownership.",
-    "This foundation does not change the runtime, its supported interval, or its TT-to-TDB and frame conversions."
+    "Agreement with JPL Horizons solution 171 does not establish the physical accuracy or future orbit uncertainty of that solution."
   ],
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "screen": {
     "analyticVelocity": {
       "julianDateTDB": 2443481.5,
       "maximumKmPerTDBDay": 0.000209916,
       "record": 749,
       "x": -1.0
+    },
+    "archivedHorizonsVectors": {
+      "epochs": 108136,
+      "julianDateTDB": 2487307.5,
+      "maximumPositionKm": 7.093823918,
+      "statedLimitKm": 10.0
     },
     "heldoutXPerRecord": [
       -1.0,
@@ -95,8 +98,9 @@
   "table": {
     "coefficientCount": 115344,
     "degreeCount": 16,
-    "layout": "record, x/y/z axis, ascending Chebyshev degree; uniform record index floor((jdTDB-start)/38), with the inclusive final endpoint handled explicitly by a future runtime integration",
+    "layout": "record, x/y/z axis, ascending Chebyshev degree, km on ICRF axes; record floor((jdTDB-start)/38) holds [start + 38k, start + 38(k + 1)), so the final endpoint is outside the table",
     "payloadBytes": 922752,
-    "payloadSHA256": "7c851fded389074bb523c4ea4ab19df3688db74cf09850af189ac0f301f20904"
+    "payloadSHA256": "7c851fded389074bb523c4ea4ab19df3688db74cf09850af189ac0f301f20904",
+    "swiftSource": "Sources/AstronomyKit/Engine/Gravity/Generated/Chiron/ChironCoefficients.swift"
   }
 }

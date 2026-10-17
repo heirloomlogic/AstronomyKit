@@ -2,8 +2,7 @@
 //  EngineChironTests.swift
 //  AstronomyKit
 //
-//  Chiron's anchors, supported span, anchor choice, reuse, and the states
-//  against JPL Horizons.
+//  Chiron's table, its supported span, and its states against JPL Horizons.
 //
 
 import Foundation
@@ -28,66 +27,90 @@ struct EngineChironTests {
     /// The start of the span, 1900-01-01 00:00 UT, as TT.
     static let earliestTT = Engine.Time(ut: Chiron.earliestUT, deltaTModel: .espenakMeeus).tt
 
-    /// Horizons' Chiron from `sources/horizons/chiron-anchor-vector.json`.
-    static let vectors = IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron-anchor" }
+    // MARK: - Table
 
-    static func reference(_ julianDateTDB: Double) throws -> IndependentReferenceArchive.Vector {
-        try #require(vectors.first { $0.julianDateTDB == julianDateTDB })
+    /// 2,403 records of 38 days from 1899-12-31 00:00 TDB, which leaves
+    /// about a day before the span's start for light time (under three hours
+    /// at Chiron's distance) and two days after its end.
+    @Test("The table covers the span with a day to spare at each end")
+    func coverage() {
+        let table = Chiron.table
+        #expect(table.start == -36_525.5)
+        #expect(table.recordDays == 38)
+        #expect(table.recordCount == 2_403)
+        #expect(table.degreeCount == 16)
+        #expect(table.coefficients.count == 2_403 * 3 * 16)
+        let end = table.start + Double(table.recordCount) * table.recordDays
+        #expect(table.start <= Self.earliestTT - 0.99)
+        #expect(end >= Chiron.latestTT + 1.99)
     }
 
-    /// Kilometres and arcseconds between the engine's state at a Horizons
-    /// epoch and Horizons' position, and the velocity error over the speed.
-    static func errors(
-        _ reference: IndependentReferenceArchive.Vector
-    ) throws -> (km: Double, arcseconds: Double, velocity: Double) {
-        let state = try Chiron.heliocentricState(at: time(tt: Horizons.tt(reference)))
-        let km = length(state.positionVector - Horizons.expected(reference)) * Engine.kilometersPerAU
-        let arcseconds = try Horizons.arcminutes(state.positionVector, reference) * 60
-        let velocity = EngineMoonStatesTests.eqj(reference.velocityAUPerDay)
-        return (km, arcseconds, length(state.velocityVector - velocity) / length(velocity))
+    /// `Scripts/chiron-data/report.json` records the largest jump between
+    /// records as 0.136 km and 0.000217 km per day. Each record is read just
+    /// before its end and carried to it at its velocity, then compared with
+    /// the next record's start.
+    @Test("Adjacent records meet within 0.2 km and 0.001 km per day")
+    func seams() {
+        let table = Chiron.table
+        let step = 1e-6
+        var position = 0.0
+        var velocity = 0.0
+        for record in 1..<table.recordCount {
+            let seam = table.start + Double(record) * table.recordDays
+            guard let before = table.evaluate(tdb: seam - step), let after = table.evaluate(tdb: seam) else {
+                Issue.record("record \(record) is missing")
+                return
+            }
+            position = max(position, Self.length(before.position + before.velocity * step - after.position))
+            velocity = max(velocity, Self.length(before.velocity - after.velocity))
+        }
+        #expect(position <= 0.2, "\(position) km")
+        #expect(velocity <= 0.001, "\(velocity) km/day")
     }
 
-    /// True in an optimized build. The 2150 check integrates 50 years
-    /// against the planets' full series, which takes about 30 s optimized
-    /// and many minutes in Debug.
-    static let optimized: Bool = {
-        #if DEBUG
-        return false
-        #else
-        return true
-        #endif
-    }()
+    // MARK: - Against JPL Horizons
 
-    // MARK: - Anchors and span
-
-    static let anchorDates = [2_451_544.5, 2_455_197.5, 2_458_849.5, 2_462_502.5, 2_466_154.5]
-
-    /// The anchors are Horizons states as AstronomyKit recorded them years
-    /// ago. Horizons' current solution moves them by 0.6 to 4.1 km and
-    /// their velocities by at most 1.2e-11 AU per day.
-    @Test("The anchors match Horizons' current states within 5 km, at 00:00 TDB")
-    func anchors() throws {
-        #expect(Chiron.anchors.count == 5)
-        #expect(Self.vectors.count == 19)
-        for (anchor, date) in zip(Chiron.anchors, Self.anchorDates) {
-            let reference = try Self.reference(date)
-            let km = Self.length(anchor.position - Horizons.expected(reference)) * Engine.kilometersPerAU
-            let velocity = Self.length(anchor.velocity - EngineMoonStatesTests.eqj(reference.velocityAUPerDay))
+    /// Horizons' Chiron from `sources/horizons/chiron-anchor-vector.json`
+    /// and `chiron-vector.json`: 1900, the 2000–2040 decades with a day
+    /// either side of their midpoints, 2100 and 2150. None is a table source
+    /// epoch, and each was requested as a time list rather than the table's
+    /// daily series. Horizons' small-body integration varies slightly with
+    /// the query, so the measured gap, 2.3 km and 0.0011 km per day at most,
+    /// exceeds the 0.13 km of the heldout epochs in
+    /// `Scripts/chiron-data/report.json`.
+    @Test("Within 5 km and 0.01 km per day of every recorded Horizons vector, 1900 to 2150")
+    func horizonsVectors() throws {
+        let vectors = IndependentReferenceArchive.shared.vectors.filter {
+            $0.body == "chiron" || $0.body == "chiron-anchor"
+        }
+        #expect(vectors.count == 22)
+        #expect(vectors.contains { $0.julianDateTDB == 2_415_020.5 })
+        #expect(vectors.contains { $0.julianDateTDB == 2_506_331.5 })
+        for reference in vectors {
+            let state = try Chiron.heliocentricState(at: Self.time(tt: Horizons.tt(reference)))
+            let km = Self.length(state.positionVector - Horizons.expected(reference)) * Engine.kilometersPerAU
+            let velocity = EngineMoonStatesTests.eqj(reference.velocityAUPerDay)
+            let kmPerDay = Self.length(state.velocityVector - velocity) * Engine.kilometersPerAU
             #expect(km <= 5, "\(reference.tdb): \(km) km")
-            #expect(velocity <= 2e-11, "\(reference.tdb): \(velocity)")
-            // At these 2000–2040 anchors, 00:00 TDB is within 1.7 ms (2e-8 day) of 00:00 TT.
-            #expect(abs(anchor.tt - (date - 2_451_545)) <= 2e-8)
+            #expect(kmPerDay <= 0.01, "\(reference.tdb): \(kmPerDay) km/day")
         }
     }
 
-    @Test("At an anchor's time the state is the anchor")
-    func atAnchor() throws {
-        for anchor in Chiron.anchors {
-            let state = try Chiron.heliocentricState(at: Self.time(tt: anchor.tt))
-            #expect(Self.length(state.positionVector - anchor.position) <= 1e-14)
-            #expect(Self.length(state.velocityVector - anchor.velocity) <= 1e-17)
+    @Test("The velocity is the derivative of the position per TT day")
+    func velocity() throws {
+        let h = 1.0 / 64
+        for tt in [-36_000.25, -1_000.5, 9_500.75, 54_000.125] {
+            func position(_ offset: Double) throws -> SIMD3<Double> {
+                try Chiron.heliocentricState(at: Self.time(tt: tt + offset)).positionVector
+            }
+            let difference =
+                (try position(-2 * h) - 8 * position(-h) + 8 * position(h) - position(2 * h)) / (12 * h)
+            let state = try Chiron.heliocentricState(at: Self.time(tt: tt))
+            #expect(Self.length(state.velocityVector - difference) <= 1e-11, "\(tt)")
         }
     }
+
+    // MARK: - Span
 
     @Test("The span is 1900-01-01 00:00 UT through 2150-01-01 00:00 UTC; outside it, badTime")
     func span() throws {
@@ -105,7 +128,8 @@ struct EngineChironTests {
             #expect(throws: AstronomyError.badTime) { _ = try Chiron.heliocentricState(at: time) }
         }
         try Chiron.checkSupported(Engine.Time(ut: Chiron.earliestUT, deltaTModel: .jplHorizons))
-        try Chiron.checkSupported(Self.time(tt: Chiron.latestTT))
+        _ = try Chiron.heliocentricState(at: Self.time(tt: Self.earliestTT))
+        _ = try Chiron.heliocentricState(at: Self.time(tt: Chiron.latestTT))
     }
 
     /// Espenak-Meeus Delta T is -2.7016 s just before 1900.0, from the
@@ -129,7 +153,7 @@ struct EngineChironTests {
     }
 
     /// A pair rebuilt from recorded scales need not agree with its model.
-    /// The simulation steps in TT, so the span is checked on TT alone.
+    /// The table is read at TT, so the span is checked on TT alone.
     @Test("A time is checked by its TT; its UT neither passes nor blocks it")
     func spanChecksTT() throws {
         // 2000-01-01 UT with a TT 2,700 years earlier, then each end.
@@ -145,177 +169,44 @@ struct EngineChironTests {
         try Chiron.checkSupported(Self.pair(ut: 0, tt: Self.earliestTT))
         try Chiron.checkSupported(Self.pair(ut: 1_000_000, tt: Chiron.latestTT))
 
-        let anchor = Chiron.anchors[0]
-        let state = try Chiron.heliocentricState(at: Self.pair(ut: -1_000_000, tt: anchor.tt))
-        #expect(Self.length(state.positionVector - anchor.position) <= 1e-14)
+        let state = try Chiron.heliocentricState(at: Self.pair(ut: -1_000_000, tt: 0))
+        let consistent = try Chiron.heliocentricState(at: Self.time(tt: 0))
+        #expect(state.positionVector == consistent.positionVector)
+        #expect(state.velocityVector == consistent.velocityVector)
         #expect(state.time.ut == -1_000_000)
     }
 
-    @Test("The nearest anchor is chosen, the earlier one on an exact tie")
-    func nearestAnchor() {
-        let tts = Chiron.anchors.map(\.tt)
-        var ties = 0
-        for index in 0..<4 {
-            let midpoint = (tts[index] + tts[index + 1]) / 2
-            #expect(Chiron.nearestAnchor(tt: midpoint - 1e-6) == index)
-            #expect(Chiron.nearestAnchor(tt: midpoint + 1e-6) == index + 1)
-            // Rounding can leave the computed midpoint an ulp nearer one
-            // side; look a few ulps around it for times exactly as far from
-            // both anchors.
-            var tt = midpoint
-            for _ in 0..<4 { tt = tt.nextDown }
-            for _ in 0..<9 {
-                if abs(tts[index] - tt) == abs(tts[index + 1] - tt) {
-                    #expect(Chiron.nearestAnchor(tt: tt) == index, "tie at \(tt)")
-                    ties += 1
-                }
-                tt = tt.nextUp
-            }
-        }
-        #expect(ties > 0)
-        #expect(Chiron.nearestAnchor(tt: -40_000) == 0)
-        #expect(Chiron.nearestAnchor(tt: 60_000) == 4)
-    }
-
-    // MARK: - Against JPL Horizons
-
-    /// Within five years of an anchor, at the four midpoints with a day
-    /// either side, the state is within 1,200 km and 0.09″ of Horizons and
-    /// within 2.3e-6 of the speed. The bounds, 2,000 km, 0.5″ and 5e-6, are
-    /// measured, not published.
-    @Test("Where the nearest anchor changes, within 2,000 km and 0.5″ of Horizons")
-    func transitions() throws {
-        let transitions = Self.vectors.filter { (reference) -> Bool in
-            let date: Double = reference.julianDateTDB
-            let inside: Bool = date > 2_416_000.0 && date < 2_500_000.0
-            return inside && !Self.anchorDates.contains(date)
-        }
-        #expect(transitions.count == 12)
-        for reference in transitions {
-            let (km, arcseconds, velocity) = try Self.errors(reference)
-            #expect(km <= 2_000, "\(reference.tdb): \(km) km")
-            #expect(arcseconds <= 0.5, "\(reference.tdb): \(arcseconds)″")
-            #expect(velocity <= 5e-6, "\(reference.tdb): \(velocity)")
-        }
-    }
-
-    /// 110 years on from the 2040 anchor, 3.1″ and 22,000 km from Horizons.
-    @Test("At the end of the span, 2150-01-01, within 1′ of Horizons", .enabled(if: optimized))
-    func spanEnd() throws {
-        let (_, arcseconds, _) = try Self.errors(try Self.reference(2_506_331.5))
-        #expect(arcseconds <= 60, "\(arcseconds)″")
-    }
-
-    /// The `chiron-vector` rows that `AuditValidationTests.chironPosition`
-    /// reads, with its archived 0.01 AU. The engine is 254,000 km (0.0017
-    /// AU) off in 1900 and 102,000 km in 2100. 1900-01-01 is also the start
-    /// of the span: there, a century back from the 2000 anchor, the state
-    /// is 32″ from Horizons, within the 1′ the public documentation gives
-    /// for Chiron, which it states for ±5 years of an anchor.
-    @Test("The AuditValidationTests chiron-vector rows within their 0.01 AU, and 1900 within 1′")
-    func auditRows() throws {
-        let rows = IndependentReferenceArchive.shared.vectors.filter { $0.body == "chiron" }
-        #expect(rows.count == 3)
-        for reference in rows {
-            let tolerance = try #require(reference.sanityToleranceAU)
-            let (km, arcseconds, _) = try Self.errors(reference)
-            #expect(km / Engine.kilometersPerAU <= tolerance, "\(reference.tdb): \(km) km")
-            if reference.julianDateTDB == 2_415_020.5 {
-                #expect(arcseconds <= 60, "\(arcseconds)″")
-            }
-        }
-    }
-
-    // MARK: - Reuse
-
-    @Test("A sequence reuses its simulation within the path budget and starts again beyond it")
-    func reuse() throws {
-        let sequence = Chiron.ReusableSimulation()
-        let anchor = Chiron.anchors[1].tt
-        func path(_ expected: Double) -> Bool { abs(sequence.pathDays - expected) < 1e-6 }
-        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 100))
-        #expect(sequence.anchorIndex == 1 && path(100))
-        // 30 days back: 130 ≤ max(2 × 70, 365), so the simulation steps on.
-        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 70))
-        #expect(sequence.anchorIndex == 1 && path(130))
-        // 400 days on: 530 ≤ max(2 × 470, 365), still reused.
-        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 470))
-        #expect(path(530))
-        // Back to 10 days: 990 > max(2 × 10, 365), so a fresh start.
-        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 10))
-        #expect(sequence.anchorIndex == 1 && path(10))
-        // Past the midpoint: the next anchor, fresh.
-        let next = Chiron.anchors[2].tt
-        _ = try sequence.heliocentricState(at: Self.time(tt: next - 1_000))
-        #expect(sequence.anchorIndex == 2 && path(1_000))
-    }
-
-    @Test("A rejected time leaves the reuse state as it was")
-    func rejectedKeepsReuseState() throws {
-        let sequence = Chiron.ReusableSimulation()
-        let anchor = Chiron.anchors[1].tt
-        func path(_ expected: Double) -> Bool { abs(sequence.pathDays - expected) < 1e-6 }
-        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 100))
-        #expect(throws: AstronomyError.badTime) {
-            _ = try sequence.heliocentricState(at: Self.pair(ut: anchor + 100, tt: -1_000_000))
-        }
-        #expect(sequence.anchorIndex == 1 && path(100))
-        _ = try sequence.heliocentricState(at: Self.time(tt: anchor + 70))
-        #expect(sequence.anchorIndex == 1 && path(130))
-    }
-
-    @Test("An internal light-time state still requires a supported observation", arguments: DeltaTModel.allCases)
-    func lightTimeObservationGuard(model: DeltaTModel) {
+    /// The light-time evaluation may precede the span, as it does in the
+    /// first hours of 1900, but not the table, which starts a day earlier.
+    @Test("An internal light-time state needs a supported observation and the table", arguments: DeltaTModel.allCases)
+    func lightTimeObservationGuard(model: DeltaTModel) throws {
         let observation = Engine.Time(ut: Chiron.earliestUT + 1.0 / 24, deltaTModel: model)
         let backdated = observation.adding(days: -2.0 / 24)
+        let state = try Chiron.heliocentricState(forLightTimeAt: backdated, observedAt: observation)
+        #expect(state.time.tt == backdated.tt)
+
         let before = Engine.Time(
             tt: Engine.Time(ut: Chiron.earliestUT, deltaTModel: model).tt.nextDown, deltaTModel: model)
         #expect(throws: AstronomyError.badTime) {
-            _ = try Chiron.ReusableSimulation().heliocentricState(
-                forLightTimeAt: backdated, observedAt: before)
+            _ = try Chiron.heliocentricState(forLightTimeAt: backdated, observedAt: before)
         }
-        #expect(throws: AstronomyError.badTime) {
-            _ = try Chiron.ReusableSimulation().heliocentricState(
-                forLightTimeAt: observation.adding(days: 1.0 / 24), observedAt: observation)
+        for evaluation in [observation.adding(days: 1.0 / 24), observation.adding(days: -2)] {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Chiron.heliocentricState(forLightTimeAt: evaluation, observedAt: observation)
+            }
         }
-    }
-
-    /// Light-time correction asks for times a few hours apart. A reused
-    /// sequence answers each within 1e-9 AU of a fresh start; the gap is the
-    /// integrator's, from a different path to the same time.
-    @Test("A light-time sequence agrees with fresh starts")
-    func lightTimeSequence() throws {
-        let time = Self.time(tt: Chiron.anchors[2].tt + 1_000)
-        let earth = try Engine.Planet.earth.heliocentricPosition(at: time)
-        let sequence = Chiron.ReusableSimulation()
-        var asked: [Engine.Time] = []
-        let reused = try Engine.LightTravel.correct(at: time) { backdated in
-            asked.append(backdated)
-            let chiron = try sequence.heliocentricState(at: backdated)
-            return Engine.Vector<Engine.EQJ>(
-                x: chiron.x - earth.x, y: chiron.y - earth.y, z: chiron.z - earth.z, time: backdated)
-        }
-        #expect(asked.count >= 3)
-        #expect(sequence.anchorIndex == 2)
-        let last = try #require(asked.last)
-        let fresh = try Chiron.heliocentricState(at: last)
-        let reusedPosition = SIMD3<Double>(reused.x, reused.y, reused.z) + SIMD3<Double>(earth.x, earth.y, earth.z)
-        let gap = reusedPosition - fresh.positionVector
-        #expect(Self.length(gap) <= 1e-9)
     }
 
     @Test("The state carries the caller's time, scales and model")
     func callerTime() throws {
-        let anchor = Chiron.anchors[0].tt
-        let time = Engine.Time(ut: anchor + 3, deltaTModel: .jplHorizons)
+        let time = Engine.Time(ut: 3, deltaTModel: .jplHorizons)
         let state = try Chiron.heliocentricState(at: time)
         #expect(state.time.ut == time.ut && state.time.tt == time.tt && state.time.deltaTModel == .jplHorizons)
     }
 
-    @Test("Sequences on separate threads get the serial results")
+    @Test("Calls on separate threads get the serial results")
     func concurrent() throws {
-        let anchor = Chiron.anchors[3].tt
-        let instants = [anchor - 50, anchor + 25.25, anchor + 300]
+        let instants = [-20_000.5, 10_000.25, 40_000.0]
         let serial: [[UInt64]] = try instants.map { tt in
             let state = try Chiron.heliocentricState(at: Self.time(tt: tt))
             return [state.x, state.y, state.z, state.vx, state.vy, state.vz].map(\.bitPattern)

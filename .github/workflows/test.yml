@@ -87,6 +87,11 @@ jobs:
           python3 -m unittest Scripts/test_capture_pluto_observers.py -v
           python3 Scripts/capture-pluto-observers.py --check
 
+      - name: Verify generated Chiron table
+        run: |
+          python3 -m unittest Scripts/test_generate_chiron_table.py -v
+          python3 Scripts/generate-chiron-table.py --check
+
       - name: Verify generated Jupiter moon series
         run: |
           python3 Scripts/generate-jupiter-moon-series.py --check

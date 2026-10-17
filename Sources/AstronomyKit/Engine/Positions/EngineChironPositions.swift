@@ -13,9 +13,8 @@ extension Engine.Positions {
     /// it for light reaching Earth at `time`, with no aberration: the public
     /// `Chiron.geocentricPosition(at:)`.
     ///
-    /// Earth stays at `time`. One ``Engine/Chiron/ReusableSimulation`` serves
-    /// every light-time iteration. As in the public API, the vector's time
-    /// is the backdated time.
+    /// Earth stays at `time`. As in the public API, the vector's time is the
+    /// backdated time.
     ///
     /// The observation is checked against Chiron's supported span. The
     /// internal light-time evaluations may precede its start, including the
@@ -23,13 +22,13 @@ extension Engine.Positions {
     ///
     /// - Throws: `AstronomyError.badTime` for a time beyond
     ///   ``Engine/acceptedTTDays`` or outside Chiron's observation span; the
-    ///   errors of ``Engine/LightTravel/correct(at:_:)`` and the simulation.
+    ///   errors of ``Engine/LightTravel/correct(at:_:)`` and
+    ///   ``Engine/Chiron/heliocentricState(forLightTimeAt:observedAt:)``.
     static func chironGeocentricPosition(at time: Engine.Time) throws -> Engine.Vector<Engine.EQJ> {
         try Engine.Chiron.checkSupported(time)
         let earth = try Engine.Planet.earth.heliocentricPosition(at: time)
-        let simulation = Engine.Chiron.ReusableSimulation()
         let vector = try Engine.LightTravel.correct(at: time) { backdated in
-            let chiron = try simulation.heliocentricState(forLightTimeAt: backdated, observedAt: time)
+            let chiron = try Engine.Chiron.heliocentricState(forLightTimeAt: backdated, observedAt: time)
             return Engine.Vector<Engine.EQJ>(
                 x: chiron.x - earth.x, y: chiron.y - earth.y, z: chiron.z - earth.z, time: backdated)
         }

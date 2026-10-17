@@ -327,7 +327,7 @@ Sources/AstronomyKit/Engine/Planets/Generated/Saturn contains DE441 Saturn-syste
 
 JPL Horizons Chiron states
 
-Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift contains five heliocentric states of 2060 Chiron (ICRF, geometric, 00:00 TDB on 1 January 2000, 2010, 2020, 2030 and 2040) retrieved from NASA/JPL Horizons (https://ssd.jpl.nasa.gov/horizons/). Scripts/reference-data/sources/horizons/chiron-anchor-vector.json records the current Horizons solution for comparison. AstronomyKit's integration from these states is not JPL software or an endorsement by JPL.
+Sources/AstronomyKit/Engine/Gravity/Generated/Chiron/ChironCoefficients.swift contains Chebyshev coefficients fitted to heliocentric states of 2060 Chiron (solution JPL#171, ICRF, geometric, JD TDB 2415019.5 through 2506333.5) retrieved from NASA/JPL Horizons (https://ssd.jpl.nasa.gov/horizons/). Scripts/chiron-data pins the Horizons queries and responses with their SHA-256 hashes, and Scripts/reference-data/sources/horizons/chiron-anchor-vector.json records separate Horizons states for comparison. The fitted table and its evaluator are AstronomyKit-derived representations, not JPL software or an endorsement by JPL.
 
 -------------------------------------------------------------------------------
 

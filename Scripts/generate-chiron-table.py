@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Capture and replay a source-qualified Chebyshev table for 2060 Chiron."""
+"""Capture Horizons states of 2060 Chiron, fit its Chebyshev table and write the Swift source."""
 
 import argparse
+import base64
 import datetime as dt
 import gzip
 import hashlib
@@ -15,13 +16,14 @@ import urllib.request
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
+REPOSITORY = Path(__file__).resolve().parent.parent
+ROOT = REPOSITORY / "Scripts" / "chiron-data"
 SOURCES = ROOT / "sources"
 RECEIPTS = ROOT / "source-receipts.json"
-COEFFICIENTS = ROOT / "coefficients.bin"
 REPORT = ROOT / "report.json"
+SWIFT_PATH = "Sources/AstronomyKit/Engine/Gravity/Generated/Chiron/ChironCoefficients.swift"
+SWIFT = REPOSITORY / SWIFT_PATH
 API_URL = "https://ssd.jpl.nasa.gov/api/horizons_file.api"
-BASE_REVISION = "3c31e2d56eb4e887554ea185f5f75bdb78b3a674"
 START_JD_TDB = 2_415_019.5
 END_JD_TDB = 2_506_333.5
 RECORD_DAYS = 38.0
@@ -35,7 +37,10 @@ HOLDOUT_X = tuple(2 * offset / RECORD_DAYS - 1 for offset in HOLDOUT_DAY_OFFSETS
 AU_KM = 149_597_870.7
 POSITION_LIMIT_KM = 1.0
 VELOCITY_LIMIT_KM_PER_DAY = 1.0
+STATED_LIMIT_KM = 10.0
 REPORT_DECIMAL_PLACES = 9
+SWIFT_LINE = 120
+J2000_JD = 2_451_545.0
 QUERY_KEYS = {
     "COMMAND": "'2060;'",
     "OBJ_DATA": "'YES'",
@@ -54,7 +59,7 @@ QUERY_KEYS = {
 }
 
 
-class PreflightError(ValueError):
+class TableError(ValueError):
     pass
 
 
@@ -79,16 +84,16 @@ def canonical(value):
 
 def require_object(value, fields, label):
     if not isinstance(value, dict) or set(value) != fields:
-        raise PreflightError("{} fields differ".format(label))
+        raise TableError("{} fields differ".format(label))
 
 
 def contained_path(relative):
     if not isinstance(relative, str) or Path(relative).is_absolute() or ".." in Path(relative).parts or Path(relative).as_posix() != relative:
-        raise PreflightError("source path is not canonical: {!r}".format(relative))
+        raise TableError("source path is not canonical: {!r}".format(relative))
     candidate = ROOT / relative
     path = candidate.resolve()
     if os.path.commonpath((str(ROOT), str(path))) != str(ROOT) or candidate.is_symlink() or not path.is_file():
-        raise PreflightError("source path is not a contained regular file: {}".format(relative))
+        raise TableError("source path is not a contained regular file: {}".format(relative))
     return path
 
 
@@ -125,7 +130,7 @@ def multipart(query):
 
 def download(query):
     body, content_type = multipart(query)
-    request = urllib.request.Request(API_URL, data=body, headers={"Content-Type": content_type, "User-Agent": "AstronomyKit Chiron source preflight"})
+    request = urllib.request.Request(API_URL, data=body, headers={"Content-Type": content_type, "User-Agent": "AstronomyKit Chiron table generator"})
     with urllib.request.urlopen(request, timeout=120) as response:
         result = response.read()
         retrieved = response.headers.get("Date")
@@ -138,21 +143,21 @@ def parse_query(data):
     try:
         text = data.decode("ascii")
     except UnicodeDecodeError as error:
-        raise PreflightError("query is not ASCII") from error
+        raise TableError("query is not ASCII") from error
     lines = text.splitlines()
     if not lines or lines[0] != "!$$SOF" or lines[-1] != "!$$EOF":
-        raise PreflightError("query envelope differs")
+        raise TableError("query envelope differs")
     values = {}
     for line in lines[1:-1]:
         if "=" not in line:
-            raise PreflightError("query setting differs")
+            raise TableError("query setting differs")
         key, value = line.split("=", 1)
         if key in values:
-            raise PreflightError("query setting is duplicated")
+            raise TableError("query setting is duplicated")
         values[key] = value
     expected = set(QUERY_KEYS) | {"START_TIME", "STOP_TIME", "STEP_SIZE"}
     if set(values) != expected or any(values[key] != value for key, value in QUERY_KEYS.items()):
-        raise PreflightError("query contract differs")
+        raise TableError("query contract differs")
     try:
         start = float(re.fullmatch(r"'JD ([0-9.]+)'", values["START_TIME"]).group(1))
         stop = float(re.fullmatch(r"'JD ([0-9.]+)'", values["STOP_TIME"]).group(1))
@@ -161,11 +166,11 @@ def parse_query(data):
             raise ValueError
         step = {"1 d": 1.0, "12 h": 0.5, "912 h": 38.0}[step_match.group(1)]
     except (ValueError, AttributeError) as error:
-        raise PreflightError("query time range is malformed") from error
+        raise TableError("query time range is malformed") from error
     count = round((stop - start) / step)
     epochs = [start + index * step for index in range(count + 1)]
     if count < 0 or abs(epochs[-1] - stop) > 5e-10 or len(epochs) > 10_000 or any(not math.isfinite(value) for value in epochs):
-        raise PreflightError("query epochs differ")
+        raise TableError("query epochs differ")
     return epochs
 
 
@@ -173,15 +178,15 @@ def parse_response(data, epochs):
     try:
         payload = json.loads(data)
     except (UnicodeDecodeError, json.JSONDecodeError) as error:
-        raise PreflightError("response JSON is malformed") from error
+        raise TableError("response JSON is malformed") from error
     require_object(payload, {"signature", "result"}, "response")
     signature = payload["signature"]
     require_object(signature, {"source", "version"}, "response signature")
     if signature != {"source": "NASA/JPL Horizons API", "version": "1.0"}:
-        raise PreflightError("response API identity differs")
+        raise TableError("response API identity differs")
     result = payload["result"]
     if not isinstance(result, str):
-        raise PreflightError("response result differs")
+        raise TableError("response result differs")
     required = (
         "Target body name: 2060 Chiron (1977 UB)           {source: JPL#171}",
         "Center body name: Sun (10)                        {source: DE441}",
@@ -191,7 +196,7 @@ def parse_response(data, epochs):
         "Output units    : KM-S",
     )
     if any(text not in result for text in required) or result.count("$$SOE") != 1 or result.count("$$EOE") != 1:
-        raise PreflightError("response source identity differs")
+        raise TableError("response source identity differs")
     body = result.split("$$SOE", 1)[1].split("$$EOE", 1)[0]
     rows = []
     for line in body.splitlines():
@@ -203,13 +208,13 @@ def parse_response(data, epochs):
         except ValueError:
             continue
         if any(not math.isfinite(value) for value in values):
-            raise PreflightError("response contains a nonfinite vector")
+            raise TableError("response contains a nonfinite vector")
         rows.append(values)
     if len(rows) != len(epochs):
-        raise PreflightError("response vector inventory differs")
+        raise TableError("response vector inventory differs")
     for expected, row in zip(epochs, rows):
         if abs(expected - row[0]) > 5e-10:
-            raise PreflightError("response epoch differs")
+            raise TableError("response epoch differs")
     return rows
 
 
@@ -253,6 +258,7 @@ def write_atomic(path, data):
             output.write(data)
             output.flush()
             os.fsync(output.fileno())
+        os.chmod(temporary, 0o644)
         os.replace(temporary, path)
     except BaseException:
         try:
@@ -266,14 +272,14 @@ def require_source_inventory(expected_paths):
     try:
         entries = tuple(SOURCES.iterdir())
     except OSError as error:
-        raise PreflightError("source directory inventory is unavailable") from error
+        raise TableError("source directory inventory is unavailable") from error
     actual_paths = set()
     for path in entries:
         if path.is_symlink() or not path.is_file():
-            raise PreflightError("source directory contains a non-regular entry")
+            raise TableError("source directory contains a non-regular entry")
         actual_paths.add(path.relative_to(ROOT).as_posix())
     if actual_paths != set(expected_paths):
-        raise PreflightError("source directory inventory differs")
+        raise TableError("source directory inventory differs")
 
 
 def capture_sources():
@@ -293,53 +299,53 @@ def capture_sources():
         expected_paths.update((query_relative, response_relative))
         receipts.append(source_receipt(kind, index, query_relative, response_relative, query, response, raw_response, retrieved, len(epochs)))
     require_source_inventory(expected_paths)
-    receipt = {"schemaVersion": 1, "baseRevision": BASE_REVISION, "api": {"url": API_URL, "method": "multipart POST", "format": "json", "signatureVersion": "1.0"}, "sources": receipts}
+    receipt = {"schemaVersion": 2, "api": {"url": API_URL, "method": "multipart POST", "format": "json", "signatureVersion": "1.0"}, "sources": receipts}
     write_atomic(RECEIPTS, encoded(receipt))
 
 
 def read_sources(receipt_data=None):
     receipt = json.loads(RECEIPTS.read_bytes()) if receipt_data is None else receipt_data
-    require_object(receipt, {"schemaVersion", "baseRevision", "api", "sources"}, "receipt")
-    if receipt["schemaVersion"] != 1 or receipt["baseRevision"] != BASE_REVISION:
-        raise PreflightError("receipt version or base differs")
+    require_object(receipt, {"schemaVersion", "api", "sources"}, "receipt")
+    if receipt["schemaVersion"] != 2:
+        raise TableError("receipt version differs")
     require_object(receipt["api"], {"url", "method", "format", "signatureVersion"}, "API receipt")
     if receipt["api"] != {"url": API_URL, "method": "multipart POST", "format": "json", "signatureVersion": "1.0"}:
-        raise PreflightError("API receipt differs")
+        raise TableError("API receipt differs")
     entries = receipt["sources"]
     if not isinstance(entries, list):
-        raise PreflightError("source receipt inventory differs")
+        raise TableError("source receipt inventory differs")
     recipes = source_recipes()
     if len(entries) != len(recipes):
-        raise PreflightError("source receipt count differs")
+        raise TableError("source receipt count differs")
     observed_paths = set()
     vectors = {"fit": [], "holdout": [], "negative": []}
     archive = {"queryBytes": 0, "compressedResponseBytes": 0, "uncompressedResponseBytes": 0, "vectors": {"fit": 0, "holdout": 0, "negative": 0}}
     for entry, (kind, index, start, stop, step) in zip(entries, recipes):
         require_object(entry, {"kind", "index", "query", "response", "retrievedAtHTTPDate", "vectorCount"}, "source receipt")
         if entry["kind"] != kind or type(entry["index"]) is not int or entry["index"] != index or type(entry["vectorCount"]) is not int:
-            raise PreflightError("source receipt identity differs")
+            raise TableError("source receipt identity differs")
         if not isinstance(entry["retrievedAtHTTPDate"], str) or not entry["retrievedAtHTTPDate"].endswith(" GMT"):
-            raise PreflightError("source receipt HTTP date differs")
+            raise TableError("source receipt HTTP date differs")
         require_object(entry["query"], {"path", "sha256", "bytes"}, "query receipt")
         require_object(entry["response"], {"path", "sha256", "bytes", "uncompressedSHA256", "uncompressedBytes"}, "response receipt")
         query_path = contained_path(entry["query"]["path"])
         response_path = contained_path(entry["response"]["path"])
         for field, path in ((entry["query"], query_path), (entry["response"], response_path)):
             if not isinstance(field["sha256"], str) or not re.fullmatch(r"[0-9a-f]{64}", field["sha256"]) or type(field["bytes"]) is not int or field["bytes"] != path.stat().st_size or field["sha256"] != digest_bytes(path.read_bytes()):
-                raise PreflightError("source file receipt differs")
+                raise TableError("source file receipt differs")
         compressed = response_path.read_bytes()
         try:
             raw_response = gzip.decompress(compressed)
         except (gzip.BadGzipFile, EOFError) as error:
-            raise PreflightError("response compression differs") from error
+            raise TableError("response compression differs") from error
         response_receipt = entry["response"]
         if not isinstance(response_receipt["uncompressedSHA256"], str) or not re.fullmatch(r"[0-9a-f]{64}", response_receipt["uncompressedSHA256"]) or type(response_receipt["uncompressedBytes"]) is not int or response_receipt["uncompressedBytes"] != len(raw_response) or response_receipt["uncompressedSHA256"] != digest_bytes(raw_response):
-            raise PreflightError("uncompressed response receipt differs")
+            raise TableError("uncompressed response receipt differs")
         query = query_path.read_bytes()
         epochs = parse_query(query)
         expected_epochs = parse_query(query_text(start, stop, step))
         if not same_epochs(epochs, expected_epochs) or entry["vectorCount"] != len(epochs):
-            raise PreflightError("source query epoch inventory differs")
+            raise TableError("source query epoch inventory differs")
         vectors[kind].extend(parse_response(raw_response, epochs))
         archive["queryBytes"] += entry["query"]["bytes"]
         archive["compressedResponseBytes"] += entry["response"]["bytes"]
@@ -365,11 +371,11 @@ def read_sources(receipt_data=None):
                 destination[key] = row
     heldout = [heldout_map[key] for key in sorted(heldout_map)]
     if len(fit) != RECORD_COUNT * FIT_POINTS_PER_RECORD or set(heldout_map) != expected_heldout or set(repeated_fit_map) != expected_fit:
-        raise PreflightError("vector inventory differs")
+        raise TableError("vector inventory differs")
     fit_times = {row[0] for row in fit}
     heldout_times = {row[0] for row in heldout}
     if fit_times & heldout_times:
-        raise PreflightError("fit and holdout epochs overlap")
+        raise TableError("fit and holdout epochs overlap")
     fit_map = {round(row[0], 9): row for row in fit}
     position_maximum = velocity_maximum = 0.0
     for key, row in repeated_fit_map.items():
@@ -377,23 +383,23 @@ def read_sources(receipt_data=None):
         position_maximum = max(position_maximum, magnitude(a - b for a, b in zip(row[1:4], original[1:4])))
         velocity_maximum = max(velocity_maximum, magnitude(86_400 * (a - b) for a, b in zip(row[4:7], original[4:7])))
     if max(position_maximum, overlap_position_maximum) > POSITION_LIMIT_KM or max(velocity_maximum, overlap_velocity_maximum) > VELOCITY_LIMIT_KM_PER_DAY:
-        raise PreflightError("aligned same-epoch source queries disagree")
+        raise TableError("aligned same-epoch source queries disagree")
     negative_position = negative_velocity = 0.0
     for row in vectors["negative"]:
         aligned = heldout_map.get(round(row[0], 9))
         if aligned is None:
-            raise PreflightError("negative query control epoch differs")
+            raise TableError("negative query control epoch differs")
         negative_position = max(negative_position, magnitude(a - b for a, b in zip(row[1:4], aligned[1:4])))
         negative_velocity = max(negative_velocity, magnitude(86_400 * (a - b) for a, b in zip(row[4:7], aligned[4:7])))
     if len(vectors["negative"]) != RECORD_COUNT or negative_position <= POSITION_LIMIT_KM:
-        raise PreflightError("negative query-path control no longer discriminates")
-    return fit, heldout, {"alignedQueries": {"fitEpochsRepeated": len(repeated_fit_map), "overlappingRangeEpochs": 3 * (len([recipe for recipe in source_recipes() if recipe[0] == "holdout"]) - 1), "maximumPositionKm": max(position_maximum, overlap_position_maximum), "maximumVelocityKmPerTDBDay": max(velocity_maximum, overlap_velocity_maximum)}, "rejectedOffsetQueryControl": {"epochs": len(vectors["negative"]), "offsetDays": 12, "stepDays": 38, "maximumPositionDifferenceKm": negative_position, "maximumVelocityDifferenceKmPerTDBDay": negative_velocity, "reason": "Horizons' numerically integrated small-body output depends on the discrete query path; this offset 38-day recipe exceeds the 1 km source-reproduction screen and is retained only as a negative control."}}, archive
+        raise TableError("negative query-path control no longer discriminates")
+    return fit, heldout, vectors["negative"], {"alignedQueries": {"fitEpochsRepeated": len(repeated_fit_map), "overlappingRangeEpochs": 3 * (len([recipe for recipe in source_recipes() if recipe[0] == "holdout"]) - 1), "maximumPositionKm": max(position_maximum, overlap_position_maximum), "maximumVelocityKmPerTDBDay": max(velocity_maximum, overlap_velocity_maximum)}, "rejectedOffsetQueryControl": {"epochs": len(vectors["negative"]), "offsetDays": 12, "stepDays": 38, "maximumPositionDifferenceKm": negative_position, "maximumVelocityDifferenceKmPerTDBDay": negative_velocity, "reason": "Horizons' numerically integrated small-body output depends on the discrete query path; this offset 38-day recipe exceeds the 1 km source-reproduction screen and is retained only as a negative control."}}, archive
 
 
 def fit_coefficients(rows):
     by_epoch = {round(row[0], 9): row for row in rows}
     if len(by_epoch) != len(rows):
-        raise PreflightError("fit source contains duplicate epochs")
+        raise TableError("fit source contains duplicate epochs")
     x_values = [-1 + 2 * (index + 0.5) / FIT_POINTS_PER_RECORD for index in range(FIT_POINTS_PER_RECORD)]
     design = [chebyshev_terms(x, DEGREE_COUNT) for x in x_values]
     factor = qr_factor(design)
@@ -404,16 +410,16 @@ def fit_coefficients(rows):
             epoch = START_JD_TDB + record * RECORD_DAYS + point + 0.5
             match = by_epoch.get(round(epoch, 9))
             if match is None:
-                raise PreflightError("fit source omits a node")
+                raise TableError("fit source omits a node")
             if abs(match[0] - epoch) > 5e-10:
-                raise PreflightError("fit source omits a node")
+                raise TableError("fit source omits a node")
             nodes.append(match)
         for axis in range(3):
             scaled = [row[axis + 1] / AU_KM for row in nodes]
             for coefficient in qr_solve(factor, scaled):
                 coefficient *= AU_KM
                 if not math.isfinite(coefficient):
-                    raise PreflightError("fit produced a nonfinite coefficient")
+                    raise TableError("fit produced a nonfinite coefficient")
                 values.append(coefficient)
     return values
 
@@ -435,7 +441,7 @@ def qr_factor(matrix):
         vector = [work[row][column] for row in range(column, len(work))]
         norm = math.sqrt(math.fsum(value * value for value in vector))
         if norm < 1e-14:
-            raise PreflightError("fit design is singular")
+            raise TableError("fit design is singular")
         vector[0] += math.copysign(norm, vector[0])
         denominator = math.fsum(value * value for value in vector)
         beta = 2 / denominator
@@ -482,10 +488,10 @@ def magnitude(values):
     return math.sqrt(math.fsum(value * value for value in values))
 
 
-def assessment(coefficients, fit, heldout, source_consistency, archive):
+def assessment(coefficients, fit, heldout, negative, source_consistency, archive):
     by_epoch = {round(row[0], 9): row for row in heldout}
     if len(by_epoch) != len(heldout):
-        raise PreflightError("heldout source contains duplicate epochs")
+        raise TableError("heldout source contains duplicate epochs")
     position_worst = (-1.0, None)
     velocity_worst = (-1.0, None)
     seam_position_worst = (-1.0, None)
@@ -507,9 +513,9 @@ def assessment(coefficients, fit, heldout, source_consistency, archive):
             epoch = middle + 0.5 * RECORD_DAYS * x
             row = by_epoch.get(round(epoch, 9))
             if row is None:
-                raise PreflightError("heldout source omits an epoch")
+                raise TableError("heldout source omits an epoch")
             if abs(row[0] - epoch) > 5e-10:
-                raise PreflightError("heldout source omits an epoch")
+                raise TableError("heldout source omits an epoch")
             position, velocity = evaluate(coefficients, record, x)
             position_error = magnitude(a - b for a, b in zip(position, row[1:4]))
             velocity_error = magnitude(a - 86_400 * b for a, b in zip(velocity, row[4:7]))
@@ -531,48 +537,85 @@ def assessment(coefficients, fit, heldout, source_consistency, archive):
             if velocity_jump > seam_velocity_worst[0]:
                 seam_velocity_worst = (velocity_jump, detail)
     if max(position_worst[0], training_position_maximum) > POSITION_LIMIT_KM or max(velocity_worst[0], training_velocity_maximum) > VELOCITY_LIMIT_KM_PER_DAY:
-        raise PreflightError("candidate exceeds the source-reproduction screen")
+        raise TableError("candidate exceeds the source-reproduction screen")
+    # The offset query is the farthest archived Horizons recipe from the table.
+    archived = (max(position_worst[0], training_position_maximum), None)
+    for row in negative:
+        record = min(int((row[0] - START_JD_TDB) // RECORD_DAYS), RECORD_COUNT - 1)
+        position, _ = evaluate(coefficients, record, 2 * (row[0] - START_JD_TDB - record * RECORD_DAYS) / RECORD_DAYS - 1)
+        error = magnitude(a - b for a, b in zip(position, row[1:4]))
+        if error > archived[0]:
+            archived = (error, row[0])
+    if archived[0] > STATED_LIMIT_KM:
+        raise TableError("candidate exceeds the stated bound at an archived Horizons vector")
     coefficient_bytes = struct.pack("<{}d".format(len(coefficients)), *coefficients)
     return coefficient_bytes, canonical({
-        "schemaVersion": 1,
-        "baseRevision": BASE_REVISION,
+        "schemaVersion": 2,
         "source": {"target": "2060 Chiron (1977 UB)", "targetSolution": "JPL#171", "center": "Sun (10)", "centerSource": "DE441", "state": "geometric ICRF", "clock": "JD TDB", "units": "km and km/s", "archive": archive},
         "coverage": {"startJulianDateTDB": START_JD_TDB, "endJulianDateTDB": END_JD_TDB, "recordDays": RECORD_DAYS, "recordCount": RECORD_COUNT, "everyRecordHeldout": True, "globalEndpointsHeldout": True, "allSeamsHeldout": True},
-        "table": {"degreeCount": DEGREE_COUNT, "coefficientCount": len(coefficients), "payloadBytes": len(coefficient_bytes), "payloadSHA256": digest_bytes(coefficient_bytes), "layout": "record, x/y/z axis, ascending Chebyshev degree; uniform record index floor((jdTDB-start)/38), with the inclusive final endpoint handled explicitly by a future runtime integration"},
-        "screen": {"positionLimitKm": POSITION_LIMIT_KM, "velocityLimitKmPerTDBDay": VELOCITY_LIMIT_KM_PER_DAY, "trainingFit": {"epochs": len(fit), "maximumPositionKm": training_position_maximum, "maximumVelocityKmPerTDBDay": training_velocity_maximum}, "heldoutXPerRecord": list(HOLDOUT_X), "recordComparisons": comparisons, "sameEpochCrossQueryConsistency": source_consistency, "position": {"maximumKm": position_worst[0], **position_worst[1]}, "analyticVelocity": {"maximumKmPerTDBDay": velocity_worst[0], **velocity_worst[1]}, "seams": {"count": RECORD_COUNT - 1, "maximumPositionJumpKm": seam_position_worst[0], **seam_position_worst[1], "maximumVelocityJumpKmPerTDBDay": seam_velocity_worst[0], **seam_velocity_worst[1]}},
-        "limitations": ["The limits are reversible first-link source-reproduction screens, not a public AstronomyKit accuracy policy.", "The passing residuals apply to the exact aligned daily and half-day query recipe. The retained offset 38-day negative query differs by more than 1 km, so this report does not claim the same result for every legitimate Horizons sampling recipe.", "The archived heldouts cover every record, every seam, and both endpoints, but finite samples do not establish a continuous-domain error bound.", "Agreement with JPL Horizons solution 171 does not establish the physical accuracy or future orbit uncertainty of that solution.", "Lookup latency, package/build cost, and public route behavior remain Link 2 work after PR #283 clears review and ownership.", "This foundation does not change the runtime, its supported interval, or its TT-to-TDB and frame conversions."],
+        "table": {"degreeCount": DEGREE_COUNT, "coefficientCount": len(coefficients), "payloadBytes": len(coefficient_bytes), "payloadSHA256": digest_bytes(coefficient_bytes), "layout": "record, x/y/z axis, ascending Chebyshev degree, km on ICRF axes; record floor((jdTDB-start)/38) holds [start + 38k, start + 38(k + 1)), so the final endpoint is outside the table", "swiftSource": SWIFT_PATH},
+        "screen": {"positionLimitKm": POSITION_LIMIT_KM, "velocityLimitKmPerTDBDay": VELOCITY_LIMIT_KM_PER_DAY, "trainingFit": {"epochs": len(fit), "maximumPositionKm": training_position_maximum, "maximumVelocityKmPerTDBDay": training_velocity_maximum}, "heldoutXPerRecord": list(HOLDOUT_X), "recordComparisons": comparisons, "sameEpochCrossQueryConsistency": source_consistency, "position": {"maximumKm": position_worst[0], **position_worst[1]}, "analyticVelocity": {"maximumKmPerTDBDay": velocity_worst[0], **velocity_worst[1]}, "archivedHorizonsVectors": {"statedLimitKm": STATED_LIMIT_KM, "epochs": len(fit) + len(heldout) + len(negative), "maximumPositionKm": archived[0], "julianDateTDB": archived[1]}, "seams": {"count": RECORD_COUNT - 1, "maximumPositionJumpKm": seam_position_worst[0], **seam_position_worst[1], "maximumVelocityJumpKmPerTDBDay": seam_velocity_worst[0], **seam_velocity_worst[1]}},
+        "limitations": ["The 1 km and 1 km/day limits screen how well the table reproduces its source; they are not a public accuracy promise.", "The passing residuals apply to the exact aligned daily and half-day query recipe. The retained offset 38-day negative query differs by more than 1 km, so this report does not claim the same result for every legitimate Horizons sampling recipe.", "The archived heldouts cover every record, every seam, and both endpoints, but finite samples do not establish a continuous-domain error bound.", "Agreement with JPL Horizons solution 171 does not establish the physical accuracy or future orbit uncertainty of that solution."],
     })
 
 
 def replay():
-    fit, heldout, source_consistency, archive = read_sources()
+    fit, heldout, negative, source_consistency, archive = read_sources()
     coefficients = fit_coefficients(fit)
-    coefficient_bytes, report = assessment(coefficients, fit, heldout, source_consistency, archive)
+    coefficient_bytes, report = assessment(coefficients, fit, heldout, negative, source_consistency, archive)
     return coefficient_bytes, encoded(report)
+
+
+def swift_source(coefficient_bytes):
+    text = base64.b64encode(coefficient_bytes).decode("ascii")
+    lines = "\n".join(text[index:index + SWIFT_LINE] for index in range(0, len(text), SWIFT_LINE))
+    return '''// Generated by Scripts/generate-chiron-table.py; do not edit.
+// Horizons sources, fit and heldout screen: Scripts/chiron-data/report.json.
+// swift-format-ignore-file
+
+extension Engine.Chiron {{
+    /// Heliocentric km on ICRF axes against TDB: record, then x, y and z, then ascending Chebyshev degree.
+    static let table = Engine.ChebyshevTable(
+        start: {start!r},
+        recordDays: {days!r},
+        recordCount: {records:_},
+        degreeCount: {degrees},
+        coefficients: Engine.unpackDoubles(
+            count: {count:_},
+            """
+{lines}
+"""
+        )
+    )
+}}
+'''.format(start=START_JD_TDB - J2000_JD, days=RECORD_DAYS, records=RECORD_COUNT, degrees=DEGREE_COUNT, count=len(coefficient_bytes) // 8, lines=lines).encode()
 
 
 def publish():
     coefficient_bytes, report = replay()
-    write_atomic(COEFFICIENTS, coefficient_bytes)
+    write_atomic(SWIFT, swift_source(coefficient_bytes))
     write_atomic(REPORT, report)
 
 
 def check():
     coefficient_bytes, report = replay()
-    if COEFFICIENTS.read_bytes() != coefficient_bytes:
-        raise PreflightError("committed coefficient payload differs")
+    if SWIFT.read_bytes() != swift_source(coefficient_bytes):
+        raise TableError("committed Swift table differs")
     if REPORT.read_bytes() != report:
-        raise PreflightError("committed report differs")
+        raise TableError("committed report differs")
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group(required=True)
-    modes.add_argument("--capture", action="store_true", help="replace the pinned Horizons sources and derived artifacts")
-    modes.add_argument("--check", action="store_true", help="replay the pinned sources without network access")
+    modes.add_argument("--capture", action="store_true", help="replace the pinned Horizons sources, then write the table and report")
+    modes.add_argument("--write", action="store_true", help="refit the pinned sources and write the table and report")
+    modes.add_argument("--check", action="store_true", help="refit the pinned sources and compare the committed table and report")
     arguments = parser.parse_args()
     if arguments.capture:
         capture_sources()
+        publish()
+    elif arguments.write:
         publish()
     else:
         check()

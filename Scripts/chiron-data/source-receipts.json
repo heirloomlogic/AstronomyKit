@@ -5,8 +5,7 @@
     "signatureVersion": "1.0",
     "url": "https://ssd.jpl.nasa.gov/api/horizons_file.api"
   },
-  "baseRevision": "3c31e2d56eb4e887554ea185f5f75bdb78b3a674",
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sources": [
     {
       "index": 0,
