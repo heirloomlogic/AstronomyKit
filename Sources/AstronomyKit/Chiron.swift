@@ -26,7 +26,7 @@ import Foundation
 ///
 /// The heliocentric position is within 10 km of every archived Horizons
 /// vector across the span. Horizons' small-body integration varies with how
-/// it is queried, so the gap depends on the query: 0.13 km at the 16,821
+/// it is queried, so the gap depends on the query: 0.13 km at the 14,419
 /// epochs held out of the fit, up to 2.3 km at vectors requested as time
 /// lists, and up to 7.1 km at a 38-day series offset from the fit's grid.
 /// That is agreement with Horizons, not the physical accuracy of its orbit
