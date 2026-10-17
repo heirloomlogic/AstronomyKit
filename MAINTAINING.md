@@ -9,7 +9,7 @@ AstronomyKit wraps a single-file C library. Two files are copied from upstream, 
 - `Sources/CLibAstronomy/astronomy.c` — the implementation
 - `Sources/CLibAstronomy/include/astronomy.h` — the public C header
 
-Everything else under `Sources/CLibAstronomy/` is ours: `polynomial.h` (the polynomial evaluator) and the generated coefficient tables under `generated/`. The Swift layer in `Sources/AstronomyKit/` is ours and is not part of the vendored code.
+Everything else under `Sources/CLibAstronomy/` is ours: `polynomial.h` (the polynomial evaluator), `deltat_iers.h` (the observed Delta T model), and the generated tables under `generated/`. The Swift layer in `Sources/AstronomyKit/` is ours and is not part of the vendored code.
 
 The top of `astronomy.c` carries a **vendoring note** recording the exact upstream commit and the local patches. That note is the source of truth; keep it current when you update.
 
@@ -58,6 +58,8 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
 
 14. **Exact Moon cache.** A 32-entry thread-local cache retains the complete longitude, latitude, and distance tuple from `CalcMoonRaw`. Every existing lunar client continues to call the `CalcMoon` wrapper, including the center and two offset samples in `MoonEcmState`, so repeated state calls reuse three exact epochs without changing the rate stencil. Keys use the exact bits of the scaled TT consumed by the series, including signed zero; nonfinite inputs bypass the cache. Entries contain no caller time metadata or mutable engine settings. Storage lasts for the thread's lifetime and needs no cleanup in `Astronomy_Reset`.
 
+15. **Observed Delta T default.** `DeltaTFunc`'s static initializer is `Astronomy_DeltaT_IersObserved` from `deltat_iers.h`, which `astronomy.c` includes just above `DeltaTFunc`, below the FP contraction pragma. It reads only the immutable tables in `generated/deltat_iers.h`, so the default needs no startup call and no locking. Daily rows at 0h UTC hold Delta T, UT1 − UTC and the stated UT1 − UTC error as integers in units of 1e-7 s; a row's abscissa is its UT1, `MJD − 51544.5 + (UT1 − UTC)/86400`, and Delta T is linear in UT1 between rows. Before the first row it evaluates the Table S15 v2020 spline in Julian epoch years, `2000 + ut/365.25`, rebuilt by the generator as C0 and C1 cubic Hermite segments (the published polynomials are rounded to 1 ms and jump by up to that at knots), the last ending on the first C04 value and rate; before −720 and after the last row it adds the integral of HMNAO's long-term length-of-day model, `36.525 × (0.86 t² + (3.5 × 14/2π) cos(2π(t + 0.75)/14))` seconds with t in centuries from 1825.0, to the value at the join. `Astronomy_DeltaTUncertainty_IersObserved` and `Astronomy_DeltaTRegime_IersObserved` report the stated uncertainty and the source. `Astronomy_DeltaT_EspenakMeeus` and `Astronomy_DeltaT_JplHorizons` are unchanged and remain selectable; upstream's default was Espenak–Meeus. The function is continuous, so the bounded TT inverse (patch 10) never meets a gap with the default model.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the corresponding `+upstream-A.B.C` engine version.
@@ -70,7 +72,7 @@ The vendored `astronomy.c` includes the patches below. Preserve them after every
            Sources/CLibAstronomy/astronomy.c
    ```
 
-3. **Apply the upstream changes**, then **re-apply the local patches** above (or, if upstream has adopted equivalent fixes, confirm that and note it). The patch sites are marked in context by the vendoring note; search for `pluto_cache_mutex`, `DeltaTFunc`, `VsopCache`, `MoonCache`, `PolynomialPosition`, `VSOP_COMPENSATED_ADD`, `Astronomy_GeoEclipticState`, and the counter names.
+3. **Apply the upstream changes**, then **re-apply the local patches** above (or, if upstream has adopted equivalent fixes, confirm that and note it). The patch sites are marked in context by the vendoring note; search for `pluto_cache_mutex`, `DeltaTFunc`, `deltat_iers.h`, `VsopCache`, `MoonCache`, `PolynomialPosition`, `VSOP_COMPENSATED_ADD`, `Astronomy_GeoEclipticState`, and the counter names.
 
 4. **Refresh the vendoring note** at the top of `astronomy.c`: update the upstream commit hash and date, and adjust the patch list if anything changed.
 
@@ -94,6 +96,7 @@ swift test --no-parallel -c release
 swift test --no-parallel --sanitize=thread
 python3 Scripts/generate-models.py --check
 python3 Scripts/generate-time-table.py --check
+python3 Scripts/generate-deltat-table.py --check
 python3 Scripts/performance/polynomial/embed.py --check
 python3 -m unittest discover -s Scripts/performance/polynomial -p 'test_*.py'
 sh Scripts/performance/test-vsop-cache.sh
@@ -109,8 +112,37 @@ CI runs all of these on every pull request, plus release-configuration tests and
 
 ## Generated tables
 
-Three generators produce checked-in sources from pinned, checksummed inputs. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
+Four generators produce checked-in sources from pinned, checksummed inputs. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
 
 - `Scripts/generate-models.py` reads `Scripts/model-data/` (full VSOP87B and IAU2000B source tables pinned to the vendored upstream revision) and writes `Sources/CLibAstronomy/generated/vsop87b_full.h` and `iau2000b_full.h`.
 - `Scripts/generate-time-table.py` reads `Scripts/time-data/` (archived USNO TAI-UTC and IERS Bulletin C records) and writes `Sources/AstronomyKit/UTCOffsetTable.swift`. Updating time standards requires a new snapshot, hash manifest, a new `ephemerisVersion`, and transition tests.
+- `Scripts/generate-deltat-table.py` reads `Scripts/deltat-data/` and the TAI−UTC table in `Scripts/time-data/`, and writes `Sources/CLibAstronomy/generated/deltat_iers.h`. See [Delta T table](#delta-t-table).
 - `Scripts/performance/polynomial/embed.py` reads the frozen coefficient archive in `Scripts/performance/polynomial/data/` and writes `Sources/CLibAstronomy/generated/polynomial-data.h`. See [that directory's README](Scripts/performance/polynomial/README.md) for coverage and provenance.
+
+## Delta T table
+
+The default Delta T model (local patch 15) is generated from these sources. `Scripts/deltat-data/manifest.json` records each file's URL, retrieval date and SHA-256, and the generator refuses a file whose hash differs.
+
+| File | Source | Use |
+|---|---|---|
+| `eopc04.1962-now` | IERS EOP 20 C04 at 0h UTC, Paris Observatory EOP Product Centre, `https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now` | Daily UT1 − UTC and its formal error from 1962-01-01 |
+| `finals2000A.all` | IERS Rapid Service/Prediction Centre (USNO), `https://maia.usno.navy.mil/ser7/finals2000A.all` | Bulletin A rapid UT1 − UTC after the last C04 row, then about a year of predictions, each with its stated error (columns 59–78) |
+| `../time-data/tai-utc.dat` | USNO, pinned by `Scripts/time-data/manifest.json` | TAI − UTC at each row, shared with the civil table |
+| `Table-S15.2020.txt` | HM Nautical Almanac Office, Table S15 v2020 (Morrison, Stephenson, Hohenkerk and Zawilski 2021, doi:10.1098/rspa.2020.0776) | Spline coefficients for Delta T from −720 to 2019 |
+| `hmnao-lvm.html` | HM Nautical Almanac Office, `https://astro.ukho.gov.uk/nao/lvm/` (last modified 2021-03-05) | Error estimates ε for −2000 to 2500 and the long-term length-of-day model; the generator checks that the page states `lod = +1.72 t − 3.5 sin(2π( t +0.75)/14)` |
+| `eopc04.12h.1984-now` | IERS EOP 20 C04 at 12h UTC | Validation only: measures linear interpolation between the 0h rows |
+
+The HMNAO server returned HTTP 503 on 2026-10-17, so its two files are the Internet Archive captures named in the manifest. Use the live server when it answers, or record the capture you used.
+
+The generator checks each step: C04 rows must be consecutive and match their calendar dates; Bulletin A rows must continue the C04 series the next day, rapid values before predictions; every Delta T must be exact in units of 1e-7 s; the first C04 row must fall on the 1962.0 spline knot. It rebuilds the spline as cubic Hermite segments through the mean one-sided value and rate at each knot, refuses a rebuild more than 1.5 ms from the published polynomials before 1959, ends the last segment on the first C04 value and rate, measures the spline's largest departure from C04 over 1962–2019 (the historical uncertainty floor) and the largest linear-interpolation error against the 12h series (the interpolation allowance), and writes all three into the header comment.
+
+### Refreshing the table (release step)
+
+Refresh before every release, and whenever downstream needs newer observations. The IERS files change daily; the HMNAO files change only with a new analysis.
+
+1. Download the source files into an empty scratch directory, not into the checkout, and confirm each is the expected format: the C04 header names "EOP (IERS) 20 C04", and `finals2000A.all` has `I` then `P` flags in column 58.
+2. Copy them into `Scripts/deltat-data/`, update `retrieved`, each `sha256` (`shasum -a 256 Scripts/deltat-data/*`) and the dates in the descriptions in `manifest.json`.
+3. If a leap second has been announced, refresh `Scripts/time-data/` first.
+4. Run `python3 Scripts/generate-deltat-table.py`. It stops until `AstronomyConfig.ephemerisVersion` names the new `deltat-iers-c04-YYYYMMDD-pred-YYYYMMDD-smh2020` table; update the version, then rerun.
+5. Run the full verification above. `DeltaTIersObservedTests` reparses the raw files, so it checks the new rows. `ReproducibilityTests` values inside the refreshed span may move; re-record them only as frozen regression bits and record the magnitudes in the changelog. The JPL and audit references must pass unchanged.
+6. Record the table identifier, the C04 and prediction end dates, and the generator's reported interpolation error, knot jumps, reconstruction error, spline step and misfit in the changelog.

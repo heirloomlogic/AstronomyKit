@@ -1,0 +1,32 @@
+{
+  "retrieved": "2026-10-17",
+  "files": {
+    "eopc04.1962-now": {
+      "url": "https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now",
+      "sha256": "1f5d6d19ea938f8417725bf52f7dac1ce689bd0f5067a4a9ee097765edda1237",
+      "description": "IERS EOP 20 C04, daily at 0h UTC, 1962-01-01 to 2026-09-17 (version v4 of 2026-02-05)"
+    },
+    "eopc04.12h.1984-now": {
+      "url": "https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.12h.1984-now",
+      "sha256": "2564c7e1996a7f3ac7b1b1da3de71c7b790335c1e58dcfa2d0a1f023517fee1a",
+      "description": "IERS EOP 20 C04 sampled at 12h UTC, 1984 to 2026-09-17; validation of interpolation only"
+    },
+    "finals2000A.all": {
+      "url": "https://maia.usno.navy.mil/ser7/finals2000A.all",
+      "sha256": "bfa2066aab0400b075357f573af6081e0068a518993609eee0c5ca991bab0845",
+      "description": "IERS Rapid Service/Prediction Centre Bulletin A, rapid values to 2026-10-15 and predictions to 2027-10-04; identical bytes at https://datacenter.iers.org/data/9/finals2000A.all"
+    },
+    "Table-S15.2020.txt": {
+      "url": "https://astro.ukho.gov.uk/nao/lvm/Table-S15.2020.txt",
+      "archive": "https://web.archive.org/web/20211018232506id_/https://astro.ukho.gov.uk/nao/lvm/Table-S15.2020.txt",
+      "sha256": "cfcb7dfcac62484f7175b3ca3831ca0345a79b806e8a3ef218093ffd19e5e723",
+      "description": "HM Nautical Almanac Office, Table S15 v2020 spline polynomial coefficients for Delta T, -720 to 2019 (Morrison, Stephenson, Hohenkerk and Zawilski 2021, doi:10.1098/rspa.2020.0776). The HMNAO server returned 503 on 2026-10-17; the bytes are the Internet Archive capture"
+    },
+    "hmnao-lvm.html": {
+      "url": "https://astro.ukho.gov.uk/nao/lvm/",
+      "archive": "https://web.archive.org/web/20210618175824id_/https://astro.ukho.gov.uk/nao/lvm/",
+      "sha256": "d00c7296873b621dbec43831694ff67fe2eb2bea3d793f3a56514d93c6f8f058",
+      "description": "HM Nautical Almanac Office, Earth Rotation - the Change in the Length of Day and Delta T (last modified 2021 March 5): Delta T error estimates and the long-term length-of-day model. The HMNAO server returned 503 on 2026-10-17; the bytes are the Internet Archive capture"
+    }
+  }
+}

@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<!-- .html ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+  <title>Earth Rotation - the Change in the Length of Day and Delta T</title>
+
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
+  <meta NAME="keywords" CONTENT="Earth rotation, Delta T, length of day" />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/nao/hmnao.css" />
+
+  <link rel="stylesheet" type="text/css" media="screen" href="cyhdt.css" />
+
+  <link rel="stylesheet" type="text/css" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+
+  <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<!--
+  html needed for stand alone running.
+
+  <link rel="stylesheet" type="text/css" media="screen" href="hmnao.css" />
+  <link rel="stylesheet" type="text/css" href="js/jquery-ui-1.10.2/themes/base/jquery-ui.css" />
+
+  <script src="js/jquery-ui-1.10.2/jquery-1.10.2.js"></script>
+  <script src="js/jquery-ui-1.10.2/ui/jquery-ui.js"></script>
+ -->
+
+  <script src="tabacdn.js"></script>
+
+</head>
+
+
+<!-- Main info  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- Web page: Earth Rotation - the Change in the Length of Day and Delta T
+
+      RSPA 478, 2021 February : Y6 version 
+
+  This web resource is used in conjunction with HMNAO web pages and style
+  files.  The files listed here are particular to this page.
+
+  Files:
+     DT-Y6.html               This file, with all the values of DT & lod
+     cyhdt.css                Web cascading style sheet file for this page
+
+     lod-Y6.web.png           Plot showing lod from -2000 to +2500
+     
+     bDT-Y6.png               Plot showing Delta T from -2000 to +1600
+     DT-720to1600.Y6.web.png  Plot showing observations and Delta T from -720 to +1650
+     DT-1500to2020-Y6.web.png Plot showing observations and Delta T from 1550 to  2019
+     bfDT-Y6.png              Plot showing Delta T from -700 to +2500
+     f1500DT-Y6.png           Plot showing Delta T from 1500 to  2200
+
+     FAQs-2020.pdf            File with frequently asked questions.
+     Poly-Y6.pdf              Polynomial coefficeints pdf file
+     PreviousVersions.zip     Previous data files
+     ReadMe-extract-2020.txt
+
+     Various jqurery files
+
+Updates:
+
+-->
+
+<body>
+
+<!-- Banner  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="bannerbox">
+
+<img src="/nao/icons/banner5.png" width="800" height="92" alt="HMNAO banner">
+
+<!-- <img src="banner5.png" width="800" height="92" alt="HMNAO banner"> -->
+
+<p class="skip"><a href="#textbox">[Skip to Content]</a></p>
+
+<!--
+<h1 class="cen">Welcome to HM Nautical Almanac Office</h1>
+-->
+
+<!-- Main info  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--
+                      2021 January - Y6
+CYH
+-->
+</div>
+
+<!-- 5678901234567890123456789012345678901234567890123456789012345678901234567 -->
+
+<div id="cnavcontainer" style="font-family: Arial,Helvetica,sans-serif";>
+
+<ul>
+<li><a href="/index.html">Data Portal</a></li>
+<li><a href="/nao/history/">History</a></li>
+<li><a href="/websurf/">Websurf</a></li>
+<li><a href="/psp/index_beta.html" style="color: #008000">Websurf 2.0</a></li>
+<li><a href="/eclipse/">Eclipse Portal</a></li>
+<li><a href="/nao/transit/">Transits of Venus</a></li>
+<li><a href="http://asa.hmnao.com">AsA Online</a></li>
+<li><a href="/moonwatch/">Moon Watch</a></li>
+<li><a href="http://www.iausofa.org/">IAU SOFA</a></li>
+<li><a href="#" onclick="history.go(-1);return false;">Previous page</a></li>
+</ul>
+</div>
+
+<div id="textbox">
+
+<h2>Earth Rotation - the Change in the Length of Day and &Delta;T</h2>
+
+
+<p><a href="#">
+   <img src="lod-Y6.web.png" alt="Plot showing lod from -2000 to +2500" width="600" height="350" /></a>
+</p>
+
+
+<h2>&Delta;T & lod from &minus;2000 to &#43;2500</h2>
+
+<p>This resource provides the results of the modern (updated in 2020) analysis of eclipse 
+and occultation timings from ancient Babylonian, China, and the Arab and European worlds 
+through early telescope observations to modern observations in the following papers:</p>
+
+<ul>
+<li><a href="https://rspa.royalsocietypublishing.org/lookup/doi/10.1098/rspa.2016.0404">
+     Measurement of the Earth's rotation: 720 BC to AD 2015</a>, published in 2016 in
+     the Royal Society's <i>Proceedings A</i> <b>472</b>, and made freely available 
+     via Open Access, by Stephenson, F.R., Morrison, L.V. and Hohenkerk, C.Y..</li>
+</ul>
+
+<p>and updated in</p>
+
+<ul>
+<li><a href="https://rspa.royalsocietypublishing.org/lookup/doi/10.1098/rspa.2020.0776">
+     Addendum 2020 to `Measurement of the Earth's Rotation: 720 BC to AD 2015'</a>, 
+     published in 2021 February in
+     the Royal Society's <i>Proceedings A</i> <b>478</b>, by  Morrison, L. V., 
+     Stephenson, F.R., Hohenkerk, C.Y. and  M. Zawilski, M..</li>
+</ul>
+
+<p>Download the file of <a href="FAQs-2020.pdf">FAQs</a> to get some general information
+   about the paper.</p>
+
+<p>The analysis provides measurement of the rotation of the Earth and allows formation
+   of the change in the length of day (lod), relative to the standard day of 86400 SI
+   seconds, and &Delta;T(<i>t</i>), the difference (using current terminology) between
+   TT and UT1, via a spline fit using a weighted least-squares analysis of the data.
+   </p>
+
+<p>The values of &Delta;T in the tables listed in the various sections should be used in
+   conjunction with lunar ephemeris designated JPL DE430/LE430 in which the tidal
+   acceleration of the Moon is &minus;25.85&quot;/cy<sup>2</sup>.
+   </p>
+   
+<p> The menus below allows users to access all the data used in this 
+    <i>Addendum 2020</i>, which consists of both new and updated data as 
+    well the data from the original 
+    <a href="/nao/lvm_original/">2016 Royal Society paper</a>.
+    </p>
+
+<div class="optionContainer">
+
+ <h3 class="dtlh">Observational Data and Spline Polynomial Coefficients for &Delta;T - Version 2020</h3><div class="optionContent">
+
+<p>This section provides links of the various data files (ASCII) relevant to the paper.
+These files are also available from the data tab of the Royal Society Proceedings A website.</p>
+
+<p>Tables 1-9, 12-14 are ASCII versions of the tables published in 
+the 2016 paper, and Tables 10 v2020 and 11 v2020, are updated in the 
+<i>Addendum 2020</i>, covering years BC 720 to 1605 AD.  Each 
+file table contains a few explanatory records at the end of each file.</p>
+
+<p>The extract from the <i>Lunar Occultation Archive VI/132B, (Herald+ 2012)</i> held at
+ by the Centre de Données Astronomiques de Strasbourg (CDS) archive covers years 1621
+ to 2015, and the format is described in the ReadMe file (see below).</p>
+ 
+ <p>The values of  &Delta;T for the final three years, 2016.0 to 2019.0, 
+ are taken from the published values in <i>The Astronomical Almanac</i> 
+ which are from the IERS Bulletin B. </p>
+
+<p>The spline approximation is provided via a set  of polynomial coefficients (<a href="Table-S15.2020.txt">Table S15 v2020</a>).</p>
+
+<table class="DTFile">
+<tr><th>Link to File</th><th>No. of data records</th><th class="lt">Contents</th></tr>
+<tr><td><a href="Table-S01.txt">Table 01</a></td><td>122</td><td class="lt">Babylonian lunar eclipses.</td></tr>
+<tr><td><a href="Table-S02.txt">Table 02</a></td><td> 21</td><td class="lt">Babylonian lunar eclipses, culmination of ziqpu star.</td></tr>
+<tr><td><a href="Table-S03.txt">Table 03</a></td><td> 25</td><td class="lt">Babylonian solar eclipses.</td></tr>
+<tr><td><a href="Table-S04.txt">Table 04</a></td><td> 12</td><td class="lt">Babylonian lunar eclipses in the Almagest.</td></tr>
+<tr><td><a href="Table-S05.txt">Table 05</a></td><td> 68</td><td class="lt">Chinese timed lunar eclipses.</td></tr>
+<tr><td><a href="Table-S06.txt">Table 06</a></td><td> 42</td><td class="lt">Chinese timed solar eclipses.</td></tr>
+<tr><td><a href="Table-S07.txt">Table 07</a></td><td> 11</td><td class="lt">Greek timed lunar and solar eclipses.</td></tr>
+<tr><td><a href="Table-S08.txt">Table 08</a></td><td> 22</td><td class="lt">Arab timed solar eclipses.</td></tr>
+<tr><td><a href="Table-S09.txt">Table 09</a></td><td> 32</td><td class="lt">Arab timed lunar eclipses.</td></tr>
+<tr><td><a href="Table-S10.2020.txt">Table 10 v2020</a></td><td> 48</td><td class="lt">Untimed total and annular solar eclipses.</td></tr>
+<tr><td><a href="Table-S11.2020.txt">Table 11 v2020</a></td><td> 20</td><td class="lt">Untimed partial solar eclipses.</td></tr>
+<tr><td><a href="Table-S12.txt">Table 12</a></td><td>  3</td><td class="lt">Untimed solar eclipses rose or set eclipsed.</td></tr>
+<tr><td><a href="Table-S13.txt">Table 13</a></td><td>  7</td><td class="lt">Untimed lunar eclipses rose or set eclipsed.</td></tr>
+<tr><td><a href="Table-S14.txt">Table 14</a></td><td>  5</td><td class="lt">Untimed lunar eclipses: estimates of degree of obscuration at rising or setting.</td></tr>
+<tr><td><a href="extract-lunarocc.dat">Lunar Occultations 1621-2015</a></td> <td>201908</td> <td class="lt">Extract of the lunar occultations from
+                                       the <a href="http://cdsarc.u-strasbg.fr/viz-bin/Cat?VI/132B">CDS archive</a> provided by Herald & Gault (2012, updated 2015 October).</td></tr>
+<tr><td><a href="ReadMe-extract-2020.txt">ReadMe</a></td> <td>168</td> <td class="lt">ReadMe file describing the content and format of the file with the extracted lunar occultations data from the CDS file.</td></tr>
+<tr><td>-------------</td><td>---------</td><td class="lt">------------------------------------------------------------------</td></tr>
+<!--  <tr><td><a href="afile">Spline</a></td> <td>x</td><td class="lt">Konts and the weighted least-squares spline coefficients valid from
+                                                                                           -720 to 2016.0.</td></tr>
+-->
+<tr><td><a href="Table-S15.2020.txt">Polynomials v2020</a></td><td>58</td><td class="lt">Polynomial coefficients, a conversion from the spline coefficients.
+                                                                                  A <a href="Poly-Y6.pdf">pdf</a> version of the file.</td></tr>
+<tr><td>-------------</td><td>---------</td><td class="lt">------------------------------------------------------------------</td></tr>
+<tr><td><a href="PreviousVersions.zip">2018 Files</a></td><td> </td><td class="lt">Updated files used in the analysis discussed in 
+                                                             "Historical Changes in UT/lod from Eclipses, published Online in
+                                                             2020 in the Proceedings of the 
+                                                             <a href=https://web.ua.es/journees2017/proceedings/PROCEEDINGS-JOURNEES.pdf >
+                                                              Journees des Systemes de Reference et de la Rotation Terrestre</a>, 2017, 
+                                                              by Morrison, L.V., Stephenson, F.R. and Hohenkerk, C.Y..</td></tr>
+</table>
+
+</div>
+
+
+<h3 class="dtlh">&Delta;T and length of day (lod) from &minus;2000 to &minus;800</h3><div class="optionContent">
+
+
+<!-- TAB A  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<div id="atabs">
+  <ul>
+    <li><a href="#tabs-a1">Summary</a></li>
+    <li><a href="#tabs-a2">&Delta;T</a></li>
+    <li><a href="#tabs-a3">lod</a></li>
+  </ul>
+
+<!-- TAB A 1  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <div id="tabs-a1">
+
+  <p>The values tabulated in the &Delta;T and lod tables have been extrapolated
+     backwards by integration using the long term lod function
+     </p>
+
+  <p>lod = +1.72 <i>t</i> &minus; 3.5 sin(2&pi;(<i>t</i>+0.75)/14)
+  </p>
+
+  <p>between the years &minus;800 to &minus;2000, where <i>t</i> is the number
+     of centuries from +1825.0.
+    </p>
+
+  <p><a href="#">
+     <img src="bDT-Y6.png" alt="Plot showing Delta T from -2000 to +1600" width="500" /></a>
+     </p>
+
+  <p>The resulting green-dashed line in the plot shows the extrapolated &Delta;T,
+     while the continuous-black line shows the spline.
+     </p>
+
+     <p> For &Delta;T the values are tabulated in <b>hours</b> every 100 years to the nearest
+     100 seconds.
+     </p>
+
+  </div>
+
+
+<!-- TAB A2/A3  Y6 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- TAB a2   ++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6++++++++ -->
+<div id="tabs-a2">
+<table class="DTTableHead">
+<TR><th colspan="9">&Delta;T (hours) : &minus;2000 to &minus;800</th></TR>
+<TR><TD colspan="9">Error estimate &epsilon; <B>hours</B></TD></TR>
+<TR><th>Year</th><th>&Delta;T</th><th>&epsilon;</th>
+    <th>Year</th><th>&Delta;T</th><th>&epsilon;</th>
+    <th>Year</th><th>&Delta;T</th><th>&epsilon;</th></TR>
+</table>
+<table class="DTTable">
+<TR><TH colspan="9"></TH></TR>
+<TR><TD class="rb">&minus;2000.0</TD><TD> 12.8</TD><TD> &plusmn;0.3</TD><TD class="rb">&minus;1600.0</TD><TD> 10.2</TD><TD> &plusmn;0.2</TD><TD class="rb">&minus;1200.0</TD><TD>  8.1</TD><TD> &plusmn;0.2</TD></TR>
+<TR><TD class="rb">&minus;1900.0</TD><TD> 12.1</TD><TD> &plusmn;0.3</TD><TD class="rb">&minus;1500.0</TD><TD>  9.7</TD><TD> &plusmn;0.2</TD><TD class="rb">&minus;1100.0</TD><TD>  7.6</TD><TD> &plusmn;0.2</TD></TR>
+<TR><TD class="rb">&minus;1800.0</TD><TD> 11.4</TD><TD> &plusmn;0.3</TD><TD class="rb">&minus;1400.0</TD><TD>  9.1</TD><TD> &plusmn;0.2</TD><TD class="rb">&minus;1000.0</TD><TD>  7.1</TD><TD> &plusmn;0.2</TD></TR>
+<TR><TD class="rb">&minus;1700.0</TD><TD> 10.8</TD><TD> &plusmn;0.3</TD><TD class="rb">&minus;1300.0</TD><TD>  8.6</TD><TD> &plusmn;0.2</TD><TD class="rb">&minus; 900.0</TD><TD>  6.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">&minus;1600.0</TD><TD> 10.2</TD><TD> &plusmn;0.2</TD><TD class="rb">&minus;1200.0</TD><TD>  8.1</TD><TD> &plusmn;0.2</TD><TD class="rb">&minus; 800.0</TD><TD>  6.1</TD><TD> &plusmn;0.1</TD></TR>
+</TABLE>
+</div>
+<!-- TAB a3  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6++++ -->
+<div id="tabs-a3">
+<table class="DTTableHead">
+<TR><th colspan="6">Change in length of day (ms) : &minus;2000 to &minus;800</th></TR>
+<TR><TD colspan="6">Error estimate &epsilon; = &plusmn;3 ms</TD></TR>
+<TR><th>Year</th><th>lod</th>
+    <th>Year</th><th>lod</th>
+    <th>Year</th><th>lod</th></TR>
+</table>
+<table class="DTTable">
+<TR><TH colspan="6"></TH></TR>
+<TR><TD class="rb">&minus;2000.0</TD><TD>&minus;69</TD><TD class="rb">&minus;1600.0</TD><TD>&minus;57</TD><TD class="rb">&minus;1200.0</TD><TD>&minus;50</TD></TR>
+<TR><TD class="rb">&minus;1900.0</TD><TD>&minus;66</TD><TD class="rb">&minus;1500.0</TD><TD>&minus;54</TD><TD class="rb">&minus;1100.0</TD><TD>&minus;50</TD></TR>
+<TR><TD class="rb">&minus;1800.0</TD><TD>&minus;63</TD><TD class="rb">&minus;1400.0</TD><TD>&minus;52</TD><TD class="rb">&minus;1000.0</TD><TD>&minus;49</TD></TR>
+<TR><TD class="rb">&minus;1700.0</TD><TD>&minus;60</TD><TD class="rb">&minus;1300.0</TD><TD>&minus;51</TD><TD class="rb">&minus; 900.0</TD><TD>&minus;49</TD></TR>
+<TR><TD class="rb">&minus;1600.0</TD><TD>&minus;57</TD><TD class="rb">&minus;1200.0</TD><TD>&minus;50</TD><TD class="rb">&minus; 800.0</TD><TD>&minus;48</TD></TR>
+</TABLE></div>
+</div>
+</div>
+<!-- End TAB A  Y6   +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--  +  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h3 class="dtlh">&Delta;T and length of day (lod) from &minus;720 to +1600</h3><div class="optionContent">
+
+<!-- TAB B ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="btabs">
+
+  <ul>
+    <li><a href="#tabs-b1">Summary</a></li>
+    <li><a href="#tabs-b2">&Delta;T</a></li>
+    <li><a href="#tabs-b3">lod</a></li>
+  </ul>
+
+<!-- TAB B 1  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <div id="tabs-b1">
+
+  <p><a href="#">
+   <img src="DT-720to1600.Y6.web.png" alt="Plot showing observations and Delta T from -720 to +1600" width="520"  /></a>
+   </p>
+  <p>The spline (continuous-black curve) that has been fitted to the observations
+     has been tabulated, from the start at &minus;720, then the following century
+     years, giving both &Delta;T and the lod.
+     </p>
+
+  <p>&Delta;T is given to the nearest 10 seconds together with an estimate
+     of the errors (&epsilon;).
+     </p>
+
+  </div>
+
+<!-- TAB B2/B3  Y6+++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- TAB b2  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6 -->
+<div id="tabs-b2">
+<table class="DTTableHead">
+ <TR><TH colspan="9">&Delta;T (s) : &minus;720 to +1600</TH></TR>
+  <TR><TD colspan="9">Error estimate &epsilon; (seconds)</TD></TR>
+ <TR><TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD></TR>
+</TABLE>
+<TABLE class="DTTable">
+<TR><TD class="rb">&minus;720.0</TD><TD>       +20370</TD><TD> &plusmn;180</TD><TD class="rb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;       0.0</TD><TD>       +10440</TD><TD> &plusmn;90</TD><TD class="rb">      +800.0</TD><TD>       +2940</TD><TD> &plusmn;25</TD></TR>
+<TR><TD class="rb">&minus;700.0</TD><TD>       +20050</TD><TD> &plusmn;170</TD><TD class="rb">      +100.0</TD><TD>       +9410</TD><TD> &plusmn;80</TD><TD class="rb">       +900.0</TD><TD>       +2230</TD><TD> &plusmn;20</TD></TR>
+<TR><TD class="rb">&minus;600.0</TD><TD>       +18470</TD><TD> &plusmn;160</TD><TD class="rb">      +200.0</TD><TD>       +8420</TD><TD> &plusmn;70</TD><TD class="rb">      +1000.0</TD><TD>       +1650</TD><TD> &plusmn;15</TD></TR>
+<TR><TD class="rb">&minus;500.0</TD><TD>       +16940</TD><TD> &plusmn;150</TD><TD class="rb">      +300.0</TD><TD>       +7480</TD><TD> &plusmn;60</TD><TD class="rb">      +1100.0</TD><TD>       +1220</TD><TD> &plusmn;15</TD></TR>
+<TR><TD class="rb">&minus;400.0</TD><TD>       +15470</TD><TD> &plusmn;130</TD><TD class="rb">      +400.0</TD><TD>       +6540</TD><TD> &plusmn;50</TD><TD class="rb">      +1200.0</TD><TD>        +910</TD><TD> &plusmn;15</TD></TR>
+<TR><TD class="rb">&minus;300.0</TD><TD>       +14080</TD><TD> &plusmn;120</TD><TD class="rb">      +500.0</TD><TD>       +5590</TD><TD> &plusmn;40</TD><TD class="rb">      +1300.0</TD><TD>        +680</TD><TD> &plusmn;15</TD></TR>
+<TR><TD class="rb">&minus;200.0</TD><TD>       +12770</TD><TD> &plusmn;110</TD><TD class="rb">      +600.0</TD><TD>       +4650</TD><TD> &plusmn;40</TD><TD class="rb">      +1400.0</TD><TD>        +480</TD><TD> &plusmn;15</TD></TR>
+<TR><TD class="rb">&minus;100.0</TD><TD>       +11560</TD><TD> &plusmn;100</TD><TD class="rb">      +700.0</TD><TD>       +3760</TD><TD> &plusmn;30</TD><TD class="rb">      +1500.0</TD><TD>        +290</TD><TD> &plusmn;15</TD></TR>
+<TR><TD class="rb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp       0.0</TD><TD>       +10440</TD><TD> &plusmn;90</TD><TD class="rb">      +800.0</TD><TD>       +2940</TD><TD> &plusmn;25</TD><TD class="rb">      +1600.0</TD><TD>       +110</TD><TD> &plusmn;15</TD></TR>
+</TABLE></DIV>
+<!-- TAB b3  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Y6 -->
+<div id="tabs-b3">
+<table class="DTTableHead">
+ <TR><TH colspan="6">Change in length of day (ms) : &minus;720 to +1600</TH></TR>
+ <TR><TD colspan="6">Error estimate &epsilon; = &plusmn;3 ms</TD></TR>
+ <TR><TD>Year</TD><TD>lod</TD>
+     <TD>Year</TD><TD>lod</TD>
+     <TD>Year</TD><TD>lod</TD></TR>
+</TABLE>
+<TABLE class="DTTable">
+<TR><TD class="rb">&minus;720.0</TD><TD> &minus;44.2</TD><TD class="rb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.0</TD><TD> &minus;29.4</TD><TD class="rb">      +800.0</TD><TD> &minus;21.1</TD></TR>
+<TR><TD class="rb">&minus;700.0</TD><TD> &minus;43.9</TD><TD class="rb">      +100.0</TD><TD> &minus;27.5</TD><TD class="rb">      +900.0</TD><TD> &minus;17.8</TD></TR>
+<TR><TD class="rb">&minus;600.0</TD><TD> &minus;42.6</TD><TD class="rb">      +200.0</TD><TD> &minus;26.3</TD><TD class="rb">      +1000.0</TD><TD> &minus;13.7</TD></TR>
+<TR><TD class="rb">&minus;500.0</TD><TD> &minus;41.0</TD><TD class="rb">      +300.0</TD><TD> &minus;25.8</TD><TD class="rb">      +1100.0</TD><TD> &minus;9.9</TD></TR>
+<TR><TD class="rb">&minus;400.0</TD><TD> &minus;39.2</TD><TD class="rb">      +400.0</TD><TD> &minus;25.9</TD><TD class="rb">      +1200.0</TD><TD> &minus;7.2</TD></TR>
+<TR><TD class="rb">&minus;300.0</TD><TD> &minus;37.0</TD><TD class="rb">      +500.0</TD><TD> &minus;25.9</TD><TD class="rb">      +1300.0</TD><TD> &minus;5.8</TD></TR>
+<TR><TD class="rb">&minus;200.0</TD><TD> &minus;34.6</TD><TD class="rb">      +600.0</TD><TD> &minus;25.1</TD><TD class="rb">      +1400.0</TD><TD> &minus;5.2</TD></TR>
+<TR><TD class="rb">&minus;100.0</TD><TD> &minus;31.9</TD><TD class="rb">      +700.0</TD><TD> &minus;23.5</TD><TD class="rb">      +1500.0</TD><TD> &minus;5.3</TD></TR>
+<TR><TD class="rb">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0.0</TD><TD> &minus;29.4</TD><TD class="rb">      +800.0</TD><TD> &minus;21.1</TD><TD class="rb">      +1600.0</TD><TD> &minus;4.3</TD></TR>
+</TABLE></DIV>
+</div>
+</div>
+<!-- End TAB B    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--  +  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h3 class="dtlh">&Delta;T and length of day (lod) from +1600 to +1800</h3><div class="optionContent">
+
+<!-- TAB C  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="ctabs">
+
+  <ul>
+    <li><a href="#tabs-c1">Summary</a></li>
+    <li><a href="#tabs-c2">&Delta;T</a></li>
+    <li><a href="#tabs-c3">lod</a></li>
+  </ul>
+
+<!-- TAB C 1  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <div id="tabs-c1">
+
+    <p><a href="#">
+     <img src="DT-1500to2020.Y6.web.png" alt="Plot showing observations and Delta T from 1550 to 2019" width="500" /></a>
+     </p>
+
+  <p>The spline (continuous-black curve) that has been fitted to the observations
+     has been evaluated from 1600 to 1800 every 10 years, giving both &Delta;T
+     and the lod.
+     </p>
+
+  <p>&Delta;T is given to the nearest second and the lod to nearest 0.1 ms
+     together with an estimate of their errors (&epsilon;).
+     </p>
+
+  </div>
+
+<!-- TAB C2/C3 Y6 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- TAB c2  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6-->
+<div id="tabs-c2">
+<table class="DTTableHead">
+ <TR><TH colspan="9">&Delta;T (s) : +1600 to +1800</TH></TR>
+ <TR><TD colspan="9">Error estimate &epsilon; (seconds)</TD></TR>
+ <TR><TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD></TR>
+</TABLE>
+<TABLE class="DTTable">
+<TR><TD class="rb">      +1600.0</TD><TD>      +109</TD><TD> &plusmn;15</TD><TD class="rb">      +1670.0</TD><TD>       +28</TD><TD> &plusmn;10</TD><TD class="rb">     +1740.0</TD><TD>       +15</TD><TD> &plusmn;2</TD></TR>
+<TR><TD class="rb">      +1610.0</TD><TD>       +94</TD><TD> &plusmn;15</TD><TD class="rb">      +1680.0</TD><TD>       +22</TD><TD> &plusmn;5</TD><TD class="rb">      +1750.0</TD><TD>       +17</TD><TD> &plusmn;2</TD></TR>
+<TR><TD class="rb">      +1620.0</TD><TD>       +80</TD><TD> &plusmn;20</TD><TD class="rb">      +1690.0</TD><TD>       +17</TD><TD> &plusmn;5</TD><TD class="rb">      +1760.0</TD><TD>       +19</TD><TD> &plusmn;2</TD></TR>
+<TR><TD class="rb">      +1630.0</TD><TD>       +66</TD><TD> &plusmn;20</TD><TD class="rb">      +1700.0</TD><TD>       +14</TD><TD> &plusmn;5</TD><TD class="rb">      +1770.0</TD><TD>       +21</TD><TD> &plusmn;1</TD></TR>
+<TR><TD class="rb">      +1640.0</TD><TD>       +54</TD><TD> &plusmn;20</TD><TD class="rb">      +1710.0</TD><TD>       +12</TD><TD> &plusmn;5</TD><TD class="rb">      +1780.0</TD><TD>       +21</TD><TD> &plusmn;1</TD></TR>
+<TR><TD class="rb">      +1650.0</TD><TD>       +44</TD><TD> &plusmn;20</TD><TD class="rb">      +1720.0</TD><TD>       +12</TD><TD> &plusmn;5</TD><TD class="rb">      +1790.0</TD><TD>       +21</TD><TD> &plusmn;1</TD></TR>
+<TR><TD class="rb">      +1660.0</TD><TD>       +35</TD><TD> &plusmn;15</TD><TD class="rb">      +1730.0</TD><TD>       +13</TD><TD> &plusmn;2</TD><TD class="rb">      +1800.0</TD><TD>       +18</TD><TD> &plusmn;0.5</TD></TR>
+<TR><TD class="rb">      +1670.0</TD><TD>       +28</TD><TD> &plusmn;10</TD><TD class="rb">      +1740.0</TD><TD>       +15</TD><TD> &plusmn;2</TD><TD class="rb">      +1810.0</TD><TD>       +16</TD><TD> &plusmn;0.5</TD></TR>
+</TABLE></DIV>
+<!-- TAB c3  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6 -->
+<div id="tabs-c3">
+<table class="DTTableHead">
+ <TR><TH colspan="9">Change in length of day (ms) : +1600 to +1800</TH></TR>
+ <TR><TD colspan="9">Error estimate &epsilon; (ms)</TD></TR>
+ <TR><TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD></TR>
+</TABLE>
+<TABLE class="DTTable">
+<TR><TD class="rb">      +1600.0</TD><TD> &minus;4.3</TD><TD> &plusmn;3</TD><TD class="rb">      +1670.0</TD><TD> &minus;1.8</TD><TD> &plusmn;2.4</TD><TD class="rb">      +1740.0</TD><TD>       +0.6</TD><TD> &plusmn;1.0</TD></TR>
+<TR><TD class="rb">      +1610.0</TD><TD> &minus;4.1</TD><TD> &plusmn;3</TD><TD class="rb">      +1680.0</TD><TD> &minus;1.4</TD><TD> &plusmn;2.2</TD><TD class="rb">      +1750.0</TD><TD>       +0.6</TD><TD> &plusmn;0.8</TD></TR>
+<TR><TD class="rb">      +1620.0</TD><TD> &minus;3.8</TD><TD> &plusmn;3</TD><TD class="rb">      +1690.0</TD><TD> &minus;1.0</TD><TD> &plusmn;1.9</TD><TD class="rb">      +1760.0</TD><TD>       +0.5</TD><TD> &plusmn;0.7</TD></TR>
+<TR><TD class="rb">      +1630.0</TD><TD> &minus;3.4</TD><TD> &plusmn;3</TD><TD class="rb">      +1700.0</TD><TD> &minus;0.6</TD><TD> &plusmn;1.6</TD><TD class="rb">      +1770.0</TD><TD>       +0.3</TD><TD> &plusmn;0.6</TD></TR>
+<TR><TD class="rb">      +1640.0</TD><TD> &minus;3.1</TD><TD> &plusmn;3</TD><TD class="rb">      +1710.0</TD><TD> &minus;0.3</TD><TD> &plusmn;1.4</TD><TD class="rb">      +1780.0</TD><TD>  &nbsp;0.0</TD><TD> &plusmn;0.5</TD></TR>
+<TR><TD class="rb">      +1650.0</TD><TD> &minus;2.7</TD><TD> &plusmn;3</TD><TD class="rb">      +1720.0</TD><TD>       +0.1</TD><TD> &plusmn;1.3</TD><TD class="rb">      +1790.0</TD><TD> &minus;0.4</TD><TD> &plusmn;0.4</TD></TR>
+<TR><TD class="rb">      +1660.0</TD><TD> &minus;2.2</TD><TD> &plusmn;3</TD><TD class="rb">      +1730.0</TD><TD>       +0.4</TD><TD> &plusmn;1.1</TD><TD class="rb">      +1800.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.3</TD></TR>
+<TR><TD class="rb">      +1670.0</TD><TD> &minus;1.8</TD><TD> &plusmn;2</TD><TD class="rb">      +1740.0</TD><TD>       +0.6</TD><TD> &plusmn;1.0</TD><TD class="rb">      +1810.0</TD><TD>  &nbsp;0.0</TD><TD> &plusmn;0.3</TD></TR>
+</TABLE></DIV>
+</div>
+</div>
+<!-- End TAB C   Y6  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--  + ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h3 class="dtlh">&Delta;T and length of day (lod) from +1800 to +1950</h3><div class="optionContent">
+
+<!-- TAB D ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="dtabs">
+
+  <ul>
+    <li><a href="#tabs-d1">Summary</a></li>
+    <li><a href="#tabs-d2">&Delta;T</a></li>
+    <li><a href="#tabs-d3">lod</a></li>
+  </ul>
+
+<!-- TAB D 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <div id="tabs-d1">
+
+  <p>The spline that has been fitted to the observations
+     has been evaluated every year from 1800 to 1950.
+     </p>
+
+     <p>&Delta;T is given to the nearest 0.1 seconds from 1800 to 1850 and to 0.01
+        seconds to 1950.  The lod is tabulated to nearest 0.1 ms.
+     </p>
+
+   </div>
+
+<!-- TAB D2/D3  Y3++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- TAB d2  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6 -->
+<div id="tabs-d2">
+<table class="DTTableHead">
+ <TR><TH colspan="9">&Delta;T (s) : +1800 to +1950</TH></TR>
+  <TR><TD colspan="9">Error estimate &epsilon; (seconds)</TD></TR>
+ <TR><TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>&Delta;T</TD><TD>&epsilon;</TD></TR>
+</TABLE>
+<div class="scroll"> <TABLE class="DTTable">
+<TR><TD class="rb">      +1800.0</TD><TD>       +18.4</TD><TD>&plusmn;0.5</TD><TD class="rb">      +1850.0</TD><TD>        +9.3</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1900.0</TD><TD> &minus;1.98</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1801.0</TD><TD>       +18.0</TD><TD>&plusmn;0.5</TD><TD class="rb">      +1851.0</TD><TD>       +9.67</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1901.0</TD><TD> &minus;0.75</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1802.0</TD><TD>       +17.6</TD><TD>&plusmn;0.4</TD><TD class="rb">      +1852.0</TD><TD>       +9.98</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1902.0</TD><TD>       +0.62</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1803.0</TD><TD>       +17.3</TD><TD>&plusmn;0.4</TD><TD class="rb">      +1853.0</TD><TD>      +10.23</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1903.0</TD><TD>       +2.06</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1804.0</TD><TD>       +16.9</TD><TD>&plusmn;0.4</TD><TD class="rb">      +1854.0</TD><TD>      +10.37</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1904.0</TD><TD>       +3.51</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1805.0</TD><TD>       +16.6</TD><TD>&plusmn;0.3</TD><TD class="rb">      +1855.0</TD><TD>      +10.36</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1905.0</TD><TD>       +4.92</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1806.0</TD><TD>       +16.3</TD><TD>&plusmn;0.3</TD><TD class="rb">      +1856.0</TD><TD>      +10.18</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1906.0</TD><TD>       +6.24</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1807.0</TD><TD>       +16.0</TD><TD>&plusmn;0.3</TD><TD class="rb">      +1857.0</TD><TD>       +9.88</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1907.0</TD><TD>       +7.49</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1808.0</TD><TD>       +15.8</TD><TD>&plusmn;0.3</TD><TD class="rb">      +1858.0</TD><TD>       +9.54</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1908.0</TD><TD>       +8.70</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1809.0</TD><TD>       +15.7</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1859.0</TD><TD>       +9.24</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1909.0</TD><TD>       +9.90</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1810.0</TD><TD>       +15.7</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1860.0</TD><TD>       +9.04</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1910.0</TD><TD>      +11.14</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1811.0</TD><TD>       +15.7</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1861.0</TD><TD>       +8.99</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1911.0</TD><TD>      +12.43</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1812.0</TD><TD>       +15.8</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1862.0</TD><TD>       +9.01</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1912.0</TD><TD>      +13.75</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1813.0</TD><TD>       +16.0</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1863.0</TD><TD>       +8.97</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1913.0</TD><TD>      +15.06</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1814.0</TD><TD>       +16.2</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1864.0</TD><TD>       +8.76</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1914.0</TD><TD>      +16.32</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1815.0</TD><TD>       +16.4</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1865.0</TD><TD>       +8.25</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1915.0</TD><TD>      +17.48</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1816.0</TD><TD>       +16.5</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1866.0</TD><TD>       +7.38</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1916.0</TD><TD>      +18.52</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1817.0</TD><TD>       +16.7</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1867.0</TD><TD>       +6.22</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1917.0</TD><TD>      +19.44</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1818.0</TD><TD>       +16.7</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1868.0</TD><TD>       +4.92</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1918.0</TD><TD>      +20.25</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1819.0</TD><TD>       +16.7</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1869.0</TD><TD>       +3.59</TD><TD>&plusmn;0.1 </TD><TD class="rb">      +1919.0</TD><TD>      +20.98</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1820.0</TD><TD>       +16.5</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1870.0</TD><TD>       +2.37</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1920.0</TD><TD>      +21.62</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1821.0</TD><TD>       +16.2</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1871.0</TD><TD>       +1.36</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1921.0</TD><TD>      +22.19</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1822.0</TD><TD>       +15.8</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1872.0</TD><TD>       +0.56</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1922.0</TD><TD>      +22.69</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1823.0</TD><TD>       +15.3</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1873.0</TD><TD> &minus;0.10</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1923.0</TD><TD>      +23.12</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1824.0</TD><TD>       +14.8</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1874.0</TD><TD> &minus;0.65</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1924.0</TD><TD>      +23.49</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1825.0</TD><TD>       +14.1</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1875.0</TD><TD> &minus;1.13</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1925.0</TD><TD>      +23.79</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1826.0</TD><TD>       +13.5</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1876.0</TD><TD> &minus;1.58</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1926.0</TD><TD>      +24.02</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1827.0</TD><TD>       +12.8</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1877.0</TD><TD> &minus;2.01</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1927.0</TD><TD>      +24.20</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1828.0</TD><TD>       +12.1</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1878.0</TD><TD> &minus;2.43</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1928.0</TD><TD>      +24.32</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1829.0</TD><TD>       +11.4</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1879.0</TD><TD> &minus;2.83</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1929.0</TD><TD>      +24.39</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1830.0</TD><TD>       +10.8</TD><TD>&plusmn;0.2</TD><TD class="rb">      +1880.0</TD><TD> &minus;3.21</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1930.0</TD><TD>      +24.42</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1831.0</TD><TD>       +10.2</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1881.0</TD><TD> &minus;3.58</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1931.0</TD><TD>      +24.41</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1832.0</TD><TD>        +9.7</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1882.0</TD><TD> &minus;3.91</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1932.0</TD><TD>      +24.38</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1833.0</TD><TD>        +9.3</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1883.0</TD><TD> &minus;4.17</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1933.0</TD><TD>      +24.32</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1834.0</TD><TD>        +8.9</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1884.0</TD><TD> &minus;4.34</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1934.0</TD><TD>      +24.25</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1835.0</TD><TD>        +8.5</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1885.0</TD><TD> &minus;4.39</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1935.0</TD><TD>      +24.16</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1836.0</TD><TD>        +8.2</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1886.0</TD><TD> &minus;4.31</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1936.0</TD><TD>      +24.08</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1837.0</TD><TD>        +8.0</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1887.0</TD><TD> &minus;4.14</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1937.0</TD><TD>      +24.04</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1838.0</TD><TD>        +7.8</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1888.0</TD><TD> &minus;3.97</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1938.0</TD><TD>      +24.06</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1839.0</TD><TD>        +7.7</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1889.0</TD><TD> &minus;3.86</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1939.0</TD><TD>      +24.17</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1840.0</TD><TD>        +7.6</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1890.0</TD><TD> &minus;3.88</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1940.0</TD><TD>      +24.43</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1841.0</TD><TD>        +7.6</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1891.0</TD><TD> &minus;4.07</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1941.0</TD><TD>      +24.83</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1842.0</TD><TD>        +7.7</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1892.0</TD><TD> &minus;4.37</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1942.0</TD><TD>      +25.35</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1843.0</TD><TD>        +7.7</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1893.0</TD><TD> &minus;4.69</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1943.0</TD><TD>      +25.92</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1844.0</TD><TD>        +7.9</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1894.0</TD><TD> &minus;4.93</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1944.0</TD><TD>      +26.51</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1845.0</TD><TD>        +8.0</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1895.0</TD><TD> &minus;5.02</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1945.0</TD><TD>      +27.05</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1846.0</TD><TD>        +8.2</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1896.0</TD><TD> &minus;4.87</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1946.0</TD><TD>      +27.51</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1847.0</TD><TD>        +8.5</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1897.0</TD><TD> &minus;4.48</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1947.0</TD><TD>      +27.89</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1848.0</TD><TD>        +8.7</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1898.0</TD><TD> &minus;3.86</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1948.0</TD><TD>      +28.24</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1849.0</TD><TD>        +9.0</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1899.0</TD><TD> &minus;3.02</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1949.0</TD><TD>      +28.58</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1850.0</TD><TD>        +9.3</TD><TD>&plusmn;0.1</TD><TD class="rb">      +1900.0</TD><TD> &minus;1.98</TD><TD>&plusmn;0.05</TD><TD class="rb">      +1950.0</TD><TD>      +28.93</TD><TD> &plusmn;0.05</TD></TR>
+</TABLE></DIV>
+</DIV>
+<!-- TAB d3  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6 -->
+<div id="tabs-d3">
+<table class="DTTableHead">
+ <TR><TH colspan="9">Change in length of day (ms) : +1800 to +1950</TH></TR>
+ <TR><TD colspan="9">Error estimate &epsilon; (ms)</TD></TR>
+ <TR><TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD></TR>
+</TABLE>
+<div class="scroll"> <TABLE class="DTTable">
+<TR><TD class="rb">      +1800.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1850.0</TD><TD>       +0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1900.0</TD><TD>       +3.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1801.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1851.0</TD><TD>       +0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1901.0</TD><TD>       +3.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1802.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1852.0</TD><TD>       +0.8</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1902.0</TD><TD>       +3.9</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1803.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1853.0</TD><TD>       +0.5</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1903.0</TD><TD>       +4.0</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1804.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1854.0</TD><TD>       +0.2</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1904.0</TD><TD>       +3.9</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1805.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1855.0</TD><TD> &minus;0.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1905.0</TD><TD>       +3.7</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1806.0</TD><TD> &minus;0.8</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1856.0</TD><TD> &minus;0.7</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1906.0</TD><TD>       +3.5</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1807.0</TD><TD> &minus;0.6</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1857.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1907.0</TD><TD>       +3.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1808.0</TD><TD> &minus;0.4</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1858.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1908.0</TD><TD>       +3.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1809.0</TD><TD> &minus;0.2</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1859.0</TD><TD> &minus;0.7</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1909.0</TD><TD>       +3.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1810.0</TD><TD> &nbsp;+0.0</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1860.0</TD><TD> &minus;0.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1910.0</TD><TD>       +3.5</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1811.0</TD><TD>       +0.2</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1861.0</TD><TD>        0.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1911.0</TD><TD>       +3.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1812.0</TD><TD>       +0.4</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1862.0</TD><TD>        0.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1912.0</TD><TD>       +3.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1813.0</TD><TD>       +0.5</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1863.0</TD><TD> &minus;0.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1913.0</TD><TD>       +3.5</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1814.0</TD><TD>       +0.5</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1864.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1914.0</TD><TD>       +3.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1815.0</TD><TD>       +0.5</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1865.0</TD><TD> &minus;1.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1915.0</TD><TD>       +3.0</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1816.0</TD><TD>       +0.4</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1866.0</TD><TD> &minus;2.8</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1916.0</TD><TD>       +2.7</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1817.0</TD><TD>       +0.2</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1867.0</TD><TD> &minus;3.4</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1917.0</TD><TD>       +2.4</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1818.0</TD><TD>  &nbsp;0.0</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1868.0</TD><TD> &minus;3.7</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1918.0</TD><TD>       +2.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1819.0</TD><TD> &minus;0.2</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1869.0</TD><TD> &minus;3.5</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1919.0</TD><TD>       +1.9</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1820.0</TD><TD> &minus;0.6</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1870.0</TD><TD> &minus;3.1</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1920.0</TD><TD>       +1.7</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1821.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1871.0</TD><TD> &minus;2.5</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1921.0</TD><TD>       +1.5</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1822.0</TD><TD> &minus;1.2</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1872.0</TD><TD> &minus;2.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1922.0</TD><TD>       +1.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1823.0</TD><TD> &minus;1.5</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1873.0</TD><TD> &minus;1.6</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1923.0</TD><TD>       +1.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1824.0</TD><TD> &minus;1.7</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1874.0</TD><TD> &minus;1.4</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1924.0</TD><TD>       +0.9</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1825.0</TD><TD> &minus;1.8</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1875.0</TD><TD> &minus;1.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1925.0</TD><TD>       +0.7</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1826.0</TD><TD> &minus;1.9</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1876.0</TD><TD> &minus;1.2</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1926.0</TD><TD>       +0.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1827.0</TD><TD> &minus;1.9</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1877.0</TD><TD> &minus;1.2</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1927.0</TD><TD>       +0.4</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1828.0</TD><TD> &minus;1.9</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1878.0</TD><TD> &minus;1.1</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1928.0</TD><TD>       +0.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1829.0</TD><TD> &minus;1.8</TD><TD> &plusmn;0.3</TD><TD class="rb">      +1879.0</TD><TD> &minus;1.1</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1929.0</TD><TD>       +0.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1830.0</TD><TD> &minus;1.6</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1880.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1930.0</TD><TD>  &nbsp;0.0</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1831.0</TD><TD> &minus;1.5</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1881.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1931.0</TD><TD> &minus;0.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1832.0</TD><TD> &minus;1.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1882.0</TD><TD> &minus;0.8</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1932.0</TD><TD> &minus;0.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1833.0</TD><TD> &minus;1.2</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1883.0</TD><TD> &minus;0.6</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1933.0</TD><TD> &minus;0.2</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1834.0</TD><TD> &minus;1.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1884.0</TD><TD> &minus;0.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1934.0</TD><TD> &minus;0.2</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1835.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1885.0</TD><TD>       +0.1</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1935.0</TD><TD> &minus;0.2</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1836.0</TD><TD> &minus;0.7</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1886.0</TD><TD>       +0.4</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1936.0</TD><TD> &minus;0.2</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1837.0</TD><TD> &minus;0.6</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1887.0</TD><TD>       +0.5</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1937.0</TD><TD> &minus;0.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1838.0</TD><TD> &minus;0.4</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1888.0</TD><TD>       +0.4</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1938.0</TD><TD>       +0.2</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1839.0</TD><TD> &minus;0.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1889.0</TD><TD>       +0.2</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1939.0</TD><TD>       +0.5</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1840.0</TD><TD> &minus;0.1</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1890.0</TD><TD> &minus;0.3</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1940.0</TD><TD>       +0.9</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1841.0</TD><TD>  &nbsp;0.0</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1891.0</TD><TD> &minus;0.7</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1941.0</TD><TD>       +1.3</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1842.0</TD><TD>       +0.2</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1892.0</TD><TD> &minus;0.9</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1942.0</TD><TD>       +1.5</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1843.0</TD><TD>       +0.3</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1893.0</TD><TD> &minus;0.8</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1943.0</TD><TD>       +1.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1844.0</TD><TD>       +0.4</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1894.0</TD><TD> &minus;0.5</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1944.0</TD><TD>       +1.6</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1845.0</TD><TD>       +0.5</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1895.0</TD><TD>       +0.1</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1945.0</TD><TD>       +1.4</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1846.0</TD><TD>       +0.6</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1896.0</TD><TD>       +0.7</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1946.0</TD><TD>       +1.1</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1847.0</TD><TD>       +0.7</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1897.0</TD><TD>       +1.4</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1947.0</TD><TD>       +1.0</TD><TD> &plusmn;0.1</TD></TR>
+<TR><TD class="rb">      +1848.0</TD><TD>       +0.8</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1898.0</TD><TD>       +2.0</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1948.0</TD><TD>       +0.9</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1849.0</TD><TD>       +0.8</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1899.0</TD><TD>       +2.6</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1949.0</TD><TD>       +0.9</TD><TD> &plusmn;0.05</TD></TR>
+<TR><TD class="rb">      +1850.0</TD><TD>       +0.9</TD><TD> &plusmn;0.2</TD><TD class="rb">      +1900.0</TD><TD>       +3.1</TD><TD> &plusmn;0.1</TD><TD class="rb">      +1950.0</TD><TD>       +1.0</TD><TD> &plusmn;0.05</TD></TR>
+</TABLE></DIV>
+</DIV>
+
+</div>
+</div>
+<!-- End TAB D    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--  +  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h3 class="dtlh">&Delta;T and length of day (lod) from +1950 to +2019</h3><div class="optionContent">
+
+<!-- TAB E  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<div id="etabs">
+
+  <ul>
+    <li><a href="#tabs-e1">Summary</a></li>
+    <li><a href="#tabs-e2">&Delta;T</a></li>
+    <li><a href="#tabs-e3">lod</a></li>
+  </ul>
+
+<!-- TAB E 1  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <div id="tabs-e1">
+
+  <p>The most accurate results from 1962 onwards are those derived from VLBI and
+     other high-accuracy observations. These are available from the
+     <a href="https://hpiers.obspm.fr/eop-pc/index.php?index=bulletins&lang=en">
+       International Earth Rotation and Reference System Service (IERS)</a>.
+   </p>
+
+   <p>The less accurate &Delta;T and lod listed here are evaluated from a spline
+       fit to the occultation observations, which has the effect of smoothing out
+       the annual and sub-annual fluctuations in the raw data. The values are
+       tabulated at half-yearly intervals to a precision of 0.01 seconds in
+       &Delta;T and 0.1 ms in lod. They agree to within &plusmn;0.05 seconds
+       with the IERS values of &Delta;T. Taken together with the occultation data
+       before 1962, the results tabulated here show the long-term trends in
+       these Earth's rotation parameters.
+   </p>
+
+  </div>
+
+<!-- TAB E2/E3  Y6+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- TAB e2  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6 -->
+<div id="tabs-e2">
+<table class="DTTableHead">
+ <TR><TH colspan="6">&Delta;T (s) : +1950 to +2019</TH></TR>
+ <TR><TD colspan="6">Error estimate &epsilon;: &epsilon; = &plusmn;0.05 seconds</TD></TR>
+ <TR><TD>Year</TD><TD>&Delta;T</TD>
+     <TD>Year</TD><TD>&Delta;T</TD>
+     <TD>Year</TD><TD>&Delta;T</TD></TR>
+</TABLE>
+<div class="scroll"> <TABLE class="DTTable">
+<TR><TD class="rb">      +1950.0</TD><TD>       +28.93</TD><TD class="rb">      +1973.0</TD><TD>       +43.15</TD><TD class="rb">      +1996.0</TD><TD>       +61.46</TD></TR>
+<TR><TD class="rb">      +1950.5</TD><TD>       +29.12</TD><TD class="rb">      +1973.5</TD><TD>       +43.70</TD><TD class="rb">      +1996.5</TD><TD>       +61.85</TD></TR>
+<TR><TD class="rb">      +1951.0</TD><TD>       +29.32</TD><TD class="rb">      +1974.0</TD><TD>       +44.24</TD><TD class="rb">      +1997.0</TD><TD>       +62.23</TD></TR>
+<TR><TD class="rb">      +1951.5</TD><TD>       +29.52</TD><TD class="rb">      +1974.5</TD><TD>       +44.77</TD><TD class="rb">      +1997.5</TD><TD>       +62.58</TD></TR>
+<TR><TD class="rb">      +1952.0</TD><TD>       +29.70</TD><TD class="rb">      +1975.0</TD><TD>       +45.28</TD><TD class="rb">      +1998.0</TD><TD>       +62.90</TD></TR>
+<TR><TD class="rb">      +1952.5</TD><TD>       +29.86</TD><TD class="rb">      +1975.5</TD><TD>       +45.78</TD><TD class="rb">      +1998.5</TD><TD>       +63.18</TD></TR>
+<TR><TD class="rb">      +1953.0</TD><TD>       +30.00</TD><TD class="rb">      +1976.0</TD><TD>       +46.28</TD><TD class="rb">      +1999.0</TD><TD>       +63.42</TD></TR>
+<TR><TD class="rb">      +1953.5</TD><TD>       +30.11</TD><TD class="rb">      +1976.5</TD><TD>       +46.78</TD><TD class="rb">      +1999.5</TD><TD>       +63.63</TD></TR>
+<TR><TD class="rb">      +1954.0</TD><TD>       +30.20</TD><TD class="rb">      +1977.0</TD><TD>       +47.29</TD><TD class="rb">      +2000.0</TD><TD>       +63.81</TD></TR>
+<TR><TD class="rb">      +1954.5</TD><TD>       +30.30</TD><TD class="rb">      +1977.5</TD><TD>       +47.81</TD><TD class="rb">      +2000.5</TD><TD>       +63.96</TD></TR>
+<TR><TD class="rb">      +1955.0</TD><TD>       +30.41</TD><TD class="rb">      +1978.0</TD><TD>       +48.33</TD><TD class="rb">      +2001.0</TD><TD>       +64.08</TD></TR>
+<TR><TD class="rb">      +1955.5</TD><TD>       +30.56</TD><TD class="rb">      +1978.5</TD><TD>       +48.85</TD><TD class="rb">      +2001.5</TD><TD>       +64.18</TD></TR>
+<TR><TD class="rb">      +1956.0</TD><TD>       +30.76</TD><TD class="rb">      +1979.0</TD><TD>       +49.37</TD><TD class="rb">      +2002.0</TD><TD>       +64.27</TD></TR>
+<TR><TD class="rb">      +1956.5</TD><TD>       +31.03</TD><TD class="rb">      +1979.5</TD><TD>       +49.87</TD><TD class="rb">      +2002.5</TD><TD>       +64.34</TD></TR>
+<TR><TD class="rb">      +1957.0</TD><TD>       +31.34</TD><TD class="rb">      +1980.0</TD><TD>       +50.36</TD><TD class="rb">      +2003.0</TD><TD>       +64.41</TD></TR>
+<TR><TD class="rb">      +1957.5</TD><TD>       +31.68</TD><TD class="rb">      +1980.5</TD><TD>       +50.83</TD><TD class="rb">      +2003.5</TD><TD>       +64.48</TD></TR>
+<TR><TD class="rb">      +1958.0</TD><TD>       +32.03</TD><TD class="rb">      +1981.0</TD><TD>       +51.28</TD><TD class="rb">      +2004.0</TD><TD>       +64.55</TD></TR>
+<TR><TD class="rb">      +1958.5</TD><TD>       +32.36</TD><TD class="rb">      +1981.5</TD><TD>       +51.71</TD><TD class="rb">      +2004.5</TD><TD>       +64.64</TD></TR>
+<TR><TD class="rb">      +1959.0</TD><TD>       +32.65</TD><TD class="rb">      +1982.0</TD><TD>       +52.13</TD><TD class="rb">      +2005.0</TD><TD>       +64.73</TD></TR>
+<TR><TD class="rb">      +1959.5</TD><TD>       +32.89</TD><TD class="rb">      +1982.5</TD><TD>       +52.54</TD><TD class="rb">      +2005.5</TD><TD>       +64.83</TD></TR>
+<TR><TD class="rb">      +1960.0</TD><TD>       +33.07</TD><TD class="rb">      +1983.0</TD><TD>       +52.94</TD><TD class="rb">      +2006.0</TD><TD>       +64.95</TD></TR>
+<TR><TD class="rb">      +1960.5</TD><TD>       +33.23</TD><TD class="rb">      +1983.5</TD><TD>       +53.32</TD><TD class="rb">      +2006.5</TD><TD>       +65.07</TD></TR>
+<TR><TD class="rb">      +1961.0</TD><TD>       +33.36</TD><TD class="rb">      +1984.0</TD><TD>       +53.70</TD><TD class="rb">      +2007.0</TD><TD>       +65.20</TD></TR>
+<TR><TD class="rb">      +1961.5</TD><TD>       +33.49</TD><TD class="rb">      +1984.5</TD><TD>       +54.06</TD><TD class="rb">      +2007.5</TD><TD>       +65.33</TD></TR>
+<TR><TD class="rb">      +1962.0</TD><TD>       +33.62</TD><TD class="rb">      +1985.0</TD><TD>       +54.39</TD><TD class="rb">      +2008.0</TD><TD>       +65.48</TD></TR>
+<TR><TD class="rb">      +1962.5</TD><TD>       +33.78</TD><TD class="rb">      +1985.5</TD><TD>       +54.70</TD><TD class="rb">      +2008.5</TD><TD>       +65.62</TD></TR>
+<TR><TD class="rb">      +1963.0</TD><TD>       +33.96</TD><TD class="rb">      +1986.0</TD><TD>       +54.98</TD><TD class="rb">      +2009.0</TD><TD>       +65.77</TD></TR>
+<TR><TD class="rb">      +1963.5</TD><TD>       +34.18</TD><TD class="rb">      +1986.5</TD><TD>       +55.23</TD><TD class="rb">      +2009.5</TD><TD>       +65.92</TD></TR>
+<TR><TD class="rb">      +1964.0</TD><TD>       +34.44</TD><TD class="rb">      +1987.0</TD><TD>       +55.46</TD><TD class="rb">      +2010.0</TD><TD>       +66.06</TD></TR>
+<TR><TD class="rb">      +1964.5</TD><TD>       +34.74</TD><TD class="rb">      +1987.5</TD><TD>       +55.67</TD><TD class="rb">      +2010.5</TD><TD>       +66.20</TD></TR>
+<TR><TD class="rb">      +1965.0</TD><TD>       +35.09</TD><TD class="rb">      +1988.0</TD><TD>       +55.89</TD><TD class="rb">      +2011.0</TD><TD>       +66.33</TD></TR>
+<TR><TD class="rb">      +1965.5</TD><TD>       +35.50</TD><TD class="rb">      +1988.5</TD><TD>       +56.12</TD><TD class="rb">      +2011.5</TD><TD>       +66.47</TD></TR>
+<TR><TD class="rb">      +1966.0</TD><TD>       +35.95</TD><TD class="rb">      +1989.0</TD><TD>       +56.37</TD><TD class="rb">      +2012.0</TD><TD>       +66.61</TD></TR>
+<TR><TD class="rb">      +1966.5</TD><TD>       +36.43</TD><TD class="rb">      +1989.5</TD><TD>       +56.67</TD><TD class="rb">      +2012.5</TD><TD>       +66.76</TD></TR>
+<TR><TD class="rb">      +1967.0</TD><TD>       +36.93</TD><TD class="rb">      +1990.0</TD><TD>       +56.99</TD><TD class="rb">      +2013.0</TD><TD>       +66.92</TD></TR>
+<TR><TD class="rb">      +1967.5</TD><TD>       +37.45</TD><TD class="rb">      +1990.5</TD><TD>       +57.34</TD><TD class="rb">      +2013.5</TD><TD>       +67.09</TD></TR>
+<TR><TD class="rb">      +1968.0</TD><TD>       +37.96</TD><TD class="rb">      +1991.0</TD><TD>       +57.70</TD><TD class="rb">      +2014.0</TD><TD>       +67.28</TD></TR>
+<TR><TD class="rb">      +1968.5</TD><TD>       +38.46</TD><TD class="rb">      +1991.5</TD><TD>       +58.08</TD><TD class="rb">      +2014.5</TD><TD>       +67.48</TD></TR>
+<TR><TD class="rb">      +1969.0</TD><TD>       +38.95</TD><TD class="rb">      +1992.0</TD><TD>       +58.45</TD><TD class="rb">      +2015.0</TD><TD>       +67.69</TD></TR>
+<TR><TD class="rb">      +1969.5</TD><TD>       +39.44</TD><TD class="rb">      +1992.5</TD><TD>       +58.82</TD><TD class="rb">      +2015.5</TD><TD>       +67.90</TD></TR>
+<TR><TD class="rb">      +1970.0</TD><TD>       +39.93</TD><TD class="rb">      +1993.0</TD><TD>       +59.19</TD><TD class="rb">      +2016.0</TD><TD>       +68.11</TD></TR>
+<TR><TD class="rb">      +1970.5</TD><TD>       +40.43</TD><TD class="rb">      +1993.5</TD><TD>       +59.55</TD><TD class="rb">      +2016.5</TD><TD>       +68.32</TD></TR>
+<TR><TD class="rb">      +1971.0</TD><TD>       +40.95</TD><TD class="rb">      +1994.0</TD><TD>       +59.92</TD><TD class="rb">      +2017.0</TD><TD>       +68.53</TD></TR>
+<TR><TD class="rb">      +1971.5</TD><TD>       +41.49</TD><TD class="rb">      +1994.5</TD><TD>       +60.30</TD><TD class="rb">      +2017.5</TD><TD>       +68.73</TD></TR>
+<TR><TD class="rb">      +1972.0</TD><TD>       +42.04</TD><TD class="rb">      +1995.0</TD><TD>       +60.68</TD><TD class="rb">      +2018.0</TD><TD>       +68.92</TD></TR>
+<TR><TD class="rb">      +1972.5</TD><TD>       +42.59</TD><TD class="rb">      +1995.5</TD><TD>       +61.07</TD><TD class="rb">      +2018.5</TD><TD>       +69.09</TD></TR>
+<TR><TD class="rb">      +1973.0</TD><TD>       +43.15</TD><TD class="rb">      +1996.0</TD><TD>       +61.46</TD><TD class="rb">      +2019.0</TD><TD>       +69.24</TD></TR>
+</TABLE></DIV>
+</DIV>
+<!-- TAB e3  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++Y6 -->
+<div id="tabs-e3">
+<table class="DTTableHead">
+ <TR><TH colspan="6">Change in length of day (ms) : +1950 to +2019</TH></TR>
+ <TR><TD colspan="6">Error estimate &epsilon; = &plusmn;0.05 ms</TD></TR>
+ <TR><TD>Year</TD><TD>lod</TD>
+     <TD>Year</TD><TD>lod</TD>
+     <TD>Year</TD><TD>lod</TD></TR>
+</TABLE>
+<div class="scroll"> <TABLE class="DTTable">
+<TR><TD class="rb">      +1950.0</TD><TD>       +1.0</TD><TD class="rb">      +1973.0</TD><TD>       +3.0</TD><TD class="rb">      +1996.0</TD><TD>       +2.2</TD> </TR>
+<TR><TD class="rb">      +1950.5</TD><TD>       +1.1</TD><TD class="rb">      +1973.5</TD><TD>       +3.0</TD><TD class="rb">      +1996.5</TD><TD>       +2.1</TD> </TR>
+<TR><TD class="rb">      +1951.0</TD><TD>       +1.1</TD><TD class="rb">      +1974.0</TD><TD>       +2.9</TD><TD class="rb">      +1997.0</TD><TD>       +2.0</TD> </TR>
+<TR><TD class="rb">      +1951.5</TD><TD>       +1.0</TD><TD class="rb">      +1974.5</TD><TD>       +2.8</TD><TD class="rb">      +1997.5</TD><TD>       +1.8</TD> </TR>
+<TR><TD class="rb">      +1952.0</TD><TD>       +1.0</TD><TD class="rb">      +1975.0</TD><TD>       +2.8</TD><TD class="rb">      +1998.0</TD><TD>       +1.6</TD> </TR>
+<TR><TD class="rb">      +1952.5</TD><TD>       +0.8</TD><TD class="rb">      +1975.5</TD><TD>       +2.7</TD><TD class="rb">      +1998.5</TD><TD>       +1.4</TD> </TR> 
+<TR><TD class="rb">      +1953.0</TD><TD>       +0.7</TD><TD class="rb">      +1976.0</TD><TD>       +2.7</TD><TD class="rb">      +1999.0</TD><TD>       +1.2</TD> </TR> 
+<TR><TD class="rb">      +1953.5</TD><TD>       +0.5</TD><TD class="rb">      +1976.5</TD><TD>       +2.8</TD><TD class="rb">      +1999.5</TD><TD>       +1.1</TD> </TR> 
+<TR><TD class="rb">      +1954.0</TD><TD>       +0.5</TD><TD class="rb">      +1977.0</TD><TD>       +2.8</TD><TD class="rb">      +2000.0</TD><TD>       +0.9</TD> </TR> 
+<TR><TD class="rb">      +1954.5</TD><TD>       +0.5</TD><TD class="rb">      +1977.5</TD><TD>       +2.8</TD><TD class="rb">      +2000.5</TD><TD>       +0.7</TD> </TR> 
+<TR><TD class="rb">      +1955.0</TD><TD>       +0.7</TD><TD class="rb">      +1978.0</TD><TD>       +2.9</TD><TD class="rb">      +2001.0</TD><TD>       +0.6</TD> </TR> 
+<TR><TD class="rb">      +1955.5</TD><TD>       +0.9</TD><TD class="rb">      +1978.5</TD><TD>       +2.8</TD><TD class="rb">      +2001.5</TD><TD>       +0.5</TD> </TR> 
+<TR><TD class="rb">      +1956.0</TD><TD>       +1.3</TD><TD class="rb">      +1979.0</TD><TD>       +2.8</TD><TD class="rb">      +2002.0</TD><TD>       +0.4</TD> </TR> 
+<TR><TD class="rb">      +1956.5</TD><TD>       +1.6</TD><TD class="rb">      +1979.5</TD><TD>       +2.7</TD><TD class="rb">      +2002.5</TD><TD>       +0.4</TD> </TR> 
+<TR><TD class="rb">      +1957.0</TD><TD>       +1.8</TD><TD class="rb">      +1980.0</TD><TD>       +2.6</TD><TD class="rb">      +2003.0</TD><TD>       +0.4</TD> </TR> 
+<TR><TD class="rb">      +1957.5</TD><TD>       +1.9</TD><TD class="rb">      +1980.5</TD><TD>       +2.5</TD><TD class="rb">      +2003.5</TD><TD>       +0.4</TD> </TR> 
+<TR><TD class="rb">      +1958.0</TD><TD>       +1.9</TD><TD class="rb">      +1981.0</TD><TD>       +2.4</TD><TD class="rb">      +2004.0</TD><TD>       +0.4</TD> </TR> 
+<TR><TD class="rb">      +1958.5</TD><TD>       +1.7</TD><TD class="rb">      +1981.5</TD><TD>       +2.3</TD><TD class="rb">      +2004.5</TD><TD>       +0.5</TD> </TR> 
+<TR><TD class="rb">      +1959.0</TD><TD>       +1.4</TD><TD class="rb">      +1982.0</TD><TD>       +2.3</TD><TD class="rb">      +2005.0</TD><TD>       +0.5</TD> </TR> 
+<TR><TD class="rb">      +1959.5</TD><TD>       +1.1</TD><TD class="rb">      +1982.5</TD><TD>       +2.2</TD><TD class="rb">      +2005.5</TD><TD>       +0.6</TD> </TR> 
+<TR><TD class="rb">      +1960.0</TD><TD>       +0.9</TD><TD class="rb">      +1983.0</TD><TD>       +2.1</TD><TD class="rb">      +2006.0</TD><TD>       +0.6</TD> </TR> 
+<TR><TD class="rb">      +1960.5</TD><TD>       +0.8</TD><TD class="rb">      +1983.5</TD><TD>       +2.1</TD><TD class="rb">      +2006.5</TD><TD>       +0.7</TD> </TR> 
+<TR><TD class="rb">      +1961.0</TD><TD>       +0.7</TD><TD class="rb">      +1984.0</TD><TD>       +2.0</TD><TD class="rb">      +2007.0</TD><TD>       +0.7</TD> </TR> 
+<TR><TD class="rb">      +1961.5</TD><TD>       +0.7</TD><TD class="rb">      +1984.5</TD><TD>       +1.9</TD><TD class="rb">      +2007.5</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1962.0</TD><TD>       +0.8</TD><TD class="rb">      +1985.0</TD><TD>       +1.8</TD><TD class="rb">      +2008.0</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1962.5</TD><TD>       +0.9</TD><TD class="rb">      +1985.5</TD><TD>       +1.6</TD><TD class="rb">      +2008.5</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1963.0</TD><TD>       +1.1</TD><TD class="rb">      +1986.0</TD><TD>       +1.4</TD><TD class="rb">      +2009.0</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1963.5</TD><TD>       +1.3</TD><TD class="rb">      +1986.5</TD><TD>       +1.3</TD><TD class="rb">      +2009.5</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1964.0</TD><TD>       +1.5</TD><TD class="rb">      +1987.0</TD><TD>       +1.2</TD><TD class="rb">      +2010.0</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1964.5</TD><TD>       +1.8</TD><TD class="rb">      +1987.5</TD><TD>       +1.2</TD><TD class="rb">      +2010.5</TD><TD>       +0.7</TD> </TR> 
+<TR><TD class="rb">      +1965.0</TD><TD>       +2.1</TD><TD class="rb">      +1988.0</TD><TD>       +1.2</TD><TD class="rb">      +2011.0</TD><TD>       +0.7</TD> </TR> 
+<TR><TD class="rb">      +1965.5</TD><TD>       +2.3</TD><TD class="rb">      +1988.5</TD><TD>       +1.3</TD><TD class="rb">      +2011.5</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1966.0</TD><TD>       +2.6</TD><TD class="rb">      +1989.0</TD><TD>       +1.5</TD><TD class="rb">      +2012.0</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1966.5</TD><TD>       +2.7</TD><TD class="rb">      +1989.5</TD><TD>       +1.7</TD><TD class="rb">      +2012.5</TD><TD>       +0.8</TD> </TR> 
+<TR><TD class="rb">      +1967.0</TD><TD>       +2.8</TD><TD class="rb">      +1990.0</TD><TD>       +1.9</TD><TD class="rb">      +2013.0</TD><TD>       +0.9</TD> </TR> 
+<TR><TD class="rb">      +1967.5</TD><TD>       +2.8</TD><TD class="rb">      +1990.5</TD><TD>       +2.0</TD><TD class="rb">      +2013.5</TD><TD>       +1.0</TD> </TR> 
+<TR><TD class="rb">      +1968.0</TD><TD>       +2.8</TD><TD class="rb">      +1991.0</TD><TD>       +2.0</TD><TD class="rb">      +2014.0</TD><TD>       +1.1</TD> </TR> 
+<TR><TD class="rb">      +1968.5</TD><TD>       +2.7</TD><TD class="rb">      +1991.5</TD><TD>       +2.1</TD><TD class="rb">      +2014.5</TD><TD>       +1.1</TD> </TR> 
+<TR><TD class="rb">      +1969.0</TD><TD>       +2.7</TD><TD class="rb">      +1992.0</TD><TD>       +2.0</TD><TD class="rb">      +2015.0</TD><TD>       +1.1</TD> </TR> 
+<TR><TD class="rb">      +1969.5</TD><TD>       +2.7</TD><TD class="rb">      +1992.5</TD><TD>       +2.0</TD><TD class="rb">      +2015.5</TD><TD>       +1.2</TD> </TR> 
+<TR><TD class="rb">      +1970.0</TD><TD>       +2.7</TD><TD class="rb">      +1993.0</TD><TD>       +2.0</TD><TD class="rb">      +2016.0</TD><TD>       +1.2</TD> </TR> 
+<TR><TD class="rb">      +1970.5</TD><TD>       +2.8</TD><TD class="rb">      +1993.5</TD><TD>       +2.0</TD><TD class="rb">      +2016.5</TD><TD>       +1.2</TD> </TR>
+<TR><TD class="rb">      +1971.0</TD><TD>       +2.9</TD><TD class="rb">      +1994.0</TD><TD>       +2.0</TD><TD class="rb">      +2017.0</TD><TD>       +1.1</TD> </TR>
+<TR><TD class="rb">      +1971.5</TD><TD>       +3.0</TD><TD class="rb">      +1994.5</TD><TD>       +2.1</TD><TD class="rb">      +2017.5</TD><TD>       +1.1</TD> </TR>
+<TR><TD class="rb">      +1972.0</TD><TD>       +3.0</TD><TD class="rb">      +1995.0</TD><TD>       +2.1</TD><TD class="rb">      +2018.0</TD><TD>       +1.0</TD> </TR>
+<TR><TD class="rb">      +1972.5</TD><TD>       +3.1</TD><TD class="rb">      +1995.5</TD><TD>       +2.2</TD><TD class="rb">      +2018.5</TD><TD>       +0.9</TD> </TR>
+<TR><TD class="rb">      +1973.0</TD><TD>       +3.0</TD><TD class="rb">      +1996.0</TD><TD>       +2.2</TD><TD class="rb">      +2019.0</TD><TD>       +0.8</TD> </TR>
+</TABLE></DIV>
+</DIV>
+
+</div>
+</div>
+
+<!-- End TAB E    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!--  +  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h3 class="dtlh">&Delta;T and length of day (lod) from +2020 to +2500</H3><div class="optionContent">
+
+<div id="ftabs">
+
+  <ul>
+    <li><a href="#tabs-f1">Summary</a></li>
+    <li><a href="#tabs-f2">&Delta;T</a></li>
+    <li><a href="#tabs-f3">lod</a></li>
+  </ul>
+
+<!-- TAB F 1  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <div id="tabs-f1">
+
+    <p><a href="#">
+     <img src="bfDT-Y6.png" alt="Plot showing Delta T from -700 to +2500" width="520" height="300" /></a>
+    </p>
+
+     <p>The values tabulated in the &Delta;T and lod tables have been extrapolated
+       forwards (green-dashed curve).   The extrapolated values for &Delta;T are
+       obtained by integrating the long-term lod function</p>
+
+     <p>lod = +1.72 <i>t</i> &minus; 3.5 sin(2&pi;(<i>t</i>+0.75)/14)
+     </p>
+
+     <p>where <i>t</i> is the number of centuries from +1825.0.  This extrapolated
+        representation of &Delta;T in seconds is plotted as the green-dashed curve between
+        2010 and 2200 in the plot below.  The continuous-black curve shows the spline fit.
+     </p>
+
+   <p><a href="#">
+     <img src="f1500DT-Y6.png" alt="Plot showing Delta T from 1500 to 2200" width="520" height="300" /></a>
+   </p>
+
+
+   </div>
+
+<!-- TAB f2  ++++++++++++++++++++++++++++NEEDS Updating to IERS & Y6++++++++++++++++++++++++++++++++++++++++ -->
+<div id="tabs-f2">
+<table class="DTTableHead">
+ <TR><TH colspan="6">&Delta;T (seconds) : +2020 to +2500</TH></TR>
+ <TR><TD colspan="6">Error estimate &epsilon; (seconds)</TD></TR>
+ <TR><TH>Year</TH><TH>&Delta;T</TH><TH>&epsilon;</TH>
+     <TH>Year</TH><TH>&Delta;T</TH><TH>&epsilon;</TH></TR>
+</TABLE>
+<TABLE class="DTTable">
+<TR><TD class="rb">+2030.0</TD><TD>    +67</TD><TD>&plusmn; 2</TD><TD class="rb">+2200.0</TD><TD> +160</TD><TD> &plusmn;20</TD></TR>
+<TR><TD class="rb">+2040.0</TD><TD>    +68</TD><TD>&plusmn; 4</TD><TD class="rb">+2300.0</TD><TD> +330</TD><TD> &plusmn;30</TD></TR>
+<TR><TD class="rb">+2050.0</TD><TD>    +70</TD><TD>&plusmn; 6</TD><TD class="rb">+2400.0</TD><TD> +610</TD><TD> &plusmn;50</TD></TR>
+<TR><TD class="rb">+2100.0</TD><TD>    +80</TD><TD>&plusmn;10</TD><TD class="rb">+2500.0</TD><TD>+1000</TD><TD> &plusmn;100</TD></TR>
+</table>
+</div>
+
+<!-- TAB f3  ++++++++++++++++++++++++++++++++NEEDS Updating to Y6+++++++++++++++++++++++++++++++++++++ -->
+<div id="tabs-f3">
+<table class="DTTableHead">
+ <TR><TH colspan="9">Change in length of day (ms) : +2020 to +2500</TH></TR>
+ <TR><TD colspan="9">Error estimate &epsilon; (ms)</TD></TR>
+ <TR><TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD>
+     <TD>Year</TD><TD>lod</TD><TD>&epsilon;</TD></TR>
+</TABLE>
+ <TABLE class="DTTable">
+<TR><TD class="rb">+2020.0</TD><TD>+0.1</TD><TD> &plusmn;0.05</TD><TD class="rb">+2030.0</TD><TD>+0.2</TD><TD> &plusmn;1</TD><TD class="rb">+2100.0</TD><TD> +1</TD><TD> &plusmn;2</TD></TR>
+<TR><TD class="rb">       </TD><TD>    </TD><TD>             </TD><TD class="rb">+2040.0</TD><TD>+0.3</TD><TD> &plusmn;1</TD><TD class="rb">+2200.0</TD><TD> +3</TD><TD> &plusmn;3</TD></TR>
+<TR><TD class="rb">       </TD><TD>    </TD><TD>             </TD><TD class="rb">+2050.0</TD><TD>+0.5</TD><TD> &plusmn;1</TD><TD class="rb">+2300.0</TD><TD> +6</TD><TD> &plusmn;3</TD></TR>
+<TR><TD class="rb">       </TD><TD>    </TD><TD>             </TD><TD class="rb">       </TD><TD>    </TD><TD>          </TD><TD class="rb">+2400.0</TD><TD> +9</TD><TD> &plusmn;3</TD></TR>
+<TR><TD class="rb">       </TD><TD>    </TD><TD>             </TD><TD class="rb">       </TD><TD>    </TD><TD>          </TD><TD class="rb">+2500.0</TD><TD>+12</TD><TD> &plusmn;3</TD></TR>
+</TABLE>
+</div>
+
+</div>
+</div>
+
+
+<!--  +  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!--  +  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h3 class="dtlh">Evaluate &Delta;T and length of day (lod) from &minus;720 to +2019.0</H3><div class="optionContent">
+
+<p> To be provided. </p>
+
+</div>
+
+<!-- End TAB F    +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+</div>
+
+<!--
+<p><b>Updates</b></p>
+
+<p>N/A</p>
+-->
+
+</div>
+
+<!-- end ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<div id="footerbox" style="font-family: Arial,Helvetica,sans-serif";>
+&copy; Crown Copyright 2008-2021 / <a href="/nao/privacy/">Privacy Policy</a><br>
+E-mail: <a href="mailto:hmnao@ukho.gov.uk?subject=HMNAO%20enquiry">hmnao@ukho.gov.uk</a><br>
+Last modified: 2021 March 5.
+<br>
+</div>
+
+</body>
+
+</html>
+

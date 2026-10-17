@@ -32,6 +32,7 @@ jobs:
         run: |
           python3 Scripts/generate-models.py --check
           python3 Scripts/generate-time-table.py --check
+          python3 Scripts/generate-deltat-table.py --check
 
       - name: Verify polynomial artifacts and analytic evaluator
         run: |

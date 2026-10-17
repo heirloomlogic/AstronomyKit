@@ -11,10 +11,12 @@ import Foundation
 /// Represents a moment in time for astronomical calculations.
 ///
 /// `AstroTime` is the fundamental time type in AstronomyKit. It stores both
-/// modeled Universal Time (UT1) and Terrestrial Time (TT). Civil UTC dates use a
+/// Universal Time (UT1) and Terrestrial Time (TT). Civil UTC dates use a
 /// bundled USNO offset table from 1961 onward; earlier dates use UT1 as a
 /// historical civil-time proxy. Future dates hold the last announced leap-second
-/// offset. This convention does not predict future leap seconds or measured UT1.
+/// offset. This convention does not predict future leap seconds. UT1 comes from
+/// the selected ``DeltaTModel``; the default takes it from IERS observations
+/// from 1962 and IERS predictions about a year ahead.
 ///
 /// ## Creating Times
 ///

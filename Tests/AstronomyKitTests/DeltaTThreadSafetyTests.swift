@@ -11,20 +11,23 @@ import Testing
 /// so ThreadSanitizer can prove the patch holds.
 @Suite("Delta T Thread Safety", .serialized)
 struct DeltaTThreadSafetyTests {
-    /// A moment ~100 years after J2000, far enough out that the
-    /// Espenak-Meeus and JPL Horizons models diverge.
+    /// A moment ~100 years after J2000, far enough out that every model
+    /// gives a different Delta T.
     static let farFutureUT = 36_525.0
 
     @Test("Concurrent model swaps never corrupt time construction")
     func concurrentModelSwapIsSafe() async {
-        defer { AstronomyConfig.setDeltaTModel(.espenakMeeus) }
+        defer { AstronomyConfig.setDeltaTModel(.iersObserved) }
 
         let ut = Self.farFutureUT
-        let ttEspenakMeeus = ut + AstronomyConfig.deltaTEspenakMeeus(universalTime: ut) / 86_400
-        let ttJplHorizons = ut + AstronomyConfig.deltaTJplHorizons(universalTime: ut) / 86_400
+        let validTT: Set<Double> = [
+            ut + AstronomyConfig.deltaTIersObserved(universalTime: ut) / 86_400,
+            ut + AstronomyConfig.deltaTEspenakMeeus(universalTime: ut) / 86_400,
+            ut + AstronomyConfig.deltaTJplHorizons(universalTime: ut) / 86_400,
+        ]
 
-        // The two models must disagree here, or the test proves nothing.
-        #expect(ttEspenakMeeus != ttJplHorizons)
+        // The models must disagree here, or the test proves nothing.
+        #expect(validTT.count == DeltaTModel.allCases.count)
 
         await withTaskGroup(of: Void.self) { group in
             // Hammer time construction on several tasks...
@@ -33,8 +36,8 @@ struct DeltaTThreadSafetyTests {
                     for _ in 0..<200 {
                         let tt = AstroTime(ut: ut).terrestrialTime
                         // Whichever model wins the race, the result must be
-                        // one of the two valid answers, never a torn value.
-                        #expect(tt == ttEspenakMeeus || tt == ttJplHorizons)
+                        // one of the valid answers, never a torn value.
+                        #expect(validTT.contains(tt))
                     }
                 }
             }
@@ -44,7 +47,7 @@ struct DeltaTThreadSafetyTests {
                 group.addTask {
                     for iteration in 0..<100 {
                         AstronomyConfig.setDeltaTModel(
-                            iteration.isMultiple(of: 2) ? .jplHorizons : .espenakMeeus
+                            DeltaTModel.allCases[iteration % DeltaTModel.allCases.count]
                         )
                         await Task.yield()
                     }
