@@ -67,7 +67,7 @@ extension PlutoSegmentSuites {
             let rows = IndependentReferenceArchive.shared.observations.filter { $0.body == "pluto" }
             #expect(rows.count == 3)
             for row in rows {
-                let ut = IndependentReferenceDate.civil(row.utc).universalTime
+                let ut = IndependentReferenceDate.civil(row.utc, deltaTModel: .espenakMeeus).universalTime
                 let time = Engine.Time(ut: ut, deltaTModel: .espenakMeeus)
                 let vector = try Self.geocentric(at: time)
                 let equatorial = try Engine.Equatorial(vector)

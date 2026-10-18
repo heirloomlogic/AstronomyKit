@@ -46,7 +46,7 @@ struct EngineTransitEventTests {
                 body: Self.body(reference.body),
                 after: IndependentReferenceDate.universal(reference.peakUTC, deltaTModel: .espenakMeeus).addingDays(
                     -100))
-            let oldReference = IndependentReferenceDate.civil(reference.peakUTC)
+            let oldReference = IndependentReferenceDate.civil(reference.peakUTC, deltaTModel: .espenakMeeus)
             rows.append([
                 "body": reference.body, "source": reference.peakUTC, "sourceUT": source.ut,
                 "startUT": event.start.ut, "startTT": event.start.tt, "peakUT": event.peak.ut, "peakTT": event.peak.tt,
@@ -238,7 +238,9 @@ struct EngineTransitEventTests {
             let native = IndependentReferenceDate.engine(reference.peakUTC)
             #expect(time.universalTime == native.ut)
             #expect(Engine.Time(tt: native.tt, deltaTModel: .espenakMeeus).ut == native.ut)
-            #expect(IndependentReferenceDate.civil(reference.peakUTC).universalTime != native.ut)
+            #expect(
+                IndependentReferenceDate.civil(reference.peakUTC, deltaTModel: .espenakMeeus).universalTime != native.ut
+            )
         }
     }
 

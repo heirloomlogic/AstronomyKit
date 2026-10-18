@@ -85,12 +85,13 @@ Scripts/test-with-isolated-timed-suites.sh -c release
 swift test --no-parallel
 swift test -c release --no-parallel --sanitize=thread
 python3 Scripts/generate-time-table.py --check
+python3 Scripts/generate-deltat-table.py --check
 python3 -m unittest Scripts/reference-data/test_build_fixtures.py -v
 python3 Scripts/reference-data/build-fixtures.py --check
 swift test --filter 'EngineStateOwnershipTests|EngineVSOP87BCacheTests|EngineNutationCacheTests|EngineMoonCacheTests|EnginePlutoCacheTests|EngineCacheTests|DeltaTThreadSafetyTests|EngineStarConcurrencyTests|EngineGravitySimulationTests'
 ```
 
-Plain `swift test` is enough locally. `DeltaTThreadSafetyTests` alternates the two public named models in an exit test's child process; each time constructed there must capture one complete named model and its matching TT. Tests change the process default model only in such child processes (see CONTRIBUTING), so suites running in parallel never see a temporary model. On macOS, `swift test --sanitize=thread` and `--sanitize=address` skip the suites that run exit tests (`DeltaTThreadSafetyTests`, `EngineStarConcurrencyTests`, `SearchCallbackDefaultModelTests` and `ChildProcessIsolationTests`) because their child processes abort under a macOS sanitizer runtime. The Linux TSan job in `deep-validation.yml` and the Linux ASan job in `sanitizers.yml` run them. The PR gate runs `Scripts/test-with-isolated-timed-suites.sh -c release`, which runs the suite in parallel and then runs the suites with wall-clock budgets in their own invocations.
+Plain `swift test` is enough locally. `DeltaTThreadSafetyTests` cycles through the three public named models in an exit test's child process; each time constructed there must capture one complete named model and its matching TT. Tests change the process default model only in such child processes (see CONTRIBUTING), so suites running in parallel never see a temporary model. On macOS, `swift test --sanitize=thread` and `--sanitize=address` skip the suites that run exit tests (`DeltaTThreadSafetyTests`, `EngineStarConcurrencyTests`, `SearchCallbackDefaultModelTests` and `ChildProcessIsolationTests`) because their child processes abort under a macOS sanitizer runtime. The Linux TSan job in `deep-validation.yml` and the Linux ASan job in `sanitizers.yml` run them. The PR gate runs `Scripts/test-with-isolated-timed-suites.sh -c release`, which runs the suite in parallel and then runs the suites with wall-clock budgets in their own invocations.
 
 For an opt-in Release observation of integrated serial and contended workload time and process peak resident bytes, set `CACHE_OWNERSHIP_MEASUREMENT_OUTPUT` to a JSON output path and filter to `EngineStateOwnershipTests.measurement`. The serial pass runs first from cold caches and warms them for the larger contended pass, so its elapsed times do not establish a speedup. Peak resident bytes are a finite process observation, not evidence that memory cannot leak. The observation has no resource threshold; compare runs only when the host, toolchain, configuration, and workload are the same.
 
@@ -109,9 +110,40 @@ The harness skips inputs that reach known engine defects; each filter names its 
 
 ## Generated tables
 
-Two generators produce checked-in files from pinned, checksummed inputs. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
+Three generators produce checked-in files from pinned, checksummed inputs. Consumers never run them; CI runs each with `--check` to confirm the committed output is current.
 
 - `Scripts/generate-time-table.py` reads `Scripts/time-data/` (archived USNO TAI-UTC and IERS Bulletin C records) and writes `Sources/AstronomyKit/UTCOffsetTable.swift`. Updating time standards requires a new snapshot, hash manifest, a new `ephemerisVersion`, and transition tests.
+- `Scripts/generate-deltat-table.py` reads `Scripts/deltat-data/` and the TAI−UTC table in `Scripts/time-data/`, and writes `Sources/AstronomyKit/Engine/Foundation/Generated/DeltaTObservedTable.swift`, which the native engine reads, and `Sources/CLibAstronomy/generated/deltat_iers.h`, the same tables for the 3.x C engine's local patch 15 (nothing on `main` includes the header). See [Delta T table](#delta-t-table).
 - `Scripts/reference-data/build-fixtures.py` reads the archived JPL Horizons, USNO, and NASA sources in `Scripts/reference-data/sources/` and writes the independent reference fixtures under `Tests/AstronomyKitTests/Fixtures/IndependentReferences/`. See [its README](Scripts/reference-data/README.md).
 
 The VSOP87B, IAU2000B, and polynomial tables under `Sources/CLibAstronomy/generated/`, the Moon and Pluto data under `Sources/CLibAstronomy/EphemerisData/`, and the solar altitude constants in `Sources/AstronomyKit/SolarAltitudeBounds.swift` are checked in directly.
+
+## Delta T table
+
+The default Delta T model, `DeltaTModel.iersObserved`, is generated from these sources. `Scripts/deltat-data/manifest.json` records each file's URL, retrieval date and SHA-256, and the generator refuses a file whose hash differs.
+
+| File | Source | Use |
+|---|---|---|
+| `eopc04.1962-now` | IERS EOP 20 C04 at 0h UTC, Paris Observatory EOP Product Centre, `https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now` | Daily UT1 − UTC and its formal error from 1962-01-01 |
+| `finals2000A.all` | IERS Rapid Service/Prediction Centre (USNO), `https://maia.usno.navy.mil/ser7/finals2000A.all` | Bulletin A rapid UT1 − UTC after the last C04 row, then about a year of predictions, each with its stated error (columns 59–78) |
+| `../time-data/tai-utc.dat` | USNO, pinned by `Scripts/time-data/manifest.json` | TAI − UTC at each row, shared with the civil table |
+| `Table-S15.2020.txt` | HM Nautical Almanac Office, Table S15 v2020 (Morrison, Stephenson, Hohenkerk and Zawilski 2021, doi:10.1098/rspa.2020.0776) | Spline coefficients for Delta T from −720 to 2019 |
+| `hmnao-lvm.html` | HM Nautical Almanac Office, `https://astro.ukho.gov.uk/nao/lvm/` (last modified 2021-03-05) | Error estimates ε for −2000 to 2500 and the long-term length-of-day model; the generator checks that the page states `lod = +1.72 t − 3.5 sin(2π( t +0.75)/14)` |
+| `eopc04.12h.1984-now` | IERS EOP 20 C04 at 12h UTC | Validation only: measures linear interpolation between the 0h rows |
+
+The HMNAO server returned HTTP 503 on 2026-10-17, so its two files are the Internet Archive captures named in the manifest. Use the live server when it answers, or record the capture you used.
+
+The generator checks each step: C04 rows must be consecutive and match their calendar dates; Bulletin A rows must continue the C04 series the next day, rapid values before predictions; every Delta T must be exact in units of 1e-7 s; the first C04 row must fall on the 1962.0 spline knot. It rebuilds the spline as cubic Hermite segments through the mean one-sided value and rate at each knot, refuses a rebuild more than 1.5 ms from the published polynomials before 1959, ends the last segment on the first C04 value and rate, measures the spline's largest departure from C04 over 1962–2019 (the historical uncertainty floor) and the largest linear-interpolation error against the 12h series (the interpolation allowance), and writes all three into the header comment of both outputs.
+
+The Swift table keeps the daily rows as the generator's exact integers in units of 1e-7 s, packed as little-endian binary64, and `Engine.DeltaT.Observed` repeats the C engine's arithmetic in the same order. One run writes both outputs from the same values and `--check` compares both, so `main` and the 3.x line use the same table. When this was ported from 3.2.0, the native functions matched the C functions bit for bit at 9,594,350 sampled UTs, including every daily row's abscissa and its neighbouring doubles.
+
+### Refreshing the table (release step)
+
+Refresh before every release, and whenever downstream needs newer observations. The IERS files change daily; the HMNAO files change only with a new analysis.
+
+1. Download the source files into an empty scratch directory, not into the checkout, and confirm each is the expected format: the C04 header names "EOP (IERS) 20 C04", and `finals2000A.all` has `I` then `P` flags in column 58.
+2. Copy them into `Scripts/deltat-data/`, update `retrieved`, each `sha256` (`shasum -a 256 Scripts/deltat-data/*`) and the dates in the descriptions in `manifest.json`.
+3. If a leap second has been announced, refresh `Scripts/time-data/` first.
+4. Run `python3 Scripts/generate-deltat-table.py`. It stops until `AstronomyConfig.ephemerisVersion` names the new `deltat-iers-c04-YYYYMMDD-pred-YYYYMMDD-smh2020` table; update the version, then rerun.
+5. Run the full verification above. `DeltaTIersObservedTests` reparses the raw files, so it checks the new rows. Frozen regression values inside the refreshed span may move; re-record them only as frozen regression bits and record the magnitudes in the release notes. Independent references must pass unchanged. The generated table is a bound source of the native evidence records, so re-capture them as each recorder's README describes.
+6. Record the table identifier, the C04 and prediction end dates, and the generator's reported interpolation error, knot jumps, reconstruction error, spline step and misfit in the release notes.

@@ -300,14 +300,14 @@ struct SeasonsTests {
     }
 }
 
-/// Every equinox and solstice from 1900 through 2130 under both Delta T models, checked against independent truth in
+/// Every equinox and solstice from 1900 through 2130 under each Delta T model, checked against independent truth in
 /// `Fixtures/SeasonalRoots/seasonal-roots.txt`: crossings of the Sun's apparent ecliptic longitude computed from JPL
 /// Horizons vectors and ERFA frame rotations, with no engine code involved. Every event must lie within 60 seconds.
 ///
-/// `Seasons.forYear` evaluates under the process default model. Installing JPL Horizons as the default would shift
-/// times built by suites running in parallel (see `DeltaTThreadSafetyTests`), so the JPL Horizons arm runs the same
-/// four Sun longitude searches from start times that capture the model; a separate test pins that those searches are
-/// exactly what `Seasons.forYear` computes.
+/// `Seasons.forYear` evaluates under the process default model, observed Delta T. Installing another model as the
+/// default would shift times built by suites running in parallel (see `DeltaTThreadSafetyTests`), so the Espenak-Meeus
+/// and JPL Horizons arms run the same four Sun longitude searches from start times that capture the model; a separate
+/// test pins that those searches are exactly what `Seasons.forYear` computes.
 @Suite("Seasonal epochs 1900-2130", .timeLimit(.minutes(5)))
 struct SeasonalEpochTests {
     struct Event {
@@ -359,8 +359,8 @@ struct SeasonalEpochTests {
 
     static func seasons(year: Int, model: DeltaTModel) throws -> [AstroTime] {
         switch model {
-        case .espenakMeeus: try Seasons.forYear(year).allEvents.map(\.time)
-        case .jplHorizons: try searchedSeasons(year: year, model: .jplHorizons)
+        case .iersObserved: try Seasons.forYear(year).allEvents.map(\.time)
+        case .espenakMeeus, .jplHorizons: try searchedSeasons(year: year, model: model)
         }
     }
 
@@ -375,7 +375,7 @@ struct SeasonalEpochTests {
     func forYearIsTheSearches() throws {
         var differing: [Int] = []
         for year in Self.years {
-            let expected = try Self.searchedSeasons(year: year, model: .espenakMeeus)
+            let expected = try Self.searchedSeasons(year: year, model: .iersObserved)
             let actual = try Seasons.forYear(year).allEvents.map(\.time)
             if actual.map(\.universalTime.bitPattern) != expected.map(\.universalTime.bitPattern)
                 || actual.map(\.terrestrialTime.bitPattern) != expected.map(\.terrestrialTime.bitPattern)

@@ -376,8 +376,10 @@ enum IndependentReferenceDate {
         Engine.Time(ut: universal(text, deltaTModel: .espenakMeeus).universalTime, deltaTModel: .espenakMeeus)
     }
 
-    static func civil(_ text: String) -> AstroTime {
-        AstroTime(date(text))
+    /// The civil UTC instant `text` under `deltaTModel`. TT comes from the
+    /// offset table whatever the model; UT follows the model's inverse.
+    static func civil(_ text: String, deltaTModel: DeltaTModel) -> AstroTime {
+        AstroTime(date(text), deltaTModel: deltaTModel)
     }
 
     static func universal(_ text: String, deltaTModel: DeltaTModel) -> AstroTime {
@@ -422,12 +424,12 @@ enum IndependentReferenceDate {
         fatalError("invalid reference date: \(text)")
     }
 
-    static func terrestrial(julianDateTDB: Double) -> AstroTime {
-        AstroTime(tt: julianDateTDB - 2_451_545.0)
+    static func terrestrial(julianDateTDB: Double, deltaTModel: DeltaTModel) -> AstroTime {
+        AstroTime(tt: julianDateTDB - 2_451_545.0, deltaTModel: deltaTModel)
     }
 
-    static func terrestrialCalendar(_ text: String) -> AstroTime {
-        AstroTime(tt: AstroTime.civilDays(of: date(text)))
+    static func terrestrialCalendar(_ text: String, deltaTModel: DeltaTModel) -> AstroTime {
+        AstroTime(tt: AstroTime.civilDays(of: date(text)), deltaTModel: deltaTModel)
     }
 
     static func seconds(_ lhs: AstroTime, _ rhs: AstroTime) -> Double {

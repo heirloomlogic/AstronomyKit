@@ -54,7 +54,8 @@ struct EnginePlanetaryEventTests {
     func publishedEarthApsides() throws {
         for reference in IndependentReferenceArchive.shared.earthApsides {
             let expected = Engine.Time(
-                tt: IndependentReferenceDate.civil(reference.utc).terrestrialTime, deltaTModel: .espenakMeeus)
+                tt: IndependentReferenceDate.civil(reference.utc, deltaTModel: .espenakMeeus).terrestrialTime,
+                deltaTModel: .espenakMeeus)
             let event = try Events.searchPlanetaryApsis(of: .earth, after: expected.adding(days: -30))
             #expect(event.kind == (reference.kind == "pericenter" ? .pericenter : .apocenter))
             #expect(abs(event.time.tt - expected.tt) * Engine.secondsPerDay <= reference.timeToleranceSeconds)

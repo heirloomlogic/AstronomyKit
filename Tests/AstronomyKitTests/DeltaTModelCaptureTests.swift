@@ -32,8 +32,12 @@ struct DeltaTModelCaptureTests {
         #expect(Self.derived(em, under: .espenakMeeus))
         #expect(jpl.terrestrialTime != em.terrestrialTime)
 
-        // The process default is still Espenak-Meeus.
-        #expect(AstroTime(ut: ut).terrestrialTime == em.terrestrialTime)
+        let observed = AstroTime(ut: ut, deltaTModel: .iersObserved)
+        #expect(Self.derived(observed, under: .iersObserved))
+        #expect(observed.terrestrialTime != em.terrestrialTime)
+
+        // The process default is still the observed model.
+        #expect(AstroTime(ut: ut).terrestrialTime == observed.terrestrialTime)
     }
 
     @Test("The TT inverse runs under the value's model")
@@ -102,7 +106,7 @@ struct DeltaTModelCaptureTests {
         let plain = AstroTime(tt: tt, ut: ut)
         #expect(plain.terrestrialTime == tt)
         #expect(plain.universalTime == ut)
-        #expect(plain.addingDays(1).terrestrialTime == Self.tt(ut: ut + 1, under: .espenakMeeus))
+        #expect(plain.addingDays(1).terrestrialTime == Self.tt(ut: ut + 1, under: .iersObserved))
     }
 
     /// A TT in a Delta T gap is a time no UT reaches, so its UT alone, which
@@ -182,10 +186,10 @@ struct DeltaTModelCaptureTests {
 
         // The default model is unchanged by any of the above. Compare TT, not
         // `deltaTModel`: the thread-safety suite may install a stand-in default
-        // that returns the Espenak-Meeus values under another function.
+        // that returns the observed values under another function.
         let plainStart = AstroTime(year: 2_030, month: 6, day: 1)
         let plainRise = try #require(try CelestialBody.sun.riseTime(after: plainStart, from: .greenwich))
-        #expect(plainRise.terrestrialTime == Self.tt(ut: plainRise.universalTime, under: .espenakMeeus))
+        #expect(plainRise.terrestrialTime == Self.tt(ut: plainRise.universalTime, under: .iersObserved))
         #expect(plainRise.universalTime != rise.universalTime)
     }
 
@@ -198,6 +202,6 @@ struct DeltaTModelCaptureTests {
 
         let decoded = try JSONDecoder().decode(AstroTime.self, from: JSONEncoder().encode(jpl))
         #expect(decoded.universalTime == 1)
-        #expect(decoded.terrestrialTime == Self.tt(ut: 1, under: .espenakMeeus))
+        #expect(decoded.terrestrialTime == Self.tt(ut: 1, under: .iersObserved))
     }
 }

@@ -12,6 +12,7 @@ struct DeltaTThreadSafetyTests {
     static func expectedTT(ut: Double, model: DeltaTModel) -> Double {
         let seconds =
             switch model {
+            case .iersObserved: AstronomyConfig.deltaTIersObserved(universalTime: ut)
             case .espenakMeeus: AstronomyConfig.deltaTEspenakMeeus(universalTime: ut)
             case .jplHorizons: AstronomyConfig.deltaTJplHorizons(universalTime: ut)
             }
@@ -70,9 +71,8 @@ struct DeltaTThreadSafetyTests {
                 for writer in 0..<2 {
                     group.addTask {
                         for iteration in 0..<500 {
-                            let model: DeltaTModel =
-                                (iteration + writer).isMultiple(of: 2) ? .espenakMeeus : .jplHorizons
-                            AstronomyConfig.setDeltaTModel(model)
+                            let models = DeltaTModel.allCases
+                            AstronomyConfig.setDeltaTModel(models[(iteration + writer) % models.count])
                             await Task.yield()
                         }
                     }

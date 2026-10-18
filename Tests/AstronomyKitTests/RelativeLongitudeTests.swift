@@ -95,7 +95,7 @@ struct RelativeLongitudeTests {
         @Test("Published conjunction and opposition intervals", arguments: publishedEvents)
         func publishedEvent(reference: IndependentReferenceArchive.RelativeLongitudeEvent) throws {
             let body = try #require(["mars": CelestialBody.mars, "venus": .venus][reference.body])
-            let start = IndependentReferenceDate.civil(reference.startUTC)
+            let start = IndependentReferenceDate.civil(reference.startUTC, deltaTModel: .iersObserved)
             let actual = try body.searchRelativeLongitude(
                 reference.targetRelativeLongitudeDegrees, after: start)
             let actualJulianDateTT = 2_451_545 + actual.terrestrialTime
@@ -108,7 +108,7 @@ struct RelativeLongitudeTests {
                 IndependentReferenceDate.terrestrialSeconds(
                     actual,
                     IndependentReferenceDate.terrestrial(
-                        julianDateTDB: reference.estimatedJulianDateTDB))
+                        julianDateTDB: reference.estimatedJulianDateTDB, deltaTModel: .iersObserved))
                     <= reference.timeToleranceSeconds)
             #expect(reference.lowerOffsetDegrees <= 0)
             #expect(reference.upperOffsetDegrees > 0)

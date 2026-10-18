@@ -93,13 +93,13 @@ extension EngineMoonEventQualificationTests {
         for reference in references.lunarNodes {
             try check(
                 try #require(Harness.Event(rawValue: reference.kind)),
-                tt: IndependentReferenceDate.civil(reference.utc).terrestrialTime,
+                tt: IndependentReferenceDate.civil(reference.utc, deltaTModel: .espenakMeeus).terrestrialTime,
                 seconds: reference.timeToleranceSeconds)
         }
         for reference in references.lunarApsides {
             try check(
                 try #require(Harness.Event(rawValue: reference.kind)),
-                tt: IndependentReferenceDate.civil(reference.utc).terrestrialTime,
+                tt: IndependentReferenceDate.civil(reference.utc, deltaTModel: .espenakMeeus).terrestrialTime,
                 seconds: reference.timeToleranceSeconds, distance: reference.distanceKM,
                 distanceAllowance: reference.distanceToleranceKM)
         }
@@ -109,7 +109,8 @@ extension EngineMoonEventQualificationTests {
         let label = "2100-01-18T12:35:00.000Z"
         let sourceTime = IndependentReferenceDate.engine(label)
         #expect(
-            abs(sourceTime.tt - IndependentReferenceDate.civil(label).terrestrialTime) * Engine.secondsPerDay > 90)
+            abs(sourceTime.tt - IndependentReferenceDate.civil(label, deltaTModel: .espenakMeeus).terrestrialTime)
+                * Engine.secondsPerDay > 90)
         try Self.write(rows, environment: "MOON_PUBLISHED_EVENT_OUTPUT")
     }
 

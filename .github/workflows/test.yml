@@ -41,6 +41,9 @@ jobs:
       - name: Verify generated time table
         run: python3 Scripts/generate-time-table.py --check
 
+      - name: Verify generated Delta T tables
+        run: python3 Scripts/generate-deltat-table.py --check
+
       - name: Verify generated nutation table
         run: python3 Scripts/generate-nutation-table.py --check
 

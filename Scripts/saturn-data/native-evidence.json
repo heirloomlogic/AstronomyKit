@@ -14,8 +14,8 @@
     ]
   ],
   "buildSeconds": {
-    "debug": 13.47,
-    "release": 140.71
+    "debug": 34.81,
+    "release": 164.62
   },
   "debug": {
     "coefficients": {
@@ -536,23 +536,23 @@
       }
     ]
   },
-  "releaseExecutableBytes": 493923504,
+  "releaseExecutableBytes": 494971984,
   "resourceScope": "macOS arm64 Release test executable; first retained evaluation then first center evaluation in a new process, followed by 2000 states per model and 100 repeated Saturn apsis searches. RSS is process high-water, not isolated object ownership. Baseline executable predates Saturn integration; binary delta also includes tests.",
   "resources": {
-    "centerColdSeconds": 0.011628985404968262,
+    "centerColdSeconds": 0.011710047721862793,
     "checksum": -443.8575980663537,
     "evaluationsPerModel": 2000,
     "eventCount": 100,
-    "eventSeconds": 0.03215301036834717,
+    "eventSeconds": 0.03232002258300781,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakAfterCenterBytes": 97206272,
-    "peakAfterRetainedBytes": 53067776,
-    "peakAfterWorkloadsBytes": 97828864,
-    "peakBeforeBytes": 48005120,
-    "retainedColdSeconds": 0.0014810562133789062,
+    "peakAfterCenterBytes": 96862208,
+    "peakAfterRetainedBytes": 52740096,
+    "peakAfterWorkloadsBytes": 97501184,
+    "peakBeforeBytes": 47693824,
+    "retainedColdSeconds": 0.0014640092849731445,
     "seconds": {
-      "center": 0.02026200294494629,
-      "retained": 0.013220071792602539
+      "center": 0.020783066749572754,
+      "retained": 0.01327502727508545
     }
   },
   "schemaVersion": 2,
@@ -601,7 +601,7 @@
     "Scripts/saturn-data/barycenter-reference.json": "218c6a9cda702a969c6eecb4cb6927aa735f5d6af9f7c81a5d41f180104c9041",
     "Scripts/saturn-data/barycenter-reference.query.json": "a12f1e6346ba1016f68c4d9eabf51ba11a71896b8122381f70151c6a02c1ab78",
     "Scripts/saturn-data/direct-fixtures.json": "09fc0c61567cb69fd7953712827029c8fe10399b8db5ed0fea8885676a0a0524",
-    "Scripts/saturn-data/native-captures.json": "ae16fe286a78c3baf6e9277a047a0fe28826f052853d16c5552153de23c0b0a1",
+    "Scripts/saturn-data/native-captures.json": "32bebf954c6ce57d0787db01fac84a82a38777a4be25ce9b1722b5301c16af8c",
     "Scripts/test_planet_cycle_census.py": "32b568f1279c9e737d01d63f35c024c0f103e5e7ada902a5b48ddce2048ac73a",
     "Scripts/test_saturn_ephemeris.py": "e1820ecdf6d02a323a0e884604f34df96317f8c544aecfa557da62e46fc149e0",
     "Sources/AstronomyKit/Apsis.swift": "846e96c10636302634649bb827e843e3b6debf9b1d3f948f0b412f8e26dcece6",
@@ -625,7 +625,8 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
     "Sources/AstronomyKit/Engine/Foundation/EngineChebyshev.swift": "24d3b6936ca45ffab9c2c2591a5de95ab21661f70c1cec97bf9b3b826892156f",
     "Sources/AstronomyKit/Engine/Foundation/EngineConstants.swift": "9504fdbc479821e8fbb658db830079cc86deada403331113e92bb98b768f946c",
-    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "e8059d781fcddcc8fe5d1f459427cb72f19a85541b8c486e66f925ded436cde2",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaT.swift": "841ca71bba922e1b620fba421e0ae020b56efe84132b515bdb07f42c08885af9",
+    "Sources/AstronomyKit/Engine/Foundation/EngineDeltaTObserved.swift": "0218d835be008ef0426a0a54c0bc50909bd0c15d4774769fff3ede011918be37",
     "Sources/AstronomyKit/Engine/Foundation/EngineDirectChebyshevTable.swift": "0937cf619659adbd0277a9204ca7952d75cce04218f26b26d9f767ac4f6a3d2e",
     "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift": "da587b4d643ba188392481fe846aed7c6cbe7fd01e84ab1d73706165c654e027",
     "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift": "724b8b3b6980b19e5e15f33978eb962bae95945af69e83ba923f05023d715159",
@@ -633,6 +634,7 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTables.swift": "b23eefd8a7160329868bc503a262f672489b32985bc22ae983ca2de6f432c3ba",
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
+    "Sources/AstronomyKit/Engine/Foundation/Generated/DeltaTObservedTable.swift": "0e0894da3b5558619d768fabd6964075764d21808dc23d288377561945fa6d31",
     "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "04e15b9546e502523bea3132e4f521465fa722056478ee35b0c9766971759808",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "d354b0a71b21064e959bd81df91a215e6b236ffb6d8d931be278816bd97c5099",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
@@ -804,15 +806,15 @@
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "58c35f4991c4f394c6efecefc13e3f1a03dec0fb3319707ea4c66c554e80d230",
     "Sources/AstronomyKit/Engine/Stars/Generated/ConstellationData.swift": "ed4a8ed46f46a48741e854c7ca7c5e4f3ddde56b4016dd92e2d9cbb570b684f8",
-    "Sources/AstronomyKit/Time.swift": "9c756adb13d331df25a10e042fac92da04aeca402f75415dfbed71cb073f07fa",
+    "Sources/AstronomyKit/Time.swift": "3d38636da7ca64c91633896cc9494b03383055a5db951539c849c6c71fa449dd",
     "Sources/CLibAstronomy/EphemerisTime/dtdb.c": "228bd7c7c1c88dda44c29a076f289c968f64d77a2dc389138b03ab5d1d442105",
     "Sources/CLibAstronomy/astronomy.c": "f0194784d44e0e0083277b00ccbe8b08a5244a6b3f161e07af93e1a6fdf71d81",
-    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "7a451fe02814ae42c27c72241c1c9fc8202604129440152f01f5f03bc8eff13b",
+    "Tests/AstronomyKitTests/Engine/Events/EnginePlanetaryEventTests.swift": "4f515aef1d7e6f1fa52a228b324789b5d5582da895e4fd57e50d7ba7920319bc",
     "Tests/AstronomyKitTests/Engine/Gravity/EngineGravityTests.swift": "3d8b0fb9480aa1d2e827b73a2554318fc0658011721b12d3066619ee39808b2c",
     "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnEphemerisTests.swift": "0e14a6ac69aaef77f87e53243bec6a23e925068d4ac15245741f4934e934bddf",
     "Tests/AstronomyKitTests/Engine/Planets/EngineSaturnMeasurementTests.swift": "2ef055c4a9f6e61bb14373c3c8aacfdb010d5b9d818521bc2e5e74e6991a3453",
     "Tests/AstronomyKitTests/Fixtures/IndependentReferences/reference-fixtures.json": "a9fe5925fc0c556d088147d78fc5f6b053f32a839e13250f7589e47dfc9a12ab",
-    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "a8710b0dc97bf5cc37a17753d6bafd0c22f6bbd8f27f394cbebad23167214395"
+    "Tests/AstronomyKitTests/IndependentReferenceFixtures.swift": "520a4b9c5dad0d9431212a10e807ccca9f9c2ede196b4599e4e02cd19c83f86c"
   },
   "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
 }

@@ -102,6 +102,13 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         /// ``SolarAltitudeObservation/maximumObserverHeight`` from the
         /// ellipsoid.
         case observerHeightOutsideBudget
+
+        /// The model is ``DeltaTModel/iersObserved``. <doc:SolarAltitudeNumerics>
+        /// derives the budget's slope, rounding, gap and step terms from the
+        /// Espenak-Meeus polynomials, which ``DeltaTModel/espenakMeeus`` and
+        /// ``DeltaTModel/jplHorizons`` evaluate; it has no derivation for the
+        /// observed table, spline and long-term model.
+        case deltaTModelOutsideBudget
     }
 
     /// The time the altitude was evaluated at, with both scales and the model.
@@ -146,6 +153,7 @@ public struct SolarAltitudeObservation: Sendable, Equatable, Hashable {
         guard abs(observer.height) <= SolarAltitudeBounds.observerHeightMeters else {
             throw Unsupported.observerHeightOutsideBudget
         }
+        guard deltaTModel != .iersObserved else { throw Unsupported.deltaTModelOutsideBudget }
         let ut = time.universalTime
         let tt = time.terrestrialTime
         guard ut.isFinite, tt.isFinite else { throw AstronomyError.badTime }

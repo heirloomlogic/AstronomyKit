@@ -285,6 +285,19 @@ struct SolarAltitudeObservationTests {
         }
     }
 
+    @Test("The observed model has no derived budget and is refused at every entry point")
+    func observedModelIsRefused() {
+        let date = Date(timeIntervalSince1970: 1_750_000_000)
+        let refused = Unsupported.deltaTModelOutsideBudget
+        #expect(throws: refused) { try Self.observe(date, deltaTModel: .iersObserved) }
+        #expect(throws: refused) { try Self.observe(tt: 9_000.25, deltaTModel: .iersObserved) }
+        #expect(throws: refused) { try Self.observe(ut: 9_000.25, deltaTModel: .iersObserved) }
+        // An invalid observer is still an invalid parameter, whatever the model.
+        #expect(throws: AstronomyError.invalidParameter) {
+            try Self.observe(tt: 9_000.25, from: Observer(latitude: 91, longitude: 0), deltaTModel: .iersObserved)
+        }
+    }
+
     @Test("Non-finite times throw badTime")
     func nonFiniteTimes() {
         #expect(throws: AstronomyError.badTime) { try Self.observe(tt: .nan) }

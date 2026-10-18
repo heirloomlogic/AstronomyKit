@@ -114,10 +114,10 @@ struct ElongationTests {
         @Test("Published Mercury and Venus maximum-elongation intervals", arguments: publishedEvents)
         func publishedEvent(reference: IndependentReferenceArchive.MaximumElongationEvent) throws {
             let body = try #require(["mercury": CelestialBody.mercury, "venus": .venus][reference.body])
-            let start = IndependentReferenceDate.civil(reference.startUTC)
-            let lower = IndependentReferenceDate.civil(reference.lowerUTC)
-            let sample = IndependentReferenceDate.civil(reference.sampleUTC)
-            let upper = IndependentReferenceDate.civil(reference.upperUTC)
+            let start = IndependentReferenceDate.civil(reference.startUTC, deltaTModel: .iersObserved)
+            let lower = IndependentReferenceDate.civil(reference.lowerUTC, deltaTModel: .iersObserved)
+            let sample = IndependentReferenceDate.civil(reference.sampleUTC, deltaTModel: .iersObserved)
+            let upper = IndependentReferenceDate.civil(reference.upperUTC, deltaTModel: .iersObserved)
             let actual = try body.searchMaxElongation(after: start)
 
             #expect(actual.time > start)

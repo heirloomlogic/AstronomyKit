@@ -110,7 +110,9 @@ struct EngineTimeTests {
 
     /// UT alone, which is what `AstroTime`'s `Codable` form records, cannot
     /// rebuild a time whose TT lies in a Delta T gap: no UT gives that TT.
-    @Test("Only the pair rebuilds a time in a Delta T gap", arguments: DeltaTModel.allCases)
+    /// Only the polynomial models have gaps; the observed model is continuous
+    /// (`DeltaTIersObservedTests`).
+    @Test("Only the pair rebuilds a time in a Delta T gap", arguments: [DeltaTModel.espenakMeeus, .jplHorizons])
     func gapNeedsPair(model: DeltaTModel) throws {
         let times = Self.gapTimes(model)
         try #require(!times.isEmpty)
