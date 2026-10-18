@@ -20,7 +20,7 @@
   "sourceSHA256": {
     "Package.swift": "f09138b379aebee7f80817802440177a09c754b962ad1d212f265a708ef5714d",
     "Scripts/solar-numerics/numerics.py": "f84b2d8af3b0703c548135db51b820c9e39e16362b352ca924add0eb730d608e",
-    "Sources/AstronomyKit/AstronomyKit.swift": "3560464447c6b40240b5962dee7d516a8547159aac3cf82a9b434a45d5bbeb18",
+    "Sources/AstronomyKit/AstronomyKit.swift": "c6dad36ea132847c27a822f1c50f04eacf5251d3f28e123a436e820a8cd761dd",
     "Sources/AstronomyKit/CivilTime.swift": "c858285d2d8e9ce8e60be2f388f71dac4554b15dd3815f5d88d47758475f47ac",
     "Sources/AstronomyKit/Engine/Foundation/EngineCache.swift": "823b7d4dae2511753d2b324385c447b35ebec849b14c76b3ebab466c1fb4bebb",
     "Sources/AstronomyKit/Engine/Foundation/EngineCalendar.swift": "b6812411d8075141b0faf28a012a1364fe09c5664543558bd42adda69bddcc10",
@@ -44,7 +44,7 @@
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "f7cc879f8780fda83a69f88bd962e17fcff57809beed2086f81021a03f11760b",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "5b0a2e36d7c08ec73302dc266980951cd2f6556f0cff8fa0fb783473ca23bae3",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",

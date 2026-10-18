@@ -396,17 +396,17 @@
   "centerExtensionBase": "128ac0a4728206f887027f5674371030faad4b5c",
   "centerNativeRelease": {
     "checksum": 44301.65643972756,
-    "coldSeconds": 0.01937401294708252,
+    "coldSeconds": 0.02067399024963379,
     "coldTT": -72000,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 120537088,
-    "peakBytesAfterLoops": 151470080,
-    "peakBytesBefore": 47382528,
+    "peakBytesAfterCold": 121323520,
+    "peakBytesAfterLoops": 152223744,
+    "peakBytesBefore": 48168960,
     "seconds": {
-      "central": 0.035798072814941406,
-      "engineRange": 0.036801934242248535,
-      "outer": 0.043988943099975586
+      "central": 0.037582993507385254,
+      "engineRange": 0.037567973136901855,
+      "outer": 0.04558992385864258
     }
   },
   "directSourceDebug": {
@@ -463,17 +463,17 @@
   },
   "nativeRelease": {
     "checksum": 44287.76723921855,
-    "coldSeconds": 0.00799095630645752,
+    "coldSeconds": 0.007962942123413086,
     "coldTT": -766524.75,
     "evaluationsPerWorkload": 2000,
     "host": "Version 27.0.1 (Build 26A434)",
-    "peakBytesAfterCold": 78659584,
-    "peakBytesAfterLoops": 151666688,
-    "peakBytesBefore": 47546368,
+    "peakBytesAfterCold": 79233024,
+    "peakBytesAfterLoops": 152174592,
+    "peakBytesBefore": 48119808,
     "seconds": {
-      "central": 0.03647196292877197,
-      "engineRange": 0.036399006843566895,
-      "outer": 0.05794203281402588
+      "central": 0.03878605365753174,
+      "engineRange": 0.03925001621246338,
+      "outer": 0.05961000919342041
     }
   },
   "nativeStorage": {
@@ -482,17 +482,17 @@
       "PlutoBarycenterCoefficients": {
         "cstringSectionBytes": 883521,
         "generatedSourceBytes": 884069,
-        "releaseObjectBytes": 1779152
+        "releaseObjectBytes": 1778984
       },
       "PlutoCenterCoefficients": {
         "cstringSectionBytes": 25128168,
         "generatedSourceBytes": 25128716,
-        "releaseObjectBytes": 50268392
+        "releaseObjectBytes": 50268224
       },
       "PlutoSunCoefficients": {
         "cstringSectionBytes": 3239223,
         "generatedSourceBytes": 3239780,
-        "releaseObjectBytes": 6490616
+        "releaseObjectBytes": 6490448
       }
     },
     "decodedPayloadBytes": 13149264,
@@ -500,15 +500,15 @@
       "PlutoDE441PlutoData": {
         "cstringSectionBytes": 5889818,
         "generatedSourceBytes": 5890201,
-        "releaseObjectBytes": 11790248
+        "releaseObjectBytes": 11790080
       },
       "PlutoDE441SunData": {
         "cstringSectionBytes": 11779506,
         "generatedSourceBytes": 11779888,
-        "releaseObjectBytes": 23569600
+        "releaseObjectBytes": 23569440
       }
     },
-    "testExecutableBytes": 493858752
+    "testExecutableBytes": 494971984
   },
   "rangeExtensionBase": "686ffb3b9d69c62ac2c9cc4d0493049f2851d8bd",
   "schemaVersion": 3,
@@ -555,13 +555,14 @@
     "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift": "f394027d5f0622e25d059a9df49bb1ee1c5df7f53663b6b394430d45d0b57763",
     "Sources/AstronomyKit/Engine/Foundation/EngineVector.swift": "20970e5598737d1cafc949d47bed32b7351fc98c6c95b8f8c01fd736dd726e81",
     "Sources/AstronomyKit/Engine/Foundation/Generated/DeltaTObservedTable.swift": "0e0894da3b5558619d768fabd6964075764d21808dc23d288377561945fa6d31",
-    "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "6d8f66fc75ada495d7165da4be80b7550d17c88196681a35dbd12039d46c4a78",
+    "Sources/AstronomyKit/Engine/Gravity/EngineChiron.swift": "04e15b9546e502523bea3132e4f521465fa722056478ee35b0c9766971759808",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravity.swift": "d354b0a71b21064e959bd81df91a215e6b236ffb6d8d931be278816bd97c5099",
     "Sources/AstronomyKit/Engine/Gravity/EngineGravitySimulation.swift": "e6140084cb3089498669e0ac9f8e241fc226afd191105f7beaca0252975d6bcf",
     "Sources/AstronomyKit/Engine/Gravity/EnginePluto.swift": "b3389b03983affa1750eb0a7304147fb46191742f46b940b5543a6fbd685be40",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoDE441.swift": "17c428ed2ded2e1d392fdc37d0b726122d42293fa0de8c9816db6c3ed8372122",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoEphemeris.swift": "54d1c0894f47a7b7a084fb03509ce9f7bf0efd6d21a1af709bf700935fc33a04",
     "Sources/AstronomyKit/Engine/Gravity/EnginePlutoLightTime.swift": "2b01424b0987be139603c8ac51770834bd37083f508a6846e934ff89e26f0863",
+    "Sources/AstronomyKit/Engine/Gravity/Generated/Chiron/ChironCoefficients.swift": "e5755eb249bb5e8272d41e91e0ed65663ea7a1c4a6a7714e3be2a42122121175",
     "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441PlutoData.swift": "2264d1c762f688282a1d07fb8386dbb490e21f9e54f77e6ad6333c16144921b4",
     "Sources/AstronomyKit/Engine/Gravity/Generated/DE441/PlutoDE441SunData.swift": "b8b0fd48631ad87985be734207575b63e41705ec62a3c6488c3a8be3242ad370",
     "Sources/AstronomyKit/Engine/Gravity/Generated/PlutoBarycenterCoefficients.swift": "c554ed8e4bd597fd85d68175238594795201fedd62146a89eb6db27632017a29",
@@ -686,7 +687,7 @@
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPolynomial.swift": "38cc8fd60a5aba2411dade7296cdfd376d13cb3a940a98d103e5405d12e45748",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanetPositions.swift": "2e124edf4d0213b181ea36b94c9bffcf905ba62c46ad82c050fa8ff248b31667",
     "Sources/AstronomyKit/Engine/Planets/EnginePlanets.swift": "4ac745de518857d76f0a01067d247a1be0143be52ff1980c7478b49f824e8259",
-    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "f7cc879f8780fda83a69f88bd962e17fcff57809beed2086f81021a03f11760b",
+    "Sources/AstronomyKit/Engine/Planets/EngineSaturnEphemeris.swift": "5b0a2e36d7c08ec73302dc266980951cd2f6556f0cff8fa0fb783473ca23bae3",
     "Sources/AstronomyKit/Engine/Planets/EngineVSOP87B.swift": "bf892f43fc7edfd54c9e9600b77c4ddab79015f1cd8470b3e04f153cbbee07f0",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthBarycenterData.swift": "cd0c937bbf3e09e1f224a893b2f060879c07b29248d9478f3ab831546fdf35bd",
     "Sources/AstronomyKit/Engine/Planets/Generated/DE441/PlanetDE441EarthOffsetData.swift": "1646133d4ef7ffc33e620886524a0ee56e266170e95b9a6e14ed835f425e6447",
@@ -716,11 +717,11 @@
     "Sources/AstronomyKit/Engine/Positions/EngineApparentKinematics.swift": "d2954f95cb6d7495a9716e577dd27ed1e46522fa281c0a13bbd0315380fe02e9",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentObserver.swift": "2fb567e7041fd99ea51b8580db0b814b21e97d8c173fb4d6b4c50a7c2e8917b4",
     "Sources/AstronomyKit/Engine/Positions/EngineApparentPlace.swift": "2507bab7eaad11ef108db797811764c89af786fd92df9b8ac08af38377978ff1",
-    "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "7113f4f674eafd9a99f254310c491f9d6cd59e7b7ce2a370e6528b324c6fe74d",
+    "Sources/AstronomyKit/Engine/Positions/EngineChironPositions.swift": "072b2c7368db51b951dab9b282a8bc6a12b873882127cb232a9ad49b7f103bfb",
     "Sources/AstronomyKit/Engine/Positions/EngineEcliptic.swift": "aa55bef4bf857f070d22bbacc3f64168abd174848555cab9ed5b31623c839264",
     "Sources/AstronomyKit/Engine/Positions/EngineEquatorial.swift": "4fe3779bb1e725d3d0409e9caa61eac655a2e1ed7132f73b480fb42261162f62",
     "Sources/AstronomyKit/Engine/Positions/EngineGeocentric.swift": "e76fe8ffe7a3f8e4605c8e32c808a4a0d6e3dc733292f25a0e5143a08694acc7",
-    "Sources/AstronomyKit/Engine/Positions/EngineHeliocentric.swift": "dea7f05a7517066b59bad6255ebc93cc4d2971a164c8e13511a9855320a0772c",
+    "Sources/AstronomyKit/Engine/Positions/EngineHeliocentric.swift": "900cf42846d48f1582a94996365a0228a72ba9b38f56e2a0d71f04bf8a722769",
     "Sources/AstronomyKit/Engine/Positions/EngineIllumination.swift": "7caf847bc8937b91cc57dcbc9e191ee05a67143ce83af837678679acced8b6bf",
     "Sources/AstronomyKit/Engine/Stars/EngineConstellations.swift": "adf34b0ecda66e7413d80cde5e556acd307d004915457aa251bde7f39083eef7",
     "Sources/AstronomyKit/Engine/Stars/EngineStar.swift": "58c35f4991c4f394c6efecefc13e3f1a03dec0fb3319707ea4c66c554e80d230",
