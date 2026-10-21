@@ -38,8 +38,7 @@ semver as usual.
 
 ## Local patches (must survive every update)
 
-The vendored `astronomy.c` differs from upstream only by these thread-safety
-patches. Upstream is single-threaded by design; AstronomyKit advertises
+The vendored `astronomy.c` differs from upstream only by these patches, most of them for thread safety. Upstream is single-threaded by design; AstronomyKit advertises
 `Sendable` safety, so these are required. **After any upstream sync they must be
 re-applied, or verified as adopted upstream.**
 
@@ -75,6 +74,18 @@ re-applied, or verified as adopted upstream.**
 
 8. **Degenerate Lagrange inputs.** `Astronomy_LagrangePoint` returns `ASTRO_INVALID_BODY` when both bodies are the same, whose zero separation reached a division by zero. `Astronomy_LagrangePointFast` returns `ASTRO_INVALID_PARAMETER` when the squared separation is zero or not finite, when the L4/L5 tangent length is zero or not finite (a relative velocity that is zero or parallel to the separation leaves the orbital plane undefined), and for any result field that is not finite; its L1 to L3 Newton iteration returns `ASTRO_NO_CONVERGE` after 10,000 steps instead of hanging. Each site carries a "degenerate Lagrange inputs" comment.
 
+9. **Observed Delta T.** `Astronomy_DeltaT_Observed` replaces `Astronomy_DeltaT_EspenakMeeus` as the initial value of `DeltaTFunc`, and Swift exposes it as `DeltaTModel.observed`. Espenak-Meeus's 2005–2050 polynomial has drifted from the Earth's rotation, about 6 seconds high by 2027. The function interpolates linearly in `DeltaTObserved`, a yearly table of IERS Delta T from 1962; before the table it is Espenak-Meeus plus an offset that fades to zero by 1952, and after the table the last yearly rate continues and blends into the long-term parabola by 2150. See "Refreshing the Delta T table" below.
+
+## Refreshing the Delta T table
+
+Refresh `DeltaTObserved` in `astronomy.c` before each release, so the table ends about a year past the release date. Nothing is committed but the table: no data files or scripts.
+
+1. Download the IERS EOP 20 C04 series (`https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now`) and the rapid series with predictions (`https://maia.usno.navy.mil/ser7/finals2000A.all`).
+2. For each day, Delta T = 32.184 s + (TAI − UTC) − (UT1 − UTC), taking UT1 − UTC from C04 where it exists and from finals2000A after it. TAI − UTC is 37 s since 2017; earlier values are in the IERS Bulletin C history.
+3. For each Julian epoch Y.0 from 1962.0 to the last whole year the predictions reach, interpolate Delta T linearly at UT days since J2000 = 365.25 (Y − 2000), and write it to 3 decimals.
+4. Append the new entries and update the retrieval date in the comment above the table. Earlier entries change only if IERS revised C04. Update the table's last year in the three places that state it: the `Astronomy_DeltaT_Observed` doc comment, the `DeltaTModel.observed` documentation, and `tableEnd` in `DeltaTObservedTests`.
+5. Run `DeltaTObservedTests`, and bump `AstronomyConfig.ephemerisVersion` at release, since results change.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the
@@ -94,7 +105,7 @@ re-applied, or verified as adopted upstream.**
 3. **Apply the upstream changes**, then **re-apply the local patches** above
    (or, if upstream has adopted equivalent thread-safety fixes, confirm that and
    note it). The patch sites are marked in context by the vendoring note; search
-   for `pluto_cache_mutex`, `DeltaTFunc`, `extreme-input guards`, `accepted time range`, `degenerate Lagrange inputs`, and the counter names.
+   for `pluto_cache_mutex`, `DeltaTFunc`, `Astronomy_DeltaT_Observed`, `extreme-input guards`, `accepted time range`, `degenerate Lagrange inputs`, and the counter names.
 
 4. **Refresh the vendoring note** at the top of `astronomy.c`: update the
    upstream commit hash and date, and adjust the patch list if anything changed.

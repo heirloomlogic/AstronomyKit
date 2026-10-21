@@ -79,19 +79,17 @@ A calculation that samples nearby times can throw within a short distance of eit
 
 ### Delta T Configuration
 
-The difference between TT and UT (called ΔT) varies over time and is estimated
-using a model. AstronomyKit defaults to the Espenak-Meeus model, but you can
-switch to JPL Horizons for compatibility:
+The difference between TT and UT (called ΔT) varies over time and is estimated using a model. AstronomyKit defaults to ``DeltaTModel/observed``, a yearly table of IERS Earth-rotation values that is extrapolated beyond its last entry. You can switch to Espenak-Meeus or, for compatibility, JPL Horizons:
 
 ```swift
 // Switch to JPL Horizons Delta T model
 AstronomyConfig.setDeltaTModel(.jplHorizons)
 
 // Query Delta T for a specific time
-let deltaT = AstronomyConfig.deltaTEspenakMeeus(universalTime: 0)  // Seconds at J2000
+let deltaT = AstronomyConfig.deltaTObserved(universalTime: 0)  // Seconds at J2000
 
-// Reset to defaults
-AstronomyConfig.reset()
+// Restore the default
+AstronomyConfig.setDeltaTModel(.observed)
 ```
 
 ### Sidereal Time

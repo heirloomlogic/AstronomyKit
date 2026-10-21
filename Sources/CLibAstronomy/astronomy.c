@@ -56,6 +56,10 @@
         the separation leaves the orbital plane undefined), and for any
         result field that is not finite. Its L1 to L3 Newton iteration
         returns ASTRO_NO_CONVERGE after 10000 steps instead of hanging.
+      - Observed Delta T: Astronomy_DeltaT_Observed, a
+        yearly IERS table joined continuously to Espenak-Meeus before it and
+        to the long-term parabola after it, is the initial value of DeltaTFunc
+        in place of Astronomy_DeltaT_EspenakMeeus.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -861,6 +865,7 @@ astro_angle_result_t Astronomy_AngleBetween(astro_vector_t a, astro_vector_t b)
  * approximate DeltaT of the Earth in their "Five Millennium Canon of Solar Eclipses".
  * See: https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html
  * This is the default Delta T function used by Astronomy Engine.
+ * AstronomyKit defaults to #Astronomy_DeltaT_Observed instead.
  *
  * @param ut
  *      The floating point number of days since noon UTC on January 1, 2000.
@@ -996,13 +1001,102 @@ double Astronomy_DeltaT_JplHorizons(double ut)
     return Astronomy_DeltaT_EspenakMeeus(ut);
 }
 
-static _Atomic(astro_deltat_func) DeltaTFunc = Astronomy_DeltaT_EspenakMeeus;
+/*
+    Observed Delta T (AstronomyKit local patch). TT - UT1 in seconds at Julian
+    epochs 1962.0, 1963.0, ..., that is at ut = 365.25 (year - 2000) days.
+    From IERS EOP 20 C04 UT1-UTC through 2026-09-17 and IERS Bulletin A
+    predictions after it, retrieved 2026-10-17: Delta T = 32.184 s + (TAI - UTC)
+    - (UT1 - UTC), interpolated linearly between the daily values.
+    Linear interpolation in this table stays within 0.09 s of the daily values.
+*/
+#define DELTAT_OBSERVED_FIRST_YEAR  1962
+#define DELTAT_OBSERVED_FADE_YEARS  10.0
+#define DELTAT_OBSERVED_JOIN_OFFSET 0.026074996595710331   /* DeltaTObserved[0] minus Espenak-Meeus at 1962.0 */
+#define DELTAT_LONG_TERM_YEAR       2150.0
+
+static const double DeltaTObserved[] =
+{
+    33.997, 34.474, 35.032, 35.742, 36.544, 37.433, 38.296, 39.204,     /* 1962 */
+    40.181, 41.170, 42.231, 43.373, 44.485, 45.477, 46.459, 47.519,     /* 1970 */
+    48.535, 49.586, 50.540, 51.380, 52.167, 52.957, 53.787, 54.343,     /* 1978 */
+    54.870, 55.322, 55.820, 56.300, 56.855, 57.566, 58.310, 59.121,     /* 1986 */
+    59.984, 60.786, 61.630, 62.295, 62.966, 63.468, 63.829, 64.091,     /* 1994 */
+    64.300, 64.474, 64.574, 64.688, 64.845, 65.147, 65.458, 65.777,     /* 2002 */
+    66.070, 66.325, 66.604, 66.907, 67.281, 67.644, 68.103, 68.592,     /* 2010 */
+    68.968, 69.220, 69.361, 69.360, 69.295, 69.204, 69.175, 69.138,     /* 2018 */
+    69.110, 69.308                                                      /* 2026 */
+};
+
+#define DELTAT_OBSERVED_COUNT  ((int)(sizeof(DeltaTObserved) / sizeof(DeltaTObserved[0])))
+
+/* The long-term parabola of Espenak and Meeus, in Julian epoch years. */
+static double DeltaTLongTerm(double year)
+{
+    double u = (year - 1820.0) / 100.0;
+    return -20.0 + 32.0*u*u;
+}
+
+/**
+ * @brief Delta T from observed Earth rotation, the default in AstronomyKit.
+ *
+ * From 1962 through 2027, Delta T interpolated linearly in a yearly table of
+ * IERS values, within 0.09 seconds of the daily IERS series.
+ *
+ * Before 1962, #Astronomy_DeltaT_EspenakMeeus, shifted to meet the table:
+ * the shift is 0.026 seconds at 1962 and fades linearly to zero by 1952.
+ *
+ * After 2027, the table's last yearly rate continues and blends, through a
+ * smoothstep weight, into the long-term parabola -20 + 32 u^2 seconds,
+ * u = (year - 1820) / 100, which applies alone from 2150. Delta T and its rate
+ * are continuous at both ends of the blend. The Earth's rotation cannot be
+ * predicted for more than a year or so: expect errors of about 0.5 seconds
+ * three years past the table and a second or more after that.
+ *
+ * @param ut
+ *      The floating point number of days since noon UTC on January 1, 2000.
+ *
+ * @returns
+ *      The estimated difference TT-UT on the given date, expressed in seconds.
+ */
+double Astronomy_DeltaT_Observed(double ut)
+{
+    const int last = DELTAT_OBSERVED_COUNT - 1;
+    double x = ut / 365.25 + (2000 - DELTAT_OBSERVED_FIRST_YEAR);   /* years since the first entry */
+
+    if (isnan(x))
+        return x;
+
+    if (x < 0.0)
+    {
+        if (x <= -DELTAT_OBSERVED_FADE_YEARS)
+            return Astronomy_DeltaT_EspenakMeeus(ut);
+        return Astronomy_DeltaT_EspenakMeeus(ut) + (1.0 + x / DELTAT_OBSERVED_FADE_YEARS) * DELTAT_OBSERVED_JOIN_OFFSET;
+    }
+
+    if (x < last)
+    {
+        int i = (int)x;
+        return DeltaTObserved[i] + (x - i) * (DeltaTObserved[i + 1] - DeltaTObserved[i]);
+    }
+
+    double year = x + DELTAT_OBSERVED_FIRST_YEAR;
+    double parabola = DeltaTLongTerm(year);
+    if (year >= DELTAT_LONG_TERM_YEAR)
+        return parabola;
+
+    double rate = DeltaTObserved[last] - DeltaTObserved[last - 1];
+    double linear = DeltaTObserved[last] + (x - last) * rate;
+    double s = (x - last) / (DELTAT_LONG_TERM_YEAR - DELTAT_OBSERVED_FIRST_YEAR - last);
+    return linear + s*s*(3.0 - 2.0*s) * (parabola - linear);
+}
+
+static _Atomic(astro_deltat_func) DeltaTFunc = Astronomy_DeltaT_Observed;
 
 /**
  * @brief Changes the function Astronomy Engine uses to calculate Delta T.
  *
  * Most programs should not call this function. It is for advanced use cases only.
- * By default, Astronomy Engine uses the function #Astronomy_DeltaT_EspenakMeeus
+ * By default, AstronomyKit uses the function #Astronomy_DeltaT_Observed
  * to estimate changes in the Earth's rotation rate over time.
  * However, for the sake of unit tests that compare calculations against
  * external data sources that use alternative models for Delta T,
