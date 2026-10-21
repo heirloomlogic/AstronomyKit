@@ -22,19 +22,7 @@ current when you update.
 
 ## Version & tag scheme
 
-Release tags embed the bundled engine version:
-
-```
-X.Y.Z+upstream-A.B.C
-```
-
-- `X.Y.Z` is AstronomyKit's own [semantic version](https://semver.org).
-- `+upstream-A.B.C` is the Astronomy Engine release the vendored `astronomy.c`
-  corresponds to (see its `ASTRONOMY_ENGINE_VERSION` / upstream release notes).
-
-Bumping the vendored library changes only the `+upstream-` suffix unless it also
-changes AstronomyKit's public API or behavior, in which case bump `X.Y.Z` per
-semver as usual.
+Release tags are AstronomyKit's own [semantic version](https://semver.org), `X.Y.Z`, with no build metadata. Releases before 4.0.0 were tagged `X.Y.Z+upstream-A.B.C`; that suffix is dropped because Astronomy Engine development has ended and the vendored `astronomy.c` stays at its final release, 2.1.19.
 
 ## Local patches (must survive every update)
 
@@ -88,8 +76,7 @@ Refresh `DeltaTObserved` in `astronomy.c` before each release, so the table ends
 
 ## Updating from upstream
 
-1. **Pick the target upstream commit.** Note its full hash and date, and the
-   corresponding `+upstream-A.B.C` engine version.
+1. **Pick the target upstream commit.** Note its full hash and date.
 
 2. **Diff, don't blind-copy.** Fetch upstream `source/c/astronomy.c` and
    `astronomy.h` at the target commit and diff against the current vendored
@@ -115,7 +102,7 @@ Refresh `DeltaTObserved` in `astronomy.c` before each release, so the table ends
 
 6. **Verify** (see below).
 
-7. **Tag and release.** Tag `X.Y.Z+upstream-A.B.C`, bump `AstronomyConfig.ephemerisVersion` if any calculated value changed, and describe the change in the GitHub release. Releases are the only change record.
+7. **Tag and release.** Tag `X.Y.Z`, bump `AstronomyConfig.ephemerisVersion` if any calculated value changed, and describe the change in the GitHub release. Releases are the only change record.
 
 ## Verification
 
