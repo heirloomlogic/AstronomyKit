@@ -27,4 +27,29 @@ struct PlutoRangeTests {
             _ = try CelestialBody.pluto.heliocentricPosition(at: time)
         }
     }
+
+    /// A NaN TT used to pass both table-range comparisons and reach a NaN to
+    /// `int` conversion (#58). `AstroTime(ut: -.infinity)` also has a NaN TT,
+    /// because Delta T turns an infinite UT into NaN.
+    @Test(
+        "Every Pluto position path throws badTime for a non-finite TT",
+        arguments: [AstroTime(ut: .nan), AstroTime(tt: .nan), AstroTime(ut: -.infinity), AstroTime(ut: .infinity)]
+    )
+    func nonFiniteTimeThrows(time: AstroTime) {
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.pluto.heliocentricPosition(at: time)
+        }
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.pluto.geocentricPosition(at: time)
+        }
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.pluto.heliocentricState(at: time)
+        }
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.pluto.barycentricState(at: time)
+        }
+        #expect(throws: AstronomyError.badTime) {
+            _ = try CelestialBody.pluto.geocentricEclipticState(at: time)
+        }
+    }
 }

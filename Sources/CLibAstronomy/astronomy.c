@@ -21,6 +21,41 @@
       - Compute denial-of-service guard (PLUTO_MAX_CRAWL_DAYS) in CalcPluto:
         times more than ~100 years outside the PlutoStateTable range return
         ASTRO_BAD_TIME instead of triggering an unbounded step-integration.
+      - Extreme-input guards, marked "extreme-input guards" at each site.
+        InternalSearchAltitude (rise/set and altitude searches) rejects a
+        non-finite limit and stops when a 0.42-day step does not advance the
+        time (|ut| >= 2^52). CalcPluto rejects a non-finite TT before
+        GetSegment, whose ClampIndex converted NaN to int.
+        Astronomy_SearchMoonNode stops when its 10-day step does not advance
+        the time. BruteSearchPlanetApsis (Neptune, Pluto) rejects a
+        non-finite start. LongitudeOffset and NormalizeLongitude reduce with
+        fmod before their loops, which took |x|/360 steps; the result is
+        bit-identical for |x| < 2^56. Astronomy_TerrestrialTime returns a
+        NaN time for a non-finite TT and stops iterating after 128 steps.
+      - Accepted time range, marked "accepted time range" at each site. The
+        ephemeris evaluators return ASTRO_BAD_TIME unless |TT| <= 1,461,000
+        days (EPHEMERIS_MAX_TT_DAYS, 4000 Julian years from J2000), which
+        also rejects a non-finite TT: CalcVsop, Astronomy_HelioVector,
+        Astronomy_HelioDistance, Astronomy_GeoVector, Astronomy_BaryState,
+        Astronomy_HelioState, Astronomy_GeoMoon, Astronomy_EclipticGeoMoon,
+        Astronomy_JupiterMoons, Astronomy_GravSimInit and
+        Astronomy_GravSimUpdate, and moon_distance_slope. Callers that
+        assumed Astronomy_GeoMoon or Astronomy_EclipticGeoMoon never fail
+        (Astronomy_GeoMoonState, the Moon node search) now check their
+        status. Results inside the range are bit-identical; Pluto keeps its
+        narrower range.
+      - Degenerate Lagrange inputs, marked "degenerate Lagrange inputs" at
+        each site. Astronomy_LagrangePoint returns ASTRO_INVALID_BODY when
+        both bodies are the same: their zero separation reached a division
+        by zero. Astronomy_LagrangePointFast returns ASTRO_INVALID_PARAMETER
+        when the squared distance between the two positions is zero, which
+        would divide by zero, or not finite, which the arithmetic that
+        follows turns into NaN. For L4 and L5 it returns
+        ASTRO_INVALID_PARAMETER when U, the length of the tangent vector, is
+        zero or not finite (a relative velocity that is zero or parallel to
+        the separation leaves the orbital plane undefined), and for any
+        result field that is not finite. Its L1 to L3 Newton iteration
+        returns ASTRO_NO_CONVERGE after 10000 steps instead of hanging.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -95,6 +130,13 @@ extern "C" {
    years beyond the PlutoStateTable range so a far-off time cannot trigger an
    unbounded step-integration (a compute denial-of-service). */
 #define PLUTO_MAX_CRAWL_DAYS 36525.0
+
+/* AstronomyKit local patch (accepted time range): the ephemeris models are
+   evaluated only for TT within 4000 Julian years of J2000 (years about -2000
+   to +6000), roughly the validity VSOP87 states. Far outside it they return
+   absurd values (negative distances from about 10^10 days) and then NaN.
+   Pluto keeps its own narrower range (PLUTO_MAX_CRAWL_DAYS above). */
+#define EPHEMERIS_MAX_TT_DAYS 1461000.0
 
 
 
@@ -413,9 +455,21 @@ static int QuadInterp(
     double tm, double dt, double fa, double fm, double fb,
     double *t, double *df_dt);
 
+/*
+    AstronomyKit local patch (extreme-input guards): upstream wraps these two
+    angles by adding or subtracting 360 in a loop, which takes |x|/360 steps
+    and never ends for an infinity. Reducing with fmod first leaves the loops
+    at most one step. For |x| < 2^56 every upstream step is exact, so the
+    result is the same double; "+ 0.0" turns the -0 that fmod returns for a
+    negative multiple of 360 into the +0 the loop reached. fmod turns an
+    infinity into NaN, which the loops pass through.
+*/
 static double LongitudeOffset(double diff)
 {
     double offset = diff;
+
+    if (offset != 0.0)
+        offset = fmod(offset, 360.0) + 0.0;
 
     while (offset <= -180.0)
         offset += 360.0;
@@ -428,6 +482,9 @@ static double LongitudeOffset(double diff)
 
 static double NormalizeLongitude(double lon)
 {
+    if (lon != 0.0)
+        lon = fmod(lon, 360.0) + 0.0;
+
     while (lon < 0.0)
         lon += 360.0;
 
@@ -544,6 +601,14 @@ double Astronomy_PlanetOrbitalPeriod(astro_body_t body)
     case BODY_PLUTO:    return  90560.0;
     default:            return  0.0;        /* invalid body */
     }
+}
+
+/* AstronomyKit local patch (accepted time range): nonzero when `time` is one
+   the ephemeris models accept. False for a NaN TT, so a non-finite time is
+   rejected too. */
+static int EphemerisTimeOk(astro_time_t time)
+{
+    return fabs(time.tt) <= EPHEMERIS_MAX_TT_DAYS;
 }
 
 static astro_vector_t VecError(astro_status_t status, astro_time_t time)
@@ -1006,14 +1071,25 @@ astro_time_t Astronomy_TimeFromDays(double ut)
 astro_time_t Astronomy_TerrestrialTime(double tt)
 {
     /* Iterate to solve to find the correct ut for a given tt, and create an astro_time_t for that time. */
-    astro_time_t time = Astronomy_TimeFromDays(tt);
-    for(;;)
+    astro_time_t time;
+
+    /* AstronomyKit local patch (extreme-input guards): a non-finite tt never
+       converges, and a finite tt whose iterates oscillate between neighboring
+       doubles never gets within 1e-12 days, so upstream's for(;;) could spin
+       forever. Ordinary inputs converge in a few iterations, so results that
+       converge are unchanged; otherwise return the last iterate. */
+    if (!isfinite(tt))
+        return Astronomy_TimeFromDays(NAN);
+
+    time = Astronomy_TimeFromDays(tt);
+    for (int iteration = 0; iteration < 128; ++iteration)
     {
         double err = tt - time.tt;
         if (fabs(err) < 1.0e-12)
             return time;
         time = Astronomy_AddDays(time, err);
     }
+    return time;
 }
 
 #if !defined(ASTRONOMY_ENGINE_NO_CURRENT_TIME)
@@ -2368,6 +2444,10 @@ astro_vector_t Astronomy_GeoMoon(astro_time_t time)
     double mpos1[3];
     double mpos2[3];
 
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
+
     CalcMoon(time.tt / 36525.0, &geo_eclip_lon, &geo_eclip_lat, &distance_au);
 
     /* Convert geocentric ecliptic spherical coordinates to Cartesian coordinates. */
@@ -2420,6 +2500,10 @@ astro_spherical_t Astronomy_EclipticGeoMoon(astro_time_t time)
     astro_ecliptic_t eclip;
     earth_tilt_t et;
     double dist_cos_lat, ecm[3], eqm[3], eqd[3];
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return SphereError(ASTRO_BAD_TIME);
 
     /* CalcMoon produces ecliptic coordinates in mean equinox of date (ECM). */
     CalcMoon(time.tt / 36525.0, &sphere.lon, &sphere.lat, &sphere.dist);
@@ -2487,6 +2571,13 @@ astro_state_vector_t Astronomy_GeoMoonState(astro_time_t time)
 
     r1 = Astronomy_GeoMoon(t1);
     r2 = Astronomy_GeoMoon(t2);
+
+    /* AstronomyKit local patch (accepted time range): Astronomy_GeoMoon can
+       now fail, and its NaN vector must not reach the average below. */
+    if (r1.status != ASTRO_SUCCESS)
+        return StateVecError(r1.status, time);
+    if (r2.status != ASTRO_SUCCESS)
+        return StateVecError(r2.status, time);
 
     /* The desired position is the average of the two calculated positions. */
     s.x = (r1.x + r2.x) / 2;
@@ -3629,6 +3720,10 @@ static astro_vector_t CalcVsop(const vsop_model_t *model, astro_time_t time)
     astro_vector_t vector;
     terse_vector_t pos;
 
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
+
     /* Calculate the VSOP "B" trigonometric series to obtain ecliptic spherical coordinates. */
     VsopCoords(model, t, sphere);
 
@@ -4124,6 +4219,11 @@ astro_status_t Astronomy_GravSimInit(
     if (originBody < BODY_MERCURY || originBody > BODY_SSB)
         return ASTRO_INVALID_BODY;
 
+    /* AstronomyKit local patch (accepted time range): the simulation places
+       the Sun and planets with the VSOP models at every step. */
+    if (!EphemerisTimeOk(time))
+        return ASTRO_BAD_TIME;
+
     /* Verify that all the state vectors are valid and have matching times. */
     for (i = 0; i < numBodies; ++i)
     {
@@ -4266,6 +4366,11 @@ astro_status_t Astronomy_GravSimUpdate(
     */
     if (numBodies != sim->numBodies)
         return ASTRO_INVALID_PARAMETER;
+
+    /* AstronomyKit local patch (accepted time range), as in Astronomy_GravSimInit.
+       Checked before the swap, so a rejected step leaves the simulation as it was. */
+    if (!EphemerisTimeOk(time))
+        return ASTRO_BAD_TIME;
 
     dt = time.tt - sim->curr->time.tt;
 
@@ -4697,6 +4802,12 @@ static astro_status_t CalcPluto(body_state_t *bstate, astro_time_t time, int hel
     memset(bstate, 0, sizeof(body_state_t));
     bstate->tt = time.tt;
 
+    /* AstronomyKit local patch (extreme-input guards): a NaN TT fails both
+       table-range comparisons in GetSegment, then reaches (int) floor(NaN)
+       in ClampIndex, which is undefined behavior. */
+    if (!isfinite(time.tt))
+        return ASTRO_BAD_TIME;
+
     /* Hold the cache mutex across both the segment lookup and the
        interpolation that reads it, so Astronomy_Reset cannot free the
        segment while it is in use. */
@@ -5087,6 +5198,13 @@ astro_jupiter_moons_t Astronomy_JupiterMoons(astro_time_t time)
 {
     astro_jupiter_moons_t jm;
 
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+    {
+        jm.io = jm.europa = jm.ganymede = jm.callisto = StateVecError(ASTRO_BAD_TIME, time);
+        return jm;
+    }
+
     jm.io       = CalcJupiterMoon(time, 0);
     jm.europa   = CalcJupiterMoon(time, 1);
     jm.ganymede = CalcJupiterMoon(time, 2);
@@ -5125,6 +5243,12 @@ astro_vector_t Astronomy_HelioVector(astro_body_t body, astro_time_t time)
     astro_vector_t vector, earth;
     body_state_t bstate;
     const stardef_t *star;
+
+    /* AstronomyKit local patch (accepted time range): checked for every body,
+       including the Sun, the barycenters, and user-defined stars, so every
+       position at one time fails or succeeds together. */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
 
     star = UserDefinedStar(body);
     if (star != NULL)
@@ -5221,6 +5345,10 @@ astro_func_result_t Astronomy_HelioDistance(astro_body_t body, astro_time_t time
     astro_vector_t vector;
     astro_func_result_t result;
     const stardef_t *star;
+
+    /* AstronomyKit local patch (accepted time range), as in Astronomy_HelioVector */
+    if (!EphemerisTimeOk(time))
+        return FuncError(ASTRO_BAD_TIME);
 
     star = UserDefinedStar(body);
     if (star != NULL)
@@ -5549,6 +5677,11 @@ astro_vector_t Astronomy_GeoVector(astro_body_t body, astro_time_t time, astro_a
 {
     astro_vector_t vector;
 
+    /* AstronomyKit local patch (accepted time range): the other bodies fail
+       through Astronomy_HelioVector or Astronomy_GeoMoon; this covers the Earth. */
+    if (!EphemerisTimeOk(time))
+        return VecError(ASTRO_BAD_TIME, time);
+
     switch (body)
     {
     case BODY_EARTH:
@@ -5597,6 +5730,10 @@ astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time)
     astro_state_vector_t state;
     major_bodies_t bary;
     body_state_t planet, earth;
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return StateVecError(ASTRO_BAD_TIME, time);
 
     if (body == BODY_SSB)
     {
@@ -5695,6 +5832,10 @@ astro_state_vector_t Astronomy_HelioState(astro_body_t body, astro_time_t time)
     astro_state_vector_t state;
     major_bodies_t bary;
     body_state_t planet, earth;
+
+    /* AstronomyKit local patch (accepted time range) */
+    if (!EphemerisTimeOk(time))
+        return StateVecError(ASTRO_BAD_TIME, time);
 
     if (UserDefinedStar(body))
     {
@@ -5857,6 +5998,13 @@ astro_state_vector_t Astronomy_LagrangePoint(
     if (minor_mass <= 0.0)
         return StateVecError(ASTRO_INVALID_BODY, time);
 
+    /*
+        AstronomyKit local patch (degenerate Lagrange inputs). A body has no
+        Lagrange point with itself, and its zero separation gave NaN.
+    */
+    if (major_body == minor_body)
+        return StateVecError(ASTRO_INVALID_BODY, time);
+
     /* Calculate the state vectors for the major and minor bodies. */
     if (major_body == BODY_EARTH && minor_body == BODY_MOON)
     {
@@ -5940,6 +6088,8 @@ astro_state_vector_t Astronomy_LagrangePointFast(
     double vx, vy, vz;
     double R2, R, r1, r2, x, deltax, dr1, dr2, numer1, numer2, omega2, accel, deriv;
     astro_state_vector_t  p;
+    const int iter_limit = 10000;   /* AstronomyKit local patch (degenerate Lagrange inputs) */
+    int iter = 0;                   /* AstronomyKit local patch (degenerate Lagrange inputs) */
 
     if (point < 1 || point > 5)
         return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
@@ -5958,6 +6108,17 @@ astro_state_vector_t Astronomy_LagrangePointFast(
     dy = minor_state.y - major_state.y;
     dz = minor_state.z - major_state.z;
     R2 = (dx*dx + dy*dy + dz*dz);
+
+    /*
+        AstronomyKit local patch (degenerate Lagrange inputs). A zero R2, from
+        coincident positions or a separation that underflows when squared,
+        would divide by zero below. A non-finite R2, from a non-finite
+        coordinate or a separation that overflows when squared, makes R
+        infinite or NaN; an infinite R becomes NaN through terms below such
+        as inf/inf and inf - inf.
+    */
+    if (R2 == 0.0 || !isfinite(R2))
+        return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
 
     /* R = Total distance between the bodies. */
     R = sqrt(R2);
@@ -5994,6 +6155,22 @@ astro_state_vector_t Astronomy_LagrangePointFast(
 
         /* Convert the tangential direction vector to a unit vector. */
         U = sqrt(ux*ux + uy*uy + uz*uz);
+
+        /*
+            AstronomyKit local patch (degenerate Lagrange inputs). U is zero
+            when the tangent is zero: the relative velocity is zero or
+            exactly parallel to the separation, so the orbital plane is
+            undefined, or the cross products underflow to zero. It is also
+            zero when the squared length of the tangent underflows. Dividing
+            by a zero U gives NaN or infinity. U is infinite when that
+            squared length overflows; dividing a finite tangent by it gives
+            a zero vector, and the result is finite but wrong. U is infinite
+            or NaN when the relative velocity is not finite or the cross
+            products overflow.
+        */
+        if (U == 0.0 || !isfinite(U))
+            return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
+
         ux /= U;
         uy /= U;
         uz /= U;
@@ -6077,6 +6254,15 @@ astro_state_vector_t Astronomy_LagrangePointFast(
         x = R*scale - r1;
         do
         {
+            /*
+                AstronomyKit local patch (degenerate Lagrange inputs). For
+                some finite inputs, including some L3 inputs with masses of
+                similar size, the iteration does not converge, and this loop
+                used to hang.
+            */
+            if (++iter > iter_limit)
+                return StateVecError(ASTRO_NO_CONVERGE, major_state.t);
+
             dr1 = x - r1;
             dr2 = x - r2;
             accel = omega2*x + numer1/(dr1*dr1) + numer2/(dr2*dr2);
@@ -6094,6 +6280,16 @@ astro_state_vector_t Astronomy_LagrangePointFast(
         p.vy = scale * vy;
         p.vz = scale * vz;
     }
+
+    /*
+        AstronomyKit local patch (degenerate Lagrange inputs). Inputs the
+        checks above let through can still give a field that is not finite,
+        such as, for L1 to L3, a relative velocity that is not finite or
+        that overflows when scaled, or masses whose sum overflows.
+    */
+    if (!(isfinite(p.x) && isfinite(p.y) && isfinite(p.z) && isfinite(p.vx) && isfinite(p.vy) && isfinite(p.vz)))
+        return StateVecError(ASTRO_INVALID_PARAMETER, major_state.t);
+
     p.t = major_state.t;
     p.status = ASTRO_SUCCESS;
     return p;
@@ -8317,6 +8513,12 @@ static astro_search_result_t InternalSearchAltitude(
     if (!isfinite(targetAltitude) || targetAltitude < -90.0 || targetAltitude > +90.0)
         return SearchError(ASTRO_INVALID_PARAMETER);
 
+    /* AstronomyKit local patch (extreme-input guards): the loop below ends only
+       when a step passes startTime.ut + limitDays, which never happens for a
+       non-finite limit. See also the step checks inside the loop. */
+    if (!isfinite(limitDays))
+        return SearchError(ASTRO_INVALID_PARAMETER);
+
     func_result = MaxAltitudeSlope(body, observer.latitude);
     if (func_result.status != ASTRO_SUCCESS)
         return SearchError(func_result.status);
@@ -8341,6 +8543,11 @@ static astro_search_result_t InternalSearchAltitude(
         if (limitDays < 0.0)
         {
             t1 = Astronomy_AddDays(t2, -RISE_SET_DT);
+            /* AstronomyKit local patch (extreme-input guards): from |ut| >= 2^52,
+               adding RISE_SET_DT no longer changes ut, and the search would
+               never reach the end of its window. */
+            if (!(t1.ut < t2.ut))
+                return SearchError(ASTRO_BAD_TIME);
             func_result = altitude_diff(&context, t1);
             if (func_result.status != ASTRO_SUCCESS)
                 return SearchError(func_result.status);
@@ -8349,6 +8556,8 @@ static astro_search_result_t InternalSearchAltitude(
         else
         {
             t2 = Astronomy_AddDays(t1, +RISE_SET_DT);
+            if (!(t1.ut < t2.ut))
+                return SearchError(ASTRO_BAD_TIME);     /* AstronomyKit local patch, as above */
             func_result = altitude_diff(&context, t2);
             if (func_result.status != ASTRO_SUCCESS)
                 return SearchError(func_result.status);
@@ -9111,6 +9320,11 @@ static astro_func_result_t moon_distance_slope(void *context, astro_time_t time)
     int direction = *((int *)context);
     astro_func_result_t result;
 
+    /* AstronomyKit local patch (accepted time range): MoonDistance has no
+       status, and every lunar apsis evaluation passes through here. */
+    if (!EphemerisTimeOk(t1) || !EphemerisTimeOk(t2))
+        return FuncError(ASTRO_BAD_TIME);
+
     dist1 = MoonDistance(t1);
     dist2 = MoonDistance(t2);
     result.value = direction * (dist2 - dist1) / dt;
@@ -9387,6 +9601,12 @@ static astro_apsis_t BruteSearchPlanetApsis(astro_body_t body, astro_time_t star
         Sample points around this orbital arc and find when the distance
         is greatest and smallest.
     */
+    /* AstronomyKit local patch (extreme-input guards): a non-finite start makes
+       the sample interval NaN, and PlanetExtreme never narrows it below its
+       one-minute exit threshold. */
+    if (!isfinite(startTime.ut))
+        return ApsisError(ASTRO_BAD_TIME);
+
     period = Astronomy_PlanetOrbitalPeriod(body);
     t1 = Astronomy_AddDays(startTime, period * ( -30.0 / 360.0));
     t2 = Astronomy_AddDays(startTime, period * (+270.0 / 360.0));
@@ -12704,6 +12924,9 @@ static astro_func_result_t MoonNodeSearchFunc(void *context, astro_time_t time)
     astro_node_kind_t kind = *((astro_node_kind_t *)context);
 
     eclip = Astronomy_EclipticGeoMoon(time);
+    /* AstronomyKit local patch (accepted time range): it can now fail. */
+    if (eclip.status != ASTRO_SUCCESS)
+        return FuncError(eclip.status);
 
     result.value = eclip.lat * (double)kind;
     result.status = ASTRO_SUCCESS;
@@ -12745,11 +12968,23 @@ astro_node_event_t Astronomy_SearchMoonNode(astro_time_t startTime)
     /* Step 10 days at a time, searching for an interval where that latitude crosses zero. */
     time1 = startTime;
     eclip1 = Astronomy_EclipticGeoMoon(time1);    /* never returns a failure code */
+    /* AstronomyKit local patch (accepted time range): it now fails outside the
+       accepted range, and a NaN latitude never brackets a node. */
+    if (eclip1.status != ASTRO_SUCCESS)
+        return NodeError(eclip1.status);
 
     for(;;)
     {
         time2 = Astronomy_AddDays(time1, MOON_NODE_STEP_DAYS);
+        /* AstronomyKit local patch (extreme-input guards): a non-finite start
+           never advances, and from |ut| >= 2^57 adding the step no longer
+           changes ut. Either way the NaN or repeated latitude never brackets
+           a node, and the loop would run forever. */
+        if (!(time1.ut < time2.ut))
+            return NodeError(ASTRO_BAD_TIME);
         eclip2 = Astronomy_EclipticGeoMoon(time2);      /* never returns a failure code */
+        if (eclip2.status != ASTRO_SUCCESS)
+            return NodeError(eclip2.status);            /* AstronomyKit local patch, as above */
         if (eclip1.lat * eclip2.lat <= 0.0)
         {
             /* There is a node somewhere inside this closed time interval. */

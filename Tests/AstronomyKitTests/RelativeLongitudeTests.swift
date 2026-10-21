@@ -110,4 +110,26 @@ struct RelativeLongitudeTests {
             )
         }
     }
+
+    // MARK: - Extreme Inputs
+
+    @Suite("Extreme Inputs")
+    struct ExtremeInputTests {
+        @Test("A non-finite target angle throws invalidParameter", arguments: [Double.nan, .infinity, -.infinity])
+        func nonFiniteTarget(angle: Double) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try CelestialBody.mars.searchRelativeLongitude(
+                    angle, after: AstroTime(year: 2025, month: 1, day: 1))
+            }
+        }
+
+        @Test("A target angle outside 0-360 wraps to the same event")
+        func wrappedTarget() throws {
+            // Wrapping 90 + 360k used to take k loop steps; it is now one fmod.
+            let start = AstroTime(year: 2025, month: 1, day: 1)
+            let direct = try CelestialBody.mars.searchRelativeLongitude(90, after: start)
+            let wrapped = try CelestialBody.mars.searchRelativeLongitude(90 + 360 * 1_000_000, after: start)
+            #expect(abs(wrapped.universalTime - direct.universalTime) * 86_400 < 1)
+        }
+    }
 }

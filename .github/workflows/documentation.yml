@@ -49,3 +49,7 @@ jobs:
         with:
           branch: gh-pages
           folder: docs
+          # Replace gh-pages with one commit on every deploy. SwiftPM clones
+          # every branch, so a growing docs history would grow every
+          # consumer's download.
+          single-commit: true

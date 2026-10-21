@@ -32,6 +32,18 @@ import Foundation
 /// let tomorrow = now.addingDays(1)
 /// let lastWeek = now.addingDays(-7)
 /// ```
+///
+/// ## Accepted Range
+///
+/// Creating an `AstroTime` never fails, but positions, states, distances, and the
+/// searches built on them accept only a Terrestrial Time within 4,000 Julian years
+/// of J2000: `abs(terrestrialTime) <= 1_461_000` days, roughly
+/// the years −2000 to +6000, about the span VSOP87 claims validity for. Outside it,
+/// and for a non-finite time, they throw ``AstronomyError/badTime`` instead of
+/// returning meaningless or NaN values. Pluto accepts a narrower span, about the years
+/// −100 to +4100. A calculation that samples nearby times (light-travel correction,
+/// the Moon's state vectors, searches) can throw within a short distance of either
+/// edge. See <doc:TimeAndObservers>.
 public struct AstroTime: Sendable {
     /// The underlying C time structure.
     var raw: astro_time_t
@@ -83,6 +95,8 @@ public struct AstroTime: Sendable {
     /// arithmetic (for example, February 31 rolls over into March).
     /// Components are clamped to the `Int32` range; the underlying engine
     /// produces meaningful results for years roughly within ±999,999.
+    /// Ephemeris calculations accept a much narrower span, roughly the years
+    /// −2000 to +6000; see "Accepted Range" under ``AstroTime``.
     public init(
         year: Int,
         month: Int,
@@ -151,17 +165,27 @@ public struct AstroTime: Sendable {
 
     /// The local sidereal time at a given geographic longitude.
     ///
+    /// Any finite longitude is accepted, including values outside -180 to +180,
+    /// and wraps by whole sidereal days. A non-finite longitude has no local
+    /// sidereal time: the result is `.nan`, so a caller that forwards an
+    /// unvalidated longitude gets a value it can test with `isNaN` and never a hang.
+    ///
     /// - Parameter longitude: The geographic longitude in degrees (-180 to +180).
     ///   Positive values are east of the prime meridian.
-    /// - Returns: The local sidereal time in hours (0 to 24).
+    /// - Returns: The local sidereal time in hours, in the half-open range 0 to 24
+    ///   (never negative zero and never exactly 24), or `.nan` if `longitude` is
+    ///   infinite or NaN.
     public func siderealTime(longitude: Double) -> Double {
         // Local sidereal time = Greenwich sidereal time + longitude/15
         // (since 15° = 1 hour of sidereal time)
-        var lst = siderealTime + longitude / 15.0
-        // Normalize to 0-24 range
-        while lst < 0 { lst += 24.0 }
-        while lst >= 24 { lst -= 24.0 }
-        return lst
+        let lst = siderealTime + longitude / 15.0
+        guard lst.isFinite else { return .nan }
+        // fmod is exact and takes constant time however large the input is.
+        var wrapped = fmod(lst, 24.0)
+        if wrapped < 0 { wrapped += 24.0 }
+        // A tiny negative remainder rounds to exactly 24 when 24 is added.
+        // Adding 0 turns -0 into +0.
+        return wrapped >= 24.0 ? 0.0 : wrapped + 0.0
     }
 }
 

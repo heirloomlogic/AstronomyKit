@@ -225,4 +225,216 @@ struct LagrangePointTests {
             #expect(result.position.magnitude > 0)
         }
     }
+
+    // MARK: - Degenerate Input Tests
+
+    @Suite("Degenerate Input")
+    struct DegenerateInput {
+        let testTime = AstroTime(year: 2025, month: 6, day: 15, hour: 12)
+
+        @Test(
+            "The same body as major and minor throws invalidBody",
+            arguments: [CelestialBody.earth, .sun],
+            LagrangePointID.allCases
+        )
+        func sameBodyThrowsInvalidBody(body: CelestialBody, point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidBody) {
+                _ = try LagrangePoint.calculate(point: point, at: testTime, majorBody: body, minorBody: body)
+            }
+        }
+
+        @Test("The same body throws invalidBody at a huge time too", arguments: LagrangePointID.allCases)
+        func sameBodyAtHugeTime(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidBody) {
+                _ = try LagrangePoint.calculate(
+                    point: point,
+                    at: AstroTime(ut: 1e70),
+                    majorBody: .earth,
+                    minorBody: .earth
+                )
+            }
+        }
+
+        @Test("Coincident states throw invalidParameter", arguments: LagrangePointID.allCases)
+        func coincidentStatesThrowInvalidParameter(point: LagrangePointID) throws {
+            let state = try CelestialBody.earth.barycentricState(at: testTime)
+            let sunMass = try #require(CelestialBody.sun.massProduct)
+            let earthMass = try #require(CelestialBody.earth.massProduct)
+
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try LagrangePoint.calculateFast(
+                    point: point,
+                    majorState: state,
+                    majorMass: sunMass,
+                    minorState: state,
+                    minorMass: earthMass
+                )
+            }
+        }
+
+        /// Calls `calculateFast` on a major body at the origin moving at `majorVelocity`
+        /// (at rest by default) and a minor body at `position` moving at `velocity`.
+        private func calculateFast(
+            _ point: LagrangePointID,
+            majorVelocity: Vector3D? = nil,
+            majorMass: Double = 1,
+            minorPosition position: Vector3D,
+            minorVelocity velocity: Vector3D,
+            minorMass: Double = 1e-6
+        ) throws -> StateVector {
+            let origin = Vector3D(x: 0, y: 0, z: 0, time: testTime)
+            return try LagrangePoint.calculateFast(
+                point: point,
+                majorState: StateVector(position: origin, velocity: majorVelocity ?? origin, time: testTime),
+                majorMass: majorMass,
+                minorState: StateVector(position: position, velocity: velocity, time: testTime),
+                minorMass: minorMass
+            )
+        }
+
+        @Test(
+            "Coincident positions with different velocities throw invalidParameter", arguments: LagrangePointID.allCases
+        )
+        func coincidentPositionsThrowInvalidParameter(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: 0, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0.01, y: 0.02, z: 0, time: testTime)
+                )
+            }
+        }
+
+        @Test("A separation whose square overflows throws invalidParameter", arguments: LagrangePointID.allCases)
+        func infiniteSeparationThrowsInvalidParameter(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: 1e200, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0, z: 0, time: testTime)
+                )
+            }
+        }
+
+        /// A relative velocity that leaves the L4/L5 tangent zero, or makes its
+        /// squared length underflow to zero or overflow to infinity, for a minor
+        /// body at (1, 0, 0).
+        struct TangentCase: Sendable, CustomTestStringConvertible {
+            let testDescription: String
+            let vx: Double
+            let vy: Double
+        }
+
+        static let degenerateTangents = [
+            TangentCase(testDescription: "zero velocity", vx: 0, vy: 0),
+            TangentCase(testDescription: "velocity along the separation", vx: 1, vy: 0),
+            TangentCase(testDescription: "velocity against the separation", vx: -0.02, vy: 0),
+            TangentCase(testDescription: "squared tangent underflows", vx: 0, vy: 1e-200),
+            TangentCase(testDescription: "squared tangent overflows", vx: 0, vy: 1e300),
+        ]
+
+        private func calculateFast(_ point: LagrangePointID, tangent: TangentCase) throws -> StateVector {
+            try calculateFast(
+                point,
+                minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: tangent.vx, y: tangent.vy, z: 0, time: testTime)
+            )
+        }
+
+        @Test(
+            "L4 and L5 with a degenerate tangent throw invalidParameter",
+            arguments: [LagrangePointID.l4, .l5],
+            degenerateTangents
+        )
+        func degenerateTangentThrowsInvalidParameter(point: LagrangePointID, tangent: TangentCase) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(point, tangent: tangent)
+            }
+        }
+
+        @Test(
+            "L1 to L3 do not use the tangent and still succeed",
+            arguments: [LagrangePointID.l1, .l2, .l3],
+            degenerateTangents
+        )
+        func collinearPointsIgnoreTangent(point: LagrangePointID, tangent: TangentCase) throws {
+            let state = try calculateFast(point, tangent: tangent)
+            let isFinite = [state.position, state.velocity].allSatisfy {
+                $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
+            }
+            #expect(isFinite)
+        }
+
+        @Test(
+            "A relative velocity that is not finite throws invalidParameter",
+            arguments: LagrangePointID.allCases,
+            [Double.nan, .infinity, -.infinity]
+        )
+        func nonFiniteVelocityThrowsInvalidParameter(point: LagrangePointID, component: Double) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: 1, y: 1, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: component, z: 0, time: testTime)
+                )
+            }
+        }
+
+        @Test(
+            "A relative velocity that overflows when subtracted throws invalidParameter",
+            arguments: LagrangePointID.allCases
+        )
+        func overflowingVelocityDifferenceThrowsInvalidParameter(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    majorVelocity: Vector3D(x: 0, y: -.greatestFiniteMagnitude, z: 0, time: testTime),
+                    minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: .greatestFiniteMagnitude, z: 0, time: testTime)
+                )
+            }
+        }
+
+        @Test("An L2 velocity that overflows when scaled throws invalidParameter")
+        func overflowingScaledVelocityThrowsInvalidParameter() {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    .l2,
+                    minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: .greatestFiniteMagnitude, z: 0, time: testTime)
+                )
+            }
+        }
+
+        @Test(
+            "Masses whose sum overflows throw invalidParameter for L1 to L3",
+            arguments: [LagrangePointID.l1, .l2, .l3]
+        )
+        func overflowingMassSumThrowsInvalidParameter(point: LagrangePointID) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    majorMass: .greatestFiniteMagnitude,
+                    minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                    minorMass: .greatestFiniteMagnitude
+                )
+            }
+        }
+
+        /// Newton's method for L3 does not converge for these masses of similar
+        /// size, and `calculateFast` used to hang.
+        @Test("L3 that does not converge throws noConvergence")
+        func nonConvergingL3ThrowsNoConvergence() {
+            #expect(throws: AstronomyError.noConvergence) {
+                _ = try calculateFast(
+                    .l3,
+                    majorMass: 1.431350589334418e-08,
+                    minorPosition: Vector3D(x: 0.00028200563538926415, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                    minorMass: 1.1985515525262112e-08
+                )
+            }
+        }
+    }
 }

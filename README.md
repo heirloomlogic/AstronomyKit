@@ -28,6 +28,10 @@ Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronom
 - Generic root-finding search for custom astronomical events
 - Full `Sendable` conformance for Swift 6
 
+## Supported dates
+
+Positions, states, distances, and the searches built on them accept a Terrestrial Time within 4,000 Julian years of J2000, roughly the years −2000 to +6000, and throw `AstronomyError.badTime` outside it. Pluto's range is narrower, about the years −100 to +4100. See "Accepted Range" in the `AstroTime` documentation.
+
 ## Installation
 
 ### Swift Package Manager
@@ -36,7 +40,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "1.0.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "4.0.0")
 ]
 ```
 
@@ -154,7 +158,7 @@ let algol = FixedStar(
     distance: 92.95    // Distance in light-years
 )
 
-// Ecliptic longitude
+// Ecliptic longitude (true ecliptic and equinox of date, same frame as the planets)
 let longitude = try algol.eclipticLongitude(at: .now)
 print("Algol is at \(longitude)°")
 

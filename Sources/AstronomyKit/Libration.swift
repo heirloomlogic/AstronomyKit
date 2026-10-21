@@ -81,6 +81,10 @@ extension Moon {
     /// Libration values indicate how the Moon appears to rock back and forth,
     /// revealing portions of the far side along the limb.
     ///
+    /// This function does not throw, so it cannot reject a time outside the
+    /// accepted range (see ``AstroTime``). Its values there are meaningless, and
+    /// NaN for a non-finite time.
+    ///
     /// - Parameter time: The time at which to calculate the libration.
     /// - Returns: The libration data.
     ///

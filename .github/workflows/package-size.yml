@@ -1,0 +1,44 @@
+name: Package size
+
+# SwiftPM clones every tag and branch of this repository into each consumer's
+# cache, so anything committed is downloaded forever, even after it is deleted
+# from `main`. These limits keep the package about the size it has been since
+# 1.0.0. Raising them needs the owner's explicit approval.
+on:
+  pull_request:
+    branches:
+      - "**"
+
+permissions:
+  contents: read
+
+jobs:
+  package-size:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check tracked file sizes
+        run: |
+          max_total=$((2 * 1024 * 1024))
+          max_file=$((600 * 1024))
+          total=0
+          status=0
+          while IFS= read -r -d '' path; do
+            size=$(stat -c %s "$path")
+            total=$((total + size))
+            if [ "$size" -gt "$max_file" ]; then
+              echo "::error file=$path::$path is $size bytes; the per-file limit is $max_file bytes."
+              status=1
+            fi
+          done < <(git ls-files -z)
+          echo "Tracked files total $total bytes; the limit is $max_total bytes."
+          if [ "$total" -gt "$max_total" ]; then
+            echo "::error::Tracked files total $total bytes; the limit is $max_total bytes."
+            status=1
+          fi
+          exit "$status"

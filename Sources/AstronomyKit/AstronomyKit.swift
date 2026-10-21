@@ -55,6 +55,14 @@ public enum DeltaTModel: Sendable {
 
 /// Module-level configuration and utility functions.
 public enum AstronomyConfig {
+    /// Numerical model identifier for provenance and version-dependent caches.
+    ///
+    /// It changes whenever a release changes calculated values, so a cache keyed
+    /// on it never mixes results from two models. The engine uses the host's
+    /// math library, so the last bits of a result can differ between platforms
+    /// and OS releases that share one value.
+    public static let ephemerisVersion = "4.0.0+upstream-2.1.19"
+
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the Espenak-Meeus model.
     ///

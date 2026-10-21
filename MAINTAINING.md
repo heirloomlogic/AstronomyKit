@@ -69,6 +69,12 @@ re-applied, or verified as adopted upstream.**
    hang. It now returns `ASTRO_BAD_TIME` for times more than
    `PLUTO_MAX_CRAWL_DAYS` (~100 years) beyond the table.
 
+6. **Extreme-input guards.** Non-finite or extreme inputs used to hang these sites or reach undefined behavior; each now returns an error status or runs in constant time, and results for ordinary inputs are unchanged. `InternalSearchAltitude` (rise/set and altitude searches) returns `ASTRO_INVALID_PARAMETER` for a non-finite `limitDays` and `ASTRO_BAD_TIME` when its 0.42-day step no longer advances the time (|UT| ≥ 2^52 days). `CalcPluto` returns `ASTRO_BAD_TIME` for a non-finite TT before `GetSegment`, whose `ClampIndex` converted NaN to `int`. `Astronomy_SearchMoonNode` returns `ASTRO_BAD_TIME` when its 10-day step no longer advances the time. `BruteSearchPlanetApsis` (Neptune, Pluto) returns `ASTRO_BAD_TIME` for a non-finite start. `LongitudeOffset` and `NormalizeLongitude` reduce with `fmod(x, 360.0) + 0.0` before the upstream loops, which took |x|/360 steps; the result is the same double for |x| < 2^56. `Astronomy_TerrestrialTime` returns a NaN time for a non-finite TT and returns its last iterate after 128 steps instead of looping forever; inputs that converge are unchanged. Each site carries an "extreme-input guards" comment.
+
+7. **Accepted time range.** The ephemeris evaluators return `ASTRO_BAD_TIME` unless |TT| ≤ 1,461,000 days (`EPHEMERIS_MAX_TT_DAYS`, 4000 Julian years either side of J2000), which also rejects a non-finite TT. Far outside that span the models return absurd values and then NaN while reporting success. The check sits in `CalcVsop`, `Astronomy_HelioVector`, `Astronomy_HelioDistance`, `Astronomy_GeoVector`, `Astronomy_BaryState`, `Astronomy_HelioState`, `Astronomy_GeoMoon`, `Astronomy_EclipticGeoMoon`, `Astronomy_JupiterMoons`, `Astronomy_GravSimInit`, `Astronomy_GravSimUpdate` and `moon_distance_slope`; every other position, search and event function reaches one of these. `Astronomy_GeoMoonState` and the Moon node search now check the status of `Astronomy_GeoMoon` and `Astronomy_EclipticGeoMoon`, which upstream treats as infallible. Results inside the range are bit-identical, and Pluto keeps its narrower range (patch 5). Each site carries an "accepted time range" comment.
+
+8. **Degenerate Lagrange inputs.** `Astronomy_LagrangePoint` returns `ASTRO_INVALID_BODY` when both bodies are the same, whose zero separation reached a division by zero. `Astronomy_LagrangePointFast` returns `ASTRO_INVALID_PARAMETER` when the squared separation is zero or not finite, when the L4/L5 tangent length is zero or not finite (a relative velocity that is zero or parallel to the separation leaves the orbital plane undefined), and for any result field that is not finite; its L1 to L3 Newton iteration returns `ASTRO_NO_CONVERGE` after 10,000 steps instead of hanging. Each site carries a "degenerate Lagrange inputs" comment.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the
@@ -85,10 +91,10 @@ re-applied, or verified as adopted upstream.**
            Sources/CLibAstronomy/astronomy.c
    ```
 
-3. **Apply the upstream changes**, then **re-apply the three local patches**
-   above (or, if upstream has adopted equivalent thread-safety fixes, confirm
-   that and note it). The patch sites are marked in context by the vendoring
-   note; search for `pluto_cache_mutex`, `DeltaTFunc`, and the counter names.
+3. **Apply the upstream changes**, then **re-apply the local patches** above
+   (or, if upstream has adopted equivalent thread-safety fixes, confirm that and
+   note it). The patch sites are marked in context by the vendoring note; search
+   for `pluto_cache_mutex`, `DeltaTFunc`, `extreme-input guards`, `accepted time range`, `degenerate Lagrange inputs`, and the counter names.
 
 4. **Refresh the vendoring note** at the top of `astronomy.c`: update the
    upstream commit hash and date, and adjust the patch list if anything changed.
@@ -98,8 +104,7 @@ re-applied, or verified as adopted upstream.**
 
 6. **Verify** (see below).
 
-7. **Changelog & tag.** Add a `CHANGELOG.md` entry, then tag
-   `X.Y.Z+upstream-A.B.C`.
+7. **Tag and release.** Tag `X.Y.Z+upstream-A.B.C`, bump `AstronomyConfig.ephemerisVersion` if any calculated value changed, and describe the change in the GitHub release. Releases are the only change record.
 
 ## Verification
 

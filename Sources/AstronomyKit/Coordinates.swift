@@ -276,7 +276,11 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.distance = distance
     }
 
-    /// Creates coordinates from the C structure.
+    /// Creates coordinates from the C structure, throwing
+    /// `AstronomyError.badTime` if a coordinate is not finite.
+    ///
+    /// A user-built vector longer than about 1e154 AU overflows the distance,
+    /// which is computed here by squaring the components.
     init(_ raw: astro_ecliptic_t) throws {
         if let error = AstronomyError(status: raw.status) {
             throw error
@@ -284,6 +288,9 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.latitude = raw.elat
         self.longitude = raw.elon
         self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
+        guard latitude.isFinite, longitude.isFinite, distance.isFinite else {
+            throw AstronomyError.badTime
+        }
     }
 
     /// Creates coordinates from a spherical C structure.

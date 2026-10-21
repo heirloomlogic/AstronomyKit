@@ -169,6 +169,81 @@ struct FixedStarTests {
         }
     }
 
+    // MARK: - Ecliptic of Date Tests
+
+    /// Checks `ecliptic(at:)` against the true ecliptic and equinox of date at
+    /// epochs a century either side of J2000, where the J2000 ecliptic is off
+    /// by about 1.4° of precession.
+    ///
+    /// References come from pyerfa 2.0.1.5 (SOFA): the catalog direction less
+    /// Earth's heliocentric position from `epv00`, annual aberration from
+    /// `ab` with Earth's barycentric velocity, the IAU 2006/2000A
+    /// bias-precession-nutation matrix `pnm06a`, and a rotation by the true
+    /// obliquity (`obl06` plus the `nut06a` obliquity nutation). The engine
+    /// uses IAU 1976 precession and IAU 2000B nutation; measured residuals
+    /// against these references are at most 0.023″. The references take the
+    /// calendar instants as TT; the engine's Delta T (up to 203 s at 2100)
+    /// moves a star by far less than that.
+    @Suite("Ecliptic of Date")
+    struct EclipticOfDateTests {
+        struct Reference: Sendable, CustomTestStringConvertible {
+            let star: FixedStar
+            let time: AstroTime
+            let longitude: Double
+            let latitude: Double
+
+            var testDescription: String { "\(star.name) \(time)" }
+        }
+
+        /// Hipparcos J2000 positions (proper motion ignored, as the engine does).
+        static let regulus = FixedStar(
+            name: "Regulus",
+            rightAscension: 10.13953083,
+            declination: 11.96720833,
+            distance: 79.3
+        )
+        static let spica = FixedStar(
+            name: "Spica",
+            rightAscension: 13.41988306,
+            declination: -11.16131944,
+            distance: 250.0
+        )
+
+        static let t1900 = AstroTime(year: 1_900, month: 1, day: 1, hour: 12)
+        static let t2026 = AstroTime(year: 2_026, month: 7, day: 24, hour: 0)
+        static let t2100 = AstroTime(year: 2_100, month: 1, day: 1, hour: 12)
+
+        static let references: [Reference] = [
+            Reference(star: regulus, time: t1900, longitude: 148.4412662, latitude: 0.4592337),
+            Reference(star: regulus, time: t2026, longitude: 150.1977578, latitude: 0.4663342),
+            Reference(star: regulus, time: t2100, longitude: 151.2310570, latitude: 0.4702852),
+            Reference(star: spica, time: t1900, longitude: 202.4489112, latitude: -2.0480062),
+            Reference(star: spica, time: t2026, longitude: 204.2140540, latitude: -2.0563696),
+            Reference(star: spica, time: t2100, longitude: 205.2376442, latitude: -2.0606519),
+        ]
+
+        /// 0.36″: about 15 times the measured residual, and about 1/14,000
+        /// of the J2000-frame error at these epochs.
+        static let tolerance = 1e-4
+
+        @Test("Matches an independent true-ecliptic-of-date reference", arguments: references)
+        func matchesReference(_ reference: Reference) throws {
+            let time = reference.time
+            let ecliptic = try reference.star.ecliptic(at: time)
+
+            #expect(
+                abs(ecliptic.longitude - reference.longitude) < Self.tolerance,
+                "longitude \(ecliptic.longitude)° vs reference \(reference.longitude)°"
+            )
+            #expect(
+                abs(ecliptic.latitude - reference.latitude) < Self.tolerance,
+                "latitude \(ecliptic.latitude)° vs reference \(reference.latitude)°"
+            )
+            #expect(try reference.star.eclipticLongitude(at: time) == ecliptic.longitude)
+            #expect(try reference.star.eclipticLatitude(at: time) == ecliptic.latitude)
+        }
+    }
+
     // MARK: - Horizon Coordinate Tests
 
     @Suite("Horizon Coordinates")

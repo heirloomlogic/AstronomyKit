@@ -241,6 +241,20 @@ struct ApsisTests {
                 #expect(apsis.time < endTime)
             }
         }
+
+        /// Neptune and Pluto use a sampling search whose interval is NaN for a
+        /// non-finite start. Neptune's never narrowed and looped forever;
+        /// Pluto's reached the NaN TT fixed in #58. The accepted time range (#62)
+        /// would also reject these starts, at the first distance sample.
+        @Test(
+            "Neptune and Pluto apsis searches throw badTime for a non-finite start",
+            arguments: [CelestialBody.neptune, .pluto], [Double.nan, .infinity, -.infinity]
+        )
+        func bruteForceNonFiniteStart(body: CelestialBody, ut: Double) {
+            #expect(throws: AstronomyError.badTime) {
+                _ = try body.searchApsis(after: AstroTime(ut: ut))
+            }
+        }
     }
 
     // MARK: - Apsis Struct Tests

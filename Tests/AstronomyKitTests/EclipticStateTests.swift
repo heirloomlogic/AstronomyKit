@@ -1,0 +1,102 @@
+import AstronomyKit
+import Testing
+
+@Suite("Ecliptic State")
+struct EclipticStateTests {
+    static let times = [
+        AstroTime(year: 1_950, month: 3, day: 1),
+        AstroTime(year: 2_026, month: 7, day: 24),
+        AstroTime(year: 2_100, month: 12, day: 31, hour: 18),
+    ]
+
+    static let planets: [CelestialBody] = [
+        .sun, .moon, .mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune, .pluto,
+    ]
+
+    /// Longitude change from `a` to `b` across the 0/360 seam.
+    static func longitudeChange(_ a: Double, _ b: Double) -> Double {
+        var change = b - a
+        if change > 180 { change -= 360 } else if change < -180 { change += 360 }
+        return change
+    }
+
+    @Test("Position fields match geocentricPosition().toEcliptic() bit for bit", arguments: times)
+    func geocentricPositionMatches(time: AstroTime) throws {
+        for body in Self.planets {
+            for aberration in [Aberration.corrected, .none] {
+                let state = try body.geocentricEclipticState(at: time, aberration: aberration)
+                let position = try body.geocentricPosition(at: time, aberration: aberration).toEcliptic()
+                #expect(state.ecliptic == position, "\(body) \(aberration)")
+                #expect(state.time == time)
+            }
+        }
+    }
+
+    @Test("Sun and Moon position fields match their dedicated functions bit for bit", arguments: times)
+    func sunAndMoonMatch(time: AstroTime) throws {
+        #expect(try Sun.eclipticState(at: time).ecliptic == Sun.position(at: time))
+        #expect(try Moon.eclipticState(at: time).ecliptic == Moon.ecliptic(at: time))
+    }
+
+    /// Simpson's rule over a quarter day integrates the rates back to the change
+    /// in position. Its own error there is below 1e-8 degrees for the Moon, so the
+    /// budgets leave room only for the central difference's truncation and for a
+    /// stencil that straddles a change in the light-time iteration count.
+    @Test("Rates integrate to the change in position over a quarter day", arguments: times)
+    func ratesIntegrateToPosition(time: AstroTime) throws {
+        let tt = time.terrestrialTime
+        let samples = [tt, tt + 0.125, tt + 0.25].map { AstroTime(tt: $0) }
+        for body in Self.planets {
+            let states = try samples.map { try body.geocentricEclipticState(at: $0) }
+            func simpson(_ rate: (EclipticState) -> Double) -> Double {
+                0.25 * (rate(states[0]) + 4 * rate(states[1]) + rate(states[2])) / 6
+            }
+            let longitude = Self.longitudeChange(states[0].longitude, states[2].longitude)
+            #expect(abs(simpson(\.longitudeRate) - longitude) < 1e-6, "\(body) longitude")
+            #expect(abs(simpson(\.latitudeRate) - (states[2].latitude - states[0].latitude)) < 1e-6, "\(body) latitude")
+            #expect(abs(simpson(\.distanceRate) - (states[2].distance - states[0].distance)) < 1e-8, "\(body) distance")
+        }
+    }
+
+    @Test("Rates fall in each body's physical range", arguments: times)
+    func ratesArePhysical(time: AstroTime) throws {
+        let sun = try Sun.eclipticState(at: time)
+        #expect((0.95...1.02).contains(sun.longitudeRate))
+        let moon = try Moon.eclipticState(at: time)
+        #expect((11.7...15.5).contains(moon.longitudeRate))
+        #expect(abs(moon.latitudeRate) < 1.5)
+        let mercury = try CelestialBody.mercury.geocentricEclipticState(at: time)
+        #expect((-1.5...2.3).contains(mercury.longitudeRate))
+    }
+
+    /// The Moon crosses 0° longitude about once a month; the rate must stay near
+    /// +13°/day there instead of jumping by 360° divided by the stencil.
+    @Test("Longitude rate is continuous across the 0/360 seam")
+    func rateAcrossSeam() throws {
+        let start = AstroTime(year: 2_026, month: 1, day: 1)
+        var time = start
+        var crossed = false
+        var previous = try Moon.ecliptic(at: time).longitude
+        while time.terrestrialTime < start.terrestrialTime + 30 {
+            time = time.addingHours(1)
+            let longitude = try Moon.ecliptic(at: time).longitude
+            if longitude < previous {
+                crossed = true
+                let state = try Moon.eclipticState(at: time.addingHours(-0.5))
+                #expect((11.7...15.5).contains(state.longitudeRate))
+            }
+            previous = longitude
+        }
+        #expect(crossed)
+    }
+
+    @Test("Bodies without a geocentric ecliptic state throw invalidBody")
+    func unsupportedBodies() {
+        let time = AstroTime(year: 2_026, month: 1, day: 1)
+        for body in [CelestialBody.earth, .earthMoonBarycenter, .solarSystemBarycenter, .io] {
+            #expect(throws: AstronomyError.invalidBody, "\(body)") {
+                _ = try body.geocentricEclipticState(at: time)
+            }
+        }
+    }
+}
