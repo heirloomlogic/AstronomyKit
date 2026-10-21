@@ -76,7 +76,7 @@ public enum AstronomyConfig {
     /// on it never mixes results from two models. The engine uses the host's
     /// math library, so the last bits of a result can differ between platforms
     /// and OS releases that share one value.
-    public static let ephemerisVersion = "4.0.0+upstream-2.1.19"
+    public static let ephemerisVersion = "4.1.0+upstream-2.1.19"
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the observed model.
