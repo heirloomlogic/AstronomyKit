@@ -284,6 +284,7 @@ astro_status_t;
  * `tt` to represent Terrestrial Time (TT, also known as *ephemeris time*).
  * The difference `tt-ut` is known as *&Delta;T*, using a best-fit piecewise model devised by
  * [Espenak and Meeus](https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html).
+ * AstronomyKit defaults to #Astronomy_DeltaT_Observed instead.
  *
  * Both `tt` and `ut` are necessary for performing different astronomical calculations.
  * Indeed, certain calculations (such as rise/set times) require both time scales.
@@ -639,11 +640,13 @@ typedef astro_func_result_t (* astro_search_func_t) (void *context, astro_time_t
  * Astronomy Engine defaults to using a Delta T function defined by
  * Espenak and Meeus in their "Five Millennium Canon of Solar Eclipses".
  * See: https://eclipse.gsfc.nasa.gov/SEhelp/deltatpoly2004.html
+ * AstronomyKit defaults to #Astronomy_DeltaT_Observed instead.
  */
 typedef double (* astro_deltat_func) (double ut);
 
 double Astronomy_DeltaT_EspenakMeeus(double ut);
 double Astronomy_DeltaT_JplHorizons(double ut);
+double Astronomy_DeltaT_Observed(double ut);
 
 void Astronomy_SetDeltaTFunction(astro_deltat_func func);
 

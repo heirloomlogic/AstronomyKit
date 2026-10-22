@@ -24,8 +24,8 @@ struct AcceptedTimeRangeTests {
     ]
 
     /// `AstroTime(ut: -1e15)` has a TT of about +2.8e17, and `-1e300` an
-    /// infinite TT, because Espenak-Meeus Delta T grows as the square of the
-    /// time. Both are rejected either way.
+    /// infinite TT, because Delta T grows as the square of the time far from
+    /// the present. Both are rejected either way.
     static let farTimes: [Double] = [1e300, -1e300, 1e15, -1e15, 1e8, -1e8]
 
     // MARK: - Far Outside the Range

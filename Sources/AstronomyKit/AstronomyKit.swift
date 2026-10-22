@@ -44,7 +44,22 @@ import CLibAstronomy
 
 /// The Delta T model used to convert between Universal Time and Terrestrial Time.
 public enum DeltaTModel: Sendable {
-    /// The Espenak-Meeus model (default).
+    /// Observed Earth rotation (default).
+    ///
+    /// From 1962 through 2027, a yearly table of International Earth Rotation
+    /// and Reference Systems Service (IERS) values, within 0.09 seconds of
+    /// the daily series. Before 1962, the Espenak-Meeus model, joined to the
+    /// table without a jump. After 2027, the last yearly rate continues and
+    /// blends into the long-term parabola, which applies alone from 2150. The
+    /// Earth's rotation cannot be predicted for more than a year or so, so
+    /// expect errors of about half a second three years past the table and
+    /// more after that.
+    case observed
+
+    /// The Espenak-Meeus model.
+    ///
+    /// Its polynomial for 2005 to 2050 has drifted from the observed Earth
+    /// rotation: it is about 2 seconds high in 2020 and 6 seconds high in 2027.
     case espenakMeeus
 
     /// The JPL Horizons model, for compatibility with JPL tools.
@@ -61,7 +76,16 @@ public enum AstronomyConfig {
     /// on it never mixes results from two models. The engine uses the host's
     /// math library, so the last bits of a result can differ between platforms
     /// and OS releases that share one value.
-    public static let ephemerisVersion = "4.0.0+upstream-2.1.19"
+    public static let ephemerisVersion = "4.1.0"
+
+    /// Calculates the Delta T value (TT - UT) for a given Universal Time
+    /// using the observed model.
+    ///
+    /// - Parameter universalTime: Universal Time days since J2000 noon.
+    /// - Returns: Delta T in seconds.
+    public static func deltaTObserved(universalTime: Double) -> Double {
+        Astronomy_DeltaT_Observed(universalTime)
+    }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
     /// using the Espenak-Meeus model.
@@ -95,6 +119,8 @@ public enum AstronomyConfig {
     /// - Parameter model: The Delta T model to use.
     public static func setDeltaTModel(_ model: DeltaTModel) {
         switch model {
+        case .observed:
+            Astronomy_SetDeltaTFunction(Astronomy_DeltaT_Observed)
         case .espenakMeeus:
             Astronomy_SetDeltaTFunction(Astronomy_DeltaT_EspenakMeeus)
         case .jplHorizons:
