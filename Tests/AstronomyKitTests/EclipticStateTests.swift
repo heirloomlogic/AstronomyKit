@@ -69,6 +69,52 @@ struct EclipticStateTests {
         #expect((-1.5...2.3).contains(mercury.longitudeRate))
     }
 
+    /// Before 1962 the default Delta T is Espenak-Meeus, whose polynomials step at
+    /// their joins (-0.036 s at 1800-01-15 01:36 UT, +0.050 s at 1860-01-15 14:19,
+    /// -0.088 s at 1900-01-15 06:48). Each time here puts a join between the center
+    /// sample and the +1/16-day sample, so a stencil offset in UT would carry the step
+    /// into the Moon's rate as an error of up to 1e-4 degrees per day.
+    @Test(
+        "Moon rates match a TT central difference across Delta T joins",
+        arguments: [
+            AstroTime(year: 1_800, month: 1, day: 15),
+            AstroTime(year: 1_860, month: 1, day: 15, hour: 14),
+            AstroTime(year: 1_900, month: 1, day: 15, hour: 6),
+        ])
+    func ratesAcrossDeltaTJoin(time: AstroTime) throws {
+        let state = try Moon.eclipticState(at: time)
+        let h = 30.0 / 86_400
+        let before = try Moon.ecliptic(at: AstroTime(tt: time.terrestrialTime - h))
+        let after = try Moon.ecliptic(at: AstroTime(tt: time.terrestrialTime + h))
+        let longitudeRate = Self.longitudeChange(before.longitude, after.longitude) / (2 * h)
+        #expect(abs(state.longitudeRate - longitudeRate) < 1e-6)
+        #expect(abs(state.latitudeRate - (after.latitude - before.latitude) / (2 * h)) < 1e-6)
+        #expect(abs(state.distanceRate - (after.distance - before.distance) / (2 * h)) < 1e-10)
+    }
+
+    /// Where Delta T steps forward, TT skips the values between the two sides of the
+    /// step, so no UT has those TTs and `AstroTime(tt:)` returns one whose TT is off by
+    /// up to the step. Each TT here sits in the middle of such a gap (+0.050 s at
+    /// 1860-01-15 14:18:31 UT, +0.012 s at 1920-01-16 03:02:00, +0.0009 s at
+    /// 1941-01-15 05:05:14), and the state is taken 1/16 day earlier, so its +1/16-day
+    /// sample lands in the gap.
+    @Test(
+        "Moon rates hold when a sample's TT falls in a forward Delta T step",
+        arguments: [-51_119.903_712_096, -29_205.373_354_701_32, -21_535.287_743_278_97])
+    func ratesAcrossDeltaTGap(gapTT: Double) throws {
+        // The condition under test: the sample's TT has no exact UT.
+        #expect(AstroTime(tt: gapTT).terrestrialTime != gapTT)
+        let time = AstroTime(tt: gapTT - 1.0 / 16)
+        let state = try Moon.eclipticState(at: time)
+        let h = 30.0 / 86_400
+        let before = try Moon.ecliptic(at: AstroTime(tt: time.terrestrialTime - h))
+        let after = try Moon.ecliptic(at: AstroTime(tt: time.terrestrialTime + h))
+        let longitudeRate = Self.longitudeChange(before.longitude, after.longitude) / (2 * h)
+        #expect(abs(state.longitudeRate - longitudeRate) < 1e-6)
+        #expect(abs(state.latitudeRate - (after.latitude - before.latitude) / (2 * h)) < 1e-6)
+        #expect(abs(state.distanceRate - (after.distance - before.distance) / (2 * h)) < 1e-10)
+    }
+
     /// The Moon crosses 0° longitude about once a month; the rate must stay near
     /// +13°/day there instead of jumping by 360° divided by the stencil.
     @Test("Longitude rate is continuous across the 0/360 seam")

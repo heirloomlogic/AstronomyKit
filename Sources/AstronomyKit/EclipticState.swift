@@ -74,16 +74,16 @@ public struct EclipticState: Sendable, Equatable, Hashable {
     init(at time: AstroTime, position: (AstroTime) throws -> Ecliptic) throws {
         let center = try position(time)
         // The samples are offset on both clocks at once, so they are evenly spaced in
-        // TT, which the positions depend on, even where the Delta T model steps
+        // TT, the scale the rates are taken against, even where the Delta T model steps
         // between two of them.
-        let times = [-2.0, -1, 1, 2].map { time.addingTerrestrialDays($0 * Self.rateStep) }
-        let samples = try times.map(position)
-        let step = (times[3].terrestrialTime - times[0].terrestrialTime) / 4
+        let samples = try [-2.0, -1, 1, 2].map {
+            try position(time.addingTerrestrialDays($0 * Self.rateStep))
+        }
 
         // Differences from the center keep the values small; longitude wraps across 0/360.
         func rate(_ change: (Ecliptic) -> Double) -> Double {
             let d = samples.map(change)
-            return (d[0] - 8 * d[1] + 8 * d[2] - d[3]) / (12 * step)
+            return (d[0] - 8 * d[1] + 8 * d[2] - d[3]) / (12 * Self.rateStep)
         }
         let longitudeRate = rate { sample in
             let change = sample.longitude - center.longitude
