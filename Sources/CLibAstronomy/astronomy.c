@@ -32,6 +32,12 @@
         fmod before their loops, which took |x|/360 steps; the result is
         bit-identical for |x| < 2^56. Astronomy_TerrestrialTime returns a
         NaN time for a non-finite TT and stops iterating after 128 steps.
+      - Exact TT inverse, marked "exact TT inverse" at each site.
+        Astronomy_TerrestrialTime returns the TT it was given for every
+        finite TT. Where the Delta T model steps forward, no UT has a TT
+        inside the step; there it stops when its iterates alternate between
+        the UTs on either side, after about four steps instead of 128, and
+        keeps the UT it stopped on.
       - Accepted time range, marked "accepted time range" at each site. The
         ephemeris evaluators return ASTRO_BAD_TIME unless |TT| <= 1,461,000
         days (EPHEMERIS_MAX_TT_DAYS, 4000 Julian years from J2000), which
@@ -1174,12 +1180,13 @@ astro_time_t Astronomy_TerrestrialTime(double tt)
 {
     /* Iterate to solve to find the correct ut for a given tt, and create an astro_time_t for that time. */
     astro_time_t time;
+    double one_back_ut = NAN, two_back_ut = NAN;
 
     /* AstronomyKit local patch (extreme-input guards): a non-finite tt never
        converges, and a finite tt whose iterates oscillate between neighboring
        doubles never gets within 1e-12 days, so upstream's for(;;) could spin
-       forever. Ordinary inputs converge in a few iterations, so results that
-       converge are unchanged; otherwise return the last iterate. */
+       forever. Ordinary inputs converge in a few iterations, so their UT is
+       unchanged; otherwise stop at the last iterate. */
     if (!isfinite(tt))
         return Astronomy_TimeFromDays(NAN);
 
@@ -1188,9 +1195,17 @@ astro_time_t Astronomy_TerrestrialTime(double tt)
     {
         double err = tt - time.tt;
         if (fabs(err) < 1.0e-12)
-            return time;
+            break;
+        /* AstronomyKit local patch (exact TT inverse): inside a forward
+           Delta T step the iterates alternate between two UTs. */
+        if (time.ut == two_back_ut)
+            break;
+        two_back_ut = one_back_ut;
+        one_back_ut = time.ut;
         time = Astronomy_AddDays(time, err);
     }
+    /* AstronomyKit local patch (exact TT inverse). */
+    time.tt = tt;
     return time;
 }
 

@@ -92,18 +92,12 @@ struct EclipticStateTests {
         #expect(abs(state.distanceRate - (after.distance - before.distance) / (2 * h)) < 1e-10)
     }
 
-    /// Where Delta T steps forward, TT skips the values between the two sides of the
-    /// step, so no UT has those TTs and `AstroTime(tt:)` returns one whose TT is off by
-    /// up to the step. Each TT here sits in the middle of such a gap (+0.050 s at
-    /// 1860-01-15 14:18:31 UT, +0.012 s at 1920-01-16 03:02:00, +0.0009 s at
-    /// 1941-01-15 05:05:14), and the state is taken 1/16 day earlier, so its +1/16-day
-    /// sample lands in the gap.
+    /// The state is taken 1/16 day before a TT that no UT has (see
+    /// ``DeltaTJoinContinuityTests/gapTTs``), so its +1/16-day sample lands in the gap.
     @Test(
         "Moon rates hold when a sample's TT falls in a forward Delta T step",
-        arguments: [-51_119.903_712_096, -29_205.373_354_701_32, -21_535.287_743_278_97])
+        arguments: DeltaTJoinContinuityTests.gapTTs)
     func ratesAcrossDeltaTGap(gapTT: Double) throws {
-        // The condition under test: the sample's TT has no exact UT.
-        #expect(AstroTime(tt: gapTT).terrestrialTime != gapTT)
         let time = AstroTime(tt: gapTT - 1.0 / 16)
         let state = try Moon.eclipticState(at: time)
         let h = 30.0 / 86_400
