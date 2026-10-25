@@ -13,7 +13,7 @@
 /// function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``,
 /// ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields
 /// are the derivative of that same function with respect to Terrestrial Time,
-/// taken as a five-point difference over ±1/8 day. Because they differentiate the
+/// taken as a five-point difference over ±1/8 TT day. Because they differentiate the
 /// position function itself, they include light-time, aberration, and the motion of
 /// the true ecliptic and equinox of date, and a zero of ``longitudeRate`` is a
 /// stationary point of ``longitude``. Their rounding noise is about 2e-11 degrees per
@@ -73,10 +73,10 @@ public struct EclipticState: Sendable, Equatable, Hashable {
     /// ±``rateStep`` and ±2 ``rateStep``.
     init(at time: AstroTime, position: (AstroTime) throws -> Ecliptic) throws {
         let center = try position(time)
-        // The samples are offset in UT. The positions depend on TT alone, so the
-        // spacing is the TT the samples actually span, which differs from the UT
-        // offsets only by Delta T's drift.
-        let times = [-2.0, -1, 1, 2].map { time.addingDays($0 * Self.rateStep) }
+        // The samples are offset on both clocks at once, so they are evenly spaced in
+        // TT, which the positions depend on, even where the Delta T model steps
+        // between two of them.
+        let times = [-2.0, -1, 1, 2].map { time.addingTerrestrialDays($0 * Self.rateStep) }
         let samples = try times.map(position)
         let step = (times[3].terrestrialTime - times[0].terrestrialTime) / 4
 

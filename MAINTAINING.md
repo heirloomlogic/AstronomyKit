@@ -64,6 +64,8 @@ re-applied, or verified as adopted upstream.**
 
 9. **Observed Delta T.** `Astronomy_DeltaT_Observed` replaces `Astronomy_DeltaT_EspenakMeeus` as the initial value of `DeltaTFunc`, and Swift exposes it as `DeltaTModel.observed`. Espenak-Meeus's 2005–2050 polynomial has drifted from the Earth's rotation, about 6 seconds high by 2027. The function interpolates linearly in `DeltaTObserved`, a yearly table of IERS Delta T from 1962; before the table it is Espenak-Meeus plus an offset that fades to zero by 1952, and after the table the last yearly rate continues and blends into the long-term parabola by 2150. See "Refreshing the Delta T table" below.
 
+10. **TT-continuous offsets.** `Astronomy_AddTerrestrialDays` adds a span to both UT and TT; Swift exposes it as `AstroTime.addingTerrestrialDays(_:)`. `Astronomy_AddDays` adds to UT and derives TT from the Delta T model, so an offset across a point where the model's pieces meet with a step (Espenak–Meeus steps back 0.088 s in January 1900 and 0.050 s in January 2005) moved TT by the span plus the step. The light travel corrections (`Astronomy_CorrectLightTravel`, `Astronomy_SunPosition`) and every numerical derivative (`Astronomy_GeoMoonState`, the elongation, magnitude, lunar and planetary distance, and shadow slopes, and `EclipticState`'s five-point rates) now offset with it, so no step falls inside their span. Each C site carries a "TT-continuous offsets" comment. Away from a step, an offset's TT moves by under 1e-7 of the offset, so results change far inside the accuracy contract.
+
 ## Refreshing the Delta T table
 
 Refresh `DeltaTObserved` in `astronomy.c` before each release, so the table ends about a year past the release date. Nothing is committed but the table: no data files or scripts.
