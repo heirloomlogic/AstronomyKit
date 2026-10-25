@@ -146,6 +146,25 @@ public struct AstroTime: Sendable {
         AstroTime(raw: Astronomy_AddDays(raw, days))
     }
 
+    /// Returns a new time by adding the specified number of days to both clocks.
+    ///
+    /// ``addingDays(_:)`` adds to Universal Time and derives Terrestrial Time from the Delta
+    /// T model, so an offset across a point where the model's pieces meet with a step
+    /// (Espenak–Meeus steps back 0.088 seconds in January 1900) moves TT by `days` plus or
+    /// minus that step. This method adds `days` to both ``universalTime`` and
+    /// ``terrestrialTime``, so TT moves by exactly `days` and neither clock steps. Its UT
+    /// differs from the Delta T model's UT for the new TT by Delta T's change over `days`,
+    /// under 1e-7 of `days`.
+    ///
+    /// Use it for short offsets around a time, such as the samples of a numerical
+    /// derivative; use ``addingDays(_:)`` to step through civil time.
+    ///
+    /// - Parameter days: The number of days to add. Can be negative.
+    /// - Returns: A new `AstroTime` with both clocks offset by the given days.
+    public func addingTerrestrialDays(_ days: Double) -> AstroTime {
+        AstroTime(raw: Astronomy_AddTerrestrialDays(raw, days))
+    }
+
     /// Returns a new time by adding the specified number of hours.
     ///
     /// - Parameter hours: The number of hours to add. Can be negative.

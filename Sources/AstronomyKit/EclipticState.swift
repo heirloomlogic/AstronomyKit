@@ -13,7 +13,7 @@
 /// function mirrors (see ``CelestialBody/geocentricEclipticState(at:aberration:)``,
 /// ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``). The rate fields
 /// are the derivative of that same function with respect to Terrestrial Time,
-/// taken as a five-point difference over ±1/8 day. Because they differentiate the
+/// taken as a five-point difference over ±1/8 TT day. Because they differentiate the
 /// position function itself, they include light-time, aberration, and the motion of
 /// the true ecliptic and equinox of date, and a zero of ``longitudeRate`` is a
 /// stationary point of ``longitude``. Their rounding noise is about 2e-11 degrees per
@@ -73,16 +73,11 @@ public struct EclipticState: Sendable, Equatable, Hashable {
     /// ±``rateStep`` and ±2 ``rateStep``.
     init(at time: AstroTime, position: (AstroTime) throws -> Ecliptic) throws {
         let center = try position(time)
-        // The samples are offset in TT, the scale the rates are taken against. Offsets
-        // in UT would pick up a Delta T model's step wherever one falls inside the
-        // stencil, as Espenak-Meeus's do at the joins of its polynomials. Where the
-        // step is forward, TT skips some values and `AstroTime(tt:)` misses them by up
-        // to the step, so each sample's TT is set to the offset value exactly.
-        let samples = try [-2.0, -1, 1, 2].map { offset in
-            let tt = time.terrestrialTime + offset * Self.rateStep
-            var sample = AstroTime(tt: tt)
-            sample.raw.tt = tt
-            return try position(sample)
+        // The samples are offset on both clocks at once, so they are evenly spaced in
+        // TT, the scale the rates are taken against, even where the Delta T model steps
+        // between two of them.
+        let samples = try [-2.0, -1, 1, 2].map {
+            try position(time.addingTerrestrialDays($0 * Self.rateStep))
         }
 
         // Differences from the center keep the values small; longitude wraps across 0/360.
