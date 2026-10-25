@@ -75,6 +75,8 @@ re-applied, or verified as adopted upstream.**
 
 8. **Degenerate Lagrange inputs.** `Astronomy_LagrangePoint` returns `ASTRO_INVALID_BODY` when both bodies are the same, whose zero separation reached a division by zero. `Astronomy_LagrangePointFast` returns `ASTRO_INVALID_PARAMETER` when the squared separation is zero or not finite, when the L4/L5 tangent length is zero or not finite (a relative velocity that is zero or parallel to the separation leaves the orbital plane undefined), and for any result field that is not finite; its L1 to L3 Newton iteration returns `ASTRO_NO_CONVERGE` after 10,000 steps instead of hanging. Each site carries a "degenerate Lagrange inputs" comment.
 
+9. **TT-continuous offsets.** `Astronomy_AddTerrestrialDays` adds a span to both UT and TT; Swift exposes it as `AstroTime.addingTerrestrialDays(_:)`. `Astronomy_AddDays` adds to UT and derives TT from the Delta T model, so an offset across a point where the model's pieces meet with a step (Espenak–Meeus steps back 0.088 s in January 1900 and 0.050 s in January 2005) moved TT by the span plus the step. The light travel corrections (`Astronomy_CorrectLightTravel`, `Astronomy_SunPosition`) and every numerical derivative (`Astronomy_GeoMoonState`, the elongation, magnitude, lunar and planetary distance, and shadow slopes, and `EclipticState`'s five-point rates) now offset with it, so no step falls inside their span. Each C site carries a "TT-continuous offsets" comment. Away from a step, an offset's TT moves by under 1e-7 of the offset, so results change far inside the accuracy contract.
+
 ## Updating from upstream
 
 1. **Pick the target upstream commit.** Note its full hash and date, and the

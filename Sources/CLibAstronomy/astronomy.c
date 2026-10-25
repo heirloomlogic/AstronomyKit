@@ -56,6 +56,14 @@
         the separation leaves the orbital plane undefined), and for any
         result field that is not finite. Its L1 to L3 Newton iteration
         returns ASTRO_NO_CONVERGE after 10000 steps instead of hanging.
+      - TT-continuous offsets, marked "TT-continuous offsets" at each site.
+        Astronomy_AddTerrestrialDays adds a span to both UT and TT. The
+        light travel corrections (Astronomy_CorrectLightTravel,
+        Astronomy_SunPosition) and the numerical derivatives
+        (Astronomy_GeoMoonState, the elongation, magnitude, lunar and
+        planetary distance, and shadow slopes) use it in place of
+        Astronomy_AddDays, so a step where the Delta T model's pieces meet
+        never falls inside their span.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -1228,6 +1236,36 @@ astro_time_t Astronomy_AddDays(astro_time_t time, double days)
 
     sum.ut = time.ut + days;
     sum.tt = TerrestrialTime(sum.ut);
+    sum.eps = sum.psi = sum.st = NAN;
+
+    return sum;
+}
+
+/**
+ * @brief   Moves an #astro_time_t by a short span measured on both clocks at once.
+ *
+ * AstronomyKit local patch (TT-continuous offsets). #Astronomy_AddDays adds to UT and
+ * recomputes TT from the Delta T model, so where the model's pieces meet with a step
+ * (Espenak-Meeus steps back 0.088 seconds in January 1900), an offset that crosses the
+ * join moves TT by `days` plus or minus the step. Numerical derivatives and the light
+ * travel correction difference positions that depend on TT, and a step inside their span
+ * corrupts them. This function adds `days` to both `ut` and `tt`, so TT moves by exactly
+ * `days` and neither clock steps. Its UT differs from the Delta T model's inverse of the
+ * new TT by Delta T's change over `days`, under 1e-7 of `days` for any model in use.
+ *
+ * Use it for offsets of about a day or less around a time that is then evaluated as a
+ * whole; use #Astronomy_AddDays to step a search through civil time.
+ *
+ * @param time  The time to move.
+ * @param days  The span in days. May be negative, 0, or positive.
+ * @return  `time` with `days` added to both its UT and its TT.
+ */
+astro_time_t Astronomy_AddTerrestrialDays(astro_time_t time, double days)
+{
+    astro_time_t sum;
+
+    sum.ut = time.ut + days;
+    sum.tt = time.tt + days;
     sum.eps = sum.psi = sum.st = NAN;
 
     return sum;
@@ -2566,8 +2604,9 @@ astro_state_vector_t Astronomy_GeoMoonState(astro_time_t time)
     astro_time_t t1, t2;
     astro_state_vector_t s;
 
-    t1 = Astronomy_AddDays(time, -dt);
-    t2 = Astronomy_AddDays(time, +dt);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    t1 = Astronomy_AddTerrestrialDays(time, -dt);
+    t2 = Astronomy_AddTerrestrialDays(time, +dt);
 
     r1 = Astronomy_GeoMoon(t1);
     r2 = Astronomy_GeoMoon(t2);
@@ -5451,7 +5490,8 @@ astro_vector_t Astronomy_CorrectLightTravel(
         if (distance > C_AUDAY)
             return VecError(ASTRO_INVALID_PARAMETER, time);
 
-        ltime2 = Astronomy_AddDays(time, -distance/C_AUDAY);
+        /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+        ltime2 = Astronomy_AddTerrestrialDays(time, -distance/C_AUDAY);
         dt = fabs(ltime2.tt - ltime.tt);
         if (dt < 1.0e-9)        /* 86.4 microseconds */
             return pos;
@@ -6858,7 +6898,8 @@ astro_ecliptic_t Astronomy_SunPosition(astro_time_t time)
 
     /* Correct for light travel time from the Sun. */
     /* Otherwise season calculations (equinox, solstice) will all be early by about 8 minutes! */
-    adjusted_time = Astronomy_AddDays(time, -1.0 / C_AUDAY);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    adjusted_time = Astronomy_AddTerrestrialDays(time, -1.0 / C_AUDAY);
 
     earth2000 = CalcEarth(adjusted_time);
     if (earth2000.status != ASTRO_SUCCESS)
@@ -7476,8 +7517,9 @@ static astro_func_result_t neg_elong_slope(void *context, astro_time_t time)
     astro_angle_result_t e1, e2;
     astro_func_result_t result;
     astro_body_t body = *((astro_body_t *)context);
-    astro_time_t t1 = Astronomy_AddDays(time, -dt/2.0);
-    astro_time_t t2 = Astronomy_AddDays(time, +dt/2.0);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    astro_time_t t1 = Astronomy_AddTerrestrialDays(time, -dt/2.0);
+    astro_time_t t2 = Astronomy_AddTerrestrialDays(time, +dt/2.0);
 
     e1 = Astronomy_AngleFromSun(body, t1);
     if (e1.status != ASTRO_SUCCESS)
@@ -9147,8 +9189,9 @@ static astro_func_result_t mag_slope(void *context, astro_time_t time)
     static const double dt = 0.01;
     astro_illum_t y1, y2;
     astro_body_t body = *((astro_body_t *)context);
-    astro_time_t t1 = Astronomy_AddDays(time, -dt/2);
-    astro_time_t t2 = Astronomy_AddDays(time, +dt/2);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    astro_time_t t1 = Astronomy_AddTerrestrialDays(time, -dt/2);
+    astro_time_t t2 = Astronomy_AddTerrestrialDays(time, +dt/2);
     astro_func_result_t result;
 
     y1 = Astronomy_Illumination(body, t1);
@@ -9314,8 +9357,9 @@ static double MoonDistance(astro_time_t t)
 static astro_func_result_t moon_distance_slope(void *context, astro_time_t time)
 {
     static const double dt = 0.001;
-    astro_time_t t1 = Astronomy_AddDays(time, -dt/2.0);
-    astro_time_t t2 = Astronomy_AddDays(time, +dt/2.0);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    astro_time_t t1 = Astronomy_AddTerrestrialDays(time, -dt/2.0);
+    astro_time_t t2 = Astronomy_AddTerrestrialDays(time, +dt/2.0);
     double dist1, dist2;
     int direction = *((int *)context);
     astro_func_result_t result;
@@ -9493,8 +9537,9 @@ static astro_func_result_t planet_distance_slope(void *context, astro_time_t tim
 {
     static const double dt = 0.001;
     const planet_distance_context_t *pc = (const planet_distance_context_t *) context;
-    astro_time_t t1 = Astronomy_AddDays(time, -dt/2.0);
-    astro_time_t t2 = Astronomy_AddDays(time, +dt/2.0);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    astro_time_t t1 = Astronomy_AddTerrestrialDays(time, -dt/2.0);
+    astro_time_t t2 = Astronomy_AddTerrestrialDays(time, +dt/2.0);
     astro_func_result_t dist1, dist2, result;
 
     dist1 = Astronomy_HelioDistance(pc->body, t1);
@@ -11816,8 +11861,9 @@ static astro_func_result_t shadow_distance_slope(void *context, astro_time_t tim
     shadow_t shadow1, shadow2;
     shadow_func_t shadowfunc = (shadow_func_t) context;
 
-    t1 = Astronomy_AddDays(time, -dt);
-    t2 = Astronomy_AddDays(time, +dt);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    t1 = Astronomy_AddTerrestrialDays(time, -dt);
+    t2 = Astronomy_AddTerrestrialDays(time, +dt);
 
     shadow1 = shadowfunc(t1);
     if (shadow1.status != ASTRO_SUCCESS)
@@ -11890,8 +11936,9 @@ static astro_func_result_t planet_shadow_distance_slope(void *context, astro_tim
     shadow_t shadow1, shadow2;
     const planet_shadow_context_t *p = (const planet_shadow_context_t *) context;
 
-    t1 = Astronomy_AddDays(time, -dt);
-    t2 = Astronomy_AddDays(time, +dt);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    t1 = Astronomy_AddTerrestrialDays(time, -dt);
+    t2 = Astronomy_AddTerrestrialDays(time, +dt);
 
     shadow1 = PlanetShadow(p->body, p->planet_radius_km, t1);
     if (shadow1.status != ASTRO_SUCCESS)
@@ -12434,8 +12481,9 @@ static astro_func_result_t local_shadow_distance_slope(void *context, astro_time
     shadow_t shadow1, shadow2;
     const astro_observer_t *observer = (const astro_observer_t *) context;
 
-    t1 = Astronomy_AddDays(time, -dt);
-    t2 = Astronomy_AddDays(time, +dt);
+    /* AstronomyKit local patch (TT-continuous offsets): no Delta T step inside the span. */
+    t1 = Astronomy_AddTerrestrialDays(time, -dt);
+    t2 = Astronomy_AddTerrestrialDays(time, +dt);
 
     shadow1 = LocalMoonShadow(t1, *observer);
     if (shadow1.status != ASTRO_SUCCESS)
