@@ -129,8 +129,8 @@ public struct AstroTime: Sendable {
     /// ``init(ut:)`` — it starts from a TT value and derives the corresponding UT.
     ///
     /// ``terrestrialTime`` is `tt` exactly for any finite `tt`. Where the Delta T model
-    /// steps forward, no UT has a TT inside the step, and ``universalTime`` is within
-    /// the step of it.
+    /// steps forward, no UT has a TT inside the step, and the model's TT for
+    /// ``universalTime`` is within the step of `tt`.
     ///
     /// - Parameter tt: Terrestrial Time days since noon on January 1, 2000.
     public init(tt: Double) {
