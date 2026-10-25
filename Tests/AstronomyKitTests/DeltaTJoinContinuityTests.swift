@@ -14,6 +14,11 @@ struct DeltaTJoinContinuityTests {
     /// it is Espenak–Meeus, and from 1962 the observed table is continuous.
     static let joins: [Double] = [1800, 1860, 1900, 1920, 1941, 1961]
 
+    /// TTs in the middle of the gaps where the default model steps forward (+0.050 s at
+    /// 1860-01-15 14:18:31 UT, +0.012 s at 1920-01-16 03:02:00, +0.0009 s at
+    /// 1941-01-15 05:05:14), so no UT has exactly these TTs.
+    static let gapTTs = [-51_119.903_712_096, -29_205.373_354_701_32, -21_535.287_743_278_97]
+
     static let bodies: [CelestialBody] = [.sun, .moon, .mercury, .venus, .mars, .jupiter, .saturn]
 
     /// The UT of an Espenak–Meeus join: its polynomials take y = 2000 + (ut − 14) / 365.24217.

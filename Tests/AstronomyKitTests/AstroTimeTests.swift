@@ -73,6 +73,25 @@ struct AstroTimeTests {
             #expect(components.hour == 12)
         }
 
+        @Test(
+            "Create from TT days keeps the TT exactly",
+            arguments: DeltaTJoinContinuityTests.gapTTs + [
+                -1_461_000, -36_524.75, -0.1, 0, 9_132.5, 1.0 / 3, 36_525.123_456_789, 1_461_000,
+            ])
+        func createFromTTDays(tt: Double) {
+            #expect(AstroTime(tt: tt).terrestrialTime == tt)
+        }
+
+        @Test("Create from TT days inside a forward Delta T step", arguments: DeltaTJoinContinuityTests.gapTTs)
+        func createFromTTDaysInGap(tt: Double) {
+            let time = AstroTime(tt: tt)
+            // The condition under test: no UT reproduces this TT.
+            let modelTT = AstroTime(ut: time.universalTime).terrestrialTime
+            #expect(modelTT != tt)
+            // The UT is still within the step of the TT's inverse.
+            #expect(abs(modelTT - tt) * 86_400 < 0.051)
+        }
+
         @Test("J2000 epoch verification")
         func j2000Epoch() {
             let time = AstroTime(year: 2_000, month: 1, day: 1, hour: 12)
