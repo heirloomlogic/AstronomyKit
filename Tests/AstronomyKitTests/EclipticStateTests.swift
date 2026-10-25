@@ -69,6 +69,29 @@ struct EclipticStateTests {
         #expect((-1.5...2.3).contains(mercury.longitudeRate))
     }
 
+    /// Before 1962 the default Delta T is Espenak-Meeus, whose polynomials step at
+    /// their joins (-0.036 s at 1800-01-15 01:36 UT, +0.050 s at 1860-01-15 14:19,
+    /// -0.088 s at 1900-01-15 06:48). Each time here puts a join between the center
+    /// sample and the +1/16-day sample, so a stencil offset in UT would carry the step
+    /// into the Moon's rate as an error of up to 1e-4 degrees per day.
+    @Test(
+        "Moon rates match a TT central difference across Delta T joins",
+        arguments: [
+            AstroTime(year: 1_800, month: 1, day: 15),
+            AstroTime(year: 1_860, month: 1, day: 15, hour: 14),
+            AstroTime(year: 1_900, month: 1, day: 15, hour: 6),
+        ])
+    func ratesAcrossDeltaTJoin(time: AstroTime) throws {
+        let state = try Moon.eclipticState(at: time)
+        let h = 30.0 / 86_400
+        let before = try Moon.ecliptic(at: AstroTime(tt: time.terrestrialTime - h))
+        let after = try Moon.ecliptic(at: AstroTime(tt: time.terrestrialTime + h))
+        let longitudeRate = Self.longitudeChange(before.longitude, after.longitude) / (2 * h)
+        #expect(abs(state.longitudeRate - longitudeRate) < 1e-6)
+        #expect(abs(state.latitudeRate - (after.latitude - before.latitude) / (2 * h)) < 1e-6)
+        #expect(abs(state.distanceRate - (after.distance - before.distance) / (2 * h)) < 1e-10)
+    }
+
     /// The Moon crosses 0° longitude about once a month; the rate must stay near
     /// +13°/day there instead of jumping by 360° divided by the stencil.
     @Test("Longitude rate is continuous across the 0/360 seam")

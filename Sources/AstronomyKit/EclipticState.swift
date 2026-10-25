@@ -73,17 +73,17 @@ public struct EclipticState: Sendable, Equatable, Hashable {
     /// ±``rateStep`` and ±2 ``rateStep``.
     init(at time: AstroTime, position: (AstroTime) throws -> Ecliptic) throws {
         let center = try position(time)
-        // The samples are offset in UT. The positions depend on TT alone, so the
-        // spacing is the TT the samples actually span, which differs from the UT
-        // offsets only by Delta T's drift.
-        let times = [-2.0, -1, 1, 2].map { time.addingDays($0 * Self.rateStep) }
-        let samples = try times.map(position)
-        let step = (times[3].terrestrialTime - times[0].terrestrialTime) / 4
+        // The samples are offset in TT, the scale the rates are taken against. Offsets
+        // in UT would pick up a Delta T model's step wherever one falls inside the
+        // stencil, as Espenak-Meeus's do at the joins of its polynomials.
+        let samples = try [-2.0, -1, 1, 2].map { offset in
+            try position(AstroTime(tt: time.terrestrialTime + offset * Self.rateStep))
+        }
 
         // Differences from the center keep the values small; longitude wraps across 0/360.
         func rate(_ change: (Ecliptic) -> Double) -> Double {
             let d = samples.map(change)
-            return (d[0] - 8 * d[1] + 8 * d[2] - d[3]) / (12 * step)
+            return (d[0] - 8 * d[1] + 8 * d[2] - d[3]) / (12 * Self.rateStep)
         }
         let longitudeRate = rate { sample in
             let change = sample.longitude - center.longitude
