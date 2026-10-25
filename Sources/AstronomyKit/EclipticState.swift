@@ -75,9 +75,14 @@ public struct EclipticState: Sendable, Equatable, Hashable {
         let center = try position(time)
         // The samples are offset in TT, the scale the rates are taken against. Offsets
         // in UT would pick up a Delta T model's step wherever one falls inside the
-        // stencil, as Espenak-Meeus's do at the joins of its polynomials.
+        // stencil, as Espenak-Meeus's do at the joins of its polynomials. Where the
+        // step is forward, TT skips some values and `AstroTime(tt:)` misses them by up
+        // to the step, so each sample's TT is set to the offset value exactly.
         let samples = try [-2.0, -1, 1, 2].map { offset in
-            try position(AstroTime(tt: time.terrestrialTime + offset * Self.rateStep))
+            let tt = time.terrestrialTime + offset * Self.rateStep
+            var sample = AstroTime(tt: tt)
+            sample.raw.tt = tt
+            return try position(sample)
         }
 
         // Differences from the center keep the values small; longitude wraps across 0/360.
