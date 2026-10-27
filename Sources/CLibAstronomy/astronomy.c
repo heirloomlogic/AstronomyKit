@@ -1018,8 +1018,8 @@ double Astronomy_DeltaT_JplHorizons(double ut)
 /*
     Observed Delta T (AstronomyKit local patch). TT - UT1 in seconds at Julian
     epochs 1962.0, 1963.0, ..., that is at ut = 365.25 (year - 2000) days.
-    From IERS EOP 20 C04 UT1-UTC through 2026-09-17 and IERS Bulletin A
-    predictions after it, retrieved 2026-10-17: Delta T = 32.184 s + (TAI - UTC)
+    From IERS EOP 20 C04 UT1-UTC through 2026-09-27 and IERS Bulletin A
+    predictions after it, retrieved 2026-10-27: Delta T = 32.184 s + (TAI - UTC)
     - (UT1 - UTC), interpolated linearly between the daily values.
     Linear interpolation in this table stays within 0.09 s of the daily values.
 */
