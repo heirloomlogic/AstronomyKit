@@ -40,7 +40,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "4.0.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "4.2.0")
 ]
 ```
 
