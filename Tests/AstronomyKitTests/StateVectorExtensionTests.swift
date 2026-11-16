@@ -35,6 +35,26 @@ struct StateVectorExtensionTests {
         #expect(abs(state.position.z - pos.z) < 1e-10)
     }
 
+    /// The velocity comes from the sine sums of a planet's series and the position from the
+    /// cosine sums. This holds one to the other in whichever series code the build uses: a
+    /// Debug build on an Apple platform sums the longer series through Accelerate.
+    @Test(
+        "Heliocentric velocity is the rate of change of heliocentric position",
+        arguments: CelestialBody.planets + [.earth])
+    func heliocentricVelocityMatchesPositionRate(body: CelestialBody) throws {
+        // The central difference over this step is within 1e-10 AU per day of the rate for
+        // Mercury at perihelion, where it is furthest off.
+        let step = 1.0 / 1_024
+        for tt in [-365_250.0, 9_816.0] {
+            let state = try body.heliocentricState(at: AstroTime(tt: tt))
+            let before = try body.heliocentricPosition(at: AstroTime(tt: tt - step))
+            let after = try body.heliocentricPosition(at: AstroTime(tt: tt + step))
+            #expect(abs((after.x - before.x) / (2 * step) - state.velocity.x) < 1e-9, "x at TT \(tt)")
+            #expect(abs((after.y - before.y) / (2 * step) - state.velocity.y) < 1e-9, "y at TT \(tt)")
+            #expect(abs((after.z - before.z) / (2 * step) - state.velocity.z) < 1e-9, "z at TT \(tt)")
+        }
+    }
+
     @Test("Earth-Moon Barycenter state returns valid result")
     func earthMoonBaryState() throws {
         let state = try CelestialBody.earthMoonBaryState(at: testTime)
