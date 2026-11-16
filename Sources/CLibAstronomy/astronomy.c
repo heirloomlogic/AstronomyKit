@@ -79,12 +79,15 @@
         kept; the rest come unchanged from the published VSOP87B files.
         MAINTAINING.md gives the selection.
       - Series cosine, marked "series cosine": SeriesSum adds up a planet
-        series two terms at a time with inline SeriesCos and SeriesSinCos,
-        which stand in for the C library's cos and sin, and SeriesWrap
-        stands in for fmod (VsopCoords, VsopHelioDistance,
-        VsopSphereToRect, CalcVsopPosVel). VsopCoordsAndRates replaces
-        upstream's VsopDeriv. They pay for the longer series, and need the
-        vector types of GCC and clang.
+        series two terms at a time with the inline cosine and sine of
+        SERIES_ADD_COS, SERIES_ADD_SIN_COS and SeriesSinCos, which stand in
+        for the C library's cos and sin, and SERIES_WRAP stands in for fmod
+        (VsopCoords, VsopHelioDistance, VsopSphereToRect, CalcVsopPosVel).
+        VsopCoordsAndRates replaces upstream's VsopDeriv. They pay for the
+        longer series, and need the vector types of GCC and clang. Their
+        macros, always_inline functions and the four pairs of terms a pass
+        takes when __OPTIMIZE__ is not defined are for builds without
+        optimisation; the results are the same in every build.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -4618,39 +4621,53 @@ static const vsop_model_t vsop[] =
     register (a GCC and clang extension; arithmetic on it is elementwise).
     Nothing below branches on the angle, so the cost does not depend on it.
 
-    SeriesWrap subtracts the nearest multiple of 2 pi, leaving y in
-    [-pi, pi]. Adding and subtracting SERIES_ROUND rounds to an integer
-    without a library call, in the default rounding mode; in a directed
-    mode k can be one off, and the results below are then good to 2e-7.
-    SERIES_2PI_A holds the first 33 bits of 2 pi, so k * SERIES_2PI_A is
-    exact for |k| < 2^20; SERIES_2PI_B and SERIES_2PI_C hold the rest. It
-    is valid for |x| < 2^20 * 2 pi, about 6.5e6. A series argument is a
-    phase plus a frequency of at most 316,429 radians per millennium times
-    at most 4 millennia (EPHEMERIS_MAX_TT_DAYS, the accepted time range
-    patch, which every caller checks first), so it is below 1.3e6.
+    SERIES_WRAP subtracts the nearest multiple of 2 pi, leaving y in
+    [-pi, pi]. SERIES_TURNS is k, the count of that multiple: adding and
+    subtracting SERIES_ROUND rounds to an integer without a library call, in
+    the default rounding mode; in a directed mode k can be one off, and the
+    results below are then good to 2e-7. SERIES_2PI_A holds the first 33
+    bits of 2 pi, so k * SERIES_2PI_A is exact for |k| < 2^20; SERIES_2PI_B
+    and SERIES_2PI_C hold the rest. It is valid for |x| < 2^20 * 2 pi, about
+    6.5e6. A series argument is a phase plus a frequency of at most 316,429
+    radians per millennium times at most 4 millennia (EPHEMERIS_MAX_TT_DAYS,
+    the accepted time range patch, which every caller checks first), so it
+    is below 1.3e6.
 
     With r = y/2, cos(x) = 2 cos(r)^2 - 1 and sin(x) = 2 sin(r) cos(r), which
     need no sign bookkeeping. SeriesHalfCos and SeriesHalfSinc are degree-8
     polynomials in y*y for cos(r) and sin(r)/r on |r| <= pi/2, interpolated
     at Chebyshev nodes; each is within 2.3e-16 of the function.
+
+    Some of the shape below is for builds without optimisation, which is how
+    SwiftPM's Debug configuration compiles C. Such a build inlines only what
+    is marked always_inline (SERIES_INLINE) and keeps every variable and
+    parameter in memory, and clang for arm64 reloads the constants at the
+    top of every basic block. So SERIES_TURNS and SERIES_WRAP are macros,
+    which repeat an expression where a function would store it and read it
+    back; the two SERIES_ADD macros are plain blocks, so that several in a
+    row stay in one basic block; and without optimisation SeriesSum takes
+    four pairs in each pass of its loops. An optimising compiler merges the
+    repeats and keeps the constants in registers, and gains nothing from the
+    four pairs. Every form does the same operations in the same order, so
+    the sums are the same doubles in every build.
 */
 /** @cond DOXYGEN_SKIP */
 typedef double series_pair_t __attribute__((vector_size(16)));
+
+#define SERIES_INLINE   static inline __attribute__((always_inline))
 
 #define SERIES_INV_2PI  0x1.45F306DC9C883p-3
 #define SERIES_2PI_A    0x1.921FB54400000p+2
 #define SERIES_2PI_B    0x1.0B4611A600000p-32
 #define SERIES_2PI_C    0x1.3198A2E037073p-67
 #define SERIES_ROUND    0x1.8p52
+
+#define SERIES_TURNS(x) (((x) * SERIES_INV_2PI + SERIES_ROUND) - SERIES_ROUND)
+#define SERIES_WRAP(x) \
+    ((((x) - SERIES_TURNS(x) * SERIES_2PI_A) - SERIES_TURNS(x) * SERIES_2PI_B) - SERIES_TURNS(x) * SERIES_2PI_C)
 /** @endcond */
 
-static inline series_pair_t SeriesWrap(series_pair_t x)
-{
-    series_pair_t k = (x * SERIES_INV_2PI + SERIES_ROUND) - SERIES_ROUND;
-    return ((x - k * SERIES_2PI_A) - k * SERIES_2PI_B) - k * SERIES_2PI_C;
-}
-
-static inline series_pair_t SeriesHalfCos(series_pair_t w)      /* cos(y/2) for w = y*y */
+SERIES_INLINE series_pair_t SeriesHalfCos(series_pair_t w)      /* cos(y/2) for w = y*y */
 {
     return 1.0 + w * (-0x1.ffffffffffffbp-4 + w * (0x1.55555555553c4p-9
         + w * (-0x1.6c16c16c09b4ep-16 + w * (0x1.a01a01994c338p-24
@@ -4658,7 +4675,7 @@ static inline series_pair_t SeriesHalfCos(series_pair_t w)      /* cos(y/2) for 
         + w * (-0x1.9350a435543dbp-51 + w * 0x1.9f23c5f3847cbp-61)))))));
 }
 
-static inline series_pair_t SeriesHalfSinc(series_pair_t w)     /* sin(y/2) / (y/2) for w = y*y */
+SERIES_INLINE series_pair_t SeriesHalfSinc(series_pair_t w)     /* sin(y/2) / (y/2) for w = y*y */
 {
     return 1.0 + w * (-0x1.5555555555555p-5 + w * (0x1.11111111110bcp-11
         + w * (-0x1.a01a01a0147f4p-19 + w * (0x1.71de3a528d198p-27
@@ -4666,80 +4683,98 @@ static inline series_pair_t SeriesHalfSinc(series_pair_t w)     /* sin(y/2) / (y
         + w * (-0x1.ae439ef7766b1p-55 + w * 0x1.88386468b9715p-65)))))));
 }
 
-static inline series_pair_t SeriesCos(series_pair_t x)
+/* The sine and the cosine of each of two angles. */
+SERIES_INLINE void SeriesSinCos(series_pair_t x, series_pair_t *sine, series_pair_t *cosine)
 {
-    series_pair_t y = SeriesWrap(x);
-    series_pair_t c = SeriesHalfCos(y * y);
-    return (c + c) * c - 1.0;
-}
-
-static inline void SeriesSinCos(series_pair_t x, series_pair_t *sine, series_pair_t *cosine)
-{
-    series_pair_t y = SeriesWrap(x);
+    series_pair_t y = SERIES_WRAP(x);
     series_pair_t w = y * y;
     series_pair_t c = SeriesHalfCos(w);
     *sine = y * SeriesHalfSinc(w) * c;
     *cosine = (c + c) * c - 1.0;
 }
 
-/* Adds one pair of terms to the running sums; sin_pair may be NULL. */
-static inline void SeriesAddPair(
-    series_pair_t amplitude, series_pair_t frequency, series_pair_t angle,
-    series_pair_t *cos_pair, series_pair_t *sin_pair)
-{
-    if (sin_pair == NULL)
-    {
-        *cos_pair += amplitude * SeriesCos(angle);
+/** @cond DOXYGEN_SKIP */
+/* Adds amplitude * cos(phase + t * frequency) of the terms a and b to the two cosine sums. */
+#define SERIES_ADD_COS(cos_pair, a, b, t) \
+    { \
+        series_pair_t x = { (a).phase + (t) * (a).frequency, (b).phase + (t) * (b).frequency }; \
+        series_pair_t y = SERIES_WRAP(x); \
+        series_pair_t c = SeriesHalfCos(y * y); \
+        series_pair_t amplitude = { (a).amplitude, (b).amplitude }; \
+        (cos_pair) += amplitude * ((c + c) * c - 1.0); \
     }
-    else
-    {
-        series_pair_t sine, cosine;
-        SeriesSinCos(angle, &sine, &cosine);
-        *cos_pair += amplitude * cosine;
-        *sin_pair += amplitude * frequency * sine;
+
+/* As SERIES_ADD_COS, and adds amplitude * frequency * sin(phase + t * frequency) to the two sine sums. */
+#define SERIES_ADD_SIN_COS(cos_pair, sin_pair, a, b, t) \
+    { \
+        series_pair_t x = { (a).phase + (t) * (a).frequency, (b).phase + (t) * (b).frequency }; \
+        series_pair_t y = SERIES_WRAP(x); \
+        series_pair_t w = y * y; \
+        series_pair_t c = SeriesHalfCos(w); \
+        series_pair_t amplitude = { (a).amplitude, (b).amplitude }; \
+        series_pair_t rate = { (a).amplitude * (a).frequency, (b).amplitude * (b).frequency }; \
+        (cos_pair) += amplitude * ((c + c) * c - 1.0); \
+        (sin_pair) += rate * (y * SeriesHalfSinc(w) * c); \
     }
-}
+/** @endcond */
 
 /*
     The sum over a series of amplitude * cos(phase + t * frequency), and with
     sin_sum not NULL also of amplitude * frequency * sin(phase + t *
     frequency). Terms are taken two at a time, the even ones summed apart
-    from the odd ones. A last term without a partner is paired with zero.
+    from the odd ones. A last term without a partner is paired with none,
+    which adds zero.
 */
-static inline double SeriesSum(const vsop_series_t *series, double t, double *sin_sum)
+SERIES_INLINE double SeriesSum(const vsop_series_t *series, double t, double *sin_sum)
 {
+    static const vsop_term_t none = { 0.0, 0.0, 0.0 };
     const vsop_term_t *term = series->term;
+    const vsop_term_t *end = term + series->nterms;
     series_pair_t cos_pair = { 0.0, 0.0 };
     series_pair_t sin_pair = { 0.0, 0.0 };
-    series_pair_t *sin_pair_or_null = (sin_sum == NULL) ? NULL : &sin_pair;
-    int i;
 
-    for (i = 0; i + 1 < series->nterms; i += 2)
+    if (sin_sum == NULL)
     {
-        series_pair_t amplitude = { term[i].amplitude, term[i+1].amplitude };
-        series_pair_t phase     = { term[i].phase,     term[i+1].phase };
-        series_pair_t frequency = { term[i].frequency, term[i+1].frequency };
-        SeriesAddPair(amplitude, frequency, phase + t * frequency, &cos_pair, sin_pair_or_null);
+#ifndef __OPTIMIZE__
+        for (; end - term >= 8; term += 8)
+        {
+            SERIES_ADD_COS(cos_pair, term[0], term[1], t);
+            SERIES_ADD_COS(cos_pair, term[2], term[3], t);
+            SERIES_ADD_COS(cos_pair, term[4], term[5], t);
+            SERIES_ADD_COS(cos_pair, term[6], term[7], t);
+        }
+#endif
+        for (; end - term >= 2; term += 2)
+            SERIES_ADD_COS(cos_pair, term[0], term[1], t);
+        if (term < end)
+            SERIES_ADD_COS(cos_pair, term[0], none, t);
     }
-
-    if (i < series->nterms)
+    else
     {
-        series_pair_t amplitude = { term[i].amplitude, 0.0 };
-        series_pair_t phase     = { term[i].phase,     0.0 };
-        series_pair_t frequency = { term[i].frequency, 0.0 };
-        SeriesAddPair(amplitude, frequency, phase + t * frequency, &cos_pair, sin_pair_or_null);
-    }
-
-    if (sin_sum != NULL)
+#ifndef __OPTIMIZE__
+        for (; end - term >= 8; term += 8)
+        {
+            SERIES_ADD_SIN_COS(cos_pair, sin_pair, term[0], term[1], t);
+            SERIES_ADD_SIN_COS(cos_pair, sin_pair, term[2], term[3], t);
+            SERIES_ADD_SIN_COS(cos_pair, sin_pair, term[4], term[5], t);
+            SERIES_ADD_SIN_COS(cos_pair, sin_pair, term[6], term[7], t);
+        }
+#endif
+        for (; end - term >= 2; term += 2)
+            SERIES_ADD_SIN_COS(cos_pair, sin_pair, term[0], term[1], t);
+        if (term < end)
+            SERIES_ADD_SIN_COS(cos_pair, sin_pair, term[0], none, t);
         *sin_sum = sin_pair[0] + sin_pair[1];
+    }
     return cos_pair[0] + cos_pair[1];
 }
 
 /* x less the nearest multiple of 2 pi, for one value. */
-static inline double SeriesWrapOne(double x)
+SERIES_INLINE double SeriesWrapOne(double x)
 {
     series_pair_t pair = { x, 0.0 };
-    return SeriesWrap(pair)[0];
+    series_pair_t wrapped = SERIES_WRAP(pair);
+    return wrapped[0];
 }
 
 static void VsopCoords(const vsop_model_t *model, double t, double sphere[3])

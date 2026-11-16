@@ -68,15 +68,15 @@ re-applied, or verified as adopted upstream.**
 
 11. **Longer planet series.** The VSOP87 tables for Mercury through Neptune hold 1,262 terms where upstream kept 466. Upstream trimmed them to its one-arcminute contract, and that left the times of stations, of crossings a fixed angle from the Sun, and of sign ingresses minutes from JPL Horizons. Every upstream term is kept. The rest come unchanged, in file order, from the published VSOP87B files (`https://ftp.imcce.fr/pub/ephem/planets/vsop87/VSOP87B.mer` through `.nep`), which are where upstream's terms came from. See "Selecting planet series terms" below.
 
-12. **Series cosine.** `SeriesSum` adds up one planet series two terms at a time, using inline `SeriesCos` and `SeriesSinCos` in place of the C library's `cos` and `sin`, and `SeriesWrap` in place of `fmod` (`VsopCoords`, `VsopHelioDistance`, `VsopSphereToRect`, `CalcVsopPosVel`). `VsopCoordsAndRates` replaces upstream's `VsopDeriv` and takes the coordinates and their rates in one pass. The pair type is a GCC and clang vector extension, which every compiler SwiftPM uses has. In the default rounding mode the inline functions agree with the exact cosine and sine within 1e-15 for arguments below 6.5e6 radians; the comment at their definition gives the method and why the arguments stay in range. They never branch on the angle, so their cost is the same for every input, where the library's is lowest when successive calls repeat nearly the same angles, as a search does; the package's Release configuration compiles C at `-Os`. Each site carries a "series cosine" comment.
+12. **Series cosine.** `SeriesSum` adds up one planet series two terms at a time, using the inline cosine and sine of `SERIES_ADD_COS`, `SERIES_ADD_SIN_COS` and `SeriesSinCos` in place of the C library's `cos` and `sin`, and `SERIES_WRAP` in place of `fmod` (`VsopCoords`, `VsopHelioDistance`, `VsopSphereToRect`, `CalcVsopPosVel`). `VsopCoordsAndRates` replaces upstream's `VsopDeriv` and takes the coordinates and their rates in one pass. The pair type is a GCC and clang vector extension, which every compiler SwiftPM uses has. In the default rounding mode the inline cosine and sine agree with the exact ones within 1e-15 for arguments below 6.5e6 radians; the comment at their definition gives the method and why the arguments stay in range. They never branch on the angle, so their cost is the same for every input, where the library's is lowest when successive calls repeat nearly the same angles, as a search does; the package's Release configuration compiles C at `-Os`. Its Debug configuration compiles C at `-O0`, where the inline code is unoptimised and the library's is not: on Apple silicon the planet operations take 1.1 to 2.0 times as long as they did with upstream's 466 terms. The macros, the `always_inline` functions and the four pairs of terms `SeriesSum` takes in a pass when `__OPTIMIZE__` is not defined are for that build, which took up to 3.1 times as long without them. Every build computes the same doubles. Each site carries a "series cosine" comment.
 
 ## Selecting planet series terms
 
-Nothing is committed but the tables: no VSOP87 files and no scripts. To reproduce or change the selection:
+Nothing is committed but the tables: no VSOP87 files and no scripts. The terms in the tables were selected this way:
 
-1. Take the reference events from the complete VSOP87B series: over 1900–2100, every station of Mercury through Neptune, every time one of them is 17′, 8.5° or 17° from the Sun in longitude, and every sign ingress of the Sun, Mercury, Venus and Mars. Longitudes are geocentric and corrected for light time.
-2. Score each VSOP87B term by the change in those event times that dropping it alone causes, as a root mean square over the events of one planet and one kind. A term's score is its largest such value. An Earth term is scored against every planet's events and the Sun's.
-3. Keep every upstream term, and every other term that scores at least the threshold for its body:
+1. The reference events came from the complete VSOP87B series: over 1900–2100, every station of Mercury through Neptune, every time one of them is 17′, 8.5° or 17° from the Sun in longitude, and every sign ingress of the Sun, Mercury, Venus and Mars. Longitudes are geocentric and corrected for light time.
+2. Each VSOP87B term was scored by the change in those event times that dropping it alone causes, as a root mean square over the events of one planet and one kind. A term's score is its largest such value. An Earth term was scored against every planet's events and the Sun's.
+3. The tables hold every upstream term, and every other term that scored at least the threshold for its body:
 
    | Body | Threshold | Terms | Upstream |
    |---|---:|---:|---:|
@@ -89,9 +89,9 @@ Nothing is committed but the tables: no VSOP87 files and no scripts. To reproduc
    | Uranus | 2 s | 180 | 76 |
    | Neptune | 3 s | 70 | 30 |
 
-4. Write each kept term as its amplitude, phase and frequency columns exactly as the file prints them, in file order within each series.
+4. Each kept term is its amplitude, phase and frequency columns exactly as the file prints them, in file order within each series.
 
-The largest frequency in the tables is 316,428 radians per millennium. `SeriesWrap` is valid while a frequency times 4 millennia stays below 6.5e6 radians, which holds for frequencies up to 1.6e6. More terms cost time in proportion, and a geocentric position evaluates the Earth's series and the planet's three times each.
+The largest frequency in the tables is 316,428 radians per millennium. `SERIES_WRAP` is valid while a frequency times 4 millennia stays below 6.5e6 radians, which holds for frequencies up to 1.6e6. More terms cost time in proportion, and a geocentric position evaluates the Earth's series and the planet's three times each.
 
 ## Refreshing the Delta T table
 
