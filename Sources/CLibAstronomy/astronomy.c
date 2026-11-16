@@ -4745,9 +4745,10 @@ SERIES_INLINE void SeriesSinCos(series_pair_t x, series_pair_t *sine, series_pai
 
     Accelerate's cosine and sine round differently from the inline ones, and
     the terms are added in another order. So such a build does not compute
-    the doubles other builds do: over the accepted time range a planet's
-    position differs by up to 1e-11 AU and its velocity by up to 1e-13 AU per
-    day.
+    the doubles other builds do. At 100,001 instants spread over the accepted
+    time range, the heliocentric positions of the eight planets were within
+    9.4e-12 AU of an optimised arm64 build's, and the velocities within
+    8.4e-14 AU per day.
 
     The strides of 3 step from one term's field to the next term's.
 */
