@@ -35,6 +35,37 @@ struct StateVectorExtensionTests {
         #expect(abs(state.position.z - pos.z) < 1e-10)
     }
 
+    /// The velocity comes from the sine sums of a planet's series and the position from the
+    /// cosine sums. This holds one to the other in whichever series code the build uses: a
+    /// Debug build on an Apple platform sums the longer series through Accelerate.
+    ///
+    /// The rate of change is a five-point difference over ±1/8 day, as in `EclipticState`. Two
+    /// things separate it from the velocity: its own error, about 5e-12 AU per day for Mercury
+    /// and less for the others, and the rounding of the positions, which grows with the time
+    /// from J2000. Over 2048 instants in the 200 days after each time below, in builds that
+    /// use Accelerate, fused multiply-add, or neither, the two were at most 4.9e-11 AU per day
+    /// apart at 1000 years from J2000 and 5.7e-12 in 2026. Each tolerance is about 20 times
+    /// that.
+    @Test(
+        "Heliocentric velocity is the rate of change of heliocentric position",
+        arguments: CelestialBody.planets + [.earth])
+    func heliocentricVelocityMatchesPositionRate(body: CelestialBody) throws {
+        let step = 1.0 / 16
+        for (tt, tolerance) in [(-365_250.0, 1e-9), (9_816.0, 1e-10)] {
+            let state = try body.heliocentricState(at: AstroTime(tt: tt))
+            let samples = try [-2.0, -1, 1, 2].map {
+                try body.heliocentricPosition(at: AstroTime(tt: tt + $0 * step))
+            }
+            func rate(_ axis: KeyPath<Vector3D, Double>) -> Double {
+                let p = samples.map { $0[keyPath: axis] }
+                return (p[0] - 8 * p[1] + 8 * p[2] - p[3]) / (12 * step)
+            }
+            #expect(abs(rate(\.x) - state.velocity.x) < tolerance, "x at TT \(tt)")
+            #expect(abs(rate(\.y) - state.velocity.y) < tolerance, "y at TT \(tt)")
+            #expect(abs(rate(\.z) - state.velocity.z) < tolerance, "z at TT \(tt)")
+        }
+    }
+
     @Test("Earth-Moon Barycenter state returns valid result")
     func earthMoonBaryState() throws {
         let state = try CelestialBody.earthMoonBaryState(at: testTime)

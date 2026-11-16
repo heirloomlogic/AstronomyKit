@@ -87,7 +87,12 @@
         longer series, and need the vector types of GCC and clang. Their
         macros, always_inline functions and the four pairs of terms a pass
         takes when __OPTIMIZE__ is not defined are for builds without
-        optimisation; the results are the same in every build.
+        optimisation, and give the same results as an optimised build. A
+        build without optimisation that defines
+        ASTRONOMYKIT_SERIES_ACCELERATE, as Package.swift does for Debug
+        builds on Apple platforms, sums the longer series through the
+        Accelerate framework instead (SeriesSumAccelerate), and its results
+        differ in rounding.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -140,6 +145,12 @@
 #endif
 
 #include "astronomy.h"
+
+/* AstronomyKit local patch (series cosine): see SeriesSumAccelerate */
+#if defined(ASTRONOMYKIT_SERIES_ACCELERATE) && !defined(__OPTIMIZE__)
+#include <Accelerate/Accelerate.h>
+#define SERIES_USE_ACCELERATE
+#endif
 
 #ifdef __FAST_MATH__
 #error Astronomy Engine does not support "fast math" optimization because it causes incorrect behavior. See: https://github.com/cosinekitty/astronomy/issues/245
@@ -4649,7 +4660,9 @@ static const vsop_model_t vsop[] =
     four pairs in each pass of its loops. An optimising compiler merges the
     repeats and keeps the constants in registers, and gains nothing from the
     four pairs. Every form does the same operations in the same order, so
-    the sums are the same doubles in every build.
+    this code sums a series to the same doubles in every build. A Debug build
+    on an Apple platform sums the longer series with SeriesSumAccelerate
+    instead, and its doubles are not these.
 */
 /** @cond DOXYGEN_SKIP */
 typedef double series_pair_t __attribute__((vector_size(16)));
@@ -4718,6 +4731,61 @@ SERIES_INLINE void SeriesSinCos(series_pair_t x, series_pair_t *sine, series_pai
     }
 /** @endcond */
 
+#ifdef SERIES_USE_ACCELERATE
+/*
+    AstronomyKit local patch (series cosine): SeriesSum for a series of
+    SERIES_ACCELERATE_MIN to SERIES_ACCELERATE_MAX terms, in a build without
+    optimisation on an Apple platform. Accelerate is optimised whatever this
+    file is compiled with, and sums a long series in about a third of the
+    time the inline code above takes unoptimised; below SERIES_ACCELERATE_MIN
+    terms its calls cost more than they save. No series is longer than
+    SERIES_ACCELERATE_MAX, the size of the buffers. Package.swift defines
+    ASTRONOMYKIT_SERIES_ACCELERATE and links the framework for Debug builds
+    on Apple platforms. No other build has this function.
+
+    Accelerate's cosine and sine round differently from the inline ones, and
+    the terms are added in another order. So such a build does not compute
+    the doubles other builds do. At 100,001 instants spread over the accepted
+    time range, the heliocentric positions of the eight planets were within
+    9.4e-12 AU of an optimised arm64 build's, and the velocities within
+    8.4e-14 AU per day.
+
+    The strides of 3 step from one term's field to the next term's.
+*/
+/** @cond DOXYGEN_SKIP */
+#define SERIES_ACCELERATE_MIN   8
+#define SERIES_ACCELERATE_MAX   192
+/** @endcond */
+
+static double SeriesSumAccelerate(const vsop_series_t *series, double t, double *sin_sum)
+{
+    _Static_assert(sizeof(vsop_term_t) == 3 * sizeof(double), "the strides of 3 need a term of three doubles");
+    double angle[SERIES_ACCELERATE_MAX];
+    double cosine[SERIES_ACCELERATE_MAX];
+    double sine[SERIES_ACCELERATE_MAX];
+    const vsop_term_t *term = series->term;
+    int n = series->nterms;
+    double cos_sum;
+
+    /* angle = phase + t * frequency */
+    vDSP_vsmaD(&term->frequency, 3, &t, &term->phase, 3, angle, 1, (vDSP_Length)n);
+    if (sin_sum == NULL)
+    {
+        vvcos(cosine, angle, &n);
+    }
+    else
+    {
+        /* the sum of amplitude * frequency * sine */
+        vvsincos(sine, cosine, angle, &n);
+        vDSP_vmulD(sine, 1, &term->frequency, 3, sine, 1, (vDSP_Length)n);
+        vDSP_dotprD(&term->amplitude, 3, sine, 1, sin_sum, (vDSP_Length)n);
+    }
+    /* the sum of amplitude * cosine */
+    vDSP_dotprD(&term->amplitude, 3, cosine, 1, &cos_sum, (vDSP_Length)n);
+    return cos_sum;
+}
+#endif
+
 /*
     The sum over a series of amplitude * cos(phase + t * frequency), and with
     sin_sum not NULL also of amplitude * frequency * sin(phase + t *
@@ -4732,6 +4800,11 @@ SERIES_INLINE double SeriesSum(const vsop_series_t *series, double t, double *si
     const vsop_term_t *end = term + series->nterms;
     series_pair_t cos_pair = { 0.0, 0.0 };
     series_pair_t sin_pair = { 0.0, 0.0 };
+
+#ifdef SERIES_USE_ACCELERATE
+    if (series->nterms >= SERIES_ACCELERATE_MIN && series->nterms <= SERIES_ACCELERATE_MAX)
+        return SeriesSumAccelerate(series, t, sin_sum);
+#endif
 
     if (sin_sum == NULL)
     {
