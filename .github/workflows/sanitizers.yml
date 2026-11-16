@@ -9,8 +9,9 @@ permissions:
   contents: read
 
 jobs:
+  # ubuntu-24.04, not ubuntu-latest: see the note on the Linux jobs in test.yml.
   asan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout repository

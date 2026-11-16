@@ -31,8 +31,11 @@ jobs:
       - name: Test
         run: swift test
 
+  # The Linux jobs name ubuntu-24.04: `ubuntu-latest` moved to Ubuntu 26.04, which
+  # swift-actions/setup-swift v2.4.0 rejects ("Version "26.04" of Ubuntu is not
+  # supported") before anything is built.
   test-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Checkout repository
@@ -49,7 +52,7 @@ jobs:
         run: swift test
 
   test-thread-sanitizer:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
       - name: Checkout repository
@@ -83,7 +86,7 @@ jobs:
         run: swift test -c release
 
   test-release-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Checkout repository
