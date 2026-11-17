@@ -8,11 +8,15 @@ import Testing
 /// every ten minutes for a day around the event, retrieved 2026-11-15): of its rate for
 /// a station, of the planet's longitude less the Sun's less the offset for a band
 /// crossing, and of the longitude less the target for a longitude crossing. A
-/// sixth-degree fit to the table locates the zero.
+/// sixth-degree fit to the table locates the zero. The Jupiter and Saturn stations are
+/// of the system barycentres, from three days of the table, retrieved 2026-11-17.
 ///
-/// Before the planet series were lengthened, these events were 19 to 393 seconds from
-/// the references. They are now within 29: the Mars and Venus stations are the furthest,
-/// held there by the five-term nutation series.
+/// Before the planet series were lengthened, the first nine events were 19 to 393
+/// seconds from the references. With the longer series and upstream's five nutation
+/// terms they were within 29, and the Jupiter and Saturn stations were 101 to 315
+/// seconds out: the slower a planet, the further the missing nutation terms move its
+/// station. With all 77 terms of the nutation series the first nine are within 7
+/// seconds and the Jupiter and Saturn stations within 15.
 @Suite("Event timing")
 struct EventTimingTests {
     enum Event: Sendable {
@@ -30,6 +34,8 @@ struct EventTimingTests {
         let event: Event
         /// Terrestrial Time of the event in days since J2000.
         let terrestrialTime: Double
+        /// The furthest the event may fall from the reference, in seconds.
+        var tolerance = 10.0
 
         var testDescription: String { name }
     }
@@ -62,6 +68,18 @@ struct EventTimingTests {
         Reference(
             name: "March equinox, 2026-03-20",
             body: .sun, event: .longitude(0), terrestrialTime: 9_575.116062065),
+        Reference(
+            name: "Jupiter direct station, 2026-03-11",
+            body: .jupiter, event: .station, terrestrialTime: 9_565.646552899, tolerance: 20),
+        Reference(
+            name: "Jupiter retrograde station, 2026-12-13",
+            body: .jupiter, event: .station, terrestrialTime: 9_842.540104577, tolerance: 20),
+        Reference(
+            name: "Saturn retrograde station, 2026-07-26",
+            body: .saturn, event: .station, terrestrialTime: 9_703.331519488, tolerance: 20),
+        Reference(
+            name: "Saturn direct station, 2026-12-10",
+            body: .saturn, event: .station, terrestrialTime: 9_840.480787235, tolerance: 20),
     ]
 
     /// The quantity whose zero is the event.
@@ -79,7 +97,7 @@ struct EventTimingTests {
         }
     }
 
-    @Test("Events fall within 40 seconds of JPL Horizons", arguments: references)
+    @Test("Events fall within seconds of JPL Horizons", arguments: references)
     func eventTime(reference: Reference) throws {
         var low = reference.terrestrialTime - 0.25
         var high = reference.terrestrialTime + 0.25
@@ -97,6 +115,6 @@ struct EventTimingTests {
             }
         }
         let seconds = ((low + high) / 2 - reference.terrestrialTime) * 86_400
-        #expect(abs(seconds) < 40, "\(seconds) seconds from Horizons")
+        #expect(abs(seconds) < reference.tolerance, "\(seconds) seconds from Horizons")
     }
 }
