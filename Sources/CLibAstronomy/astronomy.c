@@ -93,6 +93,15 @@
         builds on Apple platforms, sums the longer series through the
         Accelerate framework instead (SeriesSumAccelerate), and its results
         differ in rounding.
+      - Nutation series, marked "nutation series": iau2000b sums all 77
+        terms of the IAU 2000B series where upstream kept the five largest,
+        whose rate left the stations of the planets seconds to tens of
+        minutes out. nut_term is the published table. The routine takes the
+        cosine and sine of the five angles with the series cosine's
+        polynomials and builds every term's from them by the angle addition
+        formulas, and reduces the angles with rint in place of fmod. It
+        moved below the series cosine, which it uses, and ASEC360, which
+        nothing else used, is gone.
 
     When updating from upstream, re-apply the patches above (or verify
     upstream has adopted equivalent thread-safety fixes), then refresh the
@@ -425,7 +434,6 @@ static astro_state_vector_t ExportGravCalc(body_grav_calc_t calc, astro_time_t t
 }
 
 static const double DAYS_PER_TROPICAL_YEAR = 365.24217;
-static const double ASEC360 = 1296000.0;
 static const double ASEC2RAD = 4.848136811095359935899141e-6;
 static const double PI2 = 2.0 * PI;
 static const double ARC = 3600.0 * 180.0 / PI;          /* arcseconds per radian */
@@ -1656,52 +1664,8 @@ astro_observer_t Astronomy_MakeObserver(double latitude, double longitude, doubl
     return observer;
 }
 
-static void iau2000b(astro_time_t *time)
-{
-    /* Truncated and hand-optimized nutation model. */
-
-    if ((time != NULL) && isnan(time->psi))
-    {
-        double t, elp, f, d, om, arg, dp, de, sarg, carg;
-
-        t = time->tt / 36525.0;
-        elp = fmod(1287104.79305 + t * 129596581.0481,  ASEC360) * ASEC2RAD;
-        f   = fmod(335779.526232 + t * 1739527262.8478, ASEC360) * ASEC2RAD;
-        d   = fmod(1072260.70369 + t * 1602961601.2090, ASEC360) * ASEC2RAD;
-        om  = fmod(450160.398036 - t * 6962890.5431,    ASEC360) * ASEC2RAD;
-
-        sarg = sin(om);
-        carg = cos(om);
-        dp = (-172064161.0 - 174666.0*t)*sarg + 33386.0*carg;
-        de = (92052331.0 + 9086.0*t)*carg + 15377.0*sarg;
-
-        arg = 2.0*(f - d + om);
-        sarg = sin(arg);
-        carg = cos(arg);
-        dp += (-13170906.0 - 1675.0*t)*sarg - 13696.0*carg;
-        de += (5730336.0 - 3015.0*t)*carg - 4587.0*sarg;
-
-        arg = 2.0*(f + om);
-        sarg = sin(arg);
-        carg = cos(arg);
-        dp += (-2276413.0 - 234.0*t)*sarg + 2796.0*carg;
-        de += (978459.0 - 485.0*t)*carg + 1374.0*sarg;
-
-        arg = 2.0*om;
-        sarg = sin(arg);
-        carg = cos(arg);
-        dp += (2074554.0 + 207.0*t)*sarg - 698.0*carg;
-        de += (-897492.0 + 470.0*t)*carg - 291.0*sarg;
-
-        sarg = sin(elp);
-        carg = cos(elp);
-        dp += (1475877.0 - 3633.0*t)*sarg + 11817.0*carg;
-        de += (73871.0 - 184.0*t)*carg - 1924.0*sarg;
-
-        time->psi = -0.000135 + (dp * 1.0e-7);
-        time->eps = +0.000388 + (de * 1.0e-7);
-    }
-}
+/* AstronomyKit local patch (nutation series): defined after the series cosine, which it uses. */
+static void iau2000b(astro_time_t *time);
 
 static double mean_obliq(double tt)
 {
@@ -4848,6 +4812,247 @@ SERIES_INLINE double SeriesWrapOne(double x)
     series_pair_t pair = { x, 0.0 };
     series_pair_t wrapped = SERIES_WRAP(pair);
     return wrapped[0];
+}
+
+/*
+    AstronomyKit local patch (nutation series). Upstream kept the five
+    largest of the 77 terms of the IAU 2000B nutation series (McCarthy and
+    Luzum, 2003). This sums all 77.
+
+    Each term's argument is a whole multiple of each of five angles: l and
+    l', the mean anomalies of the Moon and the Sun; F, the Moon's mean
+    argument of latitude; D, its mean elongation from the Sun; and Om, the
+    mean longitude of its ascending node. The 77 arguments pair one of 14
+    multiples of l and l' with one of 18 multiples of F, D and Om. So the
+    cosine and sine of the five angles are found once, those of the 14 and
+    the 18 follow from them by the angle addition formulas, and each term
+    takes one more application of the formulas instead of a cosine and a
+    sine of its own.
+
+    A cosine and sine are kept together as { cosine, sine } in a
+    series_pair_t, and NUT_MUL is the angle addition formulas: from the
+    pairs of two angles it gives the pair of their sum. NUT_CONJ gives the
+    pair of the angle negated. A term multiplies its pair by its
+    coefficients into three sums, the terms at even and odd positions
+    apart as in SeriesSum, and the cosine and sine parts are added together
+    at the end. Nothing branches on an angle, so the cost is the same at
+    every time, and a build without optimisation computes the same doubles
+    as an optimised one. The result is within 4e-10 arcseconds of the
+    published routine's, which takes a cosine and a sine for each term,
+    over the accepted time range.
+
+    NUT_TERM is a row of the published table: the multiples of l, l', F, D
+    and Om, then the coefficients in units of 0.1 microarcsecond, and of
+    that per Julian century for the two rates: longitude sine and its rate,
+    longitude cosine, obliquity cosine and its rate, obliquity sine.
+    NUT_ANOMALY and NUT_NODE turn the multiples into the places in the two
+    arrays of pairs that iau2000b fills; it fills only the places the table
+    uses.
+*/
+/** @cond DOXYGEN_SKIP */
+typedef struct
+{
+    series_pair_t psi;          /* longitude: { cosine, sine } coefficients */
+    series_pair_t eps;          /* obliquity: { cosine, sine } coefficients */
+    series_pair_t rate;         /* per century: { obliquity cosine, longitude sine } */
+    unsigned char anomaly;      /* NUT_ANOMALY of the multiples of l and l' */
+    unsigned char node;         /* NUT_NODE of the multiples of F, D and Om */
+}
+nut_term_t;
+
+/* l is -2 to 3 and lp -2 to 2; f is -2, 0 or 2, d -2 to 4 and om 0 to 2. */
+#define NUT_ANOMALY(l, lp)      (((l) + 2) * 5 + (lp) + 2)
+#define NUT_NODE(f, d, om)      ((((f) + 2) / 2 * 7 + (d) + 2) * 3 + (om))
+#define NUT_ANOMALY_COUNT       30
+#define NUT_NODE_COUNT          63
+
+#define NUT_TERM(l, lp, f, d, om, ps, pst, pc, ec, ect, es) \
+    { { pc, ps }, { ec, es }, { ect, pst }, NUT_ANOMALY(l, lp), NUT_NODE(f, d, om) }
+
+#define NUT_MUL(a, b)   ((a) * (b)[0] + (series_pair_t){ -(a)[1], (a)[0] } * (b)[1])
+#define NUT_CONJ(a)     ((series_pair_t){ (a)[0], -(a)[1] })
+
+/* Turns of an angle given in arcseconds at J2000 and arcseconds per century; a turn is 1296000 arcseconds. */
+#define NUT_TURNS(asec, rate)   ((asec) / 1296000.0 + t * ((rate) / 1296000.0))
+
+/*
+    The { cosine, sine } pairs of two angles given in turns. Taking the
+    nearest whole number from each leaves at most half a turn, which is the
+    range of SeriesHalfCos and SeriesHalfSinc, however large the angle.
+*/
+#define NUT_COS_SIN(first, second, turn_a, turn_b) \
+    { \
+        series_pair_t y = { (turn_a) - rint(turn_a), (turn_b) - rint(turn_b) }; \
+        series_pair_t w, c, s; \
+        y *= 2.0 * PI; \
+        w = y * y; \
+        c = SeriesHalfCos(w); \
+        s = y * SeriesHalfSinc(w) * c; \
+        c = (c + c) * c - 1.0; \
+        (first) = (series_pair_t){ c[0], s[0] }; \
+        (second) = (series_pair_t){ c[1], s[1] }; \
+    }
+
+/* Adds term k to three sums. */
+#define NUT_ADD(k, psi_sum, eps_sum, rate_sum) \
+    { \
+        series_pair_t z = NUT_MUL(anomaly[nut_term[k].anomaly], node[nut_term[k].node]); \
+        (psi_sum) += nut_term[k].psi * z; \
+        (eps_sum) += nut_term[k].eps * z; \
+        (rate_sum) += nut_term[k].rate * z; \
+    }
+/** @endcond */
+
+static const nut_term_t nut_term[] =
+{
+    NUT_TERM( 0, 0, 0, 0, 1, -172064161, -174666,  33386,  92052331,  9086, 15377),
+    NUT_TERM( 0, 0, 2,-2, 2,  -13170906,   -1675, -13696,   5730336, -3015, -4587),
+    NUT_TERM( 0, 0, 2, 0, 2,   -2276413,    -234,   2796,    978459,  -485,  1374),
+    NUT_TERM( 0, 0, 0, 0, 2,    2074554,     207,   -698,   -897492,   470,  -291),
+    NUT_TERM( 0, 1, 0, 0, 0,    1475877,   -3633,  11817,     73871,  -184, -1924),
+    NUT_TERM( 0, 1, 2,-2, 2,    -516821,    1226,   -524,    224386,  -677,  -174),
+    NUT_TERM( 1, 0, 0, 0, 0,     711159,      73,   -872,     -6750,     0,   358),
+    NUT_TERM( 0, 0, 2, 0, 1,    -387298,    -367,    380,    200728,    18,   318),
+    NUT_TERM( 1, 0, 2, 0, 2,    -301461,     -36,    816,    129025,   -63,   367),
+    NUT_TERM( 0,-1, 2,-2, 2,     215829,    -494,    111,    -95929,   299,   132),
+    NUT_TERM( 0, 0, 2,-2, 1,     128227,     137,    181,    -68982,    -9,    39),
+    NUT_TERM(-1, 0, 2, 0, 2,     123457,      11,     19,    -53311,    32,    -4),
+    NUT_TERM(-1, 0, 0, 2, 0,     156994,      10,   -168,     -1235,     0,    82),
+    NUT_TERM( 1, 0, 0, 0, 1,      63110,      63,     27,    -33228,     0,    -9),
+    NUT_TERM(-1, 0, 0, 0, 1,     -57976,     -63,   -189,     31429,     0,   -75),
+    NUT_TERM(-1, 0, 2, 2, 2,     -59641,     -11,    149,     25543,   -11,    66),
+    NUT_TERM( 1, 0, 2, 0, 1,     -51613,     -42,    129,     26366,     0,    78),
+    NUT_TERM(-2, 0, 2, 0, 1,      45893,      50,     31,    -24236,   -10,    20),
+    NUT_TERM( 0, 0, 0, 2, 0,      63384,      11,   -150,     -1220,     0,    29),
+    NUT_TERM( 0, 0, 2, 2, 2,     -38571,      -1,    158,     16452,   -11,    68),
+    NUT_TERM( 0,-2, 2,-2, 2,      32481,       0,      0,    -13870,     0,     0),
+    NUT_TERM(-2, 0, 0, 2, 0,     -47722,       0,    -18,       477,     0,   -25),
+    NUT_TERM( 2, 0, 2, 0, 2,     -31046,      -1,    131,     13238,   -11,    59),
+    NUT_TERM( 1, 0, 2,-2, 2,      28593,       0,     -1,    -12338,    10,    -3),
+    NUT_TERM(-1, 0, 2, 0, 1,      20441,      21,     10,    -10758,     0,    -3),
+    NUT_TERM( 2, 0, 0, 0, 0,      29243,       0,    -74,      -609,     0,    13),
+    NUT_TERM( 0, 0, 2, 0, 0,      25887,       0,    -66,      -550,     0,    11),
+    NUT_TERM( 0, 1, 0, 0, 1,     -14053,     -25,     79,      8551,    -2,   -45),
+    NUT_TERM(-1, 0, 0, 2, 1,      15164,      10,     11,     -8001,     0,    -1),
+    NUT_TERM( 0, 2, 2,-2, 2,     -15794,      72,    -16,      6850,   -42,    -5),
+    NUT_TERM( 0, 0,-2, 2, 0,      21783,       0,     13,      -167,     0,    13),
+    NUT_TERM( 1, 0, 0,-2, 1,     -12873,     -10,    -37,      6953,     0,   -14),
+    NUT_TERM( 0,-1, 0, 0, 1,     -12654,      11,     63,      6415,     0,    26),
+    NUT_TERM(-1, 0, 2, 2, 1,     -10204,       0,     25,      5222,     0,    15),
+    NUT_TERM( 0, 2, 0, 0, 0,      16707,     -85,    -10,       168,    -1,    10),
+    NUT_TERM( 1, 0, 2, 2, 2,      -7691,       0,     44,      3268,     0,    19),
+    NUT_TERM(-2, 0, 2, 0, 0,     -11024,       0,    -14,       104,     0,     2),
+    NUT_TERM( 0, 1, 2, 0, 2,       7566,     -21,    -11,     -3250,     0,    -5),
+    NUT_TERM( 0, 0, 2, 2, 1,      -6637,     -11,     25,      3353,     0,    14),
+    NUT_TERM( 0,-1, 2, 0, 2,      -7141,      21,      8,      3070,     0,     4),
+    NUT_TERM( 0, 0, 0, 2, 1,      -6302,     -11,      2,      3272,     0,     4),
+    NUT_TERM( 1, 0, 2,-2, 1,       5800,      10,      2,     -3045,     0,    -1),
+    NUT_TERM( 2, 0, 2,-2, 2,       6443,       0,     -7,     -2768,     0,    -4),
+    NUT_TERM(-2, 0, 0, 2, 1,      -5774,     -11,    -15,      3041,     0,    -5),
+    NUT_TERM( 2, 0, 2, 0, 1,      -5350,       0,     21,      2695,     0,    12),
+    NUT_TERM( 0,-1, 2,-2, 1,      -4752,     -11,     -3,      2719,     0,    -3),
+    NUT_TERM( 0, 0, 0,-2, 1,      -4940,     -11,    -21,      2720,     0,    -9),
+    NUT_TERM(-1,-1, 0, 2, 0,       7350,       0,     -8,       -51,     0,     4),
+    NUT_TERM( 2, 0, 0,-2, 1,       4065,       0,      6,     -2206,     0,     1),
+    NUT_TERM( 1, 0, 0, 2, 0,       6579,       0,    -24,      -199,     0,     2),
+    NUT_TERM( 0, 1, 2,-2, 1,       3579,       0,      5,     -1900,     0,     1),
+    NUT_TERM( 1,-1, 0, 0, 0,       4725,       0,     -6,       -41,     0,     3),
+    NUT_TERM(-2, 0, 2, 0, 2,      -3075,       0,     -2,      1313,     0,    -1),
+    NUT_TERM( 3, 0, 2, 0, 2,      -2904,       0,     15,      1233,     0,     7),
+    NUT_TERM( 0,-1, 0, 2, 0,       4348,       0,    -10,       -81,     0,     2),
+    NUT_TERM( 1,-1, 2, 0, 2,      -2878,       0,      8,      1232,     0,     4),
+    NUT_TERM( 0, 0, 0, 1, 0,      -4230,       0,      5,       -20,     0,    -2),
+    NUT_TERM(-1,-1, 2, 2, 2,      -2819,       0,      7,      1207,     0,     3),
+    NUT_TERM(-1, 0, 2, 0, 0,      -4056,       0,      5,        40,     0,    -2),
+    NUT_TERM( 0,-1, 2, 2, 2,      -2647,       0,     11,      1129,     0,     5),
+    NUT_TERM(-2, 0, 0, 0, 1,      -2294,       0,    -10,      1266,     0,    -4),
+    NUT_TERM( 1, 1, 2, 0, 2,       2481,       0,     -7,     -1062,     0,    -3),
+    NUT_TERM( 2, 0, 0, 0, 1,       2179,       0,     -2,     -1129,     0,    -2),
+    NUT_TERM(-1, 1, 0, 1, 0,       3276,       0,      1,        -9,     0,     0),
+    NUT_TERM( 1, 1, 0, 0, 0,      -3389,       0,      5,        35,     0,    -2),
+    NUT_TERM( 1, 0, 2, 0, 0,       3339,       0,    -13,      -107,     0,     1),
+    NUT_TERM(-1, 0, 2,-2, 1,      -1987,       0,     -6,      1073,     0,    -2),
+    NUT_TERM( 1, 0, 0, 0, 2,      -1981,       0,      0,       854,     0,     0),
+    NUT_TERM(-1, 0, 0, 1, 0,       4026,       0,   -353,      -553,     0,  -139),
+    NUT_TERM( 0, 0, 2, 1, 2,       1660,       0,     -5,      -710,     0,    -2),
+    NUT_TERM(-1, 0, 2, 4, 2,      -1521,       0,      9,       647,     0,     4),
+    NUT_TERM(-1, 1, 0, 1, 1,       1314,       0,      0,      -700,     0,     0),
+    NUT_TERM( 0,-2, 2,-2, 1,      -1283,       0,      0,       672,     0,     0),
+    NUT_TERM( 1, 0, 2, 2, 1,      -1331,       0,      8,       663,     0,     4),
+    NUT_TERM(-2, 0, 2, 2, 2,       1383,       0,     -2,      -594,     0,    -2),
+    NUT_TERM(-1, 0, 0, 0, 2,       1405,       0,      4,      -610,     0,     2),
+    NUT_TERM( 1, 1, 2,-2, 2,       1290,       0,      0,      -556,     0,     0)
+};
+
+static void iau2000b(astro_time_t *time)
+{
+    if ((time != NULL) && isnan(time->psi))
+    {
+        double t = time->tt / 36525.0;
+        series_pair_t l, lp, f2, d, om, d2, om2, f2d2, unused;
+        series_pair_t anomaly[NUT_ANOMALY_COUNT], node[NUT_NODE_COUNT];
+        series_pair_t psi0 = { 0.0, 0.0 }, eps0 = { 0.0, 0.0 }, rate0 = { 0.0, 0.0 };
+        series_pair_t psi1 = { 0.0, 0.0 }, eps1 = { 0.0, 0.0 }, rate1 = { 0.0, 0.0 };
+        int k;
+
+        /* F appears only doubled. */
+        NUT_COS_SIN(l, lp, NUT_TURNS(485868.249036, 1717915923.2178), NUT_TURNS(1287104.79305, 129596581.0481));
+        NUT_COS_SIN(f2, d, 2.0 * NUT_TURNS(335779.526232, 1739527262.8478), NUT_TURNS(1072260.70369, 1602961601.2090));
+        NUT_COS_SIN(om, unused, NUT_TURNS(450160.398036, -6962890.5431), 0.0);
+        (void)unused;
+
+        anomaly[NUT_ANOMALY(0, 0)] = (series_pair_t){ 1.0, 0.0 };
+        anomaly[NUT_ANOMALY(1, 0)] = l;
+        anomaly[NUT_ANOMALY(-1, 0)] = NUT_CONJ(l);
+        anomaly[NUT_ANOMALY(2, 0)] = NUT_MUL(l, l);
+        anomaly[NUT_ANOMALY(-2, 0)] = NUT_CONJ(anomaly[NUT_ANOMALY(2, 0)]);
+        anomaly[NUT_ANOMALY(3, 0)] = NUT_MUL(anomaly[NUT_ANOMALY(2, 0)], l);
+        anomaly[NUT_ANOMALY(0, 1)] = lp;
+        anomaly[NUT_ANOMALY(0, -1)] = NUT_CONJ(lp);
+        anomaly[NUT_ANOMALY(0, 2)] = NUT_MUL(lp, lp);
+        anomaly[NUT_ANOMALY(0, -2)] = NUT_CONJ(anomaly[NUT_ANOMALY(0, 2)]);
+        anomaly[NUT_ANOMALY(1, 1)] = NUT_MUL(l, lp);
+        anomaly[NUT_ANOMALY(-1, -1)] = NUT_CONJ(anomaly[NUT_ANOMALY(1, 1)]);
+        anomaly[NUT_ANOMALY(1, -1)] = NUT_MUL(l, anomaly[NUT_ANOMALY(0, -1)]);
+        anomaly[NUT_ANOMALY(-1, 1)] = NUT_CONJ(anomaly[NUT_ANOMALY(1, -1)]);
+
+        d2 = NUT_MUL(d, d);
+        om2 = NUT_MUL(om, om);
+        f2d2 = NUT_MUL(f2, NUT_CONJ(d2));       /* 2F - 2D */
+        node[NUT_NODE(0, 0, 0)] = (series_pair_t){ 1.0, 0.0 };
+        node[NUT_NODE(0, 0, 1)] = om;
+        node[NUT_NODE(0, 0, 2)] = om2;
+        node[NUT_NODE(2, 0, 0)] = f2;
+        node[NUT_NODE(2, 0, 1)] = NUT_MUL(f2, om);
+        node[NUT_NODE(2, 0, 2)] = NUT_MUL(f2, om2);
+        node[NUT_NODE(0, 1, 0)] = d;
+        node[NUT_NODE(0, 1, 1)] = NUT_MUL(d, om);
+        node[NUT_NODE(0, 2, 0)] = d2;
+        node[NUT_NODE(0, 2, 1)] = NUT_MUL(d2, om);
+        node[NUT_NODE(0, -2, 1)] = NUT_MUL(NUT_CONJ(d2), om);
+        node[NUT_NODE(2, -2, 1)] = NUT_MUL(f2d2, om);
+        node[NUT_NODE(2, -2, 2)] = NUT_MUL(f2d2, om2);
+        node[NUT_NODE(-2, 2, 0)] = NUT_CONJ(f2d2);
+        node[NUT_NODE(2, 1, 2)] = NUT_MUL(node[NUT_NODE(2, 0, 2)], d);
+        node[NUT_NODE(2, 2, 1)] = NUT_MUL(node[NUT_NODE(2, 0, 1)], d2);
+        node[NUT_NODE(2, 2, 2)] = NUT_MUL(node[NUT_NODE(2, 0, 2)], d2);
+        node[NUT_NODE(2, 4, 2)] = NUT_MUL(node[NUT_NODE(2, 2, 2)], d2);
+
+        for (k = 0; k + 1 < (int)ASTRO_ARRAYSIZE(nut_term); k += 2)
+        {
+            NUT_ADD(k, psi0, eps0, rate0);
+            NUT_ADD(k + 1, psi1, eps1, rate1);
+        }
+        if (k < (int)ASTRO_ARRAYSIZE(nut_term))
+            NUT_ADD(k, psi0, eps0, rate0);
+        psi0 += psi1;
+        eps0 += eps1;
+        rate0 += rate1;
+
+        /* The two constants stand in for the planetary terms, as in the published routine. */
+        time->psi = -0.000135 + ((psi0[0] + psi0[1] + t * rate0[1]) * 1.0e-7);
+        time->eps = +0.000388 + ((eps0[0] + eps0[1] + t * rate0[0]) * 1.0e-7);
+    }
 }
 
 static void VsopCoords(const vsop_model_t *model, double t, double sphere[3])
