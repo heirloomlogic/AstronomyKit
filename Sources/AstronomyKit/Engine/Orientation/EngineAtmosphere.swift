@@ -173,7 +173,9 @@ extension Engine.Atmosphere {
         return checkpoints
     }()
 
-    private static func integrateSegment(from start: Double, to end: Double, initial: Species, step: Double) -> Species {
+    private static func integrateSegment(
+        from start: Double, to end: Double, initial: Species, step: Double
+    ) -> Species {
         var logs = initial
         var height = start
         let count = ((end - height) / step).rounded(.up)

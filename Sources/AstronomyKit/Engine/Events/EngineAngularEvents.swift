@@ -53,24 +53,7 @@ extension Engine.Events {
         let startLongitude = try Engine.Positions.sunPosition(at: start).longitude
         let tropicalYear = 365.24217
         let margin = 10.0
-        if limitDays > 0 {
-            let aheadDegrees = Engine.normalizedLongitude(targetDegrees - startLongitude)
-            let estimate = (aheadDegrees / 360) * tropicalYear
-            if estimate - margin <= limitDays {
-                let first = start.adding(days: max(0, estimate - margin))
-                let second = start.adding(days: min(limitDays, estimate + margin))
-                if let found = try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
-                {
-                    return found
-                }
-            }
-            if aheadDegrees == 0 && tropicalYear - margin <= limitDays {
-                let first = start.adding(days: max(0, tropicalYear - margin))
-                let second = start.adding(days: min(limitDays, tropicalYear + margin))
-                return try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
-            }
-            return nil
-        } else {
+        guard limitDays > 0 else {
             let behindDegrees = Engine.normalizedLongitude(startLongitude - targetDegrees)
             let estimate = -(behindDegrees / 360) * tropicalYear
             if estimate + margin >= limitDays {
@@ -88,6 +71,21 @@ extension Engine.Events {
             }
             return nil
         }
+        let aheadDegrees = Engine.normalizedLongitude(targetDegrees - startLongitude)
+        let estimate = (aheadDegrees / 360) * tropicalYear
+        if estimate - margin <= limitDays {
+            let first = start.adding(days: max(0, estimate - margin))
+            let second = start.adding(days: min(limitDays, estimate + margin))
+            if let found = try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset) {
+                return found
+            }
+        }
+        if aheadDegrees == 0 && tropicalYear - margin <= limitDays {
+            let first = start.adding(days: max(0, tropicalYear - margin))
+            let second = start.adding(days: min(limitDays, tropicalYear + margin))
+            return try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
+        }
+        return nil
     }
 
     /// The March equinox, June solstice, September equinox, and December solstice of `year`.

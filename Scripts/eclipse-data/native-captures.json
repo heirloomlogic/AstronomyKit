@@ -1,83 +1,83 @@
 {
-  "baselineRevision": "8d1687ae46d6ad6a8aabcf6430e294ff3ad887a3",
+  "baselineRevision": "7a04198c92ae9401fc7dc69fbac83a8615ba6882",
   "buildReceipts": {
-    "debug": "Building for debugging...\n[Constructing description]\n[Planning deferred tasks]\n[5\u2009/\u200925]\n[9\u2009/\u200926] CLibAstronomy\n[26\u2009/\u200945] CLibAstronomy\n[27\u2009/\u200945] CLibAstronomy\n[28\u2009/\u200945] CLibAstronomy\n[28\u2009/\u200945] AstronomyKit\n[29\u2009/\u200946] CLibAstronomy\n[30\u2009/\u200946] AstronomyKit\n[32\u2009/\u200948] AstronomyKit\n[37\u2009/\u200942] AstronomyKitTests-product\n[39\u2009/\u200944] AstronomyKitTests-product\n[40\u2009/\u200951] AstronomyKitTests-product\n[42\u2009/\u200953] AstronomyKitTests-product\n[47\u2009/\u200950] AstronomyKitTests-product\n[48\u2009/\u200950] AstronomyKitTests-product\nBuild complete! (22.82 sec)\n\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite \"Engine.Events eclipse searches\" started.\n\udbc1\udfc8  Test \"Shadow-disc overlap preserves exact and partial geometries\" started.\n\udbc4\udc5b  Test \"Shadow-disc overlap preserves exact and partial geometries\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Lunar shadow boundaries use strict contact geometry\" started.\n\udbc4\udc5b  Test \"Lunar shadow boundaries use strict contact geometry\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"NASA lunar eclipses retain type, peak, and phase durations\" started.\n\udbc4\udc5b  Test \"NASA lunar eclipses retain type, peak, and phase durations\" passed after 12.252 seconds.\n\udbc1\udfc8  Test \"NASA lunar obscuration retains its print interval and the tracked 2026 discrepancy\" started.\n\udbc2\udc82  Test \"NASA lunar obscuration retains its print interval and the tracked 2026 discrepancy\" recorded a known issue at EngineEclipseEventTests.swift:131:21: Expectation failed: actual.obscuration >= reference.roundingLowerBound && actual.obscuration <= reference.roundingUpperBound\n\udbc0\udd35  #275: apparent-input model misses SVS5672's unchanged nearest-print interval; source convention remains unresolved\n\udbc0\udd35  actual.obscuration >= reference.roundingLowerBound && actual.obscuration <= reference.roundingUpperBound \u2192 false\n\udbc0\udd35    actual.obscuration >= reference.roundingLowerBound \u2192 false\n\udbc0\udd35    actual.obscuration <= reference.roundingUpperBound \u2192 <not evaluated>\n\udbc2\udc82  Test \"NASA lunar obscuration retains its print interval and the tracked 2026 discrepancy\" passed after 0.515 seconds with 1 known issue.\n\udbc1\udfc8  Test \"Lunar search includes an eclipse after its full-moon boundary and excludes it after peak\" started.\n\udbc4\udc5b  Test \"Lunar search includes an eclipse after its full-moon boundary and excludes it after peak\" passed after 3.807 seconds.\n\udbc1\udfc8  Test \"Lunar peak resolution defines the inclusive search boundary\" started.\n\udbc4\udc5b  Test \"Lunar peak resolution defines the inclusive search boundary\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Lunar eclipse identity does not depend on the discovery start\" started.\n\udbc4\udc5b  Test \"Lunar eclipse identity does not depend on the discovery start\" passed after 3.521 seconds.\n\udbc1\udfc8  Test \"Lunar cutoff uses a represented endpoint and cannot advance through repeated clamps\" started.\n\udbc4\udc5b  Test \"Lunar cutoff uses a represented endpoint and cannot advance through repeated clamps\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Canonical lunar phase brackets retain identity across midnight and exact zeros\" started.\n\udbc4\udc5b  Test \"Canonical lunar phase brackets retain identity across midnight and exact zeros\" passed after 4.084 seconds.\n\udbc1\udfc8  Test \"Canonical phase failures remain bounded and preserve input and callback errors\" started.\n\udbc4\udc5b  Test \"Canonical phase failures remain bounded and preserve input and callback errors\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Repeated eclipse presentation clamps retain the physical cutoff and contacts\" started.\n\udbc4\udc5b  Test \"Repeated eclipse presentation clamps retain the physical cutoff and contacts\" passed after 10.246 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc1\udfc8  Test \"Consecutive eclipses advance, preserve the model, and include penumbral events\" started.\n\udbc4\udc5b  Test \"Consecutive eclipses advance, preserve the model, and include penumbral events\" passed after 1.930 seconds.\n\udbc1\udfc8  Test \"Lunar eclipse search rejects unsupported and nonfinite times\" started.\n\udbc4\udc5b  Test \"Lunar eclipse search rejects unsupported and nonfinite times\" passed after 2.552 seconds.\n\udbc2\udc82  Suite \"Engine.Events eclipse searches\" passed after 38.912 seconds with 1 known issue.\n\udbc1\udfc8  Suite \"Native global solar eclipses\" started.\n\udbc1\udfc8  Test \"Published TD calendar fields are epoch arithmetic without UTC conversion\" started.\n\udbc4\udc5b  Test \"Published TD calendar fields are epoch arithmetic without UTC conversion\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Published non-central annular and total events retain their kind\" started.\n\udbc4\udc5b  Test \"Published non-central annular and total events retain their kind\" passed after 0.317 seconds.\n\udbc1\udfc8  Test \"Geoid axis intersections distinguish contact from representable misses\" started.\n\udbc4\udc5b  Test \"Geoid axis intersections distinguish contact from representable misses\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"NASA global kinds, TD peaks, and locations retain existing allowances\" started.\n\udbc4\udc5b  Test \"NASA global kinds, TD peaks, and locations retain existing allowances\" passed after 1.235 seconds.\n\udbc1\udfc8  Test \"RP1301 direct annular area samples retain their UT plus fixed Delta T meaning\" started.\n\udbc4\udc5b  Test \"RP1301 direct annular area samples retain their UT plus fixed Delta T meaning\" passed after 0.013 seconds.\n\udbc1\udfc8  Test \"Canonical new moons retain identity across callers and midnight\" started.\n\udbc4\udc5b  Test \"Canonical new moons retain identity across callers and midnight\" passed after 6.165 seconds.\n\udbc1\udfc8  Test \"Global peak inclusion uses the canonical physical peak and represented cutoff\" started.\n\udbc4\udc5b  Test \"Global peak inclusion uses the canonical physical peak and represented cutoff\" passed after 6.025 seconds.\n\udbc1\udfc8  Test \"Global domain and phase callback failures propagate\" started.\n\udbc4\udc5b  Test \"Global domain and phase callback failures propagate\" passed after 0.236 seconds.\n\udbc1\udfc8  Test \"Ellipsoid and finite-cone geometry has independent analytic controls\" started.\n\udbc4\udc5b  Test \"Ellipsoid and finite-cone geometry has independent analytic controls\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"A finite cone can hit away from the point closest to its axis\" started.\n\udbc4\udc5b  Test \"A finite cone can hit away from the point closest to its axis\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Concentric angular discs produce area, not diameter magnitude\" started.\n\udbc4\udc5b  Test \"Concentric angular discs produce area, not diameter magnitude\" passed after 0.001 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc4\udc5b  Suite \"Native global solar eclipses\" passed after 13.995 seconds.\n\udbc1\udfc8  Suite \"Native local solar eclipses\" started.\n\udbc1\udfc8  Test \"Inherited map timestamps identify publisher UT1, despite legacy UTC field names\" started.\n\udbc4\udc5b  Test \"Inherited map timestamps identify publisher UT1, despite legacy UTC field names\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Published local contact kinds, UT1 times and altitudes\" started.\n\udbc4\udc5b  Test \"Published local contact kinds, UT1 times and altitudes\" passed after 1.397 seconds.\n\udbc1\udfc8  Test \"RP1301 local contacts and directly printed partial/annular area\" started.\n\udbc4\udc5b  Test \"RP1301 local contacts and directly printed partial/annular area\" passed after 0.835 seconds.\n\udbc1\udfc8  Test \"Local canonical identity, inclusive cutoff, clamps, models and next progress\" started.\n\udbc4\udc5b  Test \"Local canonical identity, inclusive cutoff, clamps, models and next progress\" passed after 29.432 seconds.\n\udbc1\udfc8  Test \"Contact roots bracket overlap changes without a limb epsilon\" started.\n\udbc4\udc5b  Test \"Contact roots bracket overlap changes without a limb epsilon\" passed after 1.469 seconds.\n\udbc1\udfc8  Test \"Local candidates distinguish misses, below-horizon geometry and polar observers\" started.\n\udbc4\udc5b  Test \"Local candidates distinguish misses, below-horizon geometry and polar observers\" passed after 4.215 seconds.\n\udbc1\udfc8  Test \"Local invalid observers, epochs, failed brackets and domain edges throw\" started.\n\udbc4\udc5b  Test \"Local invalid observers, epochs, failed brackets and domain edges throw\" passed after 2.224 seconds.\n\udbc1\udfc8  Test \"NASA Washington catalog independently identifies consecutive visible events\" started.\n\udbc4\udc5b  Test \"NASA Washington catalog independently identifies consecutive visible events\" passed after 2.343 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc4\udc5b  Suite \"Native local solar eclipses\" passed after 41.919 seconds.\n\udbc1\udfc8  Suite \"Native planetary transits\" started.\n\udbc1\udfc8  Test \"NASA UT contacts and geocentric minimum separation retain their allowances\" started.\n\udbc4\udc5b  Test \"NASA UT contacts and geocentric minimum separation retain their allowances\" passed after 3.005 seconds.\n\udbc1\udfc8  Test \"Canonical transit identity retains the physical one-second cutoff\" started.\n\udbc4\udc5b  Test \"Canonical transit identity retains the physical one-second cutoff\" passed after 6.701 seconds.\n\udbc1\udfc8  Test \"Transit bodies and accepted epochs fail before searching\" started.\n\udbc4\udc5b  Test \"Transit bodies and accepted epochs fail before searching\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Complete NASA catalogs establish consecutive transit, lunar and global events\" started.\n\udbc4\udc5b  Test \"Complete NASA catalogs establish consecutive transit, lunar and global events\" passed after 5.056 seconds.\n\udbc1\udfc8  Test \"Transit angular minimum and exterior tangencies have the required signs\" started.\n\udbc4\udc5b  Test \"Transit angular minimum and exterior tangencies have the required signs\" passed after 0.611 seconds.\n\udbc1\udfc8  Test \"Source UT remains distinct from UTC encoding and model TT\" started.\n\udbc4\udc5b  Test \"Source UT remains distinct from UTC encoding and model TT\" passed after 0.013 seconds.\n\udbc1\udfc8  Test \"Canonical conjunctions are independent of nearby discovery estimates\" started.\n\udbc4\udc5b  Test \"Canonical conjunctions are independent of nearby discovery estimates\" passed after 0.067 seconds.\n\udbc1\udfc8  Test \"Canonical transit refinement reuses exact longitude evaluations\" started.\n\udbc4\udc5b  Test \"Canonical transit refinement reuses exact longitude evaluations\" passed after 0.020 seconds.\n\udbc1\udfc8  Test \"Finite search endpoints and lunar contact errors remain explicit\" started.\n\udbc4\udc5b  Test \"Finite search endpoints and lunar contact errors remain explicit\" passed after 1.102 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc4\udc5b  Suite \"Native planetary transits\" passed after 16.581 seconds.\n\udbc2\udc82  Test run with 45 tests in 4 suites passed after 111.409 seconds with 1 known issue.\n",
-    "release": "Building for production...\n[Provisioning 2\u2009/\u20098]\n[Pre-planning 1\u2009/\u2009183]\n[Planning deferred tasks]\n[5\u2009/\u200915] AstronomyKit\n[6\u2009/\u200916]\n[8\u2009/\u200916] CLibAstronomy\n[26\u2009/\u200936] CLibAstronomy\n[28\u2009/\u200936] AstronomyKit\n[29\u2009/\u200938] CLibAstronomy\n[30\u2009/\u200938] AstronomyKit\n[32\u2009/\u200939] AstronomyKit\n[37\u2009/\u200938] AstronomyKitTests-product\n[38\u2009/\u200948] AstronomyKitTests-product\n[39\u2009/\u200949] AstronomyKitTests-product\n[41\u2009/\u200950] AstronomyKitTests-product\n[44\u2009/\u200946] AstronomyKitTests-product\nBuild complete! (130.49 sec)\n\udbc1\udfc8  Test run started.\n\udbc0\udd35  Testing Library Version: 2084\n\udbc0\udd35  Target Platform: arm64e-apple-macos14.0\n\udbc1\udfc8  Suite \"Engine.Events eclipse searches\" started.\n\udbc1\udfc8  Test \"Shadow-disc overlap preserves exact and partial geometries\" started.\n\udbc4\udc5b  Test \"Shadow-disc overlap preserves exact and partial geometries\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Lunar shadow boundaries use strict contact geometry\" started.\n\udbc4\udc5b  Test \"Lunar shadow boundaries use strict contact geometry\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"NASA lunar eclipses retain type, peak, and phase durations\" started.\n\udbc4\udc5b  Test \"NASA lunar eclipses retain type, peak, and phase durations\" passed after 0.335 seconds.\n\udbc1\udfc8  Test \"NASA lunar obscuration retains its print interval and the tracked 2026 discrepancy\" started.\n\udbc2\udc82  Test \"NASA lunar obscuration retains its print interval and the tracked 2026 discrepancy\" recorded a known issue at EngineEclipseEventTests.swift:131:21: Expectation failed: actual.obscuration >= reference.roundingLowerBound && actual.obscuration <= reference.roundingUpperBound\n\udbc0\udd35  #275: apparent-input model misses SVS5672's unchanged nearest-print interval; source convention remains unresolved\n\udbc0\udd35  actual.obscuration >= reference.roundingLowerBound && actual.obscuration <= reference.roundingUpperBound \u2192 false\n\udbc0\udd35    actual.obscuration >= reference.roundingLowerBound \u2192 false\n\udbc0\udd35    actual.obscuration <= reference.roundingUpperBound \u2192 <not evaluated>\n\udbc2\udc82  Test \"NASA lunar obscuration retains its print interval and the tracked 2026 discrepancy\" passed after 0.047 seconds with 1 known issue.\n\udbc1\udfc8  Test \"Lunar search includes an eclipse after its full-moon boundary and excludes it after peak\" started.\n\udbc4\udc5b  Test \"Lunar search includes an eclipse after its full-moon boundary and excludes it after peak\" passed after 0.248 seconds.\n\udbc1\udfc8  Test \"Lunar peak resolution defines the inclusive search boundary\" started.\n\udbc4\udc5b  Test \"Lunar peak resolution defines the inclusive search boundary\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Lunar eclipse identity does not depend on the discovery start\" started.\n\udbc4\udc5b  Test \"Lunar eclipse identity does not depend on the discovery start\" passed after 0.198 seconds.\n\udbc1\udfc8  Test \"Lunar cutoff uses a represented endpoint and cannot advance through repeated clamps\" started.\n\udbc4\udc5b  Test \"Lunar cutoff uses a represented endpoint and cannot advance through repeated clamps\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Canonical lunar phase brackets retain identity across midnight and exact zeros\" started.\n\udbc4\udc5b  Test \"Canonical lunar phase brackets retain identity across midnight and exact zeros\" passed after 0.255 seconds.\n\udbc1\udfc8  Test \"Canonical phase failures remain bounded and preserve input and callback errors\" started.\n\udbc4\udc5b  Test \"Canonical phase failures remain bounded and preserve input and callback errors\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Repeated eclipse presentation clamps retain the physical cutoff and contacts\" started.\n\udbc4\udc5b  Test \"Repeated eclipse presentation clamps retain the physical cutoff and contacts\" passed after 0.655 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc1\udfc8  Test \"Consecutive eclipses advance, preserve the model, and include penumbral events\" started.\n\udbc4\udc5b  Test \"Consecutive eclipses advance, preserve the model, and include penumbral events\" passed after 0.142 seconds.\n\udbc1\udfc8  Test \"Lunar eclipse search rejects unsupported and nonfinite times\" started.\n\udbc4\udc5b  Test \"Lunar eclipse search rejects unsupported and nonfinite times\" passed after 0.079 seconds.\n\udbc2\udc82  Suite \"Engine.Events eclipse searches\" passed after 1.964 seconds with 1 known issue.\n\udbc1\udfc8  Suite \"Native global solar eclipses\" started.\n\udbc1\udfc8  Test \"Published TD calendar fields are epoch arithmetic without UTC conversion\" started.\n\udbc4\udc5b  Test \"Published TD calendar fields are epoch arithmetic without UTC conversion\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Published non-central annular and total events retain their kind\" started.\n\udbc4\udc5b  Test \"Published non-central annular and total events retain their kind\" passed after 0.025 seconds.\n\udbc1\udfc8  Test \"Geoid axis intersections distinguish contact from representable misses\" started.\n\udbc4\udc5b  Test \"Geoid axis intersections distinguish contact from representable misses\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"NASA global kinds, TD peaks, and locations retain existing allowances\" started.\n\udbc4\udc5b  Test \"NASA global kinds, TD peaks, and locations retain existing allowances\" passed after 0.097 seconds.\n\udbc1\udfc8  Test \"RP1301 direct annular area samples retain their UT plus fixed Delta T meaning\" started.\n\udbc4\udc5b  Test \"RP1301 direct annular area samples retain their UT plus fixed Delta T meaning\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Canonical new moons retain identity across callers and midnight\" started.\n\udbc4\udc5b  Test \"Canonical new moons retain identity across callers and midnight\" passed after 0.275 seconds.\n\udbc1\udfc8  Test \"Global peak inclusion uses the canonical physical peak and represented cutoff\" started.\n\udbc4\udc5b  Test \"Global peak inclusion uses the canonical physical peak and represented cutoff\" passed after 0.467 seconds.\n\udbc1\udfc8  Test \"Global domain and phase callback failures propagate\" started.\n\udbc4\udc5b  Test \"Global domain and phase callback failures propagate\" passed after 0.015 seconds.\n\udbc1\udfc8  Test \"Ellipsoid and finite-cone geometry has independent analytic controls\" started.\n\udbc4\udc5b  Test \"Ellipsoid and finite-cone geometry has independent analytic controls\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"A finite cone can hit away from the point closest to its axis\" started.\n\udbc4\udc5b  Test \"A finite cone can hit away from the point closest to its axis\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Concentric angular discs produce area, not diameter magnitude\" started.\n\udbc4\udc5b  Test \"Concentric angular discs produce area, not diameter magnitude\" passed after 0.001 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc4\udc5b  Suite \"Native global solar eclipses\" passed after 0.885 seconds.\n\udbc1\udfc8  Suite \"Native local solar eclipses\" started.\n\udbc1\udfc8  Test \"Inherited map timestamps identify publisher UT1, despite legacy UTC field names\" started.\n\udbc4\udc5b  Test \"Inherited map timestamps identify publisher UT1, despite legacy UTC field names\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Published local contact kinds, UT1 times and altitudes\" started.\n\udbc4\udc5b  Test \"Published local contact kinds, UT1 times and altitudes\" passed after 0.110 seconds.\n\udbc1\udfc8  Test \"RP1301 local contacts and directly printed partial/annular area\" started.\n\udbc4\udc5b  Test \"RP1301 local contacts and directly printed partial/annular area\" passed after 0.060 seconds.\n\udbc1\udfc8  Test \"Local canonical identity, inclusive cutoff, clamps, models and next progress\" started.\n\udbc4\udc5b  Test \"Local canonical identity, inclusive cutoff, clamps, models and next progress\" passed after 2.206 seconds.\n\udbc1\udfc8  Test \"Contact roots bracket overlap changes without a limb epsilon\" started.\n\udbc4\udc5b  Test \"Contact roots bracket overlap changes without a limb epsilon\" passed after 0.116 seconds.\n\udbc1\udfc8  Test \"Local candidates distinguish misses, below-horizon geometry and polar observers\" started.\n\udbc4\udc5b  Test \"Local candidates distinguish misses, below-horizon geometry and polar observers\" passed after 0.298 seconds.\n\udbc1\udfc8  Test \"Local invalid observers, epochs, failed brackets and domain edges throw\" started.\n\udbc4\udc5b  Test \"Local invalid observers, epochs, failed brackets and domain edges throw\" passed after 0.162 seconds.\n\udbc1\udfc8  Test \"NASA Washington catalog independently identifies consecutive visible events\" started.\n\udbc4\udc5b  Test \"NASA Washington catalog independently identifies consecutive visible events\" passed after 0.202 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc4\udc5b  Suite \"Native local solar eclipses\" passed after 3.157 seconds.\n\udbc1\udfc8  Suite \"Native planetary transits\" started.\n\udbc1\udfc8  Test \"NASA UT contacts and geocentric minimum separation retain their allowances\" started.\n\udbc4\udc5b  Test \"NASA UT contacts and geocentric minimum separation retain their allowances\" passed after 0.245 seconds.\n\udbc1\udfc8  Test \"Canonical transit identity retains the physical one-second cutoff\" started.\n\udbc4\udc5b  Test \"Canonical transit identity retains the physical one-second cutoff\" passed after 0.496 seconds.\n\udbc1\udfc8  Test \"Transit bodies and accepted epochs fail before searching\" started.\n\udbc4\udc5b  Test \"Transit bodies and accepted epochs fail before searching\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Complete NASA catalogs establish consecutive transit, lunar and global events\" started.\n\udbc4\udc5b  Test \"Complete NASA catalogs establish consecutive transit, lunar and global events\" passed after 0.450 seconds.\n\udbc1\udfc8  Test \"Transit angular minimum and exterior tangencies have the required signs\" started.\n\udbc4\udc5b  Test \"Transit angular minimum and exterior tangencies have the required signs\" passed after 0.054 seconds.\n\udbc1\udfc8  Test \"Source UT remains distinct from UTC encoding and model TT\" started.\n\udbc4\udc5b  Test \"Source UT remains distinct from UTC encoding and model TT\" passed after 0.012 seconds.\n\udbc1\udfc8  Test \"Canonical conjunctions are independent of nearby discovery estimates\" started.\n\udbc4\udc5b  Test \"Canonical conjunctions are independent of nearby discovery estimates\" passed after 0.006 seconds.\n\udbc1\udfc8  Test \"Canonical transit refinement reuses exact longitude evaluations\" started.\n\udbc4\udc5b  Test \"Canonical transit refinement reuses exact longitude evaluations\" passed after 0.001 seconds.\n\udbc1\udfc8  Test \"Finite search endpoints and lunar contact errors remain explicit\" started.\n\udbc4\udc5b  Test \"Finite search endpoints and lunar contact errors remain explicit\" passed after 0.079 seconds.\n\udbc1\ude5f  Test resources() skipped.\n\udbc4\udc5b  Suite \"Native planetary transits\" passed after 1.347 seconds.\n\udbc2\udc82  Test run with 45 tests in 4 suites passed after 7.355 seconds with 1 known issue.\n"
+    "debug": "Build complete! (46.75 sec)\n",
+    "release": "Build complete! (182.62 sec)\n"
   },
   "debug": {
     "obscurations": [
       {
-        "nativePeakTT": 7992.877840023079,
-        "obscuration": 0.9914125332278434,
+        "nativePeakTT": 7992.877840023795,
+        "obscuration": 0.9914125332297304,
         "sourceTimeSearchSeed": "2021-11-19T09:03Z"
       },
       {
-        "nativePeakTT": 9735.676453130538,
-        "obscuration": 0.9624815972025613,
+        "nativePeakTT": 9735.676453130194,
+        "obscuration": 0.9624815972058244,
         "sourceTimeSearchSeed": "2026-08-28T04:13Z"
       }
     ],
     "published": [
       {
         "kind": "partial",
-        "nativePeakTT": -72949.81524582277,
-        "obscuration": 0.524614803237667,
-        "partialDurationMinutes": 75.51390815991908,
-        "peakResidualSeconds": 10.869784886017442,
-        "penumbralDurationMinutes": 143.00210802233778,
+        "nativePeakTT": -72949.81524589717,
+        "obscuration": 0.524614801695779,
+        "partialDurationMinutes": 75.51390789798461,
+        "peakResidualSeconds": 10.876213386654854,
+        "penumbralDurationMinutes": 143.00210740417242,
         "sourceTime": "1800-04-09T16:26Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "total",
-        "nativePeakTT": 19.69760836360807,
+        "nativePeakTT": 19.697608363561045,
         "obscuration": 1,
-        "partialDurationMinutes": 101.66254987114684,
-        "peakResidualSeconds": 30.515659642958326,
-        "penumbralDurationMinutes": 159.09503039676764,
+        "partialDurationMinutes": 101.6625498709422,
+        "peakResidualSeconds": 30.515663705807583,
+        "penumbralDurationMinutes": 159.09503039513055,
         "sourceTime": "2000-01-21T04:44Z",
-        "totalDurationMinutes": 38.52568867861976
+        "totalDurationMinutes": 38.52568868203463
       },
       {
         "kind": "total",
-        "nativePeakTT": 374.3483800479082,
+        "nativePeakTT": 374.3483800481208,
         "obscuration": 1,
-        "partialDurationMinutes": 98.15984180969281,
-        "peakResidualSeconds": 5.8942671172189876,
-        "penumbralDurationMinutes": 155.51754149285443,
-        "penumbralDurationResidualMinutes": 0.017541492854434182,
+        "partialDurationMinutes": 98.15984181182102,
+        "peakResidualSeconds": 5.894285485373985,
+        "penumbralDurationMinutes": 155.51754149735643,
+        "penumbralDurationResidualMinutes": 0.017541497356432956,
         "sourceTime": "2001-01-09T20:20:30Z",
-        "totalDurationMinutes": 30.557232233422837
+        "totalDurationMinutes": 30.557232232563365
       },
       {
         "kind": "partial",
-        "nativePeakTT": 551.1224657975336,
-        "obscuration": 0.45369471907217723,
-        "partialDurationMinutes": 79.6333443938147,
-        "peakResidualSeconds": 4.808199283434078,
-        "penumbralDurationMinutes": 162.52779396675578,
-        "penumbralDurationResidualMinutes": 0.022206033244231094,
+        "nativePeakTT": 551.1224657975549,
+        "obscuration": 0.45369471907338554,
+        "partialDurationMinutes": 79.63334439356913,
+        "peakResidualSeconds": 4.808201130072121,
+        "penumbralDurationMinutes": 162.5277939663465,
+        "penumbralDurationResidualMinutes": 0.02220603365350371,
         "sourceTime": "2001-07-05T14:55:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "penumbral",
-        "nativePeakTT": 728.9378198233355,
+        "nativePeakTT": 728.9378198233219,
         "obscuration": 0,
         "partialDurationMinutes": 0,
-        "peakResidualSeconds": 11.320808714299346,
-        "penumbralDurationMinutes": 121.7265542205314,
-        "penumbralDurationResidualMinutes": 0.023445779468602268,
+        "peakResidualSeconds": 11.320807535594213,
+        "penumbralDurationMinutes": 121.72655421537456,
+        "penumbralDurationResidualMinutes": 0.023445784625437227,
         "sourceTime": "2001-12-30T10:29:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "partial",
-        "nativePeakTT": 36253.85478368939,
-        "obscuration": 0.09709446186567446,
+        "nativePeakTT": 36253.85478368919,
+        "obscuration": 0.09709446186866275,
         "partialDurationMinutes": 44.022877919487655,
-        "peakResidualSeconds": 32.315091392956674,
-        "penumbralDurationMinutes": 128.82993744628038,
+        "peakResidualSeconds": 32.315073790960014,
+        "penumbralDurationMinutes": 128.82993742532562,
         "sourceTime": "2099-04-05T08:27Z",
         "totalDurationMinutes": 0
       }
@@ -86,97 +86,97 @@
   "release": {
     "obscurations": [
       {
-        "nativePeakTT": 7992.877840023079,
-        "obscuration": 0.9914125332278434,
+        "nativePeakTT": 7992.877840023795,
+        "obscuration": 0.9914125332297304,
         "sourceTimeSearchSeed": "2021-11-19T09:03Z"
       },
       {
-        "nativePeakTT": 9735.676453130538,
-        "obscuration": 0.9624815972025613,
+        "nativePeakTT": 9735.676453130194,
+        "obscuration": 0.9624815972058244,
         "sourceTimeSearchSeed": "2026-08-28T04:13Z"
       }
     ],
     "published": [
       {
         "kind": "partial",
-        "nativePeakTT": -72949.81524582277,
-        "obscuration": 0.524614803237667,
-        "partialDurationMinutes": 75.51390815991908,
-        "peakResidualSeconds": 10.869784886017442,
-        "penumbralDurationMinutes": 143.00210802233778,
+        "nativePeakTT": -72949.81524589717,
+        "obscuration": 0.524614801695779,
+        "partialDurationMinutes": 75.51390789798461,
+        "peakResidualSeconds": 10.876213386654854,
+        "penumbralDurationMinutes": 143.00210740417242,
         "sourceTime": "1800-04-09T16:26Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "total",
-        "nativePeakTT": 19.69760836360807,
+        "nativePeakTT": 19.697608363561045,
         "obscuration": 1,
-        "partialDurationMinutes": 101.66254987114684,
-        "peakResidualSeconds": 30.515659642958326,
-        "penumbralDurationMinutes": 159.09503039676764,
+        "partialDurationMinutes": 101.6625498709422,
+        "peakResidualSeconds": 30.515663705807583,
+        "penumbralDurationMinutes": 159.09503039513055,
         "sourceTime": "2000-01-21T04:44Z",
-        "totalDurationMinutes": 38.52568867861976
+        "totalDurationMinutes": 38.52568868203463
       },
       {
         "kind": "total",
-        "nativePeakTT": 374.3483800479082,
+        "nativePeakTT": 374.3483800481208,
         "obscuration": 1,
-        "partialDurationMinutes": 98.15984180969281,
-        "peakResidualSeconds": 5.8942671172189876,
-        "penumbralDurationMinutes": 155.51754149285443,
-        "penumbralDurationResidualMinutes": 0.017541492854434182,
+        "partialDurationMinutes": 98.15984181182102,
+        "peakResidualSeconds": 5.894285485373985,
+        "penumbralDurationMinutes": 155.51754149735643,
+        "penumbralDurationResidualMinutes": 0.017541497356432956,
         "sourceTime": "2001-01-09T20:20:30Z",
-        "totalDurationMinutes": 30.557232233422837
+        "totalDurationMinutes": 30.557232232563365
       },
       {
         "kind": "partial",
-        "nativePeakTT": 551.1224657975336,
-        "obscuration": 0.45369471907217723,
-        "partialDurationMinutes": 79.6333443938147,
-        "peakResidualSeconds": 4.808199283434078,
-        "penumbralDurationMinutes": 162.52779396675578,
-        "penumbralDurationResidualMinutes": 0.022206033244231094,
+        "nativePeakTT": 551.1224657975549,
+        "obscuration": 0.45369471907338554,
+        "partialDurationMinutes": 79.63334439356913,
+        "peakResidualSeconds": 4.808201130072121,
+        "penumbralDurationMinutes": 162.5277939663465,
+        "penumbralDurationResidualMinutes": 0.02220603365350371,
         "sourceTime": "2001-07-05T14:55:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "penumbral",
-        "nativePeakTT": 728.9378198233355,
+        "nativePeakTT": 728.9378198233219,
         "obscuration": 0,
         "partialDurationMinutes": 0,
-        "peakResidualSeconds": 11.320808714299346,
-        "penumbralDurationMinutes": 121.7265542205314,
-        "penumbralDurationResidualMinutes": 0.023445779468602268,
+        "peakResidualSeconds": 11.320807535594213,
+        "penumbralDurationMinutes": 121.72655421537456,
+        "penumbralDurationResidualMinutes": 0.023445784625437227,
         "sourceTime": "2001-12-30T10:29:12Z",
         "totalDurationMinutes": 0
       },
       {
         "kind": "partial",
-        "nativePeakTT": 36253.85478368939,
-        "obscuration": 0.09709446186567446,
+        "nativePeakTT": 36253.85478368919,
+        "obscuration": 0.09709446186866275,
         "partialDurationMinutes": 44.022877919487655,
-        "peakResidualSeconds": 32.315091392956674,
-        "penumbralDurationMinutes": 128.82993744628038,
+        "peakResidualSeconds": 32.315073790960014,
+        "penumbralDurationMinutes": 128.82993742532562,
         "sourceTime": "2099-04-05T08:27Z",
         "totalDurationMinutes": 0
       }
     ]
   },
-  "releaseExecutableBytes": 172479120,
+  "releaseExecutableBytes": 172675056,
   "releaseObjectBytes": {
-    "EngineEclipseEvents.o": 117184,
-    "EngineShadowGeometry.o": 31328
+    "EngineEclipseEvents.o": 121384,
+    "EngineShadowGeometry.o": 31784
   },
   "resources": {
-    "checksum": -2855994.8849313958,
-    "coldSeconds": 0.18851304054260254,
-    "host": "Version 27.0.1 (Build 26A434)",
+    "checksum": -2855994.8849313916,
+    "coldSeconds": 0.04248404502868652,
+    "host": "Version 27.2.1 (Build 26B131)",
     "nextEclipseCount": 99,
-    "nextEclipsesSeconds": 5.5390729904174805,
-    "peakAfterColdBytes": 76070912,
-    "peakAfterWorkloadBytes": 78036992,
-    "peakBeforeBytes": 50888704,
+    "nextEclipsesSeconds": 2.486256957054138,
+    "peakAfterColdBytes": 73940992,
+    "peakAfterWorkloadBytes": 75972608,
+    "peakBeforeBytes": 51707904,
     "totalEclipseCount": 100
   },
-  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+  "toolchain": "Apple Swift version 6.4.4 (swiftlang-6.4.4.3.6 clang-2100.5.3.3)\nTarget: arm64-apple-macosx27.2.0"
 }

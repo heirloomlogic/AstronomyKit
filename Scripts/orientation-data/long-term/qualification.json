@@ -114,7 +114,7 @@
     "Scripts/solar-numerics/intervals.py": "f311ffea878782dd46cb55a79486615626bbf8d8fb351c4186f9c22dfff297c1",
     "Scripts/solar-numerics/numerics.py": "37cd9fd4a07cda4ee6932a53570990f74ff88d4344056984c7faf1da44055cc6",
     "Scripts/solar-numerics/precession_bounds.py": "3f3bc8f2a40ac890d2383f019d52ccaece4bf7922085f6fa352f922066cf9c0a",
-    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "a2f809b985707e6c5baac20f6ed59e0a751490b2acce383849f764ed7bda3f64",
+    "Sources/AstronomyKit/Engine/Orientation/EnginePrecession.swift": "82239b2c040cee006635ee53af9355d0e63bd69164c9386a96c6b575b43a7e4c",
     "Sources/AstronomyKit/Engine/Orientation/Generated/Vondrak2011Terms.swift": "a63d635e4d1780328b88489cc8a5c23777257d9c43b67d485d48d1fe231ebaba"
   },
   "units": "radicands and cross norms dimensionless; rates degrees per TT day"

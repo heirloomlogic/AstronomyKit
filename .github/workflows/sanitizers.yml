@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   asan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # DE-backed trajectories still made test progress at the 120-minute cutoff
     # after the evaluation-scoped reuse fix (run 38381655135). Preserve the full
     # workload, isolation and per-test guards with a finite three-hour ceiling.

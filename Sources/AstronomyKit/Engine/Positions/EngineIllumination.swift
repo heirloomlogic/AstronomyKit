@@ -153,8 +153,10 @@ extension Engine.Positions {
             body: second, at: time, observerMotion: earth, sunMotion: sunMotion, aberration: .none
         ).position
         let rotation = Engine.FrameRotation.eqjToEct(time)
-        let a = eclipticLongitude(rotation.apply(to: Engine.Vector<Engine.EQJ>(x: firstPos.x, y: firstPos.y, z: firstPos.z, time: time)))
-        let b = eclipticLongitude(rotation.apply(to: Engine.Vector<Engine.EQJ>(x: secondPos.x, y: secondPos.y, z: secondPos.z, time: time)))
+        let a = eclipticLongitude(
+            rotation.apply(to: Engine.Vector<Engine.EQJ>(x: firstPos.x, y: firstPos.y, z: firstPos.z, time: time)))
+        let b = eclipticLongitude(
+            rotation.apply(to: Engine.Vector<Engine.EQJ>(x: secondPos.x, y: secondPos.y, z: secondPos.z, time: time)))
         return Engine.normalizedLongitude(a - b)
     }
 

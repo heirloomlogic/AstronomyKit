@@ -150,7 +150,6 @@
         "Sources/AstronomyKit/Engine/Foundation/EngineDirectChebyshevTable.swift",
         "Sources/AstronomyKit/Engine/Foundation/EngineEclipticState.swift",
         "Sources/AstronomyKit/Engine/Foundation/EngineMappedResource.swift",
-        "Sources/AstronomyKit/Engine/Foundation/EnginePackedBytes.swift",
         "Sources/AstronomyKit/Engine/Foundation/EngineSearch.swift",
         "Sources/AstronomyKit/Engine/Foundation/EngineTables.swift",
         "Sources/AstronomyKit/Engine/Foundation/EngineTime.swift",

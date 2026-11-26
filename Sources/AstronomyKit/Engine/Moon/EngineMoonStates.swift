@@ -56,7 +56,8 @@ extension Engine.Moon {
         let equatorVelocity =
             precession.rotation.apply(to: source.velocity) + precession.rate.apply(to: source.position)
         let (tilt, tiltRate) = tiltAndRate(
-            by: precession.meanObliquity, rate: precession.meanObliquityRate, from: Engine.EQM.self, to: Engine.ECM.self)
+            by: precession.meanObliquity, rate: precession.meanObliquityRate,
+            from: Engine.EQM.self, to: Engine.ECM.self)
         return (tilt.apply(to: equator), tilt.apply(to: equatorVelocity) + tiltRate.apply(to: equator))
     }
 
@@ -78,7 +79,8 @@ extension Engine.Moon {
         let ecliptic = meanEclipticState(at: time, cache: cache).state
         let precession = Engine.Precession.frame(tt: time.tt)
         let (tilt, tiltRate) = tiltAndRate(
-            by: precession.meanObliquity, rate: precession.meanObliquityRate, from: Engine.EQM.self, to: Engine.ECM.self)
+            by: precession.meanObliquity, rate: precession.meanObliquityRate,
+            from: Engine.EQM.self, to: Engine.ECM.self)
         let equator = tilt.inverse.apply(to: ecliptic, rate: tiltRate.inverse)
         let state = precession.rotation.inverse.apply(to: equator, rate: precession.rate.inverse)
         return try checked(state)

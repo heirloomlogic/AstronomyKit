@@ -305,9 +305,15 @@ extension Engine.ApparentPlace {
         let comp1 = compSum(Engine.Nutation.complementaryLinearTerms)
         let compRate = (comp0.rate + comp1.rate * t + comp1.value * dt) * Engine.radiansPerArcsecond
 
-        let psi = ScalarRate(tilt.nutation.longitude * Engine.radiansPerDegree, tilt.nutation.longitudeRate * Engine.radiansPerDegree)
-        let em = ScalarRate(tilt.meanObliquity * Engine.radiansPerDegree, tilt.meanObliquityRate * Engine.radiansPerDegree)
-        let et = ScalarRate(tilt.trueObliquity * Engine.radiansPerDegree, tilt.trueObliquityRate * Engine.radiansPerDegree)
+        let psi = ScalarRate(
+            tilt.nutation.longitude * Engine.radiansPerDegree,
+            tilt.nutation.longitudeRate * Engine.radiansPerDegree)
+        let em = ScalarRate(
+            tilt.meanObliquity * Engine.radiansPerDegree,
+            tilt.meanObliquityRate * Engine.radiansPerDegree)
+        let et = ScalarRate(
+            tilt.trueObliquity * Engine.radiansPerDegree,
+            tilt.trueObliquityRate * Engine.radiansPerDegree)
         @inline(__always)
         func srSinCos(_ a: ScalarRate) -> (s: ScalarRate, c: ScalarRate) {
             let sv = sin(a.value)
@@ -341,9 +347,18 @@ extension Engine.ApparentPlace {
 
         let pr = precession.rotation.rot
         let dp = precession.rate.rot
-        let eqj0 = ScalarRate(pr.0.0, dp.0.0) * mean0 + ScalarRate(pr.0.1, dp.0.1) * mean1 + ScalarRate(pr.0.2, dp.0.2) * mean2
-        let eqj1 = ScalarRate(pr.1.0, dp.1.0) * mean0 + ScalarRate(pr.1.1, dp.1.1) * mean1 + ScalarRate(pr.1.2, dp.1.2) * mean2
-        let eqj2 = ScalarRate(pr.2.0, dp.2.0) * mean0 + ScalarRate(pr.2.1, dp.2.1) * mean1 + ScalarRate(pr.2.2, dp.2.2) * mean2
+        let eqj0 =
+            ScalarRate(pr.0.0, dp.0.0) * mean0
+            + ScalarRate(pr.0.1, dp.0.1) * mean1
+            + ScalarRate(pr.0.2, dp.0.2) * mean2
+        let eqj1 =
+            ScalarRate(pr.1.0, dp.1.0) * mean0
+            + ScalarRate(pr.1.1, dp.1.1) * mean1
+            + ScalarRate(pr.1.2, dp.1.2) * mean2
+        let eqj2 =
+            ScalarRate(pr.2.0, dp.2.0) * mean0
+            + ScalarRate(pr.2.1, dp.2.1) * mean1
+            + ScalarRate(pr.2.2, dp.2.2) * mean2
 
         let motion = VectorRate(
             SIMD3(eqj0.value, eqj1.value, eqj2.value),

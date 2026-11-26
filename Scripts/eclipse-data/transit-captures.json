@@ -1,149 +1,149 @@
 {
   "buildReceipts": {
-    "debug": "Build complete! (22.82 sec)",
-    "release": "Build complete! (130.49 sec)"
+    "debug": "Build complete! (46.75 sec)",
+    "release": "Build complete! (182.62 sec)"
   },
   "debug": {
     "global-sequence": [
       {
         "date": "2024-04-08",
         "kind": "total",
-        "tt": 8864.262845073106,
-        "ut": 8864.261988231941
+        "tt": 8864.262845072799,
+        "ut": 8864.261988231634
       },
       {
         "date": "2024-10-02",
         "kind": "annular",
-        "tt": 9041.282099691492,
-        "ut": 9041.281239513071
+        "tt": 9041.282099691147,
+        "ut": 9041.281239512726
       },
       {
         "date": "2025-03-29",
         "kind": "partial",
-        "tt": 9218.950417048989,
-        "ut": 9218.949553486065
+        "tt": 9218.950417049184,
+        "ut": 9218.94955348626
       }
     ],
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556243510186,
-        "ingressUT": 374.2396277656119,
+        "egressUT": 374.4556243510237,
+        "ingressUT": 374.2396277656107,
         "kind": "total",
-        "semiDurationMinutes": 155.51754149285443,
-        "tt": 374.3483800479082,
-        "ut": 374.34763766512816
+        "semiDurationMinutes": 155.51754149735643,
+        "tt": 374.3483800481208,
+        "ut": 374.34763766534076
       },
       {
         "date": "2001-07-05",
-        "egressUT": 551.2346156091079,
-        "ingressUT": 551.0088825619318,
+        "egressUT": 551.2346156091098,
+        "ingressUT": 551.0088825619343,
         "kind": "partial",
-        "semiDurationMinutes": 162.52779396675578,
-        "tt": 551.1224657975336,
-        "ut": 551.121722317121
+        "semiDurationMinutes": 162.5277939663465,
+        "tt": 551.1224657975549,
+        "ut": 551.1217223171424
       },
       {
         "date": "2001-12-30",
-        "egressUT": 729.02157944232,
-        "ingressUT": 728.8525147836804,
+        "egressUT": 729.0215794423152,
+        "ingressUT": 728.8525147836828,
         "kind": "penumbral",
-        "semiDurationMinutes": 121.7265542205314,
-        "tt": 728.9378198233355,
-        "ut": 728.9370754723225
+        "semiDurationMinutes": 121.72655421537456,
+        "tt": 728.9378198233219,
+        "ut": 728.9370754723088
       }
     ],
     "published": [
       {
         "body": "mercury",
-        "finishTT": 1221.93938225448,
-        "finishUT": 1221.9386361929344,
+        "finishTT": 1221.9393822544807,
+        "finishUT": 1221.938636192935,
         "formerUTCReferenceUT": 1221.8277745869577,
-        "peakTT": 1221.8288027046183,
-        "peakUT": 1221.8280566434269,
-        "publicFormerResidualSeconds": 24.369678932998795,
-        "publicPeakUT": 1221.8280566434269,
-        "publicUTResidualSeconds": 24.093992080452153,
-        "separation": 11.805332069324997,
+        "peakTT": 1221.8288026994042,
+        "peakUT": 1221.8280566382127,
+        "publicFormerResidualSeconds": 24.369228431896772,
+        "publicPeakUT": 1221.8280566382127,
+        "publicUTResidualSeconds": 24.09354157935013,
+        "separation": 11.805332069102713,
         "source": "2003-05-07T07:52Z",
         "sourceUT": 1221.8277777777778,
-        "startTT": 1221.7181654018036,
-        "startUT": 1221.7174193409667
+        "startTT": 1221.718165401799,
+        "startUT": 1221.7174193409621
       },
       {
         "body": "mercury",
         "finishTT": 7254.253697073157,
         "finishUT": 7254.252869249327,
         "formerUTCReferenceUT": 7254.138861807767,
-        "peakTT": 7254.139552026156,
-        "peakUT": 7254.138724204296,
-        "publicFormerResidualSeconds": -11.88893994258251,
-        "publicPeakUT": 7254.138724204296,
-        "publicUTResidualSeconds": -14.228748841560446,
+        "peakTT": 7254.139552027411,
+        "peakUT": 7254.138724205551,
+        "publicFormerResidualSeconds": -11.888831501710229,
+        "publicPeakUT": 7254.138724205551,
+        "publicUTResidualSeconds": -14.228640400688164,
         "separation": 1.265586240174666,
         "source": "2019-11-11T15:20Z",
         "sourceUT": 7254.138888888889,
-        "startTT": 7254.025467756908,
-        "startUT": 7254.024639937017
+        "startTT": 7254.025467756907,
+        "startUT": 7254.024639937016
       },
       {
         "body": "mercury",
         "finishTT": 18024.240311453526,
         "finishUT": 18024.23924168216,
         "formerUTCReferenceUT": 18024.099730973237,
-        "peakTT": 18024.101198511184,
-        "peakUT": 18024.10012874367,
-        "publicFormerResidualSeconds": 34.36736539006233,
-        "publicPeakUT": 18024.10012874367,
-        "publicUTResidualSeconds": 11.123453231994063,
-        "separation": 8.530154476240687,
+        "peakTT": 18024.10119851298,
+        "peakUT": 18024.100128745467,
+        "publicFormerResidualSeconds": 34.367520664818585,
+        "publicPeakUT": 18024.100128745467,
+        "publicUTResidualSeconds": 11.123608506750315,
+        "separation": 8.530154476086873,
         "source": "2049-05-07T14:24Z",
         "sourceUT": 18024.1,
-        "startTT": 18023.962001649412,
-        "startUT": 18023.960931885755
+        "startTT": 18023.96200164941,
+        "startUT": 18023.96093188575
       },
       {
         "body": "venus",
         "finishTT": 4539.701741630144,
         "finishUT": 4539.700957048252,
         "formerUTCReferenceUT": 4539.561786994212,
-        "peakTT": 4539.562995926466,
-        "peakUT": 4539.562211346598,
-        "publicFormerResidualSeconds": 36.664046175428666,
-        "publicPeakUT": 4539.562211346598,
-        "publicUTResidualSeconds": 35.060346097452566,
+        "peakTT": 4539.562995921186,
+        "peakUT": 4539.562211341317,
+        "publicFormerResidualSeconds": 36.66358993796166,
+        "publicPeakUT": 4539.562211341317,
+        "publicUTResidualSeconds": 35.05988985998556,
         "separation": 9.239494090299738,
         "source": "2012-06-06T01:29Z",
         "sourceUT": 4539.561805555555,
-        "startTT": 4539.424248084322,
-        "startUT": 4539.423463506477
+        "startTT": 4539.424248084324,
+        "startUT": 4539.423463506479
       },
       {
         "body": "venus",
-        "finishTT": 43077.737338792496,
-        "finishUT": 43077.73449130769,
+        "finishTT": 43077.73733879249,
+        "finishUT": 43077.73449130768,
         "formerUTCReferenceUT": 43077.614619931985,
-        "peakTT": 43077.619539880274,
-        "peakUT": 43077.61669240469,
-        "publicFormerResidualSeconds": 179.06164191663265,
-        "publicPeakUT": 43077.61669240469,
-        "publicUTResidualSeconds": 2.223765221424401,
+        "peakTT": 43077.61953986286,
+        "peakUT": 43077.61669238728,
+        "publicFormerResidualSeconds": 179.06013757456094,
+        "publicPeakUT": 43077.61669238728,
+        "publicUTResidualSeconds": 2.222260879352689,
         "separation": 12.060952722912653,
         "source": "2117-12-11T02:48Z",
         "sourceUT": 43077.61666666667,
-        "startTT": 43077.50174644127,
-        "startUT": 43077.4988989749
+        "startTT": 43077.50174644125,
+        "startUT": 43077.49889897489
       },
       {
         "body": "venus",
-        "finishTT": 45997.28621831701,
-        "finishUT": 45997.28313998778,
+        "finishTT": 45997.286218317015,
+        "finishUT": 45997.28313998779,
         "formerUTCReferenceUT": 45997.16508353206,
-        "peakTT": 45997.17070078554,
-        "peakUT": 45997.167622465546,
-        "publicFormerResidualSeconds": 219.36385303270072,
-        "publicPeakUT": 45997.167622465546,
-        "publicUTResidualSeconds": 22.581023164093494,
+        "peakTT": 45997.17070079257,
+        "peakUT": 45997.16762247258,
+        "publicFormerResidualSeconds": 219.36446093022823,
+        "publicPeakUT": 45997.16762247258,
+        "publicUTResidualSeconds": 22.58163106162101,
         "separation": 12.272749458552466,
         "source": "2125-12-08T16:01Z",
         "sourceUT": 45997.16736111111,
@@ -155,47 +155,47 @@
       {
         "body": "mercury",
         "date": "2003-05-07",
-        "finishUT": 1221.9386361929344,
-        "separation": 11.805332069324997,
-        "startUT": 1221.7174193409667,
-        "tt": 1221.8288027046183,
-        "ut": 1221.8280566434269
+        "finishUT": 1221.938636192935,
+        "separation": 11.805332069102713,
+        "startUT": 1221.7174193409621,
+        "tt": 1221.8288026994042,
+        "ut": 1221.8280566382127
       },
       {
         "body": "mercury",
         "date": "2006-11-08",
-        "finishUT": 2503.506990407816,
-        "separation": 7.048572488269297,
-        "startUT": 2503.300099848919,
-        "tt": 2503.40427462524,
-        "ut": 2503.403517785878
+        "finishUT": 2503.5069904078164,
+        "separation": 7.048572488455445,
+        "startUT": 2503.3000998489206,
+        "tt": 2503.4042746245022,
+        "ut": 2503.4035177851406
       },
       {
         "body": "venus",
         "date": "2012-06-06",
         "finishUT": 4539.700957048252,
         "separation": 9.239494090299738,
-        "startUT": 4539.423463506477,
-        "tt": 4539.562995926466,
-        "ut": 4539.562211346598
+        "startUT": 4539.423463506479,
+        "tt": 4539.562995921186,
+        "ut": 4539.562211341317
       },
       {
         "body": "venus",
         "date": "2117-12-11",
-        "finishUT": 43077.73449130769,
+        "finishUT": 43077.73449130768,
         "separation": 12.060952722912653,
-        "startUT": 43077.4988989749,
-        "tt": 43077.619539880274,
-        "ut": 43077.61669240469
+        "startUT": 43077.49889897489,
+        "tt": 43077.61953986286,
+        "ut": 43077.61669238728
       },
       {
         "body": "venus",
         "date": "2125-12-08",
-        "finishUT": 45997.28313998778,
+        "finishUT": 45997.28313998779,
         "separation": 12.272749458552466,
         "startUT": 45997.05210875405,
-        "tt": 45997.17070078554,
-        "ut": 45997.167622465546
+        "tt": 45997.17070079257,
+        "ut": 45997.16762247258
       }
     ]
   },
@@ -204,142 +204,142 @@
       {
         "date": "2024-04-08",
         "kind": "total",
-        "tt": 8864.262845073106,
-        "ut": 8864.261988231941
+        "tt": 8864.262845072799,
+        "ut": 8864.261988231634
       },
       {
         "date": "2024-10-02",
         "kind": "annular",
-        "tt": 9041.282099691492,
-        "ut": 9041.281239513071
+        "tt": 9041.282099691147,
+        "ut": 9041.281239512726
       },
       {
         "date": "2025-03-29",
         "kind": "partial",
-        "tt": 9218.950417048989,
-        "ut": 9218.949553486065
+        "tt": 9218.950417049184,
+        "ut": 9218.94955348626
       }
     ],
     "lunar-sequence": [
       {
         "date": "2001-01-09",
-        "egressUT": 374.4556243510186,
-        "ingressUT": 374.2396277656119,
+        "egressUT": 374.4556243510237,
+        "ingressUT": 374.2396277656107,
         "kind": "total",
-        "semiDurationMinutes": 155.51754149285443,
-        "tt": 374.3483800479082,
-        "ut": 374.34763766512816
+        "semiDurationMinutes": 155.51754149735643,
+        "tt": 374.3483800481208,
+        "ut": 374.34763766534076
       },
       {
         "date": "2001-07-05",
-        "egressUT": 551.2346156091079,
-        "ingressUT": 551.0088825619318,
+        "egressUT": 551.2346156091098,
+        "ingressUT": 551.0088825619343,
         "kind": "partial",
-        "semiDurationMinutes": 162.52779396675578,
-        "tt": 551.1224657975336,
-        "ut": 551.121722317121
+        "semiDurationMinutes": 162.5277939663465,
+        "tt": 551.1224657975549,
+        "ut": 551.1217223171424
       },
       {
         "date": "2001-12-30",
-        "egressUT": 729.02157944232,
-        "ingressUT": 728.8525147836804,
+        "egressUT": 729.0215794423152,
+        "ingressUT": 728.8525147836828,
         "kind": "penumbral",
-        "semiDurationMinutes": 121.7265542205314,
-        "tt": 728.9378198233355,
-        "ut": 728.9370754723225
+        "semiDurationMinutes": 121.72655421537456,
+        "tt": 728.9378198233219,
+        "ut": 728.9370754723088
       }
     ],
     "published": [
       {
         "body": "mercury",
-        "finishTT": 1221.93938225448,
-        "finishUT": 1221.9386361929344,
+        "finishTT": 1221.9393822544807,
+        "finishUT": 1221.938636192935,
         "formerUTCReferenceUT": 1221.8277745869577,
-        "peakTT": 1221.8288027046183,
-        "peakUT": 1221.8280566434269,
-        "publicFormerResidualSeconds": 24.369678932998795,
-        "publicPeakUT": 1221.8280566434269,
-        "publicUTResidualSeconds": 24.093992080452153,
-        "separation": 11.805332069324997,
+        "peakTT": 1221.8288026994042,
+        "peakUT": 1221.8280566382127,
+        "publicFormerResidualSeconds": 24.369228431896772,
+        "publicPeakUT": 1221.8280566382127,
+        "publicUTResidualSeconds": 24.09354157935013,
+        "separation": 11.805332069102713,
         "source": "2003-05-07T07:52Z",
         "sourceUT": 1221.8277777777778,
-        "startTT": 1221.7181654018036,
-        "startUT": 1221.7174193409667
+        "startTT": 1221.718165401799,
+        "startUT": 1221.7174193409621
       },
       {
         "body": "mercury",
         "finishTT": 7254.253697073157,
         "finishUT": 7254.252869249327,
         "formerUTCReferenceUT": 7254.138861807767,
-        "peakTT": 7254.139552026156,
-        "peakUT": 7254.138724204296,
-        "publicFormerResidualSeconds": -11.88893994258251,
-        "publicPeakUT": 7254.138724204296,
-        "publicUTResidualSeconds": -14.228748841560446,
+        "peakTT": 7254.139552027411,
+        "peakUT": 7254.138724205551,
+        "publicFormerResidualSeconds": -11.888831501710229,
+        "publicPeakUT": 7254.138724205551,
+        "publicUTResidualSeconds": -14.228640400688164,
         "separation": 1.265586240174666,
         "source": "2019-11-11T15:20Z",
         "sourceUT": 7254.138888888889,
-        "startTT": 7254.025467756908,
-        "startUT": 7254.024639937017
+        "startTT": 7254.025467756907,
+        "startUT": 7254.024639937016
       },
       {
         "body": "mercury",
         "finishTT": 18024.240311453526,
         "finishUT": 18024.23924168216,
         "formerUTCReferenceUT": 18024.099730973237,
-        "peakTT": 18024.101198511184,
-        "peakUT": 18024.10012874367,
-        "publicFormerResidualSeconds": 34.36736539006233,
-        "publicPeakUT": 18024.10012874367,
-        "publicUTResidualSeconds": 11.123453231994063,
-        "separation": 8.530154476240687,
+        "peakTT": 18024.10119851298,
+        "peakUT": 18024.100128745467,
+        "publicFormerResidualSeconds": 34.367520664818585,
+        "publicPeakUT": 18024.100128745467,
+        "publicUTResidualSeconds": 11.123608506750315,
+        "separation": 8.530154476086873,
         "source": "2049-05-07T14:24Z",
         "sourceUT": 18024.1,
-        "startTT": 18023.962001649412,
-        "startUT": 18023.960931885755
+        "startTT": 18023.96200164941,
+        "startUT": 18023.96093188575
       },
       {
         "body": "venus",
         "finishTT": 4539.701741630144,
         "finishUT": 4539.700957048252,
         "formerUTCReferenceUT": 4539.561786994212,
-        "peakTT": 4539.562995926466,
-        "peakUT": 4539.562211346598,
-        "publicFormerResidualSeconds": 36.664046175428666,
-        "publicPeakUT": 4539.562211346598,
-        "publicUTResidualSeconds": 35.060346097452566,
+        "peakTT": 4539.562995921186,
+        "peakUT": 4539.562211341317,
+        "publicFormerResidualSeconds": 36.66358993796166,
+        "publicPeakUT": 4539.562211341317,
+        "publicUTResidualSeconds": 35.05988985998556,
         "separation": 9.239494090299738,
         "source": "2012-06-06T01:29Z",
         "sourceUT": 4539.561805555555,
-        "startTT": 4539.424248084322,
-        "startUT": 4539.423463506477
+        "startTT": 4539.424248084324,
+        "startUT": 4539.423463506479
       },
       {
         "body": "venus",
-        "finishTT": 43077.737338792496,
-        "finishUT": 43077.73449130769,
+        "finishTT": 43077.73733879249,
+        "finishUT": 43077.73449130768,
         "formerUTCReferenceUT": 43077.614619931985,
-        "peakTT": 43077.619539880274,
-        "peakUT": 43077.61669240469,
-        "publicFormerResidualSeconds": 179.06164191663265,
-        "publicPeakUT": 43077.61669240469,
-        "publicUTResidualSeconds": 2.223765221424401,
+        "peakTT": 43077.61953986286,
+        "peakUT": 43077.61669238728,
+        "publicFormerResidualSeconds": 179.06013757456094,
+        "publicPeakUT": 43077.61669238728,
+        "publicUTResidualSeconds": 2.222260879352689,
         "separation": 12.060952722912653,
         "source": "2117-12-11T02:48Z",
         "sourceUT": 43077.61666666667,
-        "startTT": 43077.50174644127,
-        "startUT": 43077.4988989749
+        "startTT": 43077.50174644125,
+        "startUT": 43077.49889897489
       },
       {
         "body": "venus",
-        "finishTT": 45997.28621831701,
-        "finishUT": 45997.28313998778,
+        "finishTT": 45997.286218317015,
+        "finishUT": 45997.28313998779,
         "formerUTCReferenceUT": 45997.16508353206,
-        "peakTT": 45997.17070078554,
-        "peakUT": 45997.167622465546,
-        "publicFormerResidualSeconds": 219.36385303270072,
-        "publicPeakUT": 45997.167622465546,
-        "publicUTResidualSeconds": 22.581023164093494,
+        "peakTT": 45997.17070079257,
+        "peakUT": 45997.16762247258,
+        "publicFormerResidualSeconds": 219.36446093022823,
+        "publicPeakUT": 45997.16762247258,
+        "publicUTResidualSeconds": 22.58163106162101,
         "separation": 12.272749458552466,
         "source": "2125-12-08T16:01Z",
         "sourceUT": 45997.16736111111,
@@ -351,64 +351,64 @@
       {
         "body": "mercury",
         "date": "2003-05-07",
-        "finishUT": 1221.9386361929344,
-        "separation": 11.805332069324997,
-        "startUT": 1221.7174193409667,
-        "tt": 1221.8288027046183,
-        "ut": 1221.8280566434269
+        "finishUT": 1221.938636192935,
+        "separation": 11.805332069102713,
+        "startUT": 1221.7174193409621,
+        "tt": 1221.8288026994042,
+        "ut": 1221.8280566382127
       },
       {
         "body": "mercury",
         "date": "2006-11-08",
-        "finishUT": 2503.506990407816,
-        "separation": 7.048572488269297,
-        "startUT": 2503.300099848919,
-        "tt": 2503.40427462524,
-        "ut": 2503.403517785878
+        "finishUT": 2503.5069904078164,
+        "separation": 7.048572488455445,
+        "startUT": 2503.3000998489206,
+        "tt": 2503.4042746245022,
+        "ut": 2503.4035177851406
       },
       {
         "body": "venus",
         "date": "2012-06-06",
         "finishUT": 4539.700957048252,
         "separation": 9.239494090299738,
-        "startUT": 4539.423463506477,
-        "tt": 4539.562995926466,
-        "ut": 4539.562211346598
+        "startUT": 4539.423463506479,
+        "tt": 4539.562995921186,
+        "ut": 4539.562211341317
       },
       {
         "body": "venus",
         "date": "2117-12-11",
-        "finishUT": 43077.73449130769,
+        "finishUT": 43077.73449130768,
         "separation": 12.060952722912653,
-        "startUT": 43077.4988989749,
-        "tt": 43077.619539880274,
-        "ut": 43077.61669240469
+        "startUT": 43077.49889897489,
+        "tt": 43077.61953986286,
+        "ut": 43077.61669238728
       },
       {
         "body": "venus",
         "date": "2125-12-08",
-        "finishUT": 45997.28313998778,
+        "finishUT": 45997.28313998779,
         "separation": 12.272749458552466,
         "startUT": 45997.05210875405,
-        "tt": 45997.17070078554,
-        "ut": 45997.167622465546
+        "tt": 45997.17070079257,
+        "ut": 45997.16762247258
       }
     ]
   },
-  "releaseExecutableBytes": 172479120,
+  "releaseExecutableBytes": 172675056,
   "releaseObjectBytes": {
-    "EngineTransitEvents.o": 57360
+    "EngineTransitEvents.o": 57816
   },
   "resources": {
-    "checksum": 537515.4329263234,
-    "coldSeconds": 0.11345601081848145,
-    "host": "Version 27.0.1 (Build 26A434)",
+    "checksum": 537515.4329263206,
+    "coldSeconds": 0.031812071800231934,
+    "host": "Version 27.2.1 (Build 26B131)",
     "nextCount": 19,
-    "nextSeconds": 1.0757139921188354,
-    "peakAfterColdBytes": 64487424,
-    "peakAfterWorkloadBytes": 73957376,
-    "peakBeforeBytes": 47808512
+    "nextSeconds": 0.7735500335693359,
+    "peakAfterColdBytes": 63143936,
+    "peakAfterWorkloadBytes": 72450048,
+    "peakBeforeBytes": 49315840
   },
-  "runtimeBaseRevision": "8d1687ae46d6ad6a8aabcf6430e294ff3ad887a3",
-  "toolchain": "Apple Swift version 6.4 (swiftlang-6.4.0.34.1 clang-2100.3.34.1)\nTarget: arm64-apple-macosx27.0.0"
+  "runtimeBaseRevision": "7a04198c92ae9401fc7dc69fbac83a8615ba6882",
+  "toolchain": "Apple Swift version 6.4.4 (swiftlang-6.4.4.3.6 clang-2100.5.3.3)\nTarget: arm64-apple-macosx27.2.0"
 }

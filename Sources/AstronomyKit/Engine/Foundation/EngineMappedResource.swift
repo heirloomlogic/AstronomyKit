@@ -191,13 +191,15 @@ extension Engine {
                         tail[remainder] = 0x80
                         let tailBlocks = remainder + 9 <= 64 ? 64 : 128
                         for shiftIndex in 0..<8 {
-                            tail[tailBlocks - 1 - shiftIndex] = UInt8(truncatingIfNeeded: bitCount >> UInt64(shiftIndex * 8))
+                            tail[tailBlocks - 1 - shiftIndex] = UInt8(
+                                truncatingIfNeeded: bitCount >> UInt64(shiftIndex * 8))
                         }
                         let tailRaw = UnsafeRawBufferPointer(tail)
                         for blockStart in stride(from: 0, to: tailBlocks, by: 64) {
                             for index in 0..<16 {
                                 words[index] = UInt32(
-                                    bigEndian: tailRaw.loadUnaligned(fromByteOffset: blockStart + index * 4, as: UInt32.self))
+                                    bigEndian: tailRaw.loadUnaligned(
+                                        fromByteOffset: blockStart + index * 4, as: UInt32.self))
                             }
                             compress()
                         }
@@ -285,7 +287,9 @@ extension Engine {
             guard let mapped else { preconditionFailure("Binary64 table has no backing storage") }
             return try mapped.withUnsafeBytes { raw in
                 try body { index in
-                    Double(bitPattern: UInt64(littleEndian: raw.loadUnaligned(fromByteOffset: index * 8, as: UInt64.self)))
+                    Double(
+                        bitPattern: UInt64(
+                            littleEndian: raw.loadUnaligned(fromByteOffset: index * 8, as: UInt64.self)))
                 }
             }
         }
