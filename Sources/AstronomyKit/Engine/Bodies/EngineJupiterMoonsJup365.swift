@@ -225,9 +225,9 @@ extension Engine.JupiterMoons {
         }
         let fallback = try state(models[moon.rawValue], at: time)
         let boundary: (tt: Double, julianDateTDB: Double, direction: Double)?
-        if time.tt >= Jup365.startTT - Jup365.transitionDays && time.tt < Jup365.startTT {
+        if tdb < Jup365.startTDBDays && time.tt >= Jup365.startTT - Jup365.transitionDays {
             boundary = (Jup365.startTT, Jup365.startJDTDB, -1)
-        } else if time.tt >= Jup365.endTT && time.tt <= Jup365.endTT + Jup365.transitionDays {
+        } else if tdb >= Jup365.exclusiveEndTDBDays && time.tt <= Jup365.endTT + Jup365.transitionDays {
             boundary = (Jup365.endTT, Jup365.exclusiveEndJDTDB, 1)
         } else {
             boundary = nil
@@ -242,8 +242,7 @@ extension Engine.JupiterMoons {
         else { return fallback }
         let boundaryFallback = try state(models[moon.rawValue], at: boundaryTime)
         let distance = boundary.direction * (time.tt - boundary.tt)
-        let u = distance / Jup365.transitionDays
-        guard (0...1).contains(u) else { return fallback }
+        let u = min(max(distance / Jup365.transitionDays, 0), 1)
         let u2 = u * u
         let u3 = u2 * u
         let h00 = 2 * u3 - 3 * u2 + 1

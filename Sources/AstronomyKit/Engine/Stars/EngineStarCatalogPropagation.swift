@@ -46,7 +46,10 @@ extension Engine {
 
             // `iauPmsafe` raises too-small parallaxes to these limits. Reject that warning so the caller's distance is never replaced silently.
             let oneYearMotion = angularSeparation(ra, dec, ra + alphaRate, dec + deltaRate)
-            guard oneYearMotion.isFinite, parallax >= max(5e-7, 326 * oneYearMotion) else {
+            let tangentMotion = hypot(alphaStar, deltaRate)
+            guard oneYearMotion.isFinite, tangentMotion.isFinite,
+                parallax >= max(5e-7, 326 * max(oneYearMotion, tangentMotion))
+            else {
                 throw AstronomyError.invalidParameter
             }
 

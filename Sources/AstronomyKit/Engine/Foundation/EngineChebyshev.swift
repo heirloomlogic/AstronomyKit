@@ -63,21 +63,25 @@ extension Engine {
             guard interval.isFinite else { return nil }
             let record = min(Int(interval.rounded(.down)), recordCount - 1)
             let x = 2 * (offset - Double(record) * recordDays) / recordDays - 1
-            var position = SIMD3<Double>()
-            var velocity = SIMD3<Double>()
-            for axis in 0..<3 {
-                let base = (3 * record + axis) * degreeCount
-                var (b1, b2, d1, d2) = (0.0, 0.0, 0.0, 0.0)
-                for k in stride(from: degreeCount - 1, to: 0, by: -1) {
-                    let b = 2 * x * b1 - b2 + coefficients[base + k]
-                    let d = 2 * b1 + 2 * x * d1 - d2
-                    (b2, b1) = (b1, b)
-                    (d2, d1) = (d1, d)
+            let twoX = 2 * x
+            let velScale = 2 / recordDays
+            return coefficients.withElementAccessor { coefficient in
+                var position = SIMD3<Double>()
+                var velocity = SIMD3<Double>()
+                for axis in 0..<3 {
+                    let base = (3 * record + axis) * degreeCount
+                    var (b1, b2, d1, d2) = (0.0, 0.0, 0.0, 0.0)
+                    for k in stride(from: degreeCount - 1, to: 0, by: -1) {
+                        let b = twoX * b1 - b2 + coefficient(base + k)
+                        let d = 2 * b1 + twoX * d1 - d2
+                        (b2, b1) = (b1, b)
+                        (d2, d1) = (d1, d)
+                    }
+                    position[axis] = coefficient(base) + x * b1 - b2
+                    velocity[axis] = (b1 + x * d1 - d2) * velScale
                 }
-                position[axis] = coefficients[base] + x * b1 - b2
-                velocity[axis] = (b1 + x * d1 - d2) * (2 / recordDays)
+                return (position, velocity)
             }
-            return (position, velocity)
         }
     }
 }

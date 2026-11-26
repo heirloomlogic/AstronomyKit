@@ -110,30 +110,34 @@ extension Engine.Observers {
             )
         }
         let siderealTime = Engine.EarthRotation.apparentSiderealTime(vector.time)
+        guard siderealTime.isFinite else { return Self.undefined }
         var longitude = Engine.degreesPerRadian * atan2(y, x) - 15 * siderealTime
         while longitude <= -180 { longitude += 360 }
         while longitude > 180 { longitude -= 360 }
 
         let f = polarRatio * polarRatio
         let factor = (f - 1) * equatorialRadiusKilometers
-        let distance = max(1, vector.length)
         var latitude = atan2(z, p)
         for _ in 0...10 {
             let (s, c) = (sin(latitude), cos(latitude))
             let radicand = c * c + f * s * s
             let denominator = radicand.squareRoot()
             let w = factor * s * c / denominator - z * c + p * s
-            if abs(w) < distance * 2e-8 {
+            if abs(w) < 2e-8 {
                 let adjust = equatorialRadiusKilometers / denominator
                 let height = abs(s) > abs(c) ? z / s - f * adjust : p / c - adjust
+                let latDegrees = latitude * Engine.degreesPerRadian
+                let heightMeters = 1000 * height
+                guard latDegrees.isFinite, heightMeters.isFinite else { return Self.undefined }
                 return Observer(
-                    latitude: latitude * Engine.degreesPerRadian,
+                    latitude: latDegrees,
                     longitude: longitude,
-                    height: 1000 * height
+                    height: heightMeters
                 )
             }
             let d =
-                factor * ((c * c - s * s) / denominator - s * s * c * c * (f - 1) / (factor * radicand)) + z * s + p * c
+                factor * ((c * c - s * s) / denominator - s * s * c * c * (f - 1) / (denominator * radicand))
+                + z * s + p * c
             latitude -= w / d
         }
         return Self.undefined

@@ -37,6 +37,8 @@ extension Engine {
         private struct Storage {
             var current: Moment
             var previous: Moment
+            /// The last time passed to `init` or `update(to:)`; preserved across `swap()`.
+            var requestedTime: Engine.Time
             /// Counts changes, so an update can tell whether it computed
             /// from the latest moments.
             var generation = 0
@@ -76,24 +78,36 @@ extension Engine {
             guard states.allSatisfy({ $0.time.tt == time.tt }) else { throw AstronomyError.inconsistentTimes }
             let solarSystem = try Engine.Gravity.SolarSystem(tt: time.tt)
             guard let originState = solarSystem.state(of: origin) else { throw AstronomyError.invalidBody }
-            let bodies = states.map { state in
+            var bodies: [Engine.Gravity.Step] = []
+            bodies.reserveCapacity(states.count)
+            for state in states {
+                guard state.x.isFinite, state.y.isFinite, state.z.isFinite,
+                    state.vx.isFinite, state.vy.isFinite, state.vz.isFinite
+                else { throw AstronomyError.invalidParameter }
                 var (position, velocity) = (state.positionVector, state.velocityVector)
                 if origin != .solarSystemBarycenter {
                     position += originState.position
                     velocity += originState.velocity
                 }
-                return Engine.Gravity.Step(
-                    tt: state.time.tt, position: position, velocity: velocity,
-                    acceleration: solarSystem.acceleration(at: position))
+                let acceleration = solarSystem.acceleration(at: position)
+                guard position.x.isFinite, position.y.isFinite, position.z.isFinite,
+                    velocity.x.isFinite, velocity.y.isFinite, velocity.z.isFinite
+                else { throw AstronomyError.badVector }
+                bodies.append(
+                    Engine.Gravity.Step(
+                        tt: state.time.tt, position: position, velocity: velocity, acceleration: acceleration))
             }
             let moment = Moment(time: time, solarSystem: solarSystem, bodies: bodies)
             self.origin = origin
             bodyCount = states.count
-            storage = Storage(current: moment, previous: moment)
+            storage = Storage(current: moment, previous: moment, requestedTime: time)
         }
 
         /// The current moment's time.
         var time: Engine.Time { lock.withLock { storage.current.time } }
+
+        /// The last time requested via `init` or `update(to:)`.
+        var requestedTime: Engine.Time { lock.withLock { storage.requestedTime } }
 
         /// The current and previous moments, for tests.
         var moments: (current: Moment, previous: Moment) {
@@ -120,18 +134,30 @@ extension Engine {
             try Engine.checkAcceptedTime(time)
             // The Sun and planets depend only on `time`, so a retry reuses them.
             var solarSystem: Engine.Gravity.SolarSystem?
-            while true {
+            // Try lock-free optimistic updates first, then serialize under the lock to prevent livelock.
+            for _ in 0..<16 {
                 let (base, generation) = lock.withLock { (storage.current, storage.generation) }
                 let next = try Self.moment(after: base, at: time, solarSystem: &solarSystem)
                 let stored = lock.withLock {
                     guard storage.generation == generation else { return false }
                     storage.previous = base
                     storage.current = next
+                    storage.requestedTime = time
                     storage.generation += 1
                     return true
                 }
                 if stored { return states(of: next, at: time) }
             }
+            let next = try lock.withLock {
+                let base = storage.current
+                let computed = try Self.moment(after: base, at: time, solarSystem: &solarSystem)
+                storage.previous = base
+                storage.current = computed
+                storage.requestedTime = time
+                storage.generation += 1
+                return computed
+            }
+            return states(of: next, at: time)
         }
 
         /// The current state of the Sun or a planet relative to ``origin``,
@@ -170,8 +196,15 @@ extension Engine {
             guard time.tt - base.time.tt != 0 else { return base }
             let solarSystem = try cached ?? Engine.Gravity.SolarSystem(tt: time.tt)
             cached = solarSystem
-            let bodies = base.bodies.map {
-                Engine.Gravity.advance($0, to: time.tt, acceleration: solarSystem.acceleration(at:))
+            var bodies: [Engine.Gravity.Step] = []
+            bodies.reserveCapacity(base.bodies.count)
+            for body in base.bodies {
+                let advanced = Engine.Gravity.advance(body, to: time.tt, acceleration: solarSystem.acceleration(at:))
+                guard advanced.position.x.isFinite, advanced.position.y.isFinite, advanced.position.z.isFinite,
+                    advanced.velocity.x.isFinite, advanced.velocity.y.isFinite, advanced.velocity.z.isFinite,
+                    advanced.acceleration.x.isFinite, advanced.acceleration.y.isFinite, advanced.acceleration.z.isFinite
+                else { throw AstronomyError.badVector }
+                bodies.append(advanced)
             }
             return Moment(time: time, solarSystem: solarSystem, bodies: bodies)
         }

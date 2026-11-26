@@ -5,8 +5,6 @@
 //  N-body gravity simulation.
 //
 
-import Synchronization
-
 // MARK: - Gravity Simulation
 
 /// An n-body gravity simulation for tracking object trajectories.
@@ -33,22 +31,15 @@ import Synchronization
 ///
 /// - Note: This uses a class (reference semantics) because the underlying
 ///         simulation owns the current and previous integration states.
-public final class GravitySimulation: @unchecked Sendable {
-    private struct SimState {
-        let simulation: Engine.GravitySimulation
-        var time: AstroTime
-        var currentTime: AstroTime
-        var previousTime: AstroTime
-    }
-
-    private let lock: Mutex<SimState>
+public final class GravitySimulation: Sendable {
+    private let simulation: Engine.GravitySimulation
 
     /// The simulation's origin body.
     public let origin: CelestialBody
 
     /// The current simulation time.
     public var time: AstroTime {
-        lock.withLock { $0.time }
+        AstroTime(simulation.requestedTime)
     }
 
     /// Creates a new gravity simulation.
@@ -70,9 +61,8 @@ public final class GravitySimulation: @unchecked Sendable {
     ) throws {
         self.origin = origin
         let nativeTime = time.engine
-        let simulation = try Engine.GravitySimulation(
+        self.simulation = try Engine.GravitySimulation(
             origin: origin, time: nativeTime, states: [initialState.engineState(at: nativeTime)])
-        self.lock = Mutex(SimState(simulation: simulation, time: time, currentTime: time, previousTime: time))
     }
 
     /// Updates the simulation to a new time.
@@ -87,15 +77,8 @@ public final class GravitySimulation: @unchecked Sendable {
     ///   `AstronomyError` if the update fails.
     @discardableResult
     public func update(to newTime: AstroTime) throws -> StateVector {
-        try lock.withLock { storage in
-            let result = try storage.simulation.update(to: newTime.engine)[0]
-            storage.previousTime = storage.currentTime
-            if newTime.terrestrialTime != storage.currentTime.terrestrialTime {
-                storage.currentTime = newTime
-            }
-            storage.time = newTime
-            return StateVector(result, at: newTime)
-        }
+        let result = try simulation.update(to: newTime.engine)[0]
+        return StateVector(result, at: newTime)
     }
 
     /// Gets the current state of a body relative to the origin.
@@ -104,21 +87,20 @@ public final class GravitySimulation: @unchecked Sendable {
     /// - Returns: The current position and velocity.
     /// - Throws: `AstronomyError` if the state cannot be retrieved.
     public func state(of body: CelestialBody) throws -> StateVector {
-        try lock.withLock { storage in
-            StateVector(try storage.simulation.state(of: body), at: storage.currentTime)
-        }
+        let native = try simulation.state(of: body)
+        return StateVector(native, at: AstroTime(native.time))
     }
 
     /// Gets the current simulation time.
     ///
     /// - Returns: The time of the simulation.
     public func currentTime() -> AstroTime {
-        lock.withLock { $0.currentTime }
+        AstroTime(simulation.time)
     }
 
     /// The number of bodies being simulated.
     public var bodyCount: Int {
-        lock.withLock { $0.simulation.bodyCount }
+        simulation.bodyCount
     }
 
     /// Swaps the direction of the simulation.
@@ -126,20 +108,13 @@ public final class GravitySimulation: @unchecked Sendable {
     /// After calling this, time updates will move backward instead of forward
     /// (or vice versa).
     public func swap() {
-        lock.withLock { storage in
-            storage.simulation.swap()
-            (storage.currentTime, storage.previousTime) = (storage.previousTime, storage.currentTime)
-        }
+        simulation.swap()
     }
 }
 
 extension GravitySimulation: CustomStringConvertible {
     /// A textual representation including the origin body, time, and body count.
     public var description: String {
-        // One lock acquisition so time and body count are a consistent snapshot.
-        let (time, bodies) = lock.withLock { simState in
-            (simState.time, simState.simulation.bodyCount)
-        }
-        return "GravitySimulation(origin: \(origin), time: \(time), bodies: \(bodies))"
+        "GravitySimulation(origin: \(origin), time: \(time), bodies: \(bodyCount))"
     }
 }

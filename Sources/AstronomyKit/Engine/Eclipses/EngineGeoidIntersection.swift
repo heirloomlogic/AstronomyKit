@@ -106,7 +106,32 @@ extension Engine.Shadows {
         var point = seed
         for _ in 0..<256 {
             let (value, gradient) = try evaluate(point)
-            if value <= 0, abs(norm(point / radii) - 1) <= 8 * Double.ulpOfOne { return point }
+            if value <= 0 {
+                if abs(norm(point / radii) - 1) <= 8 * Double.ulpOfOne { return point }
+                // For an interior point inside the cone, moving straight toward the axis
+                // (along -perpendicular/distance) keeps `along` fixed and strictly decreases
+                // `value` until exiting the ellipsoid at a guaranteed surface point inside the cone.
+                let d = point - origin
+                let along = dot(d, unit)
+                let perpendicular = d - along * unit
+                let dist = norm(perpendicular)
+                if dist > 0, dist.isFinite {
+                    let ray = -perpendicular / dist
+                    let pScaled = point / radii
+                    let rScaled = ray / radii
+                    let a = dot(rScaled, rScaled)
+                    let b = dot(pScaled, rScaled)
+                    let c = dot(pScaled, pScaled) - 1
+                    let disc = b * b - a * c
+                    if a > 0, disc >= 0, disc.isFinite {
+                        let t = (-b + sqrt(disc)) / a
+                        let candidate = point + t * ray
+                        if t > 0, finite(candidate), try evaluate(candidate).0 <= 0 {
+                            return candidate
+                        }
+                    }
+                }
+            }
             let scaled = radii * gradient
             let length = norm(scaled)
             guard length > 0, length.isFinite else { throw AstronomyError.searchFailure }

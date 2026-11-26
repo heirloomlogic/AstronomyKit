@@ -437,19 +437,52 @@ struct LagrangePointTests {
             }
         }
 
-        /// Newton's method for L3 does not converge for these masses of similar
-        /// size, so `calculateFast` would hang without an iteration limit.
-        @Test("L3 that does not converge throws noConvergence")
-        func nonConvergingL3ThrowsNoConvergence() {
-            #expect(throws: AstronomyError.noConvergence) {
-                _ = try calculateFast(
-                    .l3,
-                    majorMass: 1.431350589334418e-08,
-                    minorPosition: Vector3D(x: 0.00028200563538926415, y: 0, z: 0, time: testTime),
-                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
-                    minorMass: 1.1985515525262112e-08
-                )
-            }
+        @Test(
+            "L3 converges to physical equilibrium for similar masses",
+            arguments: [
+                (1.431350589334418e-08, 1.1985515525262112e-08, 0.00028200563538926415),
+                (31.0, 12.0, 1.0),
+                (1.0, 0.5067, 1.0),
+            ]
+        )
+        func similarMassL3ConvergesToEquilibrium(majorMass: Double, minorMass: Double, separation: Double) throws {
+            let state = try calculateFast(
+                .l3,
+                majorMass: majorMass,
+                minorPosition: Vector3D(x: separation, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                minorMass: minorMass
+            )
+            let x = state.position.x
+            #expect(x.isFinite && x < 0)
+            let xcm = separation * minorMass / (majorMass + minorMass)
+            let omega2 = (majorMass + minorMass) / (separation * separation * separation)
+            let grav1 = majorMass / (x * x)
+            let grav2 = minorMass / ((separation - x) * (separation - x))
+            let residual = abs(omega2 * (x - xcm) + grav1 + grav2)
+            #expect(residual / (grav1 + grav2) < 1e-11)
+        }
+
+        @Test("L1 converges to physical equilibrium near mu = 1/(1+sqrt(24))")
+        func criticalMassRatioL1Converges() throws {
+            let majorMass = 24.0.squareRoot()
+            let minorMass = 1.0
+            let separation = 1.0
+            let state = try calculateFast(
+                .l1,
+                majorMass: majorMass,
+                minorPosition: Vector3D(x: separation, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                minorMass: minorMass
+            )
+            let x = state.position.x
+            #expect(x.isFinite && x > 0 && x < separation)
+            let xcm = separation * minorMass / (majorMass + minorMass)
+            let omega2 = (majorMass + minorMass) / (separation * separation * separation)
+            let grav1 = majorMass / (x * x)
+            let grav2 = minorMass / ((separation - x) * (separation - x))
+            let residual = abs(omega2 * (x - xcm) - grav1 + grav2)
+            #expect(residual / (grav1 + grav2) < 1e-11)
         }
     }
 }

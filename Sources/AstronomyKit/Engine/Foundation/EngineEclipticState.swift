@@ -50,8 +50,9 @@ extension Engine.EclipticState {
             longitudeRate: Engine.degreesPerRadian * (x * state.vy - y * state.vx) / rho2,
             latitudeRate: Engine.degreesPerRadian * (rho * state.vz - z * rhoRate) / (rho2 + z * z),
             distanceRate: distanceRate)
-        let values = [self.longitude, self.latitude, self.distance, longitudeRate, latitudeRate, distanceRate]
-        guard values.allSatisfy(\.isFinite) else { throw AstronomyError.badTime }
+        guard self.longitude.isFinite, self.latitude.isFinite, self.distance.isFinite,
+            longitudeRate.isFinite, latitudeRate.isFinite, distanceRate.isFinite
+        else { throw AstronomyError.badTime }
     }
 }
 

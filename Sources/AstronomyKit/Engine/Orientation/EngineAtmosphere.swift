@@ -161,25 +161,60 @@ extension Engine.Atmosphere {
     /// diffusion, the oxygen flux term and the molecular weight change form.
     /// Halving the default 100 m step moves the densities by at most 8.5e-11
     /// at the heights the tests sample (91.5 km, 93 km and 101.6 km).
-    static func numberDensities(geometricHeight z: Double, step: Double = 100) -> Species {
+    private static let upperCheckpoints: [(height: Double, logs: Species)] = {
+        var checkpoints: [(height: Double, logs: Species)] = [(Upper.base, Species())]
         var logs = Species()
         var height = Upper.base
-        for end in [91_000.0, 95_000, 97_000, 100_000].filter({ $0 < z }) + [z] where end > height {
-            let count = ((end - height) / step).rounded(.up)
-            let h = (end - height) / count
-            let aboveMixing = height >= 100_000
-            func slopes(_ logs: Species, _ z: Double) -> Species {
-                Upper.slopes(logs, at: z, aboveMixing: aboveMixing)
-            }
-            for _ in 0..<Int(count) {
-                let k1 = slopes(logs, height)
-                let k2 = slopes(logs + h / 2 * k1, height + h / 2)
-                let k3 = slopes(logs + h / 2 * k2, height + h / 2)
-                let k4 = slopes(logs + h * k3, height + h)
-                logs += h / 6 * (k1 + 2 * k2 + 2 * k3 + k4)
-                height += h
-            }
+        for end in [91_000.0, 95_000.0, 97_000.0, 100_000.0] {
+            logs = integrateSegment(from: height, to: end, initial: logs, step: 100)
             height = end
+            checkpoints.append((end, logs))
+        }
+        return checkpoints
+    }()
+
+    private static func integrateSegment(from start: Double, to end: Double, initial: Species, step: Double) -> Species {
+        var logs = initial
+        var height = start
+        let count = ((end - height) / step).rounded(.up)
+        guard count.isFinite, let steps = Int(exactly: count), steps > 0 else { return logs }
+        let h = (end - height) / count
+        let halfH = h / 2
+        let sixthH = h / 6
+        let aboveMixing = height >= 100_000
+        for _ in 0..<steps {
+            let k1 = Upper.slopes(logs, at: height, aboveMixing: aboveMixing)
+            let k2 = Upper.slopes(logs + halfH * k1, at: height + halfH, aboveMixing: aboveMixing)
+            let k3 = Upper.slopes(logs + halfH * k2, at: height + halfH, aboveMixing: aboveMixing)
+            let k4 = Upper.slopes(logs + h * k3, at: height + h, aboveMixing: aboveMixing)
+            logs += sixthH * (k1 + 2 * k2 + 2 * k3 + k4)
+            height += h
+        }
+        return logs
+    }
+
+    static func numberDensities(geometricHeight z: Double, step: Double = 100) -> Species {
+        guard z.isFinite, step.isFinite, step > 0 else { return Species(repeating: .nan) }
+        var logs = Species()
+        var height = Upper.base
+        if step == 100 {
+            // Resume from the nearest precomputed breakpoint <= z.
+            for checkpoint in upperCheckpoints where checkpoint.height <= z {
+                height = checkpoint.height
+                logs = checkpoint.logs
+            }
+            if z > height {
+                logs = integrateSegment(from: height, to: z, initial: logs, step: 100)
+            }
+        } else {
+            let boundaries = (91_000.0, 95_000.0, 97_000.0, 100_000.0)
+            for end in [boundaries.0, boundaries.1, boundaries.2, boundaries.3] where end < z && end > height {
+                logs = integrateSegment(from: height, to: end, initial: logs, step: step)
+                height = end
+            }
+            if z > height {
+                logs = integrateSegment(from: height, to: z, initial: logs, step: step)
+            }
         }
         return Upper.densities(logs, temperature: Upper.temperature(geometricHeight: z).kelvin)
     }
@@ -289,11 +324,14 @@ extension Engine.Atmosphere {
             let majorMass = aboveMixing ? (n[0] * masses[0] + n[1] * masses[1] + n[2] * masses[2]) / majors : molarMass
             var slopes = Species()
             slopes[0] = -gas * nitrogenMass
+            let tempRatio = t / 273.15
+            let tempRatio075 = sqrt(tempRatio * sqrt(tempRatio))
             for species in diffusing {
                 let background = species.throughNitrogen ? n[0] : majors
                 let backgroundMass = species.throughNitrogen ? nitrogenMass : majorMass
                 // Eq 8; its 273.15 K is a reference temperature, not a unit conversion.
-                let d = species.scale / background * pow(t / 273.15, species.exponent)
+                let tempPower = species.exponent == 0.750 ? tempRatio075 : pow(tempRatio, species.exponent)
+                let d = species.scale / background * tempPower
                 let f =
                     gas * d / (d + k)
                     * (masses[species.lane] + backgroundMass * k / d

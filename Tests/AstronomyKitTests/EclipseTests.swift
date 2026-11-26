@@ -95,6 +95,23 @@ struct EclipseTests {
                 #expect(eclipse.peak < endTime)
             }
         }
+
+        @Test("Date range validation handles inverted, non-finite, and boundary times")
+        func lunarEclipsesRangeBounds() throws {
+            let start = AstroTime(year: 2_025, month: 6, day: 1)
+            let earlier = AstroTime(year: 2_025, month: 1, day: 1)
+            #expect(try Eclipse.lunarEclipses(from: start, to: start).isEmpty)
+            #expect(try Eclipse.lunarEclipses(from: start, to: earlier).isEmpty)
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Eclipse.lunarEclipses(from: start, to: AstroTime(ut: .nan))
+            }
+            let nearUpper = AstroTime(tt: Engine.acceptedTTDays - 10)
+            let upper = AstroTime(tt: Engine.acceptedTTDays)
+            let tail = try Eclipse.lunarEclipses(from: nearUpper, to: upper)
+            for eclipse in tail {
+                #expect(eclipse.peak >= nearUpper && eclipse.peak < upper)
+            }
+        }
     }
 
     // MARK: - Global Solar Eclipse Search Tests
@@ -160,6 +177,23 @@ struct EclipseTests {
             for eclipse in eclipses {
                 #expect(eclipse.peak >= startTime)
                 #expect(eclipse.peak < endTime)
+            }
+        }
+
+        @Test("Global solar date range validation handles inverted, non-finite, and boundary times")
+        func globalSolarEclipsesRangeBounds() throws {
+            let start = AstroTime(year: 2_025, month: 6, day: 1)
+            let earlier = AstroTime(year: 2_025, month: 1, day: 1)
+            #expect(try Eclipse.globalSolarEclipses(from: start, to: start).isEmpty)
+            #expect(try Eclipse.globalSolarEclipses(from: start, to: earlier).isEmpty)
+            #expect(throws: AstronomyError.badTime) {
+                _ = try Eclipse.globalSolarEclipses(from: start, to: AstroTime(ut: .nan))
+            }
+            let nearUpper = AstroTime(tt: Engine.acceptedTTDays - 10)
+            let upper = AstroTime(tt: Engine.acceptedTTDays)
+            let tail = try Eclipse.globalSolarEclipses(from: nearUpper, to: upper)
+            for eclipse in tail {
+                #expect(eclipse.peak >= nearUpper && eclipse.peak < upper)
             }
         }
     }

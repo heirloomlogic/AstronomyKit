@@ -49,29 +49,40 @@ extension Engine.Events {
         if lookbackDays > 0,
             let backwardFullMoon = try searchMoonPhase(180, after: start, limitDays: -lookbackDays)
         {
-            let precedingFullMoon = try canonicalFullMoon(backwardFullMoon)
-            if let eclipse = try lunarEclipse(near: precedingFullMoon),
-                let accepted = resolvedLunarEclipse(eclipse, atOrAfter: start)
-            {
-                return accepted
+            if abs(try Engine.Moon.eclipticPosition(at: backwardFullMoon).latitude) < 2.2 {
+                let precedingFullMoon = try canonicalFullMoon(backwardFullMoon)
+                if let eclipse = try lunarEclipse(near: precedingFullMoon),
+                    let accepted = resolvedLunarEclipse(eclipse, atOrAfter: start)
+                {
+                    return accepted
+                }
+                fullMoonStart = precedingFullMoon.adding(days: 10)
+                guard fullMoonStart.tt > precedingFullMoon.tt else { throw AstronomyError.badTime }
+            } else {
+                fullMoonStart = backwardFullMoon.adding(days: 10)
+                guard fullMoonStart.tt > backwardFullMoon.tt else { throw AstronomyError.badTime }
             }
-            fullMoonStart = precedingFullMoon.adding(days: 10)
-            guard fullMoonStart.tt > precedingFullMoon.tt else { throw AstronomyError.badTime }
         }
 
         for _ in 0..<fullMoonLimit {
             guard let foundFullMoon = try searchMoonPhase(180, after: fullMoonStart, limitDays: 40) else {
                 throw AstronomyError.searchFailure
             }
-            let fullMoon = try canonicalFullMoon(foundFullMoon)
-            if let eclipse = try lunarEclipse(near: fullMoon),
-                let accepted = resolvedLunarEclipse(eclipse, atOrAfter: start)
-            {
-                return accepted
+            if abs(try Engine.Moon.eclipticPosition(at: foundFullMoon).latitude) < 2.2 {
+                let fullMoon = try canonicalFullMoon(foundFullMoon)
+                if let eclipse = try lunarEclipse(near: fullMoon),
+                    let accepted = resolvedLunarEclipse(eclipse, atOrAfter: start)
+                {
+                    return accepted
+                }
+                let nextStart = fullMoon.adding(days: 10)
+                guard nextStart.tt > fullMoon.tt else { throw AstronomyError.badTime }
+                fullMoonStart = nextStart
+            } else {
+                let nextStart = foundFullMoon.adding(days: 10)
+                guard nextStart.tt > foundFullMoon.tt else { throw AstronomyError.badTime }
+                fullMoonStart = nextStart
             }
-            let nextStart = fullMoon.adding(days: 10)
-            guard nextStart.tt > fullMoon.tt else { throw AstronomyError.badTime }
-            fullMoonStart = nextStart
         }
         throw AstronomyError.internalError
     }
@@ -98,7 +109,7 @@ extension Engine.Events {
             return value
         }
         let day = floor(candidate.tt)
-        for lower in [day - 1, day, day + 1] {
+        for lower in [day, day - 1, day + 1] {
             let firstTT = max(-Engine.acceptedTTDays, lower)
             let lastTT = min(Engine.acceptedTTDays, lower + 1)
             guard firstTT < lastTT else { continue }

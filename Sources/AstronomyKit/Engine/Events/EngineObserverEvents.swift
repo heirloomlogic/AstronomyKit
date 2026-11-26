@@ -160,30 +160,67 @@ extension Engine.Events {
         return abs((360 / siderealDay - rates.0) * cos(angle)) + abs(rates.1 * sin(angle))
     }
 
+    /// Maximum span in days accepted by `searchAltitude` / `searchRiseSet` (~10 years) to prevent CPU DoS.
+    static let maxAltitudeSearchDays = 3_660.0
+
+    /// Per-step evaluation budget for `altitudeAscent` to bound grazing/flat polar subdivision.
+    private static let maxAscentEvaluationsPerStep = 512
+
     /// Original ascent subdivision, including its one-second minimum span and seventeen subdivision levels.
     static func altitudeAscent(
         lower: Engine.Time, upper: Engine.Time, lowValue: Double, highValue: Double,
-        maximumSlope: Double, depth: Int = 0, evaluate: (Engine.Time) throws -> Double
+        maximumSlope: Double, depth: Int = 0, preferLatest: Bool = false,
+        evaluate: (Engine.Time) throws -> Double
+    ) throws -> (Engine.Time, Engine.Time)? {
+        var remaining = maxAscentEvaluationsPerStep
+        return try altitudeAscent(
+            lower: lower, upper: upper, lowValue: lowValue, highValue: highValue,
+            maximumSlope: maximumSlope, depth: depth, preferLatest: preferLatest,
+            remainingEvaluations: &remaining, evaluate: evaluate)
+    }
+
+    private static func altitudeAscent(
+        lower: Engine.Time, upper: Engine.Time, lowValue: Double, highValue: Double,
+        maximumSlope: Double, depth: Int, preferLatest: Bool,
+        remainingEvaluations: inout Int, evaluate: (Engine.Time) throws -> Double
     ) throws -> (Engine.Time, Engine.Time)? {
         if lowValue < 0 && highValue >= 0 { return (lower, upper) }
         if lowValue >= 0 && highValue < 0 { return nil }
         guard depth <= 17 else { throw AstronomyError.noConvergence }
-        let halfSpan = (upper.ut - lower.ut) / 2
+        let span = upper.ut - lower.ut
+        let halfSpan = span / 2
         if halfSpan * Engine.secondsPerDay < 1 { return nil }
-        // A same-sign excursion must reach zero and return within the full interval.
-        if min(abs(lowValue), abs(highValue)) > maximumSlope * halfSpan { return nil }
+        // A same-sign excursion must travel |lowValue| down to zero and |highValue| back up within the span.
+        if abs(lowValue) + abs(highValue) > maximumSlope * span { return nil }
+        guard remainingEvaluations > 0 else { return nil }
+        remainingEvaluations -= 1
         let middle = lower.derived(ut: lower.ut + halfSpan)
         guard middle.ut > lower.ut, middle.ut < upper.ut else { throw AstronomyError.noConvergence }
         let middleValue = try evaluate(middle)
+        if preferLatest {
+            if let right = try altitudeAscent(
+                lower: middle, upper: upper, lowValue: middleValue, highValue: highValue,
+                maximumSlope: maximumSlope, depth: depth + 1, preferLatest: true,
+                remainingEvaluations: &remainingEvaluations, evaluate: evaluate)
+            {
+                return right
+            }
+            return try altitudeAscent(
+                lower: lower, upper: middle, lowValue: lowValue, highValue: middleValue,
+                maximumSlope: maximumSlope, depth: depth + 1, preferLatest: true,
+                remainingEvaluations: &remainingEvaluations, evaluate: evaluate)
+        }
         if let left = try altitudeAscent(
             lower: lower, upper: middle, lowValue: lowValue, highValue: middleValue,
-            maximumSlope: maximumSlope, depth: depth + 1, evaluate: evaluate)
+            maximumSlope: maximumSlope, depth: depth + 1, preferLatest: false,
+            remainingEvaluations: &remainingEvaluations, evaluate: evaluate)
         {
             return left
         }
         return try altitudeAscent(
             lower: middle, upper: upper, lowValue: middleValue, highValue: highValue,
-            maximumSlope: maximumSlope, depth: depth + 1, evaluate: evaluate)
+            maximumSlope: maximumSlope, depth: depth + 1, preferLatest: false,
+            remainingEvaluations: &remainingEvaluations, evaluate: evaluate)
     }
 
     /// Searches an ascending or descending altitude crossing. The bracket requires a negative value at its earlier endpoint and a nonnegative value at its later endpoint, preserving the original discovery rule. A zero-length window has no crossing.
@@ -208,6 +245,9 @@ extension Engine.Events {
         try Engine.checkAcceptedTime(start)
         let end = start.adding(days: limitDays)
         try Engine.checkAcceptedTime(end)
+        guard abs(limitDays) <= maxAltitudeSearchDays else {
+            throw AstronomyError.invalidParameter
+        }
         func evaluate(_ time: Engine.Time) throws -> Double {
             try Double(direction.rawValue)
                 * altitudeResidual(
@@ -217,10 +257,11 @@ extension Engine.Events {
         var upper = start
         var lowValue = try evaluate(start)
         var highValue = lowValue
-        if limitDays == 0 { return nil }
+        if end.ut == start.ut { return nil }
+        let backward = limitDays < 0
         while true {
             // Never sample beyond the declared window, including a short window adjacent to the source domain.
-            if limitDays < 0 {
+            if backward {
                 lower = upper.derived(ut: max(end.ut, upper.ut - 0.42))
                 guard lower.ut < upper.ut else { throw AstronomyError.noConvergence }
                 lowValue = try evaluate(lower)
@@ -231,16 +272,16 @@ extension Engine.Events {
             }
             if let bracket = try altitudeAscent(
                 lower: lower, upper: upper, lowValue: lowValue, highValue: highValue,
-                maximumSlope: slope, evaluate: evaluate)
+                maximumSlope: slope, preferLatest: backward, evaluate: evaluate)
             {
                 guard
                     let root = try Engine.Search.ascendingRoot(
                         from: bracket.0, to: bracket.1, toleranceSeconds: 0.1, evaluate)
                 else { throw AstronomyError.searchFailure }
-                if limitDays < 0 ? root.ut < end.ut : root.ut > end.ut { return nil }
+                if backward ? root.ut < end.ut : root.ut > end.ut { return nil }
                 return root
             }
-            if limitDays < 0 {
+            if backward {
                 if lower.ut <= end.ut { return nil }
                 upper = lower
                 highValue = lowValue
@@ -259,18 +300,24 @@ extension Engine.Events {
         try validateObserver(observer)
         guard heightAboveGround.isFinite, heightAboveGround >= 0 else { throw AstronomyError.invalidParameter }
         let atmosphere = try Engine.Atmosphere(elevation: observer.height - heightAboveGround)
-        let latitude = observer.latitude * Engine.radiansPerDegree
-        let polarRatio = Engine.Observers.polarRatio
-        let c = 1 / hypot(cos(latitude), sin(latitude) * polarRatio)
-        let s = c * polarRatio * polarRatio
-        let groundHeightKM = (observer.height - heightAboveGround) / 1_000
-        let radius =
-            1_000
-            * hypot(
-                (Engine.Observers.equatorialRadiusKilometers * c + groundHeightKM) * cos(latitude),
-                (Engine.Observers.equatorialRadiusKilometers * s + groundHeightKM) * sin(latitude))
-        let k = 0.175 * pow(1 - (6.5e-3 / 283.15) * (observer.height - (2.0 / 3) * heightAboveGround), 3.256)
-        let dip = -Engine.degreesPerRadian * sqrt(2 * (1 - k) * heightAboveGround / radius) / (1 - k)
+        let dip: Double
+        if heightAboveGround == 0 {
+            dip = 0
+        } else {
+            let latitude = observer.latitude * Engine.radiansPerDegree
+            let polarRatio = Engine.Observers.polarRatio
+            let c = 1 / hypot(cos(latitude), sin(latitude) * polarRatio)
+            let s = c * polarRatio * polarRatio
+            let groundHeightKM = (observer.height - heightAboveGround) / 1_000
+            let radius =
+                1_000
+                * hypot(
+                    (Engine.Observers.equatorialRadiusKilometers * c + groundHeightKM) * cos(latitude),
+                    (Engine.Observers.equatorialRadiusKilometers * s + groundHeightKM) * sin(latitude))
+            let base = max(0.0, 1 - (6.5e-3 / 283.15) * (observer.height - (2.0 / 3) * heightAboveGround))
+            let k = 0.175 * pow(base, 3.256)
+            dip = -Engine.degreesPerRadian * sqrt(2 * (1 - k) * heightAboveGround / radius) / (1 - k)
+        }
         let radiusAU: Double
         switch source {
         // Apparent optical limb convention supported by archived USNO semidiameters.

@@ -37,11 +37,56 @@ extension Engine.Events {
         try Engine.checkAcceptedTime(start)
         let end = start.adding(days: limitDays)
         try Engine.checkAcceptedTime(end)
-        return try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.01) { time in
+        func offset(_ time: Engine.Time) throws -> Double {
             let longitude = try Engine.Positions.sunPosition(at: time).longitude
-            let offset = Engine.longitudeOffset(longitude - targetDegrees)
-            guard offset.isFinite else { throw AstronomyError.badTime }
-            return offset
+            let delta = Engine.longitudeOffset(longitude - targetDegrees)
+            guard delta.isFinite else { throw AstronomyError.badTime }
+            return delta
+        }
+        // Short windows (<= 30 days) have no 180° wrap-around ambiguity.
+        if abs(limitDays) <= 30 {
+            return try Engine.Search.ascendingRoot(from: start, to: end, toleranceSeconds: 0.01, offset)
+        }
+        // Estimate the nearest crossing in the requested direction and bracket tightly
+        // around it so orbital eccentricity or multi-year spans never cause wrapped offsets
+        // to appear same-signed at the endpoints and midpoint.
+        let startLongitude = try Engine.Positions.sunPosition(at: start).longitude
+        let tropicalYear = 365.24217
+        let margin = 10.0
+        if limitDays > 0 {
+            let aheadDegrees = Engine.normalizedLongitude(targetDegrees - startLongitude)
+            let estimate = (aheadDegrees / 360) * tropicalYear
+            if estimate - margin <= limitDays {
+                let first = start.adding(days: max(0, estimate - margin))
+                let second = start.adding(days: min(limitDays, estimate + margin))
+                if let found = try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
+                {
+                    return found
+                }
+            }
+            if aheadDegrees == 0 && tropicalYear - margin <= limitDays {
+                let first = start.adding(days: max(0, tropicalYear - margin))
+                let second = start.adding(days: min(limitDays, tropicalYear + margin))
+                return try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
+            }
+            return nil
+        } else {
+            let behindDegrees = Engine.normalizedLongitude(startLongitude - targetDegrees)
+            let estimate = -(behindDegrees / 360) * tropicalYear
+            if estimate + margin >= limitDays {
+                let first = start.adding(days: max(limitDays, estimate - margin))
+                let second = start.adding(days: min(0, estimate + margin))
+                if let found = try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
+                {
+                    return found
+                }
+            }
+            if behindDegrees == 0 && -tropicalYear + margin >= limitDays {
+                let first = start.adding(days: max(limitDays, -tropicalYear - margin))
+                let second = start.adding(days: min(0, -tropicalYear + margin))
+                return try Engine.Search.ascendingRoot(from: first, to: second, toleranceSeconds: 0.01, offset)
+            }
+            return nil
         }
     }
 

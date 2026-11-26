@@ -38,27 +38,37 @@ extension Engine.Events {
         var seed = start
         let lookback = min(0.03, start.tt + Engine.acceptedTTDays)
         if lookback > 0, let found = try searchMoonPhase(0, after: start, limitDays: -lookback) {
-            let phase = try canonicalNewMoon(found)
-            if let event = try globalSolarEclipse(near: phase),
-                let result = resolvedGlobalSolarEclipse(event, atOrAfter: start)
-            {
-                return result
+            if abs(try Engine.Moon.eclipticPosition(at: found).latitude) < 2.2 {
+                let phase = try canonicalNewMoon(found)
+                if let event = try globalSolarEclipse(near: phase),
+                    let result = resolvedGlobalSolarEclipse(event, atOrAfter: start)
+                {
+                    return result
+                }
+                seed = phase.adding(days: 10)
+                guard seed.tt > phase.tt else { throw AstronomyError.badTime }
+            } else {
+                seed = found.adding(days: 10)
+                guard seed.tt > found.tt else { throw AstronomyError.badTime }
             }
-            seed = phase.adding(days: 10)
-            guard seed.tt > phase.tt else { throw AstronomyError.badTime }
         }
         for _ in 0..<12 {
             guard let found = try searchMoonPhase(0, after: seed, limitDays: 40) else {
                 throw AstronomyError.searchFailure
             }
-            let phase = try canonicalNewMoon(found)
-            if let event = try globalSolarEclipse(near: phase),
-                let result = resolvedGlobalSolarEclipse(event, atOrAfter: start)
-            {
-                return result
+            if abs(try Engine.Moon.eclipticPosition(at: found).latitude) < 2.2 {
+                let phase = try canonicalNewMoon(found)
+                if let event = try globalSolarEclipse(near: phase),
+                    let result = resolvedGlobalSolarEclipse(event, atOrAfter: start)
+                {
+                    return result
+                }
+                seed = phase.adding(days: 10)
+                guard seed.tt > phase.tt else { throw AstronomyError.badTime }
+            } else {
+                seed = found.adding(days: 10)
+                guard seed.tt > found.tt else { throw AstronomyError.badTime }
             }
-            seed = phase.adding(days: 10)
-            guard seed.tt > phase.tt else { throw AstronomyError.badTime }
         }
         throw AstronomyError.searchFailure
     }
@@ -174,8 +184,7 @@ extension Engine.Events {
                 slope: -sign * sine / cosine, radii: Geometry.earthRadii, seed: closest)
             {
                 let result = try solarDiscs(sun: sun, moon: moon, point: point)
-                guard result.kind != .partial else { throw AstronomyError.searchFailure }
-                return result
+                if result.kind != .partial { return result }
             }
         }
         return initial

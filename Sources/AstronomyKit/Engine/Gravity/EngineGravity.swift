@@ -100,11 +100,10 @@ extension Engine.Gravity {
     /// at one TT, the C engine's `CalcSolarSystem`, which the simulation
     /// reads.
     struct SolarSystem: Sendable {
+        let tt: Double
         var sun: BodyState
         /// Mercury to Neptune system-center gravitational states, indexed by ``Engine/Planet/rawValue``.
         var planets: [BodyState]
-        /// Mercury to Neptune physical-center states exposed to callers and used for origin translation.
-        var physicalCenters: [BodyState]
 
         /// The GM each planet pulls with, in table order. Earth's includes
         /// the Moon's.
@@ -121,25 +120,31 @@ extension Engine.Gravity {
         ///
         /// - Throws: As ``MajorBodies/init(tt:)``.
         init(tt: Double) throws {
+            self.tt = tt
             let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
             let evaluation = try Engine.PlanetDE441.Evaluation(
                 at: time, reusingComponentsFor: Engine.Planet.allCases)
             (sun, planets) = try barycentricStates(Self.planetsWithGM, evaluation: evaluation)
-            physicalCenters = planets
-            for planet in [Engine.Planet.earth, .jupiter, .saturn, .uranus, .neptune] {
-                let physical = try planet.heliocentricState(evaluation: evaluation, cache: seriesCache)
-                physicalCenters[planet.rawValue] = BodyState(
-                    position: physical.positionVector + sun.position,
-                    velocity: physical.velocityVector + sun.velocity)
-            }
         }
 
-        /// The barycentric state of `body`: the Sun, a planet, or the
+        /// The barycentric state of `body`: the Sun, a planet (physical center), or the
         /// barycenter itself, which is zero. `nil` for any other body.
         func state(of body: CelestialBody) -> BodyState? {
             if body == .solarSystemBarycenter { return BodyState(position: .zero, velocity: .zero) }
             if body == .sun { return sun }
-            return Engine.Planet(body).map { physicalCenters[$0.rawValue] }
+            guard let planet = Engine.Planet(body) else { return nil }
+            switch planet {
+            case .earth, .jupiter, .saturn, .uranus, .neptune:
+                let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+                if let physical = try? planet.heliocentricState(at: time, cache: Engine.Gravity.seriesCache) {
+                    return BodyState(
+                        position: physical.positionVector + sun.position,
+                        velocity: physical.velocityVector + sun.velocity)
+                }
+                return planets[planet.rawValue]
+            default:
+                return planets[planet.rawValue]
+            }
         }
 
         /// The acceleration of a body of negligible mass at barycentric

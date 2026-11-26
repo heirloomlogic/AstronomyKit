@@ -49,7 +49,10 @@ extension Engine.ApparentPlace {
                 Engine.ApparentPlace.cross(value, b.value),
                 Engine.ApparentPlace.cross(rate, b.value) + Engine.ApparentPlace.cross(value, b.rate))
         }
-        var isFinite: Bool { [value.x, value.y, value.z, rate.x, rate.y, rate.z].allSatisfy(\.isFinite) }
+        var isFinite: Bool {
+            value.x.isFinite && value.y.isFinite && value.z.isFinite
+                && rate.x.isFinite && rate.y.isFinite && rate.z.isFinite
+        }
 
         func normalized() throws -> Self {
             let r = Engine.ApparentPlace.norm(value)

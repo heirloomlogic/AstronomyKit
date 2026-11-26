@@ -155,13 +155,12 @@ extension Engine.PlanetDE441 {
         guard tt.isFinite, tdbAcceleration.isFinite else { return nil }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
-        guard let barycenter = earthBarycenter.evaluate(tdb: tdb),
-            let barycenterAcceleration = earthBarycenter.acceleration(tdb: tdb),
-            let solar = sun.evaluate(tdb: tdb), let solarAcceleration = sun.acceleration(tdb: tdb),
-            let offset = earthOffset.evaluate(tdb: tdb), let offsetAcceleration = earthOffset.acceleration(tdb: tdb)
+        guard let barycenter = earthBarycenter.evaluateAndAcceleration(tdb: tdb),
+            let solar = sun.evaluateAndAcceleration(tdb: tdb),
+            let offset = earthOffset.evaluateAndAcceleration(tdb: tdb)
         else { return nil }
         let velocity = barycenter.velocity - solar.velocity + offset.velocity
-        let acceleration = barycenterAcceleration - solarAcceleration + offsetAcceleration
+        let acceleration = barycenter.acceleration - solar.acceleration + offset.acceleration
         return Engine.FrameBias.icrsToEqj.apply(
             to: (acceleration * (conversion.rate * conversion.rate) + velocity * tdbAcceleration)
                 / Engine.kilometersPerAU)

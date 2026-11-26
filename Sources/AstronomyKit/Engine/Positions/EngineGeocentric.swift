@@ -17,22 +17,24 @@ extension Engine.Positions {
         aberration: Aberration
     ) throws -> Engine.Vector<Engine.EQJ> {
         try Engine.checkAcceptedTime(time)
-        let kinematics: Engine.ApparentPlace.Kinematics
+        let observerMotion: Engine.ApparentPlace.VectorRate
+        let sunMotion: Engine.ApparentPlace.VectorRate?
         if observer == .earth {
-            kinematics = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
+            let (earth, sun) = try Engine.ApparentPlace.earthAndSunBarycentricMotion(tt: time.tt)
+            observerMotion = earth
+            sunMotion = sun
         } else {
-            // This API returns a position only; acceleration does not enter its value.
-            kinematics = try Engine.ApparentPlace.Kinematics(
-                motion: Engine.ApparentPlace.bodyMotion(observer, tt: time.tt), acceleration: .zero)
+            observerMotion = try Engine.ApparentPlace.bodyMotion(observer, tt: time.tt)
+            sunMotion = nil
         }
         if target == observer { return Engine.Vector(x: 0, y: 0, z: 0, time: time) }
-        let result = try Engine.ApparentPlace.solution(
-            body: target, at: time, observer: kinematics, aberration: aberration)
+        let result = try Engine.ApparentPlace.positionSolution(
+            body: target, at: time, observerMotion: observerMotion, sunMotion: sunMotion, aberration: aberration)
         guard let model = time.deltaTModel else { throw AstronomyError.badTime }
         let emission = Engine.Time(tt: result.emissionTT, deltaTModel: model)
         return try checked(
             Engine.Vector(
-                x: result.motion.value.x, y: result.motion.value.y, z: result.motion.value.z, time: emission))
+                x: result.position.x, y: result.position.y, z: result.position.z, time: emission))
     }
 
     /// Astrometric or apparent position relative to Earth's center, at the reception time.
@@ -43,7 +45,8 @@ extension Engine.Positions {
     ) throws -> Engine.Vector<Engine.EQJ> {
         try Engine.checkAcceptedTime(time)
         if body == .earth { return Engine.Vector(x: 0, y: 0, z: 0, time: time) }
-        let motion = try Engine.ApparentPlace.geocentricMotion(body: body, at: time, aberration: aberration)
-        return try checked(Engine.Vector(x: motion.value.x, y: motion.value.y, z: motion.value.z, time: time))
+        let position = try Engine.ApparentPlace.geocentricPositionValue(
+            body: body, at: time, aberration: aberration)
+        return try checked(Engine.Vector(x: position.x, y: position.y, z: position.z, time: time))
     }
 }

@@ -221,13 +221,19 @@ extension Engine.Events {
             if distance > maximum.distance { maximum = (distance, time) }
         }
 
-        let pericenter = try refinePlanetaryExtreme(
-            of: body, kind: .pericenter, around: minimum.time, initialSpan: 4 * interval)
-        let apocenter = try refinePlanetaryExtreme(
-            of: body, kind: .apocenter, around: maximum.time, initialSpan: 4 * interval)
-        let candidates = [pericenter, apocenter].filter { $0.time.tt >= start.tt }.sorted { $0.time.tt < $1.time.tt }
+        var candidates: [PlanetaryApsis] = []
+        if minimum.time.tt + 2 * interval >= start.tt {
+            let pericenter = try refinePlanetaryExtreme(
+                of: body, kind: .pericenter, around: minimum.time, initialSpan: 4 * interval)
+            if pericenter.time.tt >= start.tt { candidates.append(pericenter) }
+        }
+        if maximum.time.tt + 2 * interval >= start.tt {
+            let apocenter = try refinePlanetaryExtreme(
+                of: body, kind: .apocenter, around: maximum.time, initialSpan: 4 * interval)
+            if apocenter.time.tt >= start.tt { candidates.append(apocenter) }
+        }
+        candidates.sort { $0.time.tt < $1.time.tt }
         guard let result = candidates.first else { throw AstronomyError.searchFailure }
-        _ = try Engine.Positions.heliocentricDistance(of: body, at: result.time)
         return result
     }
 
@@ -237,8 +243,9 @@ extension Engine.Events {
         around estimate: Engine.Time,
         initialSpan: Double
     ) throws -> PlanetaryApsis {
-        var first = estimate.adding(days: -initialSpan / 2)
-        var span = initialSpan
+        var first = estimate.adding(days: max(-Engine.acceptedTTDays - estimate.tt, -initialSpan / 2))
+        let last = estimate.adding(days: min(Engine.acceptedTTDays - estimate.tt, initialSpan / 2))
+        var span = last.ut - first.ut
         let direction = kind == .apocenter ? 1.0 : -1.0
         for _ in 0..<20 {
             let interval = span / 9
@@ -259,8 +266,12 @@ extension Engine.Events {
                     bestIndex = index
                 }
             }
-            first = first.adding(days: Double(bestIndex - 1) * interval)
-            span = 2 * interval
+            let lower = max(0, bestIndex - 1)
+            let upper = min(9, bestIndex + 1)
+            let nextFirst = first.adding(days: Double(lower) * interval)
+            let nextSpan = Double(upper - lower) * interval
+            first = nextFirst
+            span = nextSpan
         }
         throw AstronomyError.noConvergence
     }

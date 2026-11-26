@@ -56,11 +56,11 @@ extension Engine.Horizontal {
         let geometric = zenithDistance
         let lift = Engine.AtmosphericRefraction.angle(refraction, altitude: 90 - zenithDistance)
         zenithDistance -= lift
-        if lift > 0 && zenithDistance > 3e-4 {
+        if lift > 0 && zenithDistance > 3e-4 && geometric < 180 - 3e-4 {
             // Turn the direction toward the zenith, in the plane that
             // holds both, from the geometric to the refracted distance.
-            let zenith = rotation.inverse.apply(to: Engine.Vector<Engine.HOR>(x: 0, y: 0, z: 1, time: time))
-            let z = (zenith.x, zenith.y, zenith.z)
+            // Column 2 of `rotation.inverse` is row 2 of `rotation` (`rot.0.2, rot.1.2, rot.2.2`).
+            let z = (rotation.rot.0.2, rotation.rot.1.2, rotation.rot.2.2)
             let refracted = zenithDistance * Engine.radiansPerDegree
             let unrefracted = geometric * Engine.radiansPerDegree
             let (sinNew, cosNew) = (sin(refracted), cos(refracted))

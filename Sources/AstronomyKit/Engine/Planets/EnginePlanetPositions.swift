@@ -177,9 +177,8 @@ extension Engine.Planet {
     private func seriesState(
         millennia t: Double, cache: Engine.VSOP87B.Cache
     ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>) {
-        let sphere = Engine.VSOP87B.coordinates(self, millennia: t, cache: cache)
-        let rates = Engine.VSOP87B.derivatives(self, millennia: t, cache: cache)
-        return (Engine.VSOP87B.rectangular(sphere), Engine.VSOP87B.velocity(sphere, rates: rates))
+        let (sphere, rates) = Engine.VSOP87B.coordinatesAndDerivatives(self, millennia: t, cache: cache)
+        return Engine.VSOP87B.rectangularAndVelocity(sphere, rates: rates)
     }
 
     private static func checked<F>(_ vector: Engine.Vector<F>) throws -> Engine.Vector<F> {

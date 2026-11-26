@@ -34,7 +34,9 @@ extension Engine.FrameRotation {
     /// R1(εA + Δε): from the true equator of date to the true ecliptic of
     /// date.
     static func eqdToEct(_ time: Engine.Time) -> Rotation<EQD, ECT> {
-        tilted(by: Engine.EarthTilt(tt: time.tt).trueObliquity)
+        let meanObliquity = Engine.Precession.meanObliquity(tt: time.tt)
+        let tilt = Engine.EarthTilt(tt: time.tt, meanObliquity: meanObliquity)
+        return tilted(by: tilt.trueObliquity)
     }
 
     static func ectToEqd(_ time: Engine.Time) -> Rotation<ECT, EQD> { eqdToEct(time).inverse }
@@ -53,18 +55,17 @@ extension Engine.FrameRotation {
     /// Precession then nutation: from the J2000 equator to the true equator
     /// of date.
     static func eqjToEqd(_ time: Engine.Time) -> Rotation<EQJ, EQD> {
-        eqjToEqd(tt: time.tt, tilt: Engine.EarthTilt(tt: time.tt))
-    }
-
-    private static func eqjToEqd(tt: Double, tilt: Engine.EarthTilt) -> Rotation<EQJ, EQD> {
-        Engine.Precession.rotation(tt: tt).then(tilt.nutationRotation)
+        let (precession, meanObliquity) = Engine.Precession.rotationAndMeanObliquity(tt: time.tt)
+        let tilt = Engine.EarthTilt(tt: time.tt, meanObliquity: meanObliquity)
+        return precession.then(tilt.nutationRotation)
     }
 
     static func eqdToEqj(_ time: Engine.Time) -> Rotation<EQD, EQJ> { eqjToEqd(time).inverse }
 
     static func eqjToEct(_ time: Engine.Time) -> Rotation<EQJ, ECT> {
-        let tilt = Engine.EarthTilt(tt: time.tt)
-        return eqjToEqd(tt: time.tt, tilt: tilt).then(tilted(by: tilt.trueObliquity))
+        let (precession, meanObliquity) = Engine.Precession.rotationAndMeanObliquity(tt: time.tt)
+        let tilt = Engine.EarthTilt(tt: time.tt, meanObliquity: meanObliquity)
+        return precession.then(tilt.nutationRotation).then(tilted(by: tilt.trueObliquity))
     }
 
     static func ectToEqj(_ time: Engine.Time) -> Rotation<ECT, EQJ> { eqjToEct(time).inverse }
@@ -81,19 +82,14 @@ extension Engine.FrameRotation {
     /// validates the observer.
     static func eqdToHor(_ time: Engine.Time, observer: Observer) -> Rotation<EQD, HOR> {
         let latitude = observer.latitude * Engine.radiansPerDegree
-        let longitude = observer.longitude * Engine.radiansPerDegree
         let (sinLat, cosLat) = (sin(latitude), cos(latitude))
-        let (sinLon, cosLon) = (sin(longitude), cos(longitude))
-        // Zenith, north and west in Earth-fixed axes, then turned by sidereal
-        // time into the equator of date.
-        let spin = -15 * Engine.EarthRotation.apparentSiderealTime(time) * Engine.radiansPerDegree
-        let (c, s) = (cos(spin), sin(spin))
-        func turned(_ v: (Double, Double, Double)) -> (Double, Double, Double) {
-            (c * v.0 + s * v.1, -s * v.0 + c * v.1, v.2)
-        }
-        let zenith = turned((cosLat * cosLon, cosLat * sinLon, sinLat))
-        let north = turned((-sinLat * cosLon, -sinLat * sinLon, cosLat))
-        let west = turned((sinLon, -cosLon, 0))
+        // Local apparent sidereal time = GAST + observer longitude.
+        let localSidereal =
+            (15 * Engine.EarthRotation.apparentSiderealTime(time) + observer.longitude) * Engine.radiansPerDegree
+        let (sinLst, cosLst) = (sin(localSidereal), cos(localSidereal))
+        let zenith = (cosLat * cosLst, cosLat * sinLst, sinLat)
+        let north = (-sinLat * cosLst, -sinLat * sinLst, cosLat)
+        let west = (sinLst, -cosLst, 0.0)
         // Element (i, j) of the matrix is rot[j][i]: rot[i] is EQD axis i
         // expressed in HOR.
         return Rotation(

@@ -51,11 +51,12 @@ extension Engine.Moon {
         guard let source = outer ? Engine.MoonDE441Full.state(tt: tt) : Engine.MoonEphemeris.state(tt: tt) else {
             return nil
         }
-        let precession = Engine.Precession.rotation(tt: tt)
-        let equator = precession.apply(to: source.position)
+        let precession = Engine.Precession.frame(tt: tt)
+        let equator = precession.rotation.apply(to: source.position)
         let equatorVelocity =
-            precession.apply(to: source.velocity) + Engine.Precession.rate(tt: tt).apply(to: source.position)
-        let (tilt, tiltRate) = meanTilt(tt: tt)
+            precession.rotation.apply(to: source.velocity) + precession.rate.apply(to: source.position)
+        let (tilt, tiltRate) = tiltAndRate(
+            by: precession.meanObliquity, rate: precession.meanObliquityRate, from: Engine.EQM.self, to: Engine.ECM.self)
         return (tilt.apply(to: equator), tilt.apply(to: equatorVelocity) + tiltRate.apply(to: equator))
     }
 
@@ -75,10 +76,11 @@ extension Engine.Moon {
     ) throws -> Engine.State<Engine.EQJ> {
         try Engine.checkAcceptedTime(time)
         let ecliptic = meanEclipticState(at: time, cache: cache).state
-        let (tilt, tiltRate) = meanTilt(tt: time.tt)
+        let precession = Engine.Precession.frame(tt: time.tt)
+        let (tilt, tiltRate) = tiltAndRate(
+            by: precession.meanObliquity, rate: precession.meanObliquityRate, from: Engine.EQM.self, to: Engine.ECM.self)
         let equator = tilt.inverse.apply(to: ecliptic, rate: tiltRate.inverse)
-        let state = Engine.Precession.rotation(tt: time.tt).inverse.apply(
-            to: equator, rate: Engine.Precession.rate(tt: time.tt).inverse)
+        let state = precession.rotation.inverse.apply(to: equator, rate: precession.rate.inverse)
         return try checked(state)
     }
 
@@ -119,7 +121,8 @@ extension Engine.Moon {
         let (meanTilt, meanTiltRate) = tiltAndRate(
             by: tilt.meanObliquity, rate: tilt.meanObliquityRate, from: Engine.EQM.self, to: Engine.ECM.self)
         let equator = meanTilt.inverse.apply(to: ecliptic, rate: meanTiltRate.inverse)
-        let trueEquator = tilt.nutationRotation.apply(to: equator, rate: tilt.nutationRate)
+        let (nutation, nutationRate) = tilt.nutationRotationAndRate()
+        let trueEquator = nutation.apply(to: equator, rate: nutationRate)
         let (trueTilt, trueTiltRate) = tiltAndRate(
             by: tilt.trueObliquity, rate: tilt.trueObliquityRate, from: Engine.EQD.self, to: Engine.ECT.self)
         let state = try checked(trueTilt.apply(to: trueEquator, rate: trueTiltRate))
@@ -129,16 +132,6 @@ extension Engine.Moon {
             distanceRate: distanceRate)
     }
 
-    /// The mean obliquity's rotation from the mean equator to the mean
-    /// ecliptic of date at `tt`, and its rate.
-    private static func meanTilt(
-        tt: Double
-    ) -> (Engine.Rotation<Engine.EQM, Engine.ECM>, Engine.RotationRate<Engine.EQM, Engine.ECM>) {
-        tiltAndRate(
-            by: Engine.Precession.meanObliquity(tt: tt), rate: Engine.Precession.meanObliquityRate(tt: tt),
-            from: Engine.EQM.self, to: Engine.ECM.self)
-    }
-
     private static func tiltAndRate<From, To>(
         by obliquity: Double, rate: Double, from: From.Type, to: To.Type
     ) -> (Engine.Rotation<From, To>, Engine.RotationRate<From, To>) {
@@ -146,11 +139,9 @@ extension Engine.Moon {
     }
 
     private static func checked<F>(_ state: Engine.State<F>) throws -> Engine.State<F> {
-        try checkFinite(state.x, state.y, state.z, state.vx, state.vy, state.vz)
+        guard state.x.isFinite, state.y.isFinite, state.z.isFinite,
+            state.vx.isFinite, state.vy.isFinite, state.vz.isFinite
+        else { throw AstronomyError.badTime }
         return state
-    }
-
-    private static func checkFinite(_ values: Double...) throws {
-        guard values.allSatisfy(\.isFinite) else { throw AstronomyError.badTime }
     }
 }

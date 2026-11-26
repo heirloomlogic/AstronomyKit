@@ -71,9 +71,10 @@ extension Engine {
             let x = projected * cos(rightAscensionRadians)
             let y = projected * sin(rightAscensionRadians)
             let z = sin(declinationRadians)
-            let movedX = b1875Rotation[0, 0] * x + b1875Rotation[1, 0] * y + b1875Rotation[2, 0] * z
-            let movedY = b1875Rotation[0, 1] * x + b1875Rotation[1, 1] * y + b1875Rotation[2, 1] * z
-            let movedZ = b1875Rotation[0, 2] * x + b1875Rotation[1, 2] * y + b1875Rotation[2, 2] * z
+            let rot = b1875Rotation.rot
+            let movedX = rot.0.0 * x + rot.1.0 * y + rot.2.0 * z
+            let movedY = rot.0.1 * x + rot.1.1 * y + rot.2.1 * z
+            let movedZ = rot.0.2 * x + rot.1.2 * y + rot.2.2 * z
             var resultRightAscension = atan2(movedY, movedX)
             if resultRightAscension < 0 { resultRightAscension += 2 * .pi }
             let resultDeclination =
@@ -89,22 +90,33 @@ extension Engine {
                 throw AstronomyError.invalidParameter
             }
             let normalizedRightAscension = normalizedHours(rightAscension)
-            guard
-                let boundary = boundaries.first(where: {
-                    $0.declinationLower <= declination
-                        && $0.rightAscensionLower <= normalizedRightAscension
-                        && normalizedRightAscension < $0.rightAscensionUpper
-                })
-            else {
-                throw AstronomyError.internalError
+            // `boundaries` is sorted non-increasing by `declinationLower`; binary search
+            // for the first entry with `declinationLower <= declination`.
+            var low = 0
+            var high = boundaries.count
+            while low < high {
+                let mid = (low + high) / 2
+                if boundaries[mid].declinationLower > declination {
+                    low = mid + 1
+                } else {
+                    high = mid
+                }
             }
-            let info = infos[boundary.infoIndex]
-            return Result(
-                symbol: info.symbol,
-                name: info.name,
-                rightAscension1875: normalizedRightAscension,
-                declination1875: declination
-            )
+            for index in low..<boundaries.count {
+                let boundary = boundaries[index]
+                if boundary.rightAscensionLower <= normalizedRightAscension
+                    && normalizedRightAscension < boundary.rightAscensionUpper
+                {
+                    let info = infos[boundary.infoIndex]
+                    return Result(
+                        symbol: info.symbol,
+                        name: info.name,
+                        rightAscension1875: normalizedRightAscension,
+                        declination1875: declination
+                    )
+                }
+            }
+            throw AstronomyError.internalError
         }
 
         private static func normalizedHours(_ rightAscension: Double) -> Double {

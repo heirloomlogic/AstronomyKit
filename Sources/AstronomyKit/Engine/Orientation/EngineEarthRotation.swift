@@ -40,7 +40,9 @@ extension Engine.EarthRotation {
         _ time: Engine.Time,
         cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache
     ) -> Double {
-        siderealTime(time, equationOfEquinoxes: Engine.EarthTilt(tt: time.tt, cache: cache).equationOfEquinoxes)
+        let meanObliquity = Engine.Precession.meanObliquity(tt: time.tt)
+        let tilt = Engine.EarthTilt(tt: time.tt, meanObliquity: meanObliquity, cache: cache)
+        return siderealTime(time, equationOfEquinoxes: tilt.equationOfEquinoxes)
     }
 
     /// Sidereal hours for an equation of the equinoxes in degrees.

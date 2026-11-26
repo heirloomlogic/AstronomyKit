@@ -59,4 +59,13 @@ struct LocalSolarEclipseTests {
         #expect(end.time < eclipse.partialEnd.time)
         #expect(eclipse.peak.time.deltaTModel == model)
     }
+
+    @Test("Extreme observer height throws invalidParameter")
+    func extremeObserverHeightThrows() {
+        let startTime = AstroTime(year: 2_025, month: 1, day: 1)
+        let extreme = Observer(latitude: 40.7128, longitude: -74.0060, height: 1e9)
+        #expect(throws: AstronomyError.invalidParameter) {
+            _ = try Eclipse.searchLocalSolar(after: startTime, from: extreme)
+        }
+    }
 }

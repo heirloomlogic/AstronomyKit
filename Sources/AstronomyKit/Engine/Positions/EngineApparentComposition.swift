@@ -9,10 +9,10 @@ extension Engine.ApparentPlace {
             throw AstronomyError.badTime
         }
         if body == .solarSystemBarycenter { return VectorRate(.zero) }
-        let sun = try sunSourceKinematics(tt: tt).motion
-        if body == .sun { return sun }
-        let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+        if body == .sun { return try sunSourceMotion(tt: tt) }
         if tt >= -Engine.acceptedTTDays {
+            let sun = try sunSourceMotion(tt: tt)
+            let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
             let state = try Engine.Positions.heliocentricState(of: body, at: time)
             return VectorRate(state.positionVector, state.velocityVector) + sun
         }
@@ -29,6 +29,7 @@ extension Engine.ApparentPlace {
             return try bodyMotion(.earth, tt: tt) + VectorRate(moon.position * scale, moon.velocity * scale)
         }
         guard let planet = Engine.Planet(body) else { throw AstronomyError.invalidBody }
+        let sun = try sunSourceMotion(tt: tt)
         let t = tt / Engine.VSOP87B.daysPerMillennium
         let sphere = Engine.VSOP87B.coordinates(planet, millennia: t)
         let rates = Engine.VSOP87B.derivatives(planet, millennia: t)
@@ -66,25 +67,53 @@ extension Engine.ApparentPlace {
     }
 
     static func solution(
-        body: CelestialBody, at time: Engine.Time, observer: Kinematics, aberration: Aberration
+        body: CelestialBody, at time: Engine.Time, observer: Kinematics, aberration: Aberration,
+        sunMotion: VectorRate? = nil
     ) throws -> (motion: VectorRate, emissionTT: Double) {
         try Engine.checkAcceptedTime(time)
         let retarded = try retardedState(atTT: time.tt, observer: observer.motion) {
             try bodyMotion(body, tt: $0)
         }
         if aberration == .none { return (retarded.displacement, retarded.emissionTT) }
-        let sun = try sunBarycentricKinematics(tt: time.tt)
+        let sun = try sunMotion ?? sunSourceMotion(tt: time.tt)
         let corrected = try correctedMotion(
-            retarded.displacement, sunToObserver: observer.motion - sun.motion,
+            retarded.displacement, sunToObserver: observer.motion - sun,
             beta: observerBeta(observer, atTT: time.tt), solarSource: body == .sun)
         return (corrected, retarded.emissionTT)
+    }
+
+    /// Position-only apparent/astrometric solution (skips observer acceleration and `tdbAcceleration`).
+    static func positionSolution(
+        body: CelestialBody, at time: Engine.Time, observerMotion: VectorRate, sunMotion: VectorRate? = nil,
+        aberration: Aberration
+    ) throws -> (position: SIMD3<Double>, emissionTT: Double) {
+        try Engine.checkAcceptedTime(time)
+        let retarded = try retardedState(atTT: time.tt, observer: observerMotion) {
+            try bodyMotion(body, tt: $0)
+        }
+        if aberration == .none { return (retarded.displacement.value, retarded.emissionTT) }
+        let sun = try sunMotion ?? sunSourceMotion(tt: time.tt)
+        let corrected = try correctedMotion(
+            retarded.displacement, sunToObserver: observerMotion - sun,
+            beta: observerBetaValue(observerMotion, atTT: time.tt), solarSource: body == .sun)
+        return (corrected.value, retarded.emissionTT)
     }
 
     static func geocentricMotion(
         body: CelestialBody, at time: Engine.Time, aberration: Aberration
     ) throws -> VectorRate {
-        try solution(
-            body: body, at: time, observer: earthBarycentricKinematics(tt: time.tt), aberration: aberration
+        let (earth, sun) = try earthAndSunBarycentricKinematics(tt: time.tt)
+        return try solution(
+            body: body, at: time, observer: earth, aberration: aberration, sunMotion: sun.motion
         ).motion
+    }
+
+    static func geocentricPositionValue(
+        body: CelestialBody, at time: Engine.Time, aberration: Aberration
+    ) throws -> SIMD3<Double> {
+        let (earth, sun) = try earthAndSunBarycentricMotion(tt: time.tt)
+        return try positionSolution(
+            body: body, at: time, observerMotion: earth, sunMotion: sun, aberration: aberration
+        ).position
     }
 }

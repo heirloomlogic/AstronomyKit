@@ -47,22 +47,37 @@ extension Engine.MoonDE441Full {
     }
 
     static func evaluate(record: Int, x: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-        guard x.isFinite, (-1...1).contains(x), let c = coefficients(record: record) else { return nil }
-        var position = SIMD3<Double>()
-        var velocity = SIMD3<Double>()
-        for axis in 0..<3 {
-            let base = axis * 13
-            var (b1, b2, d1, d2) = (0.0, 0.0, 0.0, 0.0)
-            for k in stride(from: 12, to: 0, by: -1) {
-                let b = 2 * x * b1 - b2 + c[base + k]
-                let d = 2 * b1 + 2 * x * d1 - d2
-                (b2, b1) = (b1, b)
-                (d2, d1) = (d1, d)
+        guard (0..<recordCount).contains(record), x.isFinite, (-1...1).contains(x) else { return nil }
+        let localRecord = record % recordsPerChunk
+        return resourceCache.resource(at: record / recordsPerChunk).withUnsafeBytes { bytes in
+            let recordBase = localRecord * 312
+            guard recordBase + 312 <= bytes.count else { return nil }
+            let twoX = 2 * x
+            let invKmPerAU = 1 / Engine.kilometersPerAU
+            let velScale = 1 / (2 * Engine.kilometersPerAU)
+            var position = SIMD3<Double>()
+            var velocity = SIMD3<Double>()
+            for axis in 0..<3 {
+                let axisBase = recordBase + axis * 104
+                var (b1, b2, d1, d2) = (0.0, 0.0, 0.0, 0.0)
+                for k in stride(from: 12, to: 0, by: -1) {
+                    let bits = UInt64(
+                        littleEndian: bytes.loadUnaligned(fromByteOffset: axisBase + k * 8, as: UInt64.self))
+                    let ck = Double(bitPattern: bits)
+                    guard ck.isFinite else { return nil }
+                    let b = twoX * b1 - b2 + ck
+                    let d = 2 * b1 + twoX * d1 - d2
+                    (b2, b1) = (b1, b)
+                    (d2, d1) = (d1, d)
+                }
+                let c0 = Double(
+                    bitPattern: UInt64(littleEndian: bytes.loadUnaligned(fromByteOffset: axisBase, as: UInt64.self)))
+                guard c0.isFinite else { return nil }
+                position[axis] = (c0 + x * b1 - b2) * invKmPerAU
+                velocity[axis] = (b1 + x * d1 - d2) * velScale
             }
-            position[axis] = (c[base] + x * b1 - b2) / Engine.kilometersPerAU
-            velocity[axis] = (b1 + x * d1 - d2) / (2 * Engine.kilometersPerAU)
+            return (position, velocity)
         }
-        return (position, velocity)
     }
 
     /// Applies the ICRF-to-EQJ bias and analytic TT-to-TDB derivative; the coefficients remain in their source clock and frame.

@@ -17,22 +17,21 @@ extension Engine.Positions {
         aberration: Aberration
     ) throws -> Engine.Equatorial {
         try Engine.checkAcceptedTime(time)
-        let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
-        let site = try Engine.ApparentPlace.siteKinematics(observer, at: time)
-        let origin = Engine.ApparentPlace.Kinematics(
-            motion: earth.motion + site.motion, acceleration: earth.acceleration + site.acceleration)
-        let motion = try Engine.ApparentPlace.solution(
-            body: body, at: time, observer: origin, aberration: aberration
-        ).motion
+        let (earth, sun) = try Engine.ApparentPlace.earthAndSunBarycentricMotion(tt: time.tt)
+        let site = try Engine.ApparentPlace.siteMotion(observer, at: time)
+        let position = try Engine.ApparentPlace.positionSolution(
+            body: body, at: time, observerMotion: earth + site, sunMotion: sun, aberration: aberration
+        ).position
         let j2000 = Engine.Vector<Engine.EQJ>(
-            x: motion.value.x, y: motion.value.y, z: motion.value.z, time: time)
+            x: position.x, y: position.y, z: position.z, time: time)
         let equatorial =
             switch equatorDate {
             case .j2000: try coordinates(j2000)
             case .ofDate: try coordinates(Engine.FrameRotation.eqjToEqd(time).apply(to: j2000))
             }
-        let values = [equatorial.rightAscension, equatorial.declination, equatorial.distance]
-        guard values.allSatisfy(\.isFinite) else { throw AstronomyError.badTime }
+        guard equatorial.rightAscension.isFinite, equatorial.declination.isFinite, equatorial.distance.isFinite else {
+            throw AstronomyError.badTime
+        }
         return equatorial
     }
 

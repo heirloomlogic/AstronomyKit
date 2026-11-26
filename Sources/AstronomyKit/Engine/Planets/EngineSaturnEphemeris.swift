@@ -31,11 +31,14 @@ extension Engine.SaturnEphemeris {
         }
 
         func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
-            guard tdb.isFinite, tdb >= start else { return nil }
+            let end = start + Double(recordCount) * days
+            guard tdb.isFinite, end.isFinite, tdb >= start, tdb < end else { return nil }
             let interval = (tdb - start) / days
-            guard interval < Double(recordCount) else { return nil }
-            let record = Int(interval.rounded(.down))
-            return evaluate(record: record, x: 2 * ((tdb - start) - Double(record) * days) / days - 1)
+            guard interval.isFinite else { return nil }
+            let record = min(max(Int(interval.rounded(.down)), 0), recordCount - 1)
+            let x = 2 * ((tdb - start) - Double(record) * days) / days - 1
+            guard x.isFinite else { return nil }
+            return evaluate(record: record, x: x)
         }
 
         /// Clenshaw value and analytic derivative, in km and km per TDB day.

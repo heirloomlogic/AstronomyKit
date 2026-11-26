@@ -8,28 +8,32 @@ extension Engine.ApparentPlace {
         guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
         let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
         let state = try Engine.Planet.earth.heliocentricState(at: time)
-        let retainedAcceleration: SIMD3<Double>
-        if Engine.PlanetPolynomial.covers(tt),
-            let fitted = polynomialAcceleration(Engine.PlanetPolynomial.model(.earth), tt: tt)
-        {
-            retainedAcceleration = fitted
-        } else {
-            retainedAcceleration = seriesAcceleration(.earth, tt: tt)
-        }
-        let legacyAcceleration = Engine.VSOP87B.toEquatorial.apply(to: retainedAcceleration)
         let (weight, rate) = Engine.PlanetDE441.weight(tt: tt)
-        var acceleration = legacyAcceleration
-        if weight > 0 {
+        let acceleration: SIMD3<Double>
+        if weight == 1 {
             let clockAcceleration = tdbAcceleration(tt: tt)
             guard
                 let sourceAcceleration = Engine.PlanetDE441.earthAcceleration(
                     tt: tt, tdbAcceleration: clockAcceleration)
             else { throw AstronomyError.badTime }
             acceleration = sourceAcceleration
-            if weight < 1 {
-                guard let source = Engine.PlanetDE441.state(of: .earth, tt: tt, physicalCenter: true) else {
-                    throw AstronomyError.badTime
-                }
+        } else {
+            let retainedAcceleration: SIMD3<Double>
+            if Engine.PlanetPolynomial.covers(tt),
+                let fitted = polynomialAcceleration(Engine.PlanetPolynomial.model(.earth), tt: tt)
+            {
+                retainedAcceleration = fitted
+            } else {
+                retainedAcceleration = seriesAcceleration(.earth, tt: tt)
+            }
+            let legacyAcceleration = Engine.VSOP87B.toEquatorial.apply(to: retainedAcceleration)
+            if weight > 0 {
+                let clockAcceleration = tdbAcceleration(tt: tt)
+                guard
+                    let sourceAcceleration = Engine.PlanetDE441.earthAcceleration(
+                        tt: tt, tdbAcceleration: clockAcceleration),
+                    let source = Engine.PlanetDE441.state(of: .earth, tt: tt, physicalCenter: true)
+                else { throw AstronomyError.badTime }
                 let retained = Engine.VSOP87B.toEquatorial.apply(
                     to: try Engine.Planet.earth.retainedEclipticState(at: time))
                 let legacyPosition = retained.positionVector
@@ -39,12 +43,43 @@ extension Engine.ApparentPlace {
                 let positionBlend: SIMD3<Double> =
                     Engine.PlanetDE441.weightAcceleration(tt: tt) * (source.position - legacyPosition)
                 acceleration = legacyAcceleration + accelerationBlend + velocityBlend + positionBlend
+            } else {
+                acceleration = legacyAcceleration
             }
         }
-        guard [acceleration.x, acceleration.y, acceleration.z].allSatisfy(\.isFinite) else {
+        guard acceleration.x.isFinite, acceleration.y.isFinite, acceleration.z.isFinite else {
             throw AstronomyError.badTime
         }
         return Kinematics(motion: VectorRate(state.positionVector, state.velocityVector), acceleration: acceleration)
+    }
+
+    /// Earth's heliocentric motion (position + velocity only, skipping unused second derivatives).
+    static func earthHeliocentricMotion(tt: Double) throws -> VectorRate {
+        guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
+        let time = Engine.Time(ut: tt, tt: tt, deltaTModel: .espenakMeeus)
+        let state = try Engine.Planet.earth.heliocentricState(at: time)
+        return VectorRate(state.positionVector, state.velocityVector)
+    }
+
+    /// Motion-only DE441 solar trajectory (skips the 787-term `tdbAcceleration` and second-derivative pass).
+    static func sunSourceMotion(tt: Double) throws -> VectorRate {
+        guard tt.isFinite, tt >= -Engine.acceptedTTDays - 2, tt <= Engine.acceptedTTDays else {
+            throw AstronomyError.badTime
+        }
+        let conversion = Engine.TDB.offsetAndRate(tt: tt)
+        let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
+        guard let state = Engine.PlutoDE441.sun.evaluate(tdb: tdb) else { throw AstronomyError.badTime }
+        let bias = Engine.FrameBias.icrsToEqj
+        let motion = VectorRate(bias.apply(to: state.position), bias.apply(to: state.velocity * conversion.rate))
+        guard motion.isFinite else { throw AstronomyError.badTime }
+        return motion
+    }
+
+    /// Earth barycentric motion (position + velocity only) plus the Sun's barycentric motion at `tt`.
+    static func earthAndSunBarycentricMotion(tt: Double) throws -> (earth: VectorRate, sun: VectorRate) {
+        let earthHelio = try earthHeliocentricMotion(tt: tt)
+        let sun = try sunSourceMotion(tt: tt)
+        return (earthHelio + sun, sun)
     }
 
     /// DE441's compiled solar trajectory, transformed from ICRF/TDB to EQJ/TT.
@@ -62,34 +97,14 @@ extension Engine.ApparentPlace {
         }
         let conversion = Engine.TDB.offsetAndRate(tt: tt)
         let tdb = tt + conversion.offsetSeconds / Engine.secondsPerDay
-        let table = Engine.PlutoDE441.sun
-        guard let state = table.evaluate(tdb: tdb) else { throw AstronomyError.badTime }
-        let record = Int(floor((tdb - table.start) / table.days))
-        guard (0..<table.recordCount).contains(record) else { throw AstronomyError.badTime }
-        let x = 2 * (tdb - table.start - Double(record) * table.days) / table.days - 1
-        let acceleration: SIMD3<Double> = table.data.withUnsafeBytes { raw in
-            func value(_ offset: Int) -> Double {
-                Double(bitPattern: UInt64(littleEndian: raw.loadUnaligned(fromByteOffset: offset, as: UInt64.self)))
-            }
-            let left = record * 48
-            let right = left + 48
-            var result = SIMD3<Double>()
-            for axis in 0..<3 {
-                let pl = value(left + axis * 8)
-                let pr = value(right + axis * 8)
-                let dl = value(left + (axis + 3) * 8) * table.days / 2
-                let dr = value(right + (axis + 3) * 8) * table.days / 2
-                let c2 = (dr - dl) / 8
-                let c3 = (dr + dl - (pr - pl)) / 16
-                result[axis] = (4 * c2 + 24 * x * c3) * 4 / (table.days * table.days * Engine.kilometersPerAU)
-            }
-            return result
+        guard let (position, velocity, acceleration) = Engine.PlutoDE441.sun.evaluateWithAcceleration(tdb: tdb) else {
+            throw AstronomyError.badTime
         }
         let bias = Engine.FrameBias.icrsToEqj
-        let motion = VectorRate(bias.apply(to: state.position), bias.apply(to: state.velocity * conversion.rate))
+        let motion = VectorRate(bias.apply(to: position), bias.apply(to: velocity * conversion.rate))
         let ttAcceleration = bias.apply(
-            to: acceleration * (conversion.rate * conversion.rate) + state.velocity * tdbAcceleration(tt: tt))
-        guard motion.isFinite, [ttAcceleration.x, ttAcceleration.y, ttAcceleration.z].allSatisfy(\.isFinite) else {
+            to: acceleration * (conversion.rate * conversion.rate) + velocity * tdbAcceleration(tt: tt))
+        guard motion.isFinite, ttAcceleration.x.isFinite, ttAcceleration.y.isFinite, ttAcceleration.z.isFinite else {
             throw AstronomyError.badTime
         }
         return Kinematics(motion: motion, acceleration: ttAcceleration)
@@ -100,6 +115,16 @@ extension Engine.ApparentPlace {
         let earth = try earthHeliocentricKinematics(tt: tt)
         let sun = try sunBarycentricKinematics(tt: tt)
         return Kinematics(motion: earth.motion + sun.motion, acceleration: earth.acceleration + sun.acceleration)
+    }
+
+    /// Earth and Sun barycentric kinematics together, avoiding a duplicate Sun evaluation.
+    static func earthAndSunBarycentricKinematics(tt: Double) throws -> (earth: Kinematics, sun: Kinematics) {
+        let earth = try earthHeliocentricKinematics(tt: tt)
+        let sun = try sunBarycentricKinematics(tt: tt)
+        return (
+            Kinematics(motion: earth.motion + sun.motion, acceleration: earth.acceleration + sun.acceleration),
+            sun
+        )
     }
 
     /// Converts a trajectory differentiated per TT day to barycentric velocity/c and its reception-TT derivative.
@@ -114,6 +139,16 @@ extension Engine.ApparentPlace {
         let result = VectorRate(beta, acceleration / Engine.speedOfLightAUPerDay)
         guard result.isFinite else { throw AstronomyError.badVector }
         return result
+    }
+
+    /// Position-only observer beta (rate zeroed; skips `tdbAcceleration` when callers only read `.value`).
+    static func observerBetaValue(_ motion: VectorRate, atTT tt: Double) throws -> VectorRate {
+        guard tt.isFinite, abs(tt) <= Engine.acceptedTTDays else { throw AstronomyError.badTime }
+        let rate = Engine.TDB.rate(tt: tt)
+        guard let beta = subluminalBeta(velocityTT: motion.rate, tdbRate: rate) else {
+            throw AstronomyError.badVector
+        }
+        return VectorRate(beta)
     }
 
     static func polynomialAcceleration(_ model: Engine.PlanetPolynomial.Model, tt: Double) -> SIMD3<Double>? {
@@ -137,12 +172,18 @@ extension Engine.ApparentPlace {
         return result
     }
 
-    /// The second derivative of the complete spherical VSOP87B series, per Julian millennium squared.
-    static func seriesSecondDerivative(_ model: Engine.VSOP87B.Model, millennia t: Double) -> SIMD3<Double> {
-        var result = SIMD3<Double>()
+    /// Evaluates the complete spherical VSOP87B series position, first derivative, and second derivative in a single pass.
+    private static func seriesOrder012(
+        _ model: Engine.VSOP87B.Model, millennia t: Double
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>, acceleration: SIMD3<Double>) {
+        var pos = SIMD3<Double>()
+        var vel = SIMD3<Double>()
+        var acc = SIMD3<Double>()
         var term = 0
         for coordinate in 0..<3 {
-            var total = Engine.VSOP87B.CompensatedSum()
+            var totalPos = Engine.VSOP87B.CompensatedSum()
+            var totalVel = 0.0
+            var totalAcc = Engine.VSOP87B.CompensatedSum()
             var (power, lower, lower2) = (1.0, 0.0, 0.0)
             for (alpha, count) in model.termCounts[coordinate].enumerated() {
                 var values = Engine.VSOP87B.CompensatedSum()
@@ -153,26 +194,40 @@ extension Engine.ApparentPlace {
                     let b = model.terms[3 * term + 1]
                     let c = model.terms[3 * term + 2]
                     let angle = b + t * c
-                    values.add(a * cos(angle))
-                    first.add(-a * c * sin(angle))
-                    second.add(-a * c * c * cos(angle))
+                    let cosA = cos(angle)
+                    let sinA = sin(angle)
+                    let aCos = a * cosA
+                    values.add(aCos)
+                    first.add(-a * c * sinA)
+                    second.add(-aCos * c * c)
                     term += 1
                 }
-                total.add(
-                    power * second.value + 2 * Double(alpha) * lower * first.value + Double(alpha * (alpha - 1))
-                        * lower2 * values.value)
+                let v0 = values.value
+                let v1 = first.value
+                let v2 = second.value
+                var posInc = power * v0
+                if coordinate == 0 { posInc = posInc.truncatingRemainder(dividingBy: 2 * .pi) }
+                totalPos.add(posInc)
+                totalVel += Double(alpha) * lower * v0 + power * v1
+                totalAcc.add(
+                    power * v2 + 2 * Double(alpha) * lower * v1 + Double(alpha * (alpha - 1)) * lower2 * v0)
                 (lower2, lower, power) = (lower, power, power * t)
             }
-            result[coordinate] = total.value
+            pos[coordinate] = totalPos.value
+            vel[coordinate] = totalVel
+            acc[coordinate] = totalAcc.value
         }
-        return result
+        return (pos, vel, acc)
+    }
+
+    /// The second derivative of the complete spherical VSOP87B series, per Julian millennium squared.
+    static func seriesSecondDerivative(_ model: Engine.VSOP87B.Model, millennia t: Double) -> SIMD3<Double> {
+        seriesOrder012(model, millennia: t).acceleration
     }
 
     static func seriesAcceleration(_ planet: Engine.Planet, tt: Double) -> SIMD3<Double> {
         let t = tt / Engine.VSOP87B.daysPerMillennium
-        let p = Engine.VSOP87B.coordinates(planet, millennia: t)
-        let v = Engine.VSOP87B.derivatives(planet, millennia: t)
-        let a = seriesSecondDerivative(Engine.VSOP87B.model(planet), millennia: t)
+        let (p, v, a) = seriesOrder012(Engine.VSOP87B.model(planet), millennia: t)
         let (sl, cl, sb, cb) = (sin(p.x), cos(p.x), sin(p.y), cos(p.y))
         let r = p.z * cb
         let dr = v.z * cb - p.z * sb * v.y
@@ -184,6 +239,13 @@ extension Engine.ApparentPlace {
         return result / (Engine.VSOP87B.daysPerMillennium * Engine.VSOP87B.daysPerMillennium)
     }
 
+    private static let tdbJPLTerms: [(amplitude: Double, frequency: Double, phase: Double)] = [
+        (0.00065e-6, 6069.776754, 4.021194),
+        (0.00033e-6, 213.299095, 5.543132),
+        (-0.00196e-6, 6208.294251, 5.696701),
+        (-0.00173e-6, 74.781599, 2.435900),
+    ]
+
     /// Analytic derivative of `Engine.TDB.rate`, per TT day, using the same Fairhead and JPL terms.
     static func tdbAcceleration(tt: Double) -> Double {
         let t = tt / 365250
@@ -194,19 +256,19 @@ extension Engine.ApparentPlace {
             var (s, d, a) = (0.0, 0.0, 0.0)
             for term in group.reversed() {
                 let angle = term.frequency * t + term.phase
-                s += term.amplitude * sin(angle)
-                d += term.amplitude * term.frequency * cos(angle)
-                a -= term.amplitude * term.frequency * term.frequency * sin(angle)
+                let sinA = sin(angle)
+                let cosA = cos(angle)
+                let ampSin = term.amplitude * sinA
+                s += ampSin
+                d += term.amplitude * term.frequency * cosA
+                a -= ampSin * term.frequency * term.frequency
             }
             second = second * t + 2 * first + a
             first = first * t + value + d
             value = value * t + s
         }
-        for (amplitude, frequency, phase) in [
-            (0.00065e-6, 6069.776754, 4.021194), (0.00033e-6, 213.299095, 5.543132),
-            (-0.00196e-6, 6208.294251, 5.696701), (-0.00173e-6, 74.781599, 2.435900),
-        ] {
-            second -= amplitude * frequency * frequency * sin(frequency * t + phase)
+        for term in tdbJPLTerms {
+            second -= term.amplitude * term.frequency * term.frequency * sin(term.frequency * t + term.phase)
         }
         second += 2 * 0.03638e-6
         return second / (365250 * 365250 * Engine.secondsPerDay)

@@ -108,6 +108,26 @@ extension Engine.Nutation {
     /// The rates of ``planetaryArguments`` in radians per Julian century.
     private static let planetaryRates = planetaryArguments.map(\.perCentury)
 
+    /// Precomputed constant rate contribution of the 12 linear planetary arguments per term (smallest-first order).
+    private static let planetaryBaseRatesReversed: [Double] = planetaryTerms.reversed().map { term in
+        var sum = term.nl * planetaryRates[0]
+        sum += term.nf * planetaryRates[1]
+        sum += term.nd * planetaryRates[2]
+        sum += term.nom * planetaryRates[3]
+        sum += term.nme * planetaryRates[4]
+        sum += term.nve * planetaryRates[5]
+        sum += term.nea * planetaryRates[6]
+        sum += term.nma * planetaryRates[7]
+        sum += term.nju * planetaryRates[8]
+        sum += term.nsa * planetaryRates[9]
+        sum += term.nur * planetaryRates[10]
+        sum += term.nne * planetaryRates[11]
+        return sum
+    }
+
+    private static let luniSolarTermsSmallestFirst: [LuniSolarTerm] = Array(luniSolarTerms.reversed())
+    private static let planetaryTermsSmallestFirst: [PlanetaryTerm] = Array(planetaryTerms.reversed())
+
     /// The general precession in longitude, `iauFapa03`: (`linear` +
     /// `quadratic`·t)·t radians, t in Julian centuries.
     static let generalPrecession = (linear: 0.024_381_750, quadratic: 0.000_005_386_91)
@@ -118,6 +138,11 @@ extension Engine.Nutation {
     /// series summed smallest terms first; the rates are the derivatives of
     /// the same expressions.
     static func evaluate(centuries t: Double) -> Angles {
+        guard t.isFinite else {
+            return Angles(
+                longitude: .nan, obliquity: .nan, longitudeRate: .nan, obliquityRate: .nan,
+                complementaryEquationOfEquinoxes: .nan)
+        }
         // Luni-solar arguments in radians, and their rates per century.
         func angle(_ index: Int) -> Double {
             let c = luniSolarArguments[index]
@@ -143,10 +168,11 @@ extension Engine.Nutation {
         var de = 0.0
         var dpRate = 0.0
         var deRate = 0.0
-        for term in luniSolarTerms.reversed() {
+        let twoPi = 2 * Double.pi
+        for term in luniSolarTermsSmallestFirst {
             let argument = fmod(
                 term.nl * l + term.nlp * lp + term.nf * f + term.nd * d + term.nom * om,
-                2 * Double.pi
+                twoPi
             )
             let argumentRate =
                 term.nl * lRate + term.nlp * lpRate + term.nf * fRate + term.nd * dRate + term.nom * omRate
@@ -169,9 +195,12 @@ extension Engine.Nutation {
         var pe = 0.0
         var ppRate = 0.0
         var peRate = 0.0
-        for term in planetaryTerms.reversed() {
-            let argument = fmod(combination(term, planetary, pa), 2 * Double.pi)
-            let argumentRate = combinationRate(term, paRate)
+        let pTerms = planetaryTermsSmallestFirst
+        let pBaseRates = planetaryBaseRatesReversed
+        for index in pTerms.indices {
+            let term = pTerms[index]
+            let argument = fmod(combination(term, planetary, pa), twoPi)
+            let argumentRate = pBaseRates[index] + term.npa * paRate
             let s = sin(argument)
             let c = cos(argument)
             pp += term.ps * s + term.pc * c
@@ -359,6 +388,50 @@ extension Engine {
             return RotationRate(rot: ((xx, xy, xz), (yx, yy, yz), (zx, zy, zz)))
         }
 
+        /// Both ``nutationRotation`` and ``nutationRate`` sharing a single trig evaluation.
+        func nutationRotationAndRate() -> (rotation: Rotation<EQM, EQD>, rate: RotationRate<EQM, EQD>) {
+            let t = Terms(self)
+            let xx = t.cpsi
+            let yx = -t.spsi * t.cobm
+            let zx = -t.spsi * t.sobm
+            let xy = t.spsi * t.cobt
+            let yy = t.cpsi * t.cobm * t.cobt + t.sobm * t.sobt
+            let zy = t.cpsi * t.sobm * t.cobt - t.cobm * t.sobt
+            let xz = t.spsi * t.sobt
+            let yz = t.cpsi * t.cobm * t.sobt - t.sobm * t.cobt
+            let zz = t.cpsi * t.sobm * t.sobt + t.cobm * t.cobt
+            let rotation = Rotation<EQM, EQD>(rot: ((xx, xy, xz), (yx, yy, yz), (zx, zy, zz)))
+
+            let psiRate = nutation.longitudeRate * Engine.radiansPerDegree
+            let meanRate = meanObliquityRate * Engine.radiansPerDegree
+            let trueRate = trueObliquityRate * Engine.radiansPerDegree
+            let dcpsi = -t.spsi * psiRate
+            let dspsi = t.cpsi * psiRate
+            let dcobm = -t.sobm * meanRate
+            let dsobm = t.cobm * meanRate
+            let dcobt = -t.sobt * trueRate
+            let dsobt = t.cobt * trueRate
+            let rxx = dcpsi
+            let ryx = -(dspsi * t.cobm + t.spsi * dcobm)
+            let rzx = -(dspsi * t.sobm + t.spsi * dsobm)
+            let rxy = dspsi * t.cobt + t.spsi * dcobt
+            let ryy =
+                dcpsi * t.cobm * t.cobt + t.cpsi * dcobm * t.cobt + t.cpsi * t.cobm * dcobt + dsobm * t.sobt
+                + t.sobm * dsobt
+            let rzy =
+                dcpsi * t.sobm * t.cobt + t.cpsi * dsobm * t.cobt + t.cpsi * t.sobm * dcobt - dcobm * t.sobt
+                - t.cobm * dsobt
+            let rxz = dspsi * t.sobt + t.spsi * dsobt
+            let ryz =
+                dcpsi * t.cobm * t.sobt + t.cpsi * dcobm * t.sobt + t.cpsi * t.cobm * dsobt - dsobm * t.cobt
+                - t.sobm * dcobt
+            let rzz =
+                dcpsi * t.sobm * t.sobt + t.cpsi * dsobm * t.sobt + t.cpsi * t.sobm * dsobt + dcobm * t.cobt
+                + t.cobm * dcobt
+            let rate = RotationRate<EQM, EQD>(rot: ((rxx, rxy, rxz), (ryx, ryy, ryz), (rzx, rzy, rzz)))
+            return (rotation, rate)
+        }
+
         /// Sines and cosines of Δψ, εA and εA + Δε.
         private struct Terms {
             let cpsi, spsi, cobm, sobm, cobt, sobt: Double
@@ -382,11 +455,40 @@ extension Engine.EarthTilt {
         tt: Double,
         cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache
     ) {
+        let (obliquity, rate) = Engine.Precession.meanObliquityAndRate(tt: tt)
         self.init(
             tt: tt,
             nutation: Engine.Nutation.angles(tt: tt, cache: cache),
-            meanObliquity: Engine.Precession.meanObliquity(tt: tt),
-            meanObliquityRate: Engine.Precession.meanObliquityRate(tt: tt)
+            meanObliquity: obliquity,
+            meanObliquityRate: rate
+        )
+    }
+
+    /// The tilt at `tt` reusing an already-computed precession frame (zero extra precession work).
+    init(
+        tt: Double,
+        precession: Engine.Precession.Frame,
+        cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache
+    ) {
+        self.init(
+            tt: tt,
+            nutation: Engine.Nutation.angles(tt: tt, cache: cache),
+            meanObliquity: precession.meanObliquity,
+            meanObliquityRate: precession.meanObliquityRate
+        )
+    }
+
+    /// Value-only tilt (omits `meanObliquityRate`, saving derivative work when only angles/rotations are needed).
+    init(
+        tt: Double,
+        meanObliquity: Double,
+        cache: Engine.BoundedCache<Engine.ExactKey, Engine.Nutation.Angles> = Engine.Nutation.cache
+    ) {
+        self.init(
+            tt: tt,
+            nutation: Engine.Nutation.angles(tt: tt, cache: cache),
+            meanObliquity: meanObliquity,
+            meanObliquityRate: 0
         )
     }
 }

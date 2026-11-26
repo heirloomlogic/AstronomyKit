@@ -86,6 +86,61 @@ extension Engine.VSOP87B {
         return result
     }
 
+    /// Single-pass coordinates and derivatives of the VSOP87B series (halves term evaluations and trig work).
+    static func coordinatesAndDerivatives(
+        _ model: Model, millennia t: Double
+    ) -> (coordinates: SIMD3<Double>, derivatives: SIMD3<Double>) {
+        var coords = SIMD3<Double>()
+        var derivs = SIMD3<Double>()
+        var term = 0
+        for coordinate in 0..<3 {
+            var totalPos = CompensatedSum()
+            var totalVel = 0.0
+            var power = 1.0
+            var lowerPower = 0.0
+            for (alpha, count) in model.termCounts[coordinate].enumerated() {
+                var cosines = CompensatedSum()
+                var sines = CompensatedSum()
+                for _ in 0..<count {
+                    let (a, b, c) = (model.terms[3 * term], model.terms[3 * term + 1], model.terms[3 * term + 2])
+                    let angle = b + t * c
+                    cosines.add(a * cos(angle))
+                    sines.add(a * c * sin(angle))
+                    term += 1
+                }
+                let cosValue = cosines.value
+                var increment = power * cosValue
+                if coordinate == 0 { increment = increment.truncatingRemainder(dividingBy: 2 * .pi) }
+                totalPos.add(increment)
+                totalVel += Double(alpha) * lowerPower * cosValue - power * sines.value
+                lowerPower = power
+                power *= t
+            }
+            coords[coordinate] = totalPos.value
+            derivs[coordinate] = totalVel
+        }
+        return (coords, derivs)
+    }
+
+    /// Rectangular position and velocity from spherical coordinates and rates in one shared trig pass.
+    static func rectangularAndVelocity(
+        _ sphere: SIMD3<Double>, rates: SIMD3<Double>
+    ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>) {
+        let (cosLongitude, sinLongitude) = (cos(sphere[0]), sin(sphere[0]))
+        let (cosLatitude, sinLatitude) = (cos(sphere[1]), sin(sphere[1]))
+        let r = sphere[2]
+        let radialProjection = r * cosLatitude
+        let position = SIMD3(radialProjection * cosLongitude, radialProjection * sinLongitude, r * sinLatitude)
+        let perMillennium = SIMD3(
+            rates[2] * cosLatitude * cosLongitude - r * sinLatitude * cosLongitude * rates[1]
+                - radialProjection * sinLongitude * rates[0],
+            rates[2] * cosLatitude * sinLongitude - r * sinLatitude * sinLongitude * rates[1]
+                + radialProjection * cosLongitude * rates[0],
+            rates[2] * sinLatitude + radialProjection * rates[1]
+        )
+        return (position, perMillennium * (1 / daysPerMillennium))
+    }
+
     /// Rectangular coordinates from longitude, latitude and radius.
     static func rectangular(_ sphere: SIMD3<Double>) -> SIMD3<Double> {
         let radialProjection = sphere[2] * cos(sphere[1])
@@ -148,6 +203,31 @@ extension Engine.VSOP87B {
     /// ``derivatives(_:millennia:)`` for `planet`, through `cache`.
     static func derivatives(_ planet: Engine.Planet, millennia t: Double, cache: Cache = cache) -> SIMD3<Double> {
         cached(cache.derivatives[planet.rawValue], t) { derivatives(model(planet), millennia: t) }
+    }
+
+    /// Fused coordinates and derivatives through `cache`, computing both in a single pass when uncached.
+    static func coordinatesAndDerivatives(
+        _ planet: Engine.Planet, millennia t: Double, cache: Cache = cache
+    ) -> (coordinates: SIMD3<Double>, derivatives: SIMD3<Double>) {
+        let coordStore = cache.coordinates[planet.rawValue]
+        let derivStore = cache.derivatives[planet.rawValue]
+        guard let key = Engine.ExactKey(t) else {
+            return coordinatesAndDerivatives(model(planet), millennia: t)
+        }
+        if coordStore.capacity == 0 && derivStore.capacity == 0 {
+            var deriv = SIMD3<Double>()
+            let coord = coordStore.value(for: key) {
+                let both = coordinatesAndDerivatives(model(planet), millennia: t)
+                deriv = both.derivatives
+                return both.coordinates
+            }
+            _ = derivStore.value(for: key) { deriv }
+            return (coord, deriv)
+        }
+        return (
+            coordStore.value(for: key) { coordinates(model(planet), millennia: t) },
+            derivStore.value(for: key) { derivatives(model(planet), millennia: t) }
+        )
     }
 
     /// `compute()` through `store`, or directly when `t` has no key.

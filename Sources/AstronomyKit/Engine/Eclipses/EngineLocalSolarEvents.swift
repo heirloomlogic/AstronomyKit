@@ -28,10 +28,37 @@ extension Engine.Events {
         }
     }
 
+    /// Physical observer height bounds accepted for local solar eclipses: Earth's center up to 100 km.
+    private static let acceptedSolarObserverHeightRange = -6_378_136.6...100_000.0
+
+    /// Maximum lunation scans (~162 years) to prevent CPU DoS on degenerate observer inputs.
+    private static let maxLocalEclipseLunations = 2_000
+
     static func validateSolarObserver(_ observer: Observer) throws {
         guard observer.latitude.isFinite, abs(observer.latitude) <= 90,
-            observer.longitude.isFinite, observer.height.isFinite
+            observer.longitude.isFinite, acceptedSolarObserverHeightRange.contains(observer.height)
         else { throw AstronomyError.invalidParameter }
+    }
+
+    /// Lightweight shadow-axis distance for peak finding (avoids conical shadow radii, `solarDiscs`, and `obscuration`).
+    private static func localShadowAxisDistance(at time: Engine.Time, from observer: Observer) throws -> Double {
+        try Engine.checkAcceptedTime(time)
+        guard time.isValid else { throw AstronomyError.badTime }
+        let sun = try Engine.Positions.geocentricPosition(of: .sun, at: time, aberration: .corrected)
+        let moon = try Engine.Positions.geocentricPosition(of: .moon, at: time, aberration: .corrected)
+        let site = Engine.Observers.vector(observer, at: time)
+        let au = Engine.kilometersPerAU
+        let moonKm = Engine.Shadows.Triple(moon.x, moon.y, moon.z) * au
+        let axis = Engine.Shadows.Triple(moon.x - sun.x, moon.y - sun.y, moon.z - sun.z) * au
+        let point = Engine.Shadows.Triple(site.x, site.y, site.z) * au
+        let axisLength = Engine.Shadows.norm(axis)
+        guard axisLength > 0, axisLength.isFinite else { throw AstronomyError.badVector }
+        let unit = axis / axisLength
+        let offset = point - moonKm
+        let perpendicular = offset - Engine.Shadows.dot(offset, unit) * unit
+        let axisDistance = Engine.Shadows.norm(perpendicular)
+        guard axisDistance.isFinite else { throw AstronomyError.badVector }
+        return axisDistance
     }
 
     static func localSolarGeometry(at time: Engine.Time, from observer: Observer) throws -> LocalSolarGeometry {
@@ -90,8 +117,8 @@ extension Engine.Events {
                 from: phase.adding(days: -0.2), to: phase.adding(days: 0.2), toleranceSeconds: 1,
                 { time in
                     let step = 1 / Engine.secondsPerDay
-                    return try localSolarGeometry(at: time.adding(days: step), from: observer).axisDistanceKilometers
-                        - localSolarGeometry(at: time.adding(days: -step), from: observer).axisDistanceKilometers
+                    return try localShadowAxisDistance(at: time.adding(days: step), from: observer)
+                        - localShadowAxisDistance(at: time.adding(days: -step), from: observer)
                 })
         else { throw AstronomyError.searchFailure }
         let geometry = try localSolarGeometry(at: peakTime, from: observer)
@@ -110,9 +137,9 @@ extension Engine.Events {
             centralEnd = try localSolarTransition(
                 from: peakTime, to: peakTime.adding(days: 0.01), rising: false, observer: observer, interior: true)
         }
-        guard begin.time.tt < peakTime.tt, peakTime.tt < end.time.tt,
-            centralBegin.map({ begin.time.tt < $0.time.tt && $0.time.tt <= peakTime.tt }) ?? true,
-            centralEnd.map({ peakTime.tt <= $0.time.tt && $0.time.tt < end.time.tt }) ?? true
+        guard begin.time.tt <= peakTime.tt, peakTime.tt <= end.time.tt,
+            centralBegin.map({ begin.time.tt <= $0.time.tt && $0.time.tt <= peakTime.tt }) ?? true,
+            centralEnd.map({ peakTime.tt <= $0.time.tt && $0.time.tt <= end.time.tt }) ?? true
         else { throw AstronomyError.searchFailure }
         return LocalSolarEclipse(
             kind: central ? geometry.discs.kind : .partial, obscuration: geometry.discs.obscuration,
@@ -139,32 +166,44 @@ extension Engine.Events {
         var seed = start
         let lookback = min(0.2, start.tt + Engine.acceptedTTDays)
         if lookback > 0, let found = try searchMoonPhase(0, after: start, limitDays: -lookback) {
-            let phase = try canonicalNewMoon(found)
-            if let event = try localSolarEclipse(near: phase, from: observer),
-                event.partialBegin.isVisible || event.partialEnd.isVisible,
-                let resolved = try resolvedLocalSolarEclipse(event, atOrAfter: start, from: observer)
-            {
-                return resolved
+            if abs(try Engine.Moon.eclipticPosition(at: found).latitude) < 2.2 {
+                let phase = try canonicalNewMoon(found)
+                if let event = try localSolarEclipse(near: phase, from: observer),
+                    event.isVisible,
+                    let resolved = try resolvedLocalSolarEclipse(event, atOrAfter: start, from: observer)
+                {
+                    return resolved
+                }
+                seed = phase.adding(days: 10)
+                guard seed.tt > phase.tt else { throw AstronomyError.badTime }
+            } else {
+                seed = found.adding(days: 10)
+                guard seed.tt > found.tt else { throw AstronomyError.badTime }
             }
-            seed = phase.adding(days: 10)
-            guard seed.tt > phase.tt else { throw AstronomyError.badTime }
         }
         // Unlike a global search, a site's next visible eclipse can be many years away.
-        // The accepted time domain and strict phase advancement bound this iteration.
-        while seed.tt <= Engine.acceptedTTDays {
+        // The accepted time domain, lunation cap, and strict phase advancement bound this iteration.
+        for _ in 0..<maxLocalEclipseLunations {
+            guard seed.tt <= Engine.acceptedTTDays else { break }
             guard let found = try searchMoonPhase(0, after: seed, limitDays: 40) else {
                 throw AstronomyError.searchFailure
             }
-            let phase = try canonicalNewMoon(found)
-            if let event = try localSolarEclipse(near: phase, from: observer),
-                event.partialBegin.isVisible || event.partialEnd.isVisible,
-                let resolved = try resolvedLocalSolarEclipse(event, atOrAfter: start, from: observer)
-            {
-                return resolved
+            if abs(try Engine.Moon.eclipticPosition(at: found).latitude) < 2.2 {
+                let phase = try canonicalNewMoon(found)
+                if let event = try localSolarEclipse(near: phase, from: observer),
+                    event.isVisible,
+                    let resolved = try resolvedLocalSolarEclipse(event, atOrAfter: start, from: observer)
+                {
+                    return resolved
+                }
+                let next = phase.adding(days: 10)
+                guard next.tt > seed.tt else { throw AstronomyError.badTime }
+                seed = next
+            } else {
+                let next = found.adding(days: 10)
+                guard next.tt > seed.tt else { throw AstronomyError.badTime }
+                seed = next
             }
-            let next = phase.adding(days: 10)
-            guard next.tt > seed.tt else { throw AstronomyError.badTime }
-            seed = next
         }
         throw AstronomyError.badTime
     }

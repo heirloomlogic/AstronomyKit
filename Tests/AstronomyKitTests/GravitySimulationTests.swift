@@ -54,6 +54,33 @@ struct GravitySimulationTests {
 
             #expect(sim.bodyCount >= 1)
         }
+        @Test("Non-finite initial state throws invalidParameter")
+        func nonFiniteInitialStateThrows() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+            let bad = StateVector(
+                position: Vector3D(x: .nan, y: 0, z: 0, time: time),
+                velocity: Vector3D(x: 0, y: 0.01, z: 0, time: time),
+                time: time
+            )
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try GravitySimulation(origin: .sun, time: time, initialState: bad)
+            }
+        }
+
+        @Test("Updating a state coincident with origin throws badVector without corrupting simulation")
+        func coincidentInitialStateThrowsOnUpdate() throws {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+            let coincident = StateVector(
+                position: Vector3D(x: 0, y: 0, z: 0, time: time),
+                velocity: Vector3D(x: 0, y: 0.01, z: 0, time: time),
+                time: time
+            )
+            let sim = try GravitySimulation(origin: .sun, time: time, initialState: coincident)
+            #expect(throws: AstronomyError.badVector) {
+                try sim.update(to: time.addingDays(1))
+            }
+            #expect(sim.currentTime() == time)
+        }
     }
 
     // MARK: - Update Tests
@@ -150,6 +177,26 @@ struct GravitySimulationTests {
 
             // Simulation should still be valid
             #expect(sim.bodyCount >= 1)
+        }
+
+        @Test("Swap keeps time property synchronized with currentTime")
+        func swapUpdatesTime() throws {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+            let initialState = try GravitySimulationTests.makeInitialState(time: time)
+
+            let sim = try GravitySimulation(
+                origin: .sun,
+                time: time,
+                initialState: initialState
+            )
+
+            let later = time.addingDays(1)
+            try sim.update(to: later)
+            #expect(sim.time == later)
+
+            sim.swap()
+            #expect(sim.time == later)
+            #expect(sim.currentTime() == time)
         }
     }
 

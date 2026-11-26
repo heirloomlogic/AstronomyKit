@@ -108,8 +108,9 @@ extension Engine.Positions {
             time: time, magnitude: magnitude, phaseAngle: phase,
             phaseFraction: (1 + cos(phase * Engine.radiansPerDegree)) / 2,
             heliocentricDistance: heliocentricDistance, ringTilt: ringTilt)
-        let values = [magnitude, phase, illumination.phaseFraction, heliocentricDistance, ringTilt]
-        guard values.allSatisfy(\.isFinite) else { throw AstronomyError.badTime }
+        guard magnitude.isFinite, phase.isFinite, illumination.phaseFraction.isFinite,
+            heliocentricDistance.isFinite, ringTilt.isFinite
+        else { throw AstronomyError.badTime }
         return illumination
     }
 
@@ -122,8 +123,17 @@ extension Engine.Positions {
     ///   `AstronomyError.badVector` for a body with no direction from Earth.
     static func angleFromSun(of body: CelestialBody, at time: Engine.Time) throws -> Double {
         guard body != .earth else { throw AstronomyError.earthNotAllowed }
-        let sun = try geocentricPosition(of: .sun, at: time, aberration: .corrected)
-        return try sun.angle(to: try geocentricPosition(of: body, at: time, aberration: .corrected))
+        try Engine.checkAcceptedTime(time)
+        let (earth, sunMotion) = try Engine.ApparentPlace.earthAndSunBarycentricMotion(tt: time.tt)
+        let sunPos = try Engine.ApparentPlace.positionSolution(
+            body: .sun, at: time, observerMotion: earth, sunMotion: sunMotion, aberration: .corrected
+        ).position
+        let bodyPos = try Engine.ApparentPlace.positionSolution(
+            body: body, at: time, observerMotion: earth, sunMotion: sunMotion, aberration: .corrected
+        ).position
+        let sunVec = try checked(Engine.Vector<Engine.EQJ>(x: sunPos.x, y: sunPos.y, z: sunPos.z, time: time))
+        let bodyVec = try checked(Engine.Vector<Engine.EQJ>(x: bodyPos.x, y: bodyPos.y, z: bodyPos.z, time: time))
+        return try sunVec.angle(to: bodyVec)
     }
 
     /// The ecliptic longitude of `first` less that of `second`, both seen
@@ -134,8 +144,17 @@ extension Engine.Positions {
     ///   then as ``geocentricPosition(of:at:aberration:)``, `first` first.
     static func pairLongitude(_ first: CelestialBody, _ second: CelestialBody, at time: Engine.Time) throws -> Double {
         guard first != .earth, second != .earth else { throw AstronomyError.earthNotAllowed }
-        let a = Engine.Ecliptic(try geocentricPosition(of: first, at: time, aberration: .none)).longitude
-        let b = Engine.Ecliptic(try geocentricPosition(of: second, at: time, aberration: .none)).longitude
+        try Engine.checkAcceptedTime(time)
+        let (earth, sunMotion) = try Engine.ApparentPlace.earthAndSunBarycentricMotion(tt: time.tt)
+        let firstPos = try Engine.ApparentPlace.positionSolution(
+            body: first, at: time, observerMotion: earth, sunMotion: sunMotion, aberration: .none
+        ).position
+        let secondPos = try Engine.ApparentPlace.positionSolution(
+            body: second, at: time, observerMotion: earth, sunMotion: sunMotion, aberration: .none
+        ).position
+        let rotation = Engine.FrameRotation.eqjToEct(time)
+        let a = eclipticLongitude(rotation.apply(to: Engine.Vector<Engine.EQJ>(x: firstPos.x, y: firstPos.y, z: firstPos.z, time: time)))
+        let b = eclipticLongitude(rotation.apply(to: Engine.Vector<Engine.EQJ>(x: secondPos.x, y: secondPos.y, z: secondPos.z, time: time)))
         return Engine.normalizedLongitude(a - b)
     }
 
@@ -147,11 +166,48 @@ extension Engine.Positions {
     /// - Throws: As ``pairLongitude(_:_:at:)``, then
     ///   ``angleFromSun(of:at:)``.
     static func elongation(of body: CelestialBody, at time: Engine.Time) throws -> Engine.Elongation {
-        let longitude = try pairLongitude(body, .sun, at: time)
+        guard body != .earth else { throw AstronomyError.earthNotAllowed }
+        try Engine.checkAcceptedTime(time)
+        let (earth, sunMotion) = try Engine.ApparentPlace.earthAndSunBarycentricMotion(tt: time.tt)
+        let bodyRetarded = try Engine.ApparentPlace.retardedState(atTT: time.tt, observer: earth) {
+            try Engine.ApparentPlace.bodyMotion(body, tt: $0)
+        }.displacement
+        let sunRetarded = try Engine.ApparentPlace.retardedState(atTT: time.tt, observer: earth) {
+            try Engine.ApparentPlace.bodyMotion(.sun, tt: $0)
+        }.displacement
+
+        let rotation = Engine.FrameRotation.eqjToEct(time)
+        let bodyLon = eclipticLongitude(
+            rotation.apply(
+                to: Engine.Vector<Engine.EQJ>(
+                    x: bodyRetarded.value.x, y: bodyRetarded.value.y, z: bodyRetarded.value.z, time: time)))
+        let sunLon = eclipticLongitude(
+            rotation.apply(
+                to: Engine.Vector<Engine.EQJ>(
+                    x: sunRetarded.value.x, y: sunRetarded.value.y, z: sunRetarded.value.z, time: time)))
+        let longitude = Engine.normalizedLongitude(bodyLon - sunLon)
         let (visibility, separation) = longitude > 180 ? (Visibility.morning, 360 - longitude) : (.evening, longitude)
+
+        let solarOffset = earth - sunMotion
+        let beta = try Engine.ApparentPlace.observerBetaValue(earth, atTT: time.tt)
+        let sunCorrected = try Engine.ApparentPlace.correctedMotion(
+            sunRetarded, sunToObserver: solarOffset, beta: beta, solarSource: true
+        ).value
+        let bodyCorrected = try Engine.ApparentPlace.correctedMotion(
+            bodyRetarded, sunToObserver: solarOffset, beta: beta, solarSource: body == .sun
+        ).value
+        let sunVec = try checked(
+            Engine.Vector<Engine.EQJ>(x: sunCorrected.x, y: sunCorrected.y, z: sunCorrected.z, time: time))
+        let bodyVec = try checked(
+            Engine.Vector<Engine.EQJ>(x: bodyCorrected.x, y: bodyCorrected.y, z: bodyCorrected.z, time: time))
         return Engine.Elongation(
-            time: time, visibility: visibility, elongation: try angleFromSun(of: body, at: time),
+            time: time, visibility: visibility, elongation: try sunVec.angle(to: bodyVec),
             eclipticSeparation: separation)
+    }
+
+    private static func eclipticLongitude(_ vector: Engine.Vector<Engine.ECT>) -> Double {
+        let projected = hypot(vector.x, vector.y)
+        return projected > 0 ? Engine.normalized(atan2(vector.y, vector.x) * Engine.degreesPerRadian, period: 360) : 0
     }
 
     // MARK: - Magnitude models

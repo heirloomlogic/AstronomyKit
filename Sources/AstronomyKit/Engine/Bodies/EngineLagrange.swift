@@ -96,7 +96,7 @@ extension Engine.Lagrange {
                 numerator1 = majorMass
                 numerator2 = minorMass
             }
-            var x = distance * initialScale - r1
+            var x = distance * initialScale + r1
             var iterations = 0
             var correction: Double
             repeat {
@@ -113,7 +113,9 @@ extension Engine.Lagrange {
             position = scale * displacement
             speed = scale * velocity
         }
-        guard [position.x, position.y, position.z, speed.x, speed.y, speed.z].allSatisfy(\.isFinite) else {
+        guard position.x.isFinite, position.y.isFinite, position.z.isFinite,
+            speed.x.isFinite, speed.y.isFinite, speed.z.isFinite
+        else {
             throw AstronomyError.invalidParameter
         }
         return Engine.State(position: position, velocity: speed, time: majorState.time)

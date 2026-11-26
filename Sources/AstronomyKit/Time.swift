@@ -293,17 +293,9 @@ extension AstroTime: Hashable {
 }
 
 extension AstroTime: CustomStringConvertible {
-    // ISO8601DateFormatter is documented to be thread-safe, so a shared
-    // instance avoids re-allocating a formatter on every description call.
-    private nonisolated(unsafe) static let iso8601Formatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-
     /// An ISO 8601 formatted string representation of this time.
     public var description: String {
-        Self.iso8601Formatter.string(from: date)
+        Date.ISO8601FormatStyle(includingFractionalSeconds: true).format(date)
     }
 }
 

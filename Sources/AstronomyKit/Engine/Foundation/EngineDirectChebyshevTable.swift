@@ -13,7 +13,21 @@ extension Engine {
         private let recordsPerChunk: Int
         private let chunks: [StaticString]
 
-        var byteCount: Int { mappedData?.count ?? data.count }
+        var byteCount: Int {
+            if let mappedData { return mappedData.count }
+            if !chunks.isEmpty { return recordCount * 3 * coefficientCount * scalarBytes }
+            return data.count
+        }
+
+        private static let base64LUT: [UInt8] = {
+            var table = [UInt8](repeating: 0xff, count: 256)
+            for c in UInt8(65)...90 { table[Int(c)] = c - 65 }
+            for c in UInt8(97)...122 { table[Int(c)] = c - 71 }
+            for c in UInt8(48)...57 { table[Int(c)] = c + 4 }
+            table[43] = 62
+            table[47] = 63
+            return table
+        }()
 
         init(start: Double, days: Double, recordCount: Int, coefficientCount: Int, scalarBytes: Int, data: Data) {
             precondition(days > 0 && recordCount > 0 && coefficientCount > 0)
@@ -83,87 +97,43 @@ extension Engine {
             self.chunks = chunks
         }
 
-        func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+        private func locate(tdb: Double) -> (record: Int, x: Double)? {
             let end = start + Double(recordCount) * days
-            guard tdb.isFinite, tdb >= start, tdb < end else { return nil }
-            var record = min(Int(((tdb - start) / days).rounded(.down)), recordCount - 1)
-            if tdb < start + Double(record) * days { record -= 1 }
-            if tdb >= start + Double(record + 1) * days { record += 1 }
-            let x = 2 * (tdb - (start + Double(record) * days)) / days - 1
+            guard tdb.isFinite, end.isFinite, tdb >= start, tdb < end else { return nil }
+            let interval = (tdb - start) / days
+            guard interval.isFinite else { return nil }
+            var record = min(max(Int(interval.rounded(.down)), 0), recordCount - 1)
+            if record > 0, tdb < start + Double(record) * days { record -= 1 }
+            if record < recordCount - 1, tdb >= start + Double(record + 1) * days { record += 1 }
+            let rawX = 2 * (tdb - (start + Double(record) * days)) / days - 1
+            guard rawX.isFinite else { return nil }
+            return (record, min(max(rawX, -1.0), 1.0))
+        }
+
+        func evaluate(tdb: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
+            guard let (record, x) = locate(tdb: tdb) else { return nil }
             return evaluate(record: record, x: x)
         }
 
         func acceleration(tdb: Double) -> SIMD3<Double>? {
-            let end = start + Double(recordCount) * days
-            guard tdb.isFinite, tdb >= start, tdb < end else { return nil }
-            var record = min(Int(((tdb - start) / days).rounded(.down)), recordCount - 1)
-            if tdb < start + Double(record) * days { record -= 1 }
-            if tdb >= start + Double(record + 1) * days { record += 1 }
-            let x = 2 * (tdb - (start + Double(record) * days)) / days - 1
+            guard let (record, x) = locate(tdb: tdb) else { return nil }
             return acceleration(record: record, x: x)
+        }
+
+        func evaluateAndAcceleration(
+            tdb: Double
+        ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>, acceleration: SIMD3<Double>)? {
+            guard let (record, x) = locate(tdb: tdb) else { return nil }
+            return withCoefficients(record: record, x: x) { localRecord, localX, coefficient in
+                evaluateAndAcceleration(record: localRecord, x: localX, coefficient: coefficient)
+            }
         }
 
         /// Clenshaw value and analytic derivative, in source units per TDB day.
         func evaluate(record: Int, x: Double) -> (position: SIMD3<Double>, velocity: SIMD3<Double>)? {
             precondition((0..<recordCount).contains(record) && x.isFinite && (-1...1).contains(x))
-            if chunks.isEmpty {
-                return withRawBytes { raw in
-                    evaluate(record: record, x: x) { index in
-                        let offset = index * scalarBytes
-                        if scalarBytes == 4 {
-                            return Double(
-                                Float(
-                                    bitPattern: UInt32(
-                                        littleEndian: raw.loadUnaligned(fromByteOffset: offset, as: UInt32.self))))
-                        }
-                        return Double(
-                            bitPattern: UInt64(
-                                littleEndian: raw.loadUnaligned(fromByteOffset: offset, as: UInt64.self)))
-                    }
-                }
-            }
-            let local = record % recordsPerChunk
-            let encodedRecordBytes = coefficientCount * 32
-            return chunks[record / recordsPerChunk].withUTF8Buffer { bytes in
-                let base = local * (encodedRecordBytes + 1)
-                guard base + encodedRecordBytes <= bytes.count else { return nil }
-                func sextet(_ byte: UInt8) -> UInt64? {
-                    switch byte {
-                    case 65...90: UInt64(byte - 65)
-                    case 97...122: UInt64(byte - 71)
-                    case 48...57: UInt64(byte + 4)
-                    case 43: 62
-                    case 47: 63
-                    default: nil
-                    }
-                }
-                return withUnsafeTemporaryAllocation(of: Double.self, capacity: 3 * coefficientCount) {
-                    coefficients in
-                    for index in coefficients.indices {
-                        let raw = index * 8
-                        var bits: UInt64 = 0
-                        for byteIndex in 0..<8 {
-                            let byte = raw + byteIndex
-                            let group = base + (byte / 3) * 4
-                            let slot = byte % 3
-                            guard let a = sextet(bytes[group + slot]), let b = sextet(bytes[group + slot + 1])
-                            else { return nil }
-                            let value: UInt64
-                            if slot == 0 {
-                                value = (a << 2) | (b >> 4)
-                            } else if slot == 1 {
-                                value = ((a << 4) | (b >> 2)) & 255
-                            } else {
-                                value = ((a << 6) | b) & 255
-                            }
-                            bits |= value << (byteIndex * 8)
-                        }
-                        let value = Double(bitPattern: bits)
-                        guard value.isFinite else { return nil }
-                        coefficients[index] = value
-                    }
-                    return evaluate(record: 0, x: x) { coefficients[$0] }
-                }
+            return withCoefficients(record: record, x: x) { localRecord, localX, coefficient in
+                evaluate(record: localRecord, x: localX, coefficient: coefficient)
             }
         }
 
@@ -199,42 +169,35 @@ extension Engine {
             return chunks[record / recordsPerChunk].withUTF8Buffer { bytes in
                 let base = local * (encodedRecordBytes + 1)
                 guard base + encodedRecordBytes <= bytes.count else { return nil }
-                func sextet(_ byte: UInt8) -> UInt64? {
-                    switch byte {
-                    case 65...90: UInt64(byte - 65)
-                    case 97...122: UInt64(byte - 71)
-                    case 48...57: UInt64(byte + 4)
-                    case 43: 62
-                    case 47: 63
-                    default: nil
-                    }
-                }
-                return withUnsafeTemporaryAllocation(of: Double.self, capacity: 3 * coefficientCount) {
-                    coefficients in
-                    for index in coefficients.indices {
-                        let raw = index * 8
-                        var bits: UInt64 = 0
-                        for byteIndex in 0..<8 {
-                            let byte = raw + byteIndex
-                            let group = base + (byte / 3) * 4
-                            let slot = byte % 3
-                            guard let a = sextet(bytes[group + slot]), let b = sextet(bytes[group + slot + 1])
-                            else { return nil }
-                            let value: UInt64
-                            if slot == 0 {
-                                value = (a << 2) | (b >> 4)
-                            } else if slot == 1 {
-                                value = ((a << 4) | (b >> 2)) & 255
-                            } else {
-                                value = ((a << 6) | b) & 255
+                return Self.base64LUT.withUnsafeBufferPointer { lut in
+                    withUnsafeTemporaryAllocation(of: Double.self, capacity: 3 * coefficientCount) { coefficients in
+                        withUnsafeTemporaryAllocation(of: UInt8.self, capacity: 3 * coefficientCount * 8) { decoded in
+                            var src = base
+                            var dst = 0
+                            let srcEnd = base + encodedRecordBytes
+                            while src < srcEnd {
+                                let s0 = lut[Int(bytes[src])]
+                                let s1 = lut[Int(bytes[src + 1])]
+                                let s2 = lut[Int(bytes[src + 2])]
+                                let s3 = lut[Int(bytes[src + 3])]
+                                guard (s0 | s1 | s2 | s3) < 64 else { return nil }
+                                decoded[dst] = (s0 << 2) | (s1 >> 4)
+                                decoded[dst + 1] = (s1 << 4) | (s2 >> 2)
+                                decoded[dst + 2] = (s2 << 6) | s3
+                                src += 4
+                                dst += 3
                             }
-                            bits |= value << (byteIndex * 8)
+                            let decodedRaw = UnsafeRawBufferPointer(decoded)
+                            for index in coefficients.indices {
+                                let bits = UInt64(
+                                    littleEndian: decodedRaw.loadUnaligned(fromByteOffset: index * 8, as: UInt64.self))
+                                let value = Double(bitPattern: bits)
+                                guard value.isFinite else { return nil }
+                                coefficients[index] = value
+                            }
+                            return body(0, x) { coefficients[$0] }
                         }
-                        let value = Double(bitPattern: bits)
-                        guard value.isFinite else { return nil }
-                        coefficients[index] = value
                     }
-                    return body(0, x) { coefficients[$0] }
                 }
             }
         }
@@ -265,6 +228,14 @@ extension Engine {
         }
 
         private func acceleration(record: Int, x: Double, coefficient: (Int) -> Double) -> SIMD3<Double> {
+            evaluateAndAcceleration(record: record, x: x, coefficient: coefficient).acceleration
+        }
+
+        private func evaluateAndAcceleration(
+            record: Int, x: Double, coefficient: (Int) -> Double
+        ) -> (position: SIMD3<Double>, velocity: SIMD3<Double>, acceleration: SIMD3<Double>) {
+            var position = SIMD3<Double>()
+            var velocity = SIMD3<Double>()
             var result = SIMD3<Double>()
             for axis in 0..<3 {
                 let base = (record * 3 + axis) * coefficientCount
@@ -277,9 +248,11 @@ extension Engine {
                     (d2, d1) = (d1, d)
                     (a2, a1) = (a1, a)
                 }
+                position[axis] = coefficient(base) + x * b1 - b2
+                velocity[axis] = (b1 + x * d1 - d2) * 2 / days
                 result[axis] = (2 * d1 + x * a1 - a2) * 4 / (days * days)
             }
-            return result
+            return (position, velocity, result)
         }
     }
 }

@@ -75,9 +75,11 @@ extension Engine.Positions {
     /// then nutation, each rotated and its rate applied to the position.
     static func trueEquatorState(_ state: Engine.State<Engine.EQJ>) -> Engine.State<Engine.EQD> {
         let tt = state.time.tt
-        let tilt = Engine.EarthTilt(tt: tt)
-        let mean = Engine.Precession.rotation(tt: tt).apply(to: state, rate: Engine.Precession.rate(tt: tt))
-        return tilt.nutationRotation.apply(to: mean, rate: tilt.nutationRate)
+        let precession = Engine.Precession.frame(tt: tt)
+        let tilt = Engine.EarthTilt(tt: tt, precession: precession)
+        let (nutation, nutationRate) = tilt.nutationRotationAndRate()
+        let mean = precession.rotation.apply(to: state, rate: precession.rate)
+        return nutation.apply(to: mean, rate: nutationRate)
     }
 
     /// `state` on the true ecliptic and equinox of its time, with `time` as
@@ -91,17 +93,27 @@ extension Engine.Positions {
     private static func eclipticState(
         _ state: Engine.State<Engine.EQJ>, reportedAt time: Engine.Time
     ) throws -> Engine.EclipticState {
-        let ecliptic = Engine.Ecliptic(state.position)
-        let tilt = Engine.EarthTilt(tt: state.time.tt)
+        let tt = state.time.tt
+        let precession = Engine.Precession.frame(tt: tt)
+        let tilt = Engine.EarthTilt(tt: tt, precession: precession)
+        let (nutation, nutationRate) = tilt.nutationRotationAndRate()
         let trueTilt: Engine.Rotation<Engine.EQD, Engine.ECT> = Engine.tilted(by: tilt.trueObliquity)
+        let eqjToEct = precession.rotation.then(nutation).then(trueTilt)
+        let ectPos = eqjToEct.apply(to: state.position)
+        let mean = precession.rotation.apply(to: state, rate: precession.rate)
+        let eqdState = nutation.apply(to: mean, rate: nutationRate)
         let velocity = trueTilt.apply(
-            to: trueEquatorState(state), rate: Engine.tiltRate(by: tilt.trueObliquity, rate: tilt.trueObliquityRate)
+            to: eqdState, rate: Engine.tiltRate(by: tilt.trueObliquity, rate: tilt.trueObliquityRate)
         ).velocityVector
-        let position = SIMD3(ecliptic.vector.x, ecliptic.vector.y, ecliptic.vector.z)
-        let distance = ecliptic.vector.length
+        let position = SIMD3(ectPos.x, ectPos.y, ectPos.z)
+        let distance = ectPos.length
+        let projected = hypot(ectPos.x, ectPos.y)
+        let longitude =
+            projected > 0 ? Engine.normalized(atan2(ectPos.y, ectPos.x) * Engine.degreesPerRadian, period: 360) : 0
+        let latitude = atan2(ectPos.z, projected) * Engine.degreesPerRadian
         guard velocity.x.isFinite, velocity.y.isFinite, velocity.z.isFinite else { throw AstronomyError.badTime }
         return try Engine.EclipticState(
-            state: Engine.State(position: position, velocity: velocity, time: time), longitude: ecliptic.longitude,
-            latitude: ecliptic.latitude, distance: distance, distanceRate: (position * velocity).sum() / distance)
+            state: Engine.State(position: position, velocity: velocity, time: time), longitude: longitude,
+            latitude: latitude, distance: distance, distanceRate: (position * velocity).sum() / distance)
     }
 }

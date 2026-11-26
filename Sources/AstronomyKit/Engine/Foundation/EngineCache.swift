@@ -88,7 +88,6 @@ extension Engine {
             guard capacity > 0 else { return value }
             lock.withLock {
                 guard storage.entries[key] == nil else { return }
-                storage.entries[key] = value
                 if storage.slots.count < capacity {
                     storage.slots.append(key)
                 } else {
@@ -96,6 +95,7 @@ extension Engine {
                     storage.slots[storage.next] = key
                     storage.next = (storage.next + 1) % capacity
                 }
+                storage.entries[key] = value
             }
             return value
         }

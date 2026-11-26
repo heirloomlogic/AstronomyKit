@@ -133,12 +133,25 @@ extension Moon {
     /// - Returns: An array of apsis events.
     /// - Throws: `AstronomyError` if the search fails.
     public static func apsides(from startTime: AstroTime, to endTime: AstroTime) throws -> [Apsis] {
+        try Engine.checkAcceptedTime(startTime.engine)
+        try Engine.checkAcceptedTime(endTime.engine)
+        guard startTime < endTime else { return [] }
         var apsides: [Apsis] = []
-        var current = try searchApsis(after: startTime)
+        var current: Apsis
+        do {
+            current = try searchApsis(after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.time < endTime {
+            guard apsides.count < 50_000 else { throw AstronomyError.invalidParameter }
             apsides.append(current)
-            current = try nextApsis(after: current)
+            do {
+                current = try nextApsis(after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return apsides
@@ -185,12 +198,26 @@ extension CelestialBody {
     /// - Returns: An array of apsis events.
     /// - Throws: `AstronomyError` if the search fails.
     public func apsides(from startTime: AstroTime, to endTime: AstroTime) throws -> [Apsis] {
+        _ = try Engine.Events.orbitalPeriod(of: self)
+        try Engine.checkAcceptedTime(startTime.engine)
+        try Engine.checkAcceptedTime(endTime.engine)
+        guard startTime < endTime else { return [] }
         var apsides: [Apsis] = []
-        var current = try searchApsis(after: startTime)
+        var current: Apsis
+        do {
+            current = try searchApsis(after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.time < endTime {
+            guard apsides.count < 50_000 else { throw AstronomyError.invalidParameter }
             apsides.append(current)
-            current = try nextApsis(after: current)
+            do {
+                current = try nextApsis(after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return apsides

@@ -45,7 +45,7 @@ extension Engine {
             try Engine.checkAcceptedTime(time)
             guard hasCatalogMotion else { return try fixedPosition(at: time) }
             let catalog = try barycentricCatalogPosition(at: time)
-            let sun = try Engine.ApparentPlace.sunBarycentricKinematics(tt: time.tt).motion.value
+            let sun = try Engine.ApparentPlace.sunSourceMotion(tt: time.tt).value
             return try Engine.Positions.checked(
                 Engine.Vector(x: catalog.x - sun.x, y: catalog.y - sun.y, z: catalog.z - sun.z, time: time)
             )
@@ -134,17 +134,15 @@ extension Engine {
         ) throws -> Engine.Vector<Engine.EQJ> {
             try validate()
             try Engine.checkAcceptedTime(time)
-            let earth = try Engine.ApparentPlace.earthBarycentricKinematics(tt: time.tt)
-            let sun = try Engine.ApparentPlace.sunBarycentricKinematics(tt: time.tt)
+            let (earth, sun) = try Engine.ApparentPlace.earthAndSunBarycentricMotion(tt: time.tt)
             let offset =
-                try site.map { try Engine.ApparentPlace.siteKinematics($0, at: time) }
-                ?? Engine.ApparentPlace.Kinematics(motion: .init(.zero), acceleration: .zero)
-            let observer = Engine.ApparentPlace.Kinematics(
-                motion: earth.motion + offset.motion, acceleration: earth.acceleration + offset.acceleration)
-            let solarOffset = observer.motion - sun.motion
+                try site.map { try Engine.ApparentPlace.siteMotion($0, at: time) }
+                ?? Engine.ApparentPlace.VectorRate(.zero)
+            let observer = earth + offset
+            let solarOffset = observer - sun
             let displacement: Engine.ApparentPlace.VectorRate
             if let catalogMotion {
-                let observerICRS = Engine.FrameBias.icrsToEqj.inverse.apply(to: observer.motion.value)
+                let observerICRS = Engine.FrameBias.icrsToEqj.inverse.apply(to: observer.value)
                 let icrs = try Engine.StarCatalogPropagation.position(
                     rightAscensionHours: rightAscension,
                     declinationDegrees: declination,
@@ -154,7 +152,7 @@ extension Engine {
                     observerBarycentricICRS: observerICRS
                 )
                 let star = Engine.FrameBias.icrsToEqj.apply(to: icrs)
-                displacement = Engine.ApparentPlace.VectorRate(SIMD3(star.x, star.y, star.z)) - observer.motion
+                displacement = Engine.ApparentPlace.VectorRate(SIMD3(star.x, star.y, star.z)) - observer
             } else {
                 let star = try fixedPosition(at: time)
                 displacement = Engine.ApparentPlace.VectorRate(SIMD3(star.x, star.y, star.z)) - solarOffset
@@ -165,7 +163,7 @@ extension Engine {
             } else {
                 result = try Engine.ApparentPlace.correctedMotion(
                     displacement, sunToObserver: solarOffset,
-                    beta: Engine.ApparentPlace.observerBeta(observer, atTT: time.tt), solarSource: false)
+                    beta: Engine.ApparentPlace.observerBetaValue(observer, atTT: time.tt), solarSource: false)
             }
             return try Engine.Positions.checked(
                 Engine.Vector(x: result.value.x, y: result.value.y, z: result.value.z, time: time))
