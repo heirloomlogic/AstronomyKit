@@ -5,7 +5,7 @@
 //  Geographic observer location.
 //
 
-import CLibAstronomy
+import Foundation
 
 /// A geographic location for observing celestial objects.
 ///
@@ -58,31 +58,26 @@ public struct Observer: Sendable, Equatable, Hashable {
     /// rather than on the surface.
     public static let geocentric = Observer(latitude: 0, longitude: 0, height: -6_378_137)
 
-    /// The underlying C observer structure.
-    var raw: astro_observer_t {
-        astro_observer_t(latitude: latitude, longitude: longitude, height: height)
-    }
-
-    /// The underlying C observer structure, validating the coordinates first.
+    /// Returns `self` after validating coordinates.
     ///
     /// - Throws: ``AstronomyError/invalidParameter`` if latitude, longitude, or
     ///   height is not finite, or if latitude is outside -90...90. Longitude
     ///   wraps in the underlying engine, so any finite longitude is accepted.
-    func validatedRaw() throws -> astro_observer_t {
+    func validated() throws -> Observer {
         guard
             latitude.isFinite, longitude.isFinite, height.isFinite,
             (-90.0...90.0).contains(latitude)
         else {
             throw AstronomyError.invalidParameter
         }
-        return raw
+        return self
     }
 
     /// The local gravitational acceleration in m/s².
     ///
     /// This accounts for latitude and altitude effects on gravity.
     public var gravity: Double {
-        Astronomy_ObserverGravity(latitude, height)
+        EngineObserver.observerGravity(latitude: latitude, height: height)
     }
 }
 
@@ -139,9 +134,7 @@ extension Observer {
     /// - Returns: The position vector in AU.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func vector(at time: AstroTime, equator: EquatorDate = .j2000) throws -> Vector3D {
-        var rawTime = time.raw
-        let result = Astronomy_ObserverVector(&rawTime, try validatedRaw(), equator.raw)
-        return try Vector3D(result)
+        EngineObserver.observerVector(at: time, observer: try validated(), equator: equator)
     }
 
     /// Returns this observer's complete state (position and velocity).
@@ -155,9 +148,7 @@ extension Observer {
     /// - Returns: The state vector with position in AU and velocity in AU/day.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func state(at time: AstroTime, equator: EquatorDate = .j2000) throws -> StateVector {
-        var rawTime = time.raw
-        let result = Astronomy_ObserverState(&rawTime, try validatedRaw(), equator.raw)
-        return try StateVector(result)
+        EngineObserver.observerState(at: time, observer: try validated(), equator: equator)
     }
 
     /// Computes an observer's geographic location from an equatorial position vector.
@@ -174,14 +165,6 @@ extension Observer {
         vector: Vector3D,
         equatorDate: EquatorDate = .j2000
     ) -> Observer {
-        var raw = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: vector.x,
-            y: vector.y,
-            z: vector.z,
-            t: vector.time.raw
-        )
-        let obs = Astronomy_VectorObserver(&raw, equatorDate.raw)
-        return Observer(latitude: obs.latitude, longitude: obs.longitude, height: obs.height)
+        EngineObserver.vectorObserver(vector: vector, equatorDate: equatorDate)
     }
 }

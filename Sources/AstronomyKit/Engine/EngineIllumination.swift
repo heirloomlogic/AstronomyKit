@@ -6,8 +6,6 @@
 //  search matching Astronomy_Illumination and Astronomy_SearchPeakMagnitude.
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -22,37 +20,32 @@ enum EngineIllumination {
             throw AstronomyError.earthNotAllowed
         }
 
-        let earth = Astronomy_HelioVector(BODY_EARTH, time.raw)
-        if let error = AstronomyError(status: earth.status) {
-            throw error
-        }
-
-        var gc = astro_vector_t(status: ASTRO_SUCCESS, x: 0.0, y: 0.0, z: 0.0, t: time.raw)
-        var hc = astro_vector_t(status: ASTRO_SUCCESS, x: 0.0, y: 0.0, z: 0.0, t: time.raw)
+        let earth = try EnginePositions.helioVector(of: .earth, at: time)
+        let gc: Vector3D
+        let hc: Vector3D
         let phaseAngle: Double
 
         if body == .sun {
-            gc.x = -earth.x
-            gc.y = -earth.y
-            gc.z = -earth.z
+            gc = Vector3D(x: -earth.x, y: -earth.y, z: -earth.z, time: time)
+            hc = Vector3D(x: 0.0, y: 0.0, z: 0.0, time: time)
             phaseAngle = 0.0
         } else {
             if body == .moon {
-                gc = Astronomy_GeoMoon(time.raw)
-                if let error = AstronomyError(status: gc.status) {
-                    throw error
-                }
-                hc.x = earth.x + gc.x
-                hc.y = earth.y + gc.y
-                hc.z = earth.z + gc.z
+                gc = try EnginePositions.geoMoon(at: time)
+                hc = Vector3D(
+                    x: earth.x + gc.x,
+                    y: earth.y + gc.y,
+                    z: earth.z + gc.z,
+                    time: time
+                )
             } else {
-                hc = Astronomy_HelioVector(body.raw, time.raw)
-                if let error = AstronomyError(status: hc.status) {
-                    throw error
-                }
-                gc.x = hc.x - earth.x
-                gc.y = hc.y - earth.y
-                gc.z = hc.z - earth.z
+                hc = try EnginePositions.helioVector(of: body, at: time)
+                gc = Vector3D(
+                    x: hc.x - earth.x,
+                    y: hc.y - earth.y,
+                    z: hc.z - earth.z,
+                    time: time
+                )
             }
             phaseAngle = try EngineMath.angleBetween(gc, hc)
         }
@@ -104,16 +97,10 @@ enum EngineIllumination {
         var searchStart = startTime
 
         for _ in 0..<2 {
-            let plon = Astronomy_EclipticLongitude(body.raw, searchStart.raw)
-            if let error = AstronomyError(status: plon.status) {
-                throw error
-            }
-            let elon = Astronomy_EclipticLongitude(BODY_EARTH, searchStart.raw)
-            if let error = AstronomyError(status: elon.status) {
-                throw error
-            }
+            let plon = try EnginePositions.eclipticLongitude(of: body, at: searchStart)
+            let elon = try EnginePositions.eclipticLongitude(of: .earth, at: searchStart)
 
-            let rlon = EngineMath.longitudeOffset(plon.angle - elon.angle)
+            let rlon = EngineMath.longitudeOffset(plon - elon)
             let adjustDays: Double
             let rlonLo: Double
             let rlonHi: Double
@@ -139,17 +126,8 @@ enum EngineIllumination {
             }
 
             let tStart = searchStart.addingDays(adjustDays)
-            let r1 = Astronomy_SearchRelativeLongitude(body.raw, rlonLo, tStart.raw)
-            if let error = AstronomyError(status: r1.status) {
-                throw error
-            }
-            let r2 = Astronomy_SearchRelativeLongitude(body.raw, rlonHi, r1.time)
-            if let error = AstronomyError(status: r2.status) {
-                throw error
-            }
-
-            let t1 = AstroTime(raw: r1.time)
-            let t2 = AstroTime(raw: r2.time)
+            let t1 = try EngineEvents.searchRelativeLongitude(of: body, targetRelLon: rlonLo, after: tStart)
+            let t2 = try EngineEvents.searchRelativeLongitude(of: body, targetRelLon: rlonHi, after: t1)
 
             let m1 = try magSlope(of: body, at: t1)
             guard m1 < 0.0 else {
@@ -198,19 +176,16 @@ enum EngineIllumination {
         phase: Double,
         helioDist: Double,
         geoDist: Double,
-        gc: astro_vector_t,
+        gc: Vector3D,
         time: AstroTime
     ) throws -> (mag: Double, ringTilt: Double) {
-        let eclip = Astronomy_Ecliptic(gc)
-        if let error = AstronomyError(status: eclip.status) {
-            throw error
-        }
+        let eclip = try EnginePositions.ecliptic(of: gc)
 
         let deg2Rad = EngineConstants.deg2Rad
         let ir = deg2Rad * 28.06
         let nr = deg2Rad * (169.51 + 3.82e-5 * time.terrestrialTime)
-        let lat = deg2Rad * eclip.elat
-        let lon = deg2Rad * eclip.elon
+        let lat = deg2Rad * eclip.latitude
+        let lon = deg2Rad * eclip.longitude
         let tilt = asin(sin(lat) * cos(ir) - cos(lat) * sin(ir) * sin(lon - nr))
         let sinTilt = sin(abs(tilt))
 

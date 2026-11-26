@@ -6,17 +6,12 @@
 //  and Astronomy_NextMoonNode (preserving finite/step-advance and accepted-range guards).
 //
 
-import CLibAstronomy
-
 enum EngineLunarNode {
     private static let stepDays = 10.0
 
     static func searchNode(after startTime: AstroTime) throws -> LunarNode {
         var time1 = startTime
-        var eclip1 = Astronomy_EclipticGeoMoon(time1.raw)
-        if let error = AstronomyError(status: eclip1.status) {
-            throw error
-        }
+        var eclip1 = try EnginePositions.eclipticGeoMoon(at: time1)
 
         while true {
             let time2 = time1.addingDays(stepDays)
@@ -24,20 +19,14 @@ enum EngineLunarNode {
                 throw AstronomyError.badTime
             }
 
-            let eclip2 = Astronomy_EclipticGeoMoon(time2.raw)
-            if let error = AstronomyError(status: eclip2.status) {
-                throw error
-            }
+            let eclip2 = try EnginePositions.eclipticGeoMoon(at: time2)
 
-            if eclip1.lat * eclip2.lat <= 0.0 {
-                let kind: NodeKind = (eclip2.lat > eclip1.lat) ? .ascending : .descending
+            if eclip1.latitude * eclip2.latitude <= 0.0 {
+                let kind: NodeKind = (eclip2.latitude > eclip1.latitude) ? .ascending : .descending
                 let sign: Double = (kind == .ascending) ? 1.0 : -1.0
                 let crossing = try EngineSearch.find(t1: time1, t2: time2, dtToleranceSeconds: 1.0) { t in
-                    let eclip = Astronomy_EclipticGeoMoon(t.raw)
-                    if let error = AstronomyError(status: eclip.status) {
-                        throw error
-                    }
-                    return eclip.lat * sign
+                    let eclip = try EnginePositions.eclipticGeoMoon(at: t)
+                    return eclip.latitude * sign
                 }
                 return LunarNode(kind: kind, time: crossing)
             }

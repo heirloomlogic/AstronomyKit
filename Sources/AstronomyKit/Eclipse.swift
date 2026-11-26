@@ -5,7 +5,6 @@
 //  Lunar and solar eclipse calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Eclipse Kind
@@ -313,12 +312,12 @@ public enum Eclipse {
 
     // MARK: - Local Solar Eclipse
 
-    private static func validatedSolarObserver(_ observer: Observer) throws -> astro_observer_t {
-        let raw = try observer.validatedRaw()
-        guard (-6_378_136.6...100_000.0).contains(observer.height) else {
+    private static func validatedSolarObserver(_ observer: Observer) throws -> Observer {
+        let valid = try observer.validated()
+        guard (-6_378_136.6...100_000.0).contains(valid.height) else {
             throw AstronomyError.invalidParameter
         }
-        return raw
+        return valid
     }
 
     /// Searches for the next solar eclipse visible from a specific location.

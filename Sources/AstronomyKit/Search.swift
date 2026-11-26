@@ -5,64 +5,6 @@
 //  Generic root-finding search for custom astronomical events.
 //
 
-import CLibAstronomy
-
-/// Carries a user-supplied search closure across the C boundary and captures
-/// the first error it throws so the wrapper can rethrow it.
-///
-/// `@unchecked Sendable` is safe here because the C search functions invoke
-/// the callback synchronously and serially on the calling thread: `thrownError`
-/// is never accessed concurrently.
-private final class ThrowingSearchBox: @unchecked Sendable {
-    let function: (AstroTime) throws -> Double
-    var thrownError: (any Error)?
-
-    init(_ function: @escaping (AstroTime) throws -> Double) {
-        self.function = function
-    }
-}
-
-/// Same as ``ThrowingSearchBox``, for position closures.
-private final class ThrowingPositionBox: @unchecked Sendable {
-    let function: (AstroTime) throws -> Vector3D
-    var thrownError: (any Error)?
-
-    init(_ function: @escaping (AstroTime) throws -> Vector3D) {
-        self.function = function
-    }
-}
-
-private func searchTrampoline(context: UnsafeMutableRawPointer?, time: astro_time_t) -> astro_func_result_t {
-    guard let context else {
-        return astro_func_result_t(status: ASTRO_INTERNAL_ERROR, value: 0)
-    }
-    let box = Unmanaged<ThrowingSearchBox>.fromOpaque(context).takeUnretainedValue()
-    do {
-        return astro_func_result_t(status: ASTRO_SUCCESS, value: try box.function(AstroTime(raw: time)))
-    } catch {
-        // Returning a failure status makes the C search abort immediately;
-        // the wrapper rethrows the captured error.
-        box.thrownError = error
-        return astro_func_result_t(status: ASTRO_INTERNAL_ERROR, value: 0)
-    }
-}
-
-private func positionTrampoline(context: UnsafeMutableRawPointer?, time: astro_time_t) -> astro_vector_t {
-    guard let context else {
-        return astro_vector_t(status: ASTRO_INTERNAL_ERROR, x: 0, y: 0, z: 0, t: time)
-    }
-    let box = Unmanaged<ThrowingPositionBox>.fromOpaque(context).takeUnretainedValue()
-    do {
-        let vec = try box.function(AstroTime(raw: time))
-        return astro_vector_t(status: ASTRO_SUCCESS, x: vec.x, y: vec.y, z: vec.z, t: time)
-    } catch {
-        // Returning a failure status makes the C iteration abort immediately;
-        // the wrapper rethrows the captured error.
-        box.thrownError = error
-        return astro_vector_t(status: ASTRO_INTERNAL_ERROR, x: 0, y: 0, z: 0, t: time)
-    }
-}
-
 /// Generic root-finding search for custom astronomical events.
 ///
 /// Finds the *ascending root* of a function within a time range: the moment
@@ -103,26 +45,23 @@ public enum AstroSearch {
         toleranceSeconds: Double = 1.0,
         _ function: @escaping @Sendable (AstroTime) throws -> Double
     ) throws -> AstroTime? {
-        let box = ThrowingSearchBox(function)
-        let result = withExtendedLifetime(box) {
-            Astronomy_Search(
-                searchTrampoline,
-                Unmanaged.passUnretained(box).toOpaque(),
-                startTime.raw,
-                endTime.raw,
-                toleranceSeconds
-            )
-        }
-        if let error = box.thrownError {
-            throw error
-        }
-        if result.status == ASTRO_SEARCH_FAILURE {
+        var userError: (any Error)?
+        do {
+            return try EngineSearch.find(
+                t1: startTime,
+                t2: endTime,
+                dtToleranceSeconds: toleranceSeconds
+            ) { time in
+                do {
+                    return try function(time)
+                } catch {
+                    userError = error
+                    throw error
+                }
+            }
+        } catch AstronomyError.searchFailure where userError == nil {
             return nil
         }
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return AstroTime(raw: result.time)
     }
 
     /// Corrects a position for the finite speed of light.
@@ -141,17 +80,6 @@ public enum AstroSearch {
         at time: AstroTime,
         _ positionFunction: @escaping @Sendable (AstroTime) throws -> Vector3D
     ) throws -> Vector3D {
-        let box = ThrowingPositionBox(positionFunction)
-        let result = withExtendedLifetime(box) {
-            Astronomy_CorrectLightTravel(
-                Unmanaged.passUnretained(box).toOpaque(),
-                positionTrampoline,
-                time.raw
-            )
-        }
-        if let error = box.thrownError {
-            throw error
-        }
-        return try Vector3D(result)
+        try EnginePositions.correctLightTravel(at: time, positionFunction)
     }
 }

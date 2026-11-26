@@ -5,7 +5,6 @@
 //  Position calculations for 2060 Chiron using gravity simulation.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Chiron
@@ -286,15 +285,13 @@ public enum Chiron {
         refraction: Refraction = .normal
     ) throws -> Horizon {
         let eq = try equatorial(at: time)
-        var rawTime = time.raw
-        let result = Astronomy_Horizon(
-            &rawTime,
-            try observer.validatedRaw(),
-            eq.rightAscension,
-            eq.declination,
-            refraction.raw
+        return EngineObserver.horizon(
+            at: time,
+            observer: try observer.validated(),
+            rightAscension: eq.rightAscension,
+            declination: eq.declination,
+            refraction: refraction
         )
-        return Horizon(result)
     }
 
     // MARK: - Private Helpers

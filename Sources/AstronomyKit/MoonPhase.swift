@@ -5,7 +5,6 @@
 //  Moon phase calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Moon Phase
@@ -64,18 +63,6 @@ public struct MoonQuarter: Sendable, Equatable {
 
     /// The time when this phase occurs.
     public let time: AstroTime
-
-    /// Creates a moon quarter from the C structure.
-    init(_ raw: astro_moon_quarter_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        guard let phase = MoonPhase(rawValue: Int(raw.quarter)) else {
-            throw AstronomyError.internalError
-        }
-        self.phase = phase
-        self.time = AstroTime(raw: raw.time)
-    }
 }
 
 extension MoonQuarter: CustomStringConvertible {
@@ -100,11 +87,7 @@ public enum Moon {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func phaseAngle(at time: AstroTime) throws -> Double {
-        let result = Astronomy_MoonPhase(time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try EngineEvents.moonPhase(at: time)
     }
 
     private static func normalizedAngle(_ angle: Double) -> Double {
@@ -189,14 +172,15 @@ public enum Moon {
         after startTime: AstroTime,
         limitDays: Double = 60
     ) throws -> AstroTime? {
-        let result = Astronomy_SearchMoonPhase(phase.longitude, startTime.raw, limitDays)
-        if result.status == ASTRO_NO_MOON_QUARTER {
+        do {
+            return try EngineEvents.searchMoonPhase(
+                targetLon: phase.longitude,
+                after: startTime,
+                limitDays: limitDays
+            )
+        } catch AstronomyError.noMoonQuarter {
             return nil
         }
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return AstroTime(raw: result.time)
     }
 
     /// Searches for the next moon quarter (new, first, full, or third).
@@ -205,8 +189,7 @@ public enum Moon {
     /// - Returns: The next moon quarter event.
     /// - Throws: `AstronomyError` if the search fails.
     public static func searchQuarter(after startTime: AstroTime) throws -> MoonQuarter {
-        let result = Astronomy_SearchMoonQuarter(startTime.raw)
-        return try MoonQuarter(result)
+        try EngineEvents.searchMoonQuarter(after: startTime)
     }
 
     /// Finds the next moon quarter after a given quarter.
@@ -215,13 +198,7 @@ public enum Moon {
     /// - Returns: The next quarter event.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextQuarter(after quarter: MoonQuarter) throws -> MoonQuarter {
-        let raw = astro_moon_quarter_t(
-            status: ASTRO_SUCCESS,
-            quarter: Int32(quarter.phase.rawValue),
-            time: quarter.time.raw
-        )
-        let result = Astronomy_NextMoonQuarter(raw)
-        return try MoonQuarter(result)
+        try EngineEvents.nextMoonQuarter(after: quarter)
     }
 
     /// Returns all moon quarters within a date range.
@@ -267,8 +244,7 @@ public enum Moon {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func geocentricPosition(at time: AstroTime) throws -> Vector3D {
-        let result = Astronomy_GeoMoon(time.raw)
-        return try Vector3D(result)
+        try EnginePositions.geoMoon(at: time)
     }
 
     /// Calculates the Moon's ecliptic coordinates.
@@ -281,8 +257,7 @@ public enum Moon {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func ecliptic(at time: AstroTime) throws -> Ecliptic {
-        let result = Astronomy_EclipticGeoMoon(time.raw)
-        return try Ecliptic(result)
+        try EnginePositions.eclipticGeoMoon(at: time)
     }
 
     /// Calculates the Moon's geocentric state (position and velocity).
@@ -303,7 +278,6 @@ public enum Moon {
     /// print("Moon velocity: \(state.velocity)")
     /// ```
     public static func geoState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_GeoMoonState(time.raw)
-        return try StateVector(result)
+        try EnginePositions.geoMoonState(at: time)
     }
 }

@@ -6,38 +6,16 @@
 //  and Astronomy_NextTransit.
 //
 
-import CLibAstronomy
-
 enum EngineTransits {
     private static func planetShadow(
         body: CelestialBody,
         planetRadiusKM: Double,
         at time: AstroTime
     ) throws -> EngineShadow {
-        let g = Astronomy_GeoVector(body.raw, time.raw, ABERRATION)
-        if let error = AstronomyError(status: g.status) {
-            throw error
-        }
-        let s = Astronomy_GeoVector(BODY_SUN, time.raw, ABERRATION)
-        if let error = AstronomyError(status: s.status) {
-            throw error
-        }
-
-        let p = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: g.x - s.x,
-            y: g.y - s.y,
-            z: g.z - s.z,
-            t: time.raw
-        )
-        let e = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: -g.x,
-            y: -g.y,
-            z: -g.z,
-            t: time.raw
-        )
-
+        let g = try EnginePositions.geoVector(of: body, at: time, aberration: .corrected)
+        let s = try EnginePositions.geoVector(of: .sun, at: time, aberration: .corrected)
+        let p = Vector3D(x: g.x - s.x, y: g.y - s.y, z: g.z - s.z, time: time)
+        let e = Vector3D(x: -g.x, y: -g.y, z: -g.z, time: time)
         return EngineEclipses.calcShadow(bodyRadiusKM: planetRadiusKM, time: time, target: e, dir: p)
     }
 
@@ -52,8 +30,16 @@ enum EngineTransits {
         let t2 = centerTime.addingDays(window)
 
         let peakTime = try EngineSearch.find(t1: t1, t2: t2, dtToleranceSeconds: 1.0) { t in
-            let s1 = try planetShadow(body: body, planetRadiusKM: planetRadiusKM, at: t.addingTerrestrialDays(-dt))
-            let s2 = try planetShadow(body: body, planetRadiusKM: planetRadiusKM, at: t.addingTerrestrialDays(dt))
+            let s1 = try planetShadow(
+                body: body,
+                planetRadiusKM: planetRadiusKM,
+                at: t.addingTerrestrialDays(-dt)
+            )
+            let s2 = try planetShadow(
+                body: body,
+                planetRadiusKM: planetRadiusKM,
+                at: t.addingTerrestrialDays(dt)
+            )
             return (s2.r - s1.r) / dt
         }
         return try planetShadow(body: body, planetRadiusKM: planetRadiusKM, at: peakTime)
@@ -88,18 +74,14 @@ enum EngineTransits {
         var searchTime = startTime
 
         while true {
-            let conj = Astronomy_SearchRelativeLongitude(body.raw, 0.0, searchTime.raw)
-            if let error = AstronomyError(status: conj.status) {
-                throw error
-            }
-            let conjTime = AstroTime(raw: conj.time)
+            let conjTime = try EngineEvents.searchRelativeLongitude(
+                of: body,
+                targetRelLon: 0.0,
+                after: searchTime
+            )
+            let conjSep = try EnginePositions.angleFromSun(of: body, at: conjTime)
 
-            let conjSep = Astronomy_AngleFromSun(body.raw, conj.time)
-            if let error = AstronomyError(status: conjSep.status) {
-                throw error
-            }
-
-            if conjSep.angle < thresholdAngle {
+            if conjSep < thresholdAngle {
                 let shadow = try peakPlanetShadow(
                     body: body,
                     planetRadiusKM: planetRadiusKM,
@@ -120,16 +102,13 @@ enum EngineTransits {
                         t2: shadow.time.addingDays(dtDays),
                         direction: 1.0
                     )
-                    let minSep = Astronomy_AngleFromSun(body.raw, shadow.time.raw)
-                    if let error = AstronomyError(status: minSep.status) {
-                        throw error
-                    }
+                    let minSep = try EnginePositions.angleFromSun(of: body, at: shadow.time)
                     return Transit(
                         body: body,
                         start: start,
                         peak: shadow.time,
                         finish: finish,
-                        separation: 60.0 * minSep.angle
+                        separation: 60.0 * minSep
                     )
                 }
             }

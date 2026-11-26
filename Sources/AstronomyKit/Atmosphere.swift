@@ -5,7 +5,7 @@
 //  Atmospheric model calculations.
 //
 
-import CLibAstronomy
+import Foundation
 
 // MARK: - Atmosphere
 
@@ -37,18 +37,6 @@ public struct Atmosphere: Sendable, Equatable {
     /// A value of 1.0 represents sea level density.
     /// Higher elevations have lower density.
     public let density: Double
-
-    /// Creates an atmosphere from the C structure.
-    init(_ raw: astro_atmosphere_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        // Convert from Pascals to millibars (1 mbar = 100 Pa)
-        self.pressure = raw.pressure / 100.0
-        // Convert from Kelvins to Celsius
-        self.temperature = raw.temperature - 273.15
-        self.density = raw.density
-    }
 }
 
 extension Atmosphere: CustomStringConvertible {
@@ -82,8 +70,7 @@ extension Atmosphere {
     /// print("Pressure: \(everest.pressure) mbar") // ~314 mbar
     /// ```
     public static func at(elevation: Double) throws -> Atmosphere {
-        let result = Astronomy_Atmosphere(elevation)
-        return try Atmosphere(result)
+        try EngineObserver.atmosphere(elevationMeters: elevation)
     }
 }
 

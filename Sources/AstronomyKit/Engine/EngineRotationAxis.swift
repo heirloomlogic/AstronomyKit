@@ -5,8 +5,6 @@
 //  Pure-Swift planetary rotation axis orientation (IAU WGCCRE 2015) matching Astronomy_RotationAxis.
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -198,17 +196,12 @@ enum EngineRotationAxis {
     }
 
     private static func earthRotationAxis(at time: AstroTime) throws -> RotationAxis {
-        var rawTime = time.raw
-        let rot = Astronomy_Rotation_EQD_EQJ(&rawTime)
-        if let error = AstronomyError(status: rot.status) {
-            throw error
-        }
+        let rot = EngineRotation.eqdToEqj(at: time)
         // Rotating EQD north pole (0, 0, 1) to J2000 selects row 2 of the rotation matrix.
         let (nx, ny, nz) = EngineMath.rotate(rot, 0.0, 0.0, 1.0)
         let equ = try EngineMath.equatorFromVector(nx, ny, nz)
-        let updatedTime = AstroTime(raw: rawTime)
-        let north = Vector3D(x: nx, y: ny, z: nz, time: updatedTime)
-        let spin = 190.41375788700253 + 360.9856122880876 * rawTime.ut
+        let north = Vector3D(x: nx, y: ny, z: nz, time: time)
+        let spin = 190.41375788700253 + 360.9856122880876 * time.universalTime
         return RotationAxis(
             rightAscension: equ.ra,
             declination: equ.dec,

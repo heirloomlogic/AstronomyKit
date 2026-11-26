@@ -5,8 +5,6 @@
 //  Position calculations for celestial bodies.
 //
 
-import CLibAstronomy
-
 // MARK: - Position Calculations
 
 extension CelestialBody {
@@ -24,8 +22,7 @@ extension CelestialBody {
         at time: AstroTime,
         aberration: Aberration = .corrected
     ) throws -> Vector3D {
-        let result = Astronomy_GeoVector(raw, time.raw, aberration.raw)
-        return try Vector3D(result)
+        try EnginePositions.geoVector(of: self, at: time, aberration: aberration)
     }
 
     /// Calculates the heliocentric position of this body.
@@ -37,8 +34,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func heliocentricPosition(at time: AstroTime) throws -> Vector3D {
-        let result = Astronomy_HelioVector(raw, time.raw)
-        return try Vector3D(result)
+        try EnginePositions.helioVector(of: self, at: time)
     }
 
     /// Calculates the distance from the Sun to this body.
@@ -48,11 +44,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func distanceFromSun(at time: AstroTime) throws -> Double {
-        let result = Astronomy_HelioDistance(raw, time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.value
+        try EnginePositions.helioDistance(of: self, at: time)
     }
 
     /// Calculates the equatorial coordinates of this body.
@@ -73,9 +65,13 @@ extension CelestialBody {
         equatorDate: EquatorDate = .j2000,
         aberration: Aberration = .corrected
     ) throws -> Equatorial {
-        var rawTime = time.raw
-        let result = Astronomy_Equator(raw, &rawTime, try observer.validatedRaw(), equatorDate.raw, aberration.raw)
-        return try Equatorial(result, time: time)
+        try EngineObserver.equator(
+            of: self,
+            at: time,
+            observer: try observer.validated(),
+            equatorDate: equatorDate,
+            aberration: aberration
+        )
     }
 
     /// Calculates the horizontal coordinates for an observer.
@@ -94,12 +90,14 @@ extension CelestialBody {
         from observer: Observer,
         refraction: Refraction = .normal
     ) throws -> Horizon {
-        let eq = try equatorial(at: time, from: observer, equatorDate: .ofDate)
-        var rawTime = time.raw
-        let result = Astronomy_Horizon(
-            &rawTime, try observer.validatedRaw(), eq.rightAscension, eq.declination, refraction.raw
+        let validObserver = try observer.validated()
+        let gc = try EnginePositions.geoVector(of: self, at: time, aberration: .corrected)
+        return try EngineObserver.horizon(
+            geocentric: gc,
+            at: time,
+            observer: validObserver,
+            refraction: refraction
         )
-        return Horizon(result)
     }
 
     /// Calculates the ecliptic longitude of this body.
@@ -109,11 +107,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func eclipticLongitude(at time: AstroTime) throws -> Double {
-        let result = Astronomy_EclipticLongitude(raw, time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try EnginePositions.eclipticLongitude(of: self, at: time)
     }
 
     /// Calculates the angular separation from the Sun.
@@ -123,11 +117,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func angleFromSun(at time: AstroTime) throws -> Double {
-        let result = Astronomy_AngleFromSun(raw, time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try EnginePositions.angleFromSun(of: self, at: time)
     }
 
     /// Calculates the barycentric state vector (position and velocity relative
@@ -138,8 +128,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func barycentricState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_BaryState(raw, time.raw)
-        return try StateVector(result)
+        try EnginePositions.baryState(of: self, at: time)
     }
 
     /// Calculates the heliocentric state vector (position and velocity relative
@@ -150,8 +139,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public func heliocentricState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_HelioState(raw, time.raw)
-        return try StateVector(result)
+        try EnginePositions.helioState(of: self, at: time)
     }
 
     /// Calculates the geocentric state vector of the Earth-Moon Barycenter.
@@ -161,8 +149,7 @@ extension CelestialBody {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func earthMoonBaryState(at time: AstroTime) throws -> StateVector {
-        let result = Astronomy_GeoEmbState(time.raw)
-        return try StateVector(result)
+        try EnginePositions.geoEmbState(at: time)
     }
 
     /// Returns the position this body actually occupied when it emitted the light
@@ -183,13 +170,12 @@ extension CelestialBody {
         seenFrom observerBody: CelestialBody,
         aberration: Aberration = .corrected
     ) throws -> Vector3D {
-        let result = Astronomy_BackdatePosition(
-            time.raw,
-            observerBody.raw,
-            raw,
-            aberration.raw
+        try EnginePositions.backdatePosition(
+            at: time,
+            observerBody: observerBody,
+            targetBody: self,
+            aberration: aberration
         )
-        return try Vector3D(result)
     }
 }
 
@@ -202,13 +188,6 @@ public enum Aberration: Sendable {
 
     /// Correct for light time and aberration.
     case corrected
-
-    var raw: astro_aberration_t {
-        switch self {
-        case .none: return NO_ABERRATION
-        case .corrected: return ABERRATION
-        }
-    }
 }
 
 // MARK: - Equator Date
@@ -220,13 +199,6 @@ public enum EquatorDate: Sendable {
 
     /// Use coordinates of the current date.
     case ofDate
-
-    var raw: astro_equator_date_t {
-        switch self {
-        case .j2000: return EQUATOR_J2000
-        case .ofDate: return EQUATOR_OF_DATE
-        }
-    }
 }
 
 // MARK: - Sun Position
@@ -240,8 +212,7 @@ public enum Sun {
     /// - Throws: `AstronomyError.badTime` if `time` is outside the accepted range
     ///   (see ``AstroTime``), or another `AstronomyError` if the calculation fails.
     public static func position(at time: AstroTime) throws -> Ecliptic {
-        let result = Astronomy_SunPosition(time.raw)
-        return try Ecliptic(result)
+        try EnginePositions.sunPosition(at: time)
     }
 
     /// Searches for the next time the Sun reaches the specified ecliptic longitude.
@@ -263,13 +234,14 @@ public enum Sun {
         limitDays: Double = 366
     ) throws -> AstroTime? {
         guard targetLongitude.isFinite else { throw AstronomyError.invalidParameter }
-        let result = Astronomy_SearchSunLongitude(targetLongitude, startTime.raw, limitDays)
-        if result.status == ASTRO_SEARCH_FAILURE {
+        do {
+            return try EngineEvents.searchSunLongitude(
+                targetLon: targetLongitude,
+                after: startTime,
+                limitDays: limitDays
+            )
+        } catch AstronomyError.searchFailure {
             return nil
         }
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return AstroTime(raw: result.time)
     }
 }
