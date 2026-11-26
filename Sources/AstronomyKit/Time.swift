@@ -210,6 +210,18 @@ public struct AstroTime: Sendable {
         // Adding 0 turns -0 into +0.
         return wrapped >= 24.0 ? 0.0 : wrapped + 0.0
     }
+    /// Maximum accepted |TT| in days from J2000 (matches `EPHEMERIS_MAX_TT_DAYS` in `astronomy.c`).
+    static let acceptedTTDays = 1_461_000.0
+
+    /// Maximum number of events returned by range-collecting searches to guard against DoS.
+    static let maxRangeResults = 50_000
+
+    /// Validates that this time is finite and within the accepted ephemeris range.
+    func checkAcceptedTime() throws {
+        guard universalTime.isFinite, terrestrialTime.isFinite, abs(terrestrialTime) <= Self.acceptedTTDays else {
+            throw AstronomyError.badTime
+        }
+    }
 }
 
 // MARK: - Protocol Conformances
@@ -236,17 +248,9 @@ extension AstroTime: Hashable {
 }
 
 extension AstroTime: CustomStringConvertible {
-    // ISO8601DateFormatter is documented to be thread-safe, so a shared
-    // instance avoids re-allocating a formatter on every description call.
-    private nonisolated(unsafe) static let iso8601Formatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-
     /// An ISO 8601 formatted string representation of this time.
     public var description: String {
-        Self.iso8601Formatter.string(from: date)
+        Date.ISO8601FormatStyle(includingFractionalSeconds: true).format(date)
     }
 }
 

@@ -235,12 +235,26 @@ public enum Moon {
         from startTime: AstroTime,
         to endTime: AstroTime
     ) throws -> [MoonQuarter] {
+        try startTime.checkAcceptedTime()
+        try endTime.checkAcceptedTime()
+        guard startTime < endTime else { return [] }
+
         var quarters: [MoonQuarter] = []
-        var current = try searchQuarter(after: startTime)
+        var current: MoonQuarter
+        do {
+            current = try searchQuarter(after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.time < endTime {
+            guard quarters.count < AstroTime.maxRangeResults else { throw AstronomyError.invalidParameter }
             quarters.append(current)
-            current = try nextQuarter(after: current)
+            do {
+                current = try nextQuarter(after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return quarters

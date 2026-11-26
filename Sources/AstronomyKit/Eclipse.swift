@@ -280,12 +280,26 @@ public enum Eclipse {
         from startTime: AstroTime,
         to endTime: AstroTime
     ) throws -> [LunarEclipse] {
+        try startTime.checkAcceptedTime()
+        try endTime.checkAcceptedTime()
+        guard startTime < endTime else { return [] }
+
         var eclipses: [LunarEclipse] = []
-        var current = try searchLunar(after: startTime)
+        var current: LunarEclipse
+        do {
+            current = try searchLunar(after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.peak < endTime {
+            guard eclipses.count < AstroTime.maxRangeResults else { throw AstronomyError.invalidParameter }
             eclipses.append(current)
-            current = try nextLunar(after: current)
+            do {
+                current = try nextLunar(after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return eclipses
@@ -324,12 +338,26 @@ public enum Eclipse {
         from startTime: AstroTime,
         to endTime: AstroTime
     ) throws -> [GlobalSolarEclipse] {
+        try startTime.checkAcceptedTime()
+        try endTime.checkAcceptedTime()
+        guard startTime < endTime else { return [] }
+
         var eclipses: [GlobalSolarEclipse] = []
-        var current = try searchGlobalSolar(after: startTime)
+        var current: GlobalSolarEclipse
+        do {
+            current = try searchGlobalSolar(after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.peak < endTime {
+            guard eclipses.count < AstroTime.maxRangeResults else { throw AstronomyError.invalidParameter }
             eclipses.append(current)
-            current = try nextGlobalSolar(after: current)
+            do {
+                current = try nextGlobalSolar(after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return eclipses
@@ -352,11 +380,19 @@ public enum Eclipse {
     /// let eclipse = try Eclipse.searchLocalSolar(after: .now, from: nyc)
     /// print("Next eclipse: \(eclipse.kind) on \(eclipse.peak.time)")
     /// ```
+    private static func validatedSolarObserver(_ observer: Observer) throws -> astro_observer_t {
+        let raw = try observer.validatedRaw()
+        guard (-6_378_136.6...100_000.0).contains(observer.height) else {
+            throw AstronomyError.invalidParameter
+        }
+        return raw
+    }
+
     public static func searchLocalSolar(
         after startTime: AstroTime,
         from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let result = Astronomy_SearchLocalSolarEclipse(startTime.raw, try observer.validatedRaw())
+        let result = Astronomy_SearchLocalSolarEclipse(startTime.raw, try validatedSolarObserver(observer))
         return try LocalSolarEclipse(result)
     }
 
@@ -371,7 +407,7 @@ public enum Eclipse {
         after eclipse: LocalSolarEclipse,
         from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let result = Astronomy_NextLocalSolarEclipse(eclipse.peak.time.raw, try observer.validatedRaw())
+        let result = Astronomy_NextLocalSolarEclipse(eclipse.peak.time.raw, try validatedSolarObserver(observer))
         return try LocalSolarEclipse(result)
     }
 
@@ -388,12 +424,27 @@ public enum Eclipse {
         to endTime: AstroTime,
         observer: Observer
     ) throws -> [LocalSolarEclipse] {
+        _ = try validatedSolarObserver(observer)
+        try startTime.checkAcceptedTime()
+        try endTime.checkAcceptedTime()
+        guard startTime < endTime else { return [] }
+
         var eclipses: [LocalSolarEclipse] = []
-        var current = try searchLocalSolar(after: startTime, from: observer)
+        var current: LocalSolarEclipse
+        do {
+            current = try searchLocalSolar(after: startTime, from: observer)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.peak.time < endTime {
+            guard eclipses.count < AstroTime.maxRangeResults else { throw AstronomyError.invalidParameter }
             eclipses.append(current)
-            current = try nextLocalSolar(after: current, from: observer)
+            do {
+                current = try nextLocalSolar(after: current, from: observer)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return eclipses

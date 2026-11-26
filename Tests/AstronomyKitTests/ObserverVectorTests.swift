@@ -88,4 +88,20 @@ struct ObserverVectorTests {
         #expect(abs(restored.latitude - original.latitude) < 0.01)
         #expect(abs(restored.longitude - original.longitude) < 0.5)
     }
+
+    @Test("Non-finite or invalid-time vector returns NaN observer without terminating")
+    func nonFiniteOrInvalidTimeVectorReturnsNaN() {
+        let time = AstroTime(ut: 0)
+        for vector in [
+            Vector3D(x: .nan, y: 0, z: 0, time: time),
+            Vector3D(x: .infinity, y: 0, z: 0, time: time),
+            Vector3D(x: .greatestFiniteMagnitude, y: 0, z: 0, time: time),
+            Vector3D(x: 1e-5, y: 2e-5, z: 3e-5, time: AstroTime(ut: .nan)),
+        ] {
+            let observer = Observer.from(vector: vector, equatorDate: .ofDate)
+            #expect(observer.latitude.isNaN)
+            #expect(observer.longitude.isNaN)
+            #expect(observer.height.isNaN)
+        }
+    }
 }

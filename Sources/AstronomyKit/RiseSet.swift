@@ -293,7 +293,8 @@ public struct DailyEvents: Sendable {
 
         self.rise = try body.riseTime(after: date, from: observer, limitDays: 1)
         self.set = try body.setTime(after: date, from: observer, limitDays: 1)
-        self.culmination = try body.culmination(after: date, from: observer)
+        let nextCulmination = try body.culmination(after: date, from: observer)
+        self.culmination = nextCulmination.time < date.addingDays(1) ? nextCulmination : nil
     }
 
     /// Whether the body is visible at some point during this day.

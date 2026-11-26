@@ -45,16 +45,25 @@ public struct Vector3D: Sendable, Equatable, Hashable {
 
     /// The magnitude (length) of the vector in AU.
     public var magnitude: Double {
-        (x * x + y * y + z * z).squareRoot()
+        let ax = abs(x)
+        let ay = abs(y)
+        let az = abs(z)
+        let scale = max(ax, max(ay, az))
+        guard scale.isFinite else { return scale }
+        guard scale > 0 else { return 0 }
+        let sx = ax / scale
+        let sy = ay / scale
+        let sz = az / scale
+        return scale * (sx * sx + sy * sy + sz * sz).squareRoot()
     }
 
     /// Returns a unit vector in the same direction.
     ///
-    /// Returns `self` unchanged when the magnitude is zero, since a zero
-    /// vector has no direction to normalize.
+    /// Returns `self` unchanged when the magnitude is zero or non-finite, since a zero
+    /// or non-finite vector has no unit direction to normalize.
     public var normalized: Vector3D {
         let length = magnitude
-        guard length > 0 else { return self }
+        guard length.isFinite, length > 0 else { return self }
         return Vector3D(x: x / length, y: y / length, z: z / length, time: time)
     }
 }
@@ -225,11 +234,18 @@ public struct Equatorial: Sendable, Equatable, Hashable {
 
     /// Right ascension formatted as hours:minutes:seconds.
     public var rightAscensionFormatted: String {
+        guard rightAscension.isFinite else { return String(rightAscension) }
         // Round to the displayed 0.1 s precision first so that e.g. 59.96 s
         // rolls over into the next minute instead of printing "60.0s", and
-        // wrap at 24 h so values rounding up to exactly 24 display as 0 h.
-        let totalTenths = (rightAscension * 36_000).rounded()
+        // wrap into [0, 24 h) so negative values and 24 h rollovers format cleanly.
+        let wrappedHours = rightAscension.truncatingRemainder(dividingBy: 24)
+        let normalizedHours = wrappedHours < 0 ? wrappedHours + 24 : wrappedHours
+        var totalTenths = (normalizedHours * 36_000).rounded()
             .truncatingRemainder(dividingBy: 864_000)
+        if totalTenths < 0 { totalTenths += 864_000 }
+        guard totalTenths.isFinite, totalTenths >= 0, totalTenths < 864_000 else {
+            return String(rightAscension)
+        }
         let hours = Int(totalTenths / 36_000)
         let minutes = Int(totalTenths.truncatingRemainder(dividingBy: 36_000) / 600)
         let seconds = totalTenths.truncatingRemainder(dividingBy: 600) / 10
@@ -238,10 +254,14 @@ public struct Equatorial: Sendable, Equatable, Hashable {
 
     /// Declination formatted as degrees:arcminutes:arcseconds.
     public var declinationFormatted: String {
+        guard declination.isFinite else { return String(declination) }
+        let absDeclination = abs(declination)
+        // Guard against Int overflow for extreme synthetic values.
+        guard absDeclination <= 1e12 else { return "\(declination)°" }
         let sign = declination >= 0 ? "+" : "-"
         // Round to the displayed 0.1" precision first so seconds cannot
         // print as "60.0" (see rightAscensionFormatted).
-        let totalTenths = (abs(declination) * 36_000).rounded()
+        let totalTenths = (absDeclination * 36_000).rounded()
         let degrees = Int(totalTenths / 36_000)
         let arcminutes = Int(totalTenths.truncatingRemainder(dividingBy: 36_000) / 600)
         let arcseconds = totalTenths.truncatingRemainder(dividingBy: 600) / 10

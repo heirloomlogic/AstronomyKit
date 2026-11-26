@@ -123,12 +123,27 @@ extension Transit {
         from startTime: AstroTime,
         to endTime: AstroTime
     ) throws -> [Transit] {
+        guard body == .mercury || body == .venus else { throw AstronomyError.invalidBody }
+        try startTime.checkAcceptedTime()
+        try endTime.checkAcceptedTime()
+        guard startTime < endTime else { return [] }
+
         var transits: [Transit] = []
-        var current = try search(body: body, after: startTime)
+        var current: Transit
+        do {
+            current = try search(body: body, after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.peak < endTime {
+            guard transits.count < AstroTime.maxRangeResults else { throw AstronomyError.invalidParameter }
             transits.append(current)
-            current = try next(body: body, after: current)
+            do {
+                current = try next(body: body, after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return transits
