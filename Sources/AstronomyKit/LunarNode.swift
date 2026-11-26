@@ -5,8 +5,6 @@
 //  Lunar node crossing calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Node Kind
 
 /// The type of lunar node crossing.
@@ -16,15 +14,6 @@ public enum NodeKind: Sendable, Equatable, Hashable, Codable {
 
     /// The Moon crosses from north to south of the ecliptic plane.
     case descending
-
-    init(_ raw: astro_node_kind_t) {
-        switch raw {
-        case ASCENDING_NODE:
-            self = .ascending
-        default:
-            self = .descending
-        }
-    }
 
     /// A human-readable name.
     public var name: String {
@@ -69,15 +58,6 @@ public struct LunarNode: Sendable, Equatable {
 
     /// The time when the Moon crosses the ecliptic plane.
     public let time: AstroTime
-
-    /// Creates a lunar node from the C structure.
-    init(_ raw: astro_node_event_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.kind = NodeKind(raw.kind)
-        self.time = AstroTime(raw: raw.time)
-    }
 }
 
 extension LunarNode: CustomStringConvertible {
@@ -98,8 +78,7 @@ extension Moon {
     ///   the accepted time range (see ``AstroTime``), which includes a non-finite
     ///   `startTime`, or another `AstronomyError` if the search fails.
     public static func searchNode(after startTime: AstroTime) throws -> LunarNode {
-        let result = Astronomy_SearchMoonNode(startTime.raw)
-        return try LunarNode(result)
+        try EngineLunarNode.searchNode(after: startTime)
     }
 
     /// Finds the next lunar node crossing after a given node.
@@ -108,13 +87,7 @@ extension Moon {
     /// - Returns: The next node crossing.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextNode(after node: LunarNode) throws -> LunarNode {
-        let raw = astro_node_event_t(
-            status: ASTRO_SUCCESS,
-            time: node.time.raw,
-            kind: node.kind == .ascending ? ASCENDING_NODE : DESCENDING_NODE
-        )
-        let result = Astronomy_NextMoonNode(raw)
-        return try LunarNode(result)
+        try EngineLunarNode.nextNode(after: node)
     }
 
     /// Returns all lunar node crossings within a date range.

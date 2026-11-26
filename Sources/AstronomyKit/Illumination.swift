@@ -5,7 +5,7 @@
 //  Visual magnitude and illumination calculations.
 //
 
-import CLibAstronomy
+import Foundation
 
 // MARK: - Illumination
 
@@ -55,19 +55,6 @@ public struct Illumination: Sendable, Equatable {
     ///
     /// This is 0 for all bodies except Saturn.
     public let ringTilt: Double
-
-    /// Creates an illumination result from the C structure.
-    init(_ raw: astro_illum_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.time = AstroTime(raw: raw.time)
-        self.magnitude = raw.mag
-        self.phaseAngle = raw.phase_angle
-        self.phaseFraction = raw.phase_fraction
-        self.helioDistance = raw.helio_dist
-        self.ringTilt = raw.ring_tilt
-    }
 }
 
 extension Illumination: CustomStringConvertible {
@@ -100,8 +87,7 @@ extension CelestialBody {
     /// print("Mars magnitude: \(mars.magnitude)")
     /// ```
     public func illumination(at time: AstroTime) throws -> Illumination {
-        let result = Astronomy_Illumination(raw, time.raw)
-        return try Illumination(result)
+        try EngineIllumination.illumination(of: self, at: time)
     }
 
     /// Searches for the time when this body reaches peak visual magnitude.
@@ -120,7 +106,6 @@ extension CelestialBody {
     /// print("Venus brightest at \(peak.time): \(peak.magnitude)")
     /// ```
     public func searchPeakMagnitude(after startTime: AstroTime) throws -> Illumination {
-        let result = Astronomy_SearchPeakMagnitude(raw, startTime.raw)
-        return try Illumination(result)
+        try EngineIllumination.searchPeakMagnitude(of: self, after: startTime)
     }
 }

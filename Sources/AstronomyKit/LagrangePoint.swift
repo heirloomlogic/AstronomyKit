@@ -143,13 +143,12 @@ public enum LagrangePoint {
         majorBody: CelestialBody,
         minorBody: CelestialBody
     ) throws -> StateVector {
-        let result = Astronomy_LagrangePoint(
-            point.rawValue,
-            time.raw,
-            majorBody.raw,
-            minorBody.raw
+        try EngineLagrangePoint.calculate(
+            point: point,
+            at: time,
+            majorBody: majorBody,
+            minorBody: minorBody
         )
-        return try StateVector(result)
     }
 
     /// Calculates a Lagrange point from pre-computed body states and masses.
@@ -184,33 +183,12 @@ public enum LagrangePoint {
         minorState: StateVector,
         minorMass: Double
     ) throws -> StateVector {
-        let majorRaw = astro_state_vector_t(
-            status: ASTRO_SUCCESS,
-            x: majorState.position.x,
-            y: majorState.position.y,
-            z: majorState.position.z,
-            vx: majorState.velocity.x,
-            vy: majorState.velocity.y,
-            vz: majorState.velocity.z,
-            t: majorState.time.raw
+        try EngineLagrangePoint.calculateFast(
+            point: point,
+            majorState: majorState,
+            majorMass: majorMass,
+            minorState: minorState,
+            minorMass: minorMass
         )
-        let minorRaw = astro_state_vector_t(
-            status: ASTRO_SUCCESS,
-            x: minorState.position.x,
-            y: minorState.position.y,
-            z: minorState.position.z,
-            vx: minorState.velocity.x,
-            vy: minorState.velocity.y,
-            vz: minorState.velocity.z,
-            t: minorState.time.raw
-        )
-        let result = Astronomy_LagrangePointFast(
-            point.rawValue,
-            majorRaw,
-            majorMass,
-            minorRaw,
-            minorMass
-        )
-        return try StateVector(result)
     }
 }

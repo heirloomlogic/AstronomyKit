@@ -5,8 +5,6 @@
 //  Jupiter's Galilean moons state calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Jupiter Moons
 
 /// State vectors for Jupiter's four Galilean moons.
@@ -33,14 +31,6 @@ public struct JupiterMoons: Sendable, Equatable {
 
     /// The state of Callisto.
     public let callisto: StateVector
-
-    /// Creates Jupiter moons data from the C structure.
-    init(_ raw: astro_jupiter_moons_t) throws {
-        self.io = try StateVector(raw.io)
-        self.europa = try StateVector(raw.europa)
-        self.ganymede = try StateVector(raw.ganymede)
-        self.callisto = try StateVector(raw.callisto)
-    }
 }
 
 extension JupiterMoons: CustomStringConvertible {
@@ -80,7 +70,6 @@ public enum Jupiter {
     /// }
     /// ```
     public static func moons(at time: AstroTime) throws -> JupiterMoons {
-        let result = Astronomy_JupiterMoons(time.raw)
-        return try JupiterMoons(result)
+        try EngineJupiterMoons.moons(at: time)
     }
 }

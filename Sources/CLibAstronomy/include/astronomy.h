@@ -690,266 +690,6 @@ typedef struct
 }
 astro_hour_angle_t;
 
-/**
- * @brief Information about the brightness and illuminated shape of a celestial body.
- *
- * Returned by the functions #Astronomy_Illumination and #Astronomy_SearchPeakMagnitude
- * to report the visual magnitude and illuminated fraction of a celestial body at a given date and time.
- */
-typedef struct
-{
-    astro_status_t      status;         /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_time_t        time;           /**< The date and time of the observation. */
-    double              mag;            /**< The visual magnitude of the body. Smaller values are brighter. */
-    double              phase_angle;    /**< The angle in degrees between the Sun and the Earth, as seen from the body. Indicates the body's phase as seen from the Earth. */
-    double              phase_fraction; /**< A value in the range [0.0, 1.0] indicating what fraction of the body's apparent disc is illuminated, as seen from the Earth. */
-    double              helio_dist;     /**< The distance between the Sun and the body at the observation time. */
-    double              ring_tilt;      /**< For Saturn, the tilt angle in degrees of its rings as seen from Earth. For all other bodies, 0. */
-}
-astro_illum_t;
-
-/**
- * @brief The type of apsis: pericenter (closest approach) or apocenter (farthest distance).
- */
-typedef enum
-{
-    APSIS_PERICENTER,   /**< The body is at its closest approach to the object it orbits. */
-    APSIS_APOCENTER,    /**< The body is at its farthest distance from the object it orbits. */
-    APSIS_INVALID       /**< Undefined or invalid apsis. */
-}
-astro_apsis_kind_t;
-
-/**
- * @brief An apsis event: pericenter (closest approach) or apocenter (farthest distance).
- *
- * For the Moon orbiting the Earth, or a planet orbiting the Sun, an *apsis* is an
- * event where the orbiting body reaches its closest or farthest point from the primary body.
- * The closest approach is called *pericenter* and the farthest point is *apocenter*.
- *
- * More specific terminology is common for particular orbiting bodies.
- * The Moon's closest approach to the Earth is called *perigee* and its farthest
- * point is called *apogee*. The closest approach of a planet to the Sun is called
- * *perihelion* and the furthest point is called *aphelion*.
- *
- * This data structure is returned by #Astronomy_SearchLunarApsis and #Astronomy_NextLunarApsis
- * to iterate through consecutive alternating perigees and apogees.
- */
-typedef struct
-{
-    astro_status_t      status;     /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_time_t        time;       /**< The date and time of the apsis. */
-    astro_apsis_kind_t  kind;       /**< Whether this is a pericenter or apocenter event. */
-    double              dist_au;    /**< The distance between the centers of the bodies in astronomical units. */
-    double              dist_km;    /**< The distance between the centers of the bodies in kilometers. */
-}
-astro_apsis_t;
-
-/**
- * @brief The different kinds of lunar/solar eclipses.
- */
-typedef enum
-{
-    ECLIPSE_NONE,       /**< No eclipse found. */
-    ECLIPSE_PENUMBRAL,  /**< A penumbral lunar eclipse. (Never used for a solar eclipse.) */
-    ECLIPSE_PARTIAL,    /**< A partial lunar/solar eclipse. */
-    ECLIPSE_ANNULAR,    /**< An annular solar eclipse. (Never used for a lunar eclipse.) */
-    ECLIPSE_TOTAL       /**< A total lunar/solar eclipse. */
-}
-astro_eclipse_kind_t;
-
-/**
- * @brief Information about a lunar eclipse.
- *
- * Returned by #Astronomy_SearchLunarEclipse or #Astronomy_NextLunarEclipse
- * to report information about a lunar eclipse event.
- * If a lunar eclipse is found, `status` holds `ASTRO_SUCCESS` and the other fields are set.
- * If `status` holds any other value, it is an error code and the other fields are undefined.
- *
- * When a lunar eclipse is found, it is classified as penumbral, partial, or total.
- * Penumbral eclipses are difficult to observe, because the Moon is only slightly dimmed
- * by the Earth's penumbra; no part of the Moon touches the Earth's umbra.
- * Partial eclipses occur when part, but not all, of the Moon touches the Earth's umbra.
- * Total eclipses occur when the entire Moon passes into the Earth's umbra.
- *
- * The `kind` field thus holds `ECLIPSE_PENUMBRAL`, `ECLIPSE_PARTIAL`, or `ECLIPSE_TOTAL`,
- * depending on the kind of lunar eclipse found.
- *
- * The `obscuration` field holds a value in the range [0, 1] that indicates what fraction
- * of the Moon's apparent disc area is covered by the Earth's umbra at the eclipse's peak.
- * This indicates how dark the peak eclipse appears. For penumbral eclipses, the obscuration
- * is 0, because the Moon does not pass through the Earth's umbra. For partial eclipses,
- * the obscuration is somewhere between 0 and 1. For total lunar eclipses, the obscuration is 1.
- *
- * Field `peak` holds the date and time of the center of the eclipse, when it is at its peak.
- *
- * Fields `sd_penum`, `sd_partial`, and `sd_total` hold the semi-duration of each phase
- * of the eclipse, which is half of the amount of time the eclipse spends in each
- * phase (expressed in minutes), or 0 if the eclipse never reaches that phase.
- * By converting from minutes to days, and subtracting/adding with `center`, the caller
- * may determine the date and time of the beginning/end of each eclipse phase.
- */
-typedef struct
-{
-    astro_status_t          status;         /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_eclipse_kind_t    kind;           /**< The type of lunar eclipse found. */
-    double                  obscuration;    /**< The peak fraction of the Moon's apparent disc that is covered by the Earth's umbra. */
-    astro_time_t            peak;           /**< The time of the eclipse at its peak. */
-    double                  sd_penum;       /**< The semi-duration of the penumbral phase in minutes. */
-    double                  sd_partial;     /**< The semi-duration of the partial phase in minutes, or 0.0 if none. */
-    double                  sd_total;       /**< The semi-duration of the total phase in minutes, or 0.0 if none. */
-}
-astro_lunar_eclipse_t;
-
-
-/**
- * @brief Reports the time and geographic location of the peak of a solar eclipse.
- *
- * Returned by #Astronomy_SearchGlobalSolarEclipse or #Astronomy_NextGlobalSolarEclipse
- * to report information about a solar eclipse event.
- * If a solar eclipse is found, `status` holds `ASTRO_SUCCESS` and `kind`, `peak`, and `distance`
- * have valid values. The `latitude` and `longitude` are set only for total and annular eclipses
- * (see more below).
- * If `status` holds any value other than `ASTRO_SUCCESS`, it is an error code;
- * in that case, `kind` holds `ECLIPSE_NONE` and all the other fields are undefined.
- *
- * The eclipse is classified as partial, annular, or total, depending on the
- * maximum amount of the Sun's disc obscured, as seen at the peak location
- * on the surface of the Earth.
- *
- * The `kind` field thus holds `ECLIPSE_PARTIAL`, `ECLIPSE_ANNULAR`, or `ECLIPSE_TOTAL`.
- * A total eclipse is when the peak observer sees the Sun completely blocked by the Moon.
- * An annular eclipse is like a total eclipse, but the Moon is too far from the Earth's surface
- * to completely block the Sun; instead, the Sun takes on a ring-shaped appearance.
- * A partial eclipse is when the Moon blocks part of the Sun's disc, but nobody on the Earth
- * observes either a total or annular eclipse.
- *
- * If `kind` is `ECLIPSE_TOTAL` or `ECLIPSE_ANNULAR`, the `latitude` and `longitude`
- * fields give the geographic coordinates of the center of the Moon's shadow projected
- * onto the daytime side of the Earth at the instant of the eclipse's peak.
- * If `kind` has any other value, `latitude` and `longitude` are undefined and should
- * not be used.
- *
- * For total or annular eclipses, the `obscuration` field holds the fraction (0, 1]
- * of the Sun's apparent disc area that is blocked from view by the Moon's silhouette,
- * as seen by an observer located at the geographic coordinates `latitude`, `longitude`
- * at the darkest time `peak`. The value will always be 1 for total eclipses, and less than
- * 1 for annular eclipses.
- * For partial eclipses, `obscuration` is undefined and should not be used.
- * This is because there is little practical use for an obscuration value of
- * a partial eclipse without supplying a particular observation location.
- * Developers who wish to find an obscuration value for partial solar eclipses should therefore use
- * #Astronomy_SearchLocalSolarEclipse and provide the geographic coordinates of an observer.
- */
-typedef struct
-{
-    astro_status_t          status;         /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_eclipse_kind_t    kind;           /**< The type of solar eclipse found. */
-    double                  obscuration;    /**< The peak fraction of the Sun's apparent disc area obscured by the Moon (total and annular eclipses only). */
-    astro_time_t            peak;           /**< The date and time when the solar eclipse is darkest. This is the instant when the axis of the Moon's shadow cone passes closest to the Earth's center. */
-    double                  distance;       /**< The distance between the Sun/Moon shadow axis and the center of the Earth, in kilometers. */
-    double                  latitude;       /**< The geographic latitude at the center of the peak eclipse shadow. */
-    double                  longitude;      /**< The geographic longitude at the center of the peak eclipse shadow. */
-}
-astro_global_solar_eclipse_t;
-
-
-/**
- * @brief Holds a time and the observed altitude of the Sun at that time.
- *
- * When reporting a solar eclipse observed at a specific location on the Earth
- * (a "local" solar eclipse), a series of events occur. In addition
- * to the time of each event, it is important to know the altitude of the Sun,
- * because each event may be invisible to the observer if the Sun is below
- * the horizon.
- *
- * If `altitude` is negative, the event is theoretical only; it would be
- * visible if the Earth were transparent, but the observer cannot actually see it.
- * If `altitude` is positive but less than a few degrees, visibility will be impaired by
- * atmospheric interference (sunrise or sunset conditions).
- */
-typedef struct
-{
-    astro_time_t    time;       /**< The date and time of the event. */
-    double          altitude;   /**< The angular altitude of the center of the Sun above/below the horizon, at `time`, corrected for atmospheric refraction and expressed in degrees. */
-}
-astro_eclipse_event_t;
-
-
-/**
- * @brief Information about a solar eclipse as seen by an observer at a given time and geographic location.
- *
- * Returned by #Astronomy_SearchLocalSolarEclipse or #Astronomy_NextLocalSolarEclipse
- * to report information about a solar eclipse as seen at a given geographic location.
- * If a solar eclipse is found, `status` holds `ASTRO_SUCCESS` and the other fields are set.
- * If `status` holds any other value, it is an error code and the other fields are undefined.
- *
- * When a solar eclipse is found, it is classified as partial, annular, or total.
- * The `kind` field thus holds `ECLIPSE_PARTIAL`, `ECLIPSE_ANNULAR`, or `ECLIPSE_TOTAL`.
- * A partial solar eclipse is when the Moon does not line up directly enough with the Sun
- * to completely block the Sun's light from reaching the observer.
- * An annular eclipse occurs when the Moon's disc is completely visible against the Sun
- * but the Moon is too far away to completely block the Sun's light; this leaves the
- * Sun with a ring-like appearance.
- * A total eclipse occurs when the Moon is close enough to the Earth and aligned with the
- * Sun just right to completely block all sunlight from reaching the observer.
- *
- * The `obscuration` field reports what fraction of the Sun's disc appears blocked
- * by the Moon when viewed by the observer at the peak eclipse time.
- * This is a value that ranges from 0 (no blockage) to 1 (total eclipse).
- * The obscuration value will be between 0 and 1 for partial eclipses and annular eclipses.
- * The value will be exactly 1 for total eclipses. Obscuration gives an indication
- * of how dark the eclipse appears.
- *
- * There are 5 "event" fields, each of which contains a time and a solar altitude.
- * Field `peak` holds the date and time of the center of the eclipse, when it is at its peak.
- * The fields `partial_begin` and `partial_end` are always set, and indicate when
- * the eclipse begins/ends. If the eclipse reaches totality or becomes annular,
- * `total_begin` and `total_end` indicate when the total/annular phase begins/ends.
- * When an event field is valid, the caller must also check its `altitude` field to
- * see whether the Sun is above the horizon at that time. See #astro_eclipse_kind_t
- * for more information.
- */
-typedef struct
-{
-    astro_status_t          status;         /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_eclipse_kind_t    kind;           /**< The type of solar eclipse found: `ECLIPSE_PARTIAL`, `ECLIPSE_ANNULAR`, or `ECLIPSE_TOTAL`. */
-    double                  obscuration;    /**< The fraction of the Sun's apparent disc area obscured by the Moon at the eclipse peak. */
-    astro_eclipse_event_t   partial_begin;  /**< The time and Sun altitude at the beginning of the eclipse. */
-    astro_eclipse_event_t   total_begin;    /**< If this is an annular or a total eclipse, the time and Sun altitude when annular/total phase begins; otherwise invalid. */
-    astro_eclipse_event_t   peak;           /**< The time and Sun altitude when the eclipse reaches its peak. */
-    astro_eclipse_event_t   total_end;      /**< If this is an annular or a total eclipse, the time and Sun altitude when annular/total phase ends; otherwise invalid. */
-    astro_eclipse_event_t   partial_end;    /**< The time and Sun altitude at the end of the eclipse. */
-}
-astro_local_solar_eclipse_t;
-
-
-/**
- * @brief Information about a transit of Mercury or Venus, as seen from the Earth.
- *
- * Returned by #Astronomy_SearchTransit or #Astronomy_NextTransit to report
- * information about a transit of Mercury or Venus.
- * A transit is when Mercury or Venus passes between the Sun and Earth so that
- * the other planet is seen in silhouette against the Sun.
- *
- * The `start` field reports the moment in time when the planet first becomes
- * visible against the Sun in its background.
- * The `peak` field reports when the planet is most aligned with the Sun,
- * as seen from the Earth.
- * The `finish` field reports the last moment when the planet is visible
- * against the Sun in its background.
- *
- * The calculations are performed from the point of view of a geocentric observer.
- */
-typedef struct
-{
-    astro_status_t  status;         /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_time_t    start;          /**< Date and time at the beginning of the transit. */
-    astro_time_t    peak;           /**< Date and time of the peak of the transit. */
-    astro_time_t    finish;         /**< Date and time at the end of the transit. */
-    double          separation;     /**< Angular separation in arcminutes between the centers of the Sun and the planet at time `peak`. */
-}
-astro_transit_t;
-
 
 /**
  * @brief   Aberration calculation options.
@@ -1015,26 +755,6 @@ astro_direction_t;
 
 
 /**
- * @brief Reports the constellation that a given celestial point lies within.
- *
- * The #Astronomy_Constellation function returns this struct
- * to report which constellation corresponds with a given point in the sky.
- * Constellations are defined with respect to the B1875 equatorial system
- * per IAU standard. Although `Astronomy.Constellation` requires J2000 equatorial
- * coordinates, the struct contains converted B1875 coordinates for reference.
- */
-typedef struct
-{
-    astro_status_t status;      /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    const char    *symbol;      /**< 3-character mnemonic symbol for the constellation, e.g. "Ori". */
-    const char    *name;        /**< Full name of constellation, e.g. "Orion". */
-    double         ra_1875;     /**< Right ascension expressed in B1875 coordinates. */
-    double         dec_1875;    /**< Declination expressed in B1875 coordinates. */
-}
-astro_constellation_t;
-
-
-/**
  * @brief Selects the output format of the function #Astronomy_FormatTime.
  */
 typedef enum
@@ -1046,107 +766,12 @@ typedef enum
 }
 astro_time_format_t;
 
-/**
- * @brief Lunar libration angles, returned by #Astronomy_Libration.
- */
-typedef struct
-{
-    double elat;                /**< Sub-Earth libration ecliptic latitude angle, in degrees. */
-    double elon;                /**< Sub-Earth libration ecliptic longitude angle, in degrees. */
-    double mlat;                /**< Moon's geocentric ecliptic latitude, in degrees. */
-    double mlon;                /**< Moon's geocentric ecliptic longitude, in degrees. */
-    double dist_km;             /**< Distance between the centers of the Earth and Moon in kilometers. */
-    double diam_deg;            /**< The apparent angular diameter of the Moon, in degrees, as seen from the center of the Earth. */
-}
-astro_libration_t;
-
-/**
- * @brief Information about a body's rotation axis at a given time.
- *
- * This structure is returned by #Astronomy_RotationAxis to report
- * the orientation of a body's rotation axis at a given moment in time.
- * The axis is specified by the direction in space that the body's north pole
- * points, using angular equatorial coordinates in the J2000 system (EQJ).
- *
- * Thus `ra` is the right ascension, and `dec` is the declination, of the
- * body's north pole vector at the given moment in time. The north pole
- * of a body is defined as the pole that lies on the north side of the
- * [Solar System's invariable plane](https://en.wikipedia.org/wiki/Invariable_plane),
- * regardless of the body's direction of rotation.
- *
- * The `spin` field indicates the angular position of a prime meridian
- * arbitrarily recommended for the body by the International Astronomical
- * Union (IAU).
- *
- * The fields `ra`, `dec`, and `spin` correspond to the variables
- * α0, δ0, and W, respectively, from
- * [Report of the IAU Working Group on Cartographic Coordinates and Rotational Elements: 2015](https://astropedia.astrogeology.usgs.gov/download/Docs/WGCCRE/WGCCRE2015reprint.pdf).
- *
- * The field `north` is a unit vector pointing in the direction of the body's north pole.
- * It is expressed in the equatorial J2000 system (EQJ).
- */
-typedef struct
-{
-    astro_status_t  status;     /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    double          ra;         /**< The J2000 right ascension of the body's north pole direction, in sidereal hours. */
-    double          dec;        /**< The J2000 declination of the body's north pole direction, in degrees. */
-    double          spin;       /**< Rotation angle of the body's prime meridian, in degrees. */
-    astro_vector_t  north;      /**< A J2000 dimensionless unit vector pointing in the direction of the body's north pole. */
-}
-astro_axis_t;
-
 
 /**
  * \def TIME_TEXT_BYTES
  * @brief The smallest number of characters that is always large enough for #Astronomy_FormatTime.
  */
 #define TIME_TEXT_BYTES  28
-
-/**
- * @brief Holds the positions and velocities of Jupiter's major 4 moons.
- *
- * The #Astronomy_JupiterMoons function returns this struct
- * to report position and velocity vectors for Jupiter's largest 4 moons
- * Io, Europa, Ganymede, and Callisto. Each position vector is relative
- * to the center of Jupiter. Both position and velocity are oriented in
- * the EQJ system (that is, using Earth's equator at the J2000 epoch.)
- * The positions are expressed in astronomical units (AU),
- * and the velocities in AU/day.
- */
-typedef struct
-{
-    astro_state_vector_t io;        /**< Jovicentric position and velocity of Io. */
-    astro_state_vector_t europa;    /**< Jovicentric position and velocity of Europa. */
-    astro_state_vector_t ganymede;  /**< Jovicentric position and velocity of Ganymede. */
-    astro_state_vector_t callisto;  /**< Jovicentric position and velocity of Callisto. */
-}
-astro_jupiter_moons_t;
-
-
-/**
- * @brief  Indicates whether a crossing through the ecliptic plane is ascending or descending.
- */
-typedef enum
-{
-    INVALID_NODE    =  0,   /**< Placeholder value for a missing or invalid node. */
-    ASCENDING_NODE  = +1,   /**< The body passes through the ecliptic plane from south to north. */
-    DESCENDING_NODE = -1    /**< The body passes through the ecliptic plane from north to south. */
-}
-astro_node_kind_t;
-
-/**
- * @brief Information about an ascending or descending node of a body.
- *
- * This structure is returned by #Astronomy_SearchMoonNode and #Astronomy_NextMoonNode
- * to report information about the center of the Moon passing through the ecliptic plane.
- */
-typedef struct
-{
-    astro_status_t      status;     /**< `ASTRO_SUCCESS` if this struct is valid; otherwise an error code. */
-    astro_time_t        time;       /**< The time when the body passes through the ecliptic plane. */
-    astro_node_kind_t   kind;       /**< Either `ASCENDING_NODE` or `DESCENDING_NODE`, depending on the direction of the ecliptic plane crossing. */
-}
-astro_node_event_t;
 
 
 /**
@@ -1186,29 +811,12 @@ astro_vector_t Astronomy_GeoMoon(astro_time_t time);
 astro_spherical_t Astronomy_EclipticGeoMoon(astro_time_t time);
 astro_state_vector_t Astronomy_GeoMoonState(astro_time_t time);
 astro_state_vector_t Astronomy_GeoEmbState(astro_time_t time);
-astro_libration_t Astronomy_Libration(astro_time_t time);
 astro_state_vector_t Astronomy_BaryState(astro_body_t body, astro_time_t time);
 astro_state_vector_t Astronomy_HelioState(astro_body_t body, astro_time_t time);
 
 double Astronomy_MassProduct(astro_body_t body);
 double Astronomy_PlanetOrbitalPeriod(astro_body_t body);
 
-astro_state_vector_t Astronomy_LagrangePoint(
-    int point,
-    astro_time_t time,
-    astro_body_t major_body,
-    astro_body_t minor_body
-);
-
-astro_state_vector_t Astronomy_LagrangePointFast(
-    int point,
-    astro_state_vector_t major_state,
-    double major_mass,
-    astro_state_vector_t minor_state,
-    double minor_mass
-);
-
-astro_jupiter_moons_t Astronomy_JupiterMoons(astro_time_t time);
 
 astro_equatorial_t Astronomy_Equator(
     astro_body_t body,
@@ -1260,16 +868,6 @@ astro_angle_result_t Astronomy_MoonPhase(astro_time_t time);
 astro_search_result_t Astronomy_SearchMoonPhase(double targetLon, astro_time_t startTime, double limitDays);
 astro_moon_quarter_t Astronomy_SearchMoonQuarter(astro_time_t startTime);
 astro_moon_quarter_t Astronomy_NextMoonQuarter(astro_moon_quarter_t mq);
-astro_lunar_eclipse_t Astronomy_SearchLunarEclipse(astro_time_t startTime);
-astro_lunar_eclipse_t Astronomy_NextLunarEclipse(astro_time_t prevEclipseTime);
-astro_global_solar_eclipse_t Astronomy_SearchGlobalSolarEclipse(astro_time_t startTime);
-astro_global_solar_eclipse_t Astronomy_NextGlobalSolarEclipse(astro_time_t prevEclipseTime);
-astro_local_solar_eclipse_t Astronomy_SearchLocalSolarEclipse(astro_time_t startTime, astro_observer_t observer);
-astro_local_solar_eclipse_t Astronomy_NextLocalSolarEclipse(astro_time_t prevEclipseTime, astro_observer_t observer);
-astro_transit_t Astronomy_SearchTransit(astro_body_t body, astro_time_t startTime);
-astro_transit_t Astronomy_NextTransit(astro_body_t body, astro_time_t prevTransitTime);
-astro_node_event_t Astronomy_SearchMoonNode(astro_time_t startTime);
-astro_node_event_t Astronomy_NextMoonNode(astro_node_event_t prevNode);
 
 astro_search_result_t Astronomy_Search(
     astro_search_func_t func,
@@ -1324,15 +922,8 @@ astro_search_result_t Astronomy_SearchAltitude(
 
 astro_atmosphere_t Astronomy_Atmosphere(double elevationMeters);
 
-astro_axis_t Astronomy_RotationAxis(astro_body_t body, astro_time_t *time);
 
 astro_seasons_t Astronomy_Seasons(int year);
-astro_illum_t Astronomy_Illumination(astro_body_t body, astro_time_t time);
-astro_illum_t Astronomy_SearchPeakMagnitude(astro_body_t body, astro_time_t startTime);
-astro_apsis_t Astronomy_SearchLunarApsis(astro_time_t startTime);
-astro_apsis_t Astronomy_NextLunarApsis(astro_apsis_t apsis);
-astro_apsis_t Astronomy_SearchPlanetApsis(astro_body_t body, astro_time_t startTime);
-astro_apsis_t Astronomy_NextPlanetApsis(astro_body_t body, astro_apsis_t apsis);
 
 astro_rotation_t Astronomy_IdentityMatrix(void);
 astro_rotation_t Astronomy_InverseRotation(astro_rotation_t rotation);
@@ -1368,7 +959,6 @@ astro_rotation_t Astronomy_Rotation_GAL_EQJ(void);
 double Astronomy_Refraction(astro_refraction_t refraction, double altitude);
 double Astronomy_InverseRefraction(astro_refraction_t refraction, double bent_altitude);
 
-astro_constellation_t Astronomy_Constellation(double ra, double dec);
 
 astro_status_t Astronomy_GravSimInit(
     astro_grav_sim_t **simOut,

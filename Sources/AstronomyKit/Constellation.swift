@@ -5,8 +5,6 @@
 //  Constellation identification from celestial coordinates.
 //
 
-import CLibAstronomy
-
 // MARK: - Constellation
 
 /// A constellation identified from celestial coordinates.
@@ -34,17 +32,6 @@ public struct Constellation: Sendable, Equatable, Hashable {
 
     /// The declination in B1875 coordinates (degrees).
     public let declination1875: Double
-
-    /// Creates a constellation from the C structure.
-    init(_ raw: astro_constellation_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.symbol = String(cString: raw.symbol)
-        self.name = String(cString: raw.name)
-        self.rightAscension1875 = raw.ra_1875
-        self.declination1875 = raw.dec_1875
-    }
 }
 
 extension Constellation: CustomStringConvertible {
@@ -73,8 +60,7 @@ extension Constellation {
     /// print(constellation.name) // "Ursa Minor"
     /// ```
     public static func find(rightAscension: Double, declination: Double) throws -> Constellation {
-        let result = Astronomy_Constellation(rightAscension, declination)
-        return try Constellation(result)
+        try EngineConstellation.find(rightAscension: rightAscension, declination: declination)
     }
 }
 
