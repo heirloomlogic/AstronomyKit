@@ -365,6 +365,14 @@ public enum Eclipse {
 
     // MARK: - Local Solar Eclipse
 
+    private static func validatedSolarObserver(_ observer: Observer) throws -> astro_observer_t {
+        let raw = try observer.validatedRaw()
+        guard (-6_378_136.6...100_000.0).contains(observer.height) else {
+            throw AstronomyError.invalidParameter
+        }
+        return raw
+    }
+
     /// Searches for the next solar eclipse visible from a specific location.
     ///
     /// - Parameters:
@@ -380,14 +388,6 @@ public enum Eclipse {
     /// let eclipse = try Eclipse.searchLocalSolar(after: .now, from: nyc)
     /// print("Next eclipse: \(eclipse.kind) on \(eclipse.peak.time)")
     /// ```
-    private static func validatedSolarObserver(_ observer: Observer) throws -> astro_observer_t {
-        let raw = try observer.validatedRaw()
-        guard (-6_378_136.6...100_000.0).contains(observer.height) else {
-            throw AstronomyError.invalidParameter
-        }
-        return raw
-    }
-
     public static func searchLocalSolar(
         after startTime: AstroTime,
         from observer: Observer
