@@ -94,6 +94,17 @@ struct CoordinatesTests {
             #expect(set.count == 2)
         }
 
+        @Test("Magnitude and normalized avoid overflow on huge vectors")
+        func hugeVectorMagnitudeAndNormalized() {
+            let time = AstroTime.now
+            let vector = Vector3D(x: 1e200, y: 1e200, z: 0.0, time: time)
+            #expect(vector.magnitude.isFinite)
+            #expect(abs(vector.magnitude / (2.0.squareRoot() * 1e200) - 1.0) < 1e-12)
+            let unit = vector.normalized
+            #expect(unit.x.isFinite && unit.y.isFinite && unit.z.isFinite)
+            #expect(abs(unit.magnitude - 1.0) < 1e-12)
+        }
+
         @Test("CustomStringConvertible")
         func description() {
             let time = AstroTime.now
@@ -355,6 +366,23 @@ struct CoordinatesTests {
                 time: time
             )
             #expect(nearArcminute.declinationFormatted == "-46° 00' 0.0\"")
+        }
+
+        @Test("Formatted RA and Dec handle non-finite, negative, and huge values without trapping")
+        func formattedNonFiniteAndExtreme() {
+            let time = AstroTime(year: 2_025, month: 6, day: 21)
+            for value in [Double.nan, .infinity, -.infinity, 1e20, -1e20] {
+                let eq = Equatorial(rightAscension: value, declination: value, distance: 1, time: time)
+                #expect(!eq.rightAscensionFormatted.isEmpty)
+                #expect(!eq.declinationFormatted.isEmpty)
+                #expect(!eq.description.isEmpty)
+            }
+            let negativeRA = Equatorial(rightAscension: -1.5, declination: -0.5, distance: 1, time: time)
+            #expect(negativeRA.rightAscensionFormatted == "22h 30m 0.0s")
+            #expect(negativeRA.declinationFormatted == "-00° 30' 0.0\"")
+
+            let zeroEq = Vector3D(x: 0, y: 0, z: 0, time: time).toEquatorial()
+            #expect(!zeroEq.description.isEmpty)
         }
 
         @Test("CustomStringConvertible")

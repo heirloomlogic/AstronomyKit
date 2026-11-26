@@ -128,12 +128,26 @@ extension Moon {
         from startTime: AstroTime,
         to endTime: AstroTime
     ) throws -> [LunarNode] {
+        try startTime.checkAcceptedTime()
+        try endTime.checkAcceptedTime()
+        guard startTime < endTime else { return [] }
+
         var nodes: [LunarNode] = []
-        var current = try searchNode(after: startTime)
+        var current: LunarNode
+        do {
+            current = try searchNode(after: startTime)
+        } catch AstronomyError.badTime where startTime.terrestrialTime > 0 {
+            return []
+        }
 
         while current.time < endTime {
+            guard nodes.count < AstroTime.maxRangeResults else { throw AstronomyError.invalidParameter }
             nodes.append(current)
-            current = try nextNode(after: current)
+            do {
+                current = try nextNode(after: current)
+            } catch AstronomyError.badTime {
+                break
+            }
         }
 
         return nodes

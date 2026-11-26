@@ -73,6 +73,16 @@ public final class GravitySimulation: @unchecked Sendable {
         time: AstroTime,
         initialState: StateVector
     ) throws {
+        guard initialState.position.x.isFinite,
+            initialState.position.y.isFinite,
+            initialState.position.z.isFinite,
+            initialState.velocity.x.isFinite,
+            initialState.velocity.y.isFinite,
+            initialState.velocity.z.isFinite
+        else {
+            throw AstronomyError.invalidParameter
+        }
+
         self.origin = origin
 
         var state = astro_state_vector_t(
@@ -171,6 +181,7 @@ public final class GravitySimulation: @unchecked Sendable {
         lock.withLock { simState in
             guard let handle = simState.handle else { return }
             Astronomy_GravSimSwap(handle)
+            simState.time = AstroTime(raw: Astronomy_GravSimTime(handle))
         }
     }
 }

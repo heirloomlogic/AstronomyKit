@@ -1156,6 +1156,9 @@ static _Atomic(astro_deltat_func) DeltaTFunc = Astronomy_DeltaT_Observed;
  */
 void Astronomy_SetDeltaTFunction(astro_deltat_func func)
 {
+    /* AstronomyKit local patch: never store a NULL function pointer that TerrestrialTime would dereference. */
+    if (func == NULL)
+        func = Astronomy_DeltaT_EspenakMeeus;
     atomic_store_explicit(&DeltaTFunc, func, memory_order_release);
 }
 
@@ -2071,6 +2074,14 @@ static astro_observer_t inverse_terra(const double ovec[3], double st)
     x = ovec[0] * KM_PER_AU;
     y = ovec[1] * KM_PER_AU;
     z = ovec[2] * KM_PER_AU;
+    /* AstronomyKit local patch: return an all-NaN observer instead of propagating garbage or calling exit(1). */
+    if (!isfinite(x) || !isfinite(y) || !isfinite(z))
+    {
+        observer.latitude = NAN;
+        observer.longitude = NAN;
+        observer.height = NAN;
+        return observer;
+    }
     p = hypot(x, y);
     if (p < 1.0e-6)
     {
@@ -2083,6 +2094,13 @@ static astro_observer_t inverse_terra(const double ovec[3], double st)
     }
     else
     {
+        if (!isfinite(st))
+        {
+            observer.latitude = NAN;
+            observer.longitude = NAN;
+            observer.height = NAN;
+            return observer;
+        }
         stlocl = atan2(y, x);
         /* Calculate exact longitude. */
         lon_deg = RAD2DEG*stlocl - (15.0 * st);
@@ -2102,8 +2120,11 @@ static astro_observer_t inverse_terra(const double ovec[3], double st)
         {
             if (count > 10)
             {
-                fprintf(stderr, "\nFATAL(inverse_terra): did not converge!\n");
-                exit(1);
+                /* AstronomyKit local patch: return an all-NaN observer instead of terminating the host process. */
+                observer.latitude = NAN;
+                observer.longitude = NAN;
+                observer.height = NAN;
+                return observer;
             }
 
             /* Calculate the error function W(lat). */
@@ -2119,8 +2140,8 @@ static astro_observer_t inverse_terra(const double ovec[3], double st)
             if (fabs(W) < distance_au * 2.0e-8)
                 break;  /* The error is now negligible. */
             /* Error is still too large. Find the next estimate. */
-            /* Calculate D = the derivative of W with respect to lat. */
-            D = factor*((c2 - s2)/denom - s2*c2*(F-1)/(factor*radicand)) + z*s + p*c;
+            /* AstronomyKit local patch: fix Newton derivative denominator (denom*radicand, not factor*radicand). */
+            D = factor*((c2 - s2)/denom - s2*c2*(F-1)/(denom*radicand)) + z*s + p*c;
             lat -= W/D;
         }
         /* We now have a solution for the latitude in radians. */
@@ -5630,6 +5651,11 @@ astro_status_t Astronomy_GravSimInit(
         if (bodyStateArray[i].status != ASTRO_SUCCESS)
             return ASTRO_INVALID_PARAMETER;
 
+        /* AstronomyKit local patch: reject non-finite initial states to avoid NaN poisoning. */
+        if (!isfinite(bodyStateArray[i].x) || !isfinite(bodyStateArray[i].y) || !isfinite(bodyStateArray[i].z) ||
+            !isfinite(bodyStateArray[i].vx) || !isfinite(bodyStateArray[i].vy) || !isfinite(bodyStateArray[i].vz))
+            return ASTRO_INVALID_PARAMETER;
+
         if (bodyStateArray[i].t.tt != time.tt)
             return ASTRO_INCONSISTENT_TIMES;
     }
@@ -5760,6 +5786,9 @@ astro_status_t Astronomy_GravSimUpdate(
     double dt;      /* terrestrial time increment */
     int i;
 
+    if (sim == NULL)
+        return ASTRO_INVALID_PARAMETER;
+
     /*
         The caller's understanding of the number of bodies must match the actual
         array size in `sim`, or we risk corrupting/accessing invalid memory.
@@ -5843,6 +5872,19 @@ astro_status_t Astronomy_GravSimUpdate(
             a function to query the acceleration vectors for the bodies.
         */
         CalcBodyAccelerations(sim);
+
+        /* AstronomyKit local patch: reject non-finite states (e.g. coincident body collision) and restore prior state. */
+        for (i = 0; i < numBodies; ++i)
+        {
+            const body_grav_calc_t *curr = &sim->curr->bodies[i];
+            if (!isfinite(curr->r.x) || !isfinite(curr->r.y) || !isfinite(curr->r.z) ||
+                !isfinite(curr->v.x) || !isfinite(curr->v.y) || !isfinite(curr->v.z) ||
+                !isfinite(curr->a.x) || !isfinite(curr->a.y) || !isfinite(curr->a.z))
+            {
+                Astronomy_GravSimSwap(sim);
+                return ASTRO_BAD_VECTOR;
+            }
+        }
     }
 
     /*
@@ -7651,8 +7693,8 @@ astro_state_vector_t Astronomy_LagrangePointFast(
             numer2 = +minor_mass;    /* minor mass is to the right of L3. */
         }
 
-        /* Iterate Newton's Method until it converges. */
-        x = R*scale - r1;
+        /* AstronomyKit local patch: fix sign error in initial guess (inverse of scale = (x - r1) / R is R*scale + r1). */
+        x = R*scale + r1;
         do
         {
             /*
@@ -8192,7 +8234,8 @@ astro_horizon_t Astronomy_Horizon(
         refr = Astronomy_Refraction(refraction, 90.0 - zd);
         zd -= refr;
 
-        if (refr > 0.0 && zd > 3.0e-4)
+        /* AstronomyKit local patch: guard both zenith and nadir (zd0 = 180 deg) against dividing by sin(pi). */
+        if (refr > 0.0 && zd > 3.0e-4 && zd0 < 180.0 - 3.0e-4)
         {
             int j;
             double sinzd = sin(zd * DEG2RAD);
@@ -8442,6 +8485,47 @@ astro_search_result_t Astronomy_SearchSunLongitude(
     astro_time_t startTime,
     double limitDays)
 {
+    if (!isfinite(targetLon) || !isfinite(limitDays))
+        return SearchError(ASTRO_INVALID_PARAMETER);
+
+    /* AstronomyKit local patch: narrow wide windows (>30 days) around the estimated crossing
+       so opposite-side crossings under eccentric orbits do not silently miss with default limitDays = 366. */
+    if (fabs(limitDays) > 30.0)
+    {
+        astro_func_result_t initial = sun_offset(&targetLon, startTime);
+        if (initial.status != ASTRO_SUCCESS)
+            return SearchError(initial.status);
+
+        if (limitDays > 0.0)
+        {
+            double delta = -initial.value;
+            if (delta < 0.0)
+                delta += 360.0;
+            double estimate = delta * (365.24217 / 360.0);
+            if (estimate - 10.0 > limitDays)
+                return SearchError(ASTRO_SEARCH_FAILURE);
+            double lo = (estimate - 10.0 > 0.0) ? (estimate - 10.0) : 0.0;
+            double hi = (estimate + 10.0 < limitDays) ? (estimate + 10.0) : limitDays;
+            astro_time_t t1 = Astronomy_AddDays(startTime, lo);
+            astro_time_t t2 = Astronomy_AddDays(startTime, hi);
+            return Astronomy_Search(sun_offset, &targetLon, t1, t2, 0.01);
+        }
+        else
+        {
+            double delta = initial.value;
+            if (delta < 0.0)
+                delta += 360.0;
+            double estimate = -delta * (365.24217 / 360.0);
+            if (estimate + 10.0 < limitDays)
+                return SearchError(ASTRO_SEARCH_FAILURE);
+            double lo = (estimate - 10.0 > limitDays) ? (estimate - 10.0) : limitDays;
+            double hi = (estimate + 10.0 < 0.0) ? (estimate + 10.0) : 0.0;
+            astro_time_t t1 = Astronomy_AddDays(startTime, hi);
+            astro_time_t t2 = Astronomy_AddDays(startTime, lo);
+            return Astronomy_Search(sun_offset, &targetLon, t1, t2, 0.01);
+        }
+    }
+
     astro_time_t t2 = Astronomy_AddDays(startTime, limitDays);
     return Astronomy_Search(sun_offset, &targetLon, startTime, t2, 0.01);
 }
@@ -9708,6 +9792,7 @@ static ascent_t AscentError(astro_status_t status)
 
 static ascent_t FindAscent(
     int depth,
+    int *budget,
     context_altitude_t *context,
     double max_deriv_alt,
     astro_time_t t1,
@@ -9791,6 +9876,10 @@ static ascent_t FindAscent(
         return AscentError(ASTRO_SEARCH_FAILURE);
     }
 
+    /* AstronomyKit local patch: bound per-step recursive bisection evaluations against grazing CPU DoS. */
+    if (--(*budget) <= 0)
+        return AscentError(ASTRO_SEARCH_FAILURE);
+
     /* Bisect the time interval and evaluate the altitude at the midpoint. */
     tm = Astronomy_TimeFromDays((t1.ut + t2.ut)/2);
     alt = altitude_diff(context, tm);
@@ -9798,11 +9887,11 @@ static ascent_t FindAscent(
         return AscentError(ASTRO_SEARCH_FAILURE);
 
     /* Recurse to the left interval. */
-    ascent = FindAscent(1+depth, context, max_deriv_alt, t1, tm, a1, alt.value);
+    ascent = FindAscent(1+depth, budget, context, max_deriv_alt, t1, tm, a1, alt.value);
     if (ascent.status == ASTRO_SEARCH_FAILURE)
     {
         /* Recurse to the right interval. */
-        ascent = FindAscent(1+depth, context, max_deriv_alt, tm, t2, alt.value, a2);
+        ascent = FindAscent(1+depth, budget, context, max_deriv_alt, tm, t2, alt.value, a2);
     }
 
     return ascent;
@@ -9916,10 +10005,9 @@ static astro_search_result_t InternalSearchAltitude(
     if (!isfinite(targetAltitude) || targetAltitude < -90.0 || targetAltitude > +90.0)
         return SearchError(ASTRO_INVALID_PARAMETER);
 
-    /* AstronomyKit local patch (extreme-input guards): the loop below ends only
-       when a step passes startTime.ut + limitDays, which never happens for a
-       non-finite limit. See also the step checks inside the loop. */
-    if (!isfinite(limitDays))
+    /* AstronomyKit local patch (extreme-input & DoS guards): cap limitDays at 10 years
+       (3,660 days) and reject non-finite values. */
+    if (!isfinite(limitDays) || fabs(limitDays) > 3660.0)
         return SearchError(ASTRO_INVALID_PARAMETER);
 
     func_result = MaxAltitudeSlope(body, observer.latitude);
@@ -9967,7 +10055,10 @@ static astro_search_result_t InternalSearchAltitude(
             a2 = func_result.value;
         }
 
-        ascent = FindAscent(0, &context, max_deriv_alt, t1, t2, a1, a2);
+        {
+            int ascentBudget = 512;
+            ascent = FindAscent(0, &ascentBudget, &context, max_deriv_alt, t1, t2, a1, a2);
+        }
         if (ascent.status == ASTRO_SUCCESS)
         {
             /* We found a time interval [t1, t2] that contains an alt-diff */
@@ -10094,7 +10185,12 @@ static double HorizonDipAngle(
     double metersAboveGround)
 {
     double phi, sinphi, cosphi, c, s, ht_km, ach, ash, radius_m;
-    double k, dip;
+    double base, k, dip;
+
+    /* AstronomyKit local patch: zero height above ground has zero horizon dip;
+       avoids NaN from pow(negative, 3.256) when observer.height > 43,561.5 m. */
+    if (metersAboveGround == 0.0)
+        return 0.0;
 
     /* Calculate the effective radius of the Earth at ground level below the observer. */
     /* Correct for the Earth's oblateness. */
@@ -10117,7 +10213,10 @@ static double HorizonDipAngle(
     */
 
     /* k = refraction index */
-    k = 0.175 * pow(1.0 - (6.5e-3/283.15)*(observer.height - (2.0/3.0)*metersAboveGround), 3.256);
+    base = 1.0 - (6.5e-3/283.15)*(observer.height - (2.0/3.0)*metersAboveGround);
+    if (base < 0.0)
+        base = 0.0;
+    k = 0.175 * pow(base, 3.256);
 
     /* Calculate how far below the observer's horizontal plane the observed horizon dips. */
     dip = RAD2DEG * -(sqrt(2*(1 - k)*metersAboveGround / radius_m) / (1 - k));
@@ -14080,10 +14179,15 @@ astro_local_solar_eclipse_t Astronomy_SearchLocalSolarEclipse(
     shadow_t shadow;
     double eclip_lat, eclip_lon, distance;
     astro_local_solar_eclipse_t eclipse;
+    int lunation;
+
+    /* AstronomyKit local patch: bound observer height and lunation count against CPU DoS. */
+    if (!isfinite(observer.height) || observer.height < -6378136.6 || observer.height > 100000.0)
+        return LocalSolarEclipseError(ASTRO_INVALID_PARAMETER);
 
     /* Iterate through consecutive new moons until we find a solar eclipse visible somewhere on Earth. */
     nmtime = startTime;
-    for(;;)
+    for (lunation = 0; lunation < 2000; ++lunation)
     {
         /* Search for the next new moon. Any eclipse will be near it. */
         newmoon = Astronomy_SearchMoonPhase(0.0, nmtime, 40.0);
@@ -14110,9 +14214,10 @@ astro_local_solar_eclipse_t Astronomy_SearchLocalSolarEclipse(
                     return eclipse;
 
                 /* Ignore any eclipse that happens completely at night. */
-                /* More precisely, the center of the Sun must be above the horizon */
-                /* at the beginning or the end of the eclipse, or we skip the event. */
-                if (eclipse.partial_begin.altitude > 0.0 || eclipse.partial_end.altitude > 0.0)
+                /* AstronomyKit local patch: also include eclipses visible only near peak (high latitudes). */
+                if (eclipse.partial_begin.altitude > 0.0 ||
+                    eclipse.peak.altitude > 0.0 ||
+                    eclipse.partial_end.altitude > 0.0)
                     return eclipse;
             }
         }
@@ -14120,6 +14225,7 @@ astro_local_solar_eclipse_t Astronomy_SearchLocalSolarEclipse(
         /* We didn't find an eclipse on this new moon, so search for the next one. */
         nmtime = Astronomy_AddDays(newmoon.time, 10.0);
     }
+    return LocalSolarEclipseError(ASTRO_SEARCH_FAILURE);
 }
 
 

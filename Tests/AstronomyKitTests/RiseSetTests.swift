@@ -372,6 +372,23 @@ struct RiseSetTests {
             #expect(events.body == .moon)
         }
 
+        @Test("Daily events culmination always falls within the requested day")
+        func moonCulminationBoundedToDay() throws {
+            var sawMissingCulmination = false
+            let base = AstroTime(year: 2_025, month: 6, day: 1)
+            for offset in 0..<30 {
+                let day = base.addingDays(Double(offset))
+                let nextDay = day.addingDays(1)
+                let events = try DailyEvents(body: .moon, date: day, from: RiseSetTests.nyc)
+                if let culmination = events.culmination {
+                    #expect(culmination.time >= day && culmination.time <= nextDay)
+                } else {
+                    sawMissingCulmination = true
+                }
+            }
+            #expect(sawMissingCulmination)
+        }
+
         @Test("Daily events for planet")
         func planetDailyEvents() throws {
             let events = try DailyEvents(
@@ -469,6 +486,25 @@ struct RiseSetTests {
             #expect(throws: AstronomyError.self) {
                 _ = try CelestialBody.moon.riseTime(after: AstroTime(ut: ut), from: .primeMeridian, limitDays: 1)
             }
+        }
+
+        @Test("Excessive limitDays throws invalidParameter", arguments: [10_000.0, -10_000.0])
+        func excessiveLimitDaysThrows(limitDays: Double) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try CelestialBody.sun.riseTime(after: Self.start, from: RiseSetTests.nyc, limitDays: limitDays)
+            }
+        }
+
+        @Test("High-altitude observer with zero metersAboveGround does not produce NaN dip")
+        func highAltitudeObserverRiseTime() throws {
+            let highObserver = Observer(latitude: 40.7128, longitude: -74.0060, height: 50_000)
+            let rise = try CelestialBody.sun.searchRiseSet(
+                direction: .rise,
+                after: RiseSetTests.testDate,
+                from: highObserver,
+                metersAboveGround: 0
+            )
+            #expect(rise != nil)
         }
     }
 

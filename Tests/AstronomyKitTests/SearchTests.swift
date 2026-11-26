@@ -39,6 +39,17 @@ struct SearchTests {
         #expect(result == nil)
     }
 
+    @Test("Sun.searchLongitude finds opposite-side crossings with wide default limitDays")
+    func sunLongitudeWideWindow() throws {
+        let start = AstroTime(year: 2025, month: 4, day: 1)
+        let crossing = try #require(try Sun.searchLongitude(190, after: start))
+        let sun = try Sun.position(at: crossing)
+        #expect(abs(sun.longitude - 190) < 0.01)
+
+        let wide = try #require(try Sun.searchLongitude(190, after: start, limitDays: 700))
+        #expect(abs(wide.universalTime - crossing.universalTime) < 1e-4)
+    }
+
     @Test("Moon.searchPhase returns nil when the window is too short")
     func moonPhaseShortWindow() throws {
         let start = AstroTime(year: 2025, month: 3, day: 1)
