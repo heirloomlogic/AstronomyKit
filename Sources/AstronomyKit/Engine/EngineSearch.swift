@@ -22,6 +22,9 @@ enum EngineSearch {
         dtToleranceSeconds: Double,
         _ function: (AstroTime) throws -> Double
     ) throws -> AstroTime {
+        guard start.deltaTModel == end.deltaTModel else {
+            throw AstronomyError.invalidParameter
+        }
         var t1 = start
         var t2 = end
         let dtDays = abs(dtToleranceSeconds / EngineConstants.secondsPerDay)

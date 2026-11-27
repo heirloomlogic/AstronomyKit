@@ -32,13 +32,15 @@ public enum AstroSearch {
     ///
     /// - Parameters:
     ///   - startTime: The start of the search window.
-    ///   - endTime: The end of the search window.
+    ///   - endTime: The end of the search window. Must carry the same ``AstroTime/deltaTModel``
+    ///     as `startTime`.
     ///   - toleranceSeconds: Desired precision in seconds. Defaults to 1.
     ///   - function: A closure that returns a value for a given time.
     /// - Returns: The time when the function crosses from negative to
     ///   non-negative, or `nil` if no such crossing occurs in the window.
-    /// - Throws: Rethrows any error from `function`, or `AstronomyError` if
-    ///   the search fails to converge.
+    /// - Throws: ``AstronomyError/invalidParameter`` if `startTime` and `endTime` carry
+    ///   different ``AstroTime/deltaTModel`` values (before calling `function`), any error
+    ///   thrown by `function`, or another `AstronomyError` if the search fails to converge.
     public static func find(
         from startTime: AstroTime,
         to endTime: AstroTime,
