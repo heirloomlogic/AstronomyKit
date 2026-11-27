@@ -5,8 +5,6 @@
 //  Lagrange point calculations.
 //
 
-import CLibAstronomy
-
 // MARK: - Lagrange Point ID
 
 /// Identifies one of the five Lagrange points.
@@ -72,28 +70,6 @@ public struct StateVector: Sendable, Equatable {
         self.position = position
         self.velocity = velocity
         self.time = time
-    }
-
-    /// Creates a state vector from the C structure.
-
-    init(_ raw: astro_state_vector_t) throws {
-        if raw.status != ASTRO_SUCCESS {
-            throw AstronomyError(status: raw.status) ?? .internalError
-        }
-        let t = AstroTime(raw: raw.t)
-        self.time = t
-        self.position = Vector3D(
-            x: raw.x,
-            y: raw.y,
-            z: raw.z,
-            time: t
-        )
-        self.velocity = Vector3D(
-            x: raw.vx,
-            y: raw.vy,
-            z: raw.vz,
-            time: t
-        )
     }
 }
 

@@ -3,7 +3,7 @@
 import Foundation
 import PackageDescription
 
-// A Debug build compiles C without optimisation. On Apple platforms `astronomy.c` then sums
+// A Debug build compiles Swift without optimisation. On Apple platforms `EngineVsop` then sums
 // the longer planet series through Accelerate, which is optimised whatever the build
 // ("Series cosine" in MAINTAINING.md).
 let debugOnApple: BuildSettingCondition = .when(
@@ -28,7 +28,13 @@ let package = Package(
     targets: [
         .target(
             name: "AstronomyKit",
-            dependencies: ["CLibAstronomy"]
+            dependencies: ["CLibAstronomy"],
+            swiftSettings: [
+                .define("ASTRONOMYKIT_SERIES_ACCELERATE", debugOnApple)
+            ],
+            linkerSettings: [
+                .linkedFramework("Accelerate", debugOnApple)
+            ]
         ),
         .target(
             name: "CLibAstronomy",
@@ -36,11 +42,7 @@ let package = Package(
             sources: ["astronomy.c"],
             publicHeadersPath: "include",
             cSettings: [
-                .headerSearchPath("include"),
-                .define("ASTRONOMYKIT_SERIES_ACCELERATE", debugOnApple),
-            ],
-            linkerSettings: [
-                .linkedFramework("Accelerate", debugOnApple)
+                .headerSearchPath("include")
             ]
         ),
         .testTarget(

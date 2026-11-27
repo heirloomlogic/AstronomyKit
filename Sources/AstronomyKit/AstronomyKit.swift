@@ -138,6 +138,6 @@ public enum AstronomyConfig {
     ///
     /// This is safe to call concurrently with other calculations.
     public static func reset() {
-        Astronomy_Reset()
+        EngineGravityPluto.resetPlutoCache()
     }
 }

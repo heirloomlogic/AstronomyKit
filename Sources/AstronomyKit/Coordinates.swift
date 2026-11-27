@@ -5,7 +5,6 @@
 //  Coordinate types for astronomical calculations.
 //
 
-import CLibAstronomy
 import Foundation
 
 // MARK: - Vector3D
@@ -30,17 +29,6 @@ public struct Vector3D: Sendable, Equatable, Hashable {
         self.y = y
         self.z = z
         self.time = time
-    }
-
-    /// Creates a vector from the C structure.
-    init(_ raw: astro_vector_t) throws {
-        if raw.status != ASTRO_SUCCESS {
-            throw AstronomyError(status: raw.status) ?? .internalError
-        }
-        self.x = raw.x
-        self.y = raw.y
-        self.z = raw.z
-        self.time = AstroTime(raw: raw.t)
     }
 
     /// The magnitude (length) of the vector in AU.
