@@ -6,7 +6,7 @@
 
 A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
 
-Built on Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
+Pure Swift port of Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux-blue.svg)](https://swift.org)
@@ -274,14 +274,14 @@ print("Venus-Mars separation: \(angle)°")
 
 ## Beyond Astronomy Engine
 
-AstronomyKit includes features not present in the upstream C library:
+AstronomyKit includes features not present in upstream Astronomy Engine:
 
 | Feature | Description |
 |---------|-------------|
 | `Chiron` | Gravity-simulated positions for 2060 Chiron using pre-computed JPL Horizons state vectors at reference epochs (2000–2040). Astronomy Engine has no built-in Chiron support. |
-| `FixedStar` | Thread-safe value type for user-defined stars from J2000 catalog coordinates. Wraps Astronomy Engine's `Astronomy_DefineStar()` with mutex-protected calculation slots and a Swift-idiomatic API. |
+| `FixedStar` | Stateless, thread-safe value type for user-defined stars from J2000 catalog coordinates. |
 
-All other AstronomyKit types wrap Astronomy Engine C functions directly.
+All other AstronomyKit types port Astronomy Engine's algorithms directly to Swift.
 
 ## Documentation
 
@@ -321,7 +321,7 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## Credits
 
-- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross — the underlying C library (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
+- [Astronomy Engine](https://github.com/cosinekitty/astronomy) by Don Cross — the original C library whose algorithms and tables AstronomyKit ports (see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES))
 
 ## License
 

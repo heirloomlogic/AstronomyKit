@@ -1,7 +1,8 @@
-import CLibAstronomy
 import Testing
 
-/// The nutation series in `astronomy.c` against the published IAU 2000B series.
+@testable import AstronomyKit
+
+/// The nutation series in `EngineNutation` against the published IAU 2000B series.
 ///
 /// `iau2000b` sums the 77 terms by the angle addition formulas, without a cosine and a
 /// sine for each term. These references come from the series evaluated the published
@@ -35,8 +36,9 @@ struct NutationTests {
     ///
     /// The sidereal time needs the nutation, and leaves it in the time it was given.
     static func nutation(terrestrialTime: Double) -> (psi: Double, eps: Double) {
-        var time = Astronomy_TerrestrialTime(terrestrialTime)
-        _ = Astronomy_SiderealTime(&time)
+        var time = AstroTime(tt: terrestrialTime)
+        let tilt = EngineRotation.earthTilt(at: &time)
+        _ = EngineRotation.siderealTime(at: &time, tilt: tilt)
         return (time.psi, time.eps)
     }
 

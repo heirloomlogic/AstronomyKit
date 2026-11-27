@@ -109,7 +109,7 @@ enum EnginePositions {
 
     @inline(__always)
     static func addTerrestrialDays(_ time: AstroTime, _ days: Double) -> AstroTime {
-        time.addingTerrestrialDaysInline(days)
+        time.addingTerrestrialDays(days)
     }
 
     static func helioXYZ(
@@ -194,7 +194,7 @@ enum EnginePositions {
                 throw AstronomyError.invalidParameter
             }
             let ltime2 = addTerrestrialDays(time, -distance / EngineConstants.cAuday)
-            let dt = abs(ltime2.raw.tt - ltime.raw.tt)
+            let dt = abs(ltime2.tt - ltime.tt)
             if dt < 1.0e-9 {
                 return Vector3D(x: pos.x, y: pos.y, z: pos.z, time: ltime)
             }
@@ -233,7 +233,7 @@ enum EnginePositions {
                 throw AstronomyError.invalidParameter
             }
             let ltime2 = addTerrestrialDays(time, -distance / EngineConstants.cAuday)
-            if abs(ltime2.raw.tt - ltime.raw.tt) < 1.0e-9 {
+            if abs(ltime2.tt - ltime.tt) < 1.0e-9 {
                 return Vector3D(x: dx, y: dy, z: dz, time: ltime)
             }
             ltime = ltime2

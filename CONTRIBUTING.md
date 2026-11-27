@@ -31,9 +31,9 @@ Your local toolchain must match CI's Swift major.minor version; see [Toolchain A
 
 New functionality should include tests. Bug fixes should include a test that would have caught the issue.
 
-### Updating the vendored C library
+### Updating ephemeris tables
 
-AstronomyKit vendors the Astronomy Engine C library (`Sources/CLibAstronomy/`) with a few local thread-safety patches. If you need to update it from upstream, follow [MAINTAINING.md](MAINTAINING.md) so the patches are preserved and the accuracy tests still pass.
+AstronomyKit ports the Astronomy Engine algorithms and tables to pure Swift (`Sources/AstronomyKit/Engine/`). To refresh the observed Delta T table or adjust the VSOP87 planet series, follow [MAINTAINING.md](MAINTAINING.md) so the accuracy tests continue to pass.
 
 ## Code of Conduct
 

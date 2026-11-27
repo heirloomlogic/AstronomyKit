@@ -1,7 +1,7 @@
-import AstronomyKit
-import CLibAstronomy
 import Synchronization
 import Testing
+
+@testable import AstronomyKit
 
 /// Calls made through ``observedStandIn``.
 private let standInCalls = Atomic<Int>(0)
@@ -9,21 +9,20 @@ private let standInCalls = Atomic<Int>(0)
 /// A second Delta T function that returns the same bits as the observed model.
 ///
 /// Swapping between this and the real observed function changes the
-/// global function pointer without changing any result, so suites running in
+/// active model dispatch without changing any result, so suites running in
 /// parallel cannot tell that a swap happened.
-private let observedStandIn: astro_deltat_func = { ut in
+private let observedStandIn: @Sendable (Double) -> Double = { ut in
     standInCalls.add(1, ordering: .relaxed)
-    return Astronomy_DeltaT_Observed(ut)
+    return AstronomyConfig.deltaTObserved(universalTime: ut)
 }
 
 /// Verifies that the Delta T model can be swapped while calculations run on
 /// other threads.
 ///
-/// The underlying C library stores the active Delta T model in a global
-/// function pointer that every time construction reads. A local patch makes
-/// that pointer atomic; this suite exercises concurrent writers and readers
-/// so ThreadSanitizer can prove the patch holds. Other suites construct times
-/// in parallel, so the writers only swap in ``observedStandIn``; a model
+/// The engine stores the active Delta T model in an atomic selector that every
+/// time construction reads; this suite exercises concurrent writers and readers
+/// so ThreadSanitizer can prove the synchronization holds. Other suites construct
+/// times in parallel, so the writers only swap in ``observedStandIn``; a model
 /// with different results, such as JPL Horizons, would shift their answers.
 @Suite("Delta T Thread Safety")
 struct DeltaTThreadSafetyTests {
@@ -40,7 +39,7 @@ struct DeltaTThreadSafetyTests {
             for _ in 0..<8 {
                 group.addTask {
                     for _ in 0..<200 {
-                        // Whichever pointer wins the race, never a torn value.
+                        // Whichever model wins the race, never a torn value.
                         #expect(AstroTime(ut: ut).terrestrialTime == expectedTT)
                     }
                 }
@@ -51,7 +50,7 @@ struct DeltaTThreadSafetyTests {
                 group.addTask {
                     for iteration in 0..<100 {
                         if iteration.isMultiple(of: 2) {
-                            Astronomy_SetDeltaTFunction(observedStandIn)
+                            EngineTime.setCustomDeltaTFunction(observedStandIn)
                         } else {
                             AstronomyConfig.setDeltaTModel(.observed)
                         }
@@ -63,9 +62,9 @@ struct DeltaTThreadSafetyTests {
             await group.waitForAll()
         }
 
-        // The swap only tests something if time construction reads the pointer
+        // The swap only tests something if time construction reads the selector
         // the writers store. Install the stand-in once more and check it runs.
-        Astronomy_SetDeltaTFunction(observedStandIn)
+        EngineTime.setCustomDeltaTFunction(observedStandIn)
         let callsBefore = standInCalls.load(ordering: .relaxed)
         _ = AstroTime(ut: ut)
         #expect(standInCalls.load(ordering: .relaxed) > callsBefore)

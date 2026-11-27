@@ -6,8 +6,6 @@
 //  coordinate-frame conversions, and atmospheric refraction.
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -28,28 +26,30 @@ struct EngineEarthTilt {
 enum EngineRotation {
     // MARK: - Obliquity, Nutation, Precession, Sidereal Time
 
+    @inline(__always)
     static func meanObliquity(tt: Double) -> Double {
         let t = tt / 36525.0
-        let asec =
-            (((((-0.0000000434 * t
-                - 0.000000576) * t
-                + 0.00200340) * t
-                - 0.0001831) * t
-                - 46.836769) * t) + 84381.406
+        var asec = -0.000000576.addingProduct(-0.0000000434, t)
+        asec = 0.00200340.addingProduct(asec, t)
+        asec = (-0.0001831).addingProduct(asec, t)
+        asec = (-46.836769).addingProduct(asec, t)
+        asec = 84381.406.addingProduct(asec, t)
         return asec / 3600.0
     }
 
     static func earthTilt(at time: inout AstroTime) -> EngineEarthTilt {
-        if time.raw.psi.isNaN || time.raw.eps.isNaN {
-            _Astronomy_Iau2000b(&time.raw)
+        if time.psi.isNaN || time.eps.isNaN {
+            let nut = EngineNutation.iau2000b(tt: time.tt)
+            time.psi = nut.psi
+            time.eps = nut.eps
         }
-        let dpsi = time.raw.psi
-        let deps = time.raw.eps
-        let mobl = meanObliquity(tt: time.raw.tt)
+        let dpsi = time.psi
+        let deps = time.eps
+        let mobl = meanObliquity(tt: time.tt)
         let tobl = mobl + (deps / 3600.0)
         let ee = dpsi * cos(mobl * EngineConstants.deg2Rad) / 15.0
         return EngineEarthTilt(
-            tt: time.raw.tt,
+            tt: time.tt,
             dpsi: dpsi,
             deps: deps,
             ee: ee,
@@ -58,53 +58,82 @@ enum EngineRotation {
         )
     }
 
+    @inline(__always)
     static func earthTilt(at time: AstroTime) -> EngineEarthTilt {
-        var copy = time
-        return earthTilt(at: &copy)
+        let dpsi: Double
+        let deps: Double
+        if time.psi.isNaN || time.eps.isNaN {
+            let nut = EngineNutation.iau2000b(tt: time.tt)
+            dpsi = nut.psi
+            deps = nut.eps
+        } else {
+            dpsi = time.psi
+            deps = time.eps
+        }
+        let mobl = meanObliquity(tt: time.tt)
+        let tobl = mobl + (deps / 3600.0)
+        let ee = dpsi * cos(mobl * EngineConstants.deg2Rad) / 15.0
+        return EngineEarthTilt(
+            tt: time.tt,
+            dpsi: dpsi,
+            deps: deps,
+            ee: ee,
+            mobl: mobl,
+            tobl: tobl
+        )
     }
 
+    @inline(__always)
     private static func era(ut: Double) -> Double {
-        let thet1 = 0.7790572732640 + 0.00273781191135448 * ut
-        let thet3 = fmod(ut, 1.0)
-        var theta = 360.0 * fmod(thet1 + thet3, 1.0)
+        // fmod(x, 1.0) is exact x - trunc(x) for every finite Double (and NaN for non-finite).
+        let thet1 = 0.7790572732640.addingProduct(0.00273781191135448, ut)
+        let thet3 = ut - trunc(ut)
+        let sum = thet1 + thet3
+        var theta = 360.0 * (sum - trunc(sum))
         if theta < 0.0 {
             theta += 360.0
         }
         return theta
     }
 
-    static func siderealTime(at time: inout AstroTime, tilt: EngineEarthTilt) -> Double {
-        if !time.raw.st.isNaN {
-            return time.raw.st
-        }
-        let t = time.raw.tt / 36525.0
+    @inline(__always)
+    private static func computeSiderealTime(ut: Double, tt: Double, tilt: EngineEarthTilt) -> Double {
+        let t = tt / 36525.0
         let eqeq = 15.0 * tilt.ee
-        let theta = era(ut: time.raw.ut)
-        let st =
-            eqeq + 0.014506
-            + (((((-0.0000000368 * t
-                - 0.000029956) * t
-                - 0.00000044) * t
-                + 1.3915817) * t
-                + 4612.156534) * t)
+        let theta = era(ut: ut)
+        var poly = (-0.000029956).addingProduct(-0.0000000368, t)
+        poly = (-0.00000044).addingProduct(poly, t)
+        poly = 1.3915817.addingProduct(poly, t)
+        poly = 4612.156534.addingProduct(poly, t)
+        let st = (eqeq + 0.014506).addingProduct(poly, t)
         var gst = fmod(st / 3600.0 + theta, 360.0) / 15.0
         if gst < 0.0 {
             gst += 24.0
         }
-        time.raw.st = gst
+        return gst
+    }
+
+    static func siderealTime(at time: inout AstroTime, tilt: EngineEarthTilt) -> Double {
+        if !time.st.isNaN {
+            return time.st
+        }
+        let gst = computeSiderealTime(ut: time.ut, tt: time.tt, tilt: tilt)
+        time.st = gst
         return gst
     }
 
     static func siderealTime(at time: AstroTime, tilt: EngineEarthTilt) -> Double {
-        if !time.raw.st.isNaN {
-            return time.raw.st
+        if !time.st.isNaN {
+            return time.st
         }
-        var copy = time
-        return siderealTime(at: &copy, tilt: tilt)
+        return computeSiderealTime(ut: time.ut, tt: time.tt, tilt: tilt)
     }
 
     static func siderealTime(at time: AstroTime) -> Double {
-        siderealTime(at: time, tilt: earthTilt(at: time))
+        if !time.st.isNaN {
+            return time.st
+        }
+        return computeSiderealTime(ut: time.ut, tt: time.tt, tilt: earthTilt(at: time))
     }
 
     @inline(__always)
