@@ -127,21 +127,104 @@ struct SearchTests {
     @Test("Generic search stops calling the closure after it throws")
     func genericSearchAbortsAfterThrow() {
         struct TestError: Error {}
-        final class CallCounter: @unchecked Sendable {
-            var count = 0
+
+        let start = AstroTime(year: 2025, month: 1, day: 1)
+        let end = start.addingDays(30)
+        var callCount = 0
+
+        #expect(throws: TestError.self) {
+            try AstroSearch.find(from: start, to: end) { _ in
+                callCount += 1
+                throw TestError()
+            }
+        }
+        #expect(callCount == 1, "Search must abort on the first thrown error")
+    }
+
+    @Test("Generic search rethrows caller AstronomyError.searchFailure instead of returning nil")
+    func genericSearchRethrowsCallerSearchFailure() {
+        let start = AstroTime(year: 2025, month: 1, day: 1)
+        let end = start.addingDays(30)
+
+        #expect(throws: AstronomyError.searchFailure) {
+            _ = try AstroSearch.find(from: start, to: end) { _ in
+                throw AstronomyError.searchFailure
+            }
+        }
+    }
+
+    @Test("Generic search accepts non-Sendable mutable state synchronously")
+    func genericSearchCapturesLocalMutableState() throws {
+        final class NonSendableAccumulator {
+            var evaluatedTimes: [AstroTime] = []
         }
 
         let start = AstroTime(year: 2025, month: 1, day: 1)
         let end = start.addingDays(30)
-        let counter = CallCounter()
+        let accumulator = NonSendableAccumulator()
+        var callCount = 0
+
+        let result = try #require(
+            try AstroSearch.find(from: start, to: end) { time in
+                callCount += 1
+                accumulator.evaluatedTimes.append(time)
+                return time.universalTime - start.universalTime - 12.5
+            }
+        )
+
+        let expected = start.addingDays(12.5)
+        let diffSeconds = abs(result.universalTime - expected.universalTime) * 86_400
+        #expect(diffSeconds < 1)
+        #expect(callCount >= 2)
+        #expect(accumulator.evaluatedTimes.count == callCount)
+    }
+
+    @Test("Light-travel correction accepts non-Sendable mutable state synchronously")
+    func correctLightTravelCapturesLocalMutableState() throws {
+        final class NonSendableRecorder {
+            var evaluatedTimes: [AstroTime] = []
+        }
+
+        let time = AstroTime(year: 2025, month: 6, day: 15)
+        let helioEarth = try CelestialBody.earth.heliocentricPosition(at: time)
+        let expected = try CelestialBody.mars.geocentricPosition(at: time, aberration: .none)
+        let recorder = NonSendableRecorder()
+        var callCount = 0
+
+        let corrected = try AstroSearch.correctLightTravel(at: time) { sample in
+            callCount += 1
+            recorder.evaluatedTimes.append(sample)
+            let helioMars = try CelestialBody.mars.heliocentricPosition(at: sample)
+            return Vector3D(
+                x: helioMars.x - helioEarth.x,
+                y: helioMars.y - helioEarth.y,
+                z: helioMars.z - helioEarth.z,
+                time: sample
+            )
+        }
+
+        #expect(abs(corrected.x - expected.x) < 1e-12)
+        #expect(abs(corrected.y - expected.y) < 1e-12)
+        #expect(abs(corrected.z - expected.z) < 1e-12)
+        #expect(corrected.time < time)
+        #expect(callCount >= 2)
+        #expect(recorder.evaluatedTimes.count == callCount)
+    }
+
+    @Test("Light-travel correction rethrows closure errors")
+    func correctLightTravelRethrows() {
+        struct TestError: Error {}
+
+        let time = AstroTime(year: 2025, month: 6, day: 15)
+        var callCount = 0
 
         #expect(throws: TestError.self) {
-            try AstroSearch.find(from: start, to: end) { _ in
-                counter.count += 1
+            _ = try AstroSearch.correctLightTravel(at: time) { _ in
+                callCount += 1
                 throw TestError()
             }
         }
-        #expect(counter.count == 1, "C search must abort on the first thrown error")
+        #expect(callCount == 1)
     }
 
     @Test(

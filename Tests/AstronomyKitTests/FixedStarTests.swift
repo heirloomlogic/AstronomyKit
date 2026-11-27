@@ -342,7 +342,7 @@ struct FixedStarTests {
 
             let time = AstroTime(year: 2_025, month: 1, day: 1)
 
-            // Interleave calls to ensure slot switching works
+            // Interleave calls for different stars to verify lookups remain independent
             let algolLon1 = try algol.eclipticLongitude(at: time)
             let siriusLon1 = try sirius.eclipticLongitude(at: time)
             let algolLon2 = try algol.eclipticLongitude(at: time)
@@ -354,7 +354,7 @@ struct FixedStarTests {
 
         @Test("Many stars can be defined")
         func manyStars() throws {
-            // Create more than 8 stars to prove there's no slot limit
+            // Evaluate 20 distinct stars to verify there is no fixed capacity limit
             let stars = (0..<20).map { i in
                 FixedStar(
                     name: "Star\(i)",

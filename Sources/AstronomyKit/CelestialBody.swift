@@ -133,7 +133,7 @@ public enum CelestialBody: Int32, CaseIterable, Sendable {
 // MARK: - Body Categories
 
 extension CelestialBody {
-    /// The major planets (Mercury through Neptune).
+    /// The major planets other than Earth (Mercury, Venus, Mars, Jupiter, Saturn, Uranus, and Neptune).
     public static let planets: [CelestialBody] = [
         .mercury, .venus, .mars, .jupiter, .saturn, .uranus, .neptune,
     ]
@@ -153,7 +153,7 @@ extension CelestialBody {
         .io, .europa, .ganymede, .callisto,
     ]
 
-    /// Whether this body is a major planet.
+    /// Whether this body is a major planet (excluding Earth).
     public var isPlanet: Bool {
         Self.planets.contains(self)
     }

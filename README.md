@@ -4,9 +4,7 @@
 
 # AstronomyKit
 
-A Swift library for calculating positions of the Sun, Moon, planets, and fixed stars. Predicts moon phases, eclipses, transits, and rise/set times. Accurate to ±1 arcminute, based on VSOP87 and NOVAS C 3.1 models validated against JPL Horizons. Runs entirely on-device.
-
-Pure Swift port of Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library.
+AstronomyKit is a 100% pure Swift 6 library based on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library, with zero C dependencies, Swift 6 strict concurrency, and full `Sendable` conformance. It calculates positions of the Sun, Moon, planets, and fixed stars, and predicts moon phases, eclipses, transits, and rise/set times on-device. Positions are accurate to ±1 arcminute using VSOP87 and NOVAS C 3.1 models validated against JPL Horizons.
 
 [![Swift 6.0](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Platform](https://img.shields.io/badge/Platform-macOS%20|%20iOS%20|%20tvOS%20|%20watchOS%20|%20Linux-blue.svg)](https://swift.org)
@@ -15,7 +13,7 @@ Pure Swift port of Don Cross’ [Astronomy Engine](https://github.com/cosinekitt
 
 ## Features
 
-- Positions for the Sun, Moon, planets, and Jupiter's moons
+- Positions and ecliptic velocities for the Sun, Moon, planets, and Jupiter's moons
 - Moon phase angles, quarters, illumination, and libration
 - User-defined fixed stars from J2000 catalog coordinates
 - Gravity-simulated position for 2060 Chiron
@@ -25,8 +23,8 @@ Pure Swift port of Don Cross’ [Astronomy Engine](https://github.com/cosinekitt
 - Coordinate transforms across equatorial, ecliptic, horizon, and galactic systems
 - Planetary conjunctions, oppositions, and relative longitude search
 - Apsides, elongation, and transits
-- Generic root-finding search for custom astronomical events
-- Full `Sendable` conformance for Swift 6
+- Generic root-finding search and light-travel correction for custom events
+- 100% pure Swift 6 with zero C dependencies and full `Sendable` conformance
 
 ## Supported dates
 
@@ -101,12 +99,14 @@ let greenwich = Observer.greenwich
 
 ```swift
 // Available bodies
-let planets = CelestialBody.planets  // Mercury through Neptune
+let planets = CelestialBody.planets  // Mercury through Neptune (excluding Earth)
 let galileanMoons = CelestialBody.galileanMoons  // Io, Europa, Ganymede, Callisto
 
 // Body properties
 print(CelestialBody.mars.name)           // "Mars"
-print(CelestialBody.mars.orbitalPeriod)  // ~686 days
+if let period = CelestialBody.mars.orbitalPeriod {
+    print("\(period) days")              // ~686 days
+}
 ```
 
 ### Position Calculations
@@ -210,7 +210,7 @@ print("Winter: \(seasons.decemberSolstice)")
 ```swift
 // Next lunar eclipse
 let lunar = try Eclipse.searchLunar(after: .now)
-print("\(lunar.kind) lunar eclipse at \(lunar.peak)")
+print("\(lunar.kind.name) lunar eclipse at \(lunar.peak)")
 
 // Next solar eclipse
 let solar = try Eclipse.searchGlobalSolar(after: .now)
@@ -246,31 +246,45 @@ print("Venus-Mars separation: \(angle)°")
 | Type | Description |
 |------|-------------|
 | `Apsis` | Perihelion/aphelion or perigee/apogee events |
+| `AstronomyConfig` | Ephemeris version, Delta T model selection, and cache reset |
+| `AstronomyError` | Error cases thrown by calculation and search APIs |
+| `AstroSearch` | Generic root-finding search and light-travel correction |
 | `AstroTime` | Time representation with UT/TT and `Date` conversion |
-| `CelestialBody` | Enum of Sun, Moon, planets, and moons |
+| `Atmosphere` | Standard atmosphere pressure, temperature, and density by elevation |
+| `CelestialBody` | Enum of Sun, Moon, planets, barycenters, and Galilean moons |
 | `Chiron` | Gravity-simulated position for 2060 Chiron |
-| `Constellation` | Constellation identification |
-| `Ecliptic` | Ecliptic longitude and latitude coordinates |
-| `Elongation` | Angular separation from the Sun |
+| `Constellation` | IAU constellation lookup from celestial coordinates |
+| `DailyEvents` | Combined rise, set, and culmination times for one day |
+| `Eclipse` | Lunar, global solar, and local solar eclipse searches |
+| `Ecliptic` | Ecliptic longitude, latitude, and distance coordinates |
+| `EclipticState` | Geocentric ecliptic position and velocity in true ecliptic of date |
+| `Elongation` | Angular separation from the Sun and morning/evening visibility |
 | `Equatorial` | Right ascension and declination coordinates |
-| `FixedStar` | User-defined star from J2000 coordinates |
-| `GlobalSolarEclipse` | Solar eclipse with peak location |
+| `FixedStar` | Stateless value type for user-defined stars from J2000 coordinates |
+| `GlobalSolarEclipse` | Solar eclipse with peak shadow location |
 | `GravitySimulation` | N-body gravity simulation |
 | `Horizon` | Altitude and azimuth for local sky position |
-| `Illumination` | Visual magnitude and phase fraction |
-| `LagrangePoint` | L1-L5 point calculations |
-| `Libration` | Lunar libration angles and distance |
-| `LocalSolarEclipse` | Solar eclipse visibility from observer |
-| `LunarEclipse` | Lunar eclipse event with timing and duration |
-| `LunarNode` | Ascending/descending node events |
+| `Illumination` | Visual magnitude, phase fraction, and Saturn ring tilt |
+| `Jupiter` | Galilean moon state calculations |
+| `JupiterMoons` | State vectors for Io, Europa, Ganymede, and Callisto |
+| `LagrangePoint` | L1–L5 point calculations |
+| `Libration` | Lunar libration angles, distance, and apparent diameter |
+| `LocalSolarEclipse` | Solar eclipse timing and visibility from an observer |
+| `LunarEclipse` | Lunar eclipse event with peak time and phase semi-durations |
+| `LunarNode` | Ascending and descending lunar node crossings |
+| `Moon` | Lunar phase angles, quarters, position, libration, nodes, and apsides |
 | `MoonPhase` | Lunar phase enum (new, first quarter, full, third quarter) |
 | `Observer` | Geographic location (latitude, longitude, height) |
-| `RotationMatrix` | Coordinate system transformations |
-| `AstroSearch` | Generic root-finding search for custom events |
-| `Seasons` | Equinox and solstice times for a year |
-| `StateVector` | Position and velocity state vector |
-| `Sun` | Sun position and ecliptic longitude search |
-| `Transit` | Mercury/Venus solar transit |
+| `RotationAxis` | Planetary north pole orientation and prime meridian spin |
+| `RotationMatrix` | 3×3 coordinate system transformations |
+| `Seasons` | Equinox and solstice times for a calendar year |
+| `Spherical` | Spherical coordinates (latitude, longitude, distance) |
+| `StateVector` | 3D Cartesian position and velocity vector |
+| `Sun` | Sun ecliptic position, velocity, and longitude search |
+| `Transit` | Mercury and Venus solar transits |
+| `Vector3D` | 3D Cartesian position vector in AU |
+
+Supporting option and event types (`Aberration`, `ApsisKind`, `DeltaTModel`, `EclipseEvent`, `EclipseKind`, `EquatorDate`, `HourAngleEvent`, `LagrangePointID`, `MoonQuarter`, `NodeKind`, `Refraction`, `RiseSetDirection`, `Visibility`) are documented in the [DocC reference](https://heirloomlogic.github.io/AstronomyKit/documentation/astronomykit/).
 
 ## Beyond Astronomy Engine
 
@@ -279,15 +293,17 @@ AstronomyKit includes features not present in upstream Astronomy Engine:
 | Feature | Description |
 |---------|-------------|
 | `Chiron` | Gravity-simulated positions for 2060 Chiron using pre-computed JPL Horizons state vectors at reference epochs (2000–2040). Astronomy Engine has no built-in Chiron support. |
+| `EclipticState` | Geocentric ecliptic position and five-point Terrestrial Time derivative (`longitudeRate`, `latitudeRate`, `distanceRate`) in the true ecliptic and equinox of date. |
 | `FixedStar` | Stateless, thread-safe value type for user-defined stars from J2000 catalog coordinates. |
 
 All other AstronomyKit types port Astronomy Engine's algorithms directly to Swift.
 
 ## Documentation
 
-DocC documentation is available. Build it locally:
+DocC documentation is available. The DocC plugin is dev-gated behind `.dev-tooling`; build it locally with:
 
 ```bash
+touch .dev-tooling
 swift package generate-documentation --target AstronomyKit
 ```
 

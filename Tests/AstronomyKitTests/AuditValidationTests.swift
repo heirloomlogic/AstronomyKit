@@ -135,7 +135,7 @@ struct AuditValidationTests {
         func moonVelocityFromStateVector() throws {
             let time = AuditValidationTests.auditTime
 
-            // Use the proper Moon.geoState wrapper to get velocity
+            // Use Moon.geoState to get velocity
             let state = try Moon.geoState(at: time)
 
             // Velocity is in AU/day - convert to angular velocity
@@ -274,7 +274,7 @@ struct AuditValidationTests {
             let time = AuditValidationTests.auditTime
             let observer = AuditValidationTests.observer
 
-            // Use the proper Swift wrapper for local sidereal time
+            // Calculate local sidereal time
             let lst = time.siderealTime(longitude: observer.longitude)
 
             print("[AUDIT TEST] Local Sidereal Time at \(observer.longitude)°W: \(lst) hours")

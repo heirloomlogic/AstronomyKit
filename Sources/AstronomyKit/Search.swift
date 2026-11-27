@@ -43,7 +43,7 @@ public enum AstroSearch {
         from startTime: AstroTime,
         to endTime: AstroTime,
         toleranceSeconds: Double = 1.0,
-        _ function: @escaping @Sendable (AstroTime) throws -> Double
+        _ function: (AstroTime) throws -> Double
     ) throws -> AstroTime? {
         var userError: (any Error)?
         do {
@@ -78,7 +78,7 @@ public enum AstroSearch {
     ///   `AstronomyError` if the iteration fails to converge.
     public static func correctLightTravel(
         at time: AstroTime,
-        _ positionFunction: @escaping @Sendable (AstroTime) throws -> Vector3D
+        _ positionFunction: (AstroTime) throws -> Vector3D
     ) throws -> Vector3D {
         try EnginePositions.correctLightTravel(at: time, positionFunction)
     }

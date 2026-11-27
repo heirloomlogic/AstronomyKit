@@ -33,7 +33,7 @@ public struct RotationMatrix: Sendable, Equatable {
 
     /// Access matrix element at row, column.
     ///
-    /// Traps on an out-of-range index, matching the previous array-backed behavior.
+    /// Traps on an out-of-range index.
     public subscript(row: Int, col: Int) -> Double {
         switch (row, col) {
         case (0, 0): return r00

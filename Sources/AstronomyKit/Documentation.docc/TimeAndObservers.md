@@ -174,12 +174,12 @@ print("Velocity: \(state.velocity)")
 AstronomyKit works entirely in UTC. Convert to local time using Foundation:
 
 ```swift
-let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer)!
-
-let formatter = DateFormatter()
-formatter.timeZone = TimeZone(identifier: "America/New_York")
-formatter.timeStyle = .short
-print("Sunrise (local): \(formatter.string(from: sunrise.date))")
+if let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer) {
+    let formatter = DateFormatter()
+    formatter.timeZone = TimeZone(identifier: "America/New_York")
+    formatter.timeStyle = .short
+    print("Sunrise (local): \(formatter.string(from: sunrise.date))")
+}
 ```
 
 ## Codable Support
