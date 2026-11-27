@@ -169,6 +169,19 @@ public struct AstroTime: Sendable {
         AstroTime(raw: Astronomy_AddTerrestrialDays(raw, days))
     }
 
+    @inline(__always)
+    func addingTerrestrialDaysInline(_ days: Double) -> AstroTime {
+        AstroTime(
+            raw: astro_time_t(
+                ut: raw.ut + days,
+                tt: raw.tt + days,
+                psi: .nan,
+                eps: .nan,
+                st: .nan
+            )
+        )
+    }
+
     /// Returns a new time by adding the specified number of hours.
     ///
     /// - Parameter hours: The number of hours to add. Can be negative.

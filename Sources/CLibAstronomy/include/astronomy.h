@@ -82,48 +82,6 @@ typedef struct
 }
 astro_utc_t;
 
-typedef struct
-{
-    astro_status_t status;
-    double x;
-    double y;
-    double z;
-    astro_time_t t;
-}
-astro_vector_t;
-
-typedef struct
-{
-    astro_status_t status;
-    double x;
-    double y;
-    double z;
-    double vx;
-    double vy;
-    double vz;
-    astro_time_t t;
-}
-astro_state_vector_t;
-
-typedef enum
-{
-    BODY_INVALID = -1,
-    BODY_MERCURY,
-    BODY_VENUS,
-    BODY_EARTH,
-    BODY_MARS,
-    BODY_JUPITER,
-    BODY_SATURN,
-    BODY_URANUS,
-    BODY_NEPTUNE,
-    BODY_PLUTO,
-    BODY_SUN,
-    BODY_MOON,
-    BODY_EMB,
-    BODY_SSB
-}
-astro_body_t;
-
 typedef double (* astro_deltat_func) (double ut);
 
 double Astronomy_DeltaT_EspenakMeeus(double ut);
@@ -143,11 +101,8 @@ astro_time_format_t;
 
 #define TIME_TEXT_BYTES  28
 
-typedef struct astro_grav_sim_s astro_grav_sim_t;
-
 /*---------- functions ----------*/
 
-void Astronomy_Reset(void);
 #if !defined(ASTRONOMY_ENGINE_NO_CURRENT_TIME)
 astro_time_t Astronomy_CurrentTime(void);
 #endif
@@ -161,41 +116,9 @@ astro_time_t Astronomy_AddDays(astro_time_t time, double days);
 astro_time_t Astronomy_AddTerrestrialDays(astro_time_t time, double days);
 double Astronomy_SiderealTime(astro_time_t *time);
 
-astro_status_t Astronomy_GravSimInit(
-    astro_grav_sim_t **simOut,
-    astro_body_t originBody,
-    astro_time_t time,
-    int numBodies,
-    const astro_state_vector_t *bodyStateArray
-);
-
-astro_status_t Astronomy_GravSimUpdate(
-    astro_grav_sim_t *sim,
-    astro_time_t time,
-    int numBodies,
-    astro_state_vector_t *bodyStateArray
-);
-
-astro_state_vector_t Astronomy_GravSimBodyState(
-    astro_grav_sim_t *sim,
-    astro_body_t body
-);
-
-astro_time_t Astronomy_GravSimTime(const astro_grav_sim_t *sim);
-int Astronomy_GravSimNumBodies(const astro_grav_sim_t *sim);
-astro_body_t Astronomy_GravSimOrigin(const astro_grav_sim_t *sim);
-void Astronomy_GravSimSwap(astro_grav_sim_t *sim);
-void Astronomy_GravSimFree(astro_grav_sim_t *sim);
-
-/*---------- internal Swift-to-C bridge (transitional for Parts 3 & 4) ----------*/
+/*---------- internal Swift-to-C bridge (transitional for Part 4) ----------*/
 
 void _Astronomy_Iau2000b(astro_time_t *time);
-astro_vector_t _Astronomy_CalcVsop(astro_body_t body, astro_time_t time);
-astro_state_vector_t _Astronomy_CalcVsopPosVel(astro_body_t body, astro_time_t time);
-double _Astronomy_VsopHelioDistance(astro_body_t body, astro_time_t time);
-astro_vector_t _Astronomy_CalcSolarSystemBarycenter(astro_time_t time);
-astro_state_vector_t _Astronomy_CalcPluto(astro_time_t time, int helio);
-astro_state_vector_t _Astronomy_BaryMajorBody(astro_body_t body, astro_time_t time);
 
 #ifdef __cplusplus
 }

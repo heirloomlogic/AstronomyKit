@@ -6,8 +6,6 @@
 //  stateless fixed-star position calculations.
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -111,20 +109,7 @@ enum EnginePositions {
 
     @inline(__always)
     static func addTerrestrialDays(_ time: AstroTime, _ days: Double) -> AstroTime {
-        AstroTime(
-            raw: astro_time_t(
-                ut: time.raw.ut + days,
-                tt: time.raw.tt + days,
-                psi: .nan,
-                eps: .nan,
-                st: .nan
-            )
-        )
-    }
-
-    static func calcEarth(at time: AstroTime) throws -> Vector3D {
-        let raw = _Astronomy_CalcVsop(BODY_EARTH, time.raw)
-        return try Vector3D(raw)
+        time.addingTerrestrialDaysInline(days)
     }
 
     static func helioXYZ(
@@ -140,42 +125,30 @@ enum EnginePositions {
             return (0.0, 0.0, 0.0)
 
         case .mercury, .venus, .earth, .mars, .jupiter, .saturn, .uranus, .neptune:
-            let raw = _Astronomy_CalcVsop(body.raw, time.raw)
-            if raw.status != ASTRO_SUCCESS {
-                throw AstronomyError(status: raw.status) ?? .internalError
+            guard let idx = EngineVsop.bodyIndex(for: body) else {
+                throw AstronomyError.invalidBody
             }
-            return (raw.x, raw.y, raw.z)
+            let pos = EngineVsop.calcVsop(bodyIndex: idx, tt: time.terrestrialTime)
+            return (pos.x, pos.y, pos.z)
 
         case .pluto:
-            let state = _Astronomy_CalcPluto(time.raw, 1)
-            if state.status != ASTRO_SUCCESS {
-                throw AstronomyError(status: state.status) ?? .internalError
-            }
-            return (state.x, state.y, state.z)
+            let state = try EngineGravityPluto.calcPluto(at: time, heliocentric: true)
+            return (state.r.x, state.r.y, state.r.z)
 
         case .moon:
             let moon = try geoMoon(at: time)
-            let earth = _Astronomy_CalcVsop(BODY_EARTH, time.raw)
-            if earth.status != ASTRO_SUCCESS {
-                throw AstronomyError(status: earth.status) ?? .internalError
-            }
+            let earth = EngineVsop.calcVsop(bodyIndex: 2, tt: time.terrestrialTime)
             return (moon.x + earth.x, moon.y + earth.y, moon.z + earth.z)
 
         case .earthMoonBarycenter:
             let moon = try geoMoon(at: time)
-            let earth = _Astronomy_CalcVsop(BODY_EARTH, time.raw)
-            if earth.status != ASTRO_SUCCESS {
-                throw AstronomyError(status: earth.status) ?? .internalError
-            }
+            let earth = EngineVsop.calcVsop(bodyIndex: 2, tt: time.terrestrialTime)
             let d = 1.0 + EngineConstants.earthMoonMassRatio
             return (earth.x + moon.x / d, earth.y + moon.y / d, earth.z + moon.z / d)
 
         case .solarSystemBarycenter:
-            let raw = _Astronomy_CalcSolarSystemBarycenter(time.raw)
-            if raw.status != ASTRO_SUCCESS {
-                throw AstronomyError(status: raw.status) ?? .internalError
-            }
-            return (raw.x, raw.y, raw.z)
+            let ssb = EngineVsop.calcSolarSystemBarycenter(tt: time.terrestrialTime)
+            return (ssb.x, ssb.y, ssb.z)
 
         default:
             throw AstronomyError.invalidBody
@@ -197,7 +170,10 @@ enum EnginePositions {
             return 0.0
 
         case .mercury, .venus, .earth, .mars, .jupiter, .saturn, .uranus, .neptune:
-            return _Astronomy_VsopHelioDistance(body.raw, time.raw)
+            guard let idx = EngineVsop.bodyIndex(for: body) else {
+                throw AstronomyError.invalidBody
+            }
+            return EngineVsop.vsopHelioDistance(bodyIndex: idx, tt: time.terrestrialTime)
 
         default:
             let (x, y, z) = try helioXYZ(of: body, at: time)
@@ -297,6 +273,8 @@ enum EnginePositions {
             throw AstronomyError.badTime
         }
 
+        let tt = time.terrestrialTime
+
         if body == .solarSystemBarycenter {
             return StateVector(
                 position: Vector3D(x: 0.0, y: 0.0, z: 0.0, time: time),
@@ -306,50 +284,62 @@ enum EnginePositions {
         }
 
         if body == .pluto {
-            return try StateVector(_Astronomy_CalcPluto(time.raw, 0))
+            return try EngineGravityPluto.calcPluto(at: time, heliocentric: false)
+                .toStateVector(at: time)
         }
 
         switch body {
-        case .sun, .jupiter, .saturn, .uranus, .neptune:
-            return try StateVector(_Astronomy_BaryMajorBody(body.raw, time.raw))
+        case .sun:
+            return EngineVsop.majorBodyBary(tt: tt).sun.toStateVector(at: time)
+        case .jupiter:
+            return EngineVsop.majorBodyBary(tt: tt).jupiter.toStateVector(at: time)
+        case .saturn:
+            return EngineVsop.majorBodyBary(tt: tt).saturn.toStateVector(at: time)
+        case .uranus:
+            return EngineVsop.majorBodyBary(tt: tt).uranus.toStateVector(at: time)
+        case .neptune:
+            return EngineVsop.majorBodyBary(tt: tt).neptune.toStateVector(at: time)
 
         case .mercury, .venus, .earth, .mars:
-            let barySun = try StateVector(_Astronomy_BaryMajorBody(BODY_SUN, time.raw))
-            let planet = try StateVector(_Astronomy_CalcVsopPosVel(body.raw, time.raw))
+            guard let idx = EngineVsop.bodyIndex(for: body) else {
+                throw AstronomyError.invalidBody
+            }
+            let barySun = EngineVsop.majorBodyBary(tt: tt).sun
+            let planet = EngineVsop.calcVsopPosVel(bodyIndex: idx, tt: tt)
             return StateVector(
                 position: Vector3D(
-                    x: barySun.position.x + planet.position.x,
-                    y: barySun.position.y + planet.position.y,
-                    z: barySun.position.z + planet.position.z,
+                    x: barySun.r.x + planet.r.x,
+                    y: barySun.r.y + planet.r.y,
+                    z: barySun.r.z + planet.r.z,
                     time: time
                 ),
                 velocity: Vector3D(
-                    x: barySun.velocity.x + planet.velocity.x,
-                    y: barySun.velocity.y + planet.velocity.y,
-                    z: barySun.velocity.z + planet.velocity.z,
+                    x: barySun.v.x + planet.v.x,
+                    y: barySun.v.y + planet.v.y,
+                    z: barySun.v.z + planet.v.z,
                     time: time
                 ),
                 time: time
             )
 
         case .moon, .earthMoonBarycenter:
-            let barySun = try StateVector(_Astronomy_BaryMajorBody(BODY_SUN, time.raw))
-            let earth = try StateVector(_Astronomy_CalcVsopPosVel(BODY_EARTH, time.raw))
+            let barySun = EngineVsop.majorBodyBary(tt: tt).sun
+            let earth = EngineVsop.calcVsopPosVel(bodyIndex: 2, tt: tt)
             let state =
                 body == .moon
                 ? try geoMoonState(at: time)
                 : try geoEmbState(at: time)
             return StateVector(
                 position: Vector3D(
-                    x: state.position.x + barySun.position.x + earth.position.x,
-                    y: state.position.y + barySun.position.y + earth.position.y,
-                    z: state.position.z + barySun.position.z + earth.position.z,
+                    x: state.position.x + barySun.r.x + earth.r.x,
+                    y: state.position.y + barySun.r.y + earth.r.y,
+                    z: state.position.z + barySun.r.z + earth.r.z,
                     time: time
                 ),
                 velocity: Vector3D(
-                    x: state.velocity.x + barySun.velocity.x + earth.velocity.x,
-                    y: state.velocity.y + barySun.velocity.y + earth.velocity.y,
-                    z: state.velocity.z + barySun.velocity.z + earth.velocity.z,
+                    x: state.velocity.x + barySun.v.x + earth.v.x,
+                    y: state.velocity.y + barySun.v.y + earth.v.y,
+                    z: state.velocity.z + barySun.v.z + earth.v.z,
                     time: time
                 ),
                 time: time
@@ -365,6 +355,8 @@ enum EnginePositions {
             throw AstronomyError.badTime
         }
 
+        let tt = time.terrestrialTime
+
         switch body {
         case .sun:
             return StateVector(
@@ -374,46 +366,50 @@ enum EnginePositions {
             )
 
         case .solarSystemBarycenter:
-            let barySun = try StateVector(_Astronomy_BaryMajorBody(BODY_SUN, time.raw))
+            let barySun = EngineVsop.majorBodyBary(tt: tt).sun
             return StateVector(
                 position: Vector3D(
-                    x: -barySun.position.x,
-                    y: -barySun.position.y,
-                    z: -barySun.position.z,
+                    x: -barySun.r.x,
+                    y: -barySun.r.y,
+                    z: -barySun.r.z,
                     time: time
                 ),
                 velocity: Vector3D(
-                    x: -barySun.velocity.x,
-                    y: -barySun.velocity.y,
-                    z: -barySun.velocity.z,
+                    x: -barySun.v.x,
+                    y: -barySun.v.y,
+                    z: -barySun.v.z,
                     time: time
                 ),
                 time: time
             )
 
         case .mercury, .venus, .earth, .mars, .jupiter, .saturn, .uranus, .neptune:
-            return try StateVector(_Astronomy_CalcVsopPosVel(body.raw, time.raw))
+            guard let idx = EngineVsop.bodyIndex(for: body) else {
+                throw AstronomyError.invalidBody
+            }
+            return EngineVsop.calcVsopPosVel(bodyIndex: idx, tt: tt).toStateVector(at: time)
 
         case .pluto:
-            return try StateVector(_Astronomy_CalcPluto(time.raw, 1))
+            return try EngineGravityPluto.calcPluto(at: time, heliocentric: true)
+                .toStateVector(at: time)
 
         case .moon, .earthMoonBarycenter:
-            let earth = try StateVector(_Astronomy_CalcVsopPosVel(BODY_EARTH, time.raw))
+            let earth = EngineVsop.calcVsopPosVel(bodyIndex: 2, tt: tt)
             let state =
                 body == .moon
                 ? try geoMoonState(at: time)
                 : try geoEmbState(at: time)
             return StateVector(
                 position: Vector3D(
-                    x: state.position.x + earth.position.x,
-                    y: state.position.y + earth.position.y,
-                    z: state.position.z + earth.position.z,
+                    x: state.position.x + earth.r.x,
+                    y: state.position.y + earth.r.y,
+                    z: state.position.z + earth.r.z,
                     time: time
                 ),
                 velocity: Vector3D(
-                    x: state.velocity.x + earth.velocity.x,
-                    y: state.velocity.y + earth.velocity.y,
-                    z: state.velocity.z + earth.velocity.z,
+                    x: state.velocity.x + earth.v.x,
+                    y: state.velocity.y + earth.v.y,
+                    z: state.velocity.z + earth.v.z,
                     time: time
                 ),
                 time: time
@@ -490,13 +486,13 @@ enum EnginePositions {
 
     static func sunPosition(at time: AstroTime) throws -> Ecliptic {
         let adjustedTime = addTerrestrialDays(time, -1.0 / EngineConstants.cAuday)
-        let rawEarth = _Astronomy_CalcVsop(BODY_EARTH, adjustedTime.raw)
-        if rawEarth.status != ASTRO_SUCCESS {
-            throw AstronomyError(status: rawEarth.status) ?? .internalError
+        guard EngineMath.ephemerisTimeOk(adjustedTime) else {
+            throw AstronomyError.badTime
         }
-        let sx = -rawEarth.x
-        let sy = -rawEarth.y
-        let sz = -rawEarth.z
+        let earth = EngineVsop.calcVsop(bodyIndex: 2, tt: adjustedTime.terrestrialTime)
+        let sx = -earth.x
+        let sy = -earth.y
+        let sz = -earth.z
 
         let tilt = EngineRotation.earthTilt(at: adjustedTime)
         let prec = EngineRotation.precessionMatrix(at: adjustedTime, into2000: false)
