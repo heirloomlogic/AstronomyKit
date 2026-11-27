@@ -5,7 +5,7 @@
 //  Apsis (perigee/apogee, perihelion/aphelion) calculations.
 //
 
-import CLibAstronomy
+import Foundation
 
 // MARK: - Apsis Kind
 
@@ -16,15 +16,6 @@ public enum ApsisKind: Sendable, Equatable, Hashable, Codable {
 
     /// The body is at its farthest distance (apogee for Moon, aphelion for planets).
     case apocenter
-
-    init(_ raw: astro_apsis_kind_t) {
-        switch raw {
-        case APSIS_PERICENTER:
-            self = .pericenter
-        default:
-            self = .apocenter
-        }
-    }
 
     /// A human-readable name for the Moon's apsis.
     public var lunarName: String {
@@ -75,17 +66,6 @@ public struct Apsis: Sendable, Equatable {
 
     /// The distance between the centers of the bodies in kilometers.
     public let distanceKM: Double
-
-    /// Creates an apsis from the C structure.
-    init(_ raw: astro_apsis_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.kind = ApsisKind(raw.kind)
-        self.time = AstroTime(raw: raw.time)
-        self.distanceAU = raw.dist_au
-        self.distanceKM = raw.dist_km
-    }
 }
 
 extension Apsis: CustomStringConvertible {
@@ -106,8 +86,7 @@ extension Moon {
     ///   the accepted time range (see ``AstroTime``), or another `AstronomyError` if the
     ///   search fails.
     public static func searchApsis(after startTime: AstroTime) throws -> Apsis {
-        let result = Astronomy_SearchLunarApsis(startTime.raw)
-        return try Apsis(result)
+        try EngineApsis.searchLunarApsis(after: startTime)
     }
 
     /// Finds the next lunar apsis after a given apsis.
@@ -118,15 +97,7 @@ extension Moon {
     /// - Returns: The next apsis event.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextApsis(after apsis: Apsis) throws -> Apsis {
-        let raw = astro_apsis_t(
-            status: ASTRO_SUCCESS,
-            time: apsis.time.raw,
-            kind: apsis.kind == .pericenter ? APSIS_PERICENTER : APSIS_APOCENTER,
-            dist_au: apsis.distanceAU,
-            dist_km: apsis.distanceKM
-        )
-        let result = Astronomy_NextLunarApsis(raw)
-        return try Apsis(result)
+        try EngineApsis.nextLunarApsis(after: apsis)
     }
 
     /// Returns all lunar apsides within a date range.
@@ -183,8 +154,7 @@ extension CelestialBody {
     /// print("Mars \(apsis.kind.solarName): \(apsis.time)")
     /// ```
     public func searchApsis(after startTime: AstroTime) throws -> Apsis {
-        let result = Astronomy_SearchPlanetApsis(raw, startTime.raw)
-        return try Apsis(result)
+        try EngineApsis.searchPlanetApsis(of: self, after: startTime)
     }
 
     /// Finds the next planetary apsis after a given apsis.
@@ -193,15 +163,7 @@ extension CelestialBody {
     /// - Returns: The next apsis event.
     /// - Throws: `AstronomyError` if the search fails.
     public func nextApsis(after apsis: Apsis) throws -> Apsis {
-        let raw = astro_apsis_t(
-            status: ASTRO_SUCCESS,
-            time: apsis.time.raw,
-            kind: apsis.kind == .pericenter ? APSIS_PERICENTER : APSIS_APOCENTER,
-            dist_au: apsis.distanceAU,
-            dist_km: apsis.distanceKM
-        )
-        let result = Astronomy_NextPlanetApsis(self.raw, raw)
-        return try Apsis(result)
+        try EngineApsis.nextPlanetApsis(of: self, after: apsis)
     }
 
     /// Returns all planetary apsides within a date range.

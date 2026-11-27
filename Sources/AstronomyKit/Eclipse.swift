@@ -6,6 +6,7 @@
 //
 
 import CLibAstronomy
+import Foundation
 
 // MARK: - Eclipse Kind
 
@@ -25,18 +26,6 @@ public enum EclipseKind: Sendable, Equatable, Hashable {
 
     /// A total eclipse.
     case total
-
-    /// Creates an eclipse kind from the C enum.
-    init(_ raw: astro_eclipse_kind_t) {
-        switch raw {
-        case ECLIPSE_NONE: self = .none
-        case ECLIPSE_PENUMBRAL: self = .penumbral
-        case ECLIPSE_PARTIAL: self = .partial
-        case ECLIPSE_ANNULAR: self = .annular
-        case ECLIPSE_TOTAL: self = .total
-        default: self = .none
-        }
-    }
 
     /// The display name.
     public var name: String {
@@ -71,19 +60,6 @@ public struct LunarEclipse: Sendable, Equatable {
 
     /// Semi-duration of the total phase in minutes (0 if none).
     public let totalDuration: Double
-
-    /// Creates a lunar eclipse from the C structure.
-    init(_ raw: astro_lunar_eclipse_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.kind = EclipseKind(raw.kind)
-        self.peak = AstroTime(raw: raw.peak)
-        self.obscuration = raw.obscuration
-        self.penumbralDuration = raw.sd_penum
-        self.partialDuration = raw.sd_partial
-        self.totalDuration = raw.sd_total
-    }
 }
 
 extension LunarEclipse: CustomStringConvertible {
@@ -114,26 +90,6 @@ public struct GlobalSolarEclipse: Sendable, Equatable {
 
     /// Longitude at peak shadow center (total/annular only).
     public let longitude: Double?
-
-    /// Creates a global solar eclipse from the C structure.
-    init(_ raw: astro_global_solar_eclipse_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.kind = EclipseKind(raw.kind)
-        self.peak = AstroTime(raw: raw.peak)
-        self.obscuration = raw.obscuration
-        self.distance = raw.distance
-
-        // Lat/lon only valid for total/annular
-        if kind == .total || kind == .annular {
-            self.latitude = raw.latitude
-            self.longitude = raw.longitude
-        } else {
-            self.latitude = nil
-            self.longitude = nil
-        }
-    }
 }
 
 extension GlobalSolarEclipse: CustomStringConvertible {
@@ -162,10 +118,9 @@ public struct EclipseEvent: Sendable, Equatable {
     /// Whether the Sun is above the horizon at this event.
     public var isVisible: Bool { altitude > 0 }
 
-    /// Creates an eclipse event from the C structure.
-    init(_ raw: astro_eclipse_event_t) {
-        self.time = AstroTime(raw: raw.time)
-        self.altitude = raw.altitude
+    init(time: AstroTime, altitude: Double) {
+        self.time = time
+        self.altitude = altitude
     }
 }
 
@@ -206,25 +161,22 @@ public struct LocalSolarEclipse: Sendable, Equatable {
     /// When the partial phase ends.
     public let partialEnd: EclipseEvent
 
-    /// Creates a local solar eclipse from the C structure.
-    init(_ raw: astro_local_solar_eclipse_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.kind = EclipseKind(raw.kind)
-        self.obscuration = raw.obscuration
-        self.partialBegin = EclipseEvent(raw.partial_begin)
-        self.peak = EclipseEvent(raw.peak)
-        self.partialEnd = EclipseEvent(raw.partial_end)
-
-        // Total/annular phases only present for total/annular eclipses
-        if kind == .total || kind == .annular {
-            self.totalBegin = EclipseEvent(raw.total_begin)
-            self.totalEnd = EclipseEvent(raw.total_end)
-        } else {
-            self.totalBegin = nil
-            self.totalEnd = nil
-        }
+    init(
+        kind: EclipseKind,
+        obscuration: Double,
+        partialBegin: EclipseEvent,
+        totalBegin: EclipseEvent?,
+        peak: EclipseEvent,
+        totalEnd: EclipseEvent?,
+        partialEnd: EclipseEvent
+    ) {
+        self.kind = kind
+        self.obscuration = obscuration
+        self.partialBegin = partialBegin
+        self.totalBegin = totalBegin
+        self.peak = peak
+        self.totalEnd = totalEnd
+        self.partialEnd = partialEnd
     }
 
     /// Whether any part of the eclipse is visible (Sun above horizon).
@@ -255,8 +207,7 @@ public enum Eclipse {
     /// - Returns: The next lunar eclipse.
     /// - Throws: `AstronomyError` if the search fails.
     public static func searchLunar(after startTime: AstroTime) throws -> LunarEclipse {
-        let result = Astronomy_SearchLunarEclipse(startTime.raw)
-        return try LunarEclipse(result)
+        try EngineEclipses.searchLunar(after: startTime)
     }
 
     /// Finds the next lunar eclipse after a given eclipse.
@@ -265,8 +216,7 @@ public enum Eclipse {
     /// - Returns: The next lunar eclipse.
     /// - Throws: `AstronomyError` if the search fails.
     public static func nextLunar(after eclipse: LunarEclipse) throws -> LunarEclipse {
-        let result = Astronomy_NextLunarEclipse(eclipse.peak.raw)
-        return try LunarEclipse(result)
+        try EngineEclipses.nextLunar(after: eclipse.peak)
     }
 
     /// Finds all lunar eclipses within a date range.
@@ -311,8 +261,7 @@ public enum Eclipse {
     /// - Returns: The next global solar eclipse.
     /// - Throws: `AstronomyError` if the search fails.
     public static func searchGlobalSolar(after startTime: AstroTime) throws -> GlobalSolarEclipse {
-        let result = Astronomy_SearchGlobalSolarEclipse(startTime.raw)
-        return try GlobalSolarEclipse(result)
+        try EngineEclipses.searchGlobalSolar(after: startTime)
     }
 
     /// Finds the next global solar eclipse after a given eclipse.
@@ -323,8 +272,7 @@ public enum Eclipse {
     public static func nextGlobalSolar(
         after eclipse: GlobalSolarEclipse
     ) throws -> GlobalSolarEclipse {
-        let result = Astronomy_NextGlobalSolarEclipse(eclipse.peak.raw)
-        return try GlobalSolarEclipse(result)
+        try EngineEclipses.nextGlobalSolar(after: eclipse.peak)
     }
 
     /// Finds all global solar eclipses within a date range.
@@ -392,8 +340,10 @@ public enum Eclipse {
         after startTime: AstroTime,
         from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let result = Astronomy_SearchLocalSolarEclipse(startTime.raw, try validatedSolarObserver(observer))
-        return try LocalSolarEclipse(result)
+        try EngineEclipses.searchLocalSolar(
+            after: startTime,
+            observer: try validatedSolarObserver(observer)
+        )
     }
 
     /// Finds the next local solar eclipse after a given eclipse.
@@ -407,8 +357,10 @@ public enum Eclipse {
         after eclipse: LocalSolarEclipse,
         from observer: Observer
     ) throws -> LocalSolarEclipse {
-        let result = Astronomy_NextLocalSolarEclipse(eclipse.peak.time.raw, try validatedSolarObserver(observer))
-        return try LocalSolarEclipse(result)
+        try EngineEclipses.nextLocalSolar(
+            after: eclipse.peak.time,
+            observer: try validatedSolarObserver(observer)
+        )
     }
 
     /// Finds all local solar eclipses within a date range.

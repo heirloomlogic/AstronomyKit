@@ -5,7 +5,7 @@
 //  Planetary rotation axis calculations.
 //
 
-import CLibAstronomy
+import Foundation
 
 // MARK: - Rotation Axis
 
@@ -35,17 +35,6 @@ public struct RotationAxis: Sendable, Equatable {
 
     /// A unit vector pointing toward the body's north pole in J2000 coordinates.
     public let north: Vector3D
-
-    /// Creates a rotation axis from the C structure.
-    init(_ raw: astro_axis_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.rightAscension = raw.ra
-        self.declination = raw.dec
-        self.spin = raw.spin
-        self.north = try Vector3D(raw.north)
-    }
 }
 
 extension RotationAxis: CustomStringConvertible {
@@ -79,8 +68,6 @@ extension CelestialBody {
     /// print("Jupiter's north pole: RA \(axis.rightAscension)h, Dec \(axis.declination)°")
     /// ```
     public func rotationAxis(at time: AstroTime) throws -> RotationAxis {
-        var rawTime = time.raw
-        let result = Astronomy_RotationAxis(raw, &rawTime)
-        return try RotationAxis(result)
+        try EngineRotationAxis.rotationAxis(of: self, at: time)
     }
 }

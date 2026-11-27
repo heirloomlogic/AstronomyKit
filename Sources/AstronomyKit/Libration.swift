@@ -5,7 +5,7 @@
 //  Lunar libration calculations.
 //
 
-import CLibAstronomy
+import Foundation
 
 // MARK: - Libration
 
@@ -48,16 +48,6 @@ public struct Libration: Sendable, Equatable {
     ///
     /// This varies from about 0.49° (at apogee) to 0.56° (at perigee).
     public let apparentDiameter: Double
-
-    /// Creates a libration from the C structure.
-    init(_ raw: astro_libration_t) {
-        self.subEarthLatitude = raw.elat
-        self.subEarthLongitude = raw.elon
-        self.moonLatitude = raw.mlat
-        self.moonLongitude = raw.mlon
-        self.distanceKM = raw.dist_km
-        self.apparentDiameter = raw.diam_deg
-    }
 }
 
 extension Libration: CustomStringConvertible {
@@ -99,7 +89,6 @@ extension Moon {
     /// }
     /// ```
     public static func libration(at time: AstroTime) -> Libration {
-        let result = Astronomy_Libration(time.raw)
-        return Libration(result)
+        EngineLibration.libration(at: time)
     }
 }
