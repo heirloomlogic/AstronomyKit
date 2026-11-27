@@ -5,8 +5,15 @@
 //  Time representation for astronomical calculations.
 //
 
-import CLibAstronomy
 import Foundation
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif canImport(Musl)
+import Musl
+#endif
 
 /// Represents a moment in time for astronomical calculations.
 ///
@@ -45,29 +52,36 @@ import Foundation
 /// the Moon's state vectors, searches) can throw within a short distance of either
 /// edge. See <doc:TimeAndObservers>.
 public struct AstroTime: Sendable {
-    /// The underlying C time structure.
-    var raw: astro_time_t
+    var ut: Double
+    var tt: Double
+    var psi: Double
+    var eps: Double
+    var st: Double
 
     /// Universal Time days since noon on January 1, 2000.
     ///
     /// This value is appropriate for calculations involving Earth's rotation,
     /// such as rise/set times and sidereal time.
-    public var universalTime: Double { raw.ut }
+    public var universalTime: Double { ut }
 
     /// Terrestrial Time days since noon on January 1, 2000.
     ///
     /// This value is used for calculations not involving Earth's rotation,
     /// such as planetary orbits.
-    public var terrestrialTime: Double { raw.tt }
+    public var terrestrialTime: Double { tt }
 
     /// The current time.
     public static var now: AstroTime {
-        AstroTime(raw: Astronomy_CurrentTime())
+        EngineTime.currentTime()
     }
 
-    /// Creates a time from the underlying C structure.
-    init(raw: astro_time_t) {
-        self.raw = raw
+    @inline(__always)
+    init(ut: Double, tt: Double, psi: Double = .nan, eps: Double = .nan, st: Double = .nan) {
+        self.ut = ut
+        self.tt = tt
+        self.psi = psi
+        self.eps = eps
+        self.st = st
     }
 
     /// Seconds from the Unix epoch (1970-01-01 00:00 UTC) to the J2000
@@ -105,13 +119,13 @@ public struct AstroTime: Sendable {
         minute: Int = 0,
         second: Double = 0
     ) {
-        self.raw = Astronomy_MakeTime(
-            Int32(clamping: year),
-            Int32(clamping: month),
-            Int32(clamping: day),
-            Int32(clamping: hour),
-            Int32(clamping: minute),
-            second
+        self = EngineTime.makeTime(
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second
         )
     }
 
@@ -119,7 +133,7 @@ public struct AstroTime: Sendable {
     ///
     /// - Parameter ut: Days since noon on January 1, 2000 (UTC).
     public init(ut: Double) {
-        self.raw = Astronomy_TimeFromDays(ut)
+        self = EngineTime.timeFromDays(ut)
     }
 
     /// Creates a time from Terrestrial Time days since J2000.
@@ -134,12 +148,12 @@ public struct AstroTime: Sendable {
     ///
     /// - Parameter tt: Terrestrial Time days since noon on January 1, 2000.
     public init(tt: Double) {
-        self.raw = Astronomy_TerrestrialTime(tt)
+        self = EngineTime.timeFromTT(tt)
     }
 
     /// Converts this time to a Foundation `Date`.
     public var date: Date {
-        Date(timeIntervalSince1970: raw.ut * 86_400 + Self.j2000UnixOffset)
+        Date(timeIntervalSince1970: ut * 86_400 + Self.j2000UnixOffset)
     }
 
     /// Returns a new time by adding the specified number of days.
@@ -147,7 +161,7 @@ public struct AstroTime: Sendable {
     /// - Parameter days: The number of days to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given days.
     public func addingDays(_ days: Double) -> AstroTime {
-        AstroTime(raw: Astronomy_AddDays(raw, days))
+        EngineTime.addDays(self, days)
     }
 
     /// Returns a new time by adding the specified number of days to both clocks.
@@ -165,21 +179,9 @@ public struct AstroTime: Sendable {
     ///
     /// - Parameter days: The number of days to add. Can be negative.
     /// - Returns: A new `AstroTime` with both clocks offset by the given days.
-    public func addingTerrestrialDays(_ days: Double) -> AstroTime {
-        AstroTime(raw: Astronomy_AddTerrestrialDays(raw, days))
-    }
-
     @inline(__always)
-    func addingTerrestrialDaysInline(_ days: Double) -> AstroTime {
-        AstroTime(
-            raw: astro_time_t(
-                ut: raw.ut + days,
-                tt: raw.tt + days,
-                psi: .nan,
-                eps: .nan,
-                st: .nan
-            )
-        )
+    public func addingTerrestrialDays(_ days: Double) -> AstroTime {
+        EngineTime.addTerrestrialDays(self, days)
     }
 
     /// Returns a new time by adding the specified number of hours.
@@ -195,8 +197,7 @@ public struct AstroTime: Sendable {
     /// Sidereal time is the hour angle of the vernal equinox,
     /// measured in sidereal hours (0 to 24).
     public var siderealTime: Double {
-        var copy = raw
-        return Astronomy_SiderealTime(&copy)
+        EngineRotation.siderealTime(at: self)
     }
 
     /// The local sidereal time at a given geographic longitude.
@@ -223,7 +224,7 @@ public struct AstroTime: Sendable {
         // Adding 0 turns -0 into +0.
         return wrapped >= 24.0 ? 0.0 : wrapped + 0.0
     }
-    /// Maximum accepted |TT| in days from J2000 (matches `EPHEMERIS_MAX_TT_DAYS` in `astronomy.c`).
+    /// Maximum accepted |TT| in days from J2000 (4,000 Julian years).
     static let acceptedTTDays = 1_461_000.0
 
     /// Maximum number of events returned by range-collecting searches to guard against DoS.

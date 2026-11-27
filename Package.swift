@@ -3,9 +3,9 @@
 import Foundation
 import PackageDescription
 
-// A Debug build compiles Swift without optimisation. On Apple platforms `EngineVsop` then sums
-// the longer planet series through Accelerate, which is optimised whatever the build
-// ("Series cosine" in MAINTAINING.md).
+// A Debug build compiles Swift without optimisation. On Apple platforms `EngineVsop` and
+// `EngineNutation` then evaluate series through Accelerate, which is optimised whatever the
+// build ("Series cosine" in MAINTAINING.md).
 let debugOnApple: BuildSettingCondition = .when(
     platforms: [.macOS, .macCatalyst, .iOS, .tvOS, .watchOS, .visionOS],
     configuration: .debug
@@ -28,21 +28,11 @@ let package = Package(
     targets: [
         .target(
             name: "AstronomyKit",
-            dependencies: ["CLibAstronomy"],
             swiftSettings: [
                 .define("ASTRONOMYKIT_SERIES_ACCELERATE", debugOnApple)
             ],
             linkerSettings: [
                 .linkedFramework("Accelerate", debugOnApple)
-            ]
-        ),
-        .target(
-            name: "CLibAstronomy",
-            path: "Sources/CLibAstronomy",
-            sources: ["astronomy.c"],
-            publicHeadersPath: "include",
-            cSettings: [
-                .headerSearchPath("include")
             ]
         ),
         .testTarget(
@@ -77,9 +67,7 @@ if FileManager.default.fileExists(atPath: devSentinel) {
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
         .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
     ]
-    // CLibAstronomy is vendored C with no Swift sources, so the swift-format linter has
-    // nothing to say about it.
-    for target in package.targets where target.name != "CLibAstronomy" {
+    for target in package.targets {
         target.plugins = (target.plugins ?? []) + [.plugin(name: "Persnoop", package: "Persnicket")]
     }
 }

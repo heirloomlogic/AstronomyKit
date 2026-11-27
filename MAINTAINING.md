@@ -1,80 +1,46 @@
 # Maintaining AstronomyKit
 
-This document is for maintainers. It describes how AstronomyKit vendors the
-[Astronomy Engine](https://github.com/cosinekitty/astronomy) C library and how
-to update that vendored copy. Day-to-day contribution guidance lives in
-[CONTRIBUTING.md](CONTRIBUTING.md).
+This document is for maintainers. It describes AstronomyKit's pure-Swift computation engine (`Sources/AstronomyKit/Engine/`), which ports Don Cross's [Astronomy Engine](https://github.com/cosinekitty/astronomy) (2.1.19, commit `826e26ff3a6dc03ee46658b1138fef582d96c5d9`), how its numerical behavior differs from upstream, and how to refresh the ephemeris tables. Day-to-day contribution guidance lives in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## What is vendored
+## Engine structure
 
-AstronomyKit wraps a single-file C library. Two files are copied verbatim from
-upstream (aside from the local patches listed below):
-
-- `Sources/CLibAstronomy/astronomy.c` — the implementation
-- `Sources/CLibAstronomy/include/astronomy.h` — the public C header
-
-The Swift layer in `Sources/AstronomyKit/` is ours and is not part of the
-vendored code.
-
-The top of `astronomy.c` carries a **vendoring note** recording the exact
-upstream commit and the local patches. That note is the source of truth; keep it
-current when you update.
+All astronomical math and ephemeris tables live in pure Swift under `Sources/AstronomyKit/Engine/`, with no C target or C bridge. The public Swift API sits directly above those internal modules in `Sources/AstronomyKit/`.
 
 ## Version & tag scheme
 
-Release tags are AstronomyKit's own [semantic version](https://semver.org), `X.Y.Z`, with no build metadata. Releases before 4.0.0 were tagged `X.Y.Z+upstream-A.B.C`; that suffix is dropped because Astronomy Engine development has ended and the vendored `astronomy.c` stays at its final release, 2.1.19.
+Release tags are AstronomyKit's own [semantic version](https://semver.org), `X.Y.Z`, with no build metadata. Releases before 4.0.0 were tagged `X.Y.Z+upstream-A.B.C`; that suffix was dropped because upstream Astronomy Engine development ended at its final release, 2.1.19.
 
-## Local patches (must survive every update)
+## Differences from upstream Astronomy Engine 2.1.19
 
-The vendored `astronomy.c` differs from upstream only by these patches, most of them for thread safety. Upstream is single-threaded by design; AstronomyKit advertises
-`Sendable` safety, so these are required. **After any upstream sync they must be
-re-applied, or verified as adopted upstream.**
+Upstream Astronomy Engine was single-threaded by design and targeted ±1 arcminute accuracy. AstronomyKit advertises `Sendable` safety and tighter event timing, so the Swift engine carries these changes relative to upstream 2.1.19:
 
-1. **Pluto orbit cache mutex.** A `pthread` mutex (`pluto_cache_mutex`) guards
-   the Pluto segment cache. `CalcPluto` holds the lock across both the segment
-   lookup and its use; `Astronomy_Reset` takes it before freeing the cache.
-   Prevents a use-after-free between concurrent calculation and reset.
+1. **Pluto orbit cache lock.** An `NSLock` in `EngineGravityPluto.swift` guards the Pluto segment cache (`PlutoCache`). Segments are immutable once constructed, and `AstronomyConfig.reset()` clears the cache under the same lock.
 
-2. **Atomic Delta T function pointer.** `DeltaTFunc` is a C11 `_Atomic`
-   (`stdatomic.h`). `Astronomy_SetDeltaTFunction` stores with release ordering;
-   `TerrestrialTime` loads with acquire ordering. Lets the Delta T model be
-   swapped safely while calculations run on other threads.
+2. **Atomic Delta T model selector.** `EngineTime.swift` stores the active Delta T model in a `Synchronization.Atomic<Int>` (release store, acquire load), so `AstronomyConfig.setDeltaTModel(_:)` is safe to call concurrently with time construction on other threads.
 
-3. **Atomic performance counters.** The undocumented counters `_CalcMoonCount`,
-   `_AltitudeDiffCallCount`, and `_FindAscentMaxRecursionDepth` are C11
-   `_Atomic`, since concurrent Moon and rise/set calculations increment them.
+3. **Stateless fixed stars and lazy constellation frame.** `FixedStar` evaluates J2000 catalog coordinates directly in `EnginePositions.starGeoVector` without mutable star slots. `EngineConstellation` initializes its J2000→B1875 rotation matrix via Swift's thread-safe `static let`.
 
-4. **Constellation lazy-init `pthread_once`.** `Astronomy_Constellation` lazily
-   builds a J2000→B1875 rotation matrix on first use. The state was
-   function-local `static`s, so concurrent first calls raced. Initialization is
-   now hoisted to file scope (`constel_init_once`, `constel_epoch2000`,
-   `constel_rot`) behind a `pthread_once`.
+4. **Pluto compute denial-of-service guard.** `EngineGravityPluto.calcPluto` rejects times more than `plutoMaxCrawlDays` (~100 years) beyond the 51-state table (`±730,000` TT days) with `AstronomyError.badTime` instead of crawling arbitrarily far.
 
-5. **Pluto compute denial-of-service guard.** `CalcPluto`'s uncached
-   `CalcPlutoOneWay` crawl for times outside the `PlutoStateTable` range costs
-   time proportional to the distance from the table, so a far-off time could
-   hang. It now returns `ASTRO_BAD_TIME` for times more than
-   `PLUTO_MAX_CRAWL_DAYS` (~100 years) beyond the table.
+5. **Extreme-input guards.** Non-finite or extreme inputs return errors or finish in constant time without altering ordinary results: rise/set and altitude searches reject non-finite `limitDays` (`invalidParameter`) and non-advancing steps (`badTime`); Pluto rejects non-finite TT (`badTime`); lunar node and Neptune/Pluto apsis searches reject non-advancing steps or non-finite starts (`badTime`); `EngineMath.longitudeOffset` and `normalizeLongitude` reduce with `fmod(x, 360.0) + 0.0` in constant time; and `EngineTime.timeFromTT` returns a NaN time for non-finite TT and bounds iteration to 128 steps (stopping early when iterates alternate across a forward Delta T step while preserving exact `tt`).
 
-6. **Extreme-input guards.** Non-finite or extreme inputs used to hang these sites or reach undefined behavior; each now returns an error status or runs in constant time, and results for ordinary inputs are unchanged. `InternalSearchAltitude` (rise/set and altitude searches) returns `ASTRO_INVALID_PARAMETER` for a non-finite `limitDays` and `ASTRO_BAD_TIME` when its 0.42-day step no longer advances the time (|UT| ≥ 2^52 days). `CalcPluto` returns `ASTRO_BAD_TIME` for a non-finite TT before `GetSegment`, whose `ClampIndex` converted NaN to `int`. `Astronomy_SearchMoonNode` returns `ASTRO_BAD_TIME` when its 10-day step no longer advances the time. `BruteSearchPlanetApsis` (Neptune, Pluto) returns `ASTRO_BAD_TIME` for a non-finite start. `LongitudeOffset` and `NormalizeLongitude` reduce with `fmod(x, 360.0) + 0.0` before the upstream loops, which took |x|/360 steps; the result is the same double for |x| < 2^56. `Astronomy_TerrestrialTime` returns a NaN time for a non-finite TT and returns its last iterate after 128 steps instead of looping forever; inputs that converge are unchanged. Each site carries an "extreme-input guards" comment.
+6. **Accepted time range.** Ephemeris entry points validate `AstroTime.acceptedTTDays` (`|TT| ≤ 1,461,000` days, 4,000 Julian years either side of J2000) and throw `AstronomyError.badTime` outside it or for non-finite times. Pluto keeps its narrower range (item 4).
 
-7. **Accepted time range.** The ephemeris evaluators return `ASTRO_BAD_TIME` unless |TT| ≤ 1,461,000 days (`EPHEMERIS_MAX_TT_DAYS`, 4000 Julian years either side of J2000), which also rejects a non-finite TT. Far outside that span the models return absurd values and then NaN while reporting success. The check sits in `CalcVsop`, `Astronomy_HelioVector`, `Astronomy_HelioDistance`, `Astronomy_GeoVector`, `Astronomy_BaryState`, `Astronomy_HelioState`, `Astronomy_GeoMoon`, `Astronomy_EclipticGeoMoon`, `Astronomy_JupiterMoons`, `Astronomy_GravSimInit`, `Astronomy_GravSimUpdate` and `moon_distance_slope`; every other position, search and event function reaches one of these. `Astronomy_GeoMoonState` and the Moon node search now check the status of `Astronomy_GeoMoon` and `Astronomy_EclipticGeoMoon`, which upstream treats as infallible. Results inside the range are bit-identical, and Pluto keeps its narrower range (patch 5). Each site carries an "accepted time range" comment.
+7. **Degenerate Lagrange inputs.** `EngineLagrangePoint` throws `invalidBody` when both bodies are identical, throws `invalidParameter` for zero/non-finite separation, degenerate L4/L5 orbital planes, or non-finite output fields, and bounds the L1–L3 Newton loop to 10,000 steps (`noConvergence`).
 
-8. **Degenerate Lagrange inputs.** `Astronomy_LagrangePoint` returns `ASTRO_INVALID_BODY` when both bodies are the same, whose zero separation reached a division by zero. `Astronomy_LagrangePointFast` returns `ASTRO_INVALID_PARAMETER` when the squared separation is zero or not finite, when the L4/L5 tangent length is zero or not finite (a relative velocity that is zero or parallel to the separation leaves the orbital plane undefined), and for any result field that is not finite; its L1 to L3 Newton iteration returns `ASTRO_NO_CONVERGE` after 10,000 steps instead of hanging. Each site carries a "degenerate Lagrange inputs" comment.
+8. **Observed Delta T.** `EngineTime.deltaTObserved` (`DeltaTModel.observed`) is the default model in place of Espenak–Meeus, whose 2005–2050 polynomial has drifted from observed Earth rotation (about 6 seconds high by 2027). It interpolates linearly in a yearly table of IERS values from 1962; before 1962 it joins Espenak–Meeus with an offset that fades linearly to zero by 1952; after the table, the last yearly rate continues and blends smoothly into the long-term parabola by 2150. See "Refreshing the Delta T table" below.
 
-9. **Observed Delta T.** `Astronomy_DeltaT_Observed` replaces `Astronomy_DeltaT_EspenakMeeus` as the initial value of `DeltaTFunc`, and Swift exposes it as `DeltaTModel.observed`. Espenak-Meeus's 2005–2050 polynomial has drifted from the Earth's rotation, about 6 seconds high by 2027. The function interpolates linearly in `DeltaTObserved`, a yearly table of IERS Delta T from 1962; before the table it is Espenak-Meeus plus an offset that fades to zero by 1952, and after the table the last yearly rate continues and blends into the long-term parabola by 2150. See "Refreshing the Delta T table" below.
+9. **TT-continuous offsets.** `AstroTime.addingTerrestrialDays(_:)` (`EngineTime.addTerrestrialDays`) adds a span to both `ut` and `tt` so light-travel iterations and numerical derivatives never step across a Delta T piecewise boundary.
 
-10. **TT-continuous offsets.** `Astronomy_AddTerrestrialDays` adds a span to both UT and TT; Swift exposes it as `AstroTime.addingTerrestrialDays(_:)`. `Astronomy_AddDays` adds to UT and derives TT from the Delta T model, so an offset across a point where the model's pieces meet with a step (Espenak–Meeus steps back 0.088 s in January 1900 and 0.050 s in January 2005) moved TT by the span plus the step. The light travel corrections (`Astronomy_CorrectLightTravel`, `Astronomy_SunPosition`) and every numerical derivative (`Astronomy_GeoMoonState`, the elongation, magnitude, lunar and planetary distance, and shadow slopes, and `EclipticState`'s five-point rates) now offset with it, so no step falls inside their span. Each C site carries a "TT-continuous offsets" comment. Away from a step, an offset's TT moves by under 1e-7 of the offset, so results change far inside the accuracy contract.
+10. **Longer planet series.** The VSOP87B tables in `EngineVsopTables.swift` hold 1,262 terms across Mercury through Neptune where upstream kept 466. Every upstream term is kept; the added terms come unchanged, in file order, from the published VSOP87B files (`https://ftp.imcce.fr/pub/ephem/planets/vsop87/VSOP87B.mer` through `.nep`). See "Selecting planet series terms" below.
 
-11. **Longer planet series.** The VSOP87 tables for Mercury through Neptune hold 1,262 terms where upstream kept 466. Upstream trimmed them to its one-arcminute contract, and that left the times of stations, of crossings a fixed angle from the Sun, and of sign ingresses minutes from JPL Horizons. Every upstream term is kept. The rest come unchanged, in file order, from the published VSOP87B files (`https://ftp.imcce.fr/pub/ephem/planets/vsop87/VSOP87B.mer` through `.nep`), which are where upstream's terms came from. See "Selecting planet series terms" below.
+11. **Series cosine.** `EngineVsop.swift` evaluates VSOP87B series two terms at a time using FMA-contracted `SIMD2<Double>` minimax polynomials (`seriesHalfCos`, `seriesHalfSinc`) and branchless `seriesWrap` in Release and non-Apple builds, evaluating coordinates and derivatives in one pass. On Apple platforms in Debug builds, `Package.swift` defines `ASTRONOMYKIT_SERIES_ACCELERATE` and links `Accelerate`, and `EngineVsop` batches each planet's contiguous series through `vDSP_vsmaD`, `vvcos`/`vvsincos`, and `vDSP_dotprD` using a thread-local scratch buffer.
 
-12. **Series cosine.** `SeriesSum` adds up one planet series two terms at a time, using the inline cosine and sine of `SERIES_ADD_COS`, `SERIES_ADD_SIN_COS` and `SeriesSinCos` in place of the C library's `cos` and `sin`, and `SERIES_WRAP` in place of `fmod` (`VsopCoords`, `VsopHelioDistance`, `VsopSphereToRect`, `CalcVsopPosVel`). `VsopCoordsAndRates` replaces upstream's `VsopDeriv` and takes the coordinates and their rates in one pass. The pair type is a GCC and clang vector extension, which every compiler SwiftPM uses has. In the default rounding mode the inline cosine and sine agree with the exact ones within 1e-15 for arguments below 6.5e6 radians; the comment at their definition gives the method and why the arguments stay in range. They never branch on the angle, so their cost is the same for every input, where the library's is lowest when successive calls repeat nearly the same angles, as a search does; the package's Release configuration compiles C at `-Os`. Its Debug configuration compiles C at `-O0`, where the inline code is unoptimised and the library's is not. The macros, the `always_inline` functions and the four pairs of terms `SeriesSum` takes in a pass when `__OPTIMIZE__` is not defined are for that build. With them it computes the same doubles as an optimised build, and on Apple silicon the planet operations take 1.0 to 2.0 times as long as they did with upstream's 466 terms (up to 3.1 times without them). A Debug build on an Apple platform sums the longer series another way: `Package.swift` defines `ASTRONOMYKIT_SERIES_ACCELERATE` and links Accelerate for it, and `SeriesSumAccelerate` sums each series of 8 terms or more with `vDSP_vsmaD`, `vvcos` or `vvsincos`, and `vDSP_dotprD`, which are optimised whatever the build. The planet operations then take 0.55 to 1.3 times as long as with upstream's 466 terms. Accelerate rounds differently and adds the terms in another order, so that build does not compute the doubles other builds do: at 100,001 instants spread over the accepted time range, the heliocentric positions of the eight planets were within 9.4e-12 AU of an optimised arm64 build's, and the velocities within 8.4e-14 AU per day. Each site carries a "series cosine" comment.
-
-13. **Nutation series.** `iau2000b` sums all 77 terms of the IAU 2000B nutation series (McCarthy and Luzum, 2003), where upstream kept the five largest. The owner approved the table in issue #10. The 72 terms upstream dropped move nutation in longitude by up to 0.27 arcseconds, far inside the accuracy contract, but they change its rate by 0.033 arcseconds per day, and that moves the instant a planet's longitude rate is zero. Over 1900–2100, with the planet series of patch 11, stations with five terms were up to 19 s (Mercury), 38 s (Venus), 122 s (Mars), 496 s (Jupiter), 1,007 s (Saturn), 2,024 s (Uranus) and 2,898 s (Neptune) from where all 77 put them. No shorter series does: the 50 terms with the largest rates still leave 5 to 23 s on Jupiter through Neptune. `nut_term` is the published table, a row per term in the published order and units (`NUT_TERM`); nothing else is committed. The 77 arguments pair one of 14 multiples of l and l′ with one of 18 multiples of F, D and Ω, so the routine takes the cosine and sine of the five angles once, with the polynomials of patch 12, builds those 32 from them by the angle addition formulas (`NUT_MUL`), and gives each term one more application of the formulas instead of a cosine and a sine of its own. It reduces each angle by subtracting `rint` of its value in turns, where upstream called `fmod`; like upstream's, the result is finite for every finite time. It is within 4e-10 arcseconds of the published routine's term-by-term sum over the accepted time range (8e-12 within a century of J2000), and an unoptimised build computes the same doubles as an optimised one. On Apple silicon at `-Os` it takes 110 ns at every time; upstream's five terms took 80 ns when successive times were 15 minutes apart and 145 ns when they were scattered over two centuries, because the C library's `fmod`, `sin` and `cos` cost more on unfamiliar arguments. Operations that use it took 0.89 to 1.02 times as long as before. A Debug build compiles the routine at `-O0`, where it takes 570 to 590 ns against upstream's 140 to 240: sidereal time alone took 2.9 times as long, the Sun's position and the seasons search 1.4 times, and the other Moon, planet, rise and set and eclipse operations measured 1.06 to 1.2 times. Accelerate does not help here as it does in patch 12: for 77 terms its calls took as long as the inline code. `iau2000b` is defined below the series cosine, which it uses, with a declaration where upstream defined it, and `ASEC360`, which nothing else used, is removed. `NutationTests` checks it against the term-by-term sum and against SOFA's test value. Each site carries a "nutation series" comment.
+12. **Nutation series.** `EngineNutation.swift` sums all 77 terms of the IAU 2000B nutation series (McCarthy and Luzum, 2003) where upstream kept the five largest. The 77 arguments pair one of 14 multiples of `l` and `l′` with one of 18 multiples of `F`, `D`, and `Ω`: the five fundamental angles are reduced by whole turns with `rint` (keeping extreme finite times finite), evaluated once, and combined by angle addition. Release and non-Apple builds evaluate the sum with FMA-contracted `SIMD2<Double>` sharing `EngineVsop.seriesHalfCos`/`seriesHalfSinc`; Apple Debug builds batch the 77 terms with `vvsincos`, `vDSP_vindexD`, `vDSP_zvmulD`, and `vDSP_dotprD`. `NutationTests` checks the result against the published term-by-term sum and SOFA's reference test value.
 
 ## Selecting planet series terms
 
-Nothing is committed but the tables: no VSOP87 files and no scripts. The terms in the tables were selected this way:
+Nothing is committed but the tables: no VSOP87 files and no scripts. The terms in `EngineVsopTables.swift` were selected this way:
 
 1. The reference events came from the complete VSOP87B series: over 1900–2100, every station of Mercury through Neptune, every time one of them is 17′, 8.5° or 17° from the Sun in longitude, and every sign ingress of the Sun, Mercury, Venus and Mars. Longitudes are geocentric and corrected for light time.
 2. Each VSOP87B term was scored by the change in those event times that dropping it alone causes, as a root mean square over the events of one planet and one kind. A term's score is its largest such value. An Earth term was scored against every planet's events and the Sun's.
@@ -93,64 +59,28 @@ Nothing is committed but the tables: no VSOP87 files and no scripts. The terms i
 
 4. Each kept term is its amplitude, phase and frequency columns exactly as the file prints them, in file order within each series.
 
-The largest frequency in the tables is 316,428 radians per millennium. `SERIES_WRAP` is valid while a frequency times 4 millennia stays below 6.5e6 radians, which holds for frequencies up to 1.6e6. More terms cost time in proportion, and a geocentric position evaluates the Earth's series and the planet's three times each.
+The largest frequency in the tables is 316,428 radians per millennium. `seriesWrap` is valid while a frequency times 4 millennia stays below 6.5e6 radians, which holds for frequencies up to 1.6e6.
 
 ## Refreshing the Delta T table
 
-Refresh `DeltaTObserved` in `astronomy.c` before each release, so the table ends about a year past the release date. Nothing is committed but the table: no data files or scripts.
+Refresh `ObservedTable` in `Sources/AstronomyKit/Engine/EngineTime.swift` before each release, so the table ends about a year past the release date. Nothing is committed but the table: no data files or scripts.
 
 1. Download the IERS EOP 20 C04 series (`https://hpiers.obspm.fr/iers/eop/eopc04/eopc04.1962-now`) and the rapid series with predictions (`https://maia.usno.navy.mil/ser7/finals2000A.all`).
 2. For each day, Delta T = 32.184 s + (TAI − UTC) − (UT1 − UTC), taking UT1 − UTC from C04 where it exists and from finals2000A after it. TAI − UTC is 37 s since 2017; earlier values are in the IERS Bulletin C history.
 3. For each Julian epoch Y.0 from 1962.0 to the last whole year the predictions reach, interpolate Delta T linearly at UT days since J2000 = 365.25 (Y − 2000), and write it to 3 decimals.
-4. Append the new entries and update the retrieval date in the comment above the table. Earlier entries change only if IERS revised C04. Update the table's last year in the three places that state it: the `Astronomy_DeltaT_Observed` doc comment, the `DeltaTModel.observed` documentation, and `tableEnd` in `DeltaTObservedTests`.
+4. Append the new entries, update `observedCount` and the retrieval date comment in `EngineTime.swift`, and update the last year stated in `DeltaTModel.observed` (`AstronomyKit.swift`) and `tableEnd` in `DeltaTObservedTests`.
 5. Run `DeltaTObservedTests`, and bump `AstronomyConfig.ephemerisVersion` at release, since results change.
-
-## Updating from upstream
-
-1. **Pick the target upstream commit.** Note its full hash and date.
-
-2. **Diff, don't blind-copy.** Fetch upstream `source/c/astronomy.c` and
-   `astronomy.h` at the target commit and diff against the current vendored
-   files so you can see exactly what changed and re-apply the local patches
-   cleanly:
-
-   ```sh
-   # from a checkout of the upstream repo at the target commit
-   diff -u path/to/upstream/source/c/astronomy.c \
-           Sources/CLibAstronomy/astronomy.c
-   ```
-
-3. **Apply the upstream changes**, then **re-apply the local patches** above
-   (or, if upstream has adopted equivalent thread-safety fixes, confirm that and
-   note it). The patch sites are marked in context by the vendoring note; search
-   for `pluto_cache_mutex`, `DeltaTFunc`, `Astronomy_DeltaT_Observed`, `extreme-input guards`, `accepted time range`, `degenerate Lagrange inputs`, `series cosine`, and the counter names. The planet series are the `vsop_lon_`, `vsop_lat_` and `vsop_rad_` tables, which an upstream copy replaces with upstream's 466 terms; the count for each body is in "Selecting planet series terms".
-
-4. **Refresh the vendoring note** at the top of `astronomy.c`: update the
-   upstream commit hash and date, and adjust the patch list if anything changed.
-
-5. **Update `include/astronomy.h`** the same way if the header changed. Check
-   whether any new/renamed C symbols need Swift wrappers or affect existing ones.
-
-6. **Verify** (see below).
-
-7. **Tag and release.** Tag `X.Y.Z`, bump `AstronomyConfig.ephemerisVersion` if any calculated value changed, and describe the change in the GitHub release. Releases are the only change record.
 
 ## Verification
 
-Run the full suite — the JPL/Audit accuracy tests are the correctness gate, and
-the ThreadSanitizer run guards the local patches:
+Run the full suite — the JPL/Audit accuracy tests are the correctness gate, and ThreadSanitizer guards the concurrent engine state:
 
 ```sh
 touch .dev-tooling          # enable dev tooling for local builds
 swift package resolve
 swift build
 swift test                  # all suites, incl. JPLValidationTests / AuditValidationTests
-swift test --sanitize=thread  # exercises the Pluto / Delta T / counter patches
+swift test --sanitize=thread  # exercises concurrent Pluto cache and Delta T swaps
 ```
 
-The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert against
-JPL Horizons and audit reference positions to roughly ±1 arcminute; a regression
-there means the vendored math changed and needs investigation before release.
-`EventTimingTests` holds nine station, solar band and equinox times of 2026–2027 to within 10 seconds of JPL Horizons, and four Jupiter and Saturn stations to within 20; they depend on the longer planet series (patch 11) and the full nutation series (patch 13).
-CI runs these jobs plus release-configuration and per-platform builds on every
-pull request.
+The accuracy suites (`JPLValidationTests`, `AuditValidationTests`) assert against JPL Horizons and audit reference positions to roughly ±1 arcminute. `EventTimingTests` holds nine station, solar band and equinox times of 2026–2027 to within 10 seconds of JPL Horizons, and four Jupiter and Saturn stations to within 20; they depend on the longer planet series (item 10) and the full nutation series (item 12). CI runs these jobs plus release-configuration and per-platform builds on every pull request.

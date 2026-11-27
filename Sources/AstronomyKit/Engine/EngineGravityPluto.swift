@@ -499,10 +499,11 @@ enum EngineGravityPluto {
         } else {
             let segIndex = clampIndex((tt - minTT) / plutoTimeStep, count: plutoNumStates - 1)
             let seg = PlutoCache.shared.segment(at: segIndex)
-            let steps = seg.steps
-            let left = clampIndex((tt - steps[0].tt) / plutoDt, count: plutoNSteps - 1)
-            let s1 = steps[left]
-            let s2 = steps[left &+ 1]
+            let (s1, s2): (EngineGravCalc, EngineGravCalc) = withExtendedLifetime(seg) {
+                let steps = seg.steps
+                let left = clampIndex((tt - steps[0].tt) / plutoDt, count: plutoNSteps - 1)
+                return (steps[left], steps[left &+ 1])
+            }
 
             let ax = (s1.a.x + s2.a.x) / 2.0
             let ay = (s1.a.y + s2.a.y) / 2.0

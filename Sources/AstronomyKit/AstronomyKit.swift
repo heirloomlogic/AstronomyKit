@@ -2,8 +2,8 @@
 //  AstronomyKit.swift
 //  AstronomyKit
 //
-//  AstronomyKit wraps the [Astronomy Engine](https://github.com/cosinekitty/astronomy) library by
-//  Don Cross, exposing the underlying C functionality through idiomatic Swift APIs for calculating:
+//  AstronomyKit ports the [Astronomy Engine](https://github.com/cosinekitty/astronomy) library by
+//  Don Cross to pure Swift, providing idiomatic APIs for calculating:
 //
 //  - Positions for the Sun, Moon, planets, and Jupiter's moons
 //  - Moon phase angles, quarters, illumination, and libration
@@ -37,8 +37,6 @@
 //  print(mars)
 //  ```
 //
-
-import CLibAstronomy
 
 // MARK: - Delta T Models
 
@@ -84,7 +82,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTObserved(universalTime: Double) -> Double {
-        Astronomy_DeltaT_Observed(universalTime)
+        EngineTime.deltaTObserved(ut: universalTime)
     }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
@@ -93,7 +91,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTEspenakMeeus(universalTime: Double) -> Double {
-        Astronomy_DeltaT_EspenakMeeus(universalTime)
+        EngineTime.deltaTEspenakMeeus(ut: universalTime)
     }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
@@ -102,7 +100,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTJplHorizons(universalTime: Double) -> Double {
-        Astronomy_DeltaT_JplHorizons(universalTime)
+        EngineTime.deltaTJplHorizons(ut: universalTime)
     }
 
     /// Sets the Delta T model used for all subsequent calculations.
@@ -118,14 +116,7 @@ public enum AstronomyConfig {
     ///
     /// - Parameter model: The Delta T model to use.
     public static func setDeltaTModel(_ model: DeltaTModel) {
-        switch model {
-        case .observed:
-            Astronomy_SetDeltaTFunction(Astronomy_DeltaT_Observed)
-        case .espenakMeeus:
-            Astronomy_SetDeltaTFunction(Astronomy_DeltaT_EspenakMeeus)
-        case .jplHorizons:
-            Astronomy_SetDeltaTFunction(Astronomy_DeltaT_JplHorizons)
-        }
+        EngineTime.setDeltaTModel(model)
     }
 
     /// Frees all dynamic memory allocated by the Astronomy Engine.

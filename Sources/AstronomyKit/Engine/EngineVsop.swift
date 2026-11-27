@@ -19,7 +19,7 @@ import Musl
 #if ASTRONOMYKIT_SERIES_ACCELERATE && canImport(Accelerate)
 import Accelerate
 
-private enum VsopDebugScratch {
+enum VsopDebugScratch {
     /// Maximum contiguous slot span across all 8 planets is Mars (298); 304 keeps 16-byte alignment.
     static let maxSpan = 304
 
@@ -36,13 +36,13 @@ private enum VsopDebugScratch {
         if let existing = pthread_getspecific(key) {
             return existing.assumingMemoryBound(to: Double.self)
         }
-        let byteCount = maxSpan * 3 * MemoryLayout<Double>.stride
-        guard let raw = malloc(byteCount) else { return nil }
+        let count = maxSpan * 3
+        guard let raw = malloc(count * MemoryLayout<Double>.stride) else { return nil }
         guard pthread_setspecific(key, raw) == 0 else {
             free(raw)
             return nil
         }
-        return raw.assumingMemoryBound(to: Double.self)
+        return raw.bindMemory(to: Double.self, capacity: count)
     }
 }
 #endif
@@ -91,7 +91,7 @@ enum EngineVsop {
     }
 
     @inline(__always)
-    private static func seriesHalfCos(_ w: SIMD2<Double>) -> SIMD2<Double> {
+    static func seriesHalfCos(_ w: SIMD2<Double>) -> SIMD2<Double> {
         var r = SIMD2<Double>(repeating: 0x1.9f23c5f3847cbp-61)
         r = SIMD2<Double>(repeating: -0x1.9350a435543dbp-51).addingProduct(w, r)
         r = SIMD2<Double>(repeating: 0x1.1eecdf3979d83p-41).addingProduct(w, r)
@@ -104,7 +104,7 @@ enum EngineVsop {
     }
 
     @inline(__always)
-    private static func seriesHalfSinc(_ w: SIMD2<Double>) -> SIMD2<Double> {
+    static func seriesHalfSinc(_ w: SIMD2<Double>) -> SIMD2<Double> {
         var r = SIMD2<Double>(repeating: 0x1.88386468b9715p-65)
         r = SIMD2<Double>(repeating: -0x1.ae439ef7766b1p-55).addingProduct(w, r)
         r = SIMD2<Double>(repeating: 0x1.6123ccd995369p-45).addingProduct(w, r)
