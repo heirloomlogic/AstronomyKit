@@ -57,7 +57,7 @@ extension MoonPhase: CustomStringConvertible {
 // MARK: - Moon Quarter
 
 /// A lunar quarter event (the time when a specific moon phase occurs).
-public struct MoonQuarter: Sendable, Equatable {
+public struct MoonQuarter: Sendable, Equatable, Hashable {
     /// The phase of the Moon.
     public let phase: MoonPhase
 

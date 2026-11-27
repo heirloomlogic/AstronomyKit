@@ -52,7 +52,7 @@ extension NodeKind: CustomStringConvertible {
 /// let node = try Moon.searchNode(after: .now)
 /// print("\(node.kind.symbol) \(node.kind.name) at \(node.time)")
 /// ```
-public struct LunarNode: Sendable, Equatable {
+public struct LunarNode: Sendable, Equatable, Hashable {
     /// The type of node crossing.
     public let kind: NodeKind
 

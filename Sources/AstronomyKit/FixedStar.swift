@@ -41,7 +41,7 @@
 ///
 /// Calculations are stateless and operate directly on the star's coordinates,
 /// so any number of stars can be evaluated concurrently without locking.
-public struct FixedStar: Sendable, Hashable {
+public struct FixedStar: Sendable, Equatable, Hashable {
     // MARK: - Properties
 
     /// The star's display name.

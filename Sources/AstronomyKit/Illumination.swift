@@ -21,7 +21,7 @@ import Foundation
 /// print("Venus magnitude: \(venus.magnitude)")
 /// print("Illuminated: \(Int(venus.phaseFraction * 100))%")
 /// ```
-public struct Illumination: Sendable, Equatable {
+public struct Illumination: Sendable, Equatable, Hashable {
     /// The date and time of the observation.
     public let time: AstroTime
 

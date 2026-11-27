@@ -21,7 +21,7 @@ import Foundation
 /// print("Pressure: \(atm.pressure) mbar")
 /// print("Temperature: \(atm.temperature)°C")
 /// ```
-public struct Atmosphere: Sendable, Equatable {
+public struct Atmosphere: Sendable, Equatable, Hashable {
     /// The atmospheric pressure in millibars.
     ///
     /// At sea level, this is approximately 1013.25 mbar.

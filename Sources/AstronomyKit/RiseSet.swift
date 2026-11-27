@@ -8,12 +8,12 @@
 // MARK: - Direction
 
 /// The direction of motion for rise/set searches.
-public enum RiseSetDirection: Int32, Sendable {
+public enum RiseSetDirection: Sendable, Equatable, Hashable, CaseIterable {
     /// Rising above the horizon.
-    case rise = 1
+    case rise
 
     /// Setting below the horizon.
-    case set = -1
+    case set
 }
 
 // MARK: - Rise/Set Results
@@ -150,7 +150,7 @@ extension CelestialBody {
 // MARK: - Hour Angle Search
 
 /// The result of an hour angle search.
-public struct HourAngleEvent: Sendable, Equatable {
+public struct HourAngleEvent: Sendable, Equatable, Hashable {
     /// The time when the body reaches the specified hour angle.
     public let time: AstroTime
 
@@ -217,7 +217,7 @@ extension CelestialBody {
 // MARK: - Daily Events
 
 /// A collection of daily rise, set, and culmination times for a body.
-public struct DailyEvents: Sendable {
+public struct DailyEvents: Sendable, Equatable, Hashable {
     /// The celestial body.
     public let body: CelestialBody
 

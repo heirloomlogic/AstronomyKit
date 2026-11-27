@@ -215,7 +215,7 @@ enum EngineApsis {
         var i = 0
         while i < npoints {
             let ut = t1.universalTime + Double(i) * interval
-            let sampleTime = AstroTime(ut: ut)
+            let sampleTime = AstroTime(ut: ut, deltaT: startTime.deltaTModel)
             let dist = try EnginePositions.helioDistance(of: body, at: sampleTime)
             if i == 0 {
                 maxDist = dist

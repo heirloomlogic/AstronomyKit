@@ -110,6 +110,46 @@ struct AstroTimeTests {
             // Allow 1 second tolerance for test execution timing
             #expect(timeDate.timeIntervalSince1970 >= before.timeIntervalSince1970 - 1)
             #expect(timeDate.timeIntervalSince1970 <= after.timeIntervalSince1970 + 1)
+            #expect(time.deltaTModel == .observed)
+        }
+
+        @Test("Explicit DeltaTModel carried through initializers and arithmetic", arguments: DeltaTModel.allCases)
+        func explicitDeltaTModel(model: DeltaTModel) {
+            let fromDate = AstroTime(Date(timeIntervalSince1970: 1_800_000_000), deltaT: model)
+            #expect(fromDate.deltaTModel == model)
+
+            let fromComponents = AstroTime(year: 2_027, month: 6, day: 21, deltaT: model)
+            #expect(fromComponents.deltaTModel == model)
+            let expectedTT =
+                fromComponents.universalTime
+                + model.deltaT(universalTime: fromComponents.universalTime) / 86_400
+            #expect(fromComponents.terrestrialTime == expectedTT)
+
+            let fromUT = AstroTime(ut: 9_861.75, deltaT: model)
+            #expect(fromUT.deltaTModel == model)
+            #expect(fromUT.terrestrialTime == 9_861.75 + model.deltaT(universalTime: 9_861.75) / 86_400)
+
+            let fromTT = AstroTime(tt: expectedTT, deltaT: model)
+            #expect(fromTT.deltaTModel == model)
+            #expect(fromTT.terrestrialTime == expectedTT)
+            #expect(abs(fromTT.universalTime - fromComponents.universalTime) < 1e-11)
+
+            let now = AstroTime.now(deltaT: model)
+            #expect(now.deltaTModel == model)
+
+            #expect(fromComponents.addingDays(5).deltaTModel == model)
+            #expect(fromComponents.addingHours(12).deltaTModel == model)
+            #expect(fromComponents.addingTerrestrialDays(0.5).deltaTModel == model)
+        }
+
+        @Test("Equatable, Comparable, Hashable compare universalTime regardless of deltaTModel")
+        func equalityAcrossDeltaTModels() {
+            let obs = AstroTime(ut: 9_861.75, deltaT: .observed)
+            let em = AstroTime(ut: 9_861.75, deltaT: .espenakMeeus)
+            #expect(obs.terrestrialTime != em.terrestrialTime)
+            #expect(obs == em)
+            #expect(!(obs < em) && !(em < obs))
+            #expect(obs.hashValue == em.hashValue)
         }
     }
 

@@ -41,7 +41,7 @@ public enum EclipseKind: Sendable, Equatable, Hashable {
 // MARK: - Lunar Eclipse
 
 /// Information about a lunar eclipse.
-public struct LunarEclipse: Sendable, Equatable {
+public struct LunarEclipse: Sendable, Equatable, Hashable {
     /// The type of lunar eclipse.
     public let kind: EclipseKind
 
@@ -71,7 +71,7 @@ extension LunarEclipse: CustomStringConvertible {
 // MARK: - Global Solar Eclipse
 
 /// Information about a solar eclipse as seen globally.
-public struct GlobalSolarEclipse: Sendable, Equatable {
+public struct GlobalSolarEclipse: Sendable, Equatable, Hashable {
     /// The type of solar eclipse.
     public let kind: EclipseKind
 
@@ -104,7 +104,7 @@ extension GlobalSolarEclipse: CustomStringConvertible {
 // MARK: - Eclipse Event
 
 /// A specific moment during an eclipse with the Sun's altitude.
-public struct EclipseEvent: Sendable, Equatable {
+public struct EclipseEvent: Sendable, Equatable, Hashable {
     /// The date and time of the event.
     public let time: AstroTime
 
@@ -138,7 +138,7 @@ public struct EclipseEvent: Sendable, Equatable {
 /// print("Eclipse type: \(eclipse.kind)")
 /// print("Obscuration: \(Int(eclipse.obscuration * 100))%")
 /// ```
-public struct LocalSolarEclipse: Sendable, Equatable {
+public struct LocalSolarEclipse: Sendable, Equatable, Hashable {
     /// The type of solar eclipse.
     public let kind: EclipseKind
 

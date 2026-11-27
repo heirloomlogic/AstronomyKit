@@ -20,6 +20,6 @@ AstronomyKit is an on-device computation library. It performs no network I/O, re
 
 - Memory-safety bugs in unsafe pointer code within the computation engine (`Sources/AstronomyKit/Engine/`)
 - Numerical inputs that cause crashes, infinite loops, or undefined behavior
-- Thread-safety issues in shared state (e.g. the Pluto orbit cache or the Delta T model)
+- Thread-safety issues in shared state (the Pluto orbit cache)
 
 Reports on cosmetic issues, DocC content, or algorithmic limitations inherited from Astronomy Engine should be filed as regular GitHub issues.

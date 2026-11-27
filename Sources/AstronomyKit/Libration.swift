@@ -22,7 +22,7 @@ import Foundation
 /// print("Sub-Earth point: (\(libration.subEarthLatitude)°, \(libration.subEarthLongitude)°)")
 /// print("Moon distance: \(Int(libration.distanceKM)) km")
 /// ```
-public struct Libration: Sendable, Equatable {
+public struct Libration: Sendable, Equatable, Hashable {
     /// The ecliptic latitude of the sub-Earth point on the Moon's surface.
     ///
     /// This indicates how much the Moon is tilted toward or away from Earth,

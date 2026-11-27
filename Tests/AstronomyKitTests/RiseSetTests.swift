@@ -21,10 +21,10 @@ struct RiseSetTests {
 
     @Suite("RiseSetDirection")
     struct RiseSetDirectionTests {
-        @Test("Direction enum cases")
+        @Test("Direction enum cases are CaseIterable and Hashable")
         func directionCases() {
-            #expect(RiseSetDirection.rise.rawValue == 1)
-            #expect(RiseSetDirection.set.rawValue == -1)
+            #expect(RiseSetDirection.allCases == [.rise, .set])
+            #expect(Set(RiseSetDirection.allCases).count == 2)
         }
     }
 

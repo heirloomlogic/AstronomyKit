@@ -327,7 +327,7 @@ extension Horizon: CustomStringConvertible {
 // MARK: - Refraction
 
 /// Atmospheric refraction correction modes.
-public enum Refraction: Sendable {
+public enum Refraction: Sendable, Equatable, Hashable {
     /// No atmospheric refraction correction (airless).
     case none
 

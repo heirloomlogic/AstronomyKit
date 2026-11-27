@@ -58,6 +58,10 @@ public struct AstroTime: Sendable {
     var eps: Double
     var st: Double
 
+    /// The Delta T model used to convert between Universal Time and Terrestrial Time
+    /// for this instant and any times derived from it.
+    public let deltaTModel: DeltaTModel
+
     /// Universal Time days since noon on January 1, 2000.
     ///
     /// This value is appropriate for calculations involving Earth's rotation,
@@ -70,15 +74,31 @@ public struct AstroTime: Sendable {
     /// such as planetary orbits.
     public var terrestrialTime: Double { tt }
 
-    /// The current time.
+    /// The current time using the default ``DeltaTModel/observed`` model.
     public static var now: AstroTime {
-        EngineTime.currentTime()
+        EngineTime.currentTime(deltaT: .observed)
+    }
+
+    /// Returns the current time using the specified Delta T model.
+    ///
+    /// - Parameter deltaT: The Delta T model used to convert between UT and TT.
+    /// - Returns: An `AstroTime` for the current instant carrying `deltaT`.
+    public static func now(deltaT: DeltaTModel) -> AstroTime {
+        EngineTime.currentTime(deltaT: deltaT)
     }
 
     @inline(__always)
-    init(ut: Double, tt: Double, psi: Double = .nan, eps: Double = .nan, st: Double = .nan) {
+    init(
+        ut: Double,
+        tt: Double,
+        deltaTModel: DeltaTModel,
+        psi: Double = .nan,
+        eps: Double = .nan,
+        st: Double = .nan
+    ) {
         self.ut = ut
         self.tt = tt
+        self.deltaTModel = deltaTModel
         self.psi = psi
         self.eps = eps
         self.st = st
@@ -90,9 +110,11 @@ public struct AstroTime: Sendable {
 
     /// Creates a time from a Foundation `Date`.
     ///
-    /// - Parameter date: The date to convert.
-    public init(_ date: Date) {
-        self.init(ut: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400)
+    /// - Parameters:
+    ///   - date: The date to convert.
+    ///   - deltaT: The Delta T model used to derive Terrestrial Time. Defaults to ``DeltaTModel/observed``.
+    public init(_ date: Date, deltaT: DeltaTModel = .observed) {
+        self.init(ut: (date.timeIntervalSince1970 - Self.j2000UnixOffset) / 86_400, deltaT: deltaT)
     }
 
     /// Creates a time from calendar components.
@@ -104,6 +126,7 @@ public struct AstroTime: Sendable {
     ///   - hour: The hour (0-23). Defaults to 0.
     ///   - minute: The minute (0-59). Defaults to 0.
     ///   - second: The second (0.0-59.999...). Defaults to 0.
+    ///   - deltaT: The Delta T model used to derive Terrestrial Time. Defaults to ``DeltaTModel/observed``.
     ///
     /// Out-of-range components are tolerated and treated as calendar
     /// arithmetic (for example, February 31 rolls over into March).
@@ -117,7 +140,8 @@ public struct AstroTime: Sendable {
         day: Int,
         hour: Int = 0,
         minute: Int = 0,
-        second: Double = 0
+        second: Double = 0,
+        deltaT: DeltaTModel = .observed
     ) {
         self = EngineTime.makeTime(
             year: year,
@@ -125,30 +149,35 @@ public struct AstroTime: Sendable {
             day: day,
             hour: hour,
             minute: minute,
-            second: second
+            second: second,
+            deltaT: deltaT
         )
     }
 
     /// Creates a time from Universal Time days since J2000.
     ///
-    /// - Parameter ut: Days since noon on January 1, 2000 (UTC).
-    public init(ut: Double) {
-        self = EngineTime.timeFromDays(ut)
+    /// - Parameters:
+    ///   - ut: Days since noon on January 1, 2000 (UTC).
+    ///   - deltaT: The Delta T model used to derive Terrestrial Time. Defaults to ``DeltaTModel/observed``.
+    public init(ut: Double, deltaT: DeltaTModel = .observed) {
+        self = EngineTime.timeFromDays(ut, deltaT: deltaT)
     }
 
     /// Creates a time from Terrestrial Time days since J2000.
     ///
     /// Terrestrial Time is used for calculations not involving Earth's rotation
     /// (planetary orbits, eclipses, etc.). This initializer is the inverse of
-    /// ``init(ut:)`` — it starts from a TT value and derives the corresponding UT.
+    /// ``init(ut:deltaT:)`` — it starts from a TT value and derives the corresponding UT.
     ///
     /// ``terrestrialTime`` is `tt` exactly for any finite `tt`. Where the Delta T model
     /// steps forward, no UT has a TT inside the step, and the model's TT for
     /// ``universalTime`` is within the step of `tt`.
     ///
-    /// - Parameter tt: Terrestrial Time days since noon on January 1, 2000.
-    public init(tt: Double) {
-        self = EngineTime.timeFromTT(tt)
+    /// - Parameters:
+    ///   - tt: Terrestrial Time days since noon on January 1, 2000.
+    ///   - deltaT: The Delta T model used to derive Universal Time. Defaults to ``DeltaTModel/observed``.
+    public init(tt: Double, deltaT: DeltaTModel = .observed) {
+        self = EngineTime.timeFromTT(tt, deltaT: deltaT)
     }
 
     /// Converts this time to a Foundation `Date`.
@@ -157,6 +186,8 @@ public struct AstroTime: Sendable {
     }
 
     /// Returns a new time by adding the specified number of days.
+    ///
+    /// Preserves ``deltaTModel`` when deriving Terrestrial Time for the returned instant.
     ///
     /// - Parameter days: The number of days to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given days.
@@ -170,9 +201,9 @@ public struct AstroTime: Sendable {
     /// T model, so an offset across a point where the model's pieces meet with a step
     /// (Espenak–Meeus steps back 0.088 seconds in January 1900) moves TT by `days` plus or
     /// minus that step. This method adds `days` to both ``universalTime`` and
-    /// ``terrestrialTime``, so TT moves by exactly `days` and neither clock steps. Its UT
-    /// differs from the Delta T model's UT for the new TT by Delta T's change over `days`,
-    /// under 1e-7 of `days`.
+    /// ``terrestrialTime`` while preserving ``deltaTModel``, so TT moves by exactly `days`
+    /// and neither clock steps. Its UT differs from the Delta T model's UT for the new TT by
+    /// Delta T's change over `days`, under 1e-7 of `days`.
     ///
     /// Use it for short offsets around a time, such as the samples of a numerical
     /// derivative; use ``addingDays(_:)`` to step through civil time.
@@ -185,6 +216,8 @@ public struct AstroTime: Sendable {
     }
 
     /// Returns a new time by adding the specified number of hours.
+    ///
+    /// Preserves ``deltaTModel``.
     ///
     /// - Parameter hours: The number of hours to add. Can be negative.
     /// - Returns: A new `AstroTime` offset by the given hours.
@@ -241,7 +274,11 @@ public struct AstroTime: Sendable {
 // MARK: - Protocol Conformances
 
 extension AstroTime: Equatable {
-    /// Returns whether two `AstroTime` values represent the same instant.
+    /// Returns whether two `AstroTime` values represent the same Universal Time instant.
+    ///
+    /// Equality compares ``universalTime`` only (ignoring ``deltaTModel`` and internal
+    /// nutation/sidereal caches) so it remains consistent with `Comparable` ordering
+    /// and `Codable` representation.
     public static func == (lhs: AstroTime, rhs: AstroTime) -> Bool {
         lhs.universalTime == rhs.universalTime
     }
@@ -255,7 +292,7 @@ extension AstroTime: Comparable {
 }
 
 extension AstroTime: Hashable {
-    /// Hashes the essential components of this time value.
+    /// Hashes ``universalTime`` to match `Equatable`.
     public func hash(into hasher: inout Hasher) {
         hasher.combine(universalTime)
     }
@@ -271,14 +308,17 @@ extension AstroTime: CustomStringConvertible {
 // MARK: - Codable
 
 extension AstroTime: Codable {
-    /// Creates a time by decoding a Universal Time value.
+    /// Creates a time by decoding a Universal Time value using ``DeltaTModel/observed``.
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let ut = try container.decode(Double.self)
-        self.init(ut: ut)
+        self.init(ut: ut, deltaT: .observed)
     }
 
     /// Encodes this time as its Universal Time value.
+    ///
+    /// ``deltaTModel`` is not included in the encoded representation; decoded values
+    /// default to ``DeltaTModel/observed``.
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         try container.encode(universalTime)

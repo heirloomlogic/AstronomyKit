@@ -6,7 +6,7 @@
 //
 
 /// The four seasonal events (equinoxes and solstices) for a calendar year.
-public struct Seasons: Sendable, Equatable {
+public struct Seasons: Sendable, Equatable, Hashable {
     /// The March equinox (spring in the Northern Hemisphere).
     public let marchEquinox: AstroTime
 
@@ -21,14 +21,16 @@ public struct Seasons: Sendable, Equatable {
 
     /// Calculates the seasonal events for a given year.
     ///
-    /// - Parameter year: The calendar year (e.g., 2025).
+    /// - Parameters:
+    ///   - year: The calendar year (e.g., 2025).
+    ///   - deltaT: The Delta T model used to compute the event times. Defaults to ``DeltaTModel/observed``.
     /// - Returns: The four seasonal events for that year.
     /// - Throws: `AstronomyError` if the calculation fails.
-    public static func forYear(_ year: Int) throws -> Seasons {
+    public static func forYear(_ year: Int, deltaT: DeltaTModel = .observed) throws -> Seasons {
         guard Int32(exactly: year) != nil else {
             throw AstronomyError.invalidParameter
         }
-        return try EngineEvents.seasons(year: year)
+        return try EngineEvents.seasons(year: year, deltaT: deltaT)
     }
 
     /// Returns all four events as an array, in chronological order.

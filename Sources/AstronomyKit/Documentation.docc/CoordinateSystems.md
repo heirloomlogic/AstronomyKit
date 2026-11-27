@@ -117,7 +117,7 @@ let reverse = try forward.inverse
 let combined = try forward.combined(with: anotherRotation)
 
 // Pivot around an axis
-let rotated = try RotationMatrix.pivot(axis: 2, angle: 45.0)  // 45° around Z
+let rotated = try RotationMatrix.pivot(axis: .z, angle: 45.0)  // 45° around Z
 ```
 
 ## Vector Types

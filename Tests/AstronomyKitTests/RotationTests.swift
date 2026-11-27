@@ -15,16 +15,41 @@ struct RotationTests {
 
     @Suite("Pivot Validation")
     struct PivotValidation {
-        @Test("Out-of-range axes throw invalidParameter", arguments: [-1, 3, Int.max])
-        func invalidAxisThrows(axis: Int) {
-            #expect(throws: AstronomyError.invalidParameter) {
-                _ = try RotationMatrix.pivot(axis: axis, angle: 30)
+        @Test("Non-finite angles throw invalidParameter", arguments: [Double.nan, .infinity, -.infinity])
+        func nonFiniteAngleThrows(angle: Double) {
+            for axis in RotationMatrix.Axis.allCases {
+                #expect(throws: AstronomyError.invalidParameter) {
+                    _ = try RotationMatrix.pivot(axis: axis, angle: angle)
+                }
             }
         }
 
-        @Test("Valid axes are accepted", arguments: [0, 1, 2])
-        func validAxisSucceeds(axis: Int) throws {
-            _ = try RotationMatrix.pivot(axis: axis, angle: 30)
+        @Test("All typed axes are accepted", arguments: RotationMatrix.Axis.allCases)
+        func validAxisSucceeds(axis: RotationMatrix.Axis) throws {
+            let rotation = try RotationMatrix.pivot(axis: axis, angle: 30)
+            let inverse = try rotation.inverse
+            let combined = try rotation.combined(with: inverse)
+            #expect(abs(combined[0, 0] - 1) < 1e-12)
+            #expect(abs(combined[1, 1] - 1) < 1e-12)
+            #expect(abs(combined[2, 2] - 1) < 1e-12)
+        }
+
+        @Test("90-degree pivots follow the right-hand rule on each axis")
+        func rightHandedPivots() throws {
+            let rx = try RotationMatrix.pivot(axis: .x, angle: 90)
+            #expect(abs(rx[0, 0] - 1) < 1e-12)
+            #expect(abs(rx[1, 2] - 1) < 1e-12)
+            #expect(abs(rx[2, 1] - -1) < 1e-12)
+
+            let ry = try RotationMatrix.pivot(axis: .y, angle: 90)
+            #expect(abs(ry[1, 1] - 1) < 1e-12)
+            #expect(abs(ry[2, 0] - 1) < 1e-12)
+            #expect(abs(ry[0, 2] - -1) < 1e-12)
+
+            let rz = try RotationMatrix.pivot(axis: .z, angle: 90)
+            #expect(abs(rz[2, 2] - 1) < 1e-12)
+            #expect(abs(rz[0, 1] - 1) < 1e-12)
+            #expect(abs(rz[1, 0] - -1) < 1e-12)
         }
     }
 
@@ -48,7 +73,7 @@ struct RotationTests {
         func subscriptReadsAllElements() throws {
             // A 90° pivot about the z axis has a known, non-symmetric layout, so it
             // exercises each subscript branch distinctly.
-            let rotation = try RotationMatrix.pivot(axis: 2, angle: 90)
+            let rotation = try RotationMatrix.pivot(axis: .z, angle: 90)
 
             #expect(abs(rotation[0, 0] - 0) < 0.001)
             #expect(abs(rotation[0, 1] - 1) < 0.001)
@@ -84,7 +109,7 @@ struct RotationTests {
         @Test("Pivot around axis")
         func pivotAroundAxis() throws {
             // 360 degree rotation should return to identity
-            let rotation = try RotationMatrix.pivot(axis: 2, angle: 360)
+            let rotation = try RotationMatrix.pivot(axis: .z, angle: 360)
 
             #expect(abs(rotation[0, 0] - 1) < 0.001)
             #expect(abs(rotation[1, 1] - 1) < 0.001)
@@ -224,6 +249,16 @@ struct RotationTests {
             let ecliptic = try RotationMatrix.equatorialJ2000ToEcliptic()
 
             #expect(ecliptic != .identity)
+        }
+
+        @Test("Hashable")
+        func hashable() throws {
+            let r1 = try RotationMatrix.equatorialJ2000ToEcliptic()
+            let r2 = try RotationMatrix.equatorialJ2000ToEcliptic()
+            let set: Set<RotationMatrix> = [r1, r2, .identity]
+
+            #expect(set.count == 2)
+            #expect(Set(RotationMatrix.Axis.allCases).count == 3)
         }
 
         @Test("CustomStringConvertible")

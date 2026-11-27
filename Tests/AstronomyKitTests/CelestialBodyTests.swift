@@ -282,9 +282,9 @@ struct CelestialBodyTests {
             #expect(CelestialBody.allCases.count == 17)
         }
 
-        @Test("The former internal star slot is not a valid case")
+        @Test("Former internal star slot name is not a valid body")
         func starSlotRemoved() {
-            #expect(CelestialBody(rawValue: 101) == nil)
+            #expect(CelestialBody(name: "Star1") == nil)
         }
     }
 
@@ -351,25 +351,18 @@ struct CelestialBodyTests {
 
             #expect(body == decoded)
         }
-    }
 
-    // MARK: - Raw Values
+        @Test("Encodes as a single name string and rejects unknown names")
+        func encodesAsNameString() throws {
+            let data = try JSONEncoder().encode(CelestialBody.mars)
+            #expect(String(data: data, encoding: .utf8) == "\"Mars\"")
 
-    @Suite("Raw Values")
-    struct RawValueTests {
-        @Test("Raw values are consistent integers")
-        func rawValuesConsistent() {
-            #expect(CelestialBody.mercury.rawValue == 0)
-            #expect(CelestialBody.venus.rawValue == 1)
-            #expect(CelestialBody.earth.rawValue == 2)
-            #expect(CelestialBody.mars.rawValue == 3)
-        }
+            let lower = try JSONDecoder().decode(CelestialBody.self, from: Data("\"mars\"".utf8))
+            #expect(lower == .mars)
 
-        @Test("Can initialize from raw value")
-        func initFromRawValue() {
-            #expect(CelestialBody(rawValue: 0) == .mercury)
-            #expect(CelestialBody(rawValue: 9) == .sun)
-            #expect(CelestialBody(rawValue: 10) == .moon)
+            #expect(throws: DecodingError.self) {
+                _ = try JSONDecoder().decode(CelestialBody.self, from: Data("\"Vulcan\"".utf8))
+            }
         }
     }
 }

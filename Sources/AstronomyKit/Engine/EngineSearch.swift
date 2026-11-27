@@ -57,7 +57,7 @@ enum EngineSearch {
                 fm: fmid,
                 fb: f2
             ) {
-                let tq = AstroTime(ut: quad.t)
+                let tq = AstroTime(ut: quad.t, deltaT: t1.deltaTModel)
                 let fq = try function(tq)
                 if quad.dfdt != 0.0 {
                     var dtGuess = abs(fq / quad.dfdt)

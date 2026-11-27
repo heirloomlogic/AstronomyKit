@@ -20,7 +20,19 @@
 /// let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()
 /// let ecliptic = position.rotated(by: rotation)
 /// ```
-public struct RotationMatrix: Sendable, Equatable {
+public struct RotationMatrix: Sendable, Equatable, Hashable {
+    /// A principal coordinate axis for ``pivot(axis:angle:)``.
+    public enum Axis: Sendable, Equatable, Hashable, CaseIterable {
+        /// The x-axis.
+        case x
+
+        /// The y-axis.
+        case y
+
+        /// The z-axis.
+        case z
+    }
+
     let r00: Double
     let r01: Double
     let r02: Double
@@ -85,11 +97,11 @@ extension RotationMatrix {
     /// Creates a rotation that pivots around an axis.
     ///
     /// - Parameters:
-    ///   - axis: The axis to rotate around (0=x, 1=y, 2=z).
-    ///   - angle: The rotation angle in degrees.
+    ///   - axis: The coordinate axis to rotate around (``Axis/x``, ``Axis/y``, or ``Axis/z``).
+    ///   - angle: The rotation angle in degrees. Must be finite.
     /// - Returns: The rotation matrix.
-    /// - Throws: `AstronomyError` if the pivot fails.
-    public static func pivot(axis: Int, angle: Double) throws -> RotationMatrix {
+    /// - Throws: ``AstronomyError/invalidParameter`` if `angle` is not finite.
+    public static func pivot(axis: Axis, angle: Double) throws -> RotationMatrix {
         try EngineRotation.pivot(.identity, axis: axis, angle: angle)
     }
 }

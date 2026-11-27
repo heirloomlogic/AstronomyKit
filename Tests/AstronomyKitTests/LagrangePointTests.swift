@@ -31,13 +31,10 @@ struct LagrangePointTests {
             #expect(LagrangePointID.l5.name == "L5")
         }
 
-        @Test("Raw values are 1 through 5")
-        func rawValues() {
-            #expect(LagrangePointID.l1.rawValue == 1)
-            #expect(LagrangePointID.l2.rawValue == 2)
-            #expect(LagrangePointID.l3.rawValue == 3)
-            #expect(LagrangePointID.l4.rawValue == 4)
-            #expect(LagrangePointID.l5.rawValue == 5)
+        @Test("CaseIterable and Hashable cover all five points")
+        func allCasesAndHashable() {
+            #expect(LagrangePointID.allCases == [.l1, .l2, .l3, .l4, .l5])
+            #expect(Set(LagrangePointID.allCases).count == 5)
         }
     }
 

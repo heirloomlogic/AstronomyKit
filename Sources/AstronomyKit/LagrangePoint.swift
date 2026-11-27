@@ -8,21 +8,21 @@
 // MARK: - Lagrange Point ID
 
 /// Identifies one of the five Lagrange points.
-public enum LagrangePointID: Int32, Sendable, CaseIterable {
+public enum LagrangePointID: Sendable, Equatable, Hashable, CaseIterable {
     /// L1: Between the two bodies, closer to the smaller one.
-    case l1 = 1
+    case l1
 
     /// L2: Beyond the smaller body, opposite from the larger one.
-    case l2 = 2
+    case l2
 
     /// L3: Beyond the larger body, opposite from the smaller one.
-    case l3 = 3
+    case l3
 
     /// L4: 60° ahead of the smaller body in its orbit.
-    case l4 = 4
+    case l4
 
     /// L5: 60° behind the smaller body in its orbit.
-    case l5 = 5
+    case l5
 
     /// The human-readable name.
     public var name: String {
@@ -47,7 +47,7 @@ extension LagrangePointID: CustomStringConvertible {
 ///
 /// State vectors are used to describe the complete motion state of an object,
 /// including both where it is and how fast it's moving.
-public struct StateVector: Sendable, Equatable {
+public struct StateVector: Sendable, Equatable, Hashable {
     /// The position in AU.
     public let position: Vector3D
 

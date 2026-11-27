@@ -9,9 +9,6 @@ import Foundation
 
 /// Errors that can occur during astronomy calculations.
 public enum AstronomyError: Error, Equatable, Hashable, Sendable {
-    /// A placeholder indicating data is not yet initialized.
-    case notInitialized
-
     /// The celestial body was not valid for this operation.
     case invalidBody
 
@@ -49,25 +46,14 @@ public enum AstronomyError: Error, Equatable, Hashable, Sendable {
     /// Special-case logic for Neptune/Pluto apsis failed.
     case failApsis
 
-    /// A provided buffer is too small.
-    case bufferTooSmall
-
-    /// Memory allocation failed.
-    case outOfMemory
-
     /// Initial state vectors did not have matching times.
     case inconsistentTimes
-
-    /// An unknown error occurred.
-    case unknown(Int32)
 }
 
 extension AstronomyError: CustomStringConvertible {
     /// A human-readable description of the astronomy error.
     public var description: String {
         switch self {
-        case .notInitialized:
-            return "Data not initialized"
         case .invalidBody:
             return "Invalid celestial body"
         case .noConvergence:
@@ -90,14 +76,8 @@ extension AstronomyError: CustomStringConvertible {
             return "Invalid parameter value"
         case .failApsis:
             return "Failed to calculate apsis"
-        case .bufferTooSmall:
-            return "Buffer too small"
-        case .outOfMemory:
-            return "Out of memory"
         case .inconsistentTimes:
             return "State vectors have inconsistent times"
-        case .unknown(let code):
-            return "Unknown error (code: \(code))"
         }
     }
 }

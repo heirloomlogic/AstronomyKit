@@ -303,8 +303,12 @@ enum EngineRotation {
         )
     }
 
-    static func pivot(_ rotation: RotationMatrix, axis: Int, angle: Double) throws -> RotationMatrix {
-        guard (0...2).contains(axis), angle.isFinite else {
+    static func pivot(
+        _ rotation: RotationMatrix,
+        axis: RotationMatrix.Axis,
+        angle: Double
+    ) throws -> RotationMatrix {
+        guard angle.isFinite else {
             throw AstronomyError.invalidParameter
         }
         let radians = angle * EngineConstants.deg2Rad
@@ -313,7 +317,7 @@ enum EngineRotation {
 
         // Maintain right-hand rule: i x j = k where k = axis, i = (axis + 1) % 3, j = (axis + 2) % 3.
         switch axis {
-        case 0:
+        case .x:
             // i = 1, j = 2, k = 0
             return RotationMatrix(
                 r00: rotation.r00,
@@ -326,7 +330,7 @@ enum EngineRotation {
                 r21: c * rotation.r21 - s * rotation.r22,
                 r22: s * rotation.r21 + c * rotation.r22
             )
-        case 1:
+        case .y:
             // i = 2, j = 0, k = 1
             return RotationMatrix(
                 r00: s * rotation.r02 + c * rotation.r00,
@@ -339,8 +343,8 @@ enum EngineRotation {
                 r21: rotation.r21,
                 r22: c * rotation.r22 - s * rotation.r20
             )
-        default:
-            // axis == 2: i = 0, j = 1, k = 2
+        case .z:
+            // i = 0, j = 1, k = 2
             return RotationMatrix(
                 r00: c * rotation.r00 - s * rotation.r01,
                 r01: s * rotation.r00 + c * rotation.r01,

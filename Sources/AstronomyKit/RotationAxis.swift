@@ -21,7 +21,7 @@ import Foundation
 /// print("Mars north pole RA: \(axis.rightAscension) hours")
 /// print("Prime meridian spin: \(axis.spin)°")
 /// ```
-public struct RotationAxis: Sendable, Equatable {
+public struct RotationAxis: Sendable, Equatable, Hashable {
     /// The right ascension of the body's north pole in J2000 coordinates (hours).
     public let rightAscension: Double
 

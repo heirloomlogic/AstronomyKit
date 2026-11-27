@@ -77,19 +77,23 @@ Positions, states, distances, and the searches built on them accept a Terrestria
 
 A calculation that samples nearby times can throw within a short distance of either edge: light-travel correction looks back up to a few hours, the Moon's state vectors sample about a second either side, and searches step by days to years, sometimes backward before stepping forward. Creating an `AstroTime` outside the range is not an error; only the calculations reject it.
 
-### Delta T Configuration
+### Delta T Models
 
-The difference between TT and UT (called ΔT) varies over time and is estimated using a model. AstronomyKit defaults to ``DeltaTModel/observed``, a yearly table of IERS Earth-rotation values that is extrapolated beyond its last entry. You can switch to Espenak-Meeus or, for compatibility, JPL Horizons:
+The difference between TT and UT (called ΔT) varies over time and is estimated using a ``DeltaTModel``. Every ``AstroTime`` carries its own ``AstroTime/deltaTModel`` (defaulting to ``DeltaTModel/observed``, a yearly table of IERS Earth-rotation values extrapolated beyond its last entry), with no process-global mutable state. Time arithmetic and event searches propagate the input time's model automatically, so concurrent tasks can use different models safely.
 
 ```swift
-// Switch to JPL Horizons Delta T model
-AstronomyConfig.setDeltaTModel(.jplHorizons)
+// Create a time using the JPL Horizons Delta T model
+let jplTime = AstroTime(year: 2027, month: 6, day: 21, deltaT: .jplHorizons)
+let nextDay = jplTime.addingDays(1)  // Also uses .jplHorizons
 
-// Query Delta T for a specific time
-let deltaT = AstronomyConfig.deltaTObserved(universalTime: 0)  // Seconds at J2000
+// Current instant with an explicit model
+let nowEM = AstroTime.now(deltaT: .espenakMeeus)
 
-// Restore the default
-AstronomyConfig.setDeltaTModel(.observed)
+// Year-based seasonal events with an explicit model
+let seasons = try Seasons.forYear(2027, deltaT: .jplHorizons)
+
+// Query Delta T directly in seconds
+let deltaT = DeltaTModel.observed.deltaT(universalTime: 0)  // Seconds at J2000
 ```
 
 ### Sidereal Time
@@ -184,7 +188,7 @@ if let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer) {
 
 ## Codable Support
 
-Both types support `Codable` for persistence:
+Both types support `Codable` for persistence (`AstroTime` encodes its Universal Time value and decodes using ``DeltaTModel/observed``):
 
 ```swift
 let observer = Observer(latitude: 40.7, longitude: -74.0)

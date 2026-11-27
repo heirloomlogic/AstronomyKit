@@ -27,7 +27,7 @@ import Foundation
 /// print("Transit peak: \(transit.peak)")
 /// print("Transit ends: \(transit.finish)")
 /// ```
-public struct Transit: Sendable, Equatable {
+public struct Transit: Sendable, Equatable, Hashable {
     /// The transiting body (Mercury or Venus).
     public let body: CelestialBody
 

@@ -3,11 +3,8 @@
 //  AstronomyKit
 //
 //  Pure-Swift time conversions, Delta T models (Observed IERS table,
-//  Espenak-Meeus, JPL Horizons), atomic model dispatch, and TT/UT inversion.
+//  Espenak-Meeus, JPL Horizons), and TT/UT inversion.
 //
-
-import Foundation
-import Synchronization
 
 #if canImport(Darwin)
 import Darwin
@@ -50,30 +47,6 @@ enum EngineTime {
             buf.initialize(from: raw, count: raw.count)
             return ObservedTable(values: UnsafePointer(buf))
         }()
-    }
-
-    // Active Delta T model: 0 = observed, 1 = espenakMeeus, 2 = jplHorizons, 3 = custom.
-    // Built-in models use a single lock-free atomic acquire load on the hot path;
-    // the test-only custom callback is guarded by NSLock (TSan-instrumented on Linux and macOS).
-    private static let activeModel = Atomic<Int>(0)
-
-    private final class CustomCallbackBox: @unchecked Sendable {
-        static let shared = CustomCallbackBox()
-        private let lock = NSLock()
-        private var callback: (@Sendable (Double) -> Double)?
-
-        func set(_ fn: (@Sendable (Double) -> Double)?) {
-            lock.lock()
-            callback = fn
-            lock.unlock()
-        }
-
-        func get() -> (@Sendable (Double) -> Double)? {
-            lock.lock()
-            let fn = callback
-            lock.unlock()
-            return fn
-        }
     }
 
     // MARK: - Delta T Models
@@ -236,68 +209,36 @@ enum EngineTime {
 
     // MARK: - Model Dispatch
 
-    static func setDeltaTModel(_ model: DeltaTModel) {
-        let code: Int
+    static func deltaT(ut: Double, model: DeltaTModel) -> Double {
         switch model {
         case .observed:
-            code = 0
+            return deltaTObserved(ut: ut)
         case .espenakMeeus:
-            code = 1
+            return deltaTEspenakMeeus(ut: ut)
         case .jplHorizons:
-            code = 2
+            return deltaTJplHorizons(ut: ut)
         }
-        activeModel.store(code, ordering: .releasing)
     }
 
-    static func setCustomDeltaTFunction(_ function: (@Sendable (Double) -> Double)?) {
-        guard let function else {
-            activeModel.store(1, ordering: .releasing)
-            return
-        }
-        CustomCallbackBox.shared.set(function)
-        activeModel.store(3, ordering: .releasing)
-    }
-
-    @inline(never)
-    private static func customDeltaT(ut: Double) -> Double {
-        if let fn = CustomCallbackBox.shared.get() {
-            return fn(ut)
-        }
-        return deltaTEspenakMeeus(ut: ut)
-    }
-
-    @inline(__always)
-    static func terrestrialTime(ut: Double) -> Double {
-        let deltaT: Double
-        switch activeModel.load(ordering: .acquiring) {
-        case 0:
-            deltaT = deltaTObserved(ut: ut)
-        case 1:
-            deltaT = deltaTEspenakMeeus(ut: ut)
-        case 2:
-            deltaT = deltaTJplHorizons(ut: ut)
-        default:
-            deltaT = customDeltaT(ut: ut)
-        }
-        return ut + deltaT / secondsPerDay
+    static func terrestrialTime(ut: Double, model: DeltaTModel) -> Double {
+        ut + deltaT(ut: ut, model: model) / secondsPerDay
     }
 
     // MARK: - AstroTime Constructors & Arithmetic
 
-    @inline(__always)
-    static func timeFromDays(_ ut: Double) -> AstroTime {
-        AstroTime(ut: ut, tt: terrestrialTime(ut: ut))
+    static func timeFromDays(_ ut: Double, deltaT model: DeltaTModel) -> AstroTime {
+        AstroTime(ut: ut, tt: terrestrialTime(ut: ut, model: model), deltaTModel: model)
     }
 
-    static func timeFromTT(_ tt: Double) -> AstroTime {
+    static func timeFromTT(_ tt: Double, deltaT model: DeltaTModel) -> AstroTime {
         // Extreme-input guard: a non-finite TT never converges, and an oscillating
         // iterate never gets within 1e-12 days.
         guard tt.isFinite else {
-            return AstroTime(ut: .nan, tt: .nan)
+            return AstroTime(ut: .nan, tt: .nan, deltaTModel: model)
         }
 
         var ut = tt
-        var curTT = terrestrialTime(ut: ut)
+        var curTT = terrestrialTime(ut: ut, model: model)
         var oneBackUT = Double.nan
         var twoBackUT = Double.nan
         var iteration = 0
@@ -314,18 +255,18 @@ enum EngineTime {
             twoBackUT = oneBackUT
             oneBackUT = ut
             ut += err
-            curTT = terrestrialTime(ut: ut)
+            curTT = terrestrialTime(ut: ut, model: model)
             iteration &+= 1
         }
-        return AstroTime(ut: ut, tt: tt)
+        return AstroTime(ut: ut, tt: tt, deltaTModel: model)
     }
 
-    static func currentTime() -> AstroTime {
+    static func currentTime(deltaT model: DeltaTModel) -> AstroTime {
         var tv = timeval()
         gettimeofday(&tv, nil)
         let sec = Double(tv.tv_sec) + Double(tv.tv_usec) / 1.0e6
         let ut = (sec / secondsPerDay) - 10_957.5
-        return AstroTime(ut: ut, tt: terrestrialTime(ut: ut))
+        return AstroTime(ut: ut, tt: terrestrialTime(ut: ut, model: model), deltaTModel: model)
     }
 
     @inline(__always)
@@ -345,7 +286,8 @@ enum EngineTime {
         day: Int,
         hour: Int,
         minute: Int,
-        second: Double
+        second: Double,
+        deltaT model: DeltaTModel
     ) -> AstroTime {
         // Clamp components to Int32 before Int64 calendar arithmetic (matches AstroTime contract).
         let y = clampInt32(year)
@@ -367,17 +309,20 @@ enum EngineTime {
             + (Double(h) / 24.0)
             + (Double(min) / 1440.0)
             + (second / secondsPerDay)
-        return AstroTime(ut: ut, tt: terrestrialTime(ut: ut))
+        return AstroTime(ut: ut, tt: terrestrialTime(ut: ut, model: model), deltaTModel: model)
     }
 
-    @inline(__always)
     static func addDays(_ time: AstroTime, _ days: Double) -> AstroTime {
         let ut = time.ut + days
-        return AstroTime(ut: ut, tt: terrestrialTime(ut: ut))
+        return AstroTime(
+            ut: ut,
+            tt: terrestrialTime(ut: ut, model: time.deltaTModel),
+            deltaTModel: time.deltaTModel
+        )
     }
 
     @inline(__always)
     static func addTerrestrialDays(_ time: AstroTime, _ days: Double) -> AstroTime {
-        AstroTime(ut: time.ut + days, tt: time.tt + days)
+        AstroTime(ut: time.ut + days, tt: time.tt + days, deltaTModel: time.deltaTModel)
     }
 }

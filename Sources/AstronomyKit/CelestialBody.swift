@@ -24,57 +24,57 @@
 ///     print(body.name)
 /// }
 /// ```
-public enum CelestialBody: Int32, CaseIterable, Sendable {
+public enum CelestialBody: Sendable, Equatable, Hashable, CaseIterable {
     /// Mercury.
-    case mercury = 0
+    case mercury
 
     /// Venus.
-    case venus = 1
+    case venus
 
     /// The Earth (for heliocentric calculations).
-    case earth = 2
+    case earth
 
     /// Mars.
-    case mars = 3
+    case mars
 
     /// Jupiter.
-    case jupiter = 4
+    case jupiter
 
     /// Saturn.
-    case saturn = 5
+    case saturn
 
     /// Uranus.
-    case uranus = 6
+    case uranus
 
     /// Neptune.
-    case neptune = 7
+    case neptune
 
     /// Pluto.
-    case pluto = 8
+    case pluto
 
     /// The Sun.
-    case sun = 9
+    case sun
 
     /// The Moon.
-    case moon = 10
+    case moon
 
     /// The Earth-Moon Barycenter.
-    case earthMoonBarycenter = 11
+    case earthMoonBarycenter
 
     /// The Solar System Barycenter.
-    case solarSystemBarycenter = 12
+    case solarSystemBarycenter
 
     /// Io, moon of Jupiter.
-    case io = 21
+    case io
 
     /// Europa, moon of Jupiter.
-    case europa = 22
+    case europa
 
     /// Ganymede, moon of Jupiter.
-    case ganymede = 23
+    case ganymede
 
     /// Callisto, moon of Jupiter.
-    case callisto = 24
+    case callisto
 
     /// The human-readable name of this body.
     public var name: String {
@@ -178,8 +178,23 @@ extension CelestialBody: CustomStringConvertible {
 
 // MARK: - Codable
 
-extension CelestialBody: Codable {}
+extension CelestialBody: Codable {
+    /// Creates a celestial body by decoding its ``name`` string (case-insensitive).
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawName = try container.decode(String.self)
+        guard let body = CelestialBody(name: rawName) else {
+            throw DecodingError.dataCorruptedError(
+                in: container,
+                debugDescription: "Unknown CelestialBody name: \(rawName)"
+            )
+        }
+        self = body
+    }
 
-// MARK: - Hashable
-
-extension CelestialBody: Hashable {}
+    /// Encodes this celestial body as its ``name`` string.
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(name)
+    }
+}

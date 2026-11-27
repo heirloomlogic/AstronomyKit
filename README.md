@@ -38,7 +38,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "4.3.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "5.0.0")
 ]
 ```
 
@@ -246,10 +246,10 @@ print("Venus-Mars separation: \(angle)°")
 | Type | Description |
 |------|-------------|
 | `Apsis` | Perihelion/aphelion or perigee/apogee events |
-| `AstronomyConfig` | Ephemeris version, Delta T model selection, and cache reset |
+| `AstronomyConfig` | Ephemeris version, Delta T helpers, and cache reset |
 | `AstronomyError` | Error cases thrown by calculation and search APIs |
 | `AstroSearch` | Generic root-finding search and light-travel correction |
-| `AstroTime` | Time representation with UT/TT and `Date` conversion |
+| `AstroTime` | Time representation with UT/TT, Delta T model, and `Date` conversion |
 | `Atmosphere` | Standard atmosphere pressure, temperature, and density by elevation |
 | `CelestialBody` | Enum of Sun, Moon, planets, barycenters, and Galilean moons |
 | `Chiron` | Gravity-simulated position for 2060 Chiron |

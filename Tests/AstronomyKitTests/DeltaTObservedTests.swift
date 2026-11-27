@@ -95,4 +95,22 @@ struct DeltaTObservedTests {
         #expect(Self.observed(.infinity) == .infinity)
         #expect(Self.observed(-.infinity) == .infinity)
     }
+
+    @Test("DeltaTModel.deltaT(universalTime:) matches AstronomyConfig helpers")
+    func modelMethodMatchesConfigHelpers() {
+        for ut in [-36_525.0, 0.0, 9_312.5, 9_861.75, 20_000.0] {
+            #expect(
+                DeltaTModel.observed.deltaT(universalTime: ut)
+                    == AstronomyConfig.deltaTObserved(universalTime: ut)
+            )
+            #expect(
+                DeltaTModel.espenakMeeus.deltaT(universalTime: ut)
+                    == AstronomyConfig.deltaTEspenakMeeus(universalTime: ut)
+            )
+            #expect(
+                DeltaTModel.jplHorizons.deltaT(universalTime: ut)
+                    == AstronomyConfig.deltaTJplHorizons(universalTime: ut)
+            )
+        }
+    }
 }
