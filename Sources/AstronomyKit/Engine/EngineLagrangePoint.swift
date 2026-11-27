@@ -115,13 +115,16 @@ enum EngineLagrangePoint {
             let svy = vy / vScale
             let svz = vz / vScale
 
-            let nx = ry * svz - rz * svy
-            let ny = rz * svx - rx * svz
-            let nz = rx * svy - ry * svx
+            // Cross infinity-norm-scaled vectors directly before dividing by sLen
+            // so parallel 3D separation and velocity vectors cancel to exact zero
+            // instead of leaving 1-ULP rounding asymmetry.
+            let nx = sdy * svz - sdz * svy
+            let ny = sdz * svx - sdx * svz
+            let nz = sdx * svy - sdy * svx
 
-            let rawUx = ny * rz - nz * ry
-            let rawUy = nz * rx - nx * rz
-            let rawUz = nx * ry - ny * rx
+            let rawUx = ny * sdz - nz * sdy
+            let rawUy = nz * sdx - nx * sdz
+            let rawUz = nx * sdy - ny * sdx
             let u2 = rawUx * rawUx + rawUy * rawUy + rawUz * rawUz
             let ux: Double
             let uy: Double
