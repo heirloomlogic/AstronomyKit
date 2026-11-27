@@ -272,10 +272,12 @@ struct LagrangePointTests {
             }
         }
 
-        /// Calls `calculateFast` on a major body at the origin moving at `majorVelocity`
-        /// (at rest by default) and a minor body at `position` moving at `velocity`.
+        /// Calls `calculateFast` on a major body at `majorPosition` (origin by default)
+        /// moving at `majorVelocity` (at rest by default) and a minor body at `position`
+        /// moving at `velocity`.
         private func calculateFast(
             _ point: LagrangePointID,
+            majorPosition: Vector3D? = nil,
             majorVelocity: Vector3D? = nil,
             majorMass: Double = 1,
             minorPosition position: Vector3D,
@@ -285,7 +287,11 @@ struct LagrangePointTests {
             let origin = Vector3D(x: 0, y: 0, z: 0, time: testTime)
             return try LagrangePoint.calculateFast(
                 point: point,
-                majorState: StateVector(position: origin, velocity: majorVelocity ?? origin, time: testTime),
+                majorState: StateVector(
+                    position: majorPosition ?? origin,
+                    velocity: majorVelocity ?? origin,
+                    time: testTime
+                ),
                 majorMass: majorMass,
                 minorState: StateVector(position: position, velocity: velocity, time: testTime),
                 minorMass: minorMass
@@ -305,20 +311,47 @@ struct LagrangePointTests {
             }
         }
 
-        @Test("A separation whose square overflows throws invalidParameter", arguments: LagrangePointID.allCases)
+        @Test(
+            "A separation that overflows when subtracted throws invalidParameter",
+            arguments: LagrangePointID.allCases
+        )
         func infiniteSeparationThrowsInvalidParameter(point: LagrangePointID) {
             #expect(throws: AstronomyError.invalidParameter) {
                 _ = try calculateFast(
                     point,
-                    minorPosition: Vector3D(x: 1e200, y: 0, z: 0, time: testTime),
-                    minorVelocity: Vector3D(x: 0, y: 0, z: 0, time: testTime)
+                    majorPosition: Vector3D(x: -.greatestFiniteMagnitude, y: 0, z: 0, time: testTime),
+                    minorPosition: Vector3D(x: .greatestFiniteMagnitude, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime)
                 )
             }
         }
 
-        /// A relative velocity that leaves the L4/L5 tangent zero, or makes its
-        /// squared length underflow to zero or overflow to infinity, for a minor
-        /// body at (1, 0, 0).
+        @Test(
+            "Non-positive or non-finite masses throw invalidParameter",
+            arguments: LagrangePointID.allCases,
+            [0.0, -1.0, Double.nan, .infinity, -.infinity]
+        )
+        func invalidMassThrowsInvalidParameter(point: LagrangePointID, mass: Double) {
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    majorMass: mass,
+                    minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime)
+                )
+            }
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                    minorMass: mass
+                )
+            }
+        }
+
+        /// A relative velocity that leaves the L4/L5 orbital plane undefined
+        /// for a minor body at (1, 0, 0).
         struct TangentCase: Sendable, CustomTestStringConvertible {
             let testDescription: String
             let vx: Double
@@ -329,8 +362,6 @@ struct LagrangePointTests {
             TangentCase(testDescription: "zero velocity", vx: 0, vy: 0),
             TangentCase(testDescription: "velocity along the separation", vx: 1, vy: 0),
             TangentCase(testDescription: "velocity against the separation", vx: -0.02, vy: 0),
-            TangentCase(testDescription: "squared tangent underflows", vx: 0, vy: 1e-200),
-            TangentCase(testDescription: "squared tangent overflows", vx: 0, vy: 1e300),
         ]
 
         private func calculateFast(_ point: LagrangePointID, tangent: TangentCase) throws -> StateVector {
@@ -353,6 +384,38 @@ struct LagrangePointTests {
         }
 
         @Test(
+            "L4 and L5 with non-axis-aligned parallel 3D separation and velocity throw invalidParameter",
+            arguments: [LagrangePointID.l4, .l5],
+            [
+                (1.0, 3.0, 9.0, 1.0, 3.0, 9.0),
+                (1.0, 3.0, 9.0, -1.0, -3.0, -9.0),
+                (1.0, 3.0, 9.0, 3.0, 9.0, 27.0),
+                (1.0, 3.0, 9.0, -5.0, -15.0, -45.0),
+                (
+                    Double(sign: .plus, exponent: 500, significand: 1.0),
+                    3.0 * Double(sign: .plus, exponent: 500, significand: 1.0),
+                    9.0 * Double(sign: .plus, exponent: 500, significand: 1.0),
+                    Double(sign: .plus, exponent: -500, significand: 1.0),
+                    3.0 * Double(sign: .plus, exponent: -500, significand: 1.0),
+                    9.0 * Double(sign: .plus, exponent: -500, significand: 1.0)
+                ),
+            ]
+        )
+        func nonAxisAlignedParallelVelocityThrowsInvalidParameter(
+            point: LagrangePointID,
+            vectors: (Double, Double, Double, Double, Double, Double)
+        ) {
+            let (dx, dy, dz, vx, vy, vz) = vectors
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: dx, y: dy, z: dz, time: testTime),
+                    minorVelocity: Vector3D(x: vx, y: vy, z: vz, time: testTime)
+                )
+            }
+        }
+
+        @Test(
             "L1 to L3 do not use the tangent and still succeed",
             arguments: [LagrangePointID.l1, .l2, .l3],
             degenerateTangents
@@ -363,6 +426,27 @@ struct LagrangePointTests {
                 $0.x.isFinite && $0.y.isFinite && $0.z.isFinite
             }
             #expect(isFinite)
+        }
+
+        @Test(
+            "L4 and L5 handle extreme tangent velocity scales without underflow or overflow",
+            arguments: [LagrangePointID.l4, .l5],
+            [1e-200, 1e300]
+        )
+        func extremeVelocityScalesForTriangularPoints(point: LagrangePointID, vy: Double) throws {
+            let state = try calculateFast(
+                point,
+                minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: 0, y: vy, z: 0, time: testTime)
+            )
+            let expectedSign = point == .l4 ? 1.0 : -1.0
+            let sin60 = 0.8660254037844386
+            #expect(abs(state.position.x - 0.5) < 1e-14)
+            #expect(abs(state.position.y - expectedSign * sin60) < 1e-14)
+            #expect(state.position.z == 0)
+            #expect(abs(state.velocity.x - (-expectedSign * sin60 * vy)) <= abs(vy) * 1e-14)
+            #expect(abs(state.velocity.y - 0.5 * vy) <= abs(vy) * 1e-14)
+            #expect(state.velocity.z == 0)
         }
 
         @Test(
@@ -407,18 +491,151 @@ struct LagrangePointTests {
         }
 
         @Test(
-            "Masses whose sum overflows throw invalidParameter for L1 to L3",
-            arguments: [LagrangePointID.l1, .l2, .l3]
+            "Extreme masses near Double.greatestFiniteMagnitude converge to dimensionless equilibrium",
+            arguments: [LagrangePointID.l1, .l2, .l3],
+            [(1e308, 1e308), (1e308, 3e302), (Double.greatestFiniteMagnitude, Double.greatestFiniteMagnitude)]
         )
-        func overflowingMassSumThrowsInvalidParameter(point: LagrangePointID) {
-            #expect(throws: AstronomyError.invalidParameter) {
-                _ = try calculateFast(
-                    point,
-                    majorMass: .greatestFiniteMagnitude,
-                    minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
-                    minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
-                    minorMass: .greatestFiniteMagnitude
-                )
+        func extremeMassesConvergeToEquilibrium(point: LagrangePointID, masses: (Double, Double)) throws {
+            let (majorMass, minorMass) = masses
+            let state = try calculateFast(
+                point,
+                majorMass: majorMass,
+                minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                minorMass: minorMass
+            )
+            let u = state.position.x
+            #expect(u.isFinite)
+            #expect(state.velocity.y.isFinite)
+
+            let scale = max(majorMass, minorMass)
+            let m1 = majorMass / scale
+            let m2 = minorMass / scale
+            let mu = m2 / (m1 + m2)
+            let oneMinusMu = m1 / (m1 + m2)
+
+            let c1 = point == .l3 ? oneMinusMu : -oneMinusMu
+            let c2 = point == .l2 ? -mu : mu
+            let grav1 = c1 / (u * u)
+            let grav2 = c2 / ((u - 1.0) * (u - 1.0))
+            let residual = abs((u - mu) + grav1 + grav2)
+            #expect(residual / (abs(grav1) + abs(grav2)) < 1e-13)
+        }
+
+        @Test(
+            "Extreme separations succeed without overflow or underflow for all Lagrange points",
+            arguments: LagrangePointID.allCases,
+            [1e120, 1e150, 1e-120, 1e-150]
+        )
+        func extremeSeparationsSucceed(point: LagrangePointID, separation: Double) throws {
+            let majorMass = 1.0
+            let minorMass = 3.0e-6
+            let unitRef = try calculateFast(
+                point,
+                majorMass: majorMass,
+                minorPosition: Vector3D(x: 1, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                minorMass: minorMass
+            )
+            let scaled = try calculateFast(
+                point,
+                majorMass: majorMass,
+                minorPosition: Vector3D(x: separation, y: 0, z: 0, time: testTime),
+                minorVelocity: Vector3D(x: 0, y: 0.01, z: 0, time: testTime),
+                minorMass: minorMass
+            )
+
+            #expect(scaled.position.x.isFinite && scaled.position.y.isFinite && scaled.position.z.isFinite)
+            #expect(scaled.velocity.x.isFinite && scaled.velocity.y.isFinite && scaled.velocity.z.isFinite)
+            #expect(abs(scaled.position.x / separation - unitRef.position.x) < 1e-14)
+            #expect(abs(scaled.position.y / separation - unitRef.position.y) < 1e-14)
+            #expect(abs(scaled.position.z / separation - unitRef.position.z) < 1e-14)
+            #expect(abs(scaled.velocity.x - unitRef.velocity.x) < 1e-14)
+            #expect(abs(scaled.velocity.y - unitRef.velocity.y) < 1e-14)
+            #expect(abs(scaled.velocity.z - unitRef.velocity.z) < 1e-14)
+        }
+
+        @Test(
+            "Off-axis 3D extreme separations preserve vector scaling for all Lagrange points",
+            arguments: LagrangePointID.allCases,
+            [1e150, 1e-150]
+        )
+        func offAxisExtremeSeparationsSucceed(point: LagrangePointID, separation: Double) throws {
+            let majorMass = 1e308
+            let minorMass = 3e302
+            let unitRef = try calculateFast(
+                point,
+                majorMass: majorMass,
+                minorPosition: Vector3D(x: 1.0, y: 0.5, z: -0.25, time: testTime),
+                minorVelocity: Vector3D(x: 0.002, y: 0.01, z: -0.005, time: testTime),
+                minorMass: minorMass
+            )
+            let scaled = try calculateFast(
+                point,
+                majorMass: majorMass,
+                minorPosition: Vector3D(
+                    x: separation,
+                    y: 0.5 * separation,
+                    z: -0.25 * separation,
+                    time: testTime
+                ),
+                minorVelocity: Vector3D(x: 0.002, y: 0.01, z: -0.005, time: testTime),
+                minorMass: minorMass
+            )
+
+            #expect(abs(scaled.position.x / separation - unitRef.position.x) < 1e-14)
+            #expect(abs(scaled.position.y / separation - unitRef.position.y) < 1e-14)
+            #expect(abs(scaled.position.z / separation - unitRef.position.z) < 1e-14)
+            #expect(abs(scaled.velocity.x - unitRef.velocity.x) < 1e-14)
+            #expect(abs(scaled.velocity.y - unitRef.velocity.y) < 1e-14)
+            #expect(abs(scaled.velocity.z - unitRef.velocity.z) < 1e-14)
+        }
+
+        @Test(
+            "Solar-system L1 to L5 match physical equilibrium and geometry",
+            arguments: LagrangePointID.allCases
+        )
+        func solarSystemParityAndEquilibrium(point: LagrangePointID) throws {
+            let sunMass = try #require(CelestialBody.sun.massProduct)
+            let earthMass = try #require(CelestialBody.earth.massProduct)
+            let sunState = try CelestialBody.sun.barycentricState(at: testTime)
+            let earthState = try CelestialBody.earth.barycentricState(at: testTime)
+            let result = try LagrangePoint.calculateFast(
+                point: point,
+                majorState: sunState,
+                majorMass: sunMass,
+                minorState: earthState,
+                minorMass: earthMass
+            )
+
+            let dx = earthState.position.x - sunState.position.x
+            let dy = earthState.position.y - sunState.position.y
+            let dz = earthState.position.z - sunState.position.z
+            let dist = (dx * dx + dy * dy + dz * dz).squareRoot()
+
+            if point == .l4 || point == .l5 {
+                let pMag = result.position.magnitude
+                let diffX = result.position.x - dx
+                let diffY = result.position.y - dy
+                let diffZ = result.position.z - dz
+                let minorDist = (diffX * diffX + diffY * diffY + diffZ * diffZ).squareRoot()
+                #expect(abs(pMag - dist) / dist < 1e-14)
+                #expect(abs(minorDist - dist) / dist < 1e-14)
+            } else {
+                let u = (result.position.x * dx + result.position.y * dy + result.position.z * dz) / (dist * dist)
+                #expect(abs(result.position.x - u * dx) < 1e-14)
+                #expect(abs(result.position.y - u * dy) < 1e-14)
+                #expect(abs(result.position.z - u * dz) < 1e-14)
+
+                let total = sunMass + earthMass
+                let mu = earthMass / total
+                let oneMinusMu = sunMass / total
+                let c1 = point == .l3 ? oneMinusMu : -oneMinusMu
+                let c2 = point == .l2 ? -mu : mu
+                let grav1 = c1 / (u * u)
+                let grav2 = c2 / ((u - 1.0) * (u - 1.0))
+                let residual = abs((u - mu) + grav1 + grav2)
+                #expect(residual / (abs(grav1) + abs(grav2)) < 1e-13)
             }
         }
 

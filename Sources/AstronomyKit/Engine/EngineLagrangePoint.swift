@@ -71,18 +71,24 @@ enum EngineLagrangePoint {
             throw AstronomyError.invalidParameter
         }
 
-        var dx = minorState.position.x - majorState.position.x
-        var dy = minorState.position.y - majorState.position.y
-        var dz = minorState.position.z - majorState.position.z
-        let r2 = dx * dx + dy * dy + dz * dz
-        guard r2 != 0.0, r2.isFinite else {
+        let dx = minorState.position.x - majorState.position.x
+        let dy = minorState.position.y - majorState.position.y
+        let dz = minorState.position.z - majorState.position.z
+        guard dx.isFinite, dy.isFinite, dz.isFinite else {
             throw AstronomyError.invalidParameter
         }
 
-        let dist = sqrt(r2)
+        let dScale = max(abs(dx), max(abs(dy), abs(dz)))
+        guard dScale > 0.0 else {
+            throw AstronomyError.invalidParameter
+        }
+
         let vx = minorState.velocity.x - majorState.velocity.x
         let vy = minorState.velocity.y - majorState.velocity.y
         let vz = minorState.velocity.z - majorState.velocity.z
+        guard vx.isFinite, vy.isFinite, vz.isFinite else {
+            throw AstronomyError.invalidParameter
+        }
 
         let px: Double
         let py: Double
@@ -92,92 +98,127 @@ enum EngineLagrangePoint {
         let pvz: Double
 
         if point == .l4 || point == .l5 {
-            let nx = dy * vz - dz * vy
-            let ny = dz * vx - dx * vz
-            let nz = dx * vy - dy * vx
+            let sdx = dx / dScale
+            let sdy = dy / dScale
+            let sdz = dz / dScale
+            let sLen = sqrt(sdx * sdx + sdy * sdy + sdz * sdz)
+            let invSLen = 1.0 / sLen
+            let rx = sdx * invSLen
+            let ry = sdy * invSLen
+            let rz = sdz * invSLen
 
-            var ux = ny * dz - nz * dy
-            var uy = nz * dx - nx * dz
-            var uz = nx * dy - ny * dx
-            let uLen = sqrt(ux * ux + uy * uy + uz * uz)
-            guard uLen != 0.0, uLen.isFinite else {
+            let vScale = max(abs(vx), max(abs(vy), abs(vz)))
+            guard vScale > 0.0 else {
                 throw AstronomyError.invalidParameter
             }
+            let svx = vx / vScale
+            let svy = vy / vScale
+            let svz = vz / vScale
 
-            ux /= uLen
-            uy /= uLen
-            uz /= uLen
+            // Cross infinity-norm-scaled vectors directly before dividing by sLen
+            // so parallel 3D separation and velocity vectors cancel to exact zero
+            // instead of leaving 1-ULP rounding asymmetry.
+            let nx = sdy * svz - sdz * svy
+            let ny = sdz * svx - sdx * svz
+            let nz = sdx * svy - sdy * svx
 
-            dx /= dist
-            dy /= dist
-            dz /= dist
-
-            let vert = (point == .l4) ? sin60 : -sin60
-            let rotDx = cos60 * dx + vert * ux
-            let rotDy = cos60 * dy + vert * uy
-            let rotDz = cos60 * dz + vert * uz
-
-            let rotUx = cos60 * ux - vert * dx
-            let rotUy = cos60 * uy - vert * dy
-            let rotUz = cos60 * uz - vert * dz
-
-            px = dist * rotDx
-            py = dist * rotDy
-            pz = dist * rotDz
-
-            let vrad = vx * dx + vy * dy + vz * dz
-            let vtan = vx * ux + vy * uy + vz * uz
-            pvx = vrad * rotDx + vtan * rotUx
-            pvy = vrad * rotDy + vtan * rotUy
-            pvz = vrad * rotDz + vtan * rotUz
-        } else {
-            let totalMass = majorMass + minorMass
-            let r1 = -dist * (minorMass / totalMass)
-            let r2Bary = dist * (majorMass / totalMass)
-            let omega2 = totalMass / (r2 * dist)
-
-            var scale: Double
-            let numer1: Double
-            let numer2: Double
-            if point == .l1 || point == .l2 {
-                scale = (majorMass / totalMass) * cbrt(minorMass / (3.0 * majorMass))
-                numer1 = -majorMass
-                if point == .l1 {
-                    scale = 1.0 - scale
-                    numer2 = minorMass
-                } else {
-                    scale = 1.0 + scale
-                    numer2 = -minorMass
-                }
+            let rawUx = ny * sdz - nz * sdy
+            let rawUy = nz * sdx - nx * sdz
+            let rawUz = nx * sdy - ny * sdx
+            let u2 = rawUx * rawUx + rawUy * rawUy + rawUz * rawUz
+            let ux: Double
+            let uy: Double
+            let uz: Double
+            if u2 >= Double.leastNormalMagnitude {
+                let invULen = 1.0 / sqrt(u2)
+                ux = rawUx * invULen
+                uy = rawUy * invULen
+                uz = rawUz * invULen
             } else {
-                scale = ((7.0 / 12.0) * minorMass - majorMass) / totalMass
-                numer1 = majorMass
-                numer2 = minorMass
+                let uScale = max(abs(rawUx), max(abs(rawUy), abs(rawUz)))
+                guard uScale > 0.0 else {
+                    throw AstronomyError.invalidParameter
+                }
+                let sux = rawUx / uScale
+                let suy = rawUy / uScale
+                let suz = rawUz / uScale
+                let invULen = 1.0 / sqrt(sux * sux + suy * suy + suz * suz)
+                ux = sux * invULen
+                uy = suy * invULen
+                uz = suz * invULen
             }
 
-            var x = dist * scale + r1
+            let vert = (point == .l4) ? sin60 : -sin60
+            let rotDx = cos60 * rx + vert * ux
+            let rotDy = cos60 * ry + vert * uy
+            let rotDz = cos60 * rz + vert * uz
+
+            let rotUx = cos60 * ux - vert * rx
+            let rotUy = cos60 * uy - vert * ry
+            let rotUz = cos60 * uz - vert * rz
+
+            px = dScale * (sLen * rotDx)
+            py = dScale * (sLen * rotDy)
+            pz = dScale * (sLen * rotDz)
+
+            let svrad = svx * rx + svy * ry + svz * rz
+            let svtan = svx * ux + svy * uy + svz * uz
+            pvx = vScale * (svrad * rotDx + svtan * rotUx)
+            pvy = vScale * (svrad * rotDy + svtan * rotUy)
+            pvz = vScale * (svrad * rotDz + svtan * rotUz)
+        } else {
+            // Solve L1-L3 in dimensionless coordinate u = (x - r1) / dist and mass
+            // fraction mu = minorMass / (majorMass + minorMass), avoiding overflow
+            // or underflow of totalMass, dist^2, and dr^3 at extreme scales.
+            let mScale = max(majorMass, minorMass)
+            let m1 = majorMass / mScale
+            let m2 = minorMass / mScale
+            let mSum = m1 + m2
+            let mu = m2 / mSum
+            let oneMinusMu = m1 / mSum
+
+            var u: Double
+            let c1: Double
+            let c2: Double
+            if point == .l1 || point == .l2 {
+                let offset = oneMinusMu * cbrt(m2 / (3.0 * m1))
+                c1 = -oneMinusMu
+                if point == .l1 {
+                    u = 1.0 - offset
+                    c2 = mu
+                } else {
+                    u = 1.0 + offset
+                    c2 = -mu
+                }
+            } else {
+                u = (7.0 / 12.0) * mu - oneMinusMu
+                c1 = oneMinusMu
+                c2 = mu
+            }
+
             var iter = 0
-            var deltaX: Double
+            var deltaU: Double
             repeat {
                 iter &+= 1
                 if iter > iterLimit {
                     throw AstronomyError.noConvergence
                 }
-                let dr1 = x - r1
-                let dr2 = x - r2Bary
-                let accel = omega2 * x + numer1 / (dr1 * dr1) + numer2 / (dr2 * dr2)
-                let deriv = omega2 - 2.0 * numer1 / (dr1 * dr1 * dr1) - 2.0 * numer2 / (dr2 * dr2 * dr2)
-                deltaX = accel / deriv
-                x -= deltaX
-            } while abs(deltaX / dist) > 1.0e-14
+                let dr1 = u
+                let dr2 = u - 1.0
+                let term1 = c1 / (dr1 * dr1)
+                let term2 = c2 / (dr2 * dr2)
+                let accel = (u - mu) + term1 + term2
+                let deriv = 1.0 - 2.0 * (term1 / dr1 + term2 / dr2)
+                deltaU = accel / deriv
+                u -= deltaU
+            } while abs(deltaU) > 1.0e-14
 
-            scale = (x - r1) / dist
-            px = scale * dx
-            py = scale * dy
-            pz = scale * dz
-            pvx = scale * vx
-            pvy = scale * vy
-            pvz = scale * vz
+            px = u * dx
+            py = u * dy
+            pz = u * dz
+            pvx = u * vx
+            pvy = u * vy
+            pvz = u * vz
         }
 
         guard px.isFinite, py.isFinite, pz.isFinite, pvx.isFinite, pvy.isFinite, pvz.isFinite else {

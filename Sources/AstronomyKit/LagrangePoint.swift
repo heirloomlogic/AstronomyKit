@@ -140,17 +140,14 @@ public enum LagrangePoint {
     ///   - minorState: The state vector of the smaller body.
     ///   - minorMass: The mass product (GM) of the smaller body in AU³/day².
     /// - Returns: The state vector of the Lagrange point.
-    /// - Throws: ``AstronomyError/invalidParameter`` if the squared distance between the two
+    /// - Throws: ``AstronomyError/invalidParameter`` if the separation between the two
     ///   positions is zero or not finite (coincident positions or a non-finite coordinate, for
-    ///   example), or if either mass is not a positive finite number. Also for L4 and L5 if the
-    ///   tangent vector, which lies in the orbital plane at right angles to the separation, has
-    ///   zero or non-finite length. That happens when the relative velocity is zero or exactly
-    ///   parallel to the separation, which leaves the orbital plane undefined; when the relative
-    ///   velocity is not finite; or when the arithmetic that builds the tangent and its length
-    ///   underflows or overflows. Also if any field of the result would not be finite, as with an
-    ///   L1 to L3 relative velocity that is not finite.
+    ///   example), if the relative velocity is not finite, or if either mass is not a positive
+    ///   finite number. Also for L4 and L5 if the relative velocity is zero or parallel to the
+    ///   separation, which leaves the orbital plane undefined. Also if any field of the result
+    ///   would not be finite, as with an L2 position or velocity that overflows when scaled.
     ///   ``AstronomyError/noConvergence`` if the iteration for L1, L2, or L3 does not converge
-    ///   within its step limit, as can happen for L3 with masses of similar size.
+    ///   within its step limit.
     ///   Other `AstronomyError` values if the calculation fails.
     public static func calculateFast(
         point: LagrangePointID,
