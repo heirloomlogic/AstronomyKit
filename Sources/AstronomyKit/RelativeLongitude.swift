@@ -5,8 +5,6 @@
 //  Conjunction, opposition, and relative longitude calculations.
 //
 
-import CLibAstronomy
-
 extension CelestialBody {
     /// Returns the relative ecliptic longitude between this body and another.
     ///
@@ -18,11 +16,7 @@ extension CelestialBody {
     /// - Returns: The relative ecliptic longitude in degrees.
     /// - Throws: `AstronomyError` if the calculation fails.
     public func pairLongitude(with other: CelestialBody, at time: AstroTime) throws -> Double {
-        let result = Astronomy_PairLongitude(raw, other.raw, time.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try EnginePositions.pairLongitude(body1: self, body2: other, at: time)
     }
 
     /// Searches for the next time this body reaches the specified relative
@@ -48,11 +42,11 @@ extension CelestialBody {
         after startTime: AstroTime
     ) throws -> AstroTime {
         guard targetAngle.isFinite else { throw AstronomyError.invalidParameter }
-        let result = Astronomy_SearchRelativeLongitude(raw, targetAngle, startTime.raw)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return AstroTime(raw: result.time)
+        return try EngineEvents.searchRelativeLongitude(
+            of: self,
+            targetRelLon: targetAngle,
+            after: startTime
+        )
     }
 
     /// Searches for the next opposition of this body.

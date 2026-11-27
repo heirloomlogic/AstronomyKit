@@ -6,8 +6,6 @@
 //  Astronomy_NextLunarApsis, Astronomy_SearchPlanetApsis, and Astronomy_NextPlanetApsis.
 //
 
-import CLibAstronomy
-
 enum EngineApsis {
     // MARK: - Lunar Apsis
 
@@ -81,7 +79,7 @@ enum EngineApsis {
             return try bruteSearchPlanetApsis(of: body, after: startTime)
         }
 
-        let orbitPeriodDays = Astronomy_PlanetOrbitalPeriod(body.raw)
+        let orbitPeriodDays = EngineMath.planetOrbitalPeriod(of: body)
         guard orbitPeriodDays != 0.0 else {
             throw AstronomyError.invalidBody
         }
@@ -111,15 +109,12 @@ enum EngineApsis {
                 let tx = try EngineSearch.find(t1: t1, t2: t2, dtToleranceSeconds: 1.0) { t in
                     try planetDistanceSlope(body: body, direction: direction, at: t)
                 }
-                let dist = Astronomy_HelioDistance(body.raw, tx.raw)
-                if let error = AstronomyError(status: dist.status) {
-                    throw error
-                }
+                let dist = try EnginePositions.helioDistance(of: body, at: tx)
                 return Apsis(
                     kind: kind,
                     time: tx,
-                    distanceAU: dist.value,
-                    distanceKM: dist.value * EngineConstants.kmPerAU
+                    distanceAU: dist,
+                    distanceKM: dist * EngineConstants.kmPerAU
                 )
             }
 
@@ -132,7 +127,7 @@ enum EngineApsis {
     }
 
     static func nextPlanetApsis(of body: CelestialBody, after apsis: Apsis) throws -> Apsis {
-        let skip = 0.25 * Astronomy_PlanetOrbitalPeriod(body.raw)
+        let skip = 0.25 * EngineMath.planetOrbitalPeriod(of: body)
         guard skip > 0.0 else {
             throw AstronomyError.invalidBody
         }
@@ -152,15 +147,9 @@ enum EngineApsis {
         let dt = 0.001
         let t1 = time.addingTerrestrialDays(-dt / 2.0)
         let t2 = time.addingTerrestrialDays(dt / 2.0)
-        let dist1 = Astronomy_HelioDistance(body.raw, t1.raw)
-        if let error = AstronomyError(status: dist1.status) {
-            throw error
-        }
-        let dist2 = Astronomy_HelioDistance(body.raw, t2.raw)
-        if let error = AstronomyError(status: dist2.status) {
-            throw error
-        }
-        return direction * (dist2.value - dist1.value) / dt
+        let dist1 = try EnginePositions.helioDistance(of: body, at: t1)
+        let dist2 = try EnginePositions.helioDistance(of: body, at: t2)
+        return direction * (dist2 - dist1) / dt
     }
 
     private static func planetExtreme(
@@ -178,15 +167,12 @@ enum EngineApsis {
             let interval = dayspan / Double(npoints - 1)
             if interval < 1.0 / 1440.0 {
                 let apsisTime = startTime.addingDays(interval / 2.0)
-                let dist = Astronomy_HelioDistance(body.raw, apsisTime.raw)
-                if let error = AstronomyError(status: dist.status) {
-                    throw error
-                }
+                let dist = try EnginePositions.helioDistance(of: body, at: apsisTime)
                 return Apsis(
                     kind: kind,
                     time: apsisTime,
-                    distanceAU: dist.value,
-                    distanceKM: dist.value * EngineConstants.kmPerAU
+                    distanceAU: dist,
+                    distanceKM: dist * EngineConstants.kmPerAU
                 )
             }
 
@@ -195,11 +181,7 @@ enum EngineApsis {
             var i = 0
             while i < npoints {
                 let sampleTime = startTime.addingDays(Double(i) * interval)
-                let distResult = Astronomy_HelioDistance(body.raw, sampleTime.raw)
-                if let error = AstronomyError(status: distResult.status) {
-                    throw error
-                }
-                let dist = direction * distResult.value
+                let dist = direction * (try EnginePositions.helioDistance(of: body, at: sampleTime))
                 if i == 0 || dist > bestDist {
                     bestIdx = i
                     bestDist = dist
@@ -221,7 +203,7 @@ enum EngineApsis {
         }
 
         let npoints = 100
-        let period = Astronomy_PlanetOrbitalPeriod(body.raw)
+        let period = EngineMath.planetOrbitalPeriod(of: body)
         let t1 = startTime.addingDays(period * (-30.0 / 360.0))
         let t2 = startTime.addingDays(period * (270.0 / 360.0))
         var tMin = t1
@@ -234,11 +216,7 @@ enum EngineApsis {
         while i < npoints {
             let ut = t1.universalTime + Double(i) * interval
             let sampleTime = AstroTime(ut: ut)
-            let distResult = Astronomy_HelioDistance(body.raw, sampleTime.raw)
-            if let error = AstronomyError(status: distResult.status) {
-                throw error
-            }
-            let dist = distResult.value
+            let dist = try EnginePositions.helioDistance(of: body, at: sampleTime)
             if i == 0 {
                 maxDist = dist
                 minDist = dist

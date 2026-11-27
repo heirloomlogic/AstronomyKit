@@ -5,7 +5,7 @@
 //  Elongation and visibility calculations.
 //
 
-import CLibAstronomy
+import Foundation
 
 // MARK: - Visibility
 
@@ -16,15 +16,6 @@ public enum Visibility: Sendable, Equatable, Hashable, Codable {
 
     /// The body is best visible in the evening, after sunset.
     case evening
-
-    init(_ raw: astro_visibility_t) {
-        switch raw {
-        case VISIBLE_MORNING:
-            self = .morning
-        default:
-            self = .evening
-        }
-    }
 
     /// A human-readable description.
     public var name: String {
@@ -69,17 +60,6 @@ public struct Elongation: Sendable, Equatable {
     ///
     /// This is the angular separation measured along the ecliptic plane.
     public let eclipticSeparation: Double
-
-    /// Creates an elongation result from the C structure.
-    init(_ raw: astro_elongation_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.time = AstroTime(raw: raw.time)
-        self.visibility = Visibility(raw.visibility)
-        self.angle = raw.elongation
-        self.eclipticSeparation = raw.ecliptic_separation
-    }
 }
 
 extension Elongation: CustomStringConvertible {
@@ -110,8 +90,7 @@ extension CelestialBody {
     /// }
     /// ```
     public func elongation(at time: AstroTime) throws -> Elongation {
-        let result = Astronomy_Elongation(raw, time.raw)
-        return try Elongation(result)
+        try EngineEvents.elongation(of: self, at: time)
     }
 
     /// Searches for the next maximum elongation of this body.
@@ -131,7 +110,6 @@ extension CelestialBody {
     /// print("Mercury max elongation: \(maxElong.angle)° on \(maxElong.time)")
     /// ```
     public func searchMaxElongation(after startTime: AstroTime) throws -> Elongation {
-        let result = Astronomy_SearchMaxElongation(raw, startTime.raw)
-        return try Elongation(result)
+        try EngineEvents.searchMaxElongation(of: self, after: startTime)
     }
 }

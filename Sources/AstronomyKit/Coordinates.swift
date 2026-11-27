@@ -34,8 +34,8 @@ public struct Vector3D: Sendable, Equatable, Hashable {
 
     /// Creates a vector from the C structure.
     init(_ raw: astro_vector_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
+        if raw.status != ASTRO_SUCCESS {
+            throw AstronomyError(status: raw.status) ?? .internalError
         }
         self.x = raw.x
         self.y = raw.y
@@ -80,40 +80,22 @@ extension Vector3D: CustomStringConvertible {
 extension Vector3D {
     /// Converts this Cartesian vector to spherical coordinates.
     public func toSpherical() -> Spherical {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let result = Astronomy_SphereFromVector(raw)
-        return Spherical(latitude: result.lat, longitude: result.lon, distance: result.dist)
+        EngineRotation.sphereFromVector(self)
     }
 
     /// Converts this equatorial J2000 vector to equatorial coordinates.
     public func toEquatorial() -> Equatorial {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let result = Astronomy_EquatorFromVector(raw)
-        return Equatorial(
-            rightAscension: result.ra,
-            declination: result.dec,
-            distance: result.dist,
-            time: time
-        )
+        EngineRotation.equatorFromVector(self)
     }
 
     /// Converts this equatorial J2000 vector to ecliptic coordinates.
     public func toEcliptic() throws -> Ecliptic {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let result = Astronomy_Ecliptic(raw)
-        return try Ecliptic(result)
+        try EnginePositions.ecliptic(of: self)
     }
 
     /// Creates a Cartesian vector from spherical coordinates.
     public static func from(sphere: Spherical, at time: AstroTime) -> Vector3D {
-        let raw = astro_spherical_t(
-            status: ASTRO_SUCCESS,
-            lat: sphere.latitude,
-            lon: sphere.longitude,
-            dist: sphere.distance
-        )
-        let result = Astronomy_VectorFromSphere(raw, time.raw)
-        return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
+        EngineRotation.vectorFromSphere(sphere, at: time)
     }
 
     /// Creates a Cartesian vector from horizontal coordinates.
@@ -122,25 +104,12 @@ extension Vector3D {
         at time: AstroTime,
         refraction: Refraction = .normal
     ) -> Vector3D {
-        let raw = astro_spherical_t(
-            status: ASTRO_SUCCESS,
-            lat: horizon.latitude,
-            lon: horizon.longitude,
-            dist: horizon.distance
-        )
-        let result = Astronomy_VectorFromHorizon(raw, time.raw, refraction.raw)
-        return Vector3D(x: result.x, y: result.y, z: result.z, time: time)
+        EngineRotation.vectorFromHorizon(horizon, at: time, refraction: refraction)
     }
 
     /// Calculates the angle in degrees between this vector and another.
     public func angle(to other: Vector3D) throws -> Double {
-        let rawA = astro_vector_t(status: ASTRO_SUCCESS, x: x, y: y, z: z, t: time.raw)
-        let rawB = astro_vector_t(status: ASTRO_SUCCESS, x: other.x, y: other.y, z: other.z, t: other.time.raw)
-        let result = Astronomy_AngleBetween(rawA, rawB)
-        if let error = AstronomyError(status: result.status) {
-            throw error
-        }
-        return result.angle
+        try EngineMath.angleBetween(self, other)
     }
 }
 
@@ -150,9 +119,7 @@ extension Spherical {
         _ vector: Vector3D,
         refraction: Refraction = .normal
     ) -> Spherical {
-        let raw = astro_vector_t(status: ASTRO_SUCCESS, x: vector.x, y: vector.y, z: vector.z, t: vector.time.raw)
-        let result = Astronomy_HorizonFromVector(raw, refraction.raw)
-        return Spherical(latitude: result.lat, longitude: result.lon, distance: result.dist)
+        EngineRotation.horizonFromVector(vector, refraction: refraction)
     }
 }
 
@@ -174,16 +141,6 @@ public struct Spherical: Sendable, Equatable, Hashable {
         self.latitude = latitude
         self.longitude = longitude
         self.distance = distance
-    }
-
-    /// Creates coordinates from the C structure.
-    init(_ raw: astro_spherical_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.latitude = raw.lat
-        self.longitude = raw.lon
-        self.distance = raw.dist
     }
 }
 
@@ -218,17 +175,6 @@ public struct Equatorial: Sendable, Equatable, Hashable {
         self.rightAscension = rightAscension
         self.declination = declination
         self.distance = distance
-        self.time = time
-    }
-
-    /// Creates coordinates from the C structure.
-    init(_ raw: astro_equatorial_t, time: AstroTime) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.rightAscension = raw.ra
-        self.declination = raw.dec
-        self.distance = raw.dist
         self.time = time
     }
 
@@ -295,37 +241,6 @@ public struct Ecliptic: Sendable, Equatable, Hashable {
         self.longitude = longitude
         self.distance = distance
     }
-
-    /// Creates coordinates from the C structure, throwing
-    /// `AstronomyError.badTime` if a coordinate is not finite.
-    ///
-    /// A user-built vector longer than about 1e154 AU overflows the distance,
-    /// which is computed here by squaring the components.
-    init(_ raw: astro_ecliptic_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.latitude = raw.elat
-        self.longitude = raw.elon
-        self.distance = sqrt(raw.vec.x * raw.vec.x + raw.vec.y * raw.vec.y + raw.vec.z * raw.vec.z)
-        guard latitude.isFinite, longitude.isFinite, distance.isFinite else {
-            throw AstronomyError.badTime
-        }
-    }
-
-    /// Creates coordinates from a spherical C structure.
-    ///
-    /// Some engine functions (such as `Astronomy_EclipticGeoMoon`) report
-    /// ecliptic coordinates as a spherical triple rather than an
-    /// `astro_ecliptic_t`; the latitude, longitude, and distance map directly.
-    init(_ raw: astro_spherical_t) throws {
-        if let error = AstronomyError(status: raw.status) {
-            throw error
-        }
-        self.latitude = raw.lat
-        self.longitude = raw.lon
-        self.distance = raw.dist
-    }
 }
 
 extension Ecliptic: CustomStringConvertible {
@@ -370,14 +285,6 @@ public struct Horizon: Sendable, Equatable, Hashable {
         self.azimuth = azimuth
         self.rightAscension = rightAscension
         self.declination = declination
-    }
-
-    /// Creates coordinates from the C structure.
-    init(_ raw: astro_horizon_t) {
-        self.altitude = raw.altitude
-        self.azimuth = raw.azimuth
-        self.rightAscension = raw.ra
-        self.declination = raw.dec
     }
 
     /// Whether the object is currently above the horizon.
@@ -442,14 +349,6 @@ public enum Refraction: Sendable {
     /// JPL Horizons compatibility mode.
     case jplHorizons
 
-    var raw: astro_refraction_t {
-        switch self {
-        case .none: return REFRACTION_NONE
-        case .normal: return REFRACTION_NORMAL
-        case .jplHorizons: return REFRACTION_JPLHOR
-        }
-    }
-
     /// Calculates the atmospheric refraction offset for a given altitude.
     ///
     /// Returns the angular adjustment in degrees to add to a geometric
@@ -459,7 +358,7 @@ public enum Refraction: Sendable {
     /// - Parameter altitude: The geometric altitude in degrees above the horizon.
     /// - Returns: The refraction offset in degrees (always >= 0).
     public func refractionAngle(at altitude: Double) -> Double {
-        Astronomy_Refraction(raw, altitude)
+        EngineRotation.refraction(self, altitude: altitude)
     }
 
     /// Calculates the inverse atmospheric refraction for a given apparent altitude.
@@ -470,6 +369,6 @@ public enum Refraction: Sendable {
     /// - Parameter bentAltitude: The apparent altitude in degrees (after refraction).
     /// - Returns: The inverse refraction offset in degrees.
     public func inverseRefractionAngle(at bentAltitude: Double) -> Double {
-        Astronomy_InverseRefraction(raw, bentAltitude)
+        EngineRotation.inverseRefraction(self, bentAltitude: bentAltitude)
     }
 }

@@ -5,8 +5,6 @@
 //  Pure-Swift IAU constellation lookup (B1875 boundaries) matching Astronomy_Constellation.
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -27,7 +25,6 @@ private struct ConstelTableStorage: @unchecked Sendable {
     let count: Int
     let info: UnsafePointer<(symbol: String, name: String)>
     let infoCount: Int
-    let rotStatus: astro_status_t
     let r00: Double
     let r01: Double
     let r02: Double
@@ -539,24 +536,23 @@ private struct ConstelTableStorage: @unchecked Sendable {
         }
 
         // Thread-safe one-time initialization via Swift global dispatch_once (replaces C pthread_once).
-        var b1875Time = Astronomy_TimeFromDays(-45655.74141261017)
-        let rot = Astronomy_Rotation_EQJ_EQD(&b1875Time)
+        let b1875Time = AstroTime(ut: -45655.74141261017)
+        let rot = EngineRotation.eqjToEqd(at: b1875Time)
 
         return ConstelTableStorage(
             bounds: UnsafePointer(buf),
             count: count,
             info: UnsafePointer(infoBuf),
             infoCount: infoCount,
-            rotStatus: rot.status,
-            r00: rot.rot.0.0,
-            r01: rot.rot.0.1,
-            r02: rot.rot.0.2,
-            r10: rot.rot.1.0,
-            r11: rot.rot.1.1,
-            r12: rot.rot.1.2,
-            r20: rot.rot.2.0,
-            r21: rot.rot.2.1,
-            r22: rot.rot.2.2
+            r00: rot.r00,
+            r01: rot.r01,
+            r02: rot.r02,
+            r10: rot.r10,
+            r11: rot.r11,
+            r12: rot.r12,
+            r20: rot.r20,
+            r21: rot.r21,
+            r22: rot.r22
         )
     }
 }
@@ -573,9 +569,6 @@ enum EngineConstellation {
         }
 
         let table = ConstelTableStorage.shared
-        if let error = AstronomyError(status: table.rotStatus) {
-            throw error
-        }
 
         // Convert J2000 spherical (ra hours, dec deg) to unit Cartesian vector.
         let radLat = declination * EngineConstants.deg2Rad

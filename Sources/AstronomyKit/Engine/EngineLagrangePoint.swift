@@ -6,8 +6,6 @@
 //  and Astronomy_LagrangePointFast (including degenerate-input and iteration guards).
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -23,12 +21,12 @@ enum EngineLagrangePoint {
         majorBody: CelestialBody,
         minorBody: CelestialBody
     ) throws -> StateVector {
-        let majorMass = Astronomy_MassProduct(majorBody.raw)
+        let majorMass = EngineMath.massProduct(of: majorBody)
         guard majorMass > 0.0 else {
             throw AstronomyError.invalidBody
         }
 
-        let minorMass = Astronomy_MassProduct(minorBody.raw)
+        let minorMass = EngineMath.massProduct(of: minorBody)
         guard minorMass > 0.0 else {
             throw AstronomyError.invalidBody
         }
@@ -43,10 +41,10 @@ enum EngineLagrangePoint {
         if majorBody == .earth && minorBody == .moon {
             let zero = Vector3D(x: 0.0, y: 0.0, z: 0.0, time: time)
             majorState = StateVector(position: zero, velocity: zero, time: time)
-            minorState = try StateVector(Astronomy_GeoMoonState(time.raw))
+            minorState = try EnginePositions.geoMoonState(at: time)
         } else {
-            majorState = try StateVector(Astronomy_HelioState(majorBody.raw, time.raw))
-            minorState = try StateVector(Astronomy_HelioState(minorBody.raw, time.raw))
+            majorState = try EnginePositions.helioState(of: majorBody, at: time)
+            minorState = try EnginePositions.helioState(of: minorBody, at: time)
         }
 
         return try calculateFast(

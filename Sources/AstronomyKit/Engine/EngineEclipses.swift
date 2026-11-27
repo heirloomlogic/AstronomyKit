@@ -7,8 +7,6 @@
 //  Astronomy_SearchLocalSolarEclipse (plus shared shadow geometry).
 //
 
-import CLibAstronomy
-
 #if canImport(Darwin)
 import Darwin
 #elseif canImport(Glibc)
@@ -23,8 +21,8 @@ struct EngineShadow {
     let r: Double
     let k: Double
     let p: Double
-    let target: astro_vector_t
-    let dir: astro_vector_t
+    let target: Vector3D
+    let dir: Vector3D
 }
 
 enum EngineEclipses {
@@ -53,8 +51,8 @@ enum EngineEclipses {
     static func calcShadow(
         bodyRadiusKM: Double,
         time: AstroTime,
-        target: astro_vector_t,
-        dir: astro_vector_t
+        target: Vector3D,
+        dir: Vector3D
     ) -> EngineShadow {
         let u =
             (dir.x * target.x + dir.y * target.y + dir.z * target.z)
@@ -77,14 +75,8 @@ enum EngineEclipses {
         k > 0.014 ? .total : .annular
     }
 
-    private static func solarEclipseObscuration(hm: astro_vector_t, lo: astro_vector_t) -> Double {
-        let ho = astro_vector_t(
-            status: ASTRO_SUCCESS,
-            x: hm.x + lo.x,
-            y: hm.y + lo.y,
-            z: hm.z + lo.z,
-            t: lo.t
-        )
+    private static func solarEclipseObscuration(hm: Vector3D, lo: Vector3D) -> Double {
+        let ho = Vector3D(x: hm.x + lo.x, y: hm.y + lo.y, z: hm.z + lo.z, time: lo.time)
         let sunAU = EngineMath.vectorLength(ho)
         let sunRadius = asin(EngineConstants.sunRadiusAU / sunAU)
         let moonRadius = asin(EngineConstants.moonPolarRadiusAU / EngineMath.vectorLength(lo))
@@ -103,19 +95,9 @@ enum EngineEclipses {
     // MARK: - Lunar Eclipse
 
     private static func earthShadow(at time: AstroTime) throws -> EngineShadow {
-        var e = Astronomy_GeoVector(BODY_SUN, time.raw, ABERRATION)
-        if let error = AstronomyError(status: e.status) {
-            throw error
-        }
-        e.x = -e.x
-        e.y = -e.y
-        e.z = -e.z
-
-        let m = Astronomy_GeoMoon(time.raw)
-        if let error = AstronomyError(status: m.status) {
-            throw error
-        }
-
+        let sun = try EnginePositions.geoVector(of: .sun, at: time, aberration: .corrected)
+        let e = Vector3D(x: -sun.x, y: -sun.y, z: -sun.z, time: time)
+        let m = try EnginePositions.geoMoon(at: time)
         return calcShadow(bodyRadiusKM: EngineConstants.earthEclipseRadiusKM, time: time, target: m, dir: e)
     }
 
@@ -144,17 +126,23 @@ enum EngineEclipses {
 
         guard
             let s1 = try? EngineSearch.find(
-                t1: before, t2: centerTime, dtToleranceSeconds: 1.0,
+                t1: before,
+                t2: centerTime,
+                dtToleranceSeconds: 1.0,
                 { t in
                     let shadow = try earthShadow(at: t)
                     return -(shadow.r - radiusLimit)
-                }),
+                }
+            ),
             let s2 = try? EngineSearch.find(
-                t1: centerTime, t2: after, dtToleranceSeconds: 1.0,
+                t1: centerTime,
+                t2: after,
+                dtToleranceSeconds: 1.0,
                 { t in
                     let shadow = try earthShadow(at: t)
                     return shadow.r - radiusLimit
-                })
+                }
+            )
         else {
             return -1.0
         }
@@ -168,11 +156,11 @@ enum EngineEclipses {
         var fmTime = startTime
 
         for _ in 0..<12 {
-            let fullMoon = Astronomy_SearchMoonPhase(180.0, fmTime.raw, 40.0)
-            if let error = AstronomyError(status: fullMoon.status) {
-                throw error
-            }
-            let fullMoonTime = AstroTime(raw: fullMoon.time)
+            let fullMoonTime = try EngineEvents.searchMoonPhase(
+                targetLon: 180.0,
+                after: fmTime,
+                limitDays: 40.0
+            )
 
             let moon = EngineMoonCore.calcMoon(centuries: fullMoonTime.terrestrialTime / 36525.0)
             if EngineConstants.rad2Deg * abs(moon.lat) < pruneLatitude {
@@ -242,21 +230,11 @@ enum EngineEclipses {
     // MARK: - Global Solar Eclipse
 
     private static func moonShadow(at time: AstroTime) throws -> EngineShadow {
-        let s = Astronomy_GeoVector(BODY_SUN, time.raw, ABERRATION)
-        if let error = AstronomyError(status: s.status) {
-            throw error
-        }
-        var m = Astronomy_GeoMoon(time.raw)
-        if let error = AstronomyError(status: m.status) {
-            throw error
-        }
-
-        let e = astro_vector_t(status: m.status, x: -m.x, y: -m.y, z: -m.z, t: m.t)
-        m.x -= s.x
-        m.y -= s.y
-        m.z -= s.z
-
-        return calcShadow(bodyRadiusKM: EngineConstants.moonMeanRadiusKM, time: time, target: e, dir: m)
+        let s = try EnginePositions.geoVector(of: .sun, at: time, aberration: .corrected)
+        let m = try EnginePositions.geoMoon(at: time)
+        let e = Vector3D(x: -m.x, y: -m.y, z: -m.z, time: time)
+        let dir = Vector3D(x: m.x - s.x, y: m.y - s.y, z: m.z - s.z, time: time)
+        return calcShadow(bodyRadiusKM: EngineConstants.moonMeanRadiusKM, time: time, target: e, dir: dir)
     }
 
     private static func peakMoonShadow(near centerTime: AstroTime) throws -> EngineShadow {
@@ -274,11 +252,8 @@ enum EngineEclipses {
     }
 
     private static func geoidIntersect(_ shadow: EngineShadow) throws -> GlobalSolarEclipse {
-        var shadowTimeRaw = shadow.time.raw
-        let rot = Astronomy_Rotation_EQJ_EQD(&shadowTimeRaw)
-        if let error = AstronomyError(status: rot.status) {
-            throw error
-        }
+        let tilt = EngineRotation.earthTilt(at: shadow.time)
+        let rot = EngineRotation.eqjToEqd(at: shadow.time, tilt: tilt)
 
         let (vx0, vy0, vz0) = EngineMath.rotate(rot, shadow.dir.x, shadow.dir.y, shadow.dir.z)
         let (ex0, ey0, ez0) = EngineMath.rotate(rot, shadow.target.x, shadow.target.y, shadow.target.z)
@@ -312,7 +287,7 @@ enum EngineEclipses {
                 latitude = EngineConstants.rad2Deg * atan(pz / proj)
             }
 
-            let gast = Astronomy_SiderealTime(&shadowTimeRaw)
+            let gast = EngineRotation.siderealTime(at: shadow.time, tilt: tilt)
             var longitude = fmod((EngineConstants.rad2Deg * atan2(py, px)) - (15.0 * gast), 360.0)
             if longitude <= -180.0 {
                 longitude += 360.0
@@ -320,24 +295,18 @@ enum EngineEclipses {
                 longitude -= 360.0
             }
 
-            let inv = Astronomy_InverseRotation(rot)
-            if let error = AstronomyError(status: inv.status) {
-                throw error
-            }
-
+            let inv = EngineRotation.inverse(rot)
             let (ox0, oy0, oz0) = EngineMath.rotate(inv, px / kmPerAU, py / kmPerAU, pz / kmPerAU)
-            let obsLunacentric = astro_vector_t(
-                status: ASTRO_SUCCESS,
+            let obsLunacentric = Vector3D(
                 x: ox0 + shadow.target.x,
                 y: oy0 + shadow.target.y,
                 z: oz0 + shadow.target.z,
-                t: shadowTimeRaw
+                time: shadow.time
             )
 
-            let peakTime = AstroTime(raw: shadowTimeRaw)
             let surface = calcShadow(
                 bodyRadiusKM: EngineConstants.moonPolarRadiusKM,
-                time: peakTime,
+                time: shadow.time,
                 target: obsLunacentric,
                 dir: shadow.dir
             )
@@ -350,7 +319,7 @@ enum EngineEclipses {
 
             return GlobalSolarEclipse(
                 kind: kind,
-                peak: peakTime,
+                peak: shadow.time,
                 obscuration: obs,
                 distance: shadow.r,
                 latitude: latitude,
@@ -360,7 +329,7 @@ enum EngineEclipses {
 
         return GlobalSolarEclipse(
             kind: .partial,
-            peak: AstroTime(raw: shadowTimeRaw),
+            peak: shadow.time,
             obscuration: .nan,
             distance: shadow.r,
             latitude: nil,
@@ -374,11 +343,11 @@ enum EngineEclipses {
         var nmTime = startTime
 
         for _ in 0..<12 {
-            let newMoon = Astronomy_SearchMoonPhase(0.0, nmTime.raw, 40.0)
-            if let error = AstronomyError(status: newMoon.status) {
-                throw error
-            }
-            let newMoonTime = AstroTime(raw: newMoon.time)
+            let newMoonTime = try EngineEvents.searchMoonPhase(
+                targetLon: 0.0,
+                after: nmTime,
+                limitDays: 40.0
+            )
 
             let moon = EngineMoonCore.calcMoon(centuries: newMoonTime.terrestrialTime / 36525.0)
             if EngineConstants.rad2Deg * abs(moon.lat) < pruneLatitude {
@@ -402,46 +371,26 @@ enum EngineEclipses {
 
     private static func localMoonShadow(
         at time: AstroTime,
-        observer: astro_observer_t
+        observer: Observer
     ) throws -> EngineShadow {
-        var rawTime = time.raw
-        let obsVec = Astronomy_ObserverVector(&rawTime, observer, EQUATOR_J2000)
-        if let error = AstronomyError(status: obsVec.status) {
-            throw error
-        }
+        let obsVec = EngineObserver.observerVector(at: time, observer: observer, equator: .j2000)
+        let s = try EnginePositions.geoVector(of: .sun, at: time, aberration: .corrected)
+        let m = try EnginePositions.geoMoon(at: time)
 
-        let s = Astronomy_GeoVector(BODY_SUN, rawTime, ABERRATION)
-        if let error = AstronomyError(status: s.status) {
-            throw error
-        }
-
-        var m = Astronomy_GeoMoon(rawTime)
-        if let error = AstronomyError(status: m.status) {
-            throw error
-        }
-
-        let o = astro_vector_t(
-            status: m.status,
-            x: obsVec.x - m.x,
-            y: obsVec.y - m.y,
-            z: obsVec.z - m.z,
-            t: m.t
-        )
-        m.x -= s.x
-        m.y -= s.y
-        m.z -= s.z
+        let o = Vector3D(x: obsVec.x - m.x, y: obsVec.y - m.y, z: obsVec.z - m.z, time: time)
+        let dir = Vector3D(x: m.x - s.x, y: m.y - s.y, z: m.z - s.z, time: time)
 
         return calcShadow(
             bodyRadiusKM: EngineConstants.moonMeanRadiusKM,
-            time: AstroTime(raw: rawTime),
+            time: time,
             target: o,
-            dir: m
+            dir: dir
         )
     }
 
     private static func peakLocalMoonShadow(
         near centerTime: AstroTime,
-        observer: astro_observer_t
+        observer: Observer
     ) throws -> EngineShadow {
         let dt = 1.0 / 86400.0
         let window = 0.2
@@ -457,20 +406,21 @@ enum EngineEclipses {
     }
 
     private static func calcSunAltitudeEvent(
-        observer: astro_observer_t,
+        observer: Observer,
         at time: AstroTime
     ) throws -> EclipseEvent {
-        var rawTime = time.raw
-        let equ = Astronomy_Equator(BODY_SUN, &rawTime, observer, EQUATOR_OF_DATE, ABERRATION)
-        if let error = AstronomyError(status: equ.status) {
-            throw error
-        }
-        let hor = Astronomy_Horizon(&rawTime, observer, equ.ra, equ.dec, REFRACTION_NORMAL)
+        let gc = try EnginePositions.geoVector(of: .sun, at: time, aberration: .corrected)
+        let hor = try EngineObserver.horizon(
+            geocentric: gc,
+            at: time,
+            observer: observer,
+            refraction: .normal
+        )
         return EclipseEvent(time: time, altitude: hor.altitude)
     }
 
     private static func localEclipseTransition(
-        observer: astro_observer_t,
+        observer: Observer,
         direction: Double,
         isTotal: Bool,
         t1: AstroTime,
@@ -486,7 +436,7 @@ enum EngineEclipses {
 
     private static func localEclipse(
         shadow: EngineShadow,
-        observer: astro_observer_t
+        observer: Observer
     ) throws -> LocalSolarEclipse {
         let partialWindow = 0.2
         let totalWindow = 0.01
@@ -554,7 +504,7 @@ enum EngineEclipses {
 
     static func searchLocalSolar(
         after startTime: AstroTime,
-        observer: astro_observer_t
+        observer: Observer
     ) throws -> LocalSolarEclipse {
         guard observer.height.isFinite, (-6_378_136.6...100_000.0).contains(observer.height) else {
             throw AstronomyError.invalidParameter
@@ -564,11 +514,11 @@ enum EngineEclipses {
         var nmTime = startTime
 
         for _ in 0..<2000 {
-            let newMoon = Astronomy_SearchMoonPhase(0.0, nmTime.raw, 40.0)
-            if let error = AstronomyError(status: newMoon.status) {
-                throw error
-            }
-            let newMoonTime = AstroTime(raw: newMoon.time)
+            let newMoonTime = try EngineEvents.searchMoonPhase(
+                targetLon: 0.0,
+                after: nmTime,
+                limitDays: 40.0
+            )
 
             let moon = EngineMoonCore.calcMoon(centuries: newMoonTime.terrestrialTime / 36525.0)
             if EngineConstants.rad2Deg * abs(moon.lat) < pruneLatitude {
@@ -592,7 +542,7 @@ enum EngineEclipses {
 
     static func nextLocalSolar(
         after prevEclipseTime: AstroTime,
-        observer: astro_observer_t
+        observer: Observer
     ) throws -> LocalSolarEclipse {
         try searchLocalSolar(after: prevEclipseTime.addingDays(10.0), observer: observer)
     }
