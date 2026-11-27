@@ -384,6 +384,38 @@ struct LagrangePointTests {
         }
 
         @Test(
+            "L4 and L5 with non-axis-aligned parallel 3D separation and velocity throw invalidParameter",
+            arguments: [LagrangePointID.l4, .l5],
+            [
+                (1.0, 3.0, 9.0, 1.0, 3.0, 9.0),
+                (1.0, 3.0, 9.0, -1.0, -3.0, -9.0),
+                (1.0, 3.0, 9.0, 3.0, 9.0, 27.0),
+                (1.0, 3.0, 9.0, -5.0, -15.0, -45.0),
+                (
+                    Double(sign: .plus, exponent: 500, significand: 1.0),
+                    3.0 * Double(sign: .plus, exponent: 500, significand: 1.0),
+                    9.0 * Double(sign: .plus, exponent: 500, significand: 1.0),
+                    Double(sign: .plus, exponent: -500, significand: 1.0),
+                    3.0 * Double(sign: .plus, exponent: -500, significand: 1.0),
+                    9.0 * Double(sign: .plus, exponent: -500, significand: 1.0)
+                ),
+            ]
+        )
+        func nonAxisAlignedParallelVelocityThrowsInvalidParameter(
+            point: LagrangePointID,
+            vectors: (Double, Double, Double, Double, Double, Double)
+        ) {
+            let (dx, dy, dz, vx, vy, vz) = vectors
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try calculateFast(
+                    point,
+                    minorPosition: Vector3D(x: dx, y: dy, z: dz, time: testTime),
+                    minorVelocity: Vector3D(x: vx, y: vy, z: vz, time: testTime)
+                )
+            }
+        }
+
+        @Test(
             "L1 to L3 do not use the tangent and still succeed",
             arguments: [LagrangePointID.l1, .l2, .l3],
             degenerateTangents
