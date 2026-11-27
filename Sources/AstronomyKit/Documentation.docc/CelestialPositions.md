@@ -16,7 +16,7 @@ let sun = CelestialBody.sun
 let moon = CelestialBody.moon
 let mars = CelestialBody.mars
 
-// All planets (Mercury through Neptune)
+// Major planets other than Earth (Mercury through Neptune)
 for planet in CelestialBody.planets {
     print(planet.name)
 }
@@ -85,6 +85,8 @@ print(eq.declinationFormatted)      // "+12° 34' 56.7""
 Choose the reference equinox:
 
 ```swift
+let body = CelestialBody.mars
+
 // J2000 coordinates (default) - standard reference epoch
 let j2000 = try body.equatorial(at: .now, equatorDate: .j2000)
 
@@ -92,9 +94,9 @@ let j2000 = try body.equatorial(at: .now, equatorDate: .j2000)
 let ofDate = try body.equatorial(at: .now, equatorDate: .ofDate)
 ```
 
-## Ecliptic Coordinates
+## Ecliptic Coordinates and Velocity
 
-Position relative to the ecliptic plane:
+Position and rate of change relative to the true ecliptic and equinox of date:
 
 ```swift
 let longitude = try CelestialBody.venus.eclipticLongitude(at: .now)
@@ -103,7 +105,13 @@ print("Venus ecliptic longitude: \(longitude)°")
 // Sun's full ecliptic position
 let sunPos = try Sun.position(at: .now)
 print("Sun: λ=\(sunPos.longitude)°, β=\(sunPos.latitude)°")
+
+// Position and velocity together via EclipticState
+let state = try CelestialBody.mars.geocentricEclipticState(at: .now)
+print("Mars λ=\(state.longitude)°, dλ/dt=\(state.longitudeRate)°/day")
 ```
+
+``EclipticState`` provides `longitudeRate`, `latitudeRate`, and `distanceRate` per Terrestrial Time day via ``CelestialBody/geocentricEclipticState(at:aberration:)``, ``Sun/eclipticState(at:)``, and ``Moon/eclipticState(at:)``.
 
 ## Position Vectors
 
@@ -173,6 +181,8 @@ J2000 coordinates can be found from star catalogs like SIMBAD, Hipparcos, or the
 Control light-time and aberration corrections:
 
 ```swift
+let body = CelestialBody.mars
+
 // With correction (default) - apparent position
 let apparent = try body.geocentricPosition(at: .now, aberration: .corrected)
 
@@ -185,6 +195,8 @@ let geometric = try body.geocentricPosition(at: .now, aberration: .none)
 Atmospheric refraction affects horizon coordinates:
 
 ```swift
+let body = CelestialBody.mars
+
 // Normal refraction (default)
 let normal = try body.horizon(at: .now, from: observer, refraction: .normal)
 

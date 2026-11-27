@@ -4,7 +4,7 @@ Learn how to add AstronomyKit to your project and perform basic astronomical cal
 
 ## Overview
 
-AstronomyKit provides a type-safe Swift interface for astronomical calculations. This article walks you through installation and your first calculations.
+AstronomyKit is a pure Swift 6 library for on-device astronomical calculations, based on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library with zero C dependencies. This article covers installation and your first calculations.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Add AstronomyKit to your Swift package:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "4.0.0")
+    .package(url: "https://github.com/heirloomlogic/AstronomyKit", from: "4.2.0")
 ]
 ```
 
@@ -86,11 +86,11 @@ if let sunset = try CelestialBody.sun.setTime(after: .now, from: observer) {
 
 ## Error Handling
 
-All potentially failing calculations throw ``AstronomyError``:
+Calculations that can fail throw ``AstronomyError``:
 
 ```swift
 do {
-    let position = try CelestialBody.earth.horizon(at: .now, from: observer)
+    _ = try CelestialBody.earth.riseTime(after: .now, from: observer)
 } catch AstronomyError.earthNotAllowed {
     print("Cannot observe Earth from Earth!")
 } catch {
@@ -100,6 +100,6 @@ do {
 
 ## Next Steps
 
-- <doc:TimeAndObservers> — Deep dive into time and location handling
-- <doc:CelestialPositions> — Calculate positions for any celestial body
-- <doc:MoonPhases> — Explore moon phase calculations
+- <doc:TimeAndObservers> — Time scales, Delta T, and observer locations
+- <doc:CelestialPositions> — Positions for solar system bodies and fixed stars
+- <doc:MoonPhases> — Moon phases, libration, nodes, and apsides

@@ -2,8 +2,8 @@ import AstronomyKit
 import Testing
 
 /// Verifies that the constellation rotation matrix's lazy initialization is
-/// thread-safe: concurrent first calls must not race on the shared state that
-/// `Astronomy_Constellation` initializes once.
+/// thread-safe: concurrent first calls to `Constellation.find` must not race
+/// on the shared J2000-to-B1875 frame initialized once.
 @Suite("Constellation Thread Safety")
 struct ConstellationThreadSafetyTests {
     /// Known coordinates and the constellation that contains them.

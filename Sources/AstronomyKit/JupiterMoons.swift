@@ -15,7 +15,7 @@
 /// ## Example
 ///
 /// ```swift
-/// let moons = Jupiter.moons(at: .now)
+/// let moons = try Jupiter.moons(at: .now)
 /// print("Io position: \(moons.io.position)")
 /// print("Europa velocity: \(moons.europa.velocity)")
 /// ```

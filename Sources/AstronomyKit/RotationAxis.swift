@@ -30,7 +30,9 @@ public struct RotationAxis: Sendable, Equatable {
 
     /// The rotation angle of the body's prime meridian in degrees.
     ///
-    /// This value increases as the body rotates and wraps around 360°.
+    /// This value increases continuously as the body rotates (or decreases
+    /// for retrograde rotators such as Venus and Uranus) and does not wrap
+    /// modulo 360°.
     public let spin: Double
 
     /// A unit vector pointing toward the body's north pole in J2000 coordinates.

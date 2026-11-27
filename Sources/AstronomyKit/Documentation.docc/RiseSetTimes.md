@@ -181,10 +181,10 @@ This is convenient for building daily almanac displays.
 All returned times are in UTC. Convert for display:
 
 ```swift
-let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer)!
-
-let formatter = DateFormatter()
-formatter.timeZone = TimeZone(identifier: "America/New_York")
-formatter.timeStyle = .short
-print("Sunrise: \(formatter.string(from: sunrise.date))")
+if let sunrise = try CelestialBody.sun.riseTime(after: .now, from: observer) {
+    let formatter = DateFormatter()
+    formatter.timeZone = TimeZone(identifier: "America/New_York")
+    formatter.timeStyle = .short
+    print("Sunrise: \(formatter.string(from: sunrise.date))")
+}
 ```

@@ -36,13 +36,15 @@ default:
 
 ### Eclipse Timing
 
+``LunarEclipse`` reports the peak time and semi-durations (half-durations in minutes) for each phase:
+
 ```swift
 let eclipse = try Eclipse.searchLunar(after: .now)
 
 print("Peak: \(eclipse.peak)")
-print("Partial duration: \(eclipse.partialDuration) minutes")
-print("Total duration: \(eclipse.totalDuration) minutes")  // 0 if not total
-print("Penumbral duration: \(eclipse.penumbralDuration) minutes")
+print("Partial semi-duration: \(eclipse.partialDuration) minutes")
+print("Total semi-duration: \(eclipse.totalDuration) minutes")  // 0 if not total
+print("Penumbral semi-duration: \(eclipse.penumbralDuration) minutes")
 ```
 
 ### All Eclipses in a Date Range
@@ -162,6 +164,6 @@ for eclipse in eclipses {
 
 ## Eclipse Search Tips
 
-1. **Search far ahead**: Eclipses are rare—search years in advance
-2. **Check visibility**: Local eclipses may occur when the Sun is below the horizon
-3. **Consider obscuration**: Even partial eclipses can be interesting when obscuration is high
+- Search years in advance, since eclipses are rare at any single location.
+- Check `isVisible` on local solar eclipses because an eclipse can occur while the Sun is below the horizon.
+- Check `obscuration` to filter for partial eclipses with meaningful coverage.

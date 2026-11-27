@@ -309,11 +309,10 @@ public enum Chiron {
     /// integration. This keeps a reused simulation's worst-case error
     /// comparable to a fresh one while making light-travel iteration cheap.
     ///
-    /// `@unchecked Sendable` lets an instance be captured by the `@Sendable`
-    /// light-travel closure. The C solver invokes that closure synchronously
-    /// and serially on the calling thread, so the instance is never touched
-    /// concurrently.
-    private final class ReusableSimulation: @unchecked Sendable {
+    /// `AstroSearch.correctLightTravel` takes a synchronous, non-escaping
+    /// closure, so the simulation is captured directly on the calling thread
+    /// without requiring `Sendable` conformance or locking.
+    private final class ReusableSimulation {
         private var epochIndex: Int?
         private var simulation: GravitySimulation?
         private var lastUniversalTime = 0.0

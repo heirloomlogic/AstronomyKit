@@ -100,7 +100,7 @@ Transform a vector using a rotation matrix:
 ```swift
 let position = try CelestialBody.mars.geocentricPosition(at: .now)
 let rotation = try RotationMatrix.equatorialJ2000ToEcliptic()
-let eclipticPosition = position.rotated(by: rotation)
+let eclipticPosition = try position.rotated(by: rotation)
 ```
 
 ### Matrix Operations
@@ -111,7 +111,7 @@ let identity = RotationMatrix.identity
 
 // Inverse (reverse rotation)
 let forward = try RotationMatrix.equatorialJ2000ToEcliptic()
-let reverse = forward.inverse
+let reverse = try forward.inverse
 
 // Combine rotations
 let combined = try forward.combined(with: anotherRotation)
@@ -149,8 +149,7 @@ print("Velocity: \(state.velocity)")  // AU/day
 
 ## Spherical Coordinates
 
-The `Spherical` type (latitude, longitude, distance) is produced by converting
-a position vector:
+The ``Spherical`` type (latitude, longitude, distance) is produced by converting a position vector:
 
 ```swift
 let vector = try CelestialBody.mars.geocentricPosition(at: .now)
@@ -167,6 +166,8 @@ print("Distance: \(spherical.distance) AU")
 Atmospheric refraction bends light, affecting apparent altitude:
 
 ```swift
+let body = CelestialBody.mars
+
 // Normal refraction correction (default)
 let apparent = try body.horizon(at: .now, from: observer, refraction: .normal)
 
@@ -196,6 +197,8 @@ let geometric = 5.0 - inverse
 Light-time and stellar aberration affect apparent positions:
 
 ```swift
+let body = CelestialBody.mars
+
 // With aberration correction (default) - what you actually see
 let apparent = try body.geocentricPosition(at: .now, aberration: .corrected)
 

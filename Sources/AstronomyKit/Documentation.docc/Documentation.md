@@ -1,6 +1,6 @@
 # ``AstronomyKit``
 
-Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitty/astronomy) library.
+Pure Swift 6 astronomical calculations based on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library.
 
 @Metadata {
     @DisplayName("AstronomyKit")
@@ -11,17 +11,18 @@ Swift bindings for Don Cross’ [Astronomy Engine](https://github.com/cosinekitt
 
 ![AstronomyKit logo — a bronze armillary sphere](AstronomyKit-logo)
 
-AstronomyKit wraps Don Cross's [Astronomy Engine](https://github.com/cosinekitty/astronomy) and exposes the underlying C functionality through idiomatic Swift APIs.
+AstronomyKit is a 100% pure Swift 6 library based on Don Cross' [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library, with zero C dependencies, strict concurrency checking, and full `Sendable` conformance.
 
 ### Features
 
-- **Celestial Body Positions** — Calculate positions for the Sun, Moon, planets, and Jupiter's moons
-- **Moon Phases** — Phase angles, quarter searches, illumination, and libration
-- **Rise/Set Times** — Sunrise, sunset, moonrise, culmination, and custom altitude searches
-- **Eclipses** — Predict lunar and solar eclipses with detailed timing
-- **Seasons** — Find equinoxes and solstices for any year
-- **Coordinate Systems** — Transform between equatorial, ecliptic, horizontal, and galactic frames
-- **Swift 6 Ready** — Full `Sendable` conformance for safe concurrency
+- Positions and ecliptic velocities for the Sun, Moon, planets, and Jupiter's Galilean moons
+- Moon phase angles, quarters, illumination, libration, and lunar nodes
+- Rise, set, culmination, and custom altitude searches
+- Lunar, global solar, and local solar eclipse predictions
+- Equinoxes, solstices, planetary apsides, elongations, and transits
+- Coordinate transforms across equatorial, ecliptic, horizontal, and galactic frames
+- Stateless fixed stars, gravity-simulated 2060 Chiron, and generic root-finding search
+- Pure Swift 6 implementation with zero C dependencies and full `Sendable` conformance
 
 ### Quick Start
 
@@ -113,6 +114,7 @@ print("Mars: \(mars.altitude)° \(mars.compassDirection)")
 
 - ``Equatorial``
 - ``Ecliptic``
+- ``EclipticState``
 - ``Horizon``
 - ``Spherical``
 - ``Vector3D``

@@ -4,7 +4,7 @@ Calculate moon phases, quarters, libration, and lunar nodes.
 
 ## Overview
 
-The ``Moon`` type provides comprehensive lunar calculations including phase angles, illumination, quarter searches, libration data, and node crossings.
+The ``Moon`` type provides lunar phase angles, illumination, quarter searches, positions, libration data, node crossings, and apsides.
 
 ## Phase Angle
 
@@ -90,25 +90,19 @@ print("Distance: \(position.distance) AU")
 
 ### Moon State (Position and Velocity)
 
-Get the Moon's complete state vector including velocity:
+Get the Moon's geocentric 3D state vector or its ecliptic velocity:
 
 ```swift
 let state = try Moon.geoState(at: .now)
-
-// Position in AU
 print("Distance: \(state.position.magnitude) AU")
+print("Speed: \(state.velocity.magnitude) AU/day")
 
-// Velocity in AU/day
-let speed = sqrt(
-    state.velocity.x * state.velocity.x +
-    state.velocity.y * state.velocity.y +
-    state.velocity.z * state.velocity.z
-)
-print("Speed: \(speed) AU/day")
+// Ecliptic position and angular rates (degrees per TT day)
+let eclipticState = try Moon.eclipticState(at: .now)
+print("Longitude: \(eclipticState.longitude)°, Rate: \(eclipticState.longitudeRate)°/day")
 ```
 
-> Tip: Use `geoState(at:)` for velocity calculations instead of differencing 
-> ecliptic longitude positions, which gives inaccurate results.
+> Tip: Use ``Moon/eclipticState(at:)`` for ecliptic longitude/latitude rates, or ``Moon/geoState(at:)`` for 3D Cartesian velocity, rather than manual finite differences.
 
 ### Using CelestialBody
 

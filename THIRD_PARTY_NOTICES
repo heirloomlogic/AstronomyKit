@@ -1,8 +1,9 @@
 Third-Party Software Notices
 ============================
 
-AstronomyKit wraps the Astronomy Engine C library. The original source code
-and full project are available at https://github.com/cosinekitty/astronomy.
+AstronomyKit is a pure Swift port based on Don Cross' Astronomy Engine C
+library. The original source code and full project are available at
+https://github.com/cosinekitty/astronomy.
 
 -------------------------------------------------------------------------------
 

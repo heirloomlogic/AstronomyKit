@@ -2,8 +2,9 @@
 //  AstronomyKit.swift
 //  AstronomyKit
 //
-//  AstronomyKit ports the [Astronomy Engine](https://github.com/cosinekitty/astronomy) library by
-//  Don Cross to pure Swift, providing idiomatic APIs for calculating:
+//  AstronomyKit is a 100% pure Swift 6 library based on Don Cross’
+//  [Astronomy Engine](https://github.com/cosinekitty/astronomy) C library,
+//  with zero C dependencies, providing idiomatic APIs for calculating:
 //
 //  - Positions for the Sun, Moon, planets, and Jupiter's moons
 //  - Moon phase angles, quarters, illumination, and libration
@@ -119,13 +120,13 @@ public enum AstronomyConfig {
         EngineTime.setDeltaTModel(model)
     }
 
-    /// Frees all dynamic memory allocated by the Astronomy Engine.
+    /// Frees cached dynamic memory allocated by the engine.
     ///
-    /// The engine allocates memory in only one place: a cache of orbit
-    /// segments that speeds up Pluto calculations. This purges that cache,
-    /// which slows down the next nearby Pluto calculation but releases the
-    /// memory (useful before running leak checkers). It does not affect the
-    /// Delta T model or any ``FixedStar`` definitions.
+    /// The engine allocates cached memory in only one place: orbit segments
+    /// that speed up Pluto calculations. This purges that cache, which slows
+    /// down the next nearby Pluto calculation but releases the memory (useful
+    /// before running leak checkers). It does not affect the Delta T model or
+    /// any ``FixedStar`` definitions.
     ///
     /// This is safe to call concurrently with other calculations.
     public static func reset() {

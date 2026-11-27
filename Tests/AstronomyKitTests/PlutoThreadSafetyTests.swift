@@ -2,7 +2,7 @@ import AstronomyKit
 import Foundation
 import Testing
 
-/// Test to verify that Pluto calculations are thread-safe after mutex fix.
+/// Verifies that Pluto calculations remain thread-safe under concurrent access.
 ///
 /// This test runs multiple Pluto calculations in parallel to detect race conditions.
 @Suite("Pluto Thread Safety")

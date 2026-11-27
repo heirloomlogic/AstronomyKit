@@ -2,10 +2,10 @@ import AstronomyKit
 import Foundation
 import Testing
 
-/// Verifies that the per-slot fixed-star pool is thread-safe: many distinct stars
-/// mapped across the eight C star slots must produce the same results concurrently
-/// as they do serially, and repeated calls for a single star (which hit the
-/// definition-cache skip path) must stay consistent.
+/// Verifies that stateless fixed-star calculations are thread-safe: many
+/// distinct stars evaluated concurrently must produce the same results as they
+/// do serially, and repeated concurrent calls for a single star must stay
+/// consistent.
 @Suite("Fixed Star Concurrency")
 struct FixedStarConcurrencyTests {
     /// A distinct star with a precomputed serial reference position.
@@ -18,8 +18,7 @@ struct FixedStarConcurrencyTests {
 
     static let time = AstroTime(year: 2_025, month: 6, day: 21)
 
-    /// Sixteen distinct stars spread across right ascension, declination, and distance
-    /// so that they hash into a mix of the eight available slots.
+    /// Sixteen distinct stars spread across right ascension, declination, and distance.
     static let stars: [FixedStar] = (0..<16).map { i in
         FixedStar(
             name: "Star\(i)",
@@ -62,7 +61,7 @@ struct FixedStarConcurrencyTests {
         }
     }
 
-    @Test("Repeated same-star lookups stay consistent (definition-cache skip path)")
+    @Test("Repeated same-star lookups stay consistent")
     func repeatedSameStarIsConsistent() async throws {
         let star = FixedStar(
             name: "Algol",
@@ -71,7 +70,7 @@ struct FixedStarConcurrencyTests {
             distance: 92.95
         )
 
-        // Serial reference for a single star, exercising the cached-definition path.
+        // Serial reference for a single star across repeated lookups.
         let reference = try star.ecliptic(at: Self.time)
         for _ in 0..<50 {
             let ecliptic = try star.ecliptic(at: Self.time)
@@ -80,7 +79,7 @@ struct FixedStarConcurrencyTests {
             #expect(ecliptic.distance == reference.distance)
         }
 
-        // Hammer the same star from many tasks; all share one slot and skip redefinition.
+        // Evaluate the same star concurrently from many tasks.
         try await withThrowingTaskGroup(of: Void.self) { group in
             for _ in 0..<16 {
                 group.addTask {

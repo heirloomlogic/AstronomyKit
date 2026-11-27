@@ -4,7 +4,26 @@ N-body simulations, Lagrange points, Jupiter's moons, and more.
 
 ## Overview
 
-AstronomyKit includes advanced features for specialized astronomical calculations, including gravity simulations, Lagrange point positions, Jupiter's Galilean moons, planetary rotation axes, and atmospheric modeling.
+AstronomyKit includes specialized pure-Swift calculation tools for gravity simulations, custom root-finding searches, Lagrange point positions, Jupiter's Galilean moons, planetary rotation axes, atmospheric modeling, fixed stars, and 2060 Chiron.
+
+## Custom Event Search
+
+Use ``AstroSearch`` to find ascending roots of arbitrary functions over a time window, or to correct custom position functions for light-travel time. Both ``AstroSearch/find(from:to:toleranceSeconds:_:)`` and ``AstroSearch/correctLightTravel(at:_:)`` take synchronous, non-escaping closures, so they can capture local mutable state directly under Swift 6 strict concurrency.
+
+```swift
+let start = AstroTime(year: 2025, month: 1, day: 1)
+let end = start.addingDays(30)
+var evaluations = 0
+
+let crossing = try AstroSearch.find(from: start, to: end) { time in
+    evaluations += 1
+    let lon = try Moon.ecliptic(at: time).longitude
+    var diff = lon - 90.0
+    while diff < -180 { diff += 360 }
+    while diff > 180 { diff -= 360 }
+    return diff
+}
+```
 
 ## N-Body Gravity Simulation
 
@@ -213,7 +232,6 @@ J2000 coordinates can be found from:
 - [SIMBAD Astronomical Database](https://simbad.cds.unistra.fr/simbad/)
 - Hipparcos Catalog
 - Yale Bright Star Catalog
-
 
 ## Chiron
 

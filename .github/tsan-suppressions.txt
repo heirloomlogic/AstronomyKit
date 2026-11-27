@@ -1,5 +1,0 @@
-# ThreadSanitizer suppressions for AstronomyKit's Linux CI job.
-#
-# No active suppressions: FixedStar is stateless, and engine shared state
-# (the Pluto orbit cache and custom Delta T hook) uses NSLock and
-# Synchronization.Atomic, both of which ThreadSanitizer models on Linux.
