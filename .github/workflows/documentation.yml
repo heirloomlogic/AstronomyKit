@@ -10,21 +10,16 @@ permissions:
   contents: read
 
 jobs:
-  documentation:
+  build:
     runs-on: macos-26
     timeout-minutes: 20
-    # Scoped to this job rather than the workflow: the deploy step below pushes
-    # the built docs to the gh-pages branch.
     permissions:
-      contents: write
+      contents: read
     steps:
-      # No `persist-credentials: false` here, unlike every other checkout in
-      # this repo. This job ends in a push to gh-pages, and stripping the
-      # token from .git/config is a change that cannot be proven on a pull
-      # request — this workflow only fires on a version tag or a manual
-      # dispatch. Leave the credentials alone.
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Clean docs directory
         run: rm -rf ./docs
@@ -43,6 +38,38 @@ jobs:
 
       - name: Create .nojekyll file
         run: touch ./docs/.nojekyll
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: documentation
+          path: docs
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # Scoped to the deploy job only: the build job above runs SwiftPM plugins
+    # with read-only permissions and no persisted git credentials.
+    permissions:
+      contents: write
+    steps:
+      # github-pages-deploy-action runs git config/remote/worktree commands in
+      # the workspace, so check out a shallow repo without persisted
+      # credentials; the deploy action authenticates via its default github.token.
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download documentation artifact
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: documentation
+          path: docs
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # v4.9.0

@@ -64,8 +64,8 @@ let devSentinel = packageDir.appendingPathComponent(".dev-tooling").path
 
 if FileManager.default.fileExists(atPath: devSentinel) {
     package.dependencies += [
-        .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.5.0"),
-        .package(url: "https://github.com/heirloomlogic/Persnicket", from: "2.0.0"),
+        .package(url: "https://github.com/apple/swift-docc-plugin", exact: "1.5.0"),
+        .package(url: "https://github.com/heirloomlogic/Persnicket", exact: "2.3.0"),
     ]
     for target in package.targets {
         target.plugins = (target.plugins ?? []) + [.plugin(name: "Persnoop", package: "Persnicket")]
