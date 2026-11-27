@@ -244,6 +244,34 @@ struct SeasonsTests {
             #expect(s1 != s2)
         }
 
+        @Test("Hashable")
+        func hashable() throws {
+            let s1 = try Seasons.forYear(2_025)
+            let s2 = try Seasons.forYear(2_025)
+            let s3 = try Seasons.forYear(2_024)
+            let set: Set<Seasons> = [s1, s2, s3]
+
+            #expect(set.count == 2)
+        }
+
+        @Test("Explicit DeltaTModel shifts UT and propagates onto seasonal events")
+        func explicitDeltaTModel() throws {
+            let observed = try Seasons.forYear(2_027, deltaT: .observed)
+            let espenak = try Seasons.forYear(2_027, deltaT: .espenakMeeus)
+            let jpl = try Seasons.forYear(2_027, deltaT: .jplHorizons)
+
+            #expect(observed.marchEquinox.deltaTModel == .observed)
+            #expect(espenak.marchEquinox.deltaTModel == .espenakMeeus)
+            #expect(jpl.marchEquinox.deltaTModel == .jplHorizons)
+
+            // Same TT instant, shifted in UT by the difference between models (~6 s in 2027).
+            let utDiffSeconds = (observed.marchEquinox.universalTime - espenak.marchEquinox.universalTime) * 86_400
+            let expectedDiff =
+                DeltaTModel.espenakMeeus.deltaT(universalTime: observed.marchEquinox.universalTime)
+                - DeltaTModel.observed.deltaT(universalTime: observed.marchEquinox.universalTime)
+            #expect(abs(utDiffSeconds - expectedDiff) < 0.1)
+        }
+
         @Test("CustomStringConvertible contains all events")
         func description() throws {
             let seasons = try Seasons.forYear(2_025)

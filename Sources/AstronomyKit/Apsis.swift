@@ -54,7 +54,7 @@ extension ApsisKind: CustomStringConvertible {
 /// print("\(apsis.kind.lunarName) at \(apsis.time)")
 /// print("Distance: \(Int(apsis.distanceKM)) km")
 /// ```
-public struct Apsis: Sendable, Equatable {
+public struct Apsis: Sendable, Equatable, Hashable {
     /// Whether this is a closest or farthest approach.
     public let kind: ApsisKind
 

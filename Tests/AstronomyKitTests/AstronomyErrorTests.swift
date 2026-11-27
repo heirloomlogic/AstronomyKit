@@ -19,7 +19,6 @@ struct AstronomyErrorTests {
         @Test("All error case descriptions exist")
         func allCasesHaveDescriptions() {
             let errors: [AstronomyError] = [
-                .notInitialized,
                 .invalidBody,
                 .noConvergence,
                 .badTime,
@@ -31,10 +30,7 @@ struct AstronomyErrorTests {
                 .internalError,
                 .invalidParameter,
                 .failApsis,
-                .bufferTooSmall,
-                .outOfMemory,
                 .inconsistentTimes,
-                .unknown(999),
             ]
 
             for error in errors {
@@ -44,7 +40,6 @@ struct AstronomyErrorTests {
 
         @Test("Error descriptions are meaningful")
         func meaningfulDescriptions() {
-            #expect(AstronomyError.notInitialized.description.contains("initialized"))
             #expect(AstronomyError.invalidBody.description.contains("body"))
             #expect(AstronomyError.noConvergence.description.contains("converge"))
             #expect(
@@ -62,21 +57,16 @@ struct AstronomyErrorTests {
                 AstronomyError.failApsis.description.contains("apsis")
                     || AstronomyError.failApsis.description.contains("psis")
             )
-            #expect(AstronomyError.bufferTooSmall.description.contains("uffer"))
-            #expect(AstronomyError.outOfMemory.description.contains("emory"))
             #expect(AstronomyError.inconsistentTimes.description.contains("imes"))
-        }
-
-        @Test("Unknown error includes code")
-        func unknownIncludesCode() {
-            let error = AstronomyError.unknown(42)
-            #expect(error.description.contains("42"))
         }
 
         @Test("localizedDescription mirrors description")
         func localizedDescriptionMirrorsDescription() {
             #expect(AstronomyError.badTime.localizedDescription == AstronomyError.badTime.description)
-            #expect(AstronomyError.unknown(42).localizedDescription.contains("42"))
+            #expect(
+                AstronomyError.inconsistentTimes.localizedDescription
+                    == AstronomyError.inconsistentTimes.description
+            )
         }
     }
 
@@ -94,16 +84,6 @@ struct AstronomyErrorTests {
         func differentAreNotEqual() {
             #expect(AstronomyError.invalidBody != AstronomyError.badTime)
             #expect(AstronomyError.noConvergence != AstronomyError.searchFailure)
-        }
-
-        @Test("Unknown errors with same code are equal")
-        func unknownWithSameCode() {
-            #expect(AstronomyError.unknown(100) == AstronomyError.unknown(100))
-        }
-
-        @Test("Unknown errors with different codes are not equal")
-        func unknownWithDifferentCodes() {
-            #expect(AstronomyError.unknown(100) != AstronomyError.unknown(200))
         }
     }
 

@@ -245,4 +245,50 @@ struct SearchTests {
         let wrapped = try #require(try Sun.searchLongitude(90 + 360 * 1e9, after: start))
         #expect(abs(wrapped.universalTime - direct.universalTime) * 86_400 < 60)
     }
+
+    @Test(
+        "Generic search rejects mismatched DeltaTModel endpoints before calling closure",
+        arguments: [
+            (DeltaTModel.espenakMeeus, DeltaTModel.observed),
+            (DeltaTModel.observed, DeltaTModel.espenakMeeus),
+            (DeltaTModel.jplHorizons, DeltaTModel.observed),
+            (DeltaTModel.espenakMeeus, DeltaTModel.jplHorizons),
+        ]
+    )
+    func genericSearchRejectsMismatchedDeltaTModels(startModel: DeltaTModel, endModel: DeltaTModel) {
+        // Year 2027: ~6.5 s ΔT gap between .espenakMeeus and .observed.
+        let start = AstroTime(year: 2_027, month: 6, day: 1, deltaT: startModel)
+        let shortEnd = AstroTime(ut: start.universalTime + 4.0 / 86_400.0, deltaT: endModel)
+        let wideEnd = AstroTime(ut: start.universalTime + 1.0, deltaT: endModel)
+
+        for end in [shortEnd, wideEnd] {
+            var callCount = 0
+            #expect(throws: AstronomyError.invalidParameter) {
+                _ = try AstroSearch.find(from: start, to: end, toleranceSeconds: 0.1) { time in
+                    callCount += 1
+                    return time.universalTime - (start.universalTime + 2.0 / 86_400.0)
+                }
+            }
+            #expect(callCount == 0, "Search must reject mismatched DeltaTModels before evaluating closure")
+        }
+    }
+
+    @Test("Generic search succeeds on a short 2027 bracket with matching non-default DeltaTModels")
+    func genericSearchMatchingNonDefaultDeltaTModels() throws {
+        for model in DeltaTModel.allCases {
+            let start = AstroTime(year: 2_027, month: 6, day: 1, deltaT: model)
+            let end = AstroTime(ut: start.universalTime + 4.0 / 86_400.0, deltaT: model)
+            let targetUT = start.universalTime + 3.5 / 86_400.0
+
+            let root = try #require(
+                try AstroSearch.find(from: start, to: end, toleranceSeconds: 0.01) { time in
+                    #expect(time.deltaTModel == model)
+                    return (time.universalTime - targetUT) * 86_400.0
+                }
+            )
+            #expect(root.deltaTModel == model)
+            #expect(root >= start && root <= end)
+            #expect(abs(root.universalTime - targetUT) * 86_400.0 < 0.01)
+        }
+    }
 }

@@ -182,7 +182,7 @@ extension CelestialBody {
 // MARK: - Aberration
 
 /// Light aberration correction mode.
-public enum Aberration: Sendable {
+public enum Aberration: Sendable, Equatable, Hashable {
     /// No correction for aberration.
     case none
 
@@ -193,7 +193,7 @@ public enum Aberration: Sendable {
 // MARK: - Equator Date
 
 /// The equinox reference for equatorial coordinates.
-public enum EquatorDate: Sendable {
+public enum EquatorDate: Sendable, Equatable, Hashable {
     /// Use J2000 epoch coordinates.
     case j2000
 

@@ -42,7 +42,7 @@
 // MARK: - Delta T Models
 
 /// The Delta T model used to convert between Universal Time and Terrestrial Time.
-public enum DeltaTModel: Sendable {
+public enum DeltaTModel: Sendable, Equatable, Hashable, CaseIterable {
     /// Observed Earth rotation (default).
     ///
     /// From 1962 through 2027, a yearly table of International Earth Rotation
@@ -63,6 +63,14 @@ public enum DeltaTModel: Sendable {
 
     /// The JPL Horizons model, for compatibility with JPL tools.
     case jplHorizons
+
+    /// Calculates the Delta T value (TT − UT) in seconds for a given Universal Time.
+    ///
+    /// - Parameter universalTime: Universal Time days since J2000 noon.
+    /// - Returns: Delta T in seconds.
+    public func deltaT(universalTime: Double) -> Double {
+        EngineTime.deltaT(ut: universalTime, model: self)
+    }
 }
 
 // MARK: - Module-Level Functions
@@ -83,7 +91,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTObserved(universalTime: Double) -> Double {
-        EngineTime.deltaTObserved(ut: universalTime)
+        DeltaTModel.observed.deltaT(universalTime: universalTime)
     }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
@@ -92,7 +100,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTEspenakMeeus(universalTime: Double) -> Double {
-        EngineTime.deltaTEspenakMeeus(ut: universalTime)
+        DeltaTModel.espenakMeeus.deltaT(universalTime: universalTime)
     }
 
     /// Calculates the Delta T value (TT - UT) for a given Universal Time
@@ -101,23 +109,7 @@ public enum AstronomyConfig {
     /// - Parameter universalTime: Universal Time days since J2000 noon.
     /// - Returns: Delta T in seconds.
     public static func deltaTJplHorizons(universalTime: Double) -> Double {
-        EngineTime.deltaTJplHorizons(ut: universalTime)
-    }
-
-    /// Sets the Delta T model used for all subsequent calculations.
-    ///
-    /// Delta T is the difference between Terrestrial Time and Universal Time.
-    /// Different models produce slightly different values, especially for
-    /// dates far from the present.
-    ///
-    /// - Note: This is safe to call from any thread at any time. A
-    ///   calculation already in flight on another thread may use either the
-    ///   old or the new model for that one calculation, so for reproducible
-    ///   results set the model once at startup.
-    ///
-    /// - Parameter model: The Delta T model to use.
-    public static func setDeltaTModel(_ model: DeltaTModel) {
-        EngineTime.setDeltaTModel(model)
+        DeltaTModel.jplHorizons.deltaT(universalTime: universalTime)
     }
 
     /// Frees cached dynamic memory allocated by the engine.
@@ -125,8 +117,8 @@ public enum AstronomyConfig {
     /// The engine allocates cached memory in only one place: orbit segments
     /// that speed up Pluto calculations. This purges that cache, which slows
     /// down the next nearby Pluto calculation but releases the memory (useful
-    /// before running leak checkers). It does not affect the Delta T model or
-    /// any ``FixedStar`` definitions.
+    /// before running leak checkers). It does not affect any ``FixedStar``
+    /// definitions.
     ///
     /// This is safe to call concurrently with other calculations.
     public static func reset() {

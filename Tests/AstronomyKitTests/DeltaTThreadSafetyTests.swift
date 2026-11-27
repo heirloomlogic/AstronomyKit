@@ -1,72 +1,87 @@
-import Synchronization
 import Testing
 
 @testable import AstronomyKit
 
-/// Calls made through ``observedStandIn``.
-private let standInCalls = Atomic<Int>(0)
-
-/// A second Delta T function that returns the same bits as the observed model.
+/// Verifies that distinct ``DeltaTModel`` values run concurrently with full isolation.
 ///
-/// Swapping between this and the real observed function changes the
-/// active model dispatch without changing any result, so suites running in
-/// parallel cannot tell that a swap happened.
-private let observedStandIn: @Sendable (Double) -> Double = { ut in
-    standInCalls.add(1, ordering: .relaxed)
-    return AstronomyConfig.deltaTObserved(universalTime: ut)
-}
-
-/// Verifies that the Delta T model can be swapped while calculations run on
-/// other threads.
-///
-/// The engine stores the active Delta T model in an atomic selector that every
-/// time construction reads; this suite exercises concurrent writers and readers
-/// so ThreadSanitizer can prove the synchronization holds. Other suites construct
-/// times in parallel, so the writers only swap in ``observedStandIn``; a model
-/// with different results, such as JPL Horizons, would shift their answers.
-@Suite("Delta T Thread Safety")
+/// ``AstroTime`` carries its ``DeltaTModel`` by value with no process-global mutable
+/// Delta T state, so tasks using `.observed`, `.espenakMeeus`, and `.jplHorizons`
+/// simultaneously never interfere with one another.
+@Suite("Delta T Concurrency Isolation")
 struct DeltaTThreadSafetyTests {
-    @Test("Concurrent model swaps never corrupt time construction")
-    func concurrentModelSwapIsSafe() async {
-        defer { AstronomyConfig.setDeltaTModel(.observed) }
+    @Test("Concurrent multi-model AstroTime construction and searches stay isolated")
+    func concurrentMultiModelIsolation() async throws {
+        // Year 2027 (ut ≈ 9861.75): all three models produce distinct Delta T values.
+        let ut = 27.0 * 365.25
+        let observedDT = DeltaTModel.observed.deltaT(universalTime: ut)
+        let espenakDT = DeltaTModel.espenakMeeus.deltaT(universalTime: ut)
+        let jplDT = DeltaTModel.jplHorizons.deltaT(universalTime: ut)
+        #expect(observedDT != espenakDT)
+        #expect(observedDT != jplDT)
+        #expect(espenakDT != jplDT)
 
-        // ~100 years after J2000, where Delta T is large and changing.
-        let ut = 36_525.0
-        let expectedTT = ut + AstronomyConfig.deltaTObserved(universalTime: ut) / 86_400
+        let expectedByModel: [DeltaTModel: Double] = [
+            .observed: ut + observedDT / 86_400,
+            .espenakMeeus: ut + espenakDT / 86_400,
+            .jplHorizons: ut + jplDT / 86_400,
+        ]
 
-        await withTaskGroup(of: Void.self) { group in
-            // Hammer time construction on several tasks...
-            for _ in 0..<8 {
-                group.addTask {
-                    for _ in 0..<200 {
-                        // Whichever model wins the race, never a torn value.
-                        #expect(AstroTime(ut: ut).terrestrialTime == expectedTT)
-                    }
-                }
-            }
+        let expectedSeasons: [DeltaTModel: Seasons] = [
+            .observed: try Seasons.forYear(2_027, deltaT: .observed),
+            .espenakMeeus: try Seasons.forYear(2_027, deltaT: .espenakMeeus),
+            .jplHorizons: try Seasons.forYear(2_027, deltaT: .jplHorizons),
+        ]
 
-            // ...while other tasks repeatedly swap the Delta T function.
-            for _ in 0..<2 {
-                group.addTask {
-                    for iteration in 0..<100 {
-                        if iteration.isMultiple(of: 2) {
-                            EngineTime.setCustomDeltaTFunction(observedStandIn)
-                        } else {
-                            AstronomyConfig.setDeltaTModel(.observed)
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for model in DeltaTModel.allCases {
+                for _ in 0..<4 {
+                    group.addTask {
+                        let expectedTT = expectedByModel[model]!
+                        let refSeasons = expectedSeasons[model]!
+                        for _ in 0..<100 {
+                            let t = AstroTime(ut: ut, deltaT: model)
+                            #expect(t.deltaTModel == model)
+                            #expect(t.terrestrialTime == expectedTT)
+
+                            let shifted = t.addingDays(10)
+                            #expect(shifted.deltaTModel == model)
+                            #expect(
+                                shifted.terrestrialTime
+                                    == (ut + 10) + model.deltaT(universalTime: ut + 10) / 86_400
+                            )
+
+                            let ttShifted = t.addingTerrestrialDays(0.25)
+                            #expect(ttShifted.deltaTModel == model)
+                            #expect(ttShifted.terrestrialTime == expectedTT + 0.25)
+
+                            let fromTT = AstroTime(tt: expectedTT, deltaT: model)
+                            #expect(fromTT.deltaTModel == model)
+                            #expect(abs(fromTT.universalTime - ut) < 1e-11)
                         }
-                        await Task.yield()
+
+                        let seasons = try Seasons.forYear(2_027, deltaT: model)
+                        #expect(seasons == refSeasons)
+                        #expect(seasons.marchEquinox.deltaTModel == model)
+                        #expect(seasons.juneSolstice.deltaTModel == model)
+                        #expect(seasons.septemberEquinox.deltaTModel == model)
+                        #expect(seasons.decemberSolstice.deltaTModel == model)
+
+                        let start = AstroTime(year: 2_027, month: 6, day: 1, deltaT: model)
+                        let sunrise = try CelestialBody.sun.riseTime(
+                            after: start,
+                            from: .greenwich
+                        )
+                        #expect(sunrise?.deltaTModel == model)
+
+                        let fullMoon = try Moon.searchPhase(.full, after: start)
+                        #expect(fullMoon?.deltaTModel == model)
+
+                        let eclipse = try Eclipse.searchGlobalSolar(after: start)
+                        #expect(eclipse.peak.deltaTModel == model)
                     }
                 }
             }
-
-            await group.waitForAll()
+            try await group.waitForAll()
         }
-
-        // The swap only tests something if time construction reads the selector
-        // the writers store. Install the stand-in once more and check it runs.
-        EngineTime.setCustomDeltaTFunction(observedStandIn)
-        let callsBefore = standInCalls.load(ordering: .relaxed)
-        _ = AstroTime(ut: ut)
-        #expect(standInCalls.load(ordering: .relaxed) > callsBefore)
     }
 }

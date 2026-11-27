@@ -19,7 +19,7 @@
 /// print("Io position: \(moons.io.position)")
 /// print("Europa velocity: \(moons.europa.velocity)")
 /// ```
-public struct JupiterMoons: Sendable, Equatable {
+public struct JupiterMoons: Sendable, Equatable, Hashable {
     /// The state of Io.
     public let io: StateVector
 

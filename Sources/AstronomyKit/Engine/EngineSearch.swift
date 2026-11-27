@@ -22,6 +22,9 @@ enum EngineSearch {
         dtToleranceSeconds: Double,
         _ function: (AstroTime) throws -> Double
     ) throws -> AstroTime {
+        guard start.deltaTModel == end.deltaTModel else {
+            throw AstronomyError.invalidParameter
+        }
         var t1 = start
         var t2 = end
         let dtDays = abs(dtToleranceSeconds / EngineConstants.secondsPerDay)
@@ -57,7 +60,7 @@ enum EngineSearch {
                 fm: fmid,
                 fb: f2
             ) {
-                let tq = AstroTime(ut: quad.t)
+                let tq = AstroTime(ut: quad.t, deltaT: t1.deltaTModel)
                 let fq = try function(tq)
                 if quad.dfdt != 0.0 {
                     var dtGuess = abs(fq / quad.dfdt)

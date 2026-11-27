@@ -63,8 +63,8 @@ enum EnginePositions {
 
     static func geoMoonState(at time: AstroTime) throws -> StateVector {
         let dt = 1.0e-5
-        let t1 = addTerrestrialDays(time, -dt)
-        let t2 = addTerrestrialDays(time, dt)
+        let t1 = time.addingTerrestrialDays(-dt)
+        let t2 = time.addingTerrestrialDays(dt)
         let r1 = try geoMoon(at: t1)
         let r2 = try geoMoon(at: t2)
 
@@ -106,11 +106,6 @@ enum EnginePositions {
     }
 
     // MARK: - Heliocentric, Barycentric & Geocentric Positions
-
-    @inline(__always)
-    static func addTerrestrialDays(_ time: AstroTime, _ days: Double) -> AstroTime {
-        time.addingTerrestrialDays(days)
-    }
 
     static func helioXYZ(
         of body: CelestialBody,
@@ -193,7 +188,7 @@ enum EnginePositions {
             if distance > EngineConstants.cAuday {
                 throw AstronomyError.invalidParameter
             }
-            let ltime2 = addTerrestrialDays(time, -distance / EngineConstants.cAuday)
+            let ltime2 = time.addingTerrestrialDays(-distance / EngineConstants.cAuday)
             let dt = abs(ltime2.tt - ltime.tt)
             if dt < 1.0e-9 {
                 return Vector3D(x: pos.x, y: pos.y, z: pos.z, time: ltime)
@@ -232,7 +227,7 @@ enum EnginePositions {
             if distance > EngineConstants.cAuday {
                 throw AstronomyError.invalidParameter
             }
-            let ltime2 = addTerrestrialDays(time, -distance / EngineConstants.cAuday)
+            let ltime2 = time.addingTerrestrialDays(-distance / EngineConstants.cAuday)
             if abs(ltime2.tt - ltime.tt) < 1.0e-9 {
                 return Vector3D(x: dx, y: dy, z: dz, time: ltime)
             }
@@ -485,7 +480,7 @@ enum EnginePositions {
     // MARK: - Sun, Ecliptic, AngleFromSun & PairLongitude
 
     static func sunPosition(at time: AstroTime) throws -> Ecliptic {
-        let adjustedTime = addTerrestrialDays(time, -1.0 / EngineConstants.cAuday)
+        let adjustedTime = time.addingTerrestrialDays(-1.0 / EngineConstants.cAuday)
         guard EngineMath.ephemerisTimeOk(adjustedTime) else {
             throw AstronomyError.badTime
         }

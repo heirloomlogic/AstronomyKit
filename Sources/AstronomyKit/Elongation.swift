@@ -44,7 +44,7 @@ extension Visibility: CustomStringConvertible {
 /// let elongation = try CelestialBody.venus.elongation(at: .now)
 /// print("Venus is a \(elongation.visibility) star at \(elongation.angle)°")
 /// ```
-public struct Elongation: Sendable, Equatable {
+public struct Elongation: Sendable, Equatable, Hashable {
     /// The date and time of the observation.
     public let time: AstroTime
 

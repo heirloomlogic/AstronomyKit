@@ -73,28 +73,28 @@ enum EngineEvents {
         }
     }
 
-    static func seasons(year: Int) throws -> Seasons {
+    static func seasons(year: Int, deltaT: DeltaTModel) throws -> Seasons {
         guard Int32(exactly: year) != nil else {
             throw AstronomyError.invalidParameter
         }
         let mar = try searchSunLongitude(
             targetLon: 0.0,
-            after: AstroTime(year: year, month: 3, day: 10),
+            after: AstroTime(year: year, month: 3, day: 10, deltaT: deltaT),
             limitDays: 20.0
         )
         let jun = try searchSunLongitude(
             targetLon: 90.0,
-            after: AstroTime(year: year, month: 6, day: 10),
+            after: AstroTime(year: year, month: 6, day: 10, deltaT: deltaT),
             limitDays: 20.0
         )
         let sep = try searchSunLongitude(
             targetLon: 180.0,
-            after: AstroTime(year: year, month: 9, day: 10),
+            after: AstroTime(year: year, month: 9, day: 10, deltaT: deltaT),
             limitDays: 20.0
         )
         let dec = try searchSunLongitude(
             targetLon: 270.0,
-            after: AstroTime(year: year, month: 12, day: 10),
+            after: AstroTime(year: year, month: 12, day: 10, deltaT: deltaT),
             limitDays: 20.0
         )
         return Seasons(
@@ -129,8 +129,8 @@ enum EngineEvents {
 
     private static func negElongSlope(of body: CelestialBody, at time: AstroTime) throws -> Double {
         let dt = 0.1
-        let t1 = EnginePositions.addTerrestrialDays(time, -dt / 2.0)
-        let t2 = EnginePositions.addTerrestrialDays(time, dt / 2.0)
+        let t1 = time.addingTerrestrialDays(-dt / 2.0)
+        let t2 = time.addingTerrestrialDays(dt / 2.0)
         let e1 = try EnginePositions.angleFromSun(of: body, at: t1)
         let e2 = try EnginePositions.angleFromSun(of: body, at: t2)
         return (e1 - e2) / dt
@@ -518,7 +518,10 @@ enum EngineEvents {
             return nil
         }
 
-        let tm = AstroTime(ut: (t1.universalTime + t2.universalTime) / 2.0)
+        let tm = AstroTime(
+            ut: (t1.universalTime + t2.universalTime) / 2.0,
+            deltaT: t1.deltaTModel
+        )
         let alt: Double
         do {
             alt = try altitudeDiff(
@@ -647,7 +650,13 @@ enum EngineEvents {
         }
 
         let maxDerivAlt = try maxAltitudeSlope(body: body, latitude: observer.latitude)
-        let dir = Double(direction.rawValue)
+        let dir: Double
+        switch direction {
+        case .rise:
+            dir = 1.0
+        case .set:
+            dir = -1.0
+        }
 
         var t1 = startTime
         var t2 = startTime
